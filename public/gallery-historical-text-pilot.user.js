@@ -407,6 +407,172 @@
       tx.oncomplete=()=>resolve(completedValue);
     });
   }
+  const BATCH_STATUS_LABELS={
+    saved_local:'已存入本机',license_not_verified:'未核实本文许可',
+    body_missing:'科学正文不足',doi_unverified:'出版社 DOI 不匹配',
+    publisher_unreachable:'未能打开出版社页面',publisher_no_response:'出版社标签页未回传',
+    timeout:'出版社页面无回执（原因未明）',page_unavailable:'文章页不可用',
+    page_access_blocked:'页面要求登录或人工验证',page_http_error:'已观察到页面 HTTP 错误',
+    too_large:'正文数据超过体积上限',invalid_response:'采集回执结构无效',
+    capture_failed:'正文提取异常',unsupported_publisher:'不支持该出版社页面',
+    response_hash_mismatch:'正文来源哈希不一致',
+    storage_failure:'本机数据库写入未完成',local_storage_failed:'本机存储不可用',
+    publisher_script_not_confirmed:'出版社脚本未启动或未确认',
+    report_upload_failed:'服务器诊断上报失败',other:'未能确认具体原因'
+  };
+  function batchDiagnosticLabel(code){
+    return BATCH_STATUS_LABELS[String(code||'')]||BATCH_STATUS_LABELS.other;
+  }
+  function batchPublisher(doi){
+    const s=String(doi||'');
+    return s.startsWith('10.1021/')?'acs':s.startsWith('10.1002/')?'wiley'
+      :s.startsWith('10.1038/')?'nature':s.startsWith('10.1126/')?'science'
+      :s.startsWith('10.1039/')?'rsc':s.startsWith('10.1016/')?'elsevier'
+      :s.startsWith('10.31635/')?'ccs':'unknown';
+  }
+  function batchReportToken(){
+    return String(GM_getValue(BATCH_DIAG_TOKEN,'')||'').trim();
+  }
+  function batchReportKeys(){
+    try{return GM_listValues().filter(key=>String(key).startsWith(BATCH_DIAG_PREFIX));}
+    catch(_){return [];}
+  }
+  function batchReportStatus(patch){
+    const prev=GM_getValue(BATCH_DIAG_STATE,{})||{};
+    GM_setValue(BATCH_DIAG_STATE,Object.assign({},prev,patch,{at:Date.now()}));
+    batchUi?.refresh();
+  }
+  function batchQueueDiagnostic(job,kind,status,stage,reasonCode,details={}){
+    try{
+      const keys=batchReportKeys();
+      if(keys.length>=BATCH_DIAG_MAX_PENDING){
+        batchReportStatus({state:'outbox_full',pending:keys.length,
+          error:'历史诊断待发队列已满，已有记录不会被丢弃'});
+        return false;
+      }
+      const eventId='htext_'+batchId();
+      const sourceReason=String(reasonCode||'other');
+      const allowed=['started','publisher_unreachable','publisher_no_response','doi_unverified',
+        'license_not_verified','body_missing','page_unavailable','page_access_blocked',
+        'page_http_error','too_large','timeout','invalid_response','capture_failed',
+        'unsupported_publisher','response_hash_mismatch','storage_failure',
+        'local_storage_failed','publisher_script_not_confirmed','report_upload_failed',
+        'saved_local','other'];
+      const code=allowed.includes(sourceReason)?sourceReason:'other';
+      const payload={schemaVersion:BATCH_DIAG_SCHEMA,eventId,doi:job.doi,
+        runId:'hist_'+job.runId,jobId:'hist_'+job.token,kind,
+        status,stage,reasonCode:code,
+        httpStatus:Number.isInteger(details.httpStatus)&&details.httpStatus>=100
+          &&details.httpStatus<=599?details.httpStatus:null,
+        publisher:batchPublisher(job.doi),
+        pageDoiVerified:details.pageDoiVerified===true,
+        sectionCount:Math.min(300,Math.max(0,Number(details.sectionCount||0))),
+        evidenceChars:Math.min(400000,Math.max(0,Number(details.evidenceChars||0))),
+        scriptVersion:'0.2.2',occurredAt:new Date().toISOString()};
+      GM_setValue(BATCH_DIAG_PREFIX+eventId,{payload,createdAt:Date.now(),tries:0,nextAt:0});
+      batchReportStatus({state:batchReportToken()?'queued':'token_missing',
+        pending:keys.length+1,error:''});
+      // A diagnostic failure must never interrupt, block or mark text acquisition successful.
+      void batchDrainReports();
+      return true;
+    }catch(_){return false;}
+  }
+  function batchHttpRequest(options){
+    return new Promise((resolve,reject)=>{
+      try{
+        GM_xmlhttpRequest({...options,
+          timeout:10000,
+          onload:r=>resolve(r),
+          onerror:()=>reject(Error('diagnostic_transport_error')),
+          ontimeout:()=>reject(Error('diagnostic_transport_timeout'))});
+      }catch(_){reject(Error('diagnostic_transport_error'));}
+    });
+  }
+  async function batchDrainReports(){
+    if(location.hostname!=='gallery.gczhouwld.com'||batchDiagBusy)return;
+    const token=batchReportToken();
+    if(!token){
+      if(batchReportKeys().length)batchReportStatus({state:'token_missing',
+        pending:batchReportKeys().length,error:'未设置历史诊断上报密钥，记录保留本机'});
+      return;
+    }
+    batchDiagBusy=true;
+    try{
+      const ready=batchReportKeys().map(key=>({key,item:GM_getValue(key,null)}))
+        .filter(row=>row.item&&Number(row.item.nextAt||0)<=Date.now())
+        .sort((a,b)=>Number(a.item.createdAt||0)-Number(b.item.createdAt||0));
+      for(const {key,item} of ready.slice(0,4)){
+        try{
+          const response=await batchHttpRequest({method:'POST',url:BATCH_REPORT_ENDPOINT,
+            headers:{'content-type':'application/json',authorization:'Bearer '+token},
+            data:JSON.stringify(item.payload)});
+          let body={};try{body=JSON.parse(String(response.responseText||'{}'));}catch(_){}
+          if(Number(response.status)!==200||body.stored!==true
+            ||body.eventId!==item.payload.eventId||body.doi!==item.payload.doi
+            ||body.attemptId!==item.payload.jobId)throw Error(
+              Number(response.status)===401?'diagnostic_owner_auth_required':
+                'diagnostic_receipt_not_confirmed');
+          const current=GM_getValue(key,null);
+          if(current?.payload?.eventId===item.payload.eventId)GM_deleteValue(key);
+          const acks=GM_getValue(BATCH_DIAG_ACK,{})||{};
+          acks[item.payload.doi]={eventId:item.payload.eventId,confirmedAt:Date.now(),
+            attemptId:body.attemptId,status:item.payload.status};
+          const trimmed=Object.entries(acks)
+            .sort((a,b)=>Number(b[1]?.confirmedAt||0)-Number(a[1]?.confirmedAt||0))
+            .slice(0,1200);
+          GM_setValue(BATCH_DIAG_ACK,Object.fromEntries(trimmed));
+          batchReportStatus({state:'delivered',lastDoi:item.payload.doi,
+            lastAttempt:body.attemptId,pending:batchReportKeys().length,error:''});
+        }catch(error){
+          const now=Date.now();
+          const next=GM_getValue(key,null);
+          if(next?.payload?.eventId===item.payload.eventId){
+            const attempts=Math.min(12,Number(next.tries||0)+1);
+            next.tries=attempts;
+            next.nextAt=now+Math.min(300000,5000*(2**Math.min(attempts,6)));
+            GM_setValue(key,next);
+          }
+          // Never transmit/echo Authorization headers, publisher URLs or raw exception strings.
+          const type=String(error?.message||'').startsWith('diagnostic_owner_auth')
+            ?'密钥未通过服务器验证':'服务器不可用或尚未确认接收';
+          batchReportStatus({state:type.startsWith('密钥')?'auth_failed':'retry',
+            pending:batchReportKeys().length,error:type});
+          if(type.startsWith('密钥'))break;
+        }
+      }
+    }finally{batchDiagBusy=false;}
+  }
+  function batchStartDiagnostics(){
+    if(batchDiagStarted||location.hostname!=='gallery.gczhouwld.com')return;
+    batchDiagStarted=true;
+    // One independent outbox sender on Gallery. No media controller state or token read.
+    setInterval(()=>{void batchDrainReports();},10000);
+    void batchDrainReports();
+  }
+  function batchRetryAllowed(prior,manualBlocked=false){
+    if(!prior)return true;
+    if(prior.status==='saved_local')return false;
+    const noAutomatic=new Set(['license_not_verified','body_missing','doi_unverified',
+      'page_access_blocked','unsupported_publisher']);
+    if(noAutomatic.has(prior.status))return manualBlocked===true;
+    // Transient timeouts and transport failures can be retried at the user's next click.
+    // Explicit HTTP 429/403 signals must not be ignored or bypassed.
+    if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
+    return true;
+  }
+  function batchStageForStatus(status){
+    const code=String(status||'');
+    if(code==='license_not_verified')return 'license';
+    if(code==='body_missing'||code==='capture_failed'||code==='too_large')return 'body_extract';
+    if(code==='doi_unverified')return 'publisher_doi';
+    if(code==='response_hash_mismatch')return 'hash_verify';
+    if(code==='storage_failure'||code==='local_storage_failed'||code==='saved_local')return 'local_store';
+    if(code==='publisher_unreachable')return 'publisher_open';
+    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed')
+      return 'publisher_wait';
+    return 'finished';
+  }
+
   function batchStatusWrite(patch){
     batchStatus=Object.assign({},batchStatus||{},patch,{at:Date.now()});
     GM_setValue(BATCH_STATE,batchStatus);
