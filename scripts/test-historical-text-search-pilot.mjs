@@ -82,7 +82,7 @@ async function simulateTampermonkey({confirm=true,doiTags=[historicDoi],actualDa
   const table={tagName:'TABLE',textContent:'Table 1. Optimization 78% 12 mmol Ni',
     id:'',className:'',parentElement:null,closest(){return null;}};
   const root={querySelectorAll(s){
-    if(s==='h2,h3,p')return nodes;
+    if(s==='h2,h3,h4,p')return nodes;
     if(s.startsWith('figure figcaption'))return [figure];
     if(s==='table')return [table];
     throw Error('Unknown selector '+s);

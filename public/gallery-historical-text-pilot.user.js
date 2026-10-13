@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.4
+// @version      0.2.5
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -95,9 +95,9 @@
     if(!root)throw Error('找不到可验证的文章正文容器');
     const sections=[], group=new Map();
     let heading='Article body', isReferences=false, consumed=0, paragraphCount=0;
-    for(const node of root.querySelectorAll('h2,h3,p')){
+    for(const node of root.querySelectorAll('h2,h3,h4,p')){
       if(excluded(node))continue;
-      if(/^H[23]$/.test(node.tagName)){
+      if(/^H[234]$/.test(node.tagName)){
         heading=cleanText(node.textContent,300)||'Article body';
         isReferences=EXCLUDE_HEADING.test(heading);
         continue;
@@ -109,7 +109,7 @@
       consumed+=value.length;paragraphCount++;
       const key=heading.toLowerCase();
       if(!group.has(key)){
-        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
+        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity|synthes|synthetic applications?|substrate|reaction development/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
           heading,text:'',order:sections.length};
         group.set(key,row);sections.push(row);
       }
@@ -204,7 +204,9 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.4';
+  const BATCH_SCRIPT_VERSION='0.2.5';
+  // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
+  const BATCH_CAPTURE_REVISION='historic-body-science-v025';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
@@ -572,12 +574,17 @@
   function batchRetryAllowed(prior,manualBlocked=false){
     if(!prior)return true;
     if(prior.status==='saved_local')return false;
-    const noAutomatic=new Set(['license_not_verified','body_missing','doi_unverified',
-      'page_access_blocked','unsupported_publisher']);
-    if(noAutomatic.has(prior.status))return manualBlocked===true;
-    // Transient timeouts and transport failures can be retried at the user's next click.
-    // Explicit HTTP 429/403 signals must not be ignored or bypassed.
+    // Never treat a documented 403/429 or login challenge as a reason to force a visit.
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
+    if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
+      ||prior.status==='unsupported_publisher')return manualBlocked===true;
+    // The scientific-body parser/ACS license adapter changed: re-evaluate prior
+    // DOI-verified false negatives ONCE, and record the revision on the next attempt.
+    if((prior.status==='license_not_verified'||prior.status==='body_missing')
+      &&prior.pageDoiVerified===true
+      &&prior.captureRevision!==BATCH_CAPTURE_REVISION)return true;
+    if(prior.status==='license_not_verified'||prior.status==='body_missing')
+      return manualBlocked===true;
     return true;
   }
   function batchNormalizedStatus(raw){
@@ -741,6 +748,7 @@
     message.style.cssText='margin:7px 0;font-size:12px;line-height:1.5;color:#41576e;white-space:pre-wrap';
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
+    const coverageButton=document.createElement('button');coverageButton.textContent='全库正文覆盖';
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
     const server=document.createElement('button');server.textContent='服务器报告';
@@ -751,6 +759,8 @@
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
+    const coverageDetails=document.createElement('div');
+    coverageDetails.style.cssText='white-space:pre-wrap;max-height:180px;overflow:auto;font-size:12px;display:none;margin:6px 0';
     const filter=document.createElement('input');
     filter.placeholder='筛选失败 DOI／原因';filter.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
     const failureDetails=document.createElement('div');
@@ -761,11 +771,11 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
+    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause,failures,server,configure,upload,recheck,acsRecheck);
-    panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
+    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck);
+    panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
     let collapsed=false;hide.addEventListener('click',()=>{
@@ -793,9 +803,36 @@
         +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
+      coverageButton.disabled=false;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
     };
+    coverageButton.addEventListener('click',()=>{
+      coverageDetails.style.display='block';
+      coverageDetails.textContent='正在对齐正式 DOI 与本机正文台账…';
+      void (async()=>{
+        const catalog=await batchLoadCanonicalCatalog();
+        const db=await batchOpenDb();
+        let keys,attempts;
+        try{
+          keys=await batchDbOp(db,'packets','getAllKeys');
+          attempts=await batchDbOp(db,'attempts','getAll');
+        }finally{db.close();}
+        const c=batchCoverageSummary(catalog,keys,attempts);
+        const first=c.neverAttempted,post=c.parserRecheckEligible;
+        coverageDetails.textContent=[
+          '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
+          '历史日期待核验／非目标：'+c.historicalWithoutVerifiedDate+' 篇',
+          '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
+          '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
+          '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
+          '其他待核查 '+c.otherFailure+'；新版解析可复查一次 '+post,
+          '普通批次计划访问 '+c.scheduledByNormalBatch+' 篇（不等于历史母数）',
+          '本机数据不会自动进入 Gallery 公共全文索引。'
+        ].join('\n');
+      })().catch(()=>{coverageDetails.textContent=
+        '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
+    });
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
@@ -847,7 +884,7 @@
       if(event.key!=='Enter')return;
       event.preventDefault();
       const ticket=++searchToken;
-      void batchSearchLocal(search.value,results).catch(()=>{
+      void batchSearchLocal(search.value,results,()=>ticket===searchToken).catch(()=>{
         if(ticket===searchToken)results.textContent='本机索引读取失败';
       });
     });
@@ -856,36 +893,103 @@
     });
     return {refresh};
   }
-  async function batchSearchLocal(query,area){
-    const needle=cleanText(query,100).toLocaleLowerCase();
-    if(needle.length<2){area.textContent='至少输入两个字符';return;}
-    area.textContent='查询本机索引…';
-    const db=await batchOpenDb();
-    const hits=[];
-    await new Promise((resolve,reject)=>{
-      const req=db.transaction('packets','readonly').objectStore('packets').openCursor();
-      req.onerror=()=>reject(req.error||Error('cursor'));
-      req.onsuccess=()=>{
-        const cur=req.result;
-        if(!cur||hits.length>=20)return resolve();
-        const packet=cur.value.packet;
-        for(const sec of packet?.sections||[]){
-          const raw=String(sec.text||'');
-          const idx=raw.toLocaleLowerCase().indexOf(needle);
-          if(idx!==-1){hits.push({doi:packet.doi,heading:sec.heading||'正文',fragment:raw.slice(Math.max(0,idx-35),idx+100)});break;}
-        }
-        cur.continue();
-      };
-    });
-    db.close();
-    area.textContent='';
-    if(!hits.length){area.textContent='本机尚无命中（不能代表全站无文献）';return;}
-    for(const item of hits){
-      const a=document.createElement('a');a.href='https://doi.org/'+item.doi;a.target='_blank';a.rel='noopener noreferrer';
-      a.textContent=item.doi+' · '+item.heading;
-      const desc=document.createElement('div');desc.textContent=item.fragment;
-      const row=document.createElement('div');row.style.cssText='border-top:1px solid #ddd;padding:5px 0';row.append(a,desc);area.append(row);
+  function batchLocalSearchTerms(query){
+    const value=cleanText(query,150).toLocaleLowerCase();
+    // Chemistry-specific exact equivalents, never broad Ce/Fe/free-radical substitutions.
+    const groups={
+      lmct:['lmct','ligand-to-metal charge transfer','ligand to metal charge transfer',
+        '配体到金属电荷转移','配体-金属电荷转移'],
+      cpa:['cpa','chiral phosphoric acid','chiral phosphoric acids','手性磷酸'],
+      '手性磷酸':['手性磷酸','chiral phosphoric acid','chiral phosphoric acids','cpa'],
+      '轴手性':['轴手性','axial chirality','atropisomer','atroposelectiv','axially chiral']
+    };
+    return [...new Set(groups[value]||[value])];
+  }
+  function batchLocalEvidenceMatch(packet,terms){
+    if(!packet||!Array.isArray(packet.sections))return null;
+    const rows=[
+      ...packet.sections.map(s=>({kind:'正文',label:s.heading||'正文',
+        type:String(s.type||'other'),text:String(s.text||'')})),
+      ...(packet.captions||[]).map(c=>({kind:'图注',label:c.label||'图注',
+        type:'caption',text:String(c.text||'')})),
+      ...(packet.tables||[]).map(t=>({kind:'表格',label:t.label||'表格',
+        type:'table',text:String(t.text||'')}))
+    ];
+    const ranks={results:6,scope:6,mechanism:6,experimental:5,
+      caption:5,table:5,other:3,conclusion:3,abstract:2,introduction:1};
+    let best=null;
+    for(const row of rows){
+      const text=row.text.toLocaleLowerCase();
+      let first=-1;
+      for(const term of terms){
+        const idx=text.indexOf(term);
+        if(idx>=0&&(first<0||idx<first))first=idx;
+      }
+      if(first<0)continue;
+      const score=ranks[row.type]||3;
+      if(best&&best.score>=score)continue;
+      best={kind:row.kind,label:row.label,type:row.type,score,
+        excerpt:row.text.slice(Math.max(0,first-50),Math.min(row.text.length,first+140))};
     }
+    return best;
+  }
+  async function batchSearchLocal(query,area,isCurrent=()=>true){
+    const needle=cleanText(query,150);
+    if(needle.length<2){area.textContent='至少输入两个字符';return;}
+    const terms=batchLocalSearchTerms(needle);
+    area.textContent='扫描当前浏览器已存的科学正文、图注及表格…';
+    const db=await batchOpenDb();
+    const matches=[];
+    try{
+      await new Promise((resolve,reject)=>{
+        const tx=db.transaction('packets','readonly');
+        const req=tx.objectStore('packets').openCursor();
+        req.onerror=()=>reject(req.error||Error('local_search_cursor'));
+        tx.onerror=()=>reject(tx.error||Error('local_search_transaction'));
+        tx.onabort=()=>reject(tx.error||Error('local_search_aborted'));
+        req.onsuccess=()=>{
+          const cur=req.result;
+          if(!cur)return;
+          const packet=cur.value?.packet;
+          const evidence=batchLocalEvidenceMatch(packet,terms);
+          if(evidence&&packet?.doi)matches.push({doi:packet.doi,...evidence});
+          cur.continue();
+        };
+        tx.oncomplete=resolve;
+      });
+    }finally{db.close();}
+    if(!isCurrent())return;
+    matches.sort((a,b)=>b.score-a.score||a.doi.localeCompare(b.doi));
+    let shown=0;
+    const render=()=>{
+      if(!isCurrent())return;
+      area.replaceChildren();
+      const count=document.createElement('div');
+      count.textContent='本机正文命中 '+matches.length+' 篇（仅当前浏览器，非全站）；'
+        +'段落提及不代表文章主要贡献。';
+      area.append(count);
+      if(!matches.length)return;
+      for(const item of matches.slice(0,shown)){
+        const a=document.createElement('a');
+        a.href='https://doi.org/'+item.doi;a.target='_blank';a.rel='noopener noreferrer';
+        a.textContent=item.doi+' · '+item.kind+' · '+item.label;
+        const desc=document.createElement('div');desc.textContent=item.excerpt;
+        const row=document.createElement('div');
+        row.style.cssText='border-top:1px solid #ddd;padding:5px 0;word-break:break-word';
+        row.append(a,desc);area.append(row);
+      }
+      if(shown<matches.length){
+        const more=document.createElement('button');
+        more.textContent='显示更多命中（剩余 '+(matches.length-shown)+' 篇）';
+        more.style.cssText='cursor:pointer;margin-top:6px';
+        more.addEventListener('click',()=>{
+          shown=Math.min(matches.length,shown+20);render();
+        });
+        area.append(more);
+      }
+    };
+    shown=Math.min(matches.length,20);
+    render();
   }
   async function batchAwaitResponse(job){
     const start=Date.now();
@@ -913,6 +1017,36 @@
       await batchWait(350);
     }
     return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
+  }
+  function batchCoverageSummary(catalog,existingKeys,attemptRows){
+    const papers=batchHistoricalPapers(catalog);
+    const saved=new Set(existingKeys||[]);
+    const previous=new Map((attemptRows||[]).map(row=>[row.doi,row]));
+    const coverage={formalDois:Number(catalog?.formalCount||0),
+      historicalWithVerifiedDate:papers.length,
+      historicalWithoutVerifiedDate:Math.max(0,Number(catalog?.articles?.length||0)-papers.length),
+      savedLocal:0,neverAttempted:0,licensePending:0,bodyMissing:0,
+      accessBlocked:0,temporaryFailure:0,otherFailure:0,
+      scheduledByNormalBatch:0,parserRecheckEligible:0};
+    for(const paper of papers){
+      if(saved.has(paper.doi)){coverage.savedLocal++;continue;}
+      const prior=previous.get(paper.doi);
+      if(!prior){coverage.neverAttempted++;continue;}
+      if(prior.status==='license_not_verified')coverage.licensePending++;
+      else if(prior.status==='body_missing')coverage.bodyMissing++;
+      else if(['page_access_blocked','page_http_error','doi_unverified'].includes(prior.status)
+        ||[403,429].includes(Number(prior.httpStatus||0)))coverage.accessBlocked++;
+      else if(['timeout','publisher_no_response','publisher_unreachable',
+        'storage_failure','local_storage_failed','response_hash_mismatch'].includes(prior.status))
+        coverage.temporaryFailure++;
+      else coverage.otherFailure++;
+      if((prior.status==='license_not_verified'||prior.status==='body_missing')
+        &&prior.pageDoiVerified===true&&prior.captureRevision!==BATCH_CAPTURE_REVISION
+        &&![403,429].includes(Number(prior.httpStatus||0)))coverage.parserRecheckEligible++;
+    }
+    coverage.scheduledByNormalBatch=batchSelectCandidates(
+      papers,saved,attemptRows,false,'all').length;
+    return coverage;
   }
   function batchSelectCandidates(papers,existing,attemptRows,manualBlocked=false,mode='all'){
     const previous=new Map((attemptRows||[]).map(x=>[x.doi,x]));
@@ -1029,7 +1163,7 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:token,reportEventId:''};
+          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,reportEventId:''};
         // Save failure evidence before attempting its upload. Server transmission
         // must never be a prerequisite to finishing a publisher DOI.
         try{
@@ -1100,7 +1234,7 @@
   }
   function batchArticlePageReady(root){
     if(!root||document.readyState==='loading')return false;
-    try{return root.querySelectorAll('h2,h3,p').length>=2;}
+    try{return root.querySelectorAll('h2,h3,h4,p').length>=2;}
     catch(_){return false;}
   }
 
@@ -1171,7 +1305,7 @@
         }else if(ready){
           // Distinguish a stable rendered article missing its licence tag from
           // a still-hydrating article; no CC licence => no text persistence.
-          const signature=String(root?.querySelectorAll('h2,h3,p').length||0)
+          const signature=String(root?.querySelectorAll('h2,h3,h4,p').length||0)
             +':'+String(root?.querySelectorAll('section').length||0);
           if(previousState===signature)unchangedReady++;
           else unchangedReady=0;

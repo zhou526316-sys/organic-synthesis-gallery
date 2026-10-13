@@ -129,7 +129,7 @@ try{
   const search=page.getByPlaceholder('检索本机正文（LMCT/CO₂等）');
   await search.fill('LMCT');
   await search.press('Enter');
-  await page.getByText(doiOld[0]+' · Mechanistic Studies').waitFor({timeout:5000});
+  await page.getByText(doiOld[0]+' · 正文 · Mechanistic Studies').waitFor({timeout:5000});
   await start.click();
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
     && window.__gm['gallery-historical-text-batch-v2:state']?.attempted===0,null,{timeout:10000});
@@ -139,6 +139,38 @@ try{
   await page.getByRole('button',{name:'抽查 ACS 许可项（最多10篇）'}).click();
   assert.equal(await page.evaluate(()=>window.__opened.length),2,
     'targeted ACS sample does not revisit saved or never-failed articles');
+
+  await page.getByRole('button',{name:'全库正文覆盖'}).click();
+  await page.getByText('正式目录 3 篇；已核实日期的历史 DOI 2 篇').waitFor({timeout:5000});
+  assert.ok((await page.locator('#osg-historical-batch').innerText())
+    .includes('本机已存科学正文 2 篇；从未访问 0 篇'));
+
+  // A real local DOI corpus may have more than 20 matches. Count ALL and page
+  // the display; do not silently claim only 20 relevant science articles exist.
+  await page.evaluate(async()=>{
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    await new Promise((resolve,reject)=>{
+      const tx=db.transaction('packets','readwrite');
+      const store=tx.objectStore('packets');
+      for(let i=0;i<25;i++){
+        const doi='10.1021/jacs.local-body-'+i;
+        store.put({doi,packet:{doi,sections:[
+          {type:'mechanism',heading:'Mechanistic Studies',text:'The LMCT pathway was probed experimentally.'}
+        ],captions:[],tables:[]}});
+      }
+      tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+    });
+    db.close();
+  });
+  await search.fill('LMCT');
+  await search.press('Enter');
+  await page.getByText(/本机正文命中 27 篇/).waitFor({timeout:5000});
+  await page.getByRole('button',{name:/显示更多命中（剩余 7 篇）/}).click();
+  const localLinks=page.locator('#osg-historical-batch a[href^="https://doi.org/"]');
+  assert.equal(await localLinks.count(),27,'every local matching DOI remains accessible via pagination');
 
   // The browser-side outbox is durable before a token is configured.
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
@@ -226,6 +258,7 @@ try{
   await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true
+    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
+    fullCoverageLedger:true,bodySearchAllHits:27
   }));
 }finally{await browser.close();}
