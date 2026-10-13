@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r5",
+  "status": "approved_original_source_and_exemplar_editing_cloud_draft_updated_official_draftget_and_real_mobile_browser_pass",
+  "userUploadedReference": "Actual published Oct05 JACS WeChat article, 8-page PDF export, editorially inspected",
+  "previousUnsatisfactoryVersion": "2026-10-13-r4",
+  "actualExistingCloudDraft": {
+    "mediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+    "sourceReceiptAtUTC": "2026-10-13T08:34:59.941545Z",
+    "stage": "draft_update",
+    "readback": "ok",
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/728b418ac6d2c8595301e3f7.html",
+    "articleCount": 2,
+    "paperCount": 12,
+    "publishId": null,
+    "publicSendOccurred": false,
+    "noNewDraft": true
+  },
+  "editorialChanges": {
+    "sampleStrengthsApplied": [
+      "concrete reaction and synthetic bottleneck before abstract claims",
+      "short guidance blocks explain mechanism and ask why prior strategy failed",
+      "competing reaction pathways and negative controls move the argument forward",
+      "physical organic evidence includes numeric calculations and limitations, not marketing statements",
+      "medicinal chemistry utility distinguished from biological activity claims"
+    ],
+    "sampleWeaknessesAvoided": [
+      "no eleven-numbered sections",
+      "genuine dual-level useful headings rather than empty margin-only text",
+      "image/paragraph pairing and different image widths at 390px",
+      "unloaded blank images in printed PDF not mistaken for native article proof"
+    ],
+    "manuscript": {
+      "NS": {
+        "doi": "10.1038/s44160-026-01189-z",
+        "bodyChars": 3572,
+        "quickGuides": 2,
+        "sections": 8,
+        "paragraphs": 24,
+        "originalPaperAndSIImages": 12
+      },
+      "NC": {
+        "doi": "10.1038/s41557-026-02213-7",
+        "bodyChars": 3418,
+        "quickGuides": 2,
+        "sections": 8,
+        "paragraphs": 24,
+        "originalPaperAndSIImages": 10
+      }
+    },
+    "originals": {
+      "coverCount": 2,
+      "sourceBodyImageCount": 22,
+      "originalImageAssetsLockCount": 24,
+      "changedChemicalImagePixels": false
+    }
+  },
+  "evidence": {
+    "manuscriptPR": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/605",
+    "readOnlyBrowserQA_PR": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/606",
+    "offline390x740Run": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38369533720",
+    "WeChatOfficialAPIUpdateRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38370191416",
+    "real390x980WeChatPreviewRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38370574957",
+    "sourceScienceReviewPath": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+    "exemplarComparePath": "audit/wechat-working/2026-10-13-r5-oct05-published-reference-comparison.md",
+    "hashGateBlobSha": "9ecb4d9085d36b8e047f01d134cc257b4931afb6",
+    "publisherReceiptBlobSha": "82bb749bbfacab613bfd76808e1ab0dda8fb3d1e",
+    "actualCloudQABlobSha": "2f57fb7f2a23d85396dd49e543a5432cf2321a6a"
+  },
+  "liveBrowserQA": {
+    "expectedOriginalDOIUrls": [
+      "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
+      "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0"
+    ],
+    "officialNativeArticleTitles": [
+      "有机合成文献日报｜10.13｜今日精选｜Nature Synthesis：硫脲促进氧杂环丁烷向硫杂环丁烷的一步骨架编辑",
+      "往期精选｜Nature Chemistry：氧杂环丁烷向氮杂环丁烷的骨架编辑"
+    ],
+    "imageCount": 25,
+    "imageDecoded": 25,
+    "broken": [],
+    "covers": 2,
+    "bodyImages": [
+      12,
+      10
+    ],
+    "qrImages": 1,
+    "verifiedJournalCountOnlyDailySection": true,
+    "evidenceLanguageChecksPassed": true,
+    "headingCount": [
+      9,
+      9
+    ],
+    "responsiveMobile390": true,
+    "desktopViewport980": true,
+    "horizontalOverflow": false,
+    "screenshotCount": 8
+  },
+  "remainingUnverified": [
+    "Native WeChat smartphone Subscription Assistant app local draft synchronization and iOS/Android final crop not independently inspected.",
+    "Website DOI deep links were verified for exact URL and summary=0 in the actual draft; the approximately 20-second Gallery blue highlight action itself was not re-run in this editorial-only acceptance.",
+    "Browser image decoding confirms files load; it does not constitute a human pixel-by-pixel viewing of each exported mobile screenshot or a user approval of subjective reading appeal.",
+    "Previously known Gallery daily minicard grey placeholders (on missing TOC) were not changed or claimed fixed."
+  ],
+  "noMassSend": true
+}
