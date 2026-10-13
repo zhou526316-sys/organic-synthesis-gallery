@@ -5,6 +5,7 @@ import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
 import { OFFICIAL_PUBLISHER_FEEDS,parseOfficialPublisherFeed } from './lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from './lib/literature-exclusion-recheck.mjs';
 import { CROSSREF_DATE_MODES, crossrefModeQuery } from './lib/crossref-discovery-date-modes.mjs';
+import { needsHistoricalDepositReview } from './lib/crossref-deposit-backlog.mjs';
 import { publisherOnlyReviewEligible,exclusionRecheckBelongsToPrimaryWindow } from './lib/literature-review-queue-guard.mjs';
 
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
@@ -80,6 +81,7 @@ assert.ok(auditSource.includes('fetchOfficialPublisherFeeds'), 'Independent offi
 assert.ok(auditSource.includes('fetchPublisherMetadataAbstract'), 'Blank-abstract synthesis candidates must receive DOI-verified publisher abstract rescue attempts');
 assert.ok(auditSource.includes('pubAbstractResults'), 'Publisher abstract rescue successes and failures must be logged, not silently reported as zero gaps');
 assert.ok(auditSource.includes('publisherDateVerificationBacklog'), 'Unverified publisher-only DOI must remain visible beyond RSS rotation');
+assert.ok(auditSource.includes('historicalCrossrefRedepositBacklog'), 'Old redeposited DOI must be durable without causing a false primary 08:00 backlog');
 assert.ok(auditSource.includes('historicalEvidenceChallenges'), 'Historical changed-evidence exclusions must be visible without overwhelming primary review');
 assert.ok(auditSource.includes('publisherOnlyDois'), 'Publisher-only DOI differences must be reported');
 assert.ok(auditSource.includes('previousExclusionsReopened'), 'Prior exclusions must be reconsidered on substantive new evidence');
@@ -116,6 +118,9 @@ assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude),
 assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude,{confirmedExcluded:true}),'',
   'Confirmed DOI exclusions must remain authoritative despite metadata changes');
 
+const oldDeposit={date:'2026-09-25',depositedDate:'2026-10-12'};
+assert.equal(needsHistoricalDepositReview(oldDeposit,{
+  journalRescueStart:'2026-10-07',endDate:'2026-10-13'}),true);
 const oldFeed={publisherFeedUrl:'https://onlinelibrary.wiley.com/feed/15213773/most-recent',date:'',feedDate:'2026-10-10',sources:['publisher-feed:Angew']};
 assert.equal(publisherOnlyReviewEligible(oldFeed,'2026-10-11','2026-10-13'),false);
 assert.equal(exclusionRecheckBelongsToPrimaryWindow({date:'2026-09-19'},'2026-10-11','2026-10-13'),false);
