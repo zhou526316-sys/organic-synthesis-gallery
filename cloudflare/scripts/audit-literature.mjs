@@ -265,6 +265,11 @@ function mergeCandidate(map, incoming) {
   }
   if (!current.title && incoming.title) current.title = incoming.title;
   if ((!current.abstract || current.abstract.length < 120) && incoming.abstract) current.abstract = incoming.abstract;
+  if (incoming.publisherFeedUrl && !current.publisherFeedUrl) {
+    current.publisherFeedUrl = incoming.publisherFeedUrl;
+    current.feedDate = incoming.feedDate || '';
+    current.publisherDateUnverified = true;
+  }
   if (!current.date && incoming.date) current.date = incoming.date;
   for (const key of ['onlineDate', 'publishedDate', 'createdDate']) {
     const next = clean(incoming[key]);
