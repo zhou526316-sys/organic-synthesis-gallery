@@ -1,20 +1,20 @@
 {
   "schemaVersion": "gallery-history-review-worklist-v1",
   "mode": "scientific_review_worklist_only_not_scope_decision",
-  "producedAt": "2026-10-13T07:49:33.088Z",
+  "producedAt": "2026-10-13T08:34:47.323Z",
   "sourceCompletedRoots": 371,
   "uniqueCandidateDois": 55708,
   "statusCounts": {
     "alreadyPublished": 783,
-    "approvedAwaiting08": 38,
+    "approvedAwaiting08": 44,
     "sourcePending": 2,
     "explicitlyExcluded": 6,
-    "needsReview": 54879
+    "needsReview": 54873
   },
   "maximumRows": 320,
   "selected": 320,
   "distinctReviewDois": 320,
-  "remainingUnselectedRequiresReview": 54559,
+  "remainingUnselectedRequiresReview": 54553,
   "byJournal": {
     "JACS": 20,
     "Angew": 20,
@@ -2436,12 +2436,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c09931",
+      "doi": "10.1021/jacs.6c08864",
       "journal": "JACS",
-      "title": "Total Synthesis and Structural Revision of Rhabdobranin Reveals a Cryptic Gram-Negative Antibiotic",
-      "date": "2026-08-27",
+      "title": "Data-Driven Design of Asymmetric, Fluorine-Free Ethers for High-Voltage Lithium-Metal Batteries under Extreme Conditions",
+      "date": "2026-08-26",
       "year": "2026",
-      "firstAuthor": "Woonkee S. Jo",
+      "firstAuthor": "Hanjun Li",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_jacs"
@@ -3125,18 +3125,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c08864",
+      "doi": "10.1021/jacs.6c12254",
       "journal": "JACS",
-      "title": "Data-Driven Design of Asymmetric, Fluorine-Free Ethers for High-Voltage Lithium-Metal Batteries under Extreme Conditions",
-      "date": "2026-08-26",
+      "title": "Revealing Excited-State Electrochemical Reaction Pathways at Solid Electrolyte Interphases by Ab Initio Nonadiabatic Molecular Dynamics",
+      "date": "2026-08-17",
       "year": "2026",
-      "firstAuthor": "Hanjun Li",
+      "firstAuthor": "Zhan Shi",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_jacs"
+        "2026-08-15_2026-08-21_jacs"
       ],
       "sourceFingerprints": [
-        "30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044"
+        "713e9e89642a78fe1d727b138652eab1c5f68a0d2cbdae762ee9de49f62fc217"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -3314,12 +3314,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03458",
+      "doi": "10.1021/acs.orglett.6c02929",
       "journal": "Organic Letters",
-      "title": "Diastereo- and Enantioselective Synthesis of 9-Aryl-1-vinyl-tetrahydro-β-carbolines via Brønsted Acid-Catalyzed Pictet–Spengler Reaction",
-      "date": "2026-08-30",
+      "title": "Introducing Azaindole Thianthrenium Salt: An Electrophilic Coupling Partner for Cross-Coupling Reaction",
+      "date": "2026-08-27",
       "year": "2026",
-      "firstAuthor": "Deyu Zhang",
+      "firstAuthor": "Siddhartha Paul",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_organic-letters"
@@ -3470,18 +3470,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c12254",
+      "doi": "10.1021/jacs.6c05962",
       "journal": "JACS",
-      "title": "Revealing Excited-State Electrochemical Reaction Pathways at Solid Electrolyte Interphases by Ab Initio Nonadiabatic Molecular Dynamics",
-      "date": "2026-08-17",
+      "title": "Breaking the 50% Efficiency Ceiling: A Tandem Electrochemical Cycle for Efficient Singlet Oxygen Electrosynthesis",
+      "date": "2026-08-13",
       "year": "2026",
-      "firstAuthor": "Zhan Shi",
+      "firstAuthor": "Long Zhao",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-15_2026-08-21_jacs"
+        "2026-08-08_2026-08-14_jacs"
       ],
       "sourceFingerprints": [
-        "713e9e89642a78fe1d727b138652eab1c5f68a0d2cbdae762ee9de49f62fc217"
+        "64d88a9c366b024dbf9d63a05728d8345eb8cd23eb00684bdd41f1ef7efebae9"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -3659,12 +3659,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02691",
+      "doi": "10.1021/acs.orglett.6c03282",
       "journal": "Organic Letters",
-      "title": "Asymmetric Synthesis of Axially Chiral Spiro Aziridines and Spiro Thiazolidinethiones from Sulfonyl Bicyclobutanes",
-      "date": "2026-08-27",
+      "title": "Nickel-Catalyzed Asymmetric Hydrogenation of Aryl-Substituted Maleic Acid Diesters",
+      "date": "2026-08-26",
       "year": "2026",
-      "firstAuthor": "Mahesh S. Gadhave",
+      "firstAuthor": "Jiawei Han",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_organic-letters"
@@ -3817,12 +3817,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c05962",
+      "doi": "10.1021/jacs.6c08998",
       "journal": "JACS",
-      "title": "Breaking the 50% Efficiency Ceiling: A Tandem Electrochemical Cycle for Efficient Singlet Oxygen Electrosynthesis",
-      "date": "2026-08-13",
+      "title": "Pd(0)-Catalyzed Enantioselective Formal Normal-Electron-Demand Cross-[4 + 2] Cycloadditions of Morita–Baylis–Hillman Carbonates with 1,3-Dienes",
+      "date": "2026-08-12",
       "year": "2026",
-      "firstAuthor": "Long Zhao",
+      "firstAuthor": "Rui-Yang Gao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-08_2026-08-14_jacs"
@@ -4006,12 +4006,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02929",
+      "doi": "10.1021/acs.orglett.6c02796",
       "journal": "Organic Letters",
-      "title": "Introducing Azaindole Thianthrenium Salt: An Electrophilic Coupling Partner for Cross-Coupling Reaction",
-      "date": "2026-08-27",
+      "title": "Conversion of Phenyliodine(III) Dicarboxylates to Carbonyl Compounds via Hantzsch Ester-Enabled Decarboxylative Oxygenation",
+      "date": "2026-08-25",
       "year": "2026",
-      "firstAuthor": "Siddhartha Paul",
+      "firstAuthor": "Qingye Fang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_organic-letters"
@@ -4160,12 +4160,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c08998",
+      "doi": "10.1021/jacs.6c10775",
       "journal": "JACS",
-      "title": "Pd(0)-Catalyzed Enantioselective Formal Normal-Electron-Demand Cross-[4 + 2] Cycloadditions of Morita–Baylis–Hillman Carbonates with 1,3-Dienes",
-      "date": "2026-08-12",
+      "title": "Total Synthesis of (+)-CC-1065",
+      "date": "2026-08-08",
       "year": "2026",
-      "firstAuthor": "Rui-Yang Gao",
+      "firstAuthor": "Benjamin D. Senzer",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-08_2026-08-14_jacs"
@@ -4349,12 +4349,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03282",
+      "doi": "10.1021/acs.orglett.6c03345",
       "journal": "Organic Letters",
-      "title": "Nickel-Catalyzed Asymmetric Hydrogenation of Aryl-Substituted Maleic Acid Diesters",
-      "date": "2026-08-26",
+      "title": "Photoredox/Nickel-Catalyzed Decarboxylative Monofluoromethylation of β-Boryl NHPI Esters via Radical 1,2-Boron Migration",
+      "date": "2026-08-22",
       "year": "2026",
-      "firstAuthor": "Jiawei Han",
+      "firstAuthor": "Shuang Lin",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_organic-letters"
@@ -4503,18 +4503,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c10775",
+      "doi": "10.1021/jacs.6c08026",
       "journal": "JACS",
-      "title": "Total Synthesis of (+)-CC-1065",
-      "date": "2026-08-08",
+      "title": "High-Voltage Sodium–Metal Batteries with Asymmetric Fluoroalkoxylated Organoborate Anion Chemistry",
+      "date": "2026-08-07",
       "year": "2026",
-      "firstAuthor": "Benjamin D. Senzer",
+      "firstAuthor": "Zhiming Zhao",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-08_2026-08-14_jacs"
+        "2026-08-01_2026-08-07_jacs"
       ],
       "sourceFingerprints": [
-        "64d88a9c366b024dbf9d63a05728d8345eb8cd23eb00684bdd41f1ef7efebae9"
+        "aa212c945869655c06bbe97d1ee6db873540d6b926406f509cac1df0439f0fb9"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4692,18 +4692,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02796",
+      "doi": "10.1021/acs.orglett.6c02967",
       "journal": "Organic Letters",
-      "title": "Conversion of Phenyliodine(III) Dicarboxylates to Carbonyl Compounds via Hantzsch Ester-Enabled Decarboxylative Oxygenation",
-      "date": "2026-08-25",
+      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
+      "date": "2026-08-21",
       "year": "2026",
-      "firstAuthor": "Qingye Fang",
+      "firstAuthor": "Jie Hao",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_organic-letters"
+        "2026-08-15_2026-08-21_organic-letters"
       ],
       "sourceFingerprints": [
-        "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98"
+        "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4848,12 +4848,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c08026",
+      "doi": "10.1021/jacs.6c04476",
       "journal": "JACS",
-      "title": "High-Voltage Sodium–Metal Batteries with Asymmetric Fluoroalkoxylated Organoborate Anion Chemistry",
-      "date": "2026-08-07",
+      "title": "The Catalytic Enantioselective Sommelet–Hauser Rearrangement",
+      "date": "2026-08-06",
       "year": "2026",
-      "firstAuthor": "Zhiming Zhao",
+      "firstAuthor": "Ihssane El Fdali",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-01_2026-08-07_jacs"
@@ -5037,18 +5037,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03345",
+      "doi": "10.1021/acs.orglett.6c03176",
       "journal": "Organic Letters",
-      "title": "Photoredox/Nickel-Catalyzed Decarboxylative Monofluoromethylation of β-Boryl NHPI Esters via Radical 1,2-Boron Migration",
-      "date": "2026-08-22",
+      "title": "Visible Light Photoredox-Catalyzed Difunctionalization of (α-Substituted) N -Aryl Glycines with α-Bromoacetates: An Annulation Method for the Synthesis of 3-Substituted 2-Oxindoles via Decarboxylation/Aryl ortho -C–H Activation",
+      "date": "2026-08-20",
       "year": "2026",
-      "firstAuthor": "Shuang Lin",
+      "firstAuthor": "Zhengjiang Fu",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_organic-letters"
+        "2026-08-15_2026-08-21_organic-letters"
       ],
       "sourceFingerprints": [
-        "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98"
+        "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5193,12 +5193,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c04476",
+      "doi": "10.1021/jacs.6c09948",
       "journal": "JACS",
-      "title": "The Catalytic Enantioselective Sommelet–Hauser Rearrangement",
+      "title": "Asymmetric Total Synthesis of Venezuelaene A via TEMPO+BF4–-Mediated Oxidative Nazarov Cyclization and Cascade Metathesis",
       "date": "2026-08-06",
       "year": "2026",
-      "firstAuthor": "Ihssane El Fdali",
+      "firstAuthor": "Sujun Xie",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-01_2026-08-07_jacs"
@@ -5386,12 +5386,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02967",
+      "doi": "10.1021/acs.orglett.6c03420",
       "journal": "Organic Letters",
-      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
-      "date": "2026-08-21",
+      "title": "Copper-Catalyzed, Photoinduced Carbonylative Cross-Coupling of Alkyl Iodides with Amines, Alcohols, and Sodium Hydroxide",
+      "date": "2026-08-20",
       "year": "2026",
-      "firstAuthor": "Jie Hao",
+      "firstAuthor": "Omaïma Adaoudi",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_organic-letters"
@@ -5538,12 +5538,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c09948",
+      "doi": "10.1021/jacs.6c11377",
       "journal": "JACS",
-      "title": "Asymmetric Total Synthesis of Venezuelaene A via TEMPO+BF4–-Mediated Oxidative Nazarov Cyclization and Cascade Metathesis",
-      "date": "2026-08-06",
+      "title": "Overriding Intrinsic Site-Selectivity in Nickel(II)-Catalyzed Enantioselective Methylene C(sp3)–H Alkynylation",
+      "date": "2026-08-04",
       "year": "2026",
-      "firstAuthor": "Sujun Xie",
+      "firstAuthor": "Fei Yao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-01_2026-08-07_jacs"
@@ -5731,12 +5731,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03176",
+      "doi": "10.1021/acs.orglett.6c02735",
       "journal": "Organic Letters",
-      "title": "Visible Light Photoredox-Catalyzed Difunctionalization of (α-Substituted) N -Aryl Glycines with α-Bromoacetates: An Annulation Method for the Synthesis of 3-Substituted 2-Oxindoles via Decarboxylation/Aryl ortho -C–H Activation",
-      "date": "2026-08-20",
+      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
+      "date": "2026-08-19",
       "year": "2026",
-      "firstAuthor": "Zhengjiang Fu",
+      "firstAuthor": "Yukun Zhao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_organic-letters"
@@ -6223,12 +6223,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c11377",
+      "doi": "10.1021/jacs.6c12029",
       "journal": "JACS",
-      "title": "Overriding Intrinsic Site-Selectivity in Nickel(II)-Catalyzed Enantioselective Methylene C(sp3)–H Alkynylation",
-      "date": "2026-08-04",
+      "title": "Atropisomeric Aryl–Hydrazone Frameworks: Discovery and Organocatalytic Enantioselective Construction",
+      "date": "2026-08-03",
       "year": "2026",
-      "firstAuthor": "Fei Yao",
+      "firstAuthor": "Feng Zhang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-01_2026-08-07_jacs"
@@ -6416,12 +6416,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03420",
+      "doi": "10.1021/acs.orglett.6c02217",
       "journal": "Organic Letters",
-      "title": "Copper-Catalyzed, Photoinduced Carbonylative Cross-Coupling of Alkyl Iodides with Amines, Alcohols, and Sodium Hydroxide",
-      "date": "2026-08-20",
+      "title": "Palladium-Catalyzed Difluorocarbene Transfer Enables Carbonylative Esterification of Aryl Thianthrenium Salts",
+      "date": "2026-08-18",
       "year": "2026",
-      "firstAuthor": "Omaïma Adaoudi",
+      "firstAuthor": "Shibiao Tang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_organic-letters"
@@ -6577,18 +6577,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c12029",
+      "doi": "10.1021/jacs.6c02262",
       "journal": "JACS",
-      "title": "Atropisomeric Aryl–Hydrazone Frameworks: Discovery and Organocatalytic Enantioselective Construction",
-      "date": "2026-08-03",
+      "title": "Catalytic Stereochemical Relay for the Enantioselective Synthesis of Acyclic Quaternary Stereocenters",
+      "date": "2026-07-30",
       "year": "2026",
-      "firstAuthor": "Feng Zhang",
+      "firstAuthor": "Hengmu Xie",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-01_2026-08-07_jacs"
+        "2026-07-22_2026-07-31_jacs"
       ],
       "sourceFingerprints": [
-        "aa212c945869655c06bbe97d1ee6db873540d6b926406f509cac1df0439f0fb9"
+        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -6745,12 +6745,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acscatal.6c03124",
+      "doi": "10.1021/acscatal.6c04393",
       "journal": "ACS Catalysis",
-      "title": "Enantioselective Synthesis of Functionalized Chiral Diarylalkanes via Chiral Phenanthroline-Cu-Catalyzed Alkynylation and Amination of Six-Membered Cyclic Diaryliodonium Salts",
-      "date": "2026-07-21",
+      "title": "Palladium-Catalyzed Enantioselective Cyclopropanation of Unactivated Alkenes with Sulfoxonium Ylides Using a Chiral Monodentate Oxazoline Ligand",
+      "date": "2026-07-20",
       "year": "2026",
-      "firstAuthor": "Jun Gao",
+      "firstAuthor": "Bo-Yang Sun",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-07-15_2026-07-21_acs-catalysis"
@@ -6766,12 +6766,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02735",
+      "doi": "10.1021/acs.orglett.6c02933",
       "journal": "Organic Letters",
-      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
-      "date": "2026-08-19",
+      "title": "Iron-Catalyzed Sodium Iodide-Promoted Aerobic Oxidative Cross-Coupling of Benzofurans with Indoles",
+      "date": "2026-08-18",
       "year": "2026",
-      "firstAuthor": "Yukun Zhao",
+      "firstAuthor": "Angulimal Kamble",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_organic-letters"
