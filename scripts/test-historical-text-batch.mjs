@@ -286,7 +286,7 @@ test('old DOI-verified ambiguous licensing/body is rechecked exactly once after 
   const api=fixture().context.__batchTest;
   const prior={doi:DOI,status:'license_not_verified',pageDoiVerified:true,captureRevision:'old'};
   assert.equal(api.batchRetryAllowed(prior,false),true);
-  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-science-v025'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v026'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,status:'body_missing',captureRevision:'old'},false),true);
   assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
