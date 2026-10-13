@@ -1,11 +1,11 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-13T13:49:57.896Z",
+  "generatedAt": "2026-10-13T14:18:19.550Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11457,
+  "totalUnreviewedCandidates": 11453,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
@@ -32,8 +32,8 @@
     "2026-09": 106
   },
   "byPriority": {
-    "P1": 91,
-    "P0": 169,
+    "P1": 94,
+    "P0": 166,
     "P2": 39,
     "P3": 21
   },
@@ -1780,13 +1780,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc01864e",
+      "doi": "10.1039/d6gc02423h",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Cobaltaphotoredox catalysed synthesis of spiro compounds: utilizing the inherent photoredox properties of naphthoquinones",
-      "firstAuthor": "Tamanna Sharma",
+      "title": "Modular synthesis of unsymmetric 1,4-diketones via photocatalytic cross-coupling of enamides and sulfoxonium ylides",
+      "firstAuthor": "Jian Han",
       "priority": "P0",
       "flags": [
         "publisher_first_online_date_unverified",
@@ -2532,45 +2532,45 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc05170g",
+      "doi": "10.1039/d5sc07460f",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Enantioconvergent access to 1,1-diarylmethine silanes and germanes through nickel/photoredox-catalyzed cross-electrophile coupling",
-      "firstAuthor": "Emilio G. A. Acuña-Bolomey",
-      "priority": "P0",
+      "title": "Chalcogenide substitution for the synthesis of dye MSe5: a benzoselenadiazole photosensitizer for high-performance DSSCs",
+      "firstAuthor": "Laia Marín Moncusí",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-08_2026-07-14_chemical-science"
+        "2026-07-01_2026-07-07_chemical-science"
       ],
       "sourceHashes": [
-        "d0e9696fd3a5308240f8662aa01f19df461ebb7582a447f165c689c7c3db446a"
+        "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc05630j",
+      "doi": "10.1039/d6sc00048g",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Nickel-catalyzed asymmetric hydrogenation of α,β-unsaturated ester phosphonates",
-      "firstAuthor": "Hanlin Wei",
-      "priority": "P0",
+      "title": "Metallized porphyrin-based covalent organic frameworks with orbital-hybridized conduction channels for continuous-flow adsorption–photocatalytic uranium extraction from seawater",
+      "firstAuthor": "Bin Zuo",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-08-15_2026-08-21_chemical-science"
+        "2026-08-08_2026-08-14_chemical-science"
       ],
       "sourceHashes": [
-        "5f0ab7484dabcc5fec38a2f7814a603fd2aaed64a4d5ca40f68f927da0b575ed"
+        "47db1aad79f94496f56856c0d73cd9f060eb1b7bce9ec046781483b4f0da5683"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2712,23 +2712,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc02423h",
+      "doi": "10.1039/d6gc02636b",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Modular synthesis of unsymmetric 1,4-diketones via photocatalytic cross-coupling of enamides and sulfoxonium ylides",
-      "firstAuthor": "Jian Han",
+      "title": "Cu–O–Ti interface promotes C–N coupling for electrochemical urea synthesis",
+      "firstAuthor": "Li Luo",
       "priority": "P0",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-22_2026-07-31_green-chemistry"
+        "2026-07-08_2026-07-14_green-chemistry"
       ],
       "sourceHashes": [
-        "1871d6a9d809312c44e78d308b35209f6bd8b2d9864b1b0bffb7f4de0784f305"
+        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -3462,45 +3462,45 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc07460f",
+      "doi": "10.1039/d5sc08413j",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Chalcogenide substitution for the synthesis of dye MSe5: a benzoselenadiazole photosensitizer for high-performance DSSCs",
-      "firstAuthor": "Laia Marín Moncusí",
+      "title": "Synthesis and properties of N -(trifluoromethyl)amides",
+      "firstAuthor": "Miriam L. O'Duill",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-01_2026-07-07_chemical-science"
+        "2026-07-22_2026-07-31_chemical-science"
       ],
       "sourceHashes": [
-        "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
+        "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc00048g",
+      "doi": "10.1039/d6sc01721e",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Metallized porphyrin-based covalent organic frameworks with orbital-hybridized conduction channels for continuous-flow adsorption–photocatalytic uranium extraction from seawater",
-      "firstAuthor": "Bin Zuo",
+      "title": "Bioinspired peptide cyclisation enables exploration of cytochrome P450 catalysed sequential oxidation in rufomycin biosynthesis",
+      "firstAuthor": "Jessica Peate",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-08-08_2026-08-14_chemical-science"
+        "2026-08-01_2026-08-07_chemical-science"
       ],
       "sourceHashes": [
-        "47db1aad79f94496f56856c0d73cd9f060eb1b7bce9ec046781483b4f0da5683"
+        "7d9547b5d0caf86314809a621de8b85d9a2fbf4ba4b6339df1514962d6786dae"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -3642,14 +3642,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc02636b",
+      "doi": "10.1039/d6gc00187d",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Cu–O–Ti interface promotes C–N coupling for electrochemical urea synthesis",
-      "firstAuthor": "Li Luo",
-      "priority": "P0",
+      "title": "Benchmarking electro-Fenton-driven decomposition of synthetic polymers",
+      "firstAuthor": "Bhanupriya Boruah",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
@@ -4392,45 +4392,45 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc08413j",
+      "doi": "10.1039/d6sc01888b",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Synthesis and properties of N -(trifluoromethyl)amides",
-      "firstAuthor": "Miriam L. O'Duill",
+      "title": "Residual metal single-atom catalysis: enhanced photocatalytic hydrogen production via ligand-modulated d-orbital splitting",
+      "firstAuthor": "Kun Tang",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-22_2026-07-31_chemical-science"
+        "2026-07-01_2026-07-07_chemical-science"
       ],
       "sourceHashes": [
-        "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
+        "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc01721e",
+      "doi": "10.1039/d6sc02530g",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Bioinspired peptide cyclisation enables exploration of cytochrome P450 catalysed sequential oxidation in rufomycin biosynthesis",
-      "firstAuthor": "Jessica Peate",
+      "title": "A universal synthetic strategy for noncentrosymmetric lead oxyhalide frameworks with strong second-harmonic generation",
+      "firstAuthor": "Chen Sun",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-08-01_2026-08-07_chemical-science"
+        "2026-08-22_2026-08-31_chemical-science"
       ],
       "sourceHashes": [
-        "7d9547b5d0caf86314809a621de8b85d9a2fbf4ba4b6339df1514962d6786dae"
+        "5004d523307119f7d8517a7f3c572dd692405edbf873cc04ea1e3c1d66c7d426"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -4572,23 +4572,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc00187d",
+      "doi": "10.1039/d6gc01044j",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Benchmarking electro-Fenton-driven decomposition of synthetic polymers",
-      "firstAuthor": "Bhanupriya Boruah",
+      "title": "Phenolics via tandem defunctionalization of oxidative catalytic fractionation (OCF) products of lignocellulose using catalytic HCl in hot pressurized water",
+      "firstAuthor": "Mathias Bal",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-08_2026-07-14_green-chemistry"
+        "2026-07-01_2026-07-07_green-chemistry"
       ],
       "sourceHashes": [
-        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
+        "8518fa7c7b0ca72f496e0e36eb3920b8d26d12733608a0d1c9025354851b5985"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5322,45 +5322,45 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc01888b",
+      "doi": "10.1039/d6sc02376b",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Residual metal single-atom catalysis: enhanced photocatalytic hydrogen production via ligand-modulated d-orbital splitting",
-      "firstAuthor": "Kun Tang",
+      "title": "Catalytic hydroboration of aldehydes with electron-rich alkoxysilylenes: from mechanistic insights to highly active catalysts",
+      "firstAuthor": "Leon Kapp",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-01_2026-07-07_chemical-science"
+        "2026-07-15_2026-07-21_chemical-science"
       ],
       "sourceHashes": [
-        "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
+        "fb872fb6671b2e89df5fb456d5f3ba10dccf54412fe26d0c0e23f61a8607235a"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc02530g",
+      "doi": "10.1039/d6sc02845d",
       "journal": "Chemical Science",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "A universal synthetic strategy for noncentrosymmetric lead oxyhalide frameworks with strong second-harmonic generation",
-      "firstAuthor": "Chen Sun",
+      "title": "Oriented synthesis of a cationic metal–organic framework with Al 24 units for effective Cr( vi ) removal",
+      "firstAuthor": "Yonghong Xiao",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-08-22_2026-08-31_chemical-science"
+        "2026-08-01_2026-08-07_chemical-science"
       ],
       "sourceHashes": [
-        "5004d523307119f7d8517a7f3c572dd692405edbf873cc04ea1e3c1d66c7d426"
+        "7d9547b5d0caf86314809a621de8b85d9a2fbf4ba4b6339df1514962d6786dae"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5502,23 +5502,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc01044j",
+      "doi": "10.1039/d6gc01271j",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Phenolics via tandem defunctionalization of oxidative catalytic fractionation (OCF) products of lignocellulose using catalytic HCl in hot pressurized water",
-      "firstAuthor": "Mathias Bal",
+      "title": "Design of synthetic microbial cocultures for advanced biomanufacturing of lignocellulosic biofuels and bioproducts",
+      "firstAuthor": "Hyun-Joong Kim",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-01_2026-07-07_green-chemistry"
+        "2026-07-15_2026-07-21_green-chemistry"
       ],
       "sourceHashes": [
-        "8518fa7c7b0ca72f496e0e36eb3920b8d26d12733608a0d1c9025354851b5985"
+        "2c6b6e3568aacc2b48646304ff9ba525e92b95e43eeb3901a3510ea7c7ca14db"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5546,13 +5546,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc03080g",
+      "doi": "10.1039/d6gc03116a",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Solvent- and catalyst-free mechanochemical synthesis of primary sulfinamidines",
-      "firstAuthor": "Tianhao Zhang",
+      "title": "Integrated sustainability and uncertainty assessment of large-scale synthetic methane production from direct air capture and renewable hydrogen",
+      "firstAuthor": "Navid Tavakoli",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
