@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.5
+// @version      0.2.6
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -90,6 +90,65 @@
     }
     return false;
   }
+
+  // For DOI-verified pages without reuse permission, report structural counts
+  // only. No text is persisted or sent to the server.
+  function batchBodyStructure(root){
+    if(!root)return {presence:'page_shell',scienceChars:0,
+      abstractChars:0,sectionCount:0,headingCount:0,captionCount:0,tableCount:0};
+    let scienceChars=0,abstractChars=0,otherChars=0,heading='',
+      headingCount=0,sectionCount=0;
+    const science=/results?|discuss|scope|mechanis|control|reaction development|synthes|synthetic applications?|optimization|experimental|methods|procedures?/i;
+    for(const node of root.querySelectorAll('h2,h3,h4,p')){
+      if(excluded(node))continue;
+      const val=cleanText(node.textContent,6000);
+      if(/^H[234]$/.test(node.tagName)){
+        heading=val.slice(0,160);headingCount++;
+        if(science.test(heading))sectionCount++;
+        continue;
+      }
+      if(val.length<45)continue;
+      if(science.test(heading))scienceChars+=val.length;
+      else if(/^abstract\b/i.test(heading))abstractChars+=val.length;
+      else otherChars+=val.length;
+    }
+    const captionCount=Math.min(200,root.querySelectorAll('figure figcaption, figure .caption').length);
+    const tableCount=Math.min(80,root.querySelectorAll('table').length);
+    const presence=scienceChars>=250?'scientific_sections':
+      abstractChars>=45?'abstract_only':
+      scienceChars>0||otherChars>=250?'partial_science':'page_shell';
+    return {presence,scienceChars:Math.min(scienceChars,400000),
+      abstractChars:Math.min(abstractChars,400000),
+      sectionCount:Math.min(sectionCount,300),headingCount:Math.min(headingCount,300),
+      captionCount,tableCount};
+  }
+  function batchReuseRights(root){
+    const license=batchLicenseEvidence(root);
+    if(license)return {signal:'cc_reuse_verified',license};
+    const candidates=document.querySelectorAll(
+      'meta[name="citation_license_url" i],link[rel="license" i],meta[property="article:license" i]');
+    const declared=Array.from(candidates).some(el=>{
+      const url=String(el.content||el.href||el.getAttribute('href')||'');
+      return /^https?:\/\//i.test(url)
+        &&!/creativecommons\.org\/(?:licenses\/by\/(?:3\.0|4\.0)|publicdomain\/zero\/1\.0)/i.test(url);
+    });
+    return {signal:declared?'other_license_declared':'unverified',license:null};
+  }
+  function batchBodyCompleteness(capture){
+    const sections=(capture?.sections||[]).filter(s=>s.type!=='abstract');
+    const scientific=sections.filter(s=>['results','mechanism','experimental'].includes(s.type));
+    const scienceChars=scientific.reduce((n,s)=>n+String(s.text||'').length,0);
+    const hasResults=sections.some(s=>s.type==='results');
+    const hasConclusion=sections.some(s=>s.type==='conclusion');
+    const completeness=scienceChars<250
+      ?((capture?.sections||[]).some(s=>s.type==='abstract')?'abstract_only':'unavailable')
+      :hasResults&&hasConclusion&&scienceChars>=2500&&sections.length>=3
+        ?'complete_candidate':'partial';
+    return {scienceChars,scienceSectionCount:scientific.length,
+      sectionCount:sections.length,captionCount:(capture?.captions||[]).length,
+      tableCount:(capture?.tables||[]).length,hasResults,hasConclusion,
+      completeness};
+  }
   function gather(){
     const root=document.querySelector('main article, article, main, [role="main"]');
     if(!root)throw Error('找不到可验证的文章正文容器');
@@ -132,7 +191,8 @@
       if(text.length>=30&&tables.length<30)tables.push({label:'Table '+String(tables.length+1),text});
     }
     if(sections.length===0||consumed<250)throw Error('只有页面壳或正文内容不足，不保存为全文');
-    return {sections,captions,tables,paragraphCount,characterCount:consumed};
+    const packet={sections,captions,tables,paragraphCount,characterCount:consumed};
+    return {...packet,coverage:batchBodyCompleteness(packet)};
   }
   function loadCatalog(){
     return new Promise((resolve,reject)=>{
@@ -204,9 +264,9 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.5';
+  const BATCH_SCRIPT_VERSION='0.2.6';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
-  const BATCH_CAPTURE_REVISION='historic-body-science-v025';
+  const BATCH_CAPTURE_REVISION='historic-body-evidence-v026';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
