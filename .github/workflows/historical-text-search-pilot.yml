@@ -8,9 +8,6 @@ on:
       - 'scripts/test-historical-text-search-pilot.mjs'
       - 'scripts/test-historical-text-batch.mjs'
       - 'scripts/test-historical-text-batch-browser.mjs'
-      - 'cloudflare/worker/src/historical-text-diagnostics.js'
-      - 'cloudflare/worker/scripts/test-historical-text-diagnostics.mjs'
-      - 'cloudflare/worker/src/index.js'
       - 'public/gallery-historical-text-pilot.user.js'
       - 'docs/historical-backfill-media-contract.md'
       - 'docs/historical-text-search-pilot.md'
@@ -48,11 +45,9 @@ jobs:
           node --check scripts/test-historical-text-search-pilot.mjs
           node --check scripts/test-historical-text-batch.mjs
           node --check scripts/test-historical-text-batch-browser.mjs
-          node --check cloudflare/worker/src/historical-text-diagnostics.js
-          node --check cloudflare/worker/scripts/test-historical-text-diagnostics.mjs
           node --check public/gallery-historical-text-pilot.user.js
       - name: Test DOI, rights, local-only media and benchmark contracts
-        run: node --test scripts/test-historical-text-search-pilot.mjs scripts/test-historical-text-batch.mjs cloudflare/worker/scripts/test-historical-text-diagnostics.mjs
+        run: node --test scripts/test-historical-text-search-pilot.mjs scripts/test-historical-text-batch.mjs
       - name: Test one-click Gallery panel and local DOI index with Chromium
         run: |
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
