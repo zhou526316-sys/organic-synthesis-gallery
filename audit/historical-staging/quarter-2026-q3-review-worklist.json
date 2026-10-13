@@ -1,11 +1,11 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-13T14:18:19.550Z",
+  "generatedAt": "2026-10-13T14:50:15.078Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11453,
+  "totalUnreviewedCandidates": 11448,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
@@ -32,8 +32,8 @@
     "2026-09": 106
   },
   "byPriority": {
-    "P1": 94,
-    "P0": 166,
+    "P1": 98,
+    "P0": 162,
     "P2": 39,
     "P3": 21
   },
@@ -516,20 +516,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c05275",
+      "doi": "10.1021/acscatal.6c04682",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-26",
+      "apiDateCandidate": "2026-08-19",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Highly Efficient Iron-Catalyzed Asymmetric Hydrosilylation: Photo-acceleration and Positive Non-linear Effect",
-      "firstAuthor": "Dominik Baran",
+      "title": "Janus Cu-Based Alloys with Cooperative Asymmetry for Enhanced C–N Coupling in Electrochemical Urea Synthesis",
+      "firstAuthor": "Jinjie Liu",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-22_2026-08-31_acs-catalysis"
+        "2026-08-15_2026-08-21_acs-catalysis"
       ],
       "sourceHashes": [
-        "89455cff2f92af1bfbfbb4b5d36d47d8d08c0964ba318d37db37392951c37085"
+        "ed5f2e5a6734b77a7b7b4365fdacffd73ad68baf3872f3dc6220af764012e54e"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -1448,13 +1448,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c04682",
+      "doi": "10.1021/acscatal.6c03761",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-19",
+      "apiDateCandidate": "2026-08-18",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Janus Cu-Based Alloys with Cooperative Asymmetry for Enhanced C–N Coupling in Electrochemical Urea Synthesis",
-      "firstAuthor": "Jinjie Liu",
+      "title": "Enantioselective Convergent Synthesis of Heterohelicenes via Copper-Catalyzed Propargylic Annulation/Acid-Promoted Aromatization",
+      "firstAuthor": "Rongkang Huang",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -1505,13 +1505,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02796",
+      "doi": "10.1021/acs.orglett.6c03345",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-25",
+      "apiDateCandidate": "2026-08-22",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Conversion of Phenyliodine(III) Dicarboxylates to Carbonyl Compounds via Hantzsch Ester-Enabled Decarboxylative Oxygenation",
-      "firstAuthor": "Qingye Fang",
+      "title": "Photoredox/Nickel-Catalyzed Decarboxylative Monofluoromethylation of β-Boryl NHPI Esters via Radical 1,2-Boron Migration",
+      "firstAuthor": "Shuang Lin",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -1780,23 +1780,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc02423h",
+      "doi": "10.1039/d6gc02636b",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Modular synthesis of unsymmetric 1,4-diketones via photocatalytic cross-coupling of enamides and sulfoxonium ylides",
-      "firstAuthor": "Jian Han",
+      "title": "Cu–O–Ti interface promotes C–N coupling for electrochemical urea synthesis",
+      "firstAuthor": "Li Luo",
       "priority": "P0",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-22_2026-07-31_green-chemistry"
+        "2026-07-08_2026-07-14_green-chemistry"
       ],
       "sourceHashes": [
-        "1871d6a9d809312c44e78d308b35209f6bd8b2d9864b1b0bffb7f4de0784f305"
+        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2380,13 +2380,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c03761",
+      "doi": "10.1021/acscatal.6c04260",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-18",
+      "apiDateCandidate": "2026-08-16",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Enantioselective Convergent Synthesis of Heterohelicenes via Copper-Catalyzed Propargylic Annulation/Acid-Promoted Aromatization",
-      "firstAuthor": "Rongkang Huang",
+      "title": "Oriented Functional Division of Asymmetric W–V Dual Sites in NiFe LDH Enables Oxygen Evolution at Industrial-Grade Current Densities",
+      "firstAuthor": "Ruihong Xu",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -2437,20 +2437,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c03345",
+      "doi": "10.1021/acs.orglett.6c02967",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-22",
+      "apiDateCandidate": "2026-08-21",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Photoredox/Nickel-Catalyzed Decarboxylative Monofluoromethylation of β-Boryl NHPI Esters via Radical 1,2-Boron Migration",
-      "firstAuthor": "Shuang Lin",
+      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
+      "firstAuthor": "Jie Hao",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-22_2026-08-31_organic-letters"
+        "2026-08-15_2026-08-21_organic-letters"
       ],
       "sourceHashes": [
-        "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98"
+        "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2712,14 +2712,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc02636b",
+      "doi": "10.1039/d6gc00187d",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Cu–O–Ti interface promotes C–N coupling for electrochemical urea synthesis",
-      "firstAuthor": "Li Luo",
-      "priority": "P0",
+      "title": "Benchmarking electro-Fenton-driven decomposition of synthetic polymers",
+      "firstAuthor": "Bhanupriya Boruah",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
@@ -2756,13 +2756,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc03534e",
+      "doi": "10.1039/d6gc04128k",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Asymmetric-wave alternating current electrolysis for C–N bond cleavage in benzylamines",
-      "firstAuthor": "Linna Zhu",
+      "title": "Electrochemical surface reconstruction of MoNi 4 alloy enabling d-band center modulation for the paired electrosynthesis of ammonia and formic acid",
+      "firstAuthor": "Fanpeng Ma",
       "priority": "P0",
       "flags": [
         "publisher_first_online_date_unverified",
@@ -3310,20 +3310,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c04260",
+      "doi": "10.1021/acscatal.6c04538",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-16",
+      "apiDateCandidate": "2026-08-10",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Oriented Functional Division of Asymmetric W–V Dual Sites in NiFe LDH Enables Oxygen Evolution at Industrial-Grade Current Densities",
-      "firstAuthor": "Ruihong Xu",
+      "title": "Enantioselective O/F Exchange of Sulfonimidoyl Fluorides with Alcohols",
+      "firstAuthor": "Yinhong Tang",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-15_2026-08-21_acs-catalysis"
+        "2026-08-08_2026-08-14_acs-catalysis"
       ],
       "sourceHashes": [
-        "ed5f2e5a6734b77a7b7b4365fdacffd73ad68baf3872f3dc6220af764012e54e"
+        "3dc671c1184f3d88f7a3eeee079916ac92f2758e7c5c4988c0d629bc36f6ca4f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -3367,13 +3367,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02967",
+      "doi": "10.1021/acs.orglett.6c03176",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-21",
+      "apiDateCandidate": "2026-08-20",
       "publisherFirstOnlineDateVerified": false,
-      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
-      "firstAuthor": "Jie Hao",
+      "title": "Visible Light Photoredox-Catalyzed Difunctionalization of (α-Substituted) N -Aryl Glycines with α-Bromoacetates: An Annulation Method for the Synthesis of 3-Substituted 2-Oxindoles via Decarboxylation/Aryl ortho -C–H Activation",
+      "firstAuthor": "Zhengjiang Fu",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -3642,23 +3642,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc00187d",
+      "doi": "10.1039/d6gc01044j",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Benchmarking electro-Fenton-driven decomposition of synthetic polymers",
-      "firstAuthor": "Bhanupriya Boruah",
+      "title": "Phenolics via tandem defunctionalization of oxidative catalytic fractionation (OCF) products of lignocellulose using catalytic HCl in hot pressurized water",
+      "firstAuthor": "Mathias Bal",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-08_2026-07-14_green-chemistry"
+        "2026-07-01_2026-07-07_green-chemistry"
       ],
       "sourceHashes": [
-        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
+        "8518fa7c7b0ca72f496e0e36eb3920b8d26d12733608a0d1c9025354851b5985"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -3686,14 +3686,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc03989h",
+      "doi": "10.1039/d6gc03116a",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Electrochemical ring-strain release of thiirane derivatives: enabling excellent chemo-/stereoselectivity in S–S coupling",
-      "firstAuthor": "Guo-Wei Lai",
-      "priority": "P0",
+      "title": "Integrated sustainability and uncertainty assessment of large-scale synthetic methane production from direct air capture and renewable hydrogen",
+      "firstAuthor": "Navid Tavakoli",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
@@ -4240,20 +4240,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c04538",
+      "doi": "10.1021/acscatal.6c05124",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-10",
+      "apiDateCandidate": "2026-08-05",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Enantioselective O/F Exchange of Sulfonimidoyl Fluorides with Alcohols",
-      "firstAuthor": "Yinhong Tang",
+      "title": "Reprogramming ω -Transaminase for Enantioselective Assembly of Axially Chiral Spiro[3.3]heptane Building Blocks",
+      "firstAuthor": "Ziyi Lin",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-08_2026-08-14_acs-catalysis"
+        "2026-08-01_2026-08-07_acs-catalysis"
       ],
       "sourceHashes": [
-        "3dc671c1184f3d88f7a3eeee079916ac92f2758e7c5c4988c0d629bc36f6ca4f"
+        "037efd0e9bfd958b1a7dc9cd9bd07598bea808f7187d844bce038a1d97362919"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -4297,13 +4297,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c03176",
+      "doi": "10.1021/acs.orglett.6c03420",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-20",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Visible Light Photoredox-Catalyzed Difunctionalization of (α-Substituted) N -Aryl Glycines with α-Bromoacetates: An Annulation Method for the Synthesis of 3-Substituted 2-Oxindoles via Decarboxylation/Aryl ortho -C–H Activation",
-      "firstAuthor": "Zhengjiang Fu",
+      "title": "Copper-Catalyzed, Photoinduced Carbonylative Cross-Coupling of Alkyl Iodides with Amines, Alcohols, and Sodium Hydroxide",
+      "firstAuthor": "Omaïma Adaoudi",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -4572,23 +4572,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc01044j",
+      "doi": "10.1039/d6gc01271j",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Phenolics via tandem defunctionalization of oxidative catalytic fractionation (OCF) products of lignocellulose using catalytic HCl in hot pressurized water",
-      "firstAuthor": "Mathias Bal",
+      "title": "Design of synthetic microbial cocultures for advanced biomanufacturing of lignocellulosic biofuels and bioproducts",
+      "firstAuthor": "Hyun-Joong Kim",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-01_2026-07-07_green-chemistry"
+        "2026-07-15_2026-07-21_green-chemistry"
       ],
       "sourceHashes": [
-        "8518fa7c7b0ca72f496e0e36eb3920b8d26d12733608a0d1c9025354851b5985"
+        "2c6b6e3568aacc2b48646304ff9ba525e92b95e43eeb3901a3510ea7c7ca14db"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -4616,14 +4616,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc04128k",
+      "doi": "10.1039/d6gc03145e",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Electrochemical surface reconstruction of MoNi 4 alloy enabling d-band center modulation for the paired electrosynthesis of ammonia and formic acid",
-      "firstAuthor": "Fanpeng Ma",
-      "priority": "P0",
+      "title": "Aqueous reductive amination of guaiacol to cyclohexylamine over a ruthenium–nickel/ceria catalyst: synergistic catalysis and energy-efficient separation",
+      "firstAuthor": "Honghao Zheng",
+      "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
@@ -5170,20 +5170,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c05124",
+      "doi": "10.1021/acscatal.6c03666",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-05",
+      "apiDateCandidate": "2026-08-31",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Reprogramming ω -Transaminase for Enantioselective Assembly of Axially Chiral Spiro[3.3]heptane Building Blocks",
-      "firstAuthor": "Ziyi Lin",
-      "priority": "P0",
+      "title": "Local CO2 Enrichment and Heterojunction Confinement in a Mesoporous Pure-Silica Zeolite Reactor for Enhanced Photocatalytic CO2 Reduction",
+      "firstAuthor": "Li-Yu Zhou",
+      "priority": "P1",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-01_2026-08-07_acs-catalysis"
+        "2026-08-22_2026-08-31_acs-catalysis"
       ],
       "sourceHashes": [
-        "037efd0e9bfd958b1a7dc9cd9bd07598bea808f7187d844bce038a1d97362919"
+        "89455cff2f92af1bfbfbb4b5d36d47d8d08c0964ba318d37db37392951c37085"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5227,13 +5227,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c03420",
+      "doi": "10.1021/acs.orglett.6c02735",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-20",
+      "apiDateCandidate": "2026-08-19",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Copper-Catalyzed, Photoinduced Carbonylative Cross-Coupling of Alkyl Iodides with Amines, Alcohols, and Sodium Hydroxide",
-      "firstAuthor": "Omaïma Adaoudi",
+      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
+      "firstAuthor": "Yukun Zhao",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
@@ -5502,23 +5502,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc01271j",
+      "doi": "10.1039/d6gc01781a",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-07",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Design of synthetic microbial cocultures for advanced biomanufacturing of lignocellulosic biofuels and bioproducts",
-      "firstAuthor": "Hyun-Joong Kim",
+      "title": "Visible light-driven divergent synthesis of oxindoles and 3-hydroxyoxindoles from aryl α-diazoamides under metal-/photocatalyst-free conditions",
+      "firstAuthor": "Xiao-Ju Si",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-07-15_2026-07-21_green-chemistry"
+        "2026-07-08_2026-07-14_green-chemistry"
       ],
       "sourceHashes": [
-        "2c6b6e3568aacc2b48646304ff9ba525e92b95e43eeb3901a3510ea7c7ca14db"
+        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5546,23 +5546,23 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6gc03116a",
+      "doi": "10.1039/d6gc03246j",
       "journal": "Green Chemistry",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Integrated sustainability and uncertainty assessment of large-scale synthetic methane production from direct air capture and renewable hydrogen",
-      "firstAuthor": "Navid Tavakoli",
+      "title": "Nucleophilicity-controlled stereodivergent synthesis of ADP-ribosylated phenols and tyrosine derivatives directly from β-NAD +",
+      "firstAuthor": "Yanbo You",
       "priority": "P1",
       "flags": [
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
       "sourceRootIds": [
-        "2026-09-15_2026-09-21_green-chemistry"
+        "2026-09-22_2026-09-30_green-chemistry"
       ],
       "sourceHashes": [
-        "6117bfd481a42c8e859e5feea7df1cb1e9a00cb6f99bb0447fad410dbcdcca9b"
+        "e24261ee8b63ce75a06216d3bf8ad8cab118ee87ba9b76e065dec1f89e1e3e15"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -6104,13 +6104,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c03666",
+      "doi": "10.1021/acscatal.6c03771",
       "journal": "ACS Catalysis",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-31",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Local CO2 Enrichment and Heterojunction Confinement in a Mesoporous Pure-Silica Zeolite Reactor for Enhanced Photocatalytic CO2 Reduction",
-      "firstAuthor": "Li-Yu Zhou",
+      "title": "Single-Atom Defects Break the Trade-Off Between Intrinsic Activity and Site Density on Fe for Ammonia Synthesis",
+      "firstAuthor": "Chuhan Yin",
       "priority": "P1",
       "flags": [],
       "sourceRootIds": [
@@ -6161,13 +6161,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02735",
+      "doi": "10.1021/acs.orglett.6c02217",
       "journal": "Organic Letters",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-19",
+      "apiDateCandidate": "2026-08-18",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
-      "firstAuthor": "Yukun Zhao",
+      "title": "Palladium-Catalyzed Difluorocarbene Transfer Enables Carbonylative Esterification of Aryl Thianthrenium Salts",
+      "firstAuthor": "Shibiao Tang",
       "priority": "P0",
       "flags": [],
       "sourceRootIds": [
