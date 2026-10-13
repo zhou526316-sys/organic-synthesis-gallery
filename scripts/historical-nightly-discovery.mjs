@@ -13,10 +13,16 @@ export const SCHEMA='gallery-historical-nightly-staging-v1';
 export const STAGE_ROOT='audit/historical-staging';
 export const START={from:'2026-09-22',to:'2026-09-30'};
 const FLOOR='1850-01-01';
-const MAX_ROWS=100, MAX_PAGES=10;
+const MAX_ROWS=100, MAX_PAGES=10, MAX_RSC_JAN1_PAGES=100;
 export const RSC_CREATION_RESCUE_VERSION='rsc-created-date-rescue-20261012-v1';
 const RSC_JOURNALS=new Set(['Chemical Science','Green Chemistry']);
 export const requiresRscCreationRescue=journal=>RSC_JOURNALS.has(journal?.name);
+// OpenAlex sometimes converts a year-only RSC publication into January 1.
+// A single Jan 1 can therefore have >1,000 DOI; date splitting cannot help.
+// Raise only this ONE-DAY RSC OpenAlex page cap; global API budget still applies.
+export const historicalOpenAlexPageCap=(journal,range)=>
+  requiresRscCreationRescue(journal)&&range?.from===range?.to
+    &&/^\d{4}-01-01$/.test(range.from)?MAX_RSC_JAN1_PAGES:MAX_PAGES;
 
 export function normDoi(value) {
   let s=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
@@ -257,7 +263,7 @@ async function crossrefWindow(journal,range,budget){
 async function openalexWindow(journal,range,budget) {
   const map=new Map(),issues=[];let cursor='*',count=0,pages=0,total=null;
   try{
-    while(pages<MAX_PAGES){
+    while(pages<historicalOpenAlexPageCap(journal,range)){
       const u=new URL('https://api.openalex.org/works');
       u.searchParams.set('filter','primary_location.source.issn:'+historicalIssnsForRange(journal,range).join('|')
         +',from_publication_date:'+range.from+',to_publication_date:'+range.to);

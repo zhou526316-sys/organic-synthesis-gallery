@@ -17,3 +17,7 @@ the collector reports `deferredBudget=true` and exits normally after saving its 
 It never writes or marks a partially enumerated root/leaf as source complete; a future run
 retries it from the same cursor. Genuine 429/403/network errors remain blocking failures
 and must not be relabeled as a local budget deferral.
+
+## 2026-10-13 year-only RSC OpenAlex single-day pagination
+
+A REAL authorized staging run #38332122394 reproduced a one-day unsplittable OpenAlex January 1, 2026 Chemical Science root: ten pages of 100 returned with more rows, after four nested date splits. Preserve the source failure as incomplete; do not advance the cursor on a truncated source. OpenAlex year-only normalization, not proof of 1-Jan real publication, is the cause. Use only a bounded special 100-page ceiling for **one-day January 1** Chemical Science / Green Chemistry OpenAlex windows; all ordinary sources retain ten pages, and global 220 upstream-call budget remains unchanged. The existing RSC fromCrossref created-date lane and date-uncertain flag remain authoritative. A successful deep page only closes the full source API window; publisher original online date must still be checked per DOI before academic admission. If single-day >100 pages or 220-call budget remains insufficient, fail closed with exact diagnostics (do not convert into a false zero).
