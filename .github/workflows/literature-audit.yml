@@ -21,6 +21,8 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'scripts/lib/publisher-feed-discovery.mjs'
       - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/lib/literature-exclusion-recheck.mjs'
+      - 'scripts/test-literature-exclusion-recheck.mjs'
       - 'shared/literature-journals.js'
       - 'scripts/test-literature-completeness-capability.mjs'
       - 'public/curated-supplement.json'
@@ -54,7 +56,9 @@ jobs:
         run: node scripts/test-literature-completeness-capability.mjs
 
       - name: Validate independent publisher identity, date and fallback regressions
-        run: node --test scripts/test-publisher-feed-discovery.mjs
+        run: |
+          node --test scripts/test-publisher-feed-discovery.mjs
+          node --test scripts/test-literature-exclusion-recheck.mjs
 
       - name: Build DOI-union audit report
         env:
