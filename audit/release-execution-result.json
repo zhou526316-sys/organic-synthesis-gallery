@@ -1,18 +1,39 @@
 {
   "ok": true,
-  "publicationSlot": "2026-10-12T08:00:00+08:00",
-  "reviewed": 20,
-  "accepted": 5,
-  "rejected": 15,
-  "pending": 0,
-  "productionCards": 964,
+  "publicationSlot": "2026-10-13T08:00:00+08:00",
+  "reviewed": 98,
+  "accepted": 7,
+  "rejected": 86,
+  "pending": 5,
+  "productionCards": 979,
   "publishableDois": [
-    "10.1021/acs.joc.6c02017",
-    "10.1021/acs.orglett.6c04095",
-    "10.1021/acs.orglett.6c04010",
-    "10.1021/acs.orglett.6c03971",
-    "10.1021/acscatal.6c06048"
+    "10.1021/acscatal.6c05123",
+    "10.1002/anie.1983055",
+    "10.1021/jacs.6c15216",
+    "10.1021/jacs.6c17126",
+    "10.1038/s44160-026-01173-7",
+    "10.1038/s44160-026-01176-4",
+    "10.1021/acs.orglett.6c04038",
+    "10.1021/acs.joc.6c01096",
+    "10.1021/acs.joc.6c01608",
+    "10.1021/acs.joc.6c01620",
+    "10.1021/acs.joc.6c01793",
+    "10.1021/acscatal.6c05882",
+    "10.1021/acs.joc.6c00602",
+    "10.1021/acscatal.6c05426",
+    "10.1021/acs.orglett.6c03154"
   ],
+  "historicalAdmittedDois": [
+    "10.1021/acs.joc.6c01096",
+    "10.1021/acs.joc.6c01608",
+    "10.1021/acs.joc.6c01620",
+    "10.1021/acs.joc.6c01793",
+    "10.1021/acscatal.6c05882",
+    "10.1021/acs.joc.6c00602",
+    "10.1021/acscatal.6c05426",
+    "10.1021/acs.orglett.6c03154"
+  ],
+  "historicalHold": null,
   "approvedPublicationDateCorrections": {
     "reports": [
       {
@@ -23,18 +44,24 @@
     "applied": 0,
     "conflicts": 0
   },
-  "deferredDois": [],
-  "formalReviewFile": "audit/review-2026-10-12-0800.json",
-  "formalReviewBlobSha": "a28ee7d6049157ff1c700a617a34f4eeb563274f",
-  "pendingQueueFile": "audit/pending-review-2026-10-12-0800.json",
-  "pendingQueueBlobSha": "12ae96829c32c9650e4bfe9ddc77c6712c371883",
-  "rollingBlobSha": "d4950597c0d8fcdbec0cb2e5b32e52c81ff0849e",
-  "stagingReviewBlobSha": "8f08e59197f373b1a8d423d7df885bece952ac74",
-  "handoffBlobSha": "42d13b4caf79d540dc5ef0df2e04b8a7f29721b0",
-  "auditBlobSha": "1c2c3aefb3944e4883b2cec7aecf65ef0d7bde96",
-  "writerRunId": 38183482155,
+  "deferredDois": [
+    "10.31635/ccschem.026.202608292",
+    "10.31635/ccschem.026.202607973",
+    "10.31635/ccschem.026.202608252",
+    "10.1038/s44160-026-01189-z",
+    "10.1021/acs.orglett.6c03893"
+  ],
+  "formalReviewFile": "audit/review-2026-10-13-0800.json",
+  "formalReviewBlobSha": "1256941dd50fad6aa0d7bdc452e686b04286c3b2",
+  "pendingQueueFile": "audit/pending-review-2026-10-13-0800.json",
+  "pendingQueueBlobSha": "a09e31fc7bbfbf0f07791548a532ae5260fab6d4",
+  "rollingBlobSha": "13e32f3930e435b8c1080764b4470994bfc3182a",
+  "stagingReviewBlobSha": "395cce1348e0b56d486422b9f9795a4dce7efc3a",
+  "handoffBlobSha": "4810c4df492a7aae48777f61341e4a79ffa79b18",
+  "auditBlobSha": "3599d16cc219e011f506fb9495367eb5feffcbf2",
+  "writerRunId": 38323160704,
   "writerEvent": "workflow_run",
-  "prepublishGateRunId": 38183448036,
-  "approvedSourceCommit": "e45f0315d4e9c001bae22f406f600ab1338703c0",
-  "baseCommit": "8c94c9eaeb87a2cf8ef4b18f6024ae88a8b89cad"
+  "prepublishGateRunId": 38323124425,
+  "approvedSourceCommit": "ba5d77d3f1e9812ea20f9971da55753930883c3d",
+  "baseCommit": "63458d55015907fcdf47c85cbc40ecddf92bac9f"
 }

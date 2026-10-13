@@ -1,0 +1,83 @@
+name: Historical review backlog bootstrap (staging only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/historical-review-triage-bootstrap.json'
+  workflow_dispatch:
+    inputs:
+      max_roots:
+        description: 'Completed source roots to queue, max 360'
+        type: number
+        required: false
+        default: 320
+  workflow_run:
+    workflows: ['Historical DOI candidate discovery (23:00 Beijing, staging only)']
+    types: [completed]
+permissions:
+  contents: write
+concurrency:
+  group: gallery-historical-candidates-staging
+  cancel-in-progress: false
+jobs:
+  queue:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      STAGING_REF: staging/historical-archive-nightly
+      HISTORICAL_STAGING_ONLY: '1'
+      HISTORICAL_STAGING_BRANCH: '1'
+      MAX_HISTORICAL_TRIAGE_ROOTS: ${{ github.event_name == 'workflow_run' && '64' || (inputs.max_roots || '320') }}
+    steps:
+      - name: Checkout sole baseline main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run high-recall and founding validation
+        run: |
+          set -euo pipefail
+          node --check scripts/historical-review-triage.mjs
+          node --test scripts/test-historical-review-triage.mjs
+      - name: Continue separate candidate-only staging branch
+        run: |
+          set -euo pipefail
+          git config user.name "gallery-history-staging[bot]"
+          git config user.email "gallery-history-staging@users.noreply.github.com"
+          git fetch origin main --no-tags
+          git fetch origin "$STAGING_REF" --no-tags
+          git switch -C historical-staging "origin/$STAGING_REF"
+          git merge --no-edit origin/main
+          test "$(git branch --show-current)" = historical-staging
+      - name: Prepare bounded all-DOI reviewer queue
+        run: |
+          set -euo pipefail
+          node scripts/historical-review-triage.mjs
+      - name: Commit to historical staging only, never formal sources
+        run: |
+          set -euo pipefail
+          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json
+          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$)'; then
+            echo "Unsafe triage staged path" >&2
+            exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "audit(history): advance DOI-complete reviewer queue on staging"
+          fi
+          test -z "$(git diff --name-only origin/main HEAD -- . ':(exclude)audit/historical-staging/**')"
+          git push origin "HEAD:refs/heads/$STAGING_REF"
+      - name: Save finite reviewer queue checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-review-triage-ledger
+          path: audit/historical-staging/review-triage-ledger.json
+          retention-days: 14
+          if-no-files-found: warn

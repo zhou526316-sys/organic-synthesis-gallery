@@ -7,6 +7,7 @@ import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
+import {historicalPeriodApplicable,historicalIssnsForRange} from '../shared/historical-journal-founding.mjs';
 
 export const SCHEMA='gallery-historical-nightly-staging-v1';
 export const STAGE_ROOT='audit/historical-staging';
@@ -220,7 +221,7 @@ async function crossrefWindow(journal,range,budget){
   // 1,300 works in one day). Its bounded authoritative discovery lane is
   // Crossref created-date; the publisher must verify actual first-online
   // date before any historical publication/admission.
-  for(const issn of journal.issns){
+  for(const issn of historicalIssnsForRange(journal,range)){
     for(const lane of lanes){
       let cursor='*',page=0,total=null,count=0;
       try{
@@ -258,7 +259,7 @@ async function openalexWindow(journal,range,budget) {
   try{
     while(pages<MAX_PAGES){
       const u=new URL('https://api.openalex.org/works');
-      u.searchParams.set('filter','primary_location.source.issn:'+journal.issns.join('|')
+      u.searchParams.set('filter','primary_location.source.issn:'+historicalIssnsForRange(journal,range).join('|')
         +',from_publication_date:'+range.from+',to_publication_date:'+range.to);
       u.searchParams.set('per_page',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
       u.searchParams.set('select','id,doi,display_name,publication_date,authorships,primary_location,biblio,abstract_inverted_index,type');
@@ -391,10 +392,12 @@ export async function runNightly() {
     throw Error('invalid_existing_rsc_created_rescue_state');
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
-  let processed=0,blocked=false,deferredBudget=false;
+  let processed=0,blocked=false,deferredBudget=false,skippedFoundingWindows=0,visited=0;
   state.publishedMembershipSnapshot=articles.size;
   state.lastRunStarted=now;
   while(processed<maxUnits&&state.cursor){
+    // Skipped pre-founding years are NOT source-complete windows.
+    if(++visited>maxUnits*32)break;
     // Reserve the minimum three calls before beginning an unsplittable source pair.
     if(budget.max-budget.count<3){deferredBudget=true;break;}
     const rescue=state.rscCreatedRescue,nextRecheck=rescue.pending[0];
@@ -409,6 +412,16 @@ export async function runNightly() {
     if(!journal)throw Error('invalid_history_cursor_journal');
     if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
       throw Error('invalid_history_cursor_date_range');
+    if(!historicalPeriodApplicable(journal,rootRange)){
+      if(recovering||state.activeSplit)throw Error('cannot_skip_active_historical_source_window');
+      const skipped=state.skippedBeforeFounding||{};
+      const prior=skipped[journal.name]||{windows:0};
+      skipped[journal.name]={windows:prior.windows+1,latestSkippedRange:rootRange};
+      state.skippedBeforeFounding=skipped;
+      state.cursor=nextCursor(state.cursor,journals);
+      skippedFoundingWindows++;
+      continue;
+    }
     const rootId=journalBatchId(rootRange,journal);
     const split=state.activeSplit;
     if(split&&(
@@ -445,7 +458,7 @@ export async function runNightly() {
       schema:SCHEMA,
       recordType:split?'historical_discovery_segment_evidence':'historical_discovery_candidate_only',
       ...(split?{parentBatchId:rootId}:{}),
-      journal:journal.name,issns:journal.issns,
+      journal:journal.name,issns:historicalIssnsForRange(journal,range),
       range,checkedAt:new Date().toISOString(),
       status:status.complete?'source_enumeration_complete'
         :(slices?'superseded_by_subwindow_split':'incomplete_sources'),
@@ -500,7 +513,8 @@ export async function runNightly() {
     await delay(300);
   }
   state.lastRunFinished=new Date().toISOString();
-  state.lastRun={processed,blocked,deferredBudget,requests:budget.count,next:state.cursor,
+  state.lastRun={processed,blocked,deferredBudget,requests:budget.count,
+    skippedBeforeFoundingWindows:skippedFoundingWindows,next:state.cursor,
     verifiedPublishedDois:articles.size,completeWindows:state.completed.length,
     activeSplit:state.activeSplit?{
       rootId:state.activeSplit.rootId,

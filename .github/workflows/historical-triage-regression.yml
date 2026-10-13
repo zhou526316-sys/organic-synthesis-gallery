@@ -1,0 +1,45 @@
+name: Historical comprehensive review triage regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'shared/historical-journal-founding.mjs'
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/historical-review-triage.mjs'
+      - 'scripts/test-historical-review-triage.mjs'
+      - '.github/workflows/historical-triage-regression.yml'
+      - '.github/workflows/historical-triage-bootstrap.yml'
+      - 'docs/historical-coverage-triage-contract.md'
+  push:
+    branches: [main]
+    paths:
+      - 'shared/historical-journal-founding.mjs'
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/historical-review-triage.mjs'
+      - 'scripts/test-historical-review-triage.mjs'
+      - '.github/workflows/historical-triage-regression.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test complete candidate preservation, founding and legacy ISSNs
+        run: |
+          set -euo pipefail
+          node --check shared/historical-journal-founding.mjs
+          node --check scripts/historical-review-triage.mjs
+          node --check scripts/historical-nightly-discovery.mjs
+          node --test scripts/test-historical-review-triage.mjs scripts/test-historical-nightly-discovery.mjs scripts/test-historical-nightly-schedule-gate.mjs
+      - name: Check publisher source and publication isolation invariants
+        run: |
+          grep -F "candidate_discovery_only" scripts/historical-nightly-discovery.mjs
+          grep -F "HISTORICAL_STAGING_ONLY" scripts/historical-review-triage.mjs
+          grep -F "source_enumeration_complete" scripts/historical-review-triage.mjs
+          grep -F "historicalPeriodApplicable" scripts/historical-nightly-discovery.mjs
+          grep -F "historicalIssnsForRange" scripts/historical-nightly-discovery.mjs
