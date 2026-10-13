@@ -118,7 +118,7 @@ test('newly verified missed September JOC chemistry has independent evidence pas
 });
 
 test('multi-journal old synthesis admission requires official Nature publisher URLs and no old media',()=>{
-  assert.equal(root.accepted.length,20);
+  assert.ok(root.accepted.length>=23);
   for(const id of [
     '10.1021/acs.joc.6c00818','10.1021/acs.joc.6c01133',
     '10.1021/acs.joc.6c01465','10.1021/acs.joc.6c01523',
@@ -145,4 +145,30 @@ test('multi-journal old synthesis admission requires official Nature publisher U
     '10.1038/s44160-026-01023-6','https://www.nature.com/articles/s44160-026-01234-0'),false);
   assert.equal(historicalPublisherPageMatchesDoi(
     '10.1038/s44160-026-01023-6','http://www.nature.com/articles/s44160-026-01023-6'),false);
+});
+
+test('2026-Q3 three independently assessed JOC methods are never marked daily new',()=>{
+  const expected=[
+    ['10.1021/acs.joc.6c00587','2026-07-02','158a2415687e4a0ecf0c588356f417cc1679d70a'],
+    ['10.1021/acs.joc.6c00860','2026-08-05','fdbac4c465d92dcc0817d7507348d985349331f3'],
+    ['10.1021/acs.joc.5c03271','2026-08-01','fdbac4c465d92dcc0817d7507348d985349331f3']
+  ];
+  for(const [doi,date,sourceSha] of expected){
+    const row=root.accepted.find(x=>x.doi===doi);
+    assert.ok(row,'missing source-reviewed DOI '+doi);
+    assert.equal(row.date,date);
+    assert.equal(row.reviewEvidence.publisherOnlineDate,date);
+    assert.equal(row.reviewEvidence.stageBatchSha,sourceSha);
+    assert.ok(row.reviewEvidence.publisherPage.includes('/'+doi));
+    assert.equal(row.firstPassDecision,'include');
+    assert.equal(row.challengeDecision,'include');
+    assert.equal(row.reviewPasses,2);
+    assert.equal(row.new,false);
+    assert.equal(row.addedDate,'');
+    assert.equal(row.ingestionChannel,'historical_backfill');
+    assert.equal(row.mediaPolicy,'toc_only');
+    assert.equal(row.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    assert.ok(Object.keys(row.scopeAssessment).includes('boundaryChallenge'));
+    assert.equal('pdf' in row,false);
+  }
 });
