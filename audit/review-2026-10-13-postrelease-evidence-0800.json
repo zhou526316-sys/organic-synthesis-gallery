@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "post_release_new_evidence_next_slot_only",
+  "generatedAt": "2026-10-13T01:17:00Z",
+  "sourcePublicationSlot": "2026-10-13T08:00:00+08:00",
+  "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+  "originalPendingReview": "audit/review-2026-10-13-0800.json",
+  "originalPendingQueue": "audit/pending-review-2026-10-13-0800.json",
+  "originalPendingQueueBlobSha": "a09e31fc7bbfbf0f07791548a532ae5260fab6d4",
+  "sourcePublisher": "https://www.nature.com/articles/s44160-026-01189-z",
+  "reviewed": 1,
+  "accepted": [
+    {
+      "doi": "10.1038/s44160-026-01189-z",
+      "journal": "Nature Synthesis",
+      "title": "One-step skeletal editing of oxetanes to thietanes using thiourea",
+      "abstract": "",
+      "date": "2026-10-12",
+      "type": "journal-article",
+      "authors": [
+        "Like Luo",
+        "Deguang Liu",
+        "Dayu Tian",
+        "Xian Xiao",
+        "Guang Chen",
+        "Liqiang Zhang",
+        "Jiaxin Wang",
+        "Yuqing Wang",
+        "Xiaocheng Wang",
+        "Yao Fu",
+        "Hai-Jun Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2731-0582:online",
+        "crossref:2731-0582:published",
+        "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "onlineDate": "2026-10-12",
+      "publishedDate": "2026-10-12",
+      "createdDate": "2026-10-12",
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal",
+      "evidencePages": [
+        "https://www.nature.com/articles/s44160-026-01189-z",
+        "https://www.nature.com/natsynth/research-articles?year=2026"
+      ],
+      "attemptedEvidencePages": [
+        "https://www.nature.com/articles/s44160-026-01189-z",
+        "https://doi.org/10.1038/s44160-026-01189-z"
+      ],
+      "evidenceSource": "Nature Synthesis DOI-verified official public article Abstract and verified figure captions, rechecked 2026-10-13",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reason": "硫脲使氧杂环丁烷在一步反应中发生氧→硫原子替换，直接制备硫杂环丁烷；出版社摘要报告广泛底物范围、官能团耐受性及药物样复杂分子后期应用，具明确可推广制备贡献。",
+      "originalDate": "2026-10-12",
+      "sourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+      "scopeAssessment": {
+        "primaryContribution": "硫脲介导氧杂环丁烷到硫杂环丁烷的一步氧→硫骨架编辑策略。",
+        "preparativeTransformation": "以含氧四元杂环氧杂环丁烷为底物、硫脲为硫源，一步转化为含硫四元杂环硫杂环丁烷；实现C–O骨架位点的O→S替换。",
+        "generalityEvidence": "Nature原文摘要明示broad substrate scope及functional group tolerance，Fig.3标注底物范围、Fig.4标注制备实用的硫杂环丁烷砌块，支持不同取代氧杂环丁烷和复杂药物样分子适用性；未主张未读取的具体数值。",
+        "sourceEvidence": "Nature Synthesis DOI 10.1038/s44160-026-01189-z，官方公开摘要、Fig.1–Fig.4图题及2026年10月12日Research Article目录；文章作者Luo等，和原始待定DOI一致。",
+        "boundaryChallenge": "可能仅聚焦一种O→S反应模式，但原文直接提供多底物通用性及复杂分子应用，核心贡献为可转移的有机小分子制备方法学，因此应纳入。"
+      },
+      "titleZh": "硫脲介导氧杂环丁烷一步骨架编辑制备硫杂环丁烷",
+      "evidenceBasis": "2026-10-12 Nature Synthesis DOI精准原文的公开Abstract明确one-step oxetane-to-thietane skeletal editing using thiourea，broad substrate scope，functional group tolerance和structurally complex drug-like molecules应用。该论文公开图题为Fig.3 Substrate scope of oxetanes、Fig.4 synthetically valuable thietanes（另有Fig.1反应构想和Fig.2条件开发）。未虚构底物例数、收率或更具体局限。",
+      "challengeReason": "反向挑战：只有一种O→S骨架交换是否属于单骨架示例？出版社原始摘要直接陈述广泛取代氧杂环丁烷底物和官能团容忍，Fig.3展示底物范围，Fig.4示合成砌块价值并有复杂药物样分子应用；不属于单一底物展示。机制级论断仅遵循原文公开摘要描述。",
+      "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+      "priorPending": {
+        "firstPendingDate": "2026-10-13",
+        "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
+        "evidenceBasis": "Nature Synthesis出版社搜索摘要确认用硫脲把易得氧杂环丁烷一步直接转为硫杂环丁烷；但文章页被Nature IDP阻断，同代compact无摘要，未取得取代模式、官能团耐受和产物分离范围。",
+        "challengeReason": "第一遍认为O→S骨架编辑是明确合成转化；第二遍要求至少确认多种氧杂环丁烷底物与可分离硫杂环丁烷，不能只凭“一步策略”题名直接放行。",
+        "evidenceNeeded": "取得出版社完整摘要/正文/SI中的氧杂环丁烷取代范围、硫杂环丁烷产品、收率和局限。",
+        "nextAction": "次日08:00前重试Nature摘要/全文并补齐骨架编辑适用范围。",
+        "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+        "sourceReviewFile": "audit/review-2026-10-13-0800.json"
+      }
+    }
+  ],
+  "rejected": [],
+  "pending": [],
+  "productionDataModified": false,
+  "productionCardsAdded": 0,
+  "fixedSlotWriterTriggered": false,
+  "publicationAuthorized": false,
+  "handoffRequiredAtNextSlot": true,
+  "note": "Evidence-backed post-slot two-pass re-evaluation only; not an admission or change to immutable 2026-10-13 marker. Revalidate DOI, rules/corrections, fresh compact, complete source coverage and original date at 2026-10-14 08:00 fixed slot. Preserve old pending evidence."
+}
