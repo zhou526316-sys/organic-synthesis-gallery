@@ -60,11 +60,12 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/historical-review-triage.mjs
+          node scripts/historical-global-coverage.mjs
       - name: Commit to historical staging only, never formal sources
         run: |
           set -euo pipefail
-          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json
-          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$)'; then
+          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json audit/historical-staging/global-coverage-ledger.json
+          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$|global-coverage-ledger\.json$)'; then
             echo "Unsafe triage staged path" >&2
             exit 1
           fi
@@ -78,6 +79,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: historical-review-triage-ledger
-          path: audit/historical-staging/review-triage-ledger.json
+          path: |
+            audit/historical-staging/review-triage-ledger.json
+            audit/historical-staging/global-coverage-ledger.json
           retention-days: 14
           if-no-files-found: warn
