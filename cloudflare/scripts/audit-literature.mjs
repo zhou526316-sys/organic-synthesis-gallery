@@ -470,6 +470,8 @@ const publisherFeedStatus = [
     completeListing: false,error: 'No independently verified official feed endpoint'
   }))
 ];
+const publisherListingComplete = publisherFeedStatus.length === JOURNALS.length
+  && publisherFeedStatus.every(row => row.completeListing === true);
 console.log('AUDIT_PUBLISHER_FEEDS '+JSON.stringify({
   reachablePartial: publisherFeedStatus.filter(row=>row.status==='reachable_partial').length,
   blockedOrUnavailable: publisherFeedStatus.filter(row=>row.status==='blocked_or_unavailable').length,
@@ -716,7 +718,8 @@ const closureReviewedExcluded = closureRawMissing.filter(c => reviewedExclusions
 const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
 const closureHistoricalCoverageLosses = historicalCoverageLosses.filter(item => item.date === CLOSURE_DATE);
-const closureStatus = publisherDateUnverifiedDois.length > 0 ? 'blocked-unverified-publisher-dates'
+const closureStatus = !publisherListingComplete ? 'blocked-incomplete-publisher-lists'
+  : publisherDateUnverifiedDois.length > 0 ? 'blocked-unverified-publisher-dates'
   : criticalFailures.length > 0
   ? 'blocked-source-failure'
   : closureHistoricalCoverageLosses.length > 0
@@ -760,6 +763,9 @@ const report = {
     publisherDateUnverified: publisherDateUnverifiedDois.length,
     publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
     publisherAbstractProbeBlocked: pubAbstractResults.filter(row=>row.status==='blocked_or_unavailable').length,
+    publisherListingsComplete: publisherFeedStatus.filter(row=>row.completeListing===true).length,
+    publisherListingsPartial: publisherFeedStatus.filter(row=>row.status==='reachable_partial').length,
+    publisherListingsUnavailable: publisherFeedStatus.filter(row=>row.status==='blocked_or_unavailable'||row.status==='not_configured').length,
     unresolved: missing.length,
     scopeCorrectionsPending: missing.filter(candidate => candidate.scopeCorrection).length,
     excludedByPolicy: excludedUniverse.length,
@@ -775,7 +781,7 @@ const report = {
     criticalSourceFailures: criticalFailures.length,
     sourceCoverageAnomalies: closureCoverageAnomalies,
     historicalCoverageLosses: closureHistoricalCoverageLosses,
-    verifiedThroughEligible: publisherDateUnverifiedDois.length === 0 && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
+    verifiedThroughEligible: publisherListingComplete && publisherDateUnverifiedDois.length === 0 && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
   byDate,
@@ -787,7 +793,7 @@ const report = {
   historicalCoverageLosses,
   historicalNonJournalRecords,
   sourceStats: stats,
-  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:false,
+  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:publisherListingComplete,
     publisherOnlyDois,publisherDateUnverifiedDois,status:publisherFeedStatus},
   publicPublisherAbstractRescue: {mode:'doi_verified_abstract_only',
     selected:pubAbstractTargets.length,results:pubAbstractResults},
@@ -870,7 +876,7 @@ const reviewInput = {
   })),
   unresolved: unresolvedReviewCandidates,
   potentialGapDois: potentialGaps.map(candidate => candidate.doi),
-  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:false,
+  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:publisherListingComplete,
     publisherOnlyDois,status:publisherFeedStatus},
 };
 
