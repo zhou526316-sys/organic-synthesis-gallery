@@ -7,9 +7,9 @@ import vm from 'node:vm';
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle=''}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -41,10 +41,14 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     }]:[];
     throw Error('unexpected selector '+selector);
   }};
-  const document={body:footer,
+  let licenseReads=0,readyReads=0;
+  const document={body:footer,title:pageTitle,
+    get readyState(){readyReads++;return readyReads<=readyAfter?'loading':'complete';},
     querySelectorAll(selector){
       if(selector.startsWith('meta[name="citation_doi"'))return [{content:pageDoi}];
-      if(selector.startsWith('link[rel="license"'))return license?[{content:license}]:[];
+      if(selector.startsWith('link[rel="license"')){
+        licenseReads++;return license&&licenseReads>licenseAfter?[{content:license}]:[];
+      }
       throw Error('unexpected doc selector '+selector);
     },
     querySelector(selector){return selector.startsWith('main article')?root:null;},
@@ -218,4 +222,66 @@ test('publisher evidence HTTP 403 is recorded only from observed navigation stat
   assert.equal(r.status,'page_http_error');
   assert.equal(r.httpStatus,403);
   assert.equal(r.stage,'publisher_page');
+  const throttled=fixture({navigationStatus:429});
+  await throttled.context.__batchTest.batchWorker();
+  const retryAfter=throttled.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(retryAfter.status,'page_http_error');
+  assert.equal(retryAfter.httpStatus,429);
+  assert.equal(retryAfter.stage,'publisher_page');
+});
+
+test('publisher HTTP error and access block remain intact in final results and stages',()=>{
+  const api=fixture().context.__batchTest;
+  assert.equal(api.batchNormalizedStatus('page_http_error'),'page_http_error');
+  assert.equal(api.batchStageForStatus('page_http_error'),'publisher_page');
+  assert.equal(api.batchNormalizedStatus('page_unavailable'),'page_unavailable');
+  assert.equal(api.batchStageForStatus('page_unavailable'),'publisher_page');
+  assert.equal(api.batchNormalizedStatus('page_access_blocked'),'page_access_blocked');
+  assert.equal(api.batchStageForStatus('page_access_blocked'),'publisher_page');
+  assert.equal(api.batchNormalizedStatus('publisher_no_response'),'publisher_no_response');
+  assert.equal(api.batchStageForStatus('publisher_no_response'),'publisher_wait');
+  assert.equal(api.batchNormalizedStatus('invented'), 'invalid_response');
+});
+test('DOI-bound publisher accepts a licence that appears during real page hydration',async()=>{
+  const x=fixture({licenseAfter:3,readyAfter:4});
+  await x.context.__batchTest.batchWorker();
+  const result=x.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(result?.status,'ok');
+  assert.equal(result?.packet?.rightsBasis,'cc-by');
+  assert.equal(result?.packet?.doi,DOI);
+  assert.equal(result?.packet?.publicUploadAllowed,false);
+});
+test('stable article without article-level reuse license stays blocked, not access-denied',async()=>{
+  const x=fixture({license:''});
+  await x.context.__batchTest.batchWorker();
+  const result=x.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(result?.status,'license_not_verified');
+  assert.equal(result?.stage,'license');
+  assert.equal(result?.httpStatus,null);
+  const blocked=fixture({license:'',pageTitle:'Verify you are human'});
+  await blocked.context.__batchTest.batchWorker();
+  const challenge=blocked.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(challenge?.status,'page_access_blocked');
+  assert.equal(challenge?.stage,'publisher_page');
+});
+test('admin report display groups checkpoint+final by DOI and attempt',()=>{
+  const api=fixture().context.__batchTest;
+  const entries=[
+    {doi:DOI,jobId:'job_one',kind:'failure_checkpoint',
+      status:'failed',reasonCode:'page_http_error',receivedAt:1000,httpStatus:403},
+    {doi:DOI,jobId:'job_one',kind:'final_result',
+      status:'failed',reasonCode:'page_http_error',receivedAt:1001,httpStatus:403},
+    {doi:DOI,jobId:'job_two',kind:'final_result',
+      status:'blocked',reasonCode:'license_not_verified',receivedAt:1002,httpStatus:null},
+    {doi:'10.1126/science.aef0766',jobId:'job_three',kind:'final_result',
+      status:'blocked',reasonCode:'license_not_verified',receivedAt:1003,httpStatus:null},
+  ];
+  const groups=api.batchGroupServerEvents(entries);
+  assert.equal(groups.length,3,'events are not falsely counted as independent DOI');
+  const grouped=groups.find(g=>g.jobId==='job_one');
+  assert.equal(grouped.events.length,2);
+  assert.equal(grouped.display.kind,'final_result');
+  assert.equal(grouped.display.httpStatus,403);
+  assert.equal(new Set(groups.map(g=>g.doi)).size,2);
+  assert.equal(groups[0].jobId,'job_three');
 });
