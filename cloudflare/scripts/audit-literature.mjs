@@ -508,14 +508,16 @@ const historicalCoverageLosses = [...reviewedHistory.values()].filter(item => {
   return !universeDoiSet.has(item.doi);
 });
 
-const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
+const scopeCorrections = await loadScopeCorrections();
+const confirmedScopeExclusionDois = new Set(scopeCorrections.map(row=>normalizeDoi(row.doi)));
+const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi) || confirmedScopeExclusionDois.has(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
 const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
 
 // Earlier exclude is not permanent when newly obtained DOI-verified metadata
 // changes the evidence. Explicit confirmed scope corrections stay excluded.
 function exclusionRecheckReason(candidate,previous) {
-  if(!previous||previous.decision!=='exclude'||isExcludedDoi(candidate.doi))return '';
+  if(!previous||previous.decision!=='exclude'||isExcludedDoi(candidate.doi)||confirmedScopeExclusionDois.has(candidate.doi))return '';
   const title=clean(candidate.title).toLowerCase(),oldTitle=clean(previous.title).toLowerCase();
   const abstract=clean(candidate.abstract),oldAbstract=clean(previous.abstract);
   if(abstract.length>=140 && oldAbstract.length<140)
@@ -541,7 +543,6 @@ const reviewedExcluded = reviewableMissing.filter(c => reviewedExclusions.has(c.
 const missing = reviewableMissing.filter(c => !reviewedExclusions.has(c.doi) || exclusionRecheckReasons.has(c.doi));
 // Existing wrong cards are not discovered by a missing-DOI-only audit.
 // Add explicit correction candidates without inflating source-family counts.
-const scopeCorrections = await loadScopeCorrections();
 missing.splice(0, missing.length, ...withScopeCorrections(missing, scopeCorrections, galleryDois));
 const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
