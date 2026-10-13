@@ -25,7 +25,13 @@ const FEEDS = [
 export const OFFICIAL_PUBLISHER_FEEDS = Object.freeze(FEEDS.map(
   ([journal,url,doiPrefix])=>Object.freeze({journal,url,doiPrefix})
 ));
-const DOI=/10\.\d{4,9}\/[a-z0-9][a-z0-9._;()/:%+-]*/ig;
+// Journal-scoped DOI extraction must stop at the first publisher URL path
+// segment after the DOI. Silverchair ACS <guid> embeds /article/doi/{DOI}/ID/slug,
+// while <prism:doi> carries just {DOI}; both MUST identify one article.
+const journalDoiPattern=feed=>{
+  const escaped=String(feed.doiPrefix).replace(/[.*+?^${}()|[\]\\]/g,'\\const DOI=/10\.\d{4,9}\/[a-z0-9][a-z0-9._;()/:%+-]*/ig;');
+  return new RegExp(escaped+'[a-z0-9][a-z0-9._-]*','ig');
+};
 const norm=value=>String(value||'').trim().toLowerCase()
   .replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'').replace(/^doi:\s*/,'')
   .replace(/[?#].*$/,'').replace(/[.,;:]+$/,'');
@@ -69,7 +75,7 @@ function belongsToFeed(doi,feed) {
 function itemIdentity(item, feed) {
   const candidates=[];
   for (const value of identityStrings(item)) {
-    for (const match of value.matchAll(DOI)) candidates.push(norm(match[0]));
+    for (const match of value.matchAll(journalDoiPattern(feed))) candidates.push(norm(match[0]));
     // Nature's public RSS sometimes uses a DOI-less article landing URL.
     const nature=/https?:\/\/(?:www\.)?nature\.com\/articles\/(s\d{5}-\d{3}-\d{5}-[a-z0-9]+)/i.exec(value);
     if(nature&&feed.doiPrefix.startsWith('10.1038/'))candidates.push('10.1038/'+nature[1].toLowerCase());
