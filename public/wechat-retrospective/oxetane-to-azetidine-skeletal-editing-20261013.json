@@ -1,7 +1,7 @@
 {
   "date": "2026-10-13",
   "selectionAuthority": "2026-10-13_user_uploaded_publisher_main_SI_explicit_choice",
-  "editorialRevision": "2026-10-13-r4",
+  "editorialRevision": "2026-10-13-r5",
   "paper": {
     "doi": "10.1038/s41557-026-02213-7",
     "journal": "Nature Chemistry",
@@ -9,76 +9,101 @@
     "authors": "Dayu Tian, Like Luo, Xian Xiao, Guang Chen, Liqiang Zhang, Jiaxin Wang, Xiaocheng Wang, Hai-Jun Zhang"
   },
   "headline": "氧杂环丁烷向氮杂环丁烷的骨架编辑",
-  "kicker": "",
-  "quick_points": [],
+  "kicker": "往期精选｜Nature Chemistry",
+  "quick_points": [
+    {
+      "label": "先看懂作者做成了什么",
+      "text": "氧杂环丁烷先经 Lewis 酸促进的胺解开环，得到 1,3-氨基醇；再用 BEHT triflate 活化羟基，使氮原子分子内关环。两阶段连续操作，将 O 环改造成 N-取代氮杂环丁烷。"
+    },
+    {
+      "label": "为什么不能直接合在一步做？",
+      "text": "所需的胺既可能进攻氧杂环丁烷，又可能先配位并占据 Lewis 酸；即使开环成功，形成高张力四元氮环还需要专门的醇活化方式。这是两种性质不同的化学障碍。"
+    }
+  ],
   "lead_figure_id": "",
   "lead_figure_position": "before_quick_points",
   "sections": [
     {
-      "heading": "先有一个氧杂环丁烷，能否用胺库迅速换出一组氮杂环丁烷？",
-      "eyebrow": "",
+      "eyebrow": "为什么值得做",
+      "heading": "真正困难的不是得到某种四元环，而是让已完成的药物骨架可供比较",
       "paragraphs": [
-        "对药物化学而言，获得一种四元环骨架只是开始。若能把已有的氧杂环丁烷直接变为 N-取代氮杂环丁烷，就可以利用不同伯胺快速扩展类似物，而无需为每个含氮目标另走合成路线。但必须注意，O→NR 同时引入了 N 上的取代基，并非所有理化性质差异都能归因于氧、氮两种原子。",
-        "已有光化学方法先将氧杂环丁烷转为 1,3-二溴化物，再用胺重建环。张海军团队在 Fig. 1 中提出另一种逆合成思路：让胺直接打开含氧四元环，得到 1,3-氨基醇，再使同一分子内的氮回攻，关成新环。路线看起来简单，却埋着两个相互独立的障碍。"
+        "药物化学需要不断回答一类问题：把已有分子中的氧杂环丁烷变为氮杂环丁烷，能否改变酸碱性、溶解性或与靶点的相互作用？如果每次都从头合成新骨架，类似物设计就会受到路线开发速度限制。更实用的思路是让一个已存在的氧杂环丁烷变成可编辑的起点。",
+        "但这不只是把结构式中的 O 写成 N。最终产物通常是 N-取代氮杂环丁烷，所引入伯胺的 R 基也会影响分子的理化性质。由此得到的新分子适合扩展化学空间，却不能把后续所有性质差异都简单归因于单个原子。原文 Fig. 1 的背景图正是在说明为何药物化学需要便捷、可信的类似物合成方式。",
+        "2025 年报道的光催化路线已能先将氧杂环丁烷变成 1,3-二溴化物，再借助胺重建四元环。张海军团队提出另一条路：能不能让选定的胺从一开始就参与环的拆解，让开环后的 1,3-氨基醇再自己关成环？这条路线避免预先安装双离去基，却迫使作者面对两个此前不能合并解决的问题。"
       ],
       "figures": [
         "NC_Fig1"
       ],
       "figures_after_paragraph": {
-        "2": [
+        "3": [
           "NC_Fig1"
         ]
       }
     },
     {
-      "heading": "反应的第一步，就遇到亲核试剂与催化剂之间的竞争",
-      "eyebrow": "",
+      "eyebrow": "第一道障碍",
+      "heading": "想让胺进攻四元环，它却可能先把催化剂占住",
       "paragraphs": [
-        "氧杂环丁烷开环需要 Lewis 酸；但胺不仅是亲核试剂，也是很好的配位配体。尤其是碱性较强的脂肪胺，可能优先结合催化剂，反而使环醚难以活化。作者先只研究开环：模型芳胺与 3,3-二取代氧杂环丁烷在 B(C₆F₅)₃ 作用下，1,3-氨基醇的核磁收率达到约 90%；无 Lewis 酸时反应无法有效进行。",
-        "中间体 3 可以分离和表征（80% 分离收率）。这一结果把“环能不能打开”从后续成环失败中分离出来，研究者于是有机会单独追问：为什么手里已经有了 1,3-氨基醇，四元氮杂环仍然难以形成？"
+        "氧杂环丁烷不像普通的活泼卤代烃，常常需要 Lewis 酸通过与氧配位来促进开环。可是亲核胺本身也是 Lewis 碱；它既可以攻击被活化的环碳，也可以先与硼或金属中心形成配合物。对碱性较强的脂肪族伯胺，配位竞争尤其值得警惕：你加入了亲核试剂，也可能同时削弱催化剂活化氧杂环丁烷的能力。",
+        "作者没有立即把开环和关环塞进一个筛选体系，而是先用 3,3-二取代氧杂环丁烷和 4-溴苯胺研究第一步。原文 Fig. 2a 中，B(C₆F₅)₃ 让 1,3-氨基醇的核磁收率达到约 90%，缺少 Lewis 酸则无法有效开环；其中间体 3 还以 80% 分离收率取得并表征。这一操作非常重要：作者先证明第一步确实能获得一个真实可用的化学中间体，才有条件把失败归因到下一阶段。",
+        "第一道门打开之后，矛盾反而变得更鲜明：链上既有羟基，又有胺，理论上可以进行分子内取代；但要形成四元氮环，羟基必须被有效活化，且目标分子内进攻必须压过多种分子间副反应。Fig. 2 实际讲的是两次不同性质的方法学开发，而不是一次普通的最佳条件筛选。"
       ],
       "figures": [
         "NC_Fig2"
       ],
       "figures_after_paragraph": {
-        "2": [
+        "3": [
           "NC_Fig2"
         ]
       }
     },
     {
-      "heading": "最困难的不是得到氨基醇，而是让它正确关环",
-      "eyebrow": "",
+      "eyebrow": "真正的转折",
+      "heading": "1,3-氨基醇已经分离出来，为什么经典 Mitsunobu 仍然不能关环？",
       "paragraphs": [
-        "直观方案是活化羟基，让链上的胺进行分子内亲核取代。但 SI Table S2 记下了一串负结果：经典 PPh₃/DIAD Mitsunobu 条件未得到目标物，MsCl/DIPEA、TsCl/吡啶和 CBr₄/PPh₃ 等活化方式也不理想。使用 PPh₃/1,2-二碘乙烷虽能成环，收率仅约 20%，并有竞争性的分子间反应。四元环的几何约束与氮中心的副反应，无法只靠“更好的离去基”概括。",
-        "转折来自 BEHT triflate。作者借鉴已有磷鎓型醇活化试剂，让分子内氮取代能与其他反应竞争，单独关环获得约 85% 核磁收率；再将两阶段串成一锅操作，整体得到 82% 产率（原文 Fig. 2c）。这一组合的创造性在于找到两个不同瓶颈各自对应的有效化学步骤，而非发现某种能够包办一切的 Lewis 酸。"
+        "对一位有机合成研究者，看到 1,3-氨基醇，最自然的尝试是先活化 OH，再让同一个分子中的 N 进攻末端碳。问题是 4-exo-tet 关环虽然在轨道几何上允许，却仍需付出四元环形成的动力学代价；更活泼的羟基活化体系，也可能让胺先参与其他副反应。",
+        "这正是 SI Table S2 最值得读的负结果：常规 PPh₃/DIAD 条件未获得目标产物，HI/NaHSO₄、MsCl/DIPEA、TsCl/吡啶、CBr₄/PPh₃ 等方案也不奏效。用 PPh₃/1,2-二碘乙烷后目标产物仅约 20%，还出现分子间反应。失败并非简单表明“羟基难以成为离去基”，而是形成四元环的反应轨迹和亲核胺的竞争活性需要同时被控制。",
+        "作者接着借鉴 BEHT triflate 这一已有的磷鎓型醇活化试剂。它可能通过氧膦鎓中间体活化醇，使链上的胺完成分子内取代，模型关环步骤达到约 85% 核磁收率。此前确定的硼烷开环与这一关环步骤接续后，一锅、分阶段加料的总体反应给出 82% 收率。这里的创新并不是发明了新的磷鎓盐，而是找到了与这个高张力分子内取代相匹配的活化方式。",
+        "BEHT 的具体活化中间体与过渡态并未逐一直接观察，因此可以把“适合的醇活化化学”作为受实验支持的设计结论，却不能把单一氧膦鎓微观路径描述为已经完全证明。"
       ],
       "figures": [
         "NC_SI_TableS1_S2"
       ],
       "figures_after_paragraph": {
-        "1": [
+        "2": [
           "NC_SI_TableS1_S2"
         ]
       }
     },
     {
-      "heading": "同一条 O→N 路线，却必须根据胺的性质换活化方式",
-      "eyebrow": "",
+      "eyebrow": "先研究环这一侧",
+      "heading": "从 3,3-二取代到双氮螺环，产物边界取决于成环几何",
       "paragraphs": [
-        "原文 Table 1 首先改变氧杂环丁烷端：3,3-二取代、部分单取代和螺环可用于编辑，醚、酯、烯炔及卤素等官能团有一定容忍度。含氧/含氮螺[3.3]体系可进一步转化为双含氮螺环，说明可以在已经较复杂的分子中选择一个环进行修改。但 27–29 仅有约 33–50% 收率，部分底物需 20–50 mol% Lewis 酸或换体系，并非全在最佳模型条件下完成。",
-        "Table 2 把变量移到胺端。芳胺适用 B(C₆F₅)₃，脂肪族伯胺却需改用更亲氧的 Yb(OTf)₃，在甲苯、120 °C 开环，然后再以 BEHT 活化关环。将其解释为脂肪胺较强的 Lewis 碱性造成配位竞争，与实验相容，但作者并未直接测出全部催化剂物种分布。¹⁵N 标记伯胺可将标记氮带入产物 49（80%），给后续生物学示踪留下可能性。",
-        "这种组合空间不是无限的。SI Tables S4–S5 列出多种无目标产物或低收率底物，提醒研究者同时考虑环碳取代、胺的亲核性与碱性，以及开链氨基醇能否闭合。"
+        "原文 Table 1 首先固定胺源、改变氧杂环丁烷。醚、酯、硫醚、游离醇、烯炔及部分卤代链段可以保留，多个 3,3-二取代底物和螺环产物也可获得。特别是 2-氧杂-6-氮杂螺[3.3]庚烷骨架进入 2,6-二氮杂螺[3.3]庚烷系列，使常见的含氧连接单元可以直接被改写为不同含氮连接单元，而不需要把整个螺环重新合成一次。",
+        "但 Table 1 中 27–29 等较不对称的单取代底物只有约 33%、40% 和 50% 的产率；部分底物还必须提高路易斯酸用量、改用 LiBF₄ 或采用不同溶剂条件。作者将 3-单取代产物的较低效率与高张力关环有关，但不能只由终点产率推断唯一的速率控制步骤。这个对照提示，环上取代位置不仅改变亲核开环的位阻，还会改变开链后回到四元环的可能性。"
       ],
       "figures": [
-        "NC_Table1",
+        "NC_Table1"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "NC_Table1"
+        ]
+      }
+    },
+    {
+      "eyebrow": "再研究胺这一侧",
+      "heading": "芳胺和脂肪胺，为什么不能使用同一套 Lewis 酸？",
+      "paragraphs": [
+        "固定四元环、改换引入的伯胺，Table 2 展示了芳胺、含杂芳基的胺以及多种脂肪族伯胺的适用性。更有信息量的是催化条件要跟着改变：芳胺通常以 B(C₆F₅)₃（10 mol%）在 DCE、60 °C 完成开环；脂肪族伯胺则往往需要更亲氧的 Yb(OTf)₃（20 mol%），在甲苯、120 °C 下打开环，随后切换到 BEHT 体系关环。",
+        "作者认为 B(C₆F₅)₃ 更容易被碱性较强的脂肪胺结合，从而削弱其对环醚的活化；换用更亲氧的镱盐则可改善这种竞争。这个解释与催化剂切换结果相符，却不能说论文直接测定了所有催化剂—胺配位平衡常数。相比把“伯胺类型很多”写成一句话，了解为什么必须切换 Lewis 酸更有助于迁移到其他胺解反应。",
+        "Table 2 中 ¹⁵N 标记伯胺可把标记氮引入氮杂环丁烷 49（80%），说明引入的氮原子来源可由所用伯胺定义。但并非所有胺都能使用这一反应：SI Tables S4–S5 列出多个没有观察到目标产物或仅有低收率的氧杂环丁烷、胺组合。这些失败案例提示，胺的亲核性、Lewis 碱性以及随后关环的空间几何必须同时满足。"
+      ],
+      "figures": [
         "NC_Table2",
         "NC_SI_TableS4_S5"
       ],
       "figures_after_paragraph": {
-        "1": [
-          "NC_Table1"
-        ],
         "2": [
           "NC_Table2"
         ],
@@ -88,11 +113,12 @@
       }
     },
     {
-      "heading": "把药物相关胺接上去，与改写已有药物骨架，是两个不同层次",
-      "eyebrow": "",
+      "eyebrow": "真正的合成用途",
+      "heading": "把复杂胺引入新环，与直接编辑药物样骨架，不是同一件事",
       "paragraphs": [
-        "Fig. 3 让利格列汀、来那度胺及其他药物相关的复杂伯胺作为氮源参与反应。这验证了带有多种官能团的胺能够引入 N-取代氮杂环丁烷，但并不是直接在这些胺所来源的药物中完成 O→N 替换。",
-        "Fig. 4 才是严格意义上的复杂氧杂环丁烷后期骨架编辑：AZD-1979、TBI-223 相关前体以及 crenolanib 前体中的含氧四元环被定点转成含氮类似物，报告收率约为 33%、48%、59%/40%。这里获得的是可以继续研究的结构，而不是这些新产物药效已经改善的证据。"
+        "Fig. 3 的出发点是具有药物化学意义的复杂伯胺。来那度胺、利格列汀相关胺及其他含多个官能团的氮源，可以与氧杂环丁烷反应，得到 N 上接入复杂 R 基的氮杂环丁烷。不同例子中产率约从 30% 到 85%。这证明的是复杂胺作为“氮片段来源”的兼容性，而不是宣称这些药物本身的含氧四元环已经被直接替换。",
+        "Fig. 4 才是真正直接对既有复杂氧杂环丁烷进行的后期编辑：AZD-1979、TBI-223 的相关前体以及 crenolanib 前体可转成对应含氮类似物，代表收率为 33%、48%、59% 与 40%。它使成对类似物更容易进入下一步构效关系研究，但未自动证明产物的活性、溶解性或代谢性质获得改善。",
+        "对合成方法学而言，重要的是两个不同方向的模块化：既能固定胺、扫描不同的氧杂环丁烷；也能固定氧杂环丁烷、扫描伯胺库。这比仅列举几十个成功结构更能说明药物研发中为什么需要这条路线。"
       ],
       "figures": [
         "NC_Fig3",
@@ -108,11 +134,12 @@
       }
     },
     {
-      "heading": "与旧的光催化法对照，能证明的究竟是什么？",
-      "eyebrow": "",
+      "eyebrow": "方法比较",
+      "heading": "为什么必须先复现旧法，再判断新路线扩大了哪块结构空间？",
       "paragraphs": [
-        "作者先复现 Koh 团队的光催化方法，再比较相同底物。SI Fig. S2 对一个 3,3-二取代底物给出旧法 32%、新法 75% 的结果；SI Fig. S3 的三个复杂氧杂环丁烷，在作者所测旧法条件下未得到目标物，新条件则能合成。这些是对具体底物、具体条件的检验，不能扩大成对整个光化学路线的否定。",
-        "两种方法的关键差异在断键顺序：一个先经过二溴化物，再与胺成环；另一个先胺解开环，再通过羟基活化实现分子内闭环。面对不同官能团和空间拥挤程度，决定可行性的反应步骤可能完全不同。比较方法学时，比单看最高收率更重要的是找出哪一种活化逻辑更适合待编辑的分子。"
+        "如果只展示自己方法的高收率，读者仍不知道新反应究竟解决了什么。作者在 SI 中复现 Koh 团队此前的光催化氧杂环丁烷编辑路线：对同一个 3,3-二取代底物，旧法在所测试条件下给出 32%，新方法为 75%。这个比较有意义，前提是限定为相同底物与报告的具体操作，不能推出整个光催化方法在任何情况下都逊色。",
+        "对于三个药物相关复杂氧杂环丁烷 69、71、73，SI Fig. S3 报告旧光催化条件在作者手中没有得到所需产物，而新开环—关环方案具有可行性。差异不只在是否使用光源，更在于反应先形成何种开链中间体：旧法先引入二溴离去基，本法直接将胺带入 1,3-氨基醇。这两条路径面对的官能团竞争、空间限制和副反应并不相同。",
+        "因此合理的结论是：选择骨架编辑策略时，应先找出目标分子最容易在哪个环节失败，再选择合适的断键顺序；没有必要把两种逻辑硬排成一个普遍的优劣榜单。"
       ],
       "figures": [
         "NC_SI_FigS2",
@@ -128,11 +155,12 @@
       }
     },
     {
-      "heading": "从能做成，到能预测：还缺哪些证据？",
-      "eyebrow": "",
+      "eyebrow": "证据与下一步",
+      "heading": "一步打开环可以直接看到；让环真正闭合，还有哪些机制问题？",
       "paragraphs": [
-        "直接被证明的是分离得到 1,3-氨基醇，以及它能在 BEHT 条件下关环；经典活化法失效、不同胺需要切换 Lewis 酸也都有实验依据。作者提出的氧膦鎓型中间体与分子内取代路径是合理解释，但本研究并未逐一原位捕获这些瞬态物种，更没有以系统动力学或立体探针排除所有竞争机制。与同期的 O→S 工作相比，本篇也没有 ¹⁸O 示踪去直接追踪被移除氧的终点。",
-        "这项成果给出的实用能力很明确：把广泛可得的氧杂环丁烷改造成不同 N-取代氮杂环丁烷，为类似物库打开一条合成通路。下一轮有意义的研究将是降低化学计量磷鎓试剂用量、处理更拥挤的取代模式，并用标记、动力学和立体化学实验理解关环的速率与竞争路径。方法学可以先解决合成难题，随后再积累使反应可预测的物理有机证据。"
+        "本篇能够直接确认的，包括 1,3-氨基醇被分离表征，BEHT 条件能将其转为四元氮杂环，及不同 Lewis 酸、羟基活化试剂给出不同实验结果。但所提出的氧膦鎓活化、分子内取代等微观环节，并没有通过对每个中间体的原位谱学监测或系统的速率测量全部排除其他可能路径。被替换的氧究竟进入哪种具体副产物，本篇也没有像同期 O→S 研究那样用 ¹⁸O 实验直接追踪。",
+        "再看实用代价：不同胺需不同路易斯酸，有些开环要 120 °C；BEHT triflate 需要化学计量投入，部分结构无反应或只得中低收率。所谓“非氧化还原”说明无需氧化还原活化环醚，不等于没有当量试剂消耗或自动满足工艺要求。",
+        "进一步研究最有意义的方向，不只是拓展若干新胺，而是用动力学、标记及立体化学探针解释为什么某些 1,3-氨基醇更难闭环，进而让两段条件的选择具有预测性。这项研究可以教给方法学研究者的经验，是先分离并证实一段反应的产物，再将下一段真正困难的转化单独解决；当亲核试剂同时会影响催化剂时，把反应分阶段设计往往比强求“万能一锅条件”更可靠。"
       ],
       "figures": [],
       "figures_after_paragraph": {}
@@ -147,8 +175,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 2,
       "body": true,
-      "caption": "原文 Fig.1｜药物化学动机、已报道光催化二溴化物路径与本文开环/关环路线",
-      "display_width_pct": 86
+      "caption": "原文 Fig. 1｜O→NR 药物化学需求、二溴化物旧路线与本文先胺解开环—再分子内关环的两阶段设计。",
+      "display_width_pct": 89
     },
     {
       "id": "NC_Fig2",
@@ -158,8 +186,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 2,
       "body": true,
-      "caption": "原文 Fig.2｜先筛开环催化剂，再筛高张力四元含氮环的关环条件",
-      "display_width_pct": 88
+      "caption": "原文 Fig. 2｜Lewis 酸对 1,3-氨基醇形成的影响、后续关环条件和两阶段一锅整合；必须区分各步收率。",
+      "display_width_pct": 91
     },
     {
       "id": "NC_SI_TableS1_S2",
@@ -169,8 +197,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 4,
       "body": true,
-      "caption": "SI Table S1/S2｜开环酸催化及关环试剂的完整负面对照",
-      "display_width_pct": 95
+      "caption": "SI Tables S1–S2｜多个羟基活化方案失败；经典 PPh₃/DIAD 不能有效关环，BEHT 提供不同的活化方式。",
+      "display_width_pct": 94
     },
     {
       "id": "NC_Table1",
@@ -180,8 +208,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 3,
       "body": true,
-      "caption": "原文 Table 1｜氧杂环丁烷底物范围：取代模式、官能团与螺环编辑",
-      "display_width_pct": 95
+      "caption": "原文 Table 1｜氧杂环丁烷取代模式、螺环及官能团范围；低收率单取代底物与特殊条件揭示局限。",
+      "display_width_pct": 98
     },
     {
       "id": "NC_Table2",
@@ -191,8 +219,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 4,
       "body": true,
-      "caption": "原文 Table 2｜芳香族与脂肪族伯胺、含 ^15N 试剂的 N 引入",
-      "display_width_pct": 95
+      "caption": "原文 Table 2｜芳胺与脂肪族伯胺需不同 Lewis 酸和开环温度；¹⁵N 伯胺可引入标记氮。",
+      "display_width_pct": 97
     },
     {
       "id": "NC_SI_TableS4_S5",
@@ -202,8 +230,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 65,
       "body": true,
-      "caption": "SI Table S4/S5｜未反应/低收率 oxetane 与胺；展示技术边界",
-      "display_width_pct": 95
+      "caption": "SI Tables S4–S5｜未成功或低收率的氧杂环丁烷及胺，限制可自由组合的反应空间。",
+      "display_width_pct": 98
     },
     {
       "id": "NC_Fig3",
@@ -213,8 +241,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 5,
       "body": true,
-      "caption": "原文 Fig.3｜七类药用相关复杂伯胺的后期引入",
-      "display_width_pct": 92
+      "caption": "原文 Fig. 3｜复杂伯胺作为外部氮片段参与，非直接改造这些胺来源的药物杂环。",
+      "display_width_pct": 93
     },
     {
       "id": "NC_Fig4",
@@ -224,8 +252,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 6,
       "body": true,
-      "caption": "原文 Fig.4｜药样 oxetane 的 O→N 后期编辑及临床相关前体",
-      "display_width_pct": 94
+      "caption": "原文 Fig. 4｜已有药物相关氧杂环丁烷的真正后期 O→N 编辑；展示合成可及性而非新药效结论。",
+      "display_width_pct": 100
     },
     {
       "id": "NC_SI_FigS2",
@@ -235,8 +263,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 63,
       "body": true,
-      "caption": "SI Fig. S2｜3,3-二取代模型与现有光催化方法实测对比",
-      "display_width_pct": 90
+      "caption": "SI Fig. S2｜相同 3,3-二取代模型底物下，旧光催化路径与新两阶段路线的实际报告结果。",
+      "display_width_pct": 82
     },
     {
       "id": "NC_SI_FigS3",
@@ -246,8 +274,8 @@
       "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
       "source_pdf_page": 64,
       "body": true,
-      "caption": "SI Fig. S3｜复杂临床相关 oxetane 的现有路线对照",
-      "display_width_pct": 90
+      "caption": "SI Fig. S3｜三个复杂氧杂环丁烷对照；所测光催化条件下旧路线未得到目标物。",
+      "display_width_pct": 89
     },
     {
       "id": "NC_cover",
@@ -274,7 +302,7 @@
     "delivery_image_sha256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8",
     "description": "Requested image treatment: direct exact-source publisher Fig1e screenshot for NS; NC conceptual cover with each structure clipped from actual Fig1a/c/e, no molecular bond generation. SHA256-pinned."
   },
-  "editorialIntent": "R4: O/N amine-library medicinal motivation, amine/acid competitive complexation, isolate aminoalcohol then recognize closure bottleneck, negative classic Mitsunobu controls, BEHT rescue, distinct amine Lewis acids, evidence and failed substrate boundaries.",
+  "editorialIntent": "R5 read and compared user-uploaded Oct05 JACS 8-page published article against unsatisfying Oct13 R4. Learned its experimentally grounded problems and direct source image storytelling, not its fixed 11-layer form or PDF-print image gaps. Nature Chemistry article develops Lewis-acid/amine coordination obstacle, isolated 1,3-aminoalcohol, failed classic Mitsunobu and BEHT transition, amine-specific catalysts, two orthogonal scopes, exact 2025 comparator, explicit evidence boundaries. 10 unchanged original body/SI raster bytes and original cover kept.",
   "slug": "oxetane-to-azetidine-skeletal-editing-20261013",
   "title": "往期精选｜Nature Chemistry：氧杂环丁烷向氮杂环丁烷的骨架编辑",
   "digest": "路易斯酸胺解与 BEHT 脱水关环分离两项难题，深入理解四元 N 杂环非氧化还原骨架编辑的证据与边界。",

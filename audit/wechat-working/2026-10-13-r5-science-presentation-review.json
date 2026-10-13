@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r5",
+  "status": "source_grounded_science_and_reading_pacing_review_pass_mobile_offline_preview_pass_cloud_not_yet_updated",
+  "selectionDois": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "comparisonSource": "User-uploaded Oct05 published JACS PDF (8 pages) + repository source 2026-10-05; R4 old WeChat draft/get HTML",
+  "userProblem": "R4 felt flat, monotonous and provided too little high-value mechanistic interpretation despite technical image checks passing",
+  "acceptedSourcePattern": [
+    "Original reaction scheme and exact intermediate immediately clarify what was actually made",
+    "Two short reader guides: one-sentence capability + scientific bottleneck",
+    "Experimental sequence changes understanding: competing reactions, reagents, mass-transport and physical-organic origins rather than list of conditions",
+    "Quotes calculations as model evidence with numeric magnitudes, leaves unresolved channels explicitly unproved",
+    "Discusses tool/platform scope and cost/safety/stability in the method's actual context"
+  ],
+  "rejectedSourcePattern": [
+    "Eleven consecutively numbered layers as a universal template",
+    "Long stretches of cramped text without original figures",
+    "Blank image area in user PDF printout cannot be assumed to reflect the native WeChat article; guard against loss in R5",
+    "Formulaic use of 最值得看／真正／不是A而是B without a qualifying experiment"
+  ],
+  "scientificReview": {
+    "NS": [
+      [
+        "source reality",
+        "Fig1 O/S PDE4 IC50 52 vs17 nM is quoted prior literature not novel biological testing",
+        "observed_cited_background"
+      ],
+      [
+        "precursor route",
+        "Fig1c prior dibromide preactivation vs this direct thiourea cascade",
+        "main_contrast"
+      ],
+      [
+        "optimization discriminates",
+        "Fig2 In 10mol% gives 91% NMR; absent In no reaction; at80C conversion 71% product 25%; common thiocyanate reagents inferior",
+        "controlled_observed"
+      ],
+      [
+        "scope competition",
+        "Fig3 halogenated sidechains 24/26 yield competing thiol substituents, 2-monosubstituted need enhanced conditions",
+        "observed_plus_explanation"
+      ],
+      [
+        "synthetic use",
+        "Fig4 45 10mmol 58% isolated, 48 compared with existing seven-step synthesis, not proof of full cost savings",
+        "observed_with_scope"
+      ],
+      [
+        "mechanistic experiments",
+        "Fig6 63 model at 150C without In 55%; chirality 99->96 ee, regio 66 only 67, O-18 76->74 in urea",
+        "observed_with_inference"
+      ],
+      [
+        "physical organic",
+        "Fig7 27.0 vs46.7 computed barrier; Fig8 at2.518Å Eint -42.4 vs -14.1, with more strain, is calculated model not a rate measurement",
+        "calculated"
+      ],
+      [
+        "negative controls",
+        "SI Fig S26 2,2-disubstituted no thietane, 74 -> alcohol 76 67%; compound 77 mixture structures tentative",
+        "observed_plus_unresolved"
+      ]
+    ],
+    "NC": [
+      [
+        "target distinction",
+        "Fig1 O->NR edit includes N-substituent R, cannot attribute all property changes only to atom O/N",
+        "conceptual_limit"
+      ],
+      [
+        "first-stage bottleneck",
+        "Fig2 borane B(C6F5)3 aryl amine 90% NMR aminoalcohol, no acid fails; model intermediate 3 separately isolated 80%",
+        "observed"
+      ],
+      [
+        "second-stage bottleneck",
+        "classic PPh3/DIAD Mitsunobu no product; other hydroxyl activations fail; BEHT closes 85% NMR, one-pot integrated 82%, via proposed oxyphosphonium",
+        "observed_plus_model"
+      ],
+      [
+        "amine-class split",
+        "Table2 aromatic amines B(C6F5)3 at60C; aliphatic primary amines Yb(OTf)3 at120C, hypothesis competing ligand sequestration, not measured equilibrium",
+        "observed_plus_explanation"
+      ],
+      [
+        "two orthogonal substrate spaces",
+        "Tables1/2 oxetane patterns, amine libraries and 15N-labelled 49 80%, SI S4/S5 failures",
+        "observed"
+      ],
+      [
+        "applications are two types",
+        "Fig3 complex external amines vs Fig4 existing oxetane drug frameworks, no general potency screening shown",
+        "observed"
+      ],
+      [
+        "comparison bounded",
+        "SI Figs S2/S3 new 75% vs old 32% for S1 and old not detected on selected complex substrates only",
+        "bounded_reproduction"
+      ],
+      [
+        "micro mechanistic limit",
+        "author interpretation of phosphonium intermediate and intramolecular substitution not all directly measured; no O18 fate tracing in NC unlike O/S study",
+        "unresolved"
+      ]
+    ]
+  },
+  "visual": {
+    "allOriginalPaperFigures": 22,
+    "sourceImageBytesChanged": false,
+    "allCoversChanged": false,
+    "plannedImageWidthMode": "per-source figure: dense Tables/scope 97-100%; small SI evidence 78-89%; no uniform 100% widths",
+    "mobileRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38369533720",
+    "mobileQA": "audit/wechat-working/2026-10-13-r5-offline-preview/offline-qa.json",
+    "mobileWidthCSS": 390,
+    "desktopWidthCSS": 740,
+    "sourceRenderedImages": [
+      12,
+      10
+    ],
+    "renderedAll": true,
+    "overflow": false,
+    "screenshots": 14
+  },
+  "formalRules": {
+    "draftOnly": true,
+    "existingOct13TwoArticleMediaOnly": true,
+    "noNewDraft": true,
+    "noPublicSend": true,
+    "preserve12FormalNewJournalMiniCards": true,
+    "preserveExactTwoDOILinks": true,
+    "requireSourceHashGate": true,
+    "requireCloudDraftGet": true,
+    "requireActualCloudMobilePreview": true
+  },
+  "statusOfWeChat": "NOT_YET_UPDATED_WITH_R5",
+  "notes": "This is the signed-off *source science and offline presentation* gate only. Actual WeChat mutation may occur only after source fingerprints are sealed; a real cloud draft/get and 390px preview must pass separately. Do not claim native WeChat client observed."
+}
