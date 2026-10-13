@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-12T09:05:02.006Z",
-  "reason": "User-authorized resume of all sixteen journal historical staging after PR #553 RSC false-zero repair and PR #556 pure API budget deferral fix. Continue April 2026 Nature Communications; stop at configured upstream budget without advancing incomplete window.",
+  "requestedAt": "2026-10-13T01:26:08.284Z",
+  "reason": "2026-10-13 owner-approved full 16-journal founding-year historical catchup: continue safely from active January 2026 Nature Communications resumable split, preserving publisher-source completeness; candidate-only, no DOI admission or any 08:00 slot change.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -9,6 +9,6 @@
     "requestLimit": 220
   },
   "safety": "Only stage DOI candidates. Formal 08:00-only release, paper inclusion, protected sources, image/PDF assets and WeChat daily-new remain untouched.",
-  "triggerScope": "authorized_history_after_budget_fix",
-  "previousTriggerAt": "2026-10-12T08:48:49.233Z"
+  "triggerScope": "authorized_history_founding_catchup_20261013",
+  "previousTriggerAt": "2026-10-12T09:05:02.006Z"
 }
