@@ -139,20 +139,23 @@ try{
   // The browser-side outbox is durable before a token is configured.
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
   assert.equal(pendingBefore,2,'one terminal diagnostic receipt per DOI must be queued');
-  await page.getByRole('button',{name:'配置诊断上报'}).click();
+  await page.getByRole('button',{name:'配置诊断密钥'}).click();
   const secret=page.getByPlaceholder('本机管理员 Bridge 上报密钥');
   await secret.fill('local-fixture-value-012345');
   await page.getByRole('button',{name:'保存并上传诊断'}).click();
+  assert.equal(await page.getByRole('button',{name:'更换诊断密钥'}).count(),1,
+    'key is saved locally; next report must not ask for another key');
+  assert.equal(await secret.isVisible(),false,'secret field is hidden after saving');
+  assert.ok((await page.locator('#osg-historical-batch').innerText()).includes('诊断密钥：已保存'));
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:diagnostics-state-v1']?.state==='retry',
     null,{timeout:4000});
   const rejected=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
   assert.equal(rejected,2,'network failure never discards queued reports');
-  await page.evaluate(async()=>{
-    window.__diagOnline=true;
-    const queued=window.__historicalDiagTest.batchReportKeys();
-    for(const key of queued){const item=window.__gm[key];item.nextAt=0;window.__gm[key]=item;}
-    await window.__historicalDiagTest.batchDrainReports();
-  });
+  await page.evaluate(()=>{window.__diagOnline=true;});
+  await page.getByRole('button',{name:'立即上传待发诊断'}).click();
+  await page.waitForFunction(()=>window.__historicalDiagTest.batchReportKeys().length===0,
+    null,{timeout:3000});
+  assert.equal(await secret.isVisible(),false,'manual upload reused persisted key, not new prompt');
   const ack=await page.evaluate(()=>({
     pending:__historicalDiagTest.batchReportKeys().length,
     receipts:window.__gm['gallery-historical-text-batch-v2:diagnostics-acks-v1'],
@@ -219,6 +222,6 @@ try{
   await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2
+    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true
   }));
 }finally{await browser.close();}
