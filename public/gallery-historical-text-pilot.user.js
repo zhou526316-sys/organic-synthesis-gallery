@@ -578,6 +578,79 @@
     GM_setValue(BATCH_STATE,batchStatus);
     if(batchUi)batchUi.refresh();
   }
+  async function batchShowFailures(area,term=''){
+    const db=await batchOpenDb(),rows=[];
+    await new Promise((resolve,reject)=>{
+      const transaction=db.transaction('attempts','readonly');
+      const request=transaction.objectStore('attempts').openCursor();
+      request.onerror=()=>reject(request.error||Error('attempts_cursor_error'));
+      request.onsuccess=()=>{
+        const cur=request.result;
+        if(!cur)return resolve();
+        rows.push(cur.value);
+        cur.continue();
+      };
+      transaction.onabort=()=>reject(transaction.error||Error('attempts_transaction_error'));
+    });
+    db.close();
+    const needle=String(term||'').trim().toLowerCase();
+    const filtered=rows.filter(x=>x.status!=='saved_local'
+      &&(!needle||[x.doi,x.journal,x.status,x.stage,batchDiagnosticLabel(x.status)]
+        .some(v=>String(v||'').toLowerCase().includes(needle))))
+      .sort((a,b)=>Number(b.checkedAt||0)-Number(a.checkedAt||0));
+    area.replaceChildren();
+    const heading=document.createElement('div');
+    heading.textContent='本机受阻记录 '+filtered.length+' 篇（最新 40 篇；不代表全库失败）';
+    area.append(heading);
+    const acks=GM_getValue(BATCH_DIAG_ACK,{})||{};
+    for(const item of filtered.slice(0,40)){
+      const row=document.createElement('div');
+      row.style.cssText='padding:5px 0;border-top:1px solid #ddd';
+      const link=document.createElement('a');
+      link.href='https://doi.org/'+item.doi;
+      link.target='_blank';link.rel='noopener noreferrer';link.textContent=item.doi;
+      const details=document.createElement('div');
+      const ack=acks[item.doi];
+      const reported=item.reportEventId
+        ?(ack?.eventId===item.reportEventId?'服务器已确认':'报告待发送／待确认')
+        :'旧版历史记录，尚未上报';
+      const when=Number.isFinite(Number(item.checkedAt))
+        ?new Date(Number(item.checkedAt)).toLocaleString():'时间未知';
+      const code=String(item.reasonCode||item.status||'other');
+      const pieces=[batchDiagnosticLabel(code),'阶段：'+String(item.stage||'未记录'),
+        '时间：'+when,item.httpStatus?'HTTP '+item.httpStatus:'HTTP 未知',
+        '报告：'+reported];
+      if(item.reasonDetail)pieces.push('说明：'+String(item.reasonDetail).slice(0,70));
+      details.textContent=pieces.join(' · ');
+      row.append(link,details);area.append(row);
+    }
+  }
+  async function batchShowServerReports(area){
+    const token=batchReportToken();
+    if(!token){area.textContent='请先配置诊断上报密钥，服务器报告仅管理员可查。';return;}
+    area.textContent='正在核对服务器记录…';
+    try{
+      const response=await batchHttpRequest({method:'GET',
+        url:BATCH_REPORT_ENDPOINT+'?limit=25',
+        headers:{authorization:'Bearer '+token,accept:'application/json'}});
+      const body=JSON.parse(String(response.responseText||'{}'));
+      if(Number(response.status)!==200||!Array.isArray(body.items))
+        throw Error('no_valid_read_receipt');
+      area.replaceChildren();
+      const header=document.createElement('div');
+      header.textContent='服务器已保存 '+body.items.length+' 条最近记录（只读）';
+      area.append(header);
+      for(const item of body.items){
+        const row=document.createElement('div');
+        row.style.cssText='padding:4px 0;border-top:1px solid #ddd';
+        row.textContent=String(item.doi||'')+' · '+batchDiagnosticLabel(item.reasonCode)
+          +' · '+String(item.stage||'')
+          +' · '+new Date(Number(item.receivedAt||0)).toLocaleString();
+        area.append(row);
+      }
+    }catch(_){area.textContent='暂时无法读取服务器报告；本机诊断不受影响。';}
+  }
+
   function batchPanel(){
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
@@ -593,15 +666,28 @@
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
     const pause=document.createElement('button');pause.textContent='暂停';
+    const failures=document.createElement('button');failures.textContent='失败详情';
+    const server=document.createElement('button');server.textContent='服务器报告';
+    const configure=document.createElement('button');configure.textContent='配置诊断上报';
+    const recheck=document.createElement('button');recheck.textContent='复查受阻项';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
+    const filter=document.createElement('input');
+    filter.placeholder='筛选失败 DOI／原因';filter.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
+    const failureDetails=document.createElement('div');
+    failureDetails.style.cssText='max-height:220px;overflow:auto;display:none;font-size:11px;word-break:break-word';
+    const ownerSecret=document.createElement('input');
+    ownerSecret.type='password';ownerSecret.placeholder='本机管理员 Bridge 上报密钥';
+    ownerSecret.autocomplete='off';ownerSecret.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
+    const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
+    saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,hide]){
+    for(const btn of [start,pause,failures,server,configure,recheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause);
-    panel.append(message,controls,search,results);
+    controls.append(start,pause,failures,server,configure,recheck);
+    panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
     let collapsed=false;hide.addEventListener('click',()=>{
@@ -613,16 +699,61 @@
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '无权限/无许可 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
-        s.lastDoi?'当前/最近：'+s.lastDoi:''].filter(Boolean);
+        s.currentStage?'当前阶段：'+s.currentStage:'',
+        s.lastDoi?'当前/最近：'+s.lastDoi:'',
+        s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
+      const diag=GM_getValue(BATCH_DIAG_STATE,{})||{};
+      progress.push('诊断报告：'+(diag.state==='delivered'?'服务器已确认':
+        diag.state==='auth_failed'?'上报密钥无效':
+        diag.state==='token_missing'?'未配置密钥（仅本机）':
+        diag.state==='retry'?'网络失败待重传':
+        diag.state==='outbox_full'?'待发队列已满':'本机待发送')
+        +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
     };
-    start.addEventListener('click',()=>void batchStart().catch(error=>{
+    start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
+    recheck.addEventListener('click',()=>void batchStart(true).catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    failures.addEventListener('click',()=>{
+      const showing=failureDetails.style.display==='none';
+      failureDetails.style.display=showing?'block':'none';
+      filter.style.display=showing?'block':'none';
+      if(showing)void batchShowFailures(failureDetails,filter.value).catch(()=>{
+        failureDetails.textContent='本机失败记录读取失败';
+      });
+    });
+    filter.addEventListener('input',()=>void batchShowFailures(failureDetails,filter.value).catch(()=>{
+      failureDetails.textContent='筛选失败记录时出错';
+    }));
+    server.addEventListener('click',()=>{
+      failureDetails.style.display='block';filter.style.display='none';
+      void batchShowServerReports(failureDetails);
+    });
+    configure.addEventListener('click',()=>{
+      const show=ownerSecret.style.display==='none';
+      ownerSecret.style.display=show?'block':'none';
+      saveSecret.style.display=show?'inline-block':'none';
+      ownerSecret.value='';
+    });
+    saveSecret.addEventListener('click',()=>{
+      const token=ownerSecret.value.trim();
+      if(!token||token.length<12||token.length>512){
+        window.alert('管理员密钥长度无效。请在本机填入现有 Bridge 写入密钥，不要发送到聊天。');
+        return;
+      }
+      GM_setValue(BATCH_DIAG_TOKEN,token);
+      ownerSecret.value='';ownerSecret.style.display='none';
+      saveSecret.style.display='none';
+      batchReportStatus({state:'queued',error:'',pending:batchReportKeys().length});
+      void batchDrainReports();
+    });
     let searchToken=0;
     search.addEventListener('keydown',event=>{
       if(event.key!=='Enter')return;
