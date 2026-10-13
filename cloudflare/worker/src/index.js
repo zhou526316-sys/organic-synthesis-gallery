@@ -966,9 +966,6 @@ async function handleApi(request, env, ctx) {
       beforeEventId:url.searchParams.get('beforeEventId')||'',
     }),cors);
   }
-  if (request.method === 'POST' && url.pathname === '/api/media/tampermonkey-reports') {
-    return json({error:'method_not_allowed'},{status:405,headers:cors});
-  }
   if (request.method === 'GET' && url.pathname === '/api/media/tampermonkey-reports') {
     return resultResponse(await getTampermonkeyReports(request, env), cors);
   }
