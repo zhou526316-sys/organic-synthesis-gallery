@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
-import {verifyResearchIssueReceipt} from './verify-historical-publisher-issues.mjs';
+import {verifyResearchIssueReceipt,verifyCatalysisIssueResearchReceipt} from './verify-historical-publisher-issues.mjs';
 const receipt=JSON.parse(readFileSync('audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json','utf8'));
 const clone=()=>structuredClone(receipt);
 test('two independent complete publisher Research issue TOCs have 26 unique original DOI',()=>{
@@ -48,4 +48,42 @@ test('exact publisher DOI identity, article type and immutability of receipt fai
   assert.throws(()=>verifyResearchIssueReceipt(d),/catalog_date_mismatch/);
   const e=clone();e.issues[0].officialIssueResearchCount=12;
   assert.throws(()=>verifyResearchIssueReceipt(e),/issue_receipt/);
+});
+
+const catalysis=JSON.parse(readFileSync('audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json','utf8'));
+const cloneCatalysis=()=>structuredClone(catalysis);
+test('Nature Catalysis Sep issue official Research has 10 Article DOI, 3 formal and 7 awaiting scientific review',()=>{
+  const result=verifyCatalysisIssueResearchReceipt(catalysis);
+  assert.deepEqual(result,{
+    originalResearch:10,Q3IssueListed:10,formal3:3,missingFormal7:7,
+    academicEligibleAmongUnpublished:'unknown',fullQuarterPublisherComplete:false
+  });
+  assert.equal(catalysis.articles.length,10);
+  assert.equal(new Set(catalysis.articles.map(x=>x.doi)).size,10);
+  assert.deepEqual(catalysis.articles.filter(x=>x.formalCatalogReadback.present).map(x=>x.doi),[
+    '10.1038/s41929-026-01578-9','10.1038/s41929-026-01579-8','10.1038/s41929-026-01600-0'
+  ]);
+});
+test('publisher issue research receipt cannot be used to auto-include/exclude electrocatalysis studies',()=>{
+  const a=cloneCatalysis();
+  a.guards.doNotAutoApproveOrExcludeFromIssue=false;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(a),/natcatal_release_guards/);
+  const b=cloneCatalysis();
+  b.articles[3].academicScopeDecision='include';
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(b),/natcatal_DOI_or_Article/);
+  const c=cloneCatalysis();
+  c.articles[3].publisherArticleType='Research Briefing';
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(c),/natcatal_DOI_or_Article/);
+  const d=cloneCatalysis();
+  d.articles[3].publisherIssueListedDate='2026-10-01';
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(d),/natcatal_date_not_Q3/);
+  const e=cloneCatalysis();
+  e.articles[4].doi=e.articles[0].doi;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(e),/natcatal_DOI_or_Article/);
+  const f=cloneCatalysis();
+  f.articles[4].formalCatalogReadback.present=true;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(f),/natcatal_formal_date_mismatch|natcatal_counts/);
+  const g=cloneCatalysis();
+  g.articles[2].formalCatalogReadback.storedDate='2026-07-14';
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(g),/natcatal_formal_date_mismatch/);
 });
