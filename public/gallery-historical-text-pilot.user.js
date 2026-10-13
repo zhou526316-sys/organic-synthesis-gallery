@@ -1076,11 +1076,7 @@
     if(fragment&&fragment[1]!==job.token)return;
     let doi=pageDoi(),capture=null;
     // Unrelated tabs must not report into an active historical attempt.
-    if(doi&&doi!==job.doi){
-      if(fragment?.[1]===job.token)
-        storeResult({status:'doi_unverified',stage:'publisher_doi'});
-      return;
-    }
+    if(doi&&doi!==job.doi)return;
     if(!doi&&!fragment)return;
     reportStage('publisher_page');
     if([403,429].includes(observedPageHttpStatus())){
@@ -1091,11 +1087,7 @@
     let previousState='';
     while(Date.now()-begun<=maxProbeMs&&Date.now()<job.expiresAt){
       doi=pageDoi();
-      if(doi&&doi!==job.doi){
-        if(fragment?.[1]===job.token)
-          storeResult({status:'doi_unverified',stage:'publisher_doi'});
-        return;
-      }
+      if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
         verified=true;reportStage('publisher_doi');
         if(batchPublisherPageBlocked()){
