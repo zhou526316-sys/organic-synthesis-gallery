@@ -1,0 +1,38 @@
+name: Publisher DOI recall regression
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/publisher-doi-recall-regression.yml'
+      - 'cloudflare/scripts/audit-literature.mjs'
+      - 'scripts/lib/publisher-feed-discovery.mjs'
+      - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/test-literature-completeness-capability.mjs'
+      - 'scripts/validate-prepublish-review.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provenance-and-recall:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout proposed branch
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax check independent publisher discovery
+        run: |
+          node --check scripts/lib/publisher-feed-discovery.mjs
+          node --check cloudflare/scripts/audit-literature.mjs
+      - name: Validate official feed DOI identity and known omission
+        run: node --test scripts/test-publisher-feed-discovery.mjs
+      - name: Verify core literature source coverage policy
+        run: node scripts/test-literature-completeness-capability.mjs
+      - name: Verify strict prepublication contract regressions
+        run: |
+          node scripts/test-prepublish-readiness.mjs
+          node scripts/test-deferred-publication-quality.mjs
