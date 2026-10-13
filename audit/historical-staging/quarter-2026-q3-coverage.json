@@ -1,6 +1,6 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-13T07:01:30.571Z",
+  "generatedAt": "2026-10-13T07:49:33.374Z",
   "period": "2026-07-01..2026-09-30",
   "scope": "all_sixteen_journals_source_candidates_not_scope_approved",
   "counters": {
@@ -13,12 +13,13 @@
     "sourceJournalConflicts": 0,
     "sourceDateConflicts": 82,
     "sourceAlreadyPublished": 750,
-    "sourceApprovedWaiting08": 23,
+    "sourceApprovedWaiting08": 32,
     "sourcePending": 2,
     "sourceExplicitlyExcluded": 4,
-    "unfinishedQ3OrDateVerification": 11507,
+    "sourcePublisherNonResearchExcluded": 5,
+    "unfinishedQ3OrDateVerification": 11493,
     "formalQ3Count": 743,
-    "reviewedQ3Waiting08": 23,
+    "reviewedQ3Waiting08": 32,
     "missingFormalQ3FromSource": 0,
     "sourceCompletedRoots": 192,
     "expectedSourceRoots": 192,
@@ -48,6 +49,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 372,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -65,6 +67,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 319,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -82,6 +85,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 407,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -99,6 +103,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 220,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -116,6 +121,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 143,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -133,6 +139,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 156,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -150,6 +157,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 14,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -167,7 +175,8 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 18,
+      "publisherNonResearchExcluded": 1,
+      "unreviewed": 17,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -184,6 +193,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 8,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -201,6 +211,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 18,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -218,6 +229,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 14,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -235,7 +247,8 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 14,
+      "publisherNonResearchExcluded": 2,
+      "unreviewed": 12,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -252,7 +265,8 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 18,
+      "publisherNonResearchExcluded": 1,
+      "unreviewed": 17,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -269,6 +283,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 12,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -286,7 +301,8 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 23,
+      "publisherNonResearchExcluded": 1,
+      "unreviewed": 22,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -303,6 +319,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 1202,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -320,6 +337,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 1067,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -337,6 +355,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 1,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 892,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -351,10 +370,11 @@
       "apiQ3DatedCandidates": 496,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 38,
-      "approvedWaiting08": 0,
+      "approvedWaiting08": 2,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 458,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 456,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -371,6 +391,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 454,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -388,6 +409,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 2,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 375,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -405,6 +427,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 514,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -422,6 +445,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 1,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 583,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -436,10 +460,11 @@
       "apiQ3DatedCandidates": 619,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 67,
-      "approvedWaiting08": 0,
+      "approvedWaiting08": 1,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 552,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 551,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -453,10 +478,11 @@
       "apiQ3DatedCandidates": 176,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 12,
-      "approvedWaiting08": 1,
+      "approvedWaiting08": 2,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 163,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 162,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -470,10 +496,11 @@
       "apiQ3DatedCandidates": 173,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 9,
-      "approvedWaiting08": 0,
+      "approvedWaiting08": 1,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 164,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 163,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -490,6 +517,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 148,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -504,10 +532,11 @@
       "apiQ3DatedCandidates": 269,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 84,
-      "approvedWaiting08": 0,
+      "approvedWaiting08": 1,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 185,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 184,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -521,10 +550,11 @@
       "apiQ3DatedCandidates": 194,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 33,
-      "approvedWaiting08": 1,
+      "approvedWaiting08": 2,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 160,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 159,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -538,10 +568,11 @@
       "apiQ3DatedCandidates": 254,
       "undatedOrAmbiguousSourceCandidates": 2,
       "alreadyPublished": 177,
-      "approvedWaiting08": 0,
+      "approvedWaiting08": 1,
       "sourcePending": 1,
       "explicitExcluded": 0,
-      "unreviewed": 78,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 77,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -558,6 +589,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 58,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -575,6 +607,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 42,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -592,6 +625,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 46,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -609,6 +643,7 @@
       "approvedWaiting08": 4,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 183,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -626,6 +661,7 @@
       "approvedWaiting08": 2,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 177,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -643,6 +679,7 @@
       "approvedWaiting08": 2,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 162,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -660,6 +697,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 82,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -677,6 +715,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 70,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -694,6 +733,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 60,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -711,6 +751,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 408,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -728,6 +769,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 354,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -745,6 +787,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 395,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -762,6 +805,7 @@
       "approvedWaiting08": 1,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 112,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -779,6 +823,7 @@
       "approvedWaiting08": 1,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 87,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -796,6 +841,7 @@
       "approvedWaiting08": 0,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 104,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -813,6 +859,7 @@
       "approvedWaiting08": 3,
       "sourcePending": 0,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 150,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -827,10 +874,11 @@
       "apiQ3DatedCandidates": 170,
       "undatedOrAmbiguousSourceCandidates": 0,
       "alreadyPublished": 0,
-      "approvedWaiting08": 2,
+      "approvedWaiting08": 3,
       "sourcePending": 0,
       "explicitExcluded": 0,
-      "unreviewed": 168,
+      "publisherNonResearchExcluded": 0,
+      "unreviewed": 167,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
     },
@@ -847,6 +895,7 @@
       "approvedWaiting08": 6,
       "sourcePending": 1,
       "explicitExcluded": 0,
+      "publisherNonResearchExcluded": 0,
       "unreviewed": 98,
       "publisherResearchIssueComplete": false,
       "firstOnlineDateFullyPublisherVerified": false
@@ -864,6 +913,7 @@
     "noAutoInclusionOrExclusion": true,
     "noEightEveningRelease": true,
     "publisherOnlineDateNotEqualsCreatedDate": true,
-    "officialPublisherIssueCompletenessNotEstablished": true
+    "officialPublisherIssueCompletenessNotEstablished": true,
+    "publisherNonResearchExclusionsAreDOISpecificOnly": true
   }
 }
