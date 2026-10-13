@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-13T01:26:08.284Z",
-  "reason": "2026-10-13 owner-approved full 16-journal founding-year historical catchup: continue safely from active January 2026 Nature Communications resumable split, preserving publisher-source completeness; candidate-only, no DOI admission or any 08:00 slot change.",
+  "requestedAt": "2026-10-13T01:38:23.700Z",
+  "reason": "Owner-authorized bounded staging-only resume after verified RSC January 1 year-only OpenAlex source overflow fix PR #568; finish blocked 2026-01 Chemical Science leaf before moving further toward founding years.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -9,6 +9,6 @@
     "requestLimit": 220
   },
   "safety": "Only stage DOI candidates. Formal 08:00-only release, paper inclusion, protected sources, image/PDF assets and WeChat daily-new remain untouched.",
-  "triggerScope": "authorized_history_founding_catchup_20261013",
-  "previousTriggerAt": "2026-10-12T09:05:02.006Z"
+  "triggerScope": "20261013_rsc_year_only_root_resume_after_verified_fix",
+  "previousTriggerAt": "2026-10-13T01:26:08.284Z"
 }
