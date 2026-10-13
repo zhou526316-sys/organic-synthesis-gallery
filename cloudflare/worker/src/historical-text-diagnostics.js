@@ -88,14 +88,15 @@ export async function importHistoricalDiagnostic(env,payload){
     .bind(row.eventId,row.doi,row.runId,row.jobId,row.kind,row.status,row.stage,
       row.reasonCode,row.httpStatus,row.publisher,row.pageDoiVerified,row.sectionCount,
       row.evidenceChars,row.scriptVersion,row.occurredAt,now).run();
-  const saved=await env.DB.prepare('SELECT event_id,doi,kind,status FROM '+TABLE+
+  const saved=await env.DB.prepare('SELECT event_id,doi,kind,status,stage,reason_code FROM '+TABLE+
     ' WHERE event_id=?').bind(row.eventId).first();
-  if(!saved||saved.doi!==row.doi||saved.kind!==row.kind||saved.status!==row.status)
+  if(!saved||saved.doi!==row.doi||saved.kind!==row.kind||saved.status!==row.status
+    ||saved.stage!==row.stage||saved.reason_code!==row.reasonCode)
     return {status:409,body:{stored:false,error:'historical_event_id_conflict'}};
   return {status:200,body:{stored:true,eventId:row.eventId,doi:row.doi,
     attemptId:row.jobId,status:saved.status,kind:saved.kind}};
 }
-export async function listHistoricalDiagnostics(env,{doi='',status='',limit=50,before=0}={}){
+export async function listHistoricalDiagnostics(env,{doi='',status='',limit=50,before=0,beforeEventId=''}={}){
   if(!env?.DB)return {status:503,body:{error:'historical_diagnostics_db_unavailable'}};
   await ensureHistoricalDiagnosticSchema(env);
   const exactDoi=doi?normalizeHistoricDoi(doi):'';
@@ -108,7 +109,11 @@ export async function listHistoricalDiagnostics(env,{doi='',status='',limit=50,b
   const conditions=['1=1'],args=[];
   if(exactDoi){conditions.push('doi=?');args.push(exactDoi);}
   if(filter){conditions.push('status=?');args.push(filter);}
-  if(until){conditions.push('received_at<?');args.push(until);}
+  if(until&&beforeEventId){
+    if(!ID.test(String(beforeEventId)))return {status:400,body:{error:'invalid_cursor_event'}};
+    conditions.push('(received_at<? OR (received_at=? AND event_id<?))');
+    args.push(until,until,String(beforeEventId));
+  }else if(until){conditions.push('received_at<?');args.push(until);}
   const rows=await env.DB.prepare('SELECT * FROM '+TABLE+
     ' WHERE '+conditions.join(' AND ')+' ORDER BY received_at DESC,event_id DESC LIMIT ?')
     .bind(...args,bound+1).all();
@@ -116,5 +121,6 @@ export async function listHistoricalDiagnostics(env,{doi='',status='',limit=50,b
   return {status:200,body:{schemaVersion:REPORT_SCHEMA,
     count:listed.length,hasMore:all.length>bound,
     nextBefore:all.length>bound&&listed.length?Number(listed.at(-1).received_at):null,
+    nextBeforeEventId:all.length>bound&&listed.length?String(listed.at(-1).event_id):null,
     items:listed.map(resultRow)}};
 }
