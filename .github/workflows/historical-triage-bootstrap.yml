@@ -11,6 +11,11 @@ on:
         type: number
         required: false
         default: 320
+      q3_review_page:
+        description: '2026-Q3 non-overlapping 320-item science review page, zero-based'
+        type: number
+        required: false
+        default: 0
   workflow_run:
     workflows: ['Historical DOI candidate discovery (23:00 Beijing, staging only)']
     types: [completed]
@@ -32,6 +37,7 @@ jobs:
       HISTORICAL_STAGING_ONLY: '1'
       HISTORICAL_STAGING_BRANCH: '1'
       MAX_HISTORICAL_TRIAGE_ROOTS: ${{ github.event_name == 'workflow_run' && '64' || (inputs.max_roots || '320') }}
+      HISTORICAL_Q3_REVIEW_PAGE: ${{ inputs.q3_review_page || '0' }}
     steps:
       - name: Checkout sole baseline main
         uses: actions/checkout@v4
@@ -62,11 +68,12 @@ jobs:
           node scripts/historical-review-triage.mjs
           node scripts/historical-global-coverage.mjs
           node scripts/historical-review-worklist.mjs
+          node scripts/historical-q3-reconciliation.mjs
       - name: Commit to historical staging only, never formal sources
         run: |
           set -euo pipefail
-          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json audit/historical-staging/global-coverage-ledger.json audit/historical-staging/reviewer-worklist.json
-          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$|global-coverage-ledger\.json$|reviewer-worklist\.json$)'; then
+          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json audit/historical-staging/global-coverage-ledger.json audit/historical-staging/reviewer-worklist.json audit/historical-staging/quarter-2026-q3-coverage.json audit/historical-staging/quarter-2026-q3-review-worklist.json
+          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$|global-coverage-ledger\.json$|reviewer-worklist\.json$|quarter-2026-q3-coverage\.json$|quarter-2026-q3-review-worklist\.json$)'; then
             echo "Unsafe triage staged path" >&2
             exit 1
           fi
@@ -84,5 +91,7 @@ jobs:
             audit/historical-staging/review-triage-ledger.json
             audit/historical-staging/global-coverage-ledger.json
             audit/historical-staging/reviewer-worklist.json
+            audit/historical-staging/quarter-2026-q3-coverage.json
+            audit/historical-staging/quarter-2026-q3-review-worklist.json
           retention-days: 14
           if-no-files-found: warn
