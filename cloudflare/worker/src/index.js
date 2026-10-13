@@ -963,6 +963,7 @@ async function handleApi(request, env, ctx) {
       status:url.searchParams.get('status')||'',
       limit:url.searchParams.get('limit')||'50',
       before:url.searchParams.get('before')||'0',
+      beforeEventId:url.searchParams.get('beforeEventId')||'',
     }),cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/tampermonkey-reports') {
