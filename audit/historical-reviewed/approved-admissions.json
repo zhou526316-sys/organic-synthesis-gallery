@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T11:08:17.923Z",
+  "generatedAt": "2026-10-13T11:31:31.898Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 62,
-    "include": 60,
+    "checked": 64,
+    "include": 62,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -4113,6 +4113,167 @@
         }
       ],
       "reviewRationaleSecondPass": "独立反查含硫试剂对镍的毒化研究是否只是保护金属表面的材料论文：真实体系通过多个烯基溴化物形成C–S键并获得硫中心手性产物，独立满足合成方法学。"
+    },
+    {
+      "doi": "10.1126/sciadv.aeg0999",
+      "journal": "Science Advances",
+      "title": "Asymmetric radical NHC organocatalysis–enabled highly enantioselective acylation of inert C(sp 2 )─C(sp 3 ) bonds",
+      "titleZh": "手性硫唑鎓NHC自由基催化惰性芳基－烷基C–C键不对称酰基化",
+      "date": "2026-07-17",
+      "authors": [
+        "Qing-Zhu Li",
+        "Mei-Hao He",
+        "Peng-Tao Wang",
+        "Long-Hai Hong",
+        "Ting Qi",
+        "Xin-Xin Kou",
+        "Dong-Yang Xiang",
+        "Wan-Cong Liu",
+        "Zi-Jie Xing",
+        "Xiang Zhang",
+        "Jun-Long Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "29",
+        "pages": "",
+        "articleNumber": "eaeg0999",
+        "doi": "10.1126/sciadv.aeg0999"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "设计兼具中环融合骨架与C₂对称手性片段的硫唑鎓NHC催化剂，借助Smiles型芳基－烷基C–C键断裂、自由基重排与NHC来源酮基自由基对映选择性复合，实现通常难以直接官能化的未张力、非极化C(sp²)–C(sp³)键的不对称酰基化，真正形成新的有机合成断键—成键方案。",
+      "evidenceBasis": "来自AAAS Science Advances署名原创研究并由NLM PubMed PMID 42467759逐DOI标注的Journal Article，Article date 2026-07-17、卷12期29、文章编号eaeg0999；NLM PubMed Central PMC13378574保存原始AAAS研究。没有成功直接回读AAAS Science.org网页Article History，故电子日期证据等级为NLM_journal_supplied_article_date，而非声称direct_AAAS_verified。原Crossref+OpenAlex冻结历史来源根2026-07-15_2026-07-21_science-advances、Git blob SHA 022c24c12dfb71cfe3703352b13822e90ea2f2f5。科学范围证据：作者在Science Advances原始公开文章摘要和正文中报告70余个实际产物，最大收率99%、最大区域比99:1 rr和最大对映体比99.5:0.5 er；分别展示芳香/杂芳香醛、不同二芳基酰胺及不对称底物对映汇聚和后期生物活性分子官能团化。正文注明烷基醛不适用于当前不对称条件，邻位取代醛反应性下降，因此不能只报告最高值而掩盖明显边界。。不转载完整原文摘要、实验正文、图片、SI或PDF。",
+      "challengeReason": "第二遍反向质疑作者是否仅发展一组手性NHC配体，而惰性C–C键切断无法成为实用方法。原始研究直接分离70余个不对称酰基化产物，有药物衍生物晚期官能化与2 mmol放大，更超出单一催化剂结构变化。机理中Smiles断裂—自由基重组及过渡态位阻主导ee有实验和DFT支持，但不应声称每个瞬时自由基都被直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "设计兼具中环融合骨架与C₂对称手性片段的硫唑鎓NHC催化剂，借助Smiles型芳基－烷基C–C键断裂、自由基重排与NHC来源酮基自由基对映选择性复合，实现通常难以直接官能化的未张力、非极化C(sp²)–C(sp³)键的不对称酰基化，真正形成新的有机合成断键—成键方案。",
+        "preparativeTransformation": "以芳基/烷基取代的二芳基酰胺等可进行Smiles迁移的底物为碳自由基来源，与芳香醛在手性NHC催化下发生C(sp²)–C(sp³)断裂/迁移和酰基偶联，形成含手性中心的酮或酰胺骨架，反应无需光与过渡金属。不可把它理解成普通未活化烷烃C–C键在任意条件下直接被无选择性切断。",
+        "generalityEvidence": "作者在Science Advances原始公开文章摘要和正文中报告70余个实际产物，最大收率99%、最大区域比99:1 rr和最大对映体比99.5:0.5 er；分别展示芳香/杂芳香醛、不同二芳基酰胺及不对称底物对映汇聚和后期生物活性分子官能团化。正文注明烷基醛不适用于当前不对称条件，邻位取代醛反应性下降，因此不能只报告最高值而掩盖明显边界。",
+        "sourceEvidence": "来自AAAS Science Advances署名原创研究并由NLM PubMed PMID 42467759逐DOI标注的Journal Article，Article date 2026-07-17、卷12期29、文章编号eaeg0999；NLM PubMed Central PMC13378574保存原始AAAS研究。没有成功直接回读AAAS Science.org网页Article History，故电子日期证据等级为NLM_journal_supplied_article_date，而非声称direct_AAAS_verified。原Crossref+OpenAlex冻结历史来源根2026-07-15_2026-07-21_science-advances、Git blob SHA 022c24c12dfb71cfe3703352b13822e90ea2f2f5。科学范围证据：作者在Science Advances原始公开文章摘要和正文中报告70余个实际产物，最大收率99%、最大区域比99:1 rr和最大对映体比99.5:0.5 er；分别展示芳香/杂芳香醛、不同二芳基酰胺及不对称底物对映汇聚和后期生物活性分子官能团化。正文注明烷基醛不适用于当前不对称条件，邻位取代醛反应性下降，因此不能只报告最高值而掩盖明显边界。。不转载完整原文摘要、实验正文、图片、SI或PDF。",
+        "boundaryChallenge": "适用的C(sp²)–C(sp³)键具有特定二芳基酰胺底物设计与芳基自由基重排驱动力，不能扩大为所有无张力碳碳键；原文曾报道电子偏好迁移及醛配偶伙伴限制。NHC立体控制模式属于实验/计算推断，而实际可分离手性产物与后修饰为直接合成证据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.science.org/doi/10.1126/sciadv.aeg0999",
+        "publisherOnlineDate": "2026-07-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_science-advances",
+        "stageBatchSha": "022c24c12dfb71cfe3703352b13822e90ea2f2f5",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_article_date_correlated_original_AAAS_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42467759/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13378574/",
+          "date": "2026-07-17",
+          "AAASPublisherPageDirectAccess": false,
+          "articleTitleFromPublisherOriginal": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherOnlineSourceDescription": "PubMed Article date and Science Advances original journal metadata"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "设计兼具中环融合骨架与C₂对称手性片段的硫唑鎓NHC催化剂，借助Smiles型芳基－烷基C–C键断裂、自由基重排与NHC来源酮基自由基对映选择性复合，实现通常难以直接官能化的未张力、非极化C(sp²)–C(sp³)键的不对称酰基化，真正形成新的有机合成断键—成键方案。 以芳基/烷基取代的二芳基酰胺等可进行Smiles迁移的底物为碳自由基来源，与芳香醛在手性NHC催化下发生C(sp²)–C(sp³)断裂/迁移和酰基偶联，形成含手性中心的酮或酰胺骨架，反应无需光与过渡金属。不可把它理解成普通未活化烷烃C–C键在任意条件下直接被无选择性切断。 作者在Science Advances原始公开文章摘要和正文中报告70余个实际产物，最大收率99%、最大区域比99:1 rr和最大对映体比99.5:0.5 er；分别展示芳香/杂芳香醛、不同二芳基酰胺及不对称底物对映汇聚和后期生物活性分子官能团化。正文注明烷基醛不适用于当前不对称条件，邻位取代醛反应性下降，因此不能只报告最高值而掩盖明显边界。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反向质疑作者是否仅发展一组手性NHC配体，而惰性C–C键切断无法成为实用方法。原始研究直接分离70余个不对称酰基化产物，有药物衍生物晚期官能化与2 mmol放大，更超出单一催化剂结构变化。机理中Smiles断裂—自由基重组及过渡态位阻主导ee有实验和DFT支持，但不应声称每个瞬时自由基都被直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1126/sciadv.aeg8852",
+      "journal": "Science Advances",
+      "title": "Discovery of CDK8/19 inhibitors as lead compounds for IL-6–dependent lymphoma enabled by the formal synthesis of cortistatin A",
+      "titleZh": "Cortistatin A的形式全合成及基于合成类似物的CDK8/19抑制剂发现",
+      "date": "2026-09-04",
+      "authors": [
+        "Wenjun Wang",
+        "Nan Zhang",
+        "Baicheng Chen",
+        "Zijing Chen",
+        "Guihua Zeng",
+        "Tuoping Luo"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "36",
+        "pages": "",
+        "articleNumber": "eaeg8852",
+        "doi": "10.1126/sciadv.aeg8852"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "这篇Science Advances论文虽然以IL-6依赖型淋巴瘤的CDK8/19抑制剂为药理主题，但作者明确完成海洋类固醇生物碱Cortistatin A的形式全合成，并建立SmI₂介导的后期氧桥迁移构筑关键天然产物骨架；因此按已完成的形式全合成这一独立准入条款评价，而不是仅依据生物活性结果收录。",
+      "evidenceBasis": "来自AAAS Science Advances署名原创研究并由NLM PubMed PMID 42696577逐DOI标注的Journal Article，Article date 2026-09-04、卷12期36、文章编号eaeg8852；NLM PubMed Central PMC13544219保存原始AAAS研究。没有成功直接回读AAAS Science.org网页Article History，故电子日期证据等级为NLM_journal_supplied_article_date，而非声称direct_AAAS_verified。原Crossref+OpenAlex冻结历史来源根2026-09-01_2026-09-07_science-advances、Git blob SHA 913145190cc1233259f63e8875d974875451e816。科学范围证据：美国国家医学图书馆PubMed收录作者正式摘要直接声明'formal synthesis of cortistatin A was achieved'及'late-stage SmI₂-mediated oxa-bridge translocation'；还确认作者原创合成CA411类似物。药理上对38种细胞系筛选、IL-6-JAK2-STAT3信号轴及小鼠实验是明确后续使用，但这些并非证明一种普适新有机方法学的底物库，也不能冒充制备收率。。不转载完整原文摘要、实验正文、图片、SI或PDF。",
+      "challengeReason": "第二遍重点质疑原文更大量研究肿瘤信号通路、并非方法学广泛底物拓展：按网站明确包括完成形式全合成的范围，只需真实到达已知后期合成节点，不强行要求多底物反应一般性；作者PubMed摘要肯定'formal synthesis achieved'，且指出有机合成关键SmI₂氧桥迁移，具独立制备完成度。保留尚未核对形式全合成终止中间体与文献先例的具体对应结构这一证据限制，不能夸为全部天然产物的完成全合成。",
+      "scopeAssessment": {
+        "primaryContribution": "这篇Science Advances论文虽然以IL-6依赖型淋巴瘤的CDK8/19抑制剂为药理主题，但作者明确完成海洋类固醇生物碱Cortistatin A的形式全合成，并建立SmI₂介导的后期氧桥迁移构筑关键天然产物骨架；因此按已完成的形式全合成这一独立准入条款评价，而不是仅依据生物活性结果收录。",
+        "preparativeTransformation": "以多环类固醇/生物碱路线中间体为起点，经过SmI₂促进氧桥位置迁移构筑Cortistatin A相关氧桥多环骨架，路线到达已知可接续至Cortistatin A的合成节点，构成形式全合成；另经de novo化学合成制备结构简化的CA411模拟物以开展功能研究。不得说本篇已经直接分离天然(+)-Cortistatin A最终产物。",
+        "generalityEvidence": "美国国家医学图书馆PubMed收录作者正式摘要直接声明'formal synthesis of cortistatin A was achieved'及'late-stage SmI₂-mediated oxa-bridge translocation'；还确认作者原创合成CA411类似物。药理上对38种细胞系筛选、IL-6-JAK2-STAT3信号轴及小鼠实验是明确后续使用，但这些并非证明一种普适新有机方法学的底物库，也不能冒充制备收率。",
+        "sourceEvidence": "来自AAAS Science Advances署名原创研究并由NLM PubMed PMID 42696577逐DOI标注的Journal Article，Article date 2026-09-04、卷12期36、文章编号eaeg8852；NLM PubMed Central PMC13544219保存原始AAAS研究。没有成功直接回读AAAS Science.org网页Article History，故电子日期证据等级为NLM_journal_supplied_article_date，而非声称direct_AAAS_verified。原Crossref+OpenAlex冻结历史来源根2026-09-01_2026-09-07_science-advances、Git blob SHA 913145190cc1233259f63e8875d974875451e816。科学范围证据：美国国家医学图书馆PubMed收录作者正式摘要直接声明'formal synthesis of cortistatin A was achieved'及'late-stage SmI₂-mediated oxa-bridge translocation'；还确认作者原创合成CA411类似物。药理上对38种细胞系筛选、IL-6-JAK2-STAT3信号轴及小鼠实验是明确后续使用，但这些并非证明一种普适新有机方法学的底物库，也不能冒充制备收率。。不转载完整原文摘要、实验正文、图片、SI或PDF。",
+        "boundaryChallenge": "独立审核范围不将CDK8/19机制、IL-6抑制或小鼠抗癌效果当作有机合成准入证据；也不因为“formal”字样就把生物靶点发现认定为新合成方法。保留明确的形式全合成完成主张、SmI₂氧桥迁移和新合成类似物作为可追溯化学贡献；对尚未查阅原始路线图的终点结构与全程收率不作推断。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.science.org/doi/10.1126/sciadv.aeg8852",
+        "publisherOnlineDate": "2026-09-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_science-advances",
+        "stageBatchSha": "913145190cc1233259f63e8875d974875451e816",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_article_date_correlated_original_AAAS_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42696577/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13544219/",
+          "date": "2026-09-04",
+          "AAASPublisherPageDirectAccess": false,
+          "articleTitleFromPublisherOriginal": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherOnlineSourceDescription": "PubMed Article date and Science Advances original journal metadata"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "这篇Science Advances论文虽然以IL-6依赖型淋巴瘤的CDK8/19抑制剂为药理主题，但作者明确完成海洋类固醇生物碱Cortistatin A的形式全合成，并建立SmI₂介导的后期氧桥迁移构筑关键天然产物骨架；因此按已完成的形式全合成这一独立准入条款评价，而不是仅依据生物活性结果收录。 以多环类固醇/生物碱路线中间体为起点，经过SmI₂促进氧桥位置迁移构筑Cortistatin A相关氧桥多环骨架，路线到达已知可接续至Cortistatin A的合成节点，构成形式全合成；另经de novo化学合成制备结构简化的CA411模拟物以开展功能研究。不得说本篇已经直接分离天然(+)-Cortistatin A最终产物。 美国国家医学图书馆PubMed收录作者正式摘要直接声明'formal synthesis of cortistatin A was achieved'及'late-stage SmI₂-mediated oxa-bridge translocation'；还确认作者原创合成CA411类似物。药理上对38种细胞系筛选、IL-6-JAK2-STAT3信号轴及小鼠实验是明确后续使用，但这些并非证明一种普适新有机方法学的底物库，也不能冒充制备收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍重点质疑原文更大量研究肿瘤信号通路、并非方法学广泛底物拓展：按网站明确包括完成形式全合成的范围，只需真实到达已知后期合成节点，不强行要求多底物反应一般性；作者PubMed摘要肯定'formal synthesis achieved'，且指出有机合成关键SmI₂氧桥迁移，具独立制备完成度。保留尚未核对形式全合成终止中间体与文献先例的具体对应结构这一证据限制，不能夸为全部天然产物的完成全合成。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -4155,5 +4316,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 late-evening Q3 eight ACS original methods approved after publisher Published Online indexed article evidence and independently challenged two-pass chemistry review. 60 accepted, 2 old date pending unchanged; 8 previously formally historical, 52 awaiting sole 08:00 writer. 10.1021/acs.orglett.6c03028 one-day discrepancy remains unapproved. Q3 toc_only, old pre-July metadata_only, zero production D1/media/offslot publication."
+  "note": "2026-10-13 Q3 Science Advances two independent NLM-journal-supplied first-online dated DOI: broad (>70 examples) NHC radical C-C cleavage acylation and completed cortistatin A FORMAL (not completed TOTAL) synthesis in a medicinal chemistry article. 62 include, 2 previous date disputes pending preserved, 8 previously in formal, 54 await sole Beijing 08. No D1, media, new cards, SI, PDF or altered slot."
 }
