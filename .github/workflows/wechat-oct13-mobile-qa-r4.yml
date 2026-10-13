@@ -1,7 +1,7 @@
 name: WeChat Oct13 R4 independent mobile/desktop source-science QA
 on:
   push:
-    branches: [wechat-oct13-r4-innovation-driven-story]
+    branches: [wechat-oct13-r4-science-narrative]
     paths: [audit/automation-triggers/wechat-oct13-r4-mobile-qa-request.json]
 permissions:
   contents: write
@@ -53,7 +53,7 @@ jobs:
           cp -a audit/wechat-working/2026-10-13-r4-offline-preview/. /tmp/wx-oct13-offline/
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          BR='wechat-oct13-r4-innovation-driven-story'
+          BR='wechat-oct13-r4-science-narrative'
           for attempt in 1 2 3 4; do
             git fetch origin "$BR"
             git reset --hard "origin/$BR"
