@@ -12,7 +12,7 @@ const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
 const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle=''}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -31,12 +31,15 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   ];
   const footer={id:'',className:'',parentElement:null};
   for(const n of nodes)Object.assign(n,{id:'',className:'',parentElement:footer,closest(){return null;}});
+  const copyrightNode={textContent:acsNotice,id:'',className:'',children:[],parentElement:footer,
+    closest(){return acsNoticeOutside?{}:null;}};
   const figure={textContent:'Scheme 1. Photoredox reaction mechanism',id:'',className:'',parentElement:footer,closest(){return null;}};
   const table={textContent:'Table 1. Reaction optimization data',id:'',className:'',parentElement:footer,closest(){return null;}};
   const root={querySelectorAll(selector){
     if(selector==='h2,h3,p')return nodes;
     if(selector.startsWith('figure figcaption'))return [figure];
     if(selector==='table')return [table];
+    if(selector==='p,span,small,div')return acsNotice?[copyrightNode]:[];
     if(selector.startsWith('[itemprop="license"]'))return [];
     if(selector==='section')return rightsNotice?[{
       querySelector(query){return query==='h2,h3,h4'?{textContent:'Rights and permissions'}:null;},
@@ -170,6 +173,19 @@ test('worker cannot claim another tab, expired job, or unlicensed article',async
   expired.values.delete('gallery-historical-text-batch-v2:result');
   await expired.context.__batchTest.batchWorker();
   assert.equal(expired.values.has('gallery-historical-text-batch-v2:result'),false);
+});
+test('ACS article-specific copyright declaration recognizes CC BY but not generic badges or restricted licenses',async()=>{
+  const explicit='© 2026 The Authors. Published by American Chemical Society This publication is licensed under a Creative Commons Attribution 4.0 International License.';
+  const x=fixture({license:'',acsNotice:explicit});
+  assert.equal(x.context.__batchTest.batchLicenseEvidence(x.root)?.kind,'cc-by');
+  await x.context.__batchTest.batchWorker();
+  assert.equal(x.values.get('gallery-historical-text-batch-v2:result')?.status,'ok');
+  const unrelated=fixture({license:'',acsNotice:explicit,acsNoticeOutside:true});
+  assert.equal(unrelated.context.__batchTest.batchLicenseEvidence(unrelated.root),null);
+  const ncnd=fixture({license:'',acsNotice:explicit.replace('Attribution 4.0','Attribution-NonCommercial-NoDerivatives 4.0')});
+  assert.equal(ncnd.context.__batchTest.batchLicenseEvidence(ncnd.root),null);
+  const bare=fixture({license:'',acsNotice:'This content is Open Access under the license indicated.'});
+  assert.equal(bare.context.__batchTest.batchLicenseEvidence(bare.root),null);
 });
 test('Nature article legal notice is recognized without indexing legal boilerplate',async()=>{
   const input=fixture({license:'',rightsNotice:true});
