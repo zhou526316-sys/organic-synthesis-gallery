@@ -286,15 +286,16 @@
     },
     {
       "name": "cover_NS.png",
-      "bytes": 84797,
+      "bytes": 77597,
       "dimensions": [
         1880,
         800
       ],
-      "sha256": "6d556f38ba9b242d183f46c16abaa4a04e1008d578329a3404c58e01b17c80fe",
-      "originalSourceSha256": null,
-      "process": "cover_from_original_pdf_fig1_without_chemical_redraw",
-      "sourcePage": null
+      "sha256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
+      "originalSourceSha256": "6d556f38ba9b242d183f46c16abaa4a04e1008d578329a3404c58e01b17c80fe",
+      "process": "source_pdf_Fig1e_zoomed_reaction_exact_pixel_screenshot_no_generated_chemistry",
+      "sourcePage": null,
+      "quality_note": "Source true chemical reaction region magnified ~1.4x, vertically centered, right-side marketing descriptors excluded, lower native title-safe area preserved."
     }
   ],
   "reviewPolicy": "Original main and SI figure pixels only; NC SI FigS2 and FigS3 re-cut direct from original publisher SI to remove orphaned text and restore complete fourth control row, all chemistry original.",
