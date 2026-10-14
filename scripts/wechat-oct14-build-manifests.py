@@ -173,7 +173,7 @@ def main():
        "featured":FEATURED,"retrospective":retro["slug"],
        "selectionAuthority":"user_uploaded_four_main_SI_source_pdfs",
        "editorialRevision":"2026-10-14-r1","publicationMode":"draft_only",
-       "correctedDaily":{"total":20,"journalCounts":EXPECTED,"removedDois":REMOVED,"source":"corrected official Gallery catalogue 1087"}},
+       "correctedDaily":{"total":20,"journalCounts":EXPECTED,"removedDois":REMOVED,"source":"corrected official Gallery catalogue 1087"}}
     writes=[
     (ROOT/"public/wechat-featured"/(DATE+".json"),today),
     (ROOT/"public/wechat-retrospective"/(retro["slug"]+".json"),retro),
