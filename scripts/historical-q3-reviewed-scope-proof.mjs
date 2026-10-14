@@ -15,11 +15,13 @@ const sha64=s=>/^[a-f0-9]{64}$/.test(s||'');
 const trustedScienceFiles=new Map([
   ['audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json','Nature Catalysis'],
   ['audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json','Nature Catalysis'],
-  ['audit/historical-scope-assessments/2026-10-14-natsynth-13-original-two-pass.json','Nature Synthesis']
+  ['audit/historical-scope-assessments/2026-10-14-natsynth-13-original-two-pass.json','Nature Synthesis'],
+  ['audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json','Nature Chemistry']
 ]);
 const doiPatternByJournal={
   'Nature Catalysis':/^10\.1038\/s41929-026-\d{5}-[0-9a-z]$/,
-  'Nature Synthesis':/^10\.1038\/s44160-026-\d{5}-[0-9a-z]$/
+  'Nature Synthesis':/^10\.1038\/s44160-026-\d{5}-[0-9a-z]$/,
+  'Nature Chemistry':/^10\.1038\/s41557-026-\d{5}-[0-9a-z]$/
 };
 export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
   check(proof?.schemaVersion===REVIEWED_SCOPE_SCHEMA
