@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "gallery-publisher-research-issue-receipt-v1",
+  "journal": "Nature Catalysis",
+  "issn": "2520-1158",
+  "journalVolume": 9,
+  "checkedAt": "2026-10-14T04:00:00+00:00",
+  "scope": "July_and_August_issue_Research_sections_only_not_all_Q3_online_first_articles",
+  "sourceTier": "official_publisher_issue_section_and_DOI_exact_article_metadata",
+  "accessEvidence": {
+    "july": {"url": "https://www.nature.com/natcatal/volumes/9/issues/7?error=cookies_not_supported", "kind": "readable_full_public_issue_HTML", "researchSectionEntries": 7},
+    "august": {"url": "https://www.nature.com/natcatal/volumes/9/issues/8", "kind": "complete_official_publisher_Research_section_in_search_index_plus_individual_DOI_metadata", "directLiveFetch": "login_redirect_or_cache_miss", "researchSectionEntries": 11},
+    "limitations": ["The August issue count is supported by the complete indexed publisher section, not a successful live canonical-page fetch.", "An issue can contain first-online dates from earlier months. Its cover month is never substituted for the article date.", "Research is a publisher section, not an organic-synthesis include decision; it also contains an Analysis.", "No inference of complete July-September online-first coverage follows from these two receipts."]
+  },
+  "formalSnapshot": {"source": "public/toc-demand-live.json", "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b", "dois": 1087, "mainCommit": "30a6aa289cfe8c98046864959026b89bfc33fe52", "mode": "Git_only_no_production_D1"},
+  "academicSnapshot": {"source": "audit/historical-reviewed/approved-admissions.json", "sha": "1810870edb12c55356f935d12f910f3f7634b2f3", "include": 116, "pending": 2, "reviewedWaiting08": 25},
+  "issues": [
+    {
+      "journalIssue": 7,
+      "issueMonth": "2026-07",
+      "issueUrl": "https://www.nature.com/natcatal/volumes/9/issues/7",
+      "sectionName": "Research",
+      "officialResearchEntryCount": 7,
+      "articles": [
+        {"issueResearchOrder": 1, "doi": "10.1038/s41929-026-01560-5", "title": "Rapid screening platform for peptide prenyltransferases to diversify pseudo-natural prenylated peptides", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-01", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01560-5", "formalCatalogReadback": {"present": true, "storedDate": "2026-07-01"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 2, "doi": "10.1038/s41929-026-01562-3", "title": "Unveiling solid electrolyte interphase dynamics in electrochemical lithium-mediated ammonia synthesis via operando Raman spectroscopy", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-06-30", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01562-3", "q3DateCohort": "outside_Q3_not_an_academic_exclusion", "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 3, "doi": "10.1038/s41929-026-01563-2", "title": "Unlocking the Cu-catalysed asymmetric radical azidation of N-heterobenzylic sites through rational ligand design", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-06-30", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01563-2", "q3DateCohort": "outside_Q3_not_an_academic_exclusion", "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 4, "doi": "10.1038/s41929-026-01561-4", "title": "Atomically precise layer-by-layer titration of perovskite oxides reveals the termination-specific reactivity in oxygen electrocatalysis", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-06-26", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01561-4", "q3DateCohort": "outside_Q3_not_an_academic_exclusion", "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 5, "doi": "10.1038/s41929-026-01566-z", "title": "Triple energy transfer-enabled dearomative cycloaddition/rearrangement cascade of bicyclic azaarenes to structurally complex products", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-09", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01566-z", "formalCatalogReadback": {"present": true, "storedDate": "2026-07-09"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 6, "doi": "10.1038/s41929-026-01569-w", "title": "Bifunctional molecular additives enable efficient oxygen reduction reaction on platinum electrodes in the presence of strongly binding anions", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-02", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01569-w", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 7, "doi": "10.1038/s41929-026-01573-0", "title": "Ligand-mediated radical orientation enables asymmetric cyanation of unstabilized alkyl C-radicals", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-10", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01573-0", "formalCatalogReadback": {"present": true, "storedDate": "2026-07-10"}, "academicScopeDecision": "existing_formal_record_not_readmitted"}
+      ]
+    },
+    {
+      "journalIssue": 8,
+      "issueMonth": "2026-08",
+      "issueUrl": "https://www.nature.com/natcatal/volumes/9/issues/8",
+      "sectionName": "Research",
+      "officialResearchEntryCount": 11,
+      "articles": [
+        {"issueResearchOrder": 1, "doi": "10.1038/s41929-026-01557-0", "title": "Multifunctional chiral bis(amidine) organocatalysts enable stereoselective synthesis of phosphorothioate oligonucleotides", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-08-05", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01557-0", "formalCatalogReadback": {"present": true, "storedDate": "2026-08-05"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 2, "doi": "10.1038/s41929-026-01571-2", "title": "Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-06", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01571-2", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 3, "doi": "10.1038/s41929-026-01574-z", "title": "Copper-catalysed carbon monoxide electrolysis under dynamic operation", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-08", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01574-z", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 4, "doi": "10.1038/s41929-026-01576-x", "title": "A tailored CoA ligase–N-acyltransferase cascade for on-DNA amide bond formation gives access to broad substrate scope", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-17", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01576-x", "formalCatalogReadback": {"present": true, "storedDate": "2026-07-17"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 5, "doi": "10.1038/s41929-026-01580-1", "title": "In situ generation of active motifs on Ni/Al2O3 during partial oxidation of methane to syngas", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-08-14", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01580-1", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 6, "doi": "10.1038/s41929-026-01584-x", "title": "Evidence of Eley–Rideal mechanism in Cu-catalysed CO2 electroreduction in flow cells with a protective layer", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-30", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01584-x", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 7, "doi": "10.1038/s41929-026-01585-w", "title": "Nickel nanoparticles encapsulated inside mesoporous MoO2 for industrially stable anion-exchange membrane water electrolysis", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-30", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01585-w", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 8, "doi": "10.1038/s41929-026-01587-8", "title": "Protein-confined imidazolium intermediates enable diverse biocatalytic C–C and C–N bond formations", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-07-31", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01587-8", "formalCatalogReadback": {"present": true, "storedDate": "2026-07-31"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 9, "doi": "10.1038/s41929-026-01589-6", "title": "Catalytic asymmetric intermolecular carbonyl–ene-type reactions of unactivated aldehydes and alkenes", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-08-12", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01589-6", "formalCatalogReadback": {"present": true, "storedDate": "2026-08-12"}, "academicScopeDecision": "existing_formal_record_not_readmitted"},
+        {"issueResearchOrder": 10, "doi": "10.1038/s41929-026-01595-8", "title": "Oxygen migration pathways in the methanol oxidation reaction", "publisherArticleType": "Article", "publisherIssueListedDate": "2026-08-14", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01595-8", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"},
+        {"issueResearchOrder": 11, "doi": "10.1038/s41929-026-01559-y", "title": "Quantifying uncertainty in catalyst activity and deactivation during CO2 hydrogenation via round-robin testing for data-driven modelling", "publisherArticleType": "Analysis", "publisherIssueListedDate": "2026-07-31", "publisherArticleUrl": "https://www.nature.com/articles/s41929-026-01559-y", "formalCatalogReadback": {"present": false, "storedDate": null}, "academicScopeDecision": "not_made_by_issue_enumeration"}
+      ]
+    }
+  ],
+  "counters": {"researchSectionEntries": 18, "articleTypeArticle": 17, "articleTypeAnalysis": 1, "firstOnlineQ3": 15, "firstOnlineBeforeQ3": 3, "q3AlreadyFormal": 7, "q3NotFormal": 8, "newAcademicIncludes": 0},
+  "scopeAssessmentFile": "audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json",
+  "guards": {"notGlobalQuarterPublisherComplete": true, "notPublicationAuthority": true, "neverTreatIssueMonthAsDate": true, "doNotAutoApproveOrExcludeFromIssue": true, "doNotAlterMainLiterature": true, "zeroProductionD1": true, "noMediaPdfBodySiAcquisition": true, "noNewTodayHotWechat": true}
+}
