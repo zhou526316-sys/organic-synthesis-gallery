@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Q3_history_staging_only_recount_after_44_Nature_Synthesis_two_pass_source_proven_verdicts_20261014",
+  "purpose": "NatureChemistry_Q3_51_reviews_immutable_raw_batch_and_deterministic_reviewer_status_refresh_recovery",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T07:55:09.517Z",
-  "reason": "After CI-green merged #654 commit 432219e63dfbe65e08ea15609302135c24469a6f, use only the existing staging-only Q3 16-journal source verifier to consume 44 exact Nature Synthesis DOI source/type records (31 publisher-confirmed nonoriginal + 11 genuine Article scientific scope exclusions + 2 Article scientific evidence pending). Preserve original 116 accepted, 2 original manifest pending, 25 next Beijing 2026-10-15 08:00 waiting. Forecast 11384→11340 unfinished only after same-generation stage readback. Unique 12286 DOI immutable; Nature Synthesis source 63 known, 17 formal, previous 2 nonoriginal, 31 new nonoriginal, 11 scope excluded, 2 newly held scope pending. Unverified full publisher issue/online-first remains open; zero D1, no new media/PDF/HTML, no extra publication slot, owner corrections unchanged.",
+  "requestedAt": "2026-10-14T09:43:02.751Z",
+  "reason": "PR #657 and #659 merged (1a047bae08aeccd4b9318ced58c601370060c029, abf38fd6a3bbadd3fef8e8201d2c26c5237194f4), protected CI all success. Run the existing staging-only Q3 reconciliation ONCE after authenticating each frozen Nature Chemistry original Crossref/OpenAlex source SHA256 and raw Git SHA1, deterministic replay of current reviewer queue after 3 legitimate approvals, and root-specific historical SHA aliases. Do not retry failed #38538114410 or #38539425019 as if successful. True 66 publisher DOI, 51 reviewed: 27 nonoriginal, 20 science excluded, 1 science evidence-pending, 3 academically accepted only for sole Beijing 08:00. Original manifests 119 accepted, 2 date conflict pending, 28 waiting 2026-10-15 08:00; formal 1087 and Q3 formal 820 unchanged. Expected unfinished 11340->11289 only on successful same-generation audited stage JSON readback. D1 0, no new publication/Today/Hot/WeChat/media/PDF/SI. 16 journal publisher Research closure FALSE.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_Q3_NatureSynthesis_44_new_reviewed_31_nonoriginal_11_science_excluded_2_new_scope_pending_source_proof",
+  "triggerScope": "20261014_final_recovery_after_status_sha_refresh_PR659_66_nchem_source_51_reviewed_3_staged_includes",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,16 +20,16 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 375,
   "expectedStageCompletedRoots": 375,
-  "expectedAcademicInclude": 116,
+  "expectedAcademicInclude": 119,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
-  "publisherNonResearchExactCount": 55,
+  "publisherNonResearchExactCount": 82,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
   "trustedScopeCorrectionsSha": "109be3cc5abedc62f744431e34faa0552564782d",
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "432219e63dfbe65e08ea15609302135c24469a6f",
+  "lastRelatedMergeCommit": "abf38fd6a3bbadd3fef8e8201d2c26c5237194f4",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -51,16 +51,29 @@
   "noProductionDeploymentClaims": true,
   "reviewedPublisherScopeSourceProofFile": "audit/historical-reviewed/q3-natcatal-scope-source-proof.json",
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
-  "expectedScopeScienceExcluded": 29,
-  "expectedAdditionalEvidencePending": 4,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11340,
-  "retryOfRunId": 38518015247,
-  "retryCause": "q3_reviewed_scope_provenance_or_science_conflict_01571-2_due_24_char_Chinese_description",
+  "expectedScopeScienceExcluded": 49,
+  "expectedAdditionalEvidencePending": 5,
+  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11289,
+  "retryOfRunId": 38539425019,
+  "retryCause": "q3_nchem_source_root_count_invalid_due_66_vs_51_doi_subset_windows",
   "retainOwnerPermanentCorrections": true,
   "pendingSupplementalDoiExact": [
     "10.1038/s41929-026-01608-6",
     "10.1038/s41929-026-01611-x",
     "10.1038/s44160-026-01115-3",
-    "10.1038/s44160-026-01146-w"
+    "10.1038/s44160-026-01146-w",
+    "10.1038/s41557-026-02226-2"
+  ],
+  "expectedReviewedWaitingAt08": 28,
+  "expectedQ3Formal": 820,
+  "expectedQ3UniqueSources": 12286,
+  "newHistoricalApprovalDoiExact": [
+    "10.1038/s41557-026-02228-0",
+    "10.1038/s41557-026-02227-1",
+    "10.1038/s41557-026-02232-4"
+  ],
+  "priorFailedRunIds": [
+    38538114410,
+    38539425019
   ]
 }

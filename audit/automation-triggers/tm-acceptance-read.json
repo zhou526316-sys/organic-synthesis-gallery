@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261012-1240-new-owner-log-recheck",
-  "requestedAt": "2026-10-12T04:41:18.496Z",
+  "requestId": "tm-20261014-1733-bridge284-read",
+  "requestedAt": "2026-10-14T09:33:00Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User says newest Tampermonkey logs uploaded October 12 Beijing 12:40. Read latest R2 local-diagnostics latest.json, Tampermonkey per-DOI report-index, local-captures index and figure stage-index without publisher network requests or production writes. Verify latest uploadedAt, Bridge installRevision / TOC engine / controller and whether this is a new 6.2.64 or later real browser pass. Summarize all available same-run 30 prior blocked DOI evidence and per-DOI RSC, Chem, ACS TOC/body/fulltext/owner-private-PDF capture statuses; separate publisher failures, staged receipts, review/publication, and remaining actual gaps. Do not misclassify historical toc_only or treat unverified PDFs as missing. No source or media modification.",
+  "context": "Read newest manually uploaded Tampermonkey log and R2 media indexes. Compare owner screenshot: 207 gap jobs; 101 publisher pages; 43 resolved; 162 outstanding; last progress 15:10 BJT. Classify failure categories and whether run is idle/stalled. Only read existing evidence, do not alter media.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
@@ -10,8 +10,8 @@
     "10.1016/j.chempr.2026.103043",
     "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.83",
-  "expectedInstallRevision": "6.2.64",
+  "expectedBridgeVersion": "2.2.84",
+  "expectedInstallRevision": "6.2.65",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,

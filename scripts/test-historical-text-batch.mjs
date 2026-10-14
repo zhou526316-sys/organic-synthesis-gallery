@@ -5,13 +5,14 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.8/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.8'/);
-assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v026'/);
+assert.match(original,/\/\/ @version\s+0\.2\.9/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.9'/);
+assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v029'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket};\n"+anchor);
+const source=original.replace('const BATCH_PUBLISHER_PROBE_MS=9500;',
+  'const BATCH_PUBLISHER_PROBE_MS=45;').replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket,batchFinishPublisherTab,batchCloseReviewTabs,batchArticlePageReady,batchReviewTabs};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false,
   routePath='/doi/'+DOI,routeHash='#gallery-historical-job='+TOKEN}={}){
@@ -54,7 +55,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     get readyState(){readyReads++;return readyReads<=readyAfter?'loading':'complete';},
     querySelectorAll(selector){
       if(selector.startsWith('meta[name="citation_doi"'))return [{content:pageDoi}];
-      if(selector.startsWith('meta[name="citation_license_url"'))return [];
+      if(selector.startsWith('meta[name="citation_license_url"'))return license?[{content:license}]:[];
       if(selector.startsWith('link[rel="license"')){
         licenseReads++;return license&&licenseReads>licenseAfter?[{content:license}]:[];
       }
@@ -94,7 +95,7 @@ test('DOI-bound article structure remains metadata only when no reusable licence
   assert.equal(x.context.__batchTest.batchReuseRights(x.root).signal,'unverified');
   await x.context.__batchTest.batchWorker();
   const outcome=x.values.get('gallery-historical-text-batch-v2:result');
-  assert.equal(outcome.status,'license_not_verified');
+  assert.equal(outcome.status,'license_pending_load');
   assert.equal(outcome.rightsSignal,'unverified');
   assert.equal(outcome.bodyEvidence.presence,'scientific_sections');
   assert.equal(outcome.packet,undefined);
@@ -360,7 +361,8 @@ test('old DOI-verified ambiguous licensing/body is rechecked exactly once after 
   const api=fixture().context.__batchTest;
   const prior={doi:DOI,status:'license_not_verified',pageDoiVerified:true,captureRevision:'old'};
   assert.equal(api.batchRetryAllowed(prior,false),true);
-  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v026'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v026'},false),true);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v029'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,status:'body_missing',captureRevision:'old'},false),true);
   assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
@@ -447,8 +449,8 @@ test('stable article without article-level reuse license stays blocked, not acce
   const x=fixture({license:''});
   await x.context.__batchTest.batchWorker();
   const result=x.values.get('gallery-historical-text-batch-v2:result');
-  assert.equal(result?.status,'license_not_verified');
-  assert.equal(result?.stage,'license');
+  assert.equal(result?.status,'license_pending_load');
+  assert.equal(result?.stage,'publisher_wait');
   assert.equal(result?.httpStatus,null);
   const blocked=fixture({license:'',pageTitle:'Verify you are human'});
   await blocked.context.__batchTest.batchWorker();
@@ -476,4 +478,56 @@ test('admin report display groups checkpoint+final by DOI and attempt',()=>{
   assert.equal(grouped.display.httpStatus,403);
   assert.equal(new Set(groups.map(g=>g.doi)).size,2);
   assert.equal(groups[0].jobId,'job_three');
+});
+
+test('hydration-pending rights differ from DOI-bound explicit restricted licence',async()=>{
+  const pending=fixture({license:''});
+  await pending.context.__batchTest.batchWorker();
+  assert.equal(pending.values.get('gallery-historical-text-batch-v2:result')?.status,'license_pending_load');
+  const restricted=fixture({license:'https://creativecommons.org/licenses/by-nc-nd/4.0/'});
+  await restricted.context.__batchTest.batchWorker();
+  const observed=restricted.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(observed?.status,'license_not_verified');
+  assert.equal(observed?.rightsSignal,'other_license_declared');
+  assert.equal(observed?.packet,undefined);
+});
+test('keeps no more than two DOI-confirmed review tabs; immediately closes denied pages',()=>{
+  const api=fixture().context.__batchTest;
+  const closed=[];
+  const tab=id=>({close(){closed.push(id)}});
+  const pending={status:'license_pending_load',pageDoiVerified:true};
+  assert.equal(api.batchFinishPublisherTab(tab('a'),pending,'10.1021/a'),true);
+  assert.equal(api.batchFinishPublisherTab(tab('b'),pending,'10.1021/b'),true);
+  assert.equal(api.batchFinishPublisherTab(tab('c'),pending,'10.1021/c'),true);
+  assert.deepEqual(closed,['a']);
+  assert.equal(api.batchReviewTabs.length,2);
+  assert.equal(api.batchFinishPublisherTab(tab('denied'),{
+    status:'page_http_error',pageDoiVerified:false,httpStatus:403},'10.1021/denied'),false);
+  assert.equal(api.batchFinishPublisherTab(tab('unknown'),{
+    status:'license_pending_load',pageDoiVerified:false},'10.1021/unknown'),false);
+  assert.deepEqual(closed,['a','denied','unknown']);
+  api.batchCloseReviewTabs();
+  assert.equal(api.batchReviewTabs.length,0);
+  assert.deepEqual(closed,['a','denied','unknown','b','c']);
+});
+test('v026 checked DOI licence false negatives are rechecked only once after upgrade',()=>{
+  const api=fixture().context.__batchTest;
+  const old={doi:DOI,status:'license_not_verified',pageDoiVerified:true,
+    captureRevision:'historic-body-evidence-v026'};
+  assert.equal(api.batchRetryAllowed(old,false),true);
+  assert.equal(api.batchRetryAllowed({...old,captureRevision:'historic-body-evidence-v029'},false),false);
+  assert.equal(api.batchRetryAllowed({...old,httpStatus:403},false),false);
+  assert.equal(api.batchRetryAllowed({...old,httpStatus:429},false),false);
+  assert.equal(api.batchRetryAllowed({...old,status:'license_pending_load'},false),true);
+});
+
+
+test('Pages artifact gate checks byte-for-byte installer and reviewed version rather than obsolete hardcode',async()=>{
+  const pages=await readFile('.github/workflows/github-pages.yml','utf8');
+  const marker=pages.slice(pages.indexOf('test -s dist/gallery-historical-text-pilot.user.js'),
+    pages.indexOf('grep -F "全库开放正文补抓（本机）"'));
+  assert.ok(marker.includes("assert.equal(published, original"),'same reviewed userscript must reach Pages');
+  assert.ok(marker.includes("patch >= 9"),'disallow rollback below user-approved 0.2.9');
+  assert.ok(marker.includes("BATCH_SCRIPT_VERSION"),'script metadata and diagnostic version must agree');
+  assert.ok(!marker.includes('grep -F "// @version      0.2.8"'),'stale version pin must not block a legitimate deployment');
 });
