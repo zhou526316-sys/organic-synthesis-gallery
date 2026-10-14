@@ -473,7 +473,7 @@ export async function runQuarterAudit({
   for(const item of natsynthFrozen.items){
     const tp=nsTypeMap.get(item.doi);
     ensure(tp&&tp.publisherArticleType===item.publisherArticleType
-      &&tp.publisherPage===item.publisherUrl
+      &&tp.publisherPage===item.publisherPage
       &&tp.relatedOriginalDoi===item.relatedOriginalDoi
       &&item.rawSourceBatchGitBlobSha===rawGitShaByRoot.get(item.sourceRootId)
       &&item.rawSourceBatchPath==='audit/historical-staging/batches/'+item.sourceRootId+'.json'
@@ -490,7 +490,7 @@ export async function runQuarterAudit({
     ensure(f&&f.publisherArticleType!=='Article'&&!nsNonOriginalIds.has(item.doi)
       &&item.title===f.title&&item.date===f.date
       &&item.publisherArticleType===f.publisherArticleType
-      &&ev.publisherPage===f.publisherUrl
+      &&ev.publisherPage===f.publisherPage
       &&ev.stageSourceSha256===f.sourceSha256
       &&ev.stageBatchGitBlobSha===f.rawSourceBatchGitBlobSha
       &&ev.sourceReviewQueueGitBlobSha===f.reviewQueueGitBlobSha
