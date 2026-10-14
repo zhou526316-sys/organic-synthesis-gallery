@@ -1,24 +1,23 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-14T06:16:05.983Z",
+  "generatedAt": "2026-10-14T07:55:41.007Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11384,
+  "totalUnreviewedCandidates": 11340,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
     "Nature": 24,
-    "Science": 23,
-    "Nature Synthesis": 21,
-    "Nature Chemistry": 21,
-    "Nature Communications": 21,
-    "JACS": 21,
-    "Angew": 21,
-    "ACS Catalysis": 21,
-    "Organic Letters": 21,
-    "Chem": 21,
+    "Science": 24,
+    "Nature Chemistry": 24,
+    "Nature Communications": 24,
+    "JACS": 24,
+    "Angew": 24,
+    "ACS Catalysis": 24,
+    "Organic Letters": 24,
+    "Chem": 23,
     "Chemical Science": 21,
     "CCS Chemistry": 21,
     "Science Advances": 21,
@@ -31,10 +30,10 @@
     "2026-09": 106
   },
   "byPriority": {
-    "P1": 119,
-    "P0": 155,
-    "P2": 27,
-    "P3": 19
+    "P1": 118,
+    "P0": 159,
+    "P2": 25,
+    "P3": 18
   },
   "requiringDateVerification": 44,
   "sourceWindowsComplete": true,
@@ -149,63 +148,6 @@
       ],
       "sourceHashes": [
         "4aca02121efe1d33ebc17f8e9063146cb1ca4b8cdac1187957f9384d522055d0"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01119-z",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-27",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Guiding principles for seeded electrochemical synthesis of multimetallic nanocrystals",
-      "firstAuthor": "Nilotpal Kapuria",
-      "priority": "P0",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01124-2",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-26",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "A fast and energy-efficient catalytic pathway for stainless steel synthesis",
-      "firstAuthor": "Williams Lefebvre",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01146-w",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-08",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "A coumarin-linked conjugated covalent organic framework for enhanced photocatalytic hydrogen evolution",
-      "firstAuthor": "Yuxiang Zhao",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-08_2026-09-14_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -1029,63 +971,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s44160-026-01112-6",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-23",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Electrochemical cross-electrophile coupling for carbon–heteroatom and heteroatom–heteroatom bond formation",
-      "firstAuthor": "Wan-Chen Cindy Lee",
-      "priority": "P0",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01133-1",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-26",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Accelerating synthesis at scale requires a coordinated ecosystem",
-      "firstAuthor": "Brandon R. Sutherland",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01165-7",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-02",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Author Correction: Accelerating synthesis at scale requires a coordinated ecosystem",
-      "firstAuthor": "Brandon R. Sutherland",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-01_2026-09-07_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41557-026-02207-5",
       "journal": "Nature Chemistry",
       "sourceWindowMonth": "2026-07",
@@ -1897,63 +1782,6 @@
       ],
       "sourceHashes": [
         "e9e69d731fbfe32c2f39a6f1aa37dbdb9c31b4957d8992d9d8f07ce3ec1c5d50"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01117-1",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-16",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Synthesis of a 524-atom bifurcated molecular knot",
-      "firstAuthor": "",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-15_2026-07-21_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01141-1",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-20",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Rapid and sustainable MXene synthesis",
-      "firstAuthor": "",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-15_2026-08-21_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01163-9",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Hierarchically porous metal–organic frameworks with red topology for hydrogen and methane storage",
-      "firstAuthor": "Xu Chen",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2777,63 +2605,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s44160-026-01129-x",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-15",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Rotaxane synthesis inside out",
-      "firstAuthor": "Jet-Sing M. Lee",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-15_2026-07-21_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01139-9",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-17",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Chlorine-mediated electrosynthesis of hydrazine from urea",
-      "firstAuthor": "Pengtang Wang",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-15_2026-08-21_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01167-5",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-29",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Geometric frustration in morphologically chiral nanoribbons of layered perovskites",
-      "firstAuthor": "Wenhao Shao",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41557-026-02220-8",
       "journal": "Nature Chemistry",
       "sourceWindowMonth": "2026-07",
@@ -3650,63 +3421,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s44160-026-01110-8",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-03",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Programmable assembly lines in E. coli enable the synthesis of macrolide antibiotics",
-      "firstAuthor": "",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-01_2026-07-07_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "19f2503f14271aa0b4e45fe21e884e04490ee8b43ac3e1be1798ddffa165d94c"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01132-2",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-10",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Flash Joule heating for rapid MXenes synthesis",
-      "firstAuthor": "Shichen Xu",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-08_2026-08-14_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "f711f0eefe72a7a964d09131c23166912eae8f38b38dbb5e6f768d183c6a37d6"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01169-3",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-29",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Accelerated polymer design outpaces resistance",
-      "firstAuthor": "Jet-Sing M. Lee",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41557-026-02215-5",
       "journal": "Nature Chemistry",
       "sourceWindowMonth": "2026-07",
@@ -4518,63 +4232,6 @@
       ],
       "sourceHashes": [
         "4b98845bbbcdcd988ff3f47a68d289189aad11e09e2ea1da4b8f79898a3b8d1a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01103-7",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-02",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Electrophotocatalysis for direct vicinal dichlorination of carboxylic acids",
-      "firstAuthor": "Luca Massaro",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-01_2026-07-07_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "19f2503f14271aa0b4e45fe21e884e04490ee8b43ac3e1be1798ddffa165d94c"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01126-0",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-03",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Ordered heteronuclear metal pairs facilitate urea electrosynthesis",
-      "firstAuthor": "Yuntong Sun",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-01_2026-08-07_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01196-0",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Author Correction: Chemical reactivity from the perspective of enthalpic coupling",
-      "firstAuthor": "Chelsey Brien",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5400,63 +5057,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s44160-026-01113-5",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-09",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Multi-walled carbon nanotube network-toughened diamond composite via atomic interface continuity",
-      "firstAuthor": "Jiawei Zhang",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-08_2026-07-14_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01130-4",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Designing heterogeneous electrocatalytic sites using reticular chemistry",
-      "firstAuthor": "Arnab Ghatak",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s44160-026-01157-7",
-      "journal": "Nature Synthesis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-23",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Crystallization control for narrow-linewidth perovskite LEDs",
-      "firstAuthor": "Natalia Murrietta",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-synthesis"
-      ],
-      "sourceHashes": [
-        "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41557-026-02221-7",
       "journal": "Nature Chemistry",
       "sourceWindowMonth": "2026-07",
@@ -6256,13 +5856,412 @@
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/science.adu1550",
+      "journal": "Science",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-24",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "2D theoretically twistable material database",
+      "firstAuthor": "Yi Jiang",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-22_2026-09-30_science"
+      ],
+      "sourceHashes": [
+        "4aca02121efe1d33ebc17f8e9063146cb1ca4b8cdac1187957f9384d522055d0"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02229-z",
+      "journal": "Nature Chemistry",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-27",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "On-support phosphitylation for oligonucleotide modification",
+      "firstAuthor": "",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_nature-chemistry"
+      ],
+      "sourceHashes": [
+        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02219-1",
+      "journal": "Nature Chemistry",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-20",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Understanding and suppressing gas evolution in lithium metal batteries with ether-based electrolytes",
+      "firstAuthor": "Samantha T. Hung",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-15_2026-08-21_nature-chemistry"
+      ],
+      "sourceHashes": [
+        "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02256-w",
+      "journal": "Nature Chemistry",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-17",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "F-centre charge state and dynamism govern oxide electrocatalytic selectivity",
+      "firstAuthor": "Xiaoyuan Zhang",
+      "priority": "P2",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-15_2026-09-21_nature-chemistry"
+      ],
+      "sourceHashes": [
+        "74772b49d94e5e9be64405fecec73d949ec30924ce9bbe69e8385b2c42f5efb1"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75923-8",
+      "journal": "Nature Communications",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-28",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Split intron-exon system for circular RNA synthesis",
+      "firstAuthor": "Lei Wang",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_nature-communications"
+      ],
+      "sourceHashes": [
+        "7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75221-3",
+      "journal": "Nature Communications",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-29",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Cascade electrosynthesis of glycolic acid from ethylene and oxygen with an energy efficiency of 62.9%",
+      "firstAuthor": "Jun Wang",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_nature-communications"
+      ],
+      "sourceHashes": [
+        "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41467-026-78255-9",
+      "journal": "Nature Communications",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-29",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Methane oxidation in African lakes increases with phytoplankton and outweighs photosynthesis-driven oxic methane production",
+      "firstAuthor": "Alberto V. Borges",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-22_2026-09-30_nature-communications"
+      ],
+      "sourceHashes": [
+        "2e3475048ac0d07885f2145bdd78cf38ce418af568b2c99ce49c67cb581d6fce"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10599",
+      "journal": "JACS",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-30",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Reactivity of Nitroarenes toward Alkyl Radicals Enables Direct C–H Alkylation",
+      "firstAuthor": "Kousik Das",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_jacs"
+      ],
+      "sourceHashes": [
+        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/jacs.6c12925",
+      "journal": "JACS",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-31",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Catalytic Regulation of Cluster-Mediated Growth Enables Scalable Synthesis of Shape-Controlled Single-Crystalline Silver Nanocrystals",
+      "firstAuthor": "Yasutaka Nagaoka",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_jacs"
+      ],
+      "sourceHashes": [
+        "30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/jacs.6c17136",
+      "journal": "JACS",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-29",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Triadic σ–π Coordination Programs Cuδ+ Sites to Drive Sequential Dual-N Species C–N Coupling for Efficient Urea Electrosynthesis",
+      "firstAuthor": "Chao Zhao",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-22_2026-09-30_jacs"
+      ],
+      "sourceHashes": [
+        "4f9d0dcfe3627382692d586281a8722035188abfbd82c6c8a7def568a850d693"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1002/anie.9818208",
+      "journal": "Angew",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-26",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Catalytic C–F Bond Activation at Room Temperature: Enolate Cross‐Couplings Enabled by [Pd(1‐MeNAP)TFA] 2 and LiHMDS",
+      "firstAuthor": "Nele Krüger",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_angew"
+      ],
+      "sourceHashes": [
+        "712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1002/anie.2026-m1308073600",
+      "journal": "Angew",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-20",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Inside Front Cover: Multi‐Level Asymmetric Mesoporous Nanochannels for Photothermal‐Regulated Dopamine Sensing (Angew. Chem. Int. Ed. 41/2026)",
+      "firstAuthor": "Abuduheiremu Awati",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-15_2026-08-21_angew"
+      ],
+      "sourceHashes": [
+        "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1002/anie.3793785",
+      "journal": "Angew",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-07",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Modulating *CO Adsorption Behavior: A Mechanistic Strategy for High‐Efficiency C–N Coupling in Urea Electrochemical Synthesis",
+      "firstAuthor": "Lu‐Hua Zhang",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-01_2026-09-07_angew"
+      ],
+      "sourceHashes": [
+        "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02525",
+      "journal": "ACS Catalysis",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-25",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Emerging Mechanisms and Synthetic Potential of Nonheme Fe(II)/α-Ketoglutarate-Dependent Dioxygenases",
+      "firstAuthor": "Jun-Bin He",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_acs-catalysis"
+      ],
+      "sourceHashes": [
+        "d015a1ceaf64a9f542ab08455564dac615d16bafe330795124d25dfdaf38abd1"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03437",
+      "journal": "ACS Catalysis",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-28",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Reconciling Activity and Selectivity in Photocatalytic HMF Oxidation over PtCo/g-C3N4 via d-Band Center Engineering",
+      "firstAuthor": "Chen Huang",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_acs-catalysis"
+      ],
+      "sourceHashes": [
+        "89455cff2f92af1bfbfbb4b5d36d47d8d08c0964ba318d37db37392951c37085"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c05012",
+      "journal": "ACS Catalysis",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-08",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Catalytic Asymmetric Coupling of Borylallene and Ketones: Rapid Access to Enantioenriched ( Z )- or ( E )-δ-Boryl-Substituted Tertiary Homoallylic Alcohols",
+      "firstAuthor": "Zhen Wu",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-08_2026-09-14_acs-catalysis"
+      ],
+      "sourceHashes": [
+        "5da648e489a1a5a2c6455cfa2dac85aac626338f7e13b1282fe9ef089ebe9c6a"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02188",
+      "journal": "Organic Letters",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-21",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Electrocatalytic Enantioselective Reductive Cross-Coupling for Accessing Chiral α-Aryl Phosphonates",
+      "firstAuthor": "Yin-Hui Huang",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-15_2026-07-21_organic-letters"
+      ],
+      "sourceHashes": [
+        "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03015",
+      "journal": "Organic Letters",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-14",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Nickel-Catalyzed Asymmetric C(sp2)–P Coupling for the Direct Synthesis of the PMOP Atropisomeric Phosphine Ligand",
+      "firstAuthor": "Bendu Pan",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-08_2026-08-14_organic-letters"
+      ],
+      "sourceHashes": [
+        "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03619",
+      "journal": "Organic Letters",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-12",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Dihydrobenzofuran Formation through Ring Contraction of Dihydroisocoumarin Synthesized by a Polyketide Synthase Assembly Line with a Terminal Reductase Domain in Asperfuran Biosynthesis",
+      "firstAuthor": "Xiao-Xin Xue",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-08_2026-09-14_organic-letters"
+      ],
+      "sourceHashes": [
+        "9749c37f30910434eed2f1c7611fab11c12fedc362eb969edec9e181b30bb9a2"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103139",
+      "journal": "Chem",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Redefining synthetic efficiency: Chemical and technological shortcuts",
+      "firstAuthor": "Jonas Djossou",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-01_2026-07-07_chem"
+      ],
+      "sourceHashes": [
+        "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103189",
+      "journal": "Chem",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Replicating the Bohr/Haldane effect in a synthetic system",
+      "firstAuthor": "Chen Zhao",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-01_2026-08-07_chem"
+      ],
+      "sourceHashes": [
+        "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
     }
   ],
   "noAutomaticAcademicDecision": true,
   "noCloudflareD1Access": true,
-  "verifiedPublisherNonResearchExcluded": 24,
-  "verifiedPublisherScopeExcluded": 18,
-  "verifiedPublisherScopeEvidencePending": 2,
+  "verifiedPublisherNonResearchExcluded": 55,
+  "verifiedPublisherScopeExcluded": 29,
+  "verifiedPublisherScopeEvidencePending": 4,
   "publisherScopeEvidencePending": [
     {
       "doi": "10.1038/s41929-026-01608-6",
@@ -6280,6 +6279,24 @@
       "evidenceNeeded": "Nature官方摘要明确体外反应LC–MS、结构和DFT分析，证明特定代谢物生物合成和异常酶反应；但公开材料未证实分离制备规模、离体底物范围或能够独立应用于有机制备的酶改造",
       "nextAction": "优先获取出版社可合法阅读的详细实验与补充信息或作者公开数据，核对AzcA、AzcB/C离体制备、产物分离与非天然底物范围，再进行独立反向挑战；在证据不足时保留pending，不下载或公开历史PDF及图片。",
       "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1038/s44160-026-01115-3",
+      "journal": "Nature Synthesis",
+      "publisherFirstOnlineDate": "2026-07-16",
+      "evidenceNeeded": "原文证实单个复杂拓扑有机配位分子的结构与稳健性，但公开摘要未说明普适前体和拓扑扩展范围",
+      "nextAction": "核对出版社可合法访问的详细实验、产物表征和开放支持信息，判断一般制备/合成路线贡献；在直接证据不足时继续保留pending，不把未获得全文写成原文不存在证据。",
+      "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1038/s44160-026-01146-w",
+      "journal": "Nature Synthesis",
+      "publisherFirstOnlineDate": "2026-09-08",
+      "evidenceNeeded": "公开数据主要是光催化析氢量子效率和电荷寿命，单体/聚合反应通用性未充分呈现",
+      "nextAction": "核对出版社可合法访问的详细实验、产物表征和开放支持信息，判断一般制备/合成路线贡献；在直接证据不足时继续保留pending，不把未获得全文写成原文不存在证据。",
+      "sourceRootId": "2026-09-08_2026-09-14_nature-synthesis",
       "notOriginalManifestPending": true
     }
   ]
