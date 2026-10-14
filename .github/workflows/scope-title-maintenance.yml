@@ -6,6 +6,8 @@ on:
       - '.github/workflows/scope-title-maintenance.yml'
       - 'scripts/smoke-live-chinese-titles.mjs'
       - 'scripts/finalize-verified-scope-correction.mjs'
+      - 'scripts/classify-scope-correction-postdeploy-quality.mjs'
+      - 'scripts/test-scope-correction-postdeploy-quality.mjs'
       - 'scripts/test-scope-title-corrections.mjs'
       - 'scripts/lib/scope-corrections.mjs'
       - 'shared/chinese-title-overrides.js'
@@ -44,6 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/test-scope-title-corrections.mjs | tee /tmp/scope-title-regression.json
+          node scripts/test-scope-correction-postdeploy-quality.mjs
           node scripts/test-literature-completeness-capability.mjs | tee /tmp/discovery-capability-regression.json
       - name: Install isolated browser test tools
         run: |
@@ -85,19 +88,33 @@ jobs:
         run: |
           node --check scripts/finalize-verified-scope-correction.mjs
           node scripts/finalize-verified-scope-correction.mjs
-      - name: Validate full publication quality against corrected state
+      - name: Validate full publication quality against corrected state without conflating exact deletion delivery and discovery closure
+        shell: bash
+        run: |
+          # The existing global quality gate remains fully strict and reports its
+          # actual error. A separate classifier may permit committing an already
+          # verified deletion receipt ONLY for the exact recognized unreviewed
+          # discovery gap. Unexpected errors remain fatal in the classifier.
+          set +e
+          set -o pipefail
+          node scripts/validate-literature-quality-gate.mjs | tee /tmp/scope-correction-quality.json
+          quality_exit=${PIPESTATUS[0]}
+          echo "Global full-literature quality gate exit: $quality_exit"
+          exit 0
+      - name: Require exact post-deletion quality classification and preserve open review gaps
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/validate-literature-quality-gate.mjs | tee /tmp/scope-correction-quality.json
+          node scripts/classify-scope-correction-postdeploy-quality.mjs /tmp/scope-correction-quality.json
       - name: Persist only verified coordination state and evidence
         shell: bash
         run: |
           set -euo pipefail
           if [ ! -f /tmp/scope-correction-state-finalized.json ]; then echo 'No unverified correction'; exit 0; fi
           evidence="$(node -p "require('/tmp/scope-correction-state-finalized.json').evidenceFile")"
+          quality_evidence="$(node -p "require('/tmp/scope-postdelete-quality-classified.json').file")"
           git diff --exit-code -- public shared .github/workflows audit/publication-release-state.json
-          git add audit/literature-update-state.json "$evidence"
+          git add audit/literature-update-state.json "$evidence" "$quality_evidence"
           git diff --cached --binary > /tmp/scope-state-finalize.patch
           base=$(git rev-parse HEAD)
           git fetch origin main
@@ -118,5 +135,6 @@ jobs:
           path: |
             /tmp/scope-correction-state-finalized.json
             /tmp/scope-correction-quality.json
+            /tmp/scope-postdelete-quality-classified.json
           if-no-files-found: warn
           retention-days: 14

@@ -1,0 +1,31 @@
+name: Scope deletion receipt vs discovery quality regression
+on:
+  pull_request:
+    paths:
+      - 'scripts/classify-scope-correction-postdeploy-quality.mjs'
+      - 'scripts/test-scope-correction-postdeploy-quality.mjs'
+      - '.github/workflows/scope-title-maintenance.yml'
+      - '.github/workflows/scope-correction-postdelete-quality-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/classify-scope-correction-postdeploy-quality.mjs'
+      - 'scripts/test-scope-correction-postdeploy-quality.mjs'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate post-deletion quality classifier
+        run: |
+          node --check scripts/classify-scope-correction-postdeploy-quality.mjs
+          node scripts/test-scope-correction-postdeploy-quality.mjs
+      - name: Check established deletion-only authorization regressions
+        run: |
+          node scripts/test-immediate-scope-correction.mjs
+          node scripts/test-pages-literature-authorization.mjs
