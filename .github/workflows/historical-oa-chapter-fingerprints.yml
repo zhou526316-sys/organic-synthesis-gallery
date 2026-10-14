@@ -1,0 +1,46 @@
+name: Verify frozen official OA science chapter evidence
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical_oa_section_review.py'
+      - 'scripts/test_historical_oa_section_review.py'
+      - 'audit/historical-body-review/2026-10-14-oa-section-source-targets.json'
+      - '.github/workflows/historical-oa-chapter-fingerprints.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical_oa_section_review.py'
+      - '.github/workflows/historical-oa-chapter-fingerprints.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: historical-oa-chapter-proof
+  cancel-in-progress: false
+jobs:
+  science:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate source parsing and rights with offline fixtures
+        run: |
+          python3 -m py_compile scripts/historical_oa_section_review.py
+          python3 -m unittest scripts.test_historical_oa_section_review -v
+      - name: Read two frozen DOI-exact CC JATS with no source storage
+        if: github.event_name != 'pull_request'
+        run: |
+          python3 scripts/historical_oa_section_review.py \
+            --targets audit/historical-body-review/2026-10-14-oa-section-source-targets.json \
+            --output /tmp/historical-oa-chapter-fingerprints.json
+      - name: Preserve only DOI-scoped section metadata and SHA256 values
+        if: github.event_name != 'pull_request' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-oa-chapter-proof
+          path: /tmp/historical-oa-chapter-fingerprints.json
+          retention-days: 7
+          if-no-files-found: warn
