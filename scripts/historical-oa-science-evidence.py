@@ -122,7 +122,10 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
     ADMIN_HEADINGS = ("data availability", "code availability", "rights and permissions",
         "additional information", "ethics declarations", "author information",
         "acknowledgements", "acknowledgments", "funding information",
-        "conflict of interest", "competing interests", "supplementary information")
+        "conflict of interest", "competing interests", "supplementary information",
+        "supplementary material", "online content", "author contributions",
+        "contributor information", "funding", "correspondence", "bibliography",
+        "conflict of interests", "declaration of competing interest")
     def include_piece(typ, heading, text, n):
         # Keep short *authentic* scientific fragments as a separate hash-
         # evidenced completeness gap. They are never fabricated/padded to pass
