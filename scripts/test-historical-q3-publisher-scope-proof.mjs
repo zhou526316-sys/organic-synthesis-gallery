@@ -115,3 +115,35 @@ test('Q3 remains scientifically unclosed even after all DOI statuses in one shar
   assert.equal(coverage.reference.notAutomaticInclusionTarget,true);
   assert.equal(coverage.guards.officialPublisherIssueCompletenessNotEstablished,true);
 });
+
+test('DOI-exact concise Chinese preparative description is valid scientific evidence, not an empty template',()=>{
+  const row=authority.reviewed.find(x=>x.doi==='10.1038/s41929-026-01571-2');
+  assert.equal(row.assessment.preparativeTransformation.length,24);
+  assert.ok(row.assessment.firstPassReason.length>=40);
+  assert.ok(row.assessment.independentChallengeReason.length>=40);
+  const sourceRoot=row.sourceRootId;
+  const sourceShard={
+    ...shard,rootId:sourceRoot,
+    sourceSha256:row.stageSourceSha256,
+    gitBlobSha:row.stageBatchGitBlobSha,
+    stats:{candidateOccurrences:1},
+    records:[{
+      doi:row.doi,journal:'Nature Catalysis',date:row.date,
+      title:row.assessment.primaryContribution,
+      sourceFamilies:row.sourceFamilies,flags:[],authors:['One Author'],priority:'P2'
+    }]
+  };
+  const input={
+    ...mock,
+    state:{...mock.state,completed:[sourceRoot]},
+    triage:{...mock.triage,rootSummaries:{
+      [sourceRoot]:{sourceSha256:row.stageSourceSha256}
+    }},
+    shards:[sourceShard],
+    publisherReviewedScope:{...authority,reviewed:[row]}
+  };
+  const result=reconcileQ3(input);
+  assert.equal(result.coverage.counters.sourcePublisherReviewedScopeExcluded,1);
+  assert.equal(result.coverage.counters.unfinishedQ3OrDateVerification,0);
+  assert.equal(result.worklist.totalUnreviewedCandidates,0);
+});
