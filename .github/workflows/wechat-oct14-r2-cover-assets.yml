@@ -1,0 +1,26 @@
+name: WeChat Oct14 R2 precise cover upload
+on:
+  push:
+    branches: [wechat-oct14-r2-cover-language]
+    paths:
+      - audit/automation-triggers/wechat-oct14-r2-covers-upload.json
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download SHA-pinned original-plus-concept art only
+        env:
+          ORIGINAL_COVER_ARCHIVE: https://at.adobe.com/e31GxwfFMaCa9lTH
+        run: python3 scripts/wechat-oct14-r2-stage-covers.py
+      - name: Commit exactly the two reviewed image assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-assets/reviewed/2026-10-14-r2/cover_featured.png public/wechat-assets/reviewed/2026-10-14-r2/cover_retrospective.png
+          git diff --cached --check
+          git commit -m 'assets(wechat): corrected exact title-safe JACS Fig1B cover and abstract IDPi concept art'
+          git push origin HEAD:wechat-oct14-r2-cover-language
