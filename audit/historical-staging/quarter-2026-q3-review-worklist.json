@@ -1,11 +1,11 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-14T03:43:43.792Z",
+  "generatedAt": "2026-10-14T05:51:02.193Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11423,
+  "totalUnreviewedCandidates": 11408,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
@@ -33,9 +33,9 @@
   },
   "byPriority": {
     "P1": 108,
-    "P0": 152,
-    "P2": 39,
-    "P3": 21
+    "P0": 151,
+    "P2": 33,
+    "P3": 28
   },
   "requiringDateVerification": 37,
   "sourceWindowsComplete": true,
@@ -174,14 +174,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01608-6",
+      "doi": "10.1038/s41929-026-01610-y",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-25",
+      "apiDateCandidate": "2026-08-24",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Electrochemical coupling of CO2 and phosphite for foscarnet synthesis",
-      "firstAuthor": "Hengan Wang",
-      "priority": "P0",
+      "title": "Single-turnover optical imaging of nonfluorescent electrocatalysis",
+      "firstAuthor": "",
+      "priority": "P2",
       "flags": [],
       "sourceRootIds": [
         "2026-08-22_2026-08-31_nature-catalysis"
@@ -1087,13 +1087,13 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01559-y",
+      "doi": "10.1038/s41929-026-01577-w",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-31",
+      "apiDateCandidate": "2026-07-23",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Quantifying uncertainty in catalyst activity and deactivation during CO2 hydrogenation via round-robin testing for data-driven modelling",
-      "firstAuthor": "Selin Bac",
+      "title": "Defining screening of peptide-functionalizing biocatalysts",
+      "firstAuthor": "Florian Hubrich",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -1106,20 +1106,20 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01603-x",
+      "doi": "10.1038/s41929-026-01583-y",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-25",
+      "apiDateCandidate": "2026-08-20",
       "publisherFirstOnlineDateVerified": false,
-      "title": "pH-dependent interaction of interfacial water with Pt in the electrocatalytic hydrogen oxidation reaction",
-      "firstAuthor": "Wen-xuan Liang",
+      "title": "Getting real about transient electrocatalysis",
+      "firstAuthor": "Mijndert van der Spek",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-catalysis"
+        "2026-08-15_2026-08-21_nature-catalysis"
       ],
       "sourceHashes": [
-        "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41"
+        "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2017,51 +2017,51 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01584-x",
+      "doi": "10.1038/s41929-026-01591-y",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-30",
+      "apiDateCandidate": "2026-07-13",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Evidence of Eley–Rideal mechanism in Cu-catalysed CO2 electroreduction in flow cells with a protective layer",
-      "firstAuthor": "Qiwen Sun",
+      "title": "Author Correction: Bifunctional molecular additives enable efficient oxygen reduction reaction on platinum electrodes in the presence of strongly binding anions",
+      "firstAuthor": "Kaiyue Zhao",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-catalysis"
+        "2026-07-08_2026-07-14_nature-catalysis"
       ],
       "sourceHashes": [
-        "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e"
+        "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01610-y",
+      "doi": "10.1038/s41929-026-01596-7",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-24",
+      "apiDateCandidate": "2026-08-07",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Single-turnover optical imaging of nonfluorescent electrocatalysis",
-      "firstAuthor": "",
+      "title": "The important ingredient in your catalyst you never meant to add",
+      "firstAuthor": "Arun Devaraj",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-catalysis"
+        "2026-08-01_2026-08-07_nature-catalysis"
       ],
       "sourceHashes": [
-        "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41"
+        "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01605-9",
+      "doi": "10.1038/s41929-026-01609-5",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-07",
       "publisherFirstOnlineDateVerified": false,
-      "title": "The role of individual nickel surface species in the hydrogen evolution reaction on nickel in alkaline electrolytes",
-      "firstAuthor": "Dzevad K. Kozlica",
+      "title": "Unlocking reaction pathways for CO2 and CO electrocatalytic reduction to C3+ hydrocarbons and oxygenates using plasma activation",
+      "firstAuthor": "Ji-Yong Kim",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -2949,58 +2949,58 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01577-w",
+      "doi": "10.1038/s41929-026-01590-z",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-23",
+      "apiDateCandidate": "2026-07-09",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Defining screening of peptide-functionalizing biocatalysts",
-      "firstAuthor": "Florian Hubrich",
+      "title": "Publisher Correction: Atomically precise layer-by-layer titration of perovskite oxides reveals the termination-specific reactivity in oxygen electrocatalysis",
+      "firstAuthor": "Hongyang Su",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-catalysis"
+        "2026-07-08_2026-07-14_nature-catalysis"
       ],
       "sourceHashes": [
-        "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e"
+        "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01583-y",
+      "doi": "10.1038/s41929-026-01594-9",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-20",
+      "apiDateCandidate": "2026-08-05",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Getting real about transient electrocatalysis",
-      "firstAuthor": "Mijndert van der Spek",
+      "title": "Chiral phosphorus by catalyst design",
+      "firstAuthor": "Kyle Knouse",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-15_2026-08-21_nature-catalysis"
+        "2026-08-01_2026-08-07_nature-catalysis"
       ],
       "sourceHashes": [
-        "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00"
+        "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01609-5",
+      "doi": "10.1038/s41929-026-01623-7",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-07",
+      "apiDateCandidate": "2026-09-23",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Unlocking reaction pathways for CO2 and CO electrocatalytic reduction to C3+ hydrocarbons and oxygenates using plasma activation",
-      "firstAuthor": "Ji-Yong Kim",
-      "priority": "P2",
+      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
+      "firstAuthor": "Haesol Kim",
+      "priority": "P3",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-01_2026-09-07_nature-catalysis"
+        "2026-09-22_2026-09-30_nature-catalysis"
       ],
       "sourceHashes": [
-        "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59"
+        "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -3879,51 +3879,51 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01591-y",
+      "doi": "10.1038/s41929-026-01572-1",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-13",
+      "apiDateCandidate": "2026-07-31",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Author Correction: Bifunctional molecular additives enable efficient oxygen reduction reaction on platinum electrodes in the presence of strongly binding anions",
-      "firstAuthor": "Kaiyue Zhao",
-      "priority": "P2",
+      "title": "Uncovering the source of uncertainty",
+      "firstAuthor": "Lichen Liu",
+      "priority": "P3",
       "flags": [],
       "sourceRootIds": [
-        "2026-07-08_2026-07-14_nature-catalysis"
+        "2026-07-22_2026-07-31_nature-catalysis"
       ],
       "sourceHashes": [
-        "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f"
+        "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01595-8",
+      "doi": "10.1038/s41929-026-01598-5",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-14",
+      "apiDateCandidate": "2026-08-24",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Oxygen migration pathways in the methanol oxidation reaction",
-      "firstAuthor": "Fanxu Meng",
-      "priority": "P2",
+      "title": "From amines to nitriles via C–N bond cleavage",
+      "firstAuthor": "Muliang Zhang",
+      "priority": "P3",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-08_2026-08-14_nature-catalysis"
+        "2026-08-22_2026-08-31_nature-catalysis"
       ],
       "sourceHashes": [
-        "ff3314d28365fd357fa923c30eb871a280e80123d0a394c5a562e6136056b558"
+        "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01623-7",
+      "doi": "10.1038/s41929-026-01614-8",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-23",
+      "apiDateCandidate": "2026-09-22",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
-      "firstAuthor": "Haesol Kim",
+      "title": "Engineering cellular nitrene chemistry",
+      "firstAuthor": "Jan-Stefan Völler",
       "priority": "P3",
       "flags": [],
       "sourceRootIds": [
@@ -4809,58 +4809,58 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01590-z",
+      "doi": "10.1038/s41929-026-01570-3",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-09",
+      "apiDateCandidate": "2026-07-23",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Publisher Correction: Atomically precise layer-by-layer titration of perovskite oxides reveals the termination-specific reactivity in oxygen electrocatalysis",
-      "firstAuthor": "Hongyang Su",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-08_2026-07-14_nature-catalysis"
-      ],
-      "sourceHashes": [
-        "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41929-026-01599-4",
-      "journal": "Nature Catalysis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-13",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Single-turnover subparticle imaging reveals kinetic compensation in electrocatalytic surface water dissociation",
-      "firstAuthor": "Lei Fan",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-08_2026-08-14_nature-catalysis"
-      ],
-      "sourceHashes": [
-        "ff3314d28365fd357fa923c30eb871a280e80123d0a394c5a562e6136056b558"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41929-026-01614-8",
-      "journal": "Nature Catalysis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-22",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Engineering cellular nitrene chemistry",
-      "firstAuthor": "Jan-Stefan Völler",
+      "title": "The interphase behind lithium-mediated ammonia",
+      "firstAuthor": "David Kumar Yesudoss",
       "priority": "P3",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-catalysis"
+        "2026-07-22_2026-07-31_nature-catalysis"
       ],
       "sourceHashes": [
-        "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d"
+        "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01581-0",
+      "journal": "Nature Catalysis",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-20",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Phosphines beyond lone pairs",
+      "firstAuthor": "Camilla Callegari",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-15_2026-08-21_nature-catalysis"
+      ],
+      "sourceHashes": [
+        "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01612-w",
+      "journal": "Nature Catalysis",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-21",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Operando single-atom tracking in individual Pt nanoparticles detects the coexistence of Langmuir and Taylor active sites",
+      "firstAuthor": "K. Jenkinson",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-15_2026-09-21_nature-catalysis"
+      ],
+      "sourceHashes": [
+        "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5743,58 +5743,58 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41929-026-01574-z",
+      "doi": "10.1038/s41929-026-01586-9",
       "journal": "Nature Catalysis",
       "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-08",
+      "apiDateCandidate": "2026-07-23",
       "publisherFirstOnlineDateVerified": false,
-      "title": "Copper-catalysed carbon monoxide electrolysis under dynamic operation",
-      "firstAuthor": "Wanyu Deng",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-08_2026-07-14_nature-catalysis"
-      ],
-      "sourceHashes": [
-        "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41929-026-01596-7",
-      "journal": "Nature Catalysis",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-07",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "The important ingredient in your catalyst you never meant to add",
-      "firstAuthor": "Arun Devaraj",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-01_2026-08-07_nature-catalysis"
-      ],
-      "sourceHashes": [
-        "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41929-026-01612-w",
-      "journal": "Nature Catalysis",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-21",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Operando single-atom tracking in individual Pt nanoparticles detects the coexistence of Langmuir and Taylor active sites",
-      "firstAuthor": "K. Jenkinson",
+      "title": "Industrial waste reformed",
+      "firstAuthor": "Chenyu Wang",
       "priority": "P3",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-15_2026-09-21_nature-catalysis"
+        "2026-07-22_2026-07-31_nature-catalysis"
       ],
       "sourceHashes": [
-        "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2"
+        "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01588-7",
+      "journal": "Nature Catalysis",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-20",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Enzyme cascade transforms DNA-encoded chemical libraries",
+      "firstAuthor": "Yizhou Li",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-15_2026-08-21_nature-catalysis"
+      ],
+      "sourceHashes": [
+        "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01613-9",
+      "journal": "Nature Catalysis",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-11",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Consequences of overtones in Raman spectra for assigning nickel anode surface structures as NiO2 during alkaline electrolysis",
+      "firstAuthor": "Justus Leist",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-08_2026-09-14_nature-catalysis"
+      ],
+      "sourceHashes": [
+        "ce91a360b874087818e02ad8fa9b61472131e80de4fa3f672b1891f2a89a58ad"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -6239,5 +6239,18 @@
   ],
   "noAutomaticAcademicDecision": true,
   "noCloudflareD1Access": true,
-  "verifiedPublisherNonResearchExcluded": 5
+  "verifiedPublisherNonResearchExcluded": 5,
+  "verifiedPublisherScopeExcluded": 14,
+  "verifiedPublisherScopeEvidencePending": 1,
+  "publisherScopeEvidencePending": [
+    {
+      "doi": "10.1038/s41929-026-01608-6",
+      "journal": "Nature Catalysis",
+      "publisherFirstOnlineDate": "2026-08-25",
+      "evidenceNeeded": "官方摘要给出法拉第效率、电流密度和单位面积生成速率；本轮证据尚不足以确认分离制备、产品纯度/物料衡算和可迁移的反应范围。",
+      "nextAction": "核对作者公开实验中的膦甲酸分离、鉴定、纯度、制备规模与物料衡算，确认是否有可迁移的C–P合成证据，再独立复审；不触发历史PDF或图片批量补抓。",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+      "notOriginalManifestPending": true
+    }
+  ]
 }
