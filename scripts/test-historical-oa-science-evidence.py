@@ -91,6 +91,21 @@ class SourceEvidenceTest(unittest.TestCase):
         self.assertEqual(len(result["shortScienceFragments"][0]["sha256"]),64)
         self.assertEqual(result["publicFtsImported"],False)
         self.assertNotIn("Very brief note.",json.dumps(result))
+    def test_jats_online_content_and_supplement_links_excluded(self):
+        raw=fixture().replace(b"</body>",(
+            b"<sec><title>Online content</title><p>The supplementary materials and online "
+            b"content are accessible from the publisher website.</p></sec>"
+            b"<sec><title>Author contributions</title><p>The authors planned and "
+            b"supervised the research and reviewed this final manuscript.</p></sec>"
+            b"<sec><title>Supplementary Material</title><p>Additional Supporting "
+            b"Information is available online under the publisher's links.</p></sec>"
+            b"</body>"))
+        result=source.parse_science_jats(raw,DOI)
+        self.assertEqual(result["shortScienceFragmentCount"],0)
+        self.assertFalse(any(x["heading"] in (
+            "Online content","Supplementary Material","Author contributions")
+            for x in result["sections"]))
+
     def test_administrative_data_availability_not_in_scientific_sections(self):
         raw=fixture().replace(b"</body>",(
             b"<sec><title>Data availability</title><p>All article data are in the "
