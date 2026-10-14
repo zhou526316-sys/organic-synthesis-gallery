@@ -59,7 +59,7 @@ jobs:
         with:
           node-version: '22'
       - name: Resolve reviewed, catalog-pinned and bounded source window
-        id: source-window
+        id: source_window
         shell: bash
         env:
           OA_EVENT: ${{ github.event_name }}
@@ -96,11 +96,11 @@ jobs:
           NODE
           fi
       - name: Scan one exact published-DOI OA window (no protected article requests)
-        if: steps.source-window.outputs.enabled == 'true'
+        if: steps.source_window.outputs.enabled == 'true'
         env:
-          OA_OFFSET: ${{ steps.source-window.outputs.offset }}
-          OA_LIMIT: ${{ steps.source-window.outputs.limit }}
-          OA_CATALOG: ${{ steps.source-window.outputs.catalog }}
+          OA_OFFSET: ${{ steps.source_window.outputs.offset }}
+          OA_LIMIT: ${{ steps.source_window.outputs.limit }}
+          OA_CATALOG: ${{ steps.source_window.outputs.catalog }}
         run: |
           node scripts/audit-historical-open-science-oa.mjs --limit="$OA_LIMIT" \
             --offset="$OA_OFFSET" --expected-catalog-id="$OA_CATALOG" \
