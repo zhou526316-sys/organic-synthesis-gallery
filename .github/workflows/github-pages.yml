@@ -131,6 +131,7 @@ jobs:
         if: steps.resolve.outputs.should_deploy == 'true'
         run: |
           node scripts/test-pages-literature-authorization.mjs
+          node scripts/test-verified-title-presentation.mjs
           node scripts/test-one-time-owner-catchup-20261013.mjs
       - name: Enforce fixed literature publication slot
         if: steps.resolve.outputs.should_deploy == 'true'
