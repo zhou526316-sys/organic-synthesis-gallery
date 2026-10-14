@@ -4,7 +4,7 @@
 
 Yuang Cui、Yizhou Chen、Hui Lv、Rao Liang、Beibei Zhan、Xiaheng Zhang｜JACS｜DOI：10.1021/jacs.6c17662
 
-> 10 月 14 日正式新增：24 篇。JOC 7、Organic Letters 7、JACS 2、Angew 2、ACS Catalysis 2、Nature Synthesis 2、Nature Communications 1、Chemical Science 1。这里仅显示正式入库计数；实际公众号需使用 Gallery 的真实文献卡片及扫码入口。
+> 10 月 14 日正式新增：20 篇。JOC 7、Organic Letters 7、JACS 2、ACS Catalysis 1、Nature Synthesis 2、Chemical Science 1。这里仅显示正式入库计数；实际公众号需使用 Gallery 的真实文献卡片及扫码入口。
 
 ## 先看懂这项反应
 
