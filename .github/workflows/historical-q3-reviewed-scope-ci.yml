@@ -7,6 +7,11 @@ on:
       - 'scripts/historical-q3-reviewed-scope-proof.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-publisher-scope-proof.mjs'
+      - 'scripts/test-historical-q3-natcatal-residual-24.mjs'
+      - 'audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json'
+      - 'audit/historical-reviewed/q3-natcatal-nonoriginal-19-two-pass.json'
+      - 'audit/historical-reviewed/q3-natcatal-late-online-five-source-proof.json'
+      - 'audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json'
       - 'audit/historical-reviewed/q3-natcatal-scope-source-proof.json'
       - 'audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json'
       - '.github/workflows/historical-q3-reviewed-scope-ci.yml'
@@ -29,3 +34,5 @@ jobs:
         run: node --test scripts/test-historical-q3-reconciliation.mjs
       - name: Validate 15 exact DOI science decisions, source hashes, and new isolated counters
         run: node --test scripts/test-historical-q3-publisher-scope-proof.mjs
+      - name: Verify 24 additional Nat Catal DOI source hashes and academic/nonoriginal partitions
+        run: node --test scripts/test-historical-q3-natcatal-residual-24.mjs

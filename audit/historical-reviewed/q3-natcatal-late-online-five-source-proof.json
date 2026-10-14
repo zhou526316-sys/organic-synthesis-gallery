@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "gallery-historical-q3-reviewed-scope-source-proof-v1",
+  "mode": "frozen_source_proof_for_scientific_scope_reviews_not_publication",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "period": "2026-07-01..2026-09-30",
+  "scientificEvidenceFile": "audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json",
+  "scientificEvidenceBlobSha": "44c417a6ea039703e867674ec25888e3e63a632c",
+  "reviewed": [
+    {
+      "doi": "10.1038/s41929-026-01609-5",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-07",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01609-5",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-catalysis.json",
+      "stageSourceSha256": "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59",
+      "stageBatchGitBlobSha": "908d4e8cc5e9f560c90c4e9981000a14a2deacff",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01611-x",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-07",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01611-x",
+      "scientificDecision": "pending",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-catalysis.json",
+      "stageSourceSha256": "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59",
+      "stageBatchGitBlobSha": "908d4e8cc5e9f560c90c4e9981000a14a2deacff",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01613-9",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-11",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01613-9",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-09-08_2026-09-14_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-08_2026-09-14_nature-catalysis.json",
+      "stageSourceSha256": "ce91a360b874087818e02ad8fa9b61472131e80de4fa3f672b1891f2a89a58ad",
+      "stageBatchGitBlobSha": "2040f425db56d6c46f34490e4606203c9c96ef9a",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01612-w",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-21",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01612-w",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-09-15_2026-09-21_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-15_2026-09-21_nature-catalysis.json",
+      "stageSourceSha256": "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2",
+      "stageBatchGitBlobSha": "f5e35437883b2d28030ef6c7499999ce3958642a",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01615-7",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-25",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01615-7",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-09-22_2026-09-30_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-catalysis.json",
+      "stageSourceSha256": "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d",
+      "stageBatchGitBlobSha": "450fb275555579041ca0b0d7d90b328b7bc40791",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "scopeExclude": 4,
+    "scopeEvidencePending": 1
+  },
+  "limits": {
+    "notPermanentOwnerExclusions": true,
+    "notAcademicAdmissions": true,
+    "sourceShardsRemainImmutable": true,
+    "noD1": true,
+    "noPdfOrMedia": true
+  }
+}
