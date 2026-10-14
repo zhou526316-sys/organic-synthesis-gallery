@@ -8,6 +8,8 @@ const RIGHTS={'cc-by-4.0':'https://creativecommons.org/licenses/by/4.0/',
   'cc0-1.0':'https://creativecommons.org/publicdomain/zero/1.0/'};
 const TYPES=new Set(['results','scope','mechanism','experimental','introduction',
   'conclusion','figure_caption','table','other']);
+const MAX_SCIENCE_SECTIONS=32;
+const MAX_SCIENCE_BYTES=240000;
 const FORBIDDEN=/^(?:references?|bibliography|acknowledgements?|rights and permissions|open access|license|copyright|associated content|author information)\b/i;
 const ready=new WeakSet();
 const resp=(status,body)=>({status,body});
@@ -62,7 +64,8 @@ async function normalizeInput(input){
   if(input.origin!=='independently_reviewed_public_text'
     ||input.publicUploadAllowed!==true)throw Error('body_private_packet_not_eligible');
   const rows=input.sections,sections=[],ids=new Set();
-  if(!Array.isArray(rows)||rows.length<1||rows.length>8)throw Error('body_batch_invalid');
+  if(!Array.isArray(rows)||rows.length<1||rows.length>MAX_SCIENCE_SECTIONS)throw Error('body_batch_invalid');
+  let textBytes=0;
   for(const row of rows){
     const sectionId=String(row?.sectionId||''),type=String(row?.type||''),
       heading=String(row?.heading||'').trim().slice(0,200),
@@ -71,6 +74,8 @@ async function normalizeInput(input){
       ||FORBIDDEN.test(heading)||text.length<60||text.length>16000||text.includes('\u0000'))
       throw Error('body_section_invalid');
     if(!SHA.test(row.sha256)||await hash(text)!==row.sha256)throw Error('body_section_sha_invalid');
+    textBytes+=new TextEncoder().encode(text).byteLength;
+    if(textBytes>MAX_SCIENCE_BYTES)throw Error('body_science_byte_budget_exceeded');
     sections.push({sectionId,type,heading,text,sha:row.sha256});ids.add(sectionId);
   }
   const canonical=sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n');
@@ -108,12 +113,28 @@ export async function importReviewedPublicBodySections(env,input){
     .bind(n.catalogId,n.doi).first();
   if(member?.revision!==n.revision)return resp(409,{error:'body_doi_revision_mismatch'});
   await ensurePublicBodySchema(env);
-  const prev=await db.prepare('SELECT DISTINCT source_sha FROM literature_body_sections_reviewed WHERE catalog_id=? AND doi=?')
+  const prev=await db.prepare('SELECT section_id,section_type,heading,section_sha,source_sha '+
+    'FROM literature_body_sections_reviewed WHERE catalog_id=? AND doi=?')
     .bind(n.catalogId,n.doi).all();
-  const hashes=(prev.results||[]).map(x=>x.source_sha);
-  if(hashes.length&&hashes.every(x=>x===n.sourceSha))
-    return resp(200,{ok:true,alreadyReviewed:true,doi:n.doi,storedSections:0,publicEnabled:false});
-  if(hashes.length)return resp(409,{error:'body_reviewed_source_conflict'});
+  const existing=prev.results||[];
+  if(existing.length){
+    const approvedById=new Map(n.sections.map(s=>[s.sectionId,s]));
+    const identical=existing.length===n.sections.length&&existing.every(row=>{
+      const s=approvedById.get(row.section_id);
+      return Boolean(s&&row.section_type===s.type&&row.heading===s.heading
+        &&row.section_sha===s.sha&&row.source_sha===n.sourceSha);
+    });
+    if(identical){
+      const fts=await db.prepare('SELECT COUNT(*) AS c FROM literature_body_sections_fts '+
+        'WHERE catalog_id=? AND doi=?').bind(n.catalogId,n.doi).first();
+      if(Number(fts?.c)===n.sections.length)
+        return resp(200,{ok:true,alreadyReviewed:true,doi:n.doi,
+          storedSections:0,publicEnabled:false});
+    }
+    // A same-SHA DOI with missing rows, changed section types or missing FTS
+    // must not be silently acknowledged as a complete approved import.
+    return resp(409,{error:'body_reviewed_source_conflict'});
+  }
   if(typeof db.batch!=='function')return resp(503,{error:'body_atomic_transaction_required'});
   const now=Date.now(),statements=[];
   for(const s of n.sections){

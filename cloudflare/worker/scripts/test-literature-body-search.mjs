@@ -135,6 +135,45 @@ test('reviewed public CC by sections can be indexed but remain private until exp
   conflict.rightsReview={...conflict.rightsReview,sourceSha256:conflict.sourceSha256};
   assert.equal((await importReviewedPublicBodySections(env,conflict)).status,409);
 });
+test('25 real-structure scientific sections import atomically; truncated replay cannot pretend complete',async t=>{
+  const env=await fixture(t),base=packet();
+  const sections=Array.from({length:25},(_,i)=>{
+    const sectionId='s'+String(i+1).padStart(3,'0');
+    const type=i%2?'mechanism':'results';
+    const heading='Research section '+(i+1);
+    const text='Verified scientific original content with DOI-bound spectroscopy and synthesis examples. '.repeat(2)+' Section '+i;
+    return {sectionId,type,heading,text,sha256:sha(text)};
+  });
+  const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
+  const payload={...base,sections,sourceSha256,
+    rightsReview:{...base.rightsReview,sourceSha256}};
+  const first=await importReviewedPublicBodySections(env,payload);
+  assert.equal(first.status,200);assert.equal(first.body.storedSections,25);
+  const coverage=await getPublicBodyCoverage(env,GEN.catalogId);
+  assert.equal(coverage.body.verifiedDoi,1);assert.equal(coverage.body.verifiedSections,25);
+  const repeated=await importReviewedPublicBodySections(env,payload);
+  assert.equal(repeated.status,200);assert.equal(repeated.body.alreadyReviewed,true);
+  env.LITERATURE_INDEX_DB.sqlite.prepare('DELETE FROM literature_body_sections_reviewed WHERE catalog_id=? AND doi=? AND section_id=?')
+    .run(GEN.catalogId,DOI,'s025');
+  const incomplete=await importReviewedPublicBodySections(env,payload);
+  assert.equal(incomplete.status,409);assert.equal(incomplete.body.error,'body_reviewed_source_conflict');
+});
+test('source-size and section-limit constraints never become partial public science',async t=>{
+  const env=await fixture(t),base=packet();
+  const mk=(n,chars)=>Array.from({length:n},(_,i)=>{
+    const text=('A'.repeat(chars-3))+String(i).padStart(3,'0');
+    return {sectionId:'s'+String(i+1).padStart(3,'0'),type:'results',
+      heading:'Experimental results '+i,text,sha256:sha(text)};
+  });
+  for(const sections of [mk(33,120),mk(20,15000)]){
+    const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
+    const x={...base,sections,sourceSha256,
+      rightsReview:{...base.rightsReview,sourceSha256}};
+    assert.equal((await importReviewedPublicBodySections(env,x)).status,400);
+  }
+  const coverage=await getPublicBodyCoverage(env,GEN.catalogId);
+  assert.equal(coverage.body.verifiedDoi,0);
+});
 test('unauthorized importer route and disabled public endpoint preserve least privilege',async t=>{
   const env=await fixture(t);env.BRIDGE_WRITE_TOKEN='test-only-local-bearer';
   const worker=(await import('../src/index.js')).default;
