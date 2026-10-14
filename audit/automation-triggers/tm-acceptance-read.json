@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261014-1733-bridge284-read",
-  "requestedAt": "2026-10-14T09:33:00Z",
+  "requestId": "tm-20261014-1852-fresh-owner-upload",
+  "requestedAt": "2026-10-14T10:53:36.378Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "Read newest manually uploaded Tampermonkey log and R2 media indexes. Compare owner screenshot: 207 gap jobs; 101 publisher pages; 43 resolved; 162 outstanding; last progress 15:10 BJT. Classify failure categories and whether run is idle/stalled. Only read existing evidence, do not alter media.",
+  "context": "User reports another newly uploaded Tampermonkey log in the Oct14 18:52 Beijing project conversation. Read latest R2 owner diagnostics, per-DOI reports and media indexes read-only. Compare prior verified owner 2026-10-14 17:33 upload (207 tasks, 101 DOI visits, 111 results; fullyResolved43, unresolved162, TOC158/PDF6; 820 historical 261 Oct, scopeCount1087). Verify upload time/run identity, phase, per-layer receipt truth, current owner PDF inventory, nature/RSC/Chem source failures and any improvement/regression. No media writes, no publisher access, no scheduler changes, preserve provenance and protection for 7-9 historical TOC-only and 10-1+ full bundle.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
