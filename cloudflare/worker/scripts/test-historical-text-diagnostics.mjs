@@ -126,3 +126,20 @@ test('live Worker route rejects all anonymous reads/writes and confirms owner re
   assert.ok(!JSON.stringify(result).includes('test-only-owner-write-token'));
   assert.equal(read.headers.get('access-control-allow-origin'),'https://gallery.gczhouwld.com');
 });
+
+test('pending publisher hydration has its own owner-only metadata reason',async t=>{
+  const db=new D1();t.after(()=>db.close());const env={DB:db};
+  const row=base({eventId:'htext_pending_aaaaaaaaaaaa',scriptVersion:'0.2.9',
+    reasonCode:'license_pending_load',status:'failed',stage:'publisher_wait',
+    pageDoiVerified:true,sectionCount:1,evidenceChars:264});
+  const result=await importHistoricalDiagnostic(env,row);
+  assert.equal(result.status,200);
+  assert.equal(result.body.stored,true);
+  const received=await listHistoricalDiagnostics(env,{doi:row.doi});
+  assert.equal(received.body.count,1);
+  assert.equal(received.body.items[0].reasonCode,'license_pending_load');
+  assert.equal(received.body.items[0].scriptVersion,'0.2.9');
+  assert.equal(received.body.items[0].httpStatus,null);
+  assert.equal(received.body.items[0].pageDoiVerified,true);
+  assert.equal(JSON.stringify(received.body).includes('articleText'),false);
+});

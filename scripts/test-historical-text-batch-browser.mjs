@@ -396,6 +396,65 @@ try{
   assert.equal(await pdfPage.locator('#osg-historical-batch').count(),0,
     'historical batch must not overlay private PDF reader');
   await pdfPage.close();
+
+  // Full Chromium publisher page: fixed h2/p element count, but its exact
+  // article-level CC BY metadata hydrates after 3.5s (> previous 3.2s).
+  // The old worker prematurely reported licence_not_verified and closed the tab.
+  async function browserArticleRightsCase({rights='',appearAfterMs=0,probeMs=9500}={}){
+    const articleDoi=doiOld[0], token='a'.repeat(24), run='b'.repeat(24);
+    const articlePage=await browser.newPage();
+    const science=('LMCT photochemical mechanism experiments provide robust reaction scope evidence with isolated products. ').repeat(9);
+    const abstract=('The method develops a selective carbon-carbon coupling protocol under mild conditions. ').repeat(5);
+    const html='<!doctype html><html><head><title>Science paper</title>'+
+      '<meta name="citation_doi" content="'+articleDoi+'"></head><body><main><article>'+
+      '<section><h2>Abstract</h2><p>'+abstract+'</p></section>'+
+      '<section><h2>Results and discussion</h2><p>'+science+'</p></section>'+
+      '</article></main></body></html>';
+    await articlePage.route('https://pubs.acs.org/**',route=>route.fulfill({
+      status:200,contentType:'text/html',body:html}));
+    await articlePage.goto('https://pubs.acs.org/doi/'+articleDoi+
+      '#gallery-historical-job='+token);
+    await articlePage.evaluate(({articleDoi,token,run,rights,appearAfterMs})=>{
+      window.__publisherGm=new Map([['gallery-historical-text-batch-v2:job',{
+        doi:articleDoi,publication:'2026-09-14',journal:'JACS',
+        title:'Verified scientific text',runId:run,token,
+        expiresAt:Date.now()+20000
+      }]]);
+      window.GM_getValue=(key,def)=>window.__publisherGm.has(key)?window.__publisherGm.get(key):def;
+      window.GM_setValue=(key,value)=>{window.__publisherGm.set(key,value);};
+      window.GM_deleteValue=key=>{window.__publisherGm.delete(key);};
+      window.GM_registerMenuCommand=()=>{};
+      if(rights)setTimeout(()=>{
+        const meta=document.createElement('meta');
+        meta.name='citation_license_url';meta.content=rights;
+        document.head.append(meta);
+      },appearAfterMs);
+    },{articleDoi,token,run,rights,appearAfterMs});
+    const rewritten=probeMs===9500?source:source.replace(
+      'const BATCH_PUBLISHER_PROBE_MS=9500;',
+      'const BATCH_PUBLISHER_PROBE_MS='+probeMs+';');
+    await articlePage.addScriptTag({content:rewritten});
+    await articlePage.waitForFunction(()=>window.__publisherGm.has('gallery-historical-text-batch-v2:result'),
+      null,{timeout:14000});
+    const result=await articlePage.evaluate(()=>window.__publisherGm.get('gallery-historical-text-batch-v2:result'));
+    await articlePage.close();
+    return result;
+  }
+  const ccLater=await browserArticleRightsCase({
+    rights:'https://creativecommons.org/licenses/by/4.0/',appearAfterMs:3500});
+  assert.equal(ccLater.status,'ok','real delayed CC BY with unchanged article DOM count must be captured');
+  assert.equal(ccLater.packet.rightsBasis,'cc-by');
+  assert.equal(ccLater.packet.publicUploadAllowed,false);
+  assert.ok(ccLater.packet.sections.some(x=>x.type==='results'&&x.text.includes('LMCT')));
+  const absentRights=await browserArticleRightsCase({probeMs:1700});
+  assert.equal(absentRights.status,'license_pending_load',
+    'no loaded article licence is pending, not asserted to be a right denial');
+  assert.equal(absentRights.packet,undefined,'unknown licence cannot persist scientific text');
+  const restrictedRights=await browserArticleRightsCase({
+    rights:'https://creativecommons.org/licenses/by-nc-nd/4.0/',probeMs:1700});
+  assert.equal(restrictedRights.status,'license_not_verified');
+  assert.equal(restrictedRights.packet,undefined,'NC/ND must not be saved');
+
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
     publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
