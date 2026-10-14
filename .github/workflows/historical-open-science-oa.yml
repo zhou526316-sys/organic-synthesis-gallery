@@ -89,7 +89,8 @@ jobs:
           const raw=JSON.parse(readFileSync('audit/automation-triggers/historical-science-oa-window.json','utf8'));
           const win=normalizeOaTrigger(raw);
           appendFileSync(process.env.GITHUB_OUTPUT,
-            'enabled=true\\noffset='+win.offset+'\\nlimit='+win.limit+'\\ncatalog='+win.catalogId+'\\n');
+            ['enabled=true','offset='+win.offset,'limit='+win.limit,
+              'catalog='+win.catalogId,''].join(String.fromCharCode(10)));
           console.log('HISTORICAL_OA_WINDOW '+JSON.stringify({requestId:win.requestId,offset:win.offset,
             limit:win.limit,catalogId:win.catalogId,readOnly:true}));
           NODE
