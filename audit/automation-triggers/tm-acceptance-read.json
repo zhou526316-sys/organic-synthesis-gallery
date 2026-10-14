@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261014-1852-fresh-owner-upload",
-  "requestedAt": "2026-10-14T10:53:36.378Z",
+  "requestId": "tm-20261014-2334-current-bridge285-owner-followup",
+  "requestedAt": "2026-10-14T15:34:00.000Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User reports another newly uploaded Tampermonkey log in the Oct14 18:52 Beijing project conversation. Read latest R2 owner diagnostics, per-DOI reports and media indexes read-only. Compare prior verified owner 2026-10-14 17:33 upload (207 tasks, 101 DOI visits, 111 results; fullyResolved43, unresolved162, TOC158/PDF6; 820 historical 261 Oct, scopeCount1087). Verify upload time/run identity, phase, per-layer receipt truth, current owner PDF inventory, nature/RSC/Chem source failures and any improvement/regression. No media writes, no publisher access, no scheduler changes, preserve provenance and protection for 7-9 historical TOC-only and 10-1+ full bundle.",
+  "context": "User requested continue on prior approved Tampermonkey DOI-scoped inventory, Nature official TOC and RSC source repair. PR #552 and follow-up RSC single-listing PR #660 are already merged; public installer now Bridge 2.2.85 / engine 6.2.66. Read the latest owner-uploaded R2 local diagnostic, stage/capture/report indexes strictly read-only and determine uploadedAt and actual runtime installRevision. Compare 2026-10-14 18:53 Beijing owner evidence: 207 targets, 101 DOI visited, 111 attempts, 43 fully resolved and 162 unresolved, 43 TOC stored, 255 ready PDF, inventory verified, 0 inventory errors. Investigate RSC issue/listing per-DOI no-TOC failures and execution latency; separate historical toc_only vs Oct1+ acquisition. No publisher visits, no re-scraping, no credentials, no PDF/media writes, and no formal publication changes.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
@@ -10,8 +10,8 @@
     "10.1016/j.chempr.2026.103043",
     "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.84",
-  "expectedInstallRevision": "6.2.65",
+  "expectedBridgeVersion": "2.2.85",
+  "expectedInstallRevision": "6.2.66",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,
