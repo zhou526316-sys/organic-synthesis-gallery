@@ -1,0 +1,706 @@
+{
+  "schemaVersion": "gallery-historical-q3-publisher-type-exclusions-v1",
+  "mode": "publisher_verified_non_original_doi_only_not_publication",
+  "generatedAt": "2026-10-14",
+  "period": "2026-07-01..2026-09-30",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json",
+  "reviewMethod": "same assistant performed specific first pass and adversarial challenge, not two independent humans",
+  "summary": {
+    "count": 19,
+    "byType": {
+      "Publisher Correction": 1,
+      "Author Correction": 2,
+      "Research Briefing": 2,
+      "Research Highlight": 4,
+      "News & Views": 9,
+      "Comment": 1
+    }
+  },
+  "reviewed": [
+    {
+      "doi": "10.1038/s41929-026-01590-z",
+      "journal": "Nature Catalysis",
+      "title": "Publisher Correction: Atomically precise layer-by-layer titration of perovskite oxides reveals the termination-specific reactivity in oxygen electrocatalysis",
+      "date": "2026-07-09",
+      "publisherArticleType": "Publisher Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：更正早先钙钛矿氧电催化论文图1h和图4d中的电阻面积单位，原研究于6月26日在线。出版社明确标注该DOI为Publisher Correction，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：这是一条出版社勘误，修订旧图轴单位而非发表新的实验方法；即使提及原研究的氧掺入化学，也不能当作独立原创论文。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Publisher Correction; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01590-z；更正早先钙钛矿氧电催化论文图1h和图4d中的电阻面积单位，原研究于6月26日在线。出版社标注Publisher Correction及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01590-z",
+        "publisherArticleType": "Publisher Correction",
+        "publisherArticleDate": "2026-07-09",
+        "sourceRootId": "2026-07-08_2026-07-14_nature-catalysis",
+        "stageSourceSha256": "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f",
+        "stageBatchGitBlobSha": "cce9d9088d867054ad915919e844e79e0d0a0edd",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01561-4"
+    },
+    {
+      "doi": "10.1038/s41929-026-01591-y",
+      "journal": "Nature Catalysis",
+      "title": "Author Correction: Bifunctional molecular additives enable efficient oxygen reduction reaction on platinum electrodes in the presence of strongly binding anions",
+      "date": "2026-07-13",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：更正7-烷基茶碱改善铂电极氧还原研究图6a的吸附位点示意，将atop改为hollow。出版社明确标注该DOI为Author Correction，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：表面位点更正会影响对机理图的解读，应关联原文章；但不提供新的制备反应，不能将修图视为一篇独立合成论文。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Author Correction; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01591-y；更正7-烷基茶碱改善铂电极氧还原研究图6a的吸附位点示意，将atop改为hollow。出版社标注Author Correction及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01591-y",
+        "publisherArticleType": "Author Correction",
+        "publisherArticleDate": "2026-07-13",
+        "sourceRootId": "2026-07-08_2026-07-14_nature-catalysis",
+        "stageSourceSha256": "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f",
+        "stageBatchGitBlobSha": "cce9d9088d867054ad915919e844e79e0d0a0edd",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01569-w"
+    },
+    {
+      "doi": "10.1038/s41929-026-01582-z",
+      "journal": "Nature Catalysis",
+      "title": "Atomic-layer titration reveals optimal SrO termination for oxygen incorporation in perovskite oxides",
+      "date": "2026-07-15",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：概述原子层控制SrO表面覆盖改变钙钛矿氧掺入速率的研究。出版社明确标注该DOI为Research Briefing，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：本摘要重述火山型结构活性关系与单层SrO最优终止态，即使内容涉及新实验技术，也属于另一篇原始论文的结果。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Briefing; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01582-z；概述原子层控制SrO表面覆盖改变钙钛矿氧掺入速率的研究。出版社标注Research Briefing及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01582-z",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-15",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-catalysis",
+        "stageSourceSha256": "f157cdd689c93ee8d8fa530c8938d36c52bcaadd3e45b3d2b7357bdc52fdece2",
+        "stageBatchGitBlobSha": "59ffc376c0b1ee6147d160fa2dc3d60783d1e719",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01561-4"
+    },
+    {
+      "doi": "10.1038/s41929-026-01570-3",
+      "journal": "Nature Catalysis",
+      "title": "The interphase behind lithium-mediated ammonia",
+      "date": "2026-07-23",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：评论锂介导氮还原合成氨中的固态界面和乙醇电解质作用。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：分析操作窗口和固态界面化学并非新的有机制备实验，被评论原研究首发在6月，不能挪用本评论7月日期。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01570-3；评论锂介导氮还原合成氨中的固态界面和乙醇电解质作用。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01570-3",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+        "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+        "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01562-3"
+    },
+    {
+      "doi": "10.1038/s41929-026-01577-w",
+      "journal": "Nature Catalysis",
+      "title": "Defining screening of peptide-functionalizing biocatalysts",
+      "date": "2026-07-23",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：评论29种蓝藻肽类异戊烯基转移酶的活性筛选平台。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：酶筛选与多肽修饰有方法学价值，却是Inoue等人原始研究的数据；当前综评没有再建立新的酶催化产物范围。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01577-w；评论29种蓝藻肽类异戊烯基转移酶的活性筛选平台。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01577-w",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+        "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+        "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01560-5"
+    },
+    {
+      "doi": "10.1038/s41929-026-01586-9",
+      "journal": "Nature Catalysis",
+      "title": "Industrial waste reformed",
+      "date": "2026-07-23",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：报道Ni–Mo/MgO体系工业废弃物重整及可规模化催化剂生产成果。出版社明确标注该DOI为Research Highlight，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：大于15千克催化剂制造和长周期稳定性是被解读的工程成果，不等于这篇亮点文章报道了克级有机制备产物。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Highlight; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01586-9；报道Ni–Mo/MgO体系工业废弃物重整及可规模化催化剂生产成果。出版社标注Research Highlight及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01586-9",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+        "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+        "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01592-x",
+      "journal": "Nature Catalysis",
+      "title": "When aggregation induces photocatalysis",
+      "date": "2026-07-23",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读两亲性二苯乙烯基蒽盐聚集后分子运动受限并产生光催化活性的外部研究。出版社明确标注该DOI为Research Highlight，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：染料聚集与电子转移是有意义的催化化学，但原实验属于被评论论文，不能误写为编辑短文独立展示了光催化底物范围。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Highlight; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01592-x；解读两亲性二苯乙烯基蒽盐聚集后分子运动受限并产生光催化活性的外部研究。出版社标注Research Highlight及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01592-x",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+        "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+        "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01572-1",
+      "journal": "Nature Catalysis",
+      "title": "Uncovering the source of uncertainty",
+      "date": "2026-07-31",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读多实验室Rh/TiO2催化二氧化碳加氢数据不确定度。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：真实轮比测量属于Bac等人另外的Analysis论文；该评论没有独立的底物范围或可迁移小分子制备方案。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01572-1；解读多实验室Rh/TiO2催化二氧化碳加氢数据不确定度。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01572-1",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-31",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+        "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+        "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01559-y"
+    },
+    {
+      "doi": "10.1038/s41929-026-01575-y",
+      "journal": "Nature Catalysis",
+      "title": "The active site and its environment",
+      "date": "2026-08-03",
+      "publisherArticleType": "Comment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：提出评价催化活性位点时必须结合局部反应环境的概念框架。出版社明确标注该DOI为Comment，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：有机及异相催化设计可从该观点获益，但Comment本身未报告新的底物到有机产物的反应路线或实验方法。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Comment; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01575-y；提出评价催化活性位点时必须结合局部反应环境的概念框架。出版社标注Comment及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01575-y",
+        "publisherArticleType": "Comment",
+        "publisherArticleDate": "2026-08-03",
+        "sourceRootId": "2026-08-01_2026-08-07_nature-catalysis",
+        "stageSourceSha256": "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435",
+        "stageBatchGitBlobSha": "3cfc9b261cd49175f39ca713ba55bf2b2eaa0964",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01594-9",
+      "journal": "Nature Catalysis",
+      "title": "Chiral phosphorus by catalyst design",
+      "date": "2026-08-05",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读催化控制硫代磷酸寡核苷酸的立体定义砌块加载。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：P立体化学确有直接合成价值，但底物范围和操作条件归于Fang等人原始Article，评论不能重复作为另一原创方法。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01594-9；解读催化控制硫代磷酸寡核苷酸的立体定义砌块加载。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01594-9",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-05",
+        "sourceRootId": "2026-08-01_2026-08-07_nature-catalysis",
+        "stageSourceSha256": "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435",
+        "stageBatchGitBlobSha": "3cfc9b261cd49175f39ca713ba55bf2b2eaa0964",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01557-0"
+    },
+    {
+      "doi": "10.1038/s41929-026-01596-7",
+      "journal": "Nature Catalysis",
+      "title": "The important ingredient in your catalyst you never meant to add",
+      "date": "2026-08-07",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读碳酸氢钠来源的Na杂质如何稳定氧化物衍生铜工作态。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：原始材料表征与CO2电还原实验是Kim等人的研究，这篇外部评价并未自行建立有机制备方法。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01596-7；解读碳酸氢钠来源的Na杂质如何稳定氧化物衍生铜工作态。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01596-7",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-07",
+        "sourceRootId": "2026-08-01_2026-08-07_nature-catalysis",
+        "stageSourceSha256": "753bde348efc0c80877c8f9ce9b68354c685232d5ca9d9da839b159b3caa6435",
+        "stageBatchGitBlobSha": "3cfc9b261cd49175f39ca713ba55bf2b2eaa0964",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01571-2"
+    },
+    {
+      "doi": "10.1038/s41929-026-01581-0",
+      "journal": "Nature Catalysis",
+      "title": "Phosphines beyond lone pairs",
+      "date": "2026-08-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：评论光氧化还原与膦催化联用实现末端烯烃马氏氢胺化。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：光氧化还原膦催化C–N成键是独立方法学，但归属于被报道的原研究；当前作者提供的是批判性解读。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01581-0；评论光氧化还原与膦催化联用实现末端烯烃马氏氢胺化。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01581-0",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-catalysis",
+        "stageSourceSha256": "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00",
+        "stageBatchGitBlobSha": "f260bce09b33cf5968e6e0b43d3d842703b2520e",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01583-y",
+      "journal": "Nature Catalysis",
+      "title": "Getting real about transient electrocatalysis",
+      "date": "2026-08-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读铜电催化一氧化碳还原受控停机减缓失活及经济性。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：750小时运行和市场成本分析来自Deng等人的原始研究，本篇为转述而非重新建立反应物到产物的方法学。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01583-y；解读铜电催化一氧化碳还原受控停机减缓失活及经济性。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01583-y",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-catalysis",
+        "stageSourceSha256": "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00",
+        "stageBatchGitBlobSha": "f260bce09b33cf5968e6e0b43d3d842703b2520e",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01574-z"
+    },
+    {
+      "doi": "10.1038/s41929-026-01588-7",
+      "journal": "Nature Catalysis",
+      "title": "Enzyme cascade transforms DNA-encoded chemical libraries",
+      "date": "2026-08-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：解读CoA连接酶与N-酰基转移酶级联构建DNA编码分子库。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：On-DNA酰胺成键是具体合成反应，但真实Schaub等人原创Article已经对应独立DOI，不能复制建卡。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01588-7；解读CoA连接酶与N-酰基转移酶级联构建DNA编码分子库。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01588-7",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-catalysis",
+        "stageSourceSha256": "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00",
+        "stageBatchGitBlobSha": "f260bce09b33cf5968e6e0b43d3d842703b2520e",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01576-x"
+    },
+    {
+      "doi": "10.1038/s41929-026-01606-8",
+      "journal": "Nature Catalysis",
+      "title": "Solar coproduction in an artificial leaf",
+      "date": "2026-08-20",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：报道多结人工叶甘油光电氧化合成二羟基丙酮并同步放氢的外部研究。出版社明确标注该DOI为Research Highlight，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：二羟基丙酮选择性和光电流是原研究器件数据，不是编辑型亮点文章新完成的独立制备反应。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Highlight; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01606-8；报道多结人工叶甘油光电氧化合成二羟基丙酮并同步放氢的外部研究。出版社标注Research Highlight及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01606-8",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-catalysis",
+        "stageSourceSha256": "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00",
+        "stageBatchGitBlobSha": "f260bce09b33cf5968e6e0b43d3d842703b2520e",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01598-5",
+      "journal": "Nature Catalysis",
+      "title": "From amines to nitriles via C–N bond cleavage",
+      "date": "2026-08-24",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：评论脂肪伯胺直接脱氨氰化合成腈及不对称氰化。出版社明确标注该DOI为News & Views，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：C–N键断裂构建腈很符合有机合成范围，必须保留Xue等人原始Article，不能以本评论重复创建原创卡片。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked News & Views; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01598-5；评论脂肪伯胺直接脱氨氰化合成腈及不对称氰化。出版社标注News & Views及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01598-5",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-24",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+        "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+        "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01578-9"
+    },
+    {
+      "doi": "10.1038/s41929-026-01610-y",
+      "journal": "Nature Catalysis",
+      "title": "Single-turnover optical imaging of nonfluorescent electrocatalysis",
+      "date": "2026-08-24",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：概要介绍DELINE技术对非荧光电催化水解离进行单次周转成像。出版社明确标注该DOI为Research Briefing，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：DELINE确有测量方法意义，但原创新技术属于Fan等人Article，且主要服务电催化动力学测量而非有机合成。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Briefing; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01610-y；概要介绍DELINE技术对非荧光电催化水解离进行单次周转成像。出版社标注Research Briefing及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01610-y",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-08-24",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+        "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+        "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01599-4"
+    },
+    {
+      "doi": "10.1038/s41929-026-01614-8",
+      "journal": "Nature Catalysis",
+      "title": "Engineering cellular nitrene chemistry",
+      "date": "2026-09-22",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：介绍工程化代谢通路和P450氮宾转移在细胞内合成氨基醇的成果。出版社明确标注该DOI为Research Highlight，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：细胞内氮宾C–N成键与近90%ee值得关注，但这篇期刊亮点不报告独立实验，原方法须按自己的DOI核验。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Research Highlight; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01614-8；介绍工程化代谢通路和P450氮宾转移在细胞内合成氨基醇的成果。出版社标注Research Highlight及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01614-8",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-09-22",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-catalysis",
+        "stageSourceSha256": "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d",
+        "stageBatchGitBlobSha": "450fb275555579041ca0b0d7d90b328b7bc40791",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01623-7",
+      "journal": "Nature Catalysis",
+      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
+      "date": "2026-09-23",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按实际论文类型和科学贡献审查：更正氧化物衍生铜电极原论文图4e的ODNa-Cu与TBAHCO3标注。出版社明确标注该DOI为Author Correction，本条不是一项新发表的原创有机制备研究。",
+      "independentChallengeReason": "第二遍反向挑战，考虑可能误漏原始合成创新：这类标注更正需要关联原论文版本以免误引用，但不能使用9月更正日期为原研究新开一个方法学DOI。因此必须记录原科学信息与论文关联，但不得把该二级文章当成原创方法入库。",
+      "reason": "Publisher-marked Author Correction; no distinct original preparative-method results under this commentary/correction DOI.",
+      "evidenceBasis": "DOI精确官方出版社页 https://www.nature.com/articles/s41929-026-01623-7；更正氧化物衍生铜电极原论文图4e的ODNa-Cu与TBAHCO3标注。出版社标注Author Correction及Online 2026日期，与冻结Crossref/OpenAlex批次同一天。不复制出版商的英文摘要、正文、图片或SI。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01623-7",
+        "publisherArticleType": "Author Correction",
+        "publisherArticleDate": "2026-09-23",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-catalysis",
+        "stageSourceSha256": "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d",
+        "stageBatchGitBlobSha": "450fb275555579041ca0b0d7d90b328b7bc40791",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_two_article_specific_passes_not_distinct_human_reviewers",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01571-2"
+    }
+  ],
+  "guards": {
+    "noOwnerPermanentExclusions": true,
+    "noD1": true,
+    "noAutomaticAdmission": true,
+    "noMediaPdfSiBody": true,
+    "noTodayHotWechat": true
+  }
+}
