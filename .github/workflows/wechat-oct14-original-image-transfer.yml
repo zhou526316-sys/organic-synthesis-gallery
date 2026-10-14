@@ -1,0 +1,28 @@
+name: WeChat Oct14 immutable original image transfer
+on:
+  push:
+    branches: [wechat-oct14-two-jacs-preparation]
+    paths:
+      - audit/automation-triggers/wechat-oct14-original-assets-transfer.json
+permissions:
+  contents: write
+jobs:
+  stage-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Transfer from exact user's PDF-derived archive and compare SHA
+        env:
+          OCT14_IMAGE_TRANSFER_URL: https://at.adobe.com/RTuxMN9RC1K1gIAU
+        run: python3 scripts/wechat-oct14-stage-originals.py
+      - name: Commit validated original image rasters
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-assets/reviewed/2026-10-14-r1/ audit/wechat-working/2026-10-14-r1*
+          git diff --cached --check
+          git commit -m 'assets(wechat): pin 25 original JACS source figures and two verified covers'
+          git push origin HEAD:wechat-oct14-two-jacs-preparation
