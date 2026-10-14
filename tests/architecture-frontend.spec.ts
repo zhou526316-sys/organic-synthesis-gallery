@@ -269,7 +269,7 @@ test('future unverified JOC date is hidden on 14 Oct while admission stays corre
   await expect(joc.locator('.tag.date')).not.toContainText(/10月15|Oct 15|2026-10-15/);
   await expect(joc).toHaveAttribute('data-date', '');
   await expect(joc.locator('.tag.new')).toBeVisible();
-  await expect(joc.locator('.tag.new')).toHaveAttribute('title', /今日收录|Added to Gallery today/);
+  await expect(joc.locator('.tag.date')).toHaveAttribute('title', /新增.*当天收入|New means newly added/);
 
   await page.locator('#search').fill('10.1039/d6sc06571f');
   const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
