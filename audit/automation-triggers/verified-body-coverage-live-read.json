@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "verified_body_live_coverage_20261014_after_oa_full_census",
-  "purpose": "Read only, verify whether production scientific FTS database is bound and how many independently licensed scientific sections actually exist",
-  "approvedScope": "Continue historical scientific body acquisition, no production writes or media changes"
+  "requestId": "verified_body_live_coverage_20261014_after_first_real_import_38529562872",
+  "purpose": "Independently read production owner-gated FTS coverage after exact DOI 10.1038/s41557-026-02206-6 successfully imported 6 actual licensed scientific sections; verify 1 DOI, 6 sections and publicEnabled=false.",
+  "approvedScope": "No additional writes; validate same live catalogId and re-query secure coverage endpoint.",
+  "expectedCatalogId": "1423102a4bb33e93d24693b89e8714062106f5309eacc3c3fef56876ca966b7c",
+  "minimumRealReviewedDoi": 1,
+  "minimumRealReviewedSections": 6,
+  "publicReadExpected": false
 }

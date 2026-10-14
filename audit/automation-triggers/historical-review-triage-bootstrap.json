@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Q3_hist_staging_recount_after_24_more_NatCatal_originality_and_science_verdicts",
+  "purpose": "Q3_history_staging_only_recount_after_44_Nature_Synthesis_two_pass_source_proven_verdicts_20261014",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T06:15:40.350Z",
-  "reason": "CI-green merged PR #652 (9c6ad501eb8fceefe7de6811cf20b2e4e4c6b070) adds official DOI exact 19 Nature Catalysis publisher non-original types (9 News & Views,4 Research Highlights,2 Research Briefings,1 Comment,2 Author Corrections,1 Publisher Correction) and 5 original Article science reviews (4 academic exclude,1 pending AzcA skeletal editing). Recount frozen 2026-Q3 192 roots in staging only. Combined expected publisher nonoriginal 24, academic-science excludes 18, additional evidence pending 2, original manifest pending 2 and accepted 116 unchanged; candidate source union 12286 and real Q3 formal 820 unchanged unless genuinely newer main inputs. Forecast unfinished 11408 to 11384 only AFTER actual run, do not assert before same-generation evidence readback. Zero D1, zero media/PDF/HTML retrieval, zero off-slot publication, no scope owner updates. Publisher Research issue completeness remains unproven.",
+  "requestedAt": "2026-10-14T07:55:09.517Z",
+  "reason": "After CI-green merged #654 commit 432219e63dfbe65e08ea15609302135c24469a6f, use only the existing staging-only Q3 16-journal source verifier to consume 44 exact Nature Synthesis DOI source/type records (31 publisher-confirmed nonoriginal + 11 genuine Article scientific scope exclusions + 2 Article scientific evidence pending). Preserve original 116 accepted, 2 original manifest pending, 25 next Beijing 2026-10-15 08:00 waiting. Forecast 11384→11340 unfinished only after same-generation stage readback. Unique 12286 DOI immutable; Nature Synthesis source 63 known, 17 formal, previous 2 nonoriginal, 31 new nonoriginal, 11 scope excluded, 2 newly held scope pending. Unverified full publisher issue/online-first remains open; zero D1, no new media/PDF/HTML, no extra publication slot, owner corrections unchanged.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_natcatal_all_53_doi_reviewed_19_nonoriginal_4_science_exclude_1_science_pending_24_delta_run_on_existing_staging_only",
+  "triggerScope": "20261014_Q3_NatureSynthesis_44_new_reviewed_31_nonoriginal_11_science_excluded_2_new_scope_pending_source_proof",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -23,13 +23,13 @@
   "expectedAcademicInclude": 116,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
-  "publisherNonResearchExactCount": 24,
+  "publisherNonResearchExactCount": 55,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
   "trustedScopeCorrectionsSha": "109be3cc5abedc62f744431e34faa0552564782d",
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "9c6ad501eb8fceefe7de6811cf20b2e4e4c6b070",
+  "lastRelatedMergeCommit": "432219e63dfbe65e08ea15609302135c24469a6f",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -51,14 +51,16 @@
   "noProductionDeploymentClaims": true,
   "reviewedPublisherScopeSourceProofFile": "audit/historical-reviewed/q3-natcatal-scope-source-proof.json",
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
-  "expectedScopeScienceExcluded": 18,
-  "expectedAdditionalEvidencePending": 2,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11384,
+  "expectedScopeScienceExcluded": 29,
+  "expectedAdditionalEvidencePending": 4,
+  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11340,
   "retryOfRunId": 38518015247,
   "retryCause": "q3_reviewed_scope_provenance_or_science_conflict_01571-2_due_24_char_Chinese_description",
   "retainOwnerPermanentCorrections": true,
   "pendingSupplementalDoiExact": [
     "10.1038/s41929-026-01608-6",
-    "10.1038/s41929-026-01611-x"
+    "10.1038/s41929-026-01611-x",
+    "10.1038/s44160-026-01115-3",
+    "10.1038/s44160-026-01146-w"
   ]
 }

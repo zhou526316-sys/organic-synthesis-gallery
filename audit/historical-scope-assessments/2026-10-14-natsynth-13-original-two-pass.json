@@ -1,0 +1,798 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "period": "2026-07-01..2026-09-30",
+  "journal": "Nature Synthesis",
+  "reviewedAt": "2026-10-14",
+  "reviewMethod": "same assistant two separate paper-specific reviews, not two independent humans",
+  "sourceProofFile": "audit/historical-reviewed/q3-natsynth-44-frozen-source-proof.json",
+  "evidenceLevel": "official DOI-exact publisher abstracts and accessible article sections; protected full text or SI not claimed",
+  "accounting": {
+    "assessmentCount": 13,
+    "include": 0,
+    "exclude": 11,
+    "evidencePending": 2,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s44160-026-01111-7",
+      "journal": "Nature Synthesis",
+      "title": "Dynamic anionic sublattice engineering in perovskite heterostructures for perovskite–silicon tandem solar cells",
+      "date": "2026-07-09",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "动态氰酸根阴离子调控钙钛矿异质结生长及叠层电池器件效率",
+      "preparativeTransformation": "调节Rb/Pb/I/OCN晶相与薄膜结晶、电子缺陷钝化，而非获得有机分子产物",
+      "generalityEvidence": "报告认证34.29%器件效率和耐湿稳定性，没有有机底物及分离产物范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-07-09，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "氰酸根相关无机晶格合成确实创新，然而器件效率或老化时间不能当成有机合成底物范围，不应按出现有机试剂就纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "动态氰酸根阴离子调控钙钛矿异质结生长及叠层电池器件效率",
+        "preparativeTransformation": "调节Rb/Pb/I/OCN晶相与薄膜结晶、电子缺陷钝化，而非获得有机分子产物",
+        "generalityEvidence": "报告认证34.29%器件效率和耐湿稳定性，没有有机底物及分离产物范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-07-08_2026-07-14_nature-synthesis; sha256=fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+        "boundaryChallenge": "氰酸根相关无机晶格合成确实创新，然而器件效率或老化时间不能当成有机合成底物范围，不应按出现有机试剂就纳入。"
+      },
+      "firstPassReason": "原文核心是钙钛矿器件晶格和光伏性能，虽然用到有机配位溶剂，但没有开发新的有机制备反应。",
+      "independentChallengeReason": "氰酸根相关无机晶格合成确实创新，然而器件效率或老化时间不能当成有机合成底物范围，不应按出现有机试剂就纳入。",
+      "reason": "动态氰酸根阴离子调控钙钛矿异质结生长及叠层电池器件效率。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：报告认证34.29%器件效率和耐湿稳定性，没有有机底物及分离产物范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-07-09",
+      "sourceRootId": "2026-07-08_2026-07-14_nature-synthesis",
+      "sourceSha256": "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+      "reviewQueueGitBlobSha": "3cbb1bcf8edf24fb2244eb557aa4d02b9eae77be",
+      "stageBatchGitBlobSha": "f017acaada189e0d6f36af7a99349b0d6ff830e5",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01111-7",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01111-7",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-07-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_nature-synthesis",
+        "stageBatchSha": "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01113-5",
+      "journal": "Nature Synthesis",
+      "title": "Multi-walled carbon nanotube network-toughened diamond composite via atomic interface continuity",
+      "date": "2026-07-09",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "金刚石颗粒间引入多壁碳纳米管连续网络提升硬度与韧性",
+      "preparativeTransformation": "高温高压形成sp²–sp³碳材料界面，制备的是工程复合固体",
+      "generalityEvidence": "硬度、断裂韧性及显微结构实验完整，但没有有机分子目标产品范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-07-09，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "其碳网络构筑可以是一般无机材料加工策略，但不提供目标有机分子、聚合单体或有机反应伙伴的制备证据。",
+      "scopeAssessment": {
+        "primaryContribution": "金刚石颗粒间引入多壁碳纳米管连续网络提升硬度与韧性",
+        "preparativeTransformation": "高温高压形成sp²–sp³碳材料界面，制备的是工程复合固体",
+        "generalityEvidence": "硬度、断裂韧性及显微结构实验完整，但没有有机分子目标产品范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-07-08_2026-07-14_nature-synthesis; sha256=fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+        "boundaryChallenge": "其碳网络构筑可以是一般无机材料加工策略，但不提供目标有机分子、聚合单体或有机反应伙伴的制备证据。"
+      },
+      "firstPassReason": "真正的材料制造和碳成键不能被否认，研究的关键是晶体界面增韧而不是一个有机官能团构建方法。",
+      "independentChallengeReason": "其碳网络构筑可以是一般无机材料加工策略，但不提供目标有机分子、聚合单体或有机反应伙伴的制备证据。",
+      "reason": "金刚石颗粒间引入多壁碳纳米管连续网络提升硬度与韧性。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：硬度、断裂韧性及显微结构实验完整，但没有有机分子目标产品范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-07-09",
+      "sourceRootId": "2026-07-08_2026-07-14_nature-synthesis",
+      "sourceSha256": "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+      "reviewQueueGitBlobSha": "3cbb1bcf8edf24fb2244eb557aa4d02b9eae77be",
+      "stageBatchGitBlobSha": "f017acaada189e0d6f36af7a99349b0d6ff830e5",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01113-5",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01113-5",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-07-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_nature-synthesis",
+        "stageBatchSha": "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01115-3",
+      "journal": "Nature Synthesis",
+      "title": "Assembly of a bifurcated knot via sequence selective imine condensation",
+      "date": "2026-07-16",
+      "publisherArticleType": "Article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "primaryContribution": "经金属模板和两次定向亚胺缩合构筑524原子的分叉拓扑分子结",
+      "preparativeTransformation": "Zn8L6亚结构外露醛基与三胺再次缩合，形成三处交叉及二十处分叉结点",
+      "generalityEvidence": "原文证实单个复杂拓扑有机配位分子的结构与稳健性，但公开摘要未说明普适前体和拓扑扩展范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-07-16，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "反向检查发现路线高度依赖定制模板和几何匹配三胺，目前无法仅凭一个目标结构就称为通用有机方法或天然产物全合成，需保留待核。",
+      "scopeAssessment": {
+        "primaryContribution": "经金属模板和两次定向亚胺缩合构筑524原子的分叉拓扑分子结",
+        "preparativeTransformation": "Zn8L6亚结构外露醛基与三胺再次缩合，形成三处交叉及二十处分叉结点",
+        "generalityEvidence": "原文证实单个复杂拓扑有机配位分子的结构与稳健性，但公开摘要未说明普适前体和拓扑扩展范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-07-15_2026-07-21_nature-synthesis; sha256=52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "boundaryChallenge": "反向检查发现路线高度依赖定制模板和几何匹配三胺，目前无法仅凭一个目标结构就称为通用有机方法或天然产物全合成，需保留待核。"
+      },
+      "firstPassReason": "这不是仅有材料性能的论文：作者确实建立了复杂新型共价分子结构的实际合成路线，不能以含锌配位或超分子标签直接排除。",
+      "independentChallengeReason": "反向检查发现路线高度依赖定制模板和几何匹配三胺，目前无法仅凭一个目标结构就称为通用有机方法或天然产物全合成，需保留待核。",
+      "reason": "经金属模板和两次定向亚胺缩合构筑524原子的分叉拓扑分子结。制备方法普适性证据仍待补核。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：原文证实单个复杂拓扑有机配位分子的结构与稳健性，但公开摘要未说明普适前体和拓扑扩展范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-07-16",
+      "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+      "sourceSha256": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+      "reviewQueueGitBlobSha": "377909bf87c761f97541dcf4a31f6798efc9bdab",
+      "stageBatchGitBlobSha": "2a83f4b214272040b9f0e690908ca99d95b1615d",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "evidenceNeeded": "不同拓扑结构、亚胺缩合底物与配位模板的可推广制备；该524原子目标是否为特殊单例。",
+      "nextAction": "核对出版社可合法访问的详细实验、产物表征和开放支持信息，判断一般制备/合成路线贡献；在直接证据不足时继续保留pending，不把未获得全文写成原文不存在证据。",
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01115-3",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01115-3",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-07-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_nature-synthesis",
+        "stageBatchSha": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01119-z",
+      "journal": "Nature Synthesis",
+      "title": "Guiding principles for seeded electrochemical synthesis of multimetallic nanocrystals",
+      "date": "2026-07-27",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "晶种电沉积指导多金属纳米晶体的层状与岛状生长",
+      "preparativeTransformation": "通过外加电位、电流和晶格失配控制二元、三元金属核壳纳米晶",
+      "generalityEvidence": "不同金属体系确有制备广度，但不是系列有机底物到分子产物的转化",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-07-27，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "多金属体系的推广性确实强，这是重要反向依据；然而这些都是元素及晶体界面组成的变化，不构成本站所需有机制备路线。",
+      "scopeAssessment": {
+        "primaryContribution": "晶种电沉积指导多金属纳米晶体的层状与岛状生长",
+        "preparativeTransformation": "通过外加电位、电流和晶格失配控制二元、三元金属核壳纳米晶",
+        "generalityEvidence": "不同金属体系确有制备广度，但不是系列有机底物到分子产物的转化",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-07-22_2026-07-31_nature-synthesis; sha256=505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "boundaryChallenge": "多金属体系的推广性确实强，这是重要反向依据；然而这些都是元素及晶体界面组成的变化，不构成本站所需有机制备路线。"
+      },
+      "firstPassReason": "论文直接给出无机纳米晶体合成设计规则，不能把它误写成没有实际合成；但主要研究对象不是有机化学方法。",
+      "independentChallengeReason": "多金属体系的推广性确实强，这是重要反向依据；然而这些都是元素及晶体界面组成的变化，不构成本站所需有机制备路线。",
+      "reason": "晶种电沉积指导多金属纳米晶体的层状与岛状生长。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：不同金属体系确有制备广度，但不是系列有机底物到分子产物的转化；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-07-27",
+      "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+      "sourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+      "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+      "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01119-z",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01119-z",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageBatchSha": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01123-3",
+      "journal": "Nature Synthesis",
+      "title": "Selective pore modulation in layered molecular crystals",
+      "date": "2026-07-27",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "酰腙与羧基氢键配合构筑双孔氢键有机晶态框架",
+      "preparativeTransformation": "合成有机连接体并形成双壁HOF晶体，改变孔尺寸和酸稳定性",
+      "generalityEvidence": "拓展框架晶体并测质子电导率，不是独立小分子合成的底物范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-07-27，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "连接体的有机共价成键是真实化学证据，但宏观孔尺寸及导电性不能替代可推广有机产物制备，应按主要贡献排除。",
+      "scopeAssessment": {
+        "primaryContribution": "酰腙与羧基氢键配合构筑双孔氢键有机晶态框架",
+        "preparativeTransformation": "合成有机连接体并形成双壁HOF晶体，改变孔尺寸和酸稳定性",
+        "generalityEvidence": "拓展框架晶体并测质子电导率，不是独立小分子合成的底物范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-07-22_2026-07-31_nature-synthesis; sha256=505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "boundaryChallenge": "连接体的有机共价成键是真实化学证据，但宏观孔尺寸及导电性不能替代可推广有机产物制备，应按主要贡献排除。"
+      },
+      "firstPassReason": "作者报道特殊酰腙构象、双孔网络和较强酸下稳定性，科学成果是多孔材料可控晶体结构而非新有机反应。",
+      "independentChallengeReason": "连接体的有机共价成键是真实化学证据，但宏观孔尺寸及导电性不能替代可推广有机产物制备，应按主要贡献排除。",
+      "reason": "酰腙与羧基氢键配合构筑双孔氢键有机晶态框架。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：拓展框架晶体并测质子电导率，不是独立小分子合成的底物范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-07-27",
+      "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+      "sourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+      "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+      "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01123-3",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01123-3",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageBatchSha": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01126-0",
+      "journal": "Nature Synthesis",
+      "title": "Ordered heteronuclear metal pairs facilitate urea electrosynthesis",
+      "date": "2026-08-03",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "有序Cu–Zn不等价金属位点催化CO₂与硝酸根电合成尿素",
+      "preparativeTransformation": "*CO与*NO在电极表面耦合形成真实尿素C–N键",
+      "generalityEvidence": "作者提供法拉第效率约79%及产率速率，却未展示多类有机底物制备通用性",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-08-03，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "不能一概排除CO₂参加的有机合成，不过此研究的催化剂工程和电解效能指标并非目标分子系列的分离产率。",
+      "scopeAssessment": {
+        "primaryContribution": "有序Cu–Zn不等价金属位点催化CO₂与硝酸根电合成尿素",
+        "preparativeTransformation": "*CO与*NO在电极表面耦合形成真实尿素C–N键",
+        "generalityEvidence": "作者提供法拉第效率约79%及产率速率，却未展示多类有机底物制备通用性",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-08-01_2026-08-07_nature-synthesis; sha256=dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+        "boundaryChallenge": "不能一概排除CO₂参加的有机合成，不过此研究的催化剂工程和电解效能指标并非目标分子系列的分离产率。"
+      },
+      "firstPassReason": "尿素确实属于有机小分子，必须承认原文发生C–N成键，但研究中心是原子级金属位点和电化学生产性能。",
+      "independentChallengeReason": "不能一概排除CO₂参加的有机合成，不过此研究的催化剂工程和电解效能指标并非目标分子系列的分离产率。",
+      "reason": "有序Cu–Zn不等价金属位点催化CO₂与硝酸根电合成尿素。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：作者提供法拉第效率约79%及产率速率，却未展示多类有机底物制备通用性；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-08-03",
+      "sourceRootId": "2026-08-01_2026-08-07_nature-synthesis",
+      "sourceSha256": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+      "reviewQueueGitBlobSha": "3b9a322073d635f265c2b4d36d11ad1b001d11da",
+      "stageBatchGitBlobSha": "56ff3c8ed327d41349898fa67c5c4f7df5fac4f2",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01126-0",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01126-0",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-08-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_nature-synthesis",
+        "stageBatchSha": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01132-2",
+      "journal": "Nature Synthesis",
+      "title": "Flash Joule heating for rapid MXenes synthesis",
+      "date": "2026-08-10",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "闪速焦耳加热配合氯化氟化选择性刻蚀MAX相制备MXene",
+      "preparativeTransformation": "九种不同无机MAX材料迅速转化为层状二维MXene",
+      "generalityEvidence": "多个前体和材料表征证明材料通用性，不代表有机目标分子制备",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-08-10，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "不能否认作者给出九种材料来源及合理工艺数据，但它们不是有机底物范围，研究主旨仍是材料晶相及节能制备。",
+      "scopeAssessment": {
+        "primaryContribution": "闪速焦耳加热配合氯化氟化选择性刻蚀MAX相制备MXene",
+        "preparativeTransformation": "九种不同无机MAX材料迅速转化为层状二维MXene",
+        "generalityEvidence": "多个前体和材料表征证明材料通用性，不代表有机目标分子制备",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-08-08_2026-08-14_nature-synthesis; sha256=f711f0eefe72a7a964d09131c23166912eae8f38b38dbb5e6f768d183c6a37d6",
+        "boundaryChallenge": "不能否认作者给出九种材料来源及合理工艺数据，但它们不是有机底物范围，研究主旨仍是材料晶相及节能制备。"
+      },
+      "firstPassReason": "论文确有快速可放大的选择性蚀刻合成工艺，但制备产物是无机二维层状材料，不属于一般有机合成方法。",
+      "independentChallengeReason": "不能否认作者给出九种材料来源及合理工艺数据，但它们不是有机底物范围，研究主旨仍是材料晶相及节能制备。",
+      "reason": "闪速焦耳加热配合氯化氟化选择性刻蚀MAX相制备MXene。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：多个前体和材料表征证明材料通用性，不代表有机目标分子制备；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-08-10",
+      "sourceRootId": "2026-08-08_2026-08-14_nature-synthesis",
+      "sourceSha256": "f711f0eefe72a7a964d09131c23166912eae8f38b38dbb5e6f768d183c6a37d6",
+      "reviewQueueGitBlobSha": "6e5806c909276ab15e38652c9d32be124a8c6960",
+      "stageBatchGitBlobSha": "1448a2e9ee2c6665e1b404a6e61b055de907a695",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01132-2",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01132-2",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-08-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-synthesis",
+        "stageBatchSha": "f711f0eefe72a7a964d09131c23166912eae8f38b38dbb5e6f768d183c6a37d6",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01139-9",
+      "journal": "Nature Synthesis",
+      "title": "Chlorine-mediated electrosynthesis of hydrazine from urea",
+      "date": "2026-08-17",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "表面氯介导尿素电氧化后碱性重排制肼并提高连续运行效率",
+      "preparativeTransformation": "Pt电极将尿素转成N-氯尿素，进一步得到无机N₂H₄",
+      "generalityEvidence": "有尿素废液及流动电解实测性能，但最终肼不含碳且不形成有机目标产物",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-08-17，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "原料适应性及长期运行是工艺推广性而非有机制备反应范围，不能把肼产量作为有机分子方法学的分离产率。",
+      "scopeAssessment": {
+        "primaryContribution": "表面氯介导尿素电氧化后碱性重排制肼并提高连续运行效率",
+        "preparativeTransformation": "Pt电极将尿素转成N-氯尿素，进一步得到无机N₂H₄",
+        "generalityEvidence": "有尿素废液及流动电解实测性能，但最终肼不含碳且不形成有机目标产物",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-08-15_2026-08-21_nature-synthesis; sha256=68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+        "boundaryChallenge": "原料适应性及长期运行是工艺推广性而非有机制备反应范围，不能把肼产量作为有机分子方法学的分离产率。"
+      },
+      "firstPassReason": "研究含有机尿素底物和N–Cl中间体，确实涉及化学合成，但主要目标是无机肼能源化学品的工业过程。",
+      "independentChallengeReason": "原料适应性及长期运行是工艺推广性而非有机制备反应范围，不能把肼产量作为有机分子方法学的分离产率。",
+      "reason": "表面氯介导尿素电氧化后碱性重排制肼并提高连续运行效率。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：有尿素废液及流动电解实测性能，但最终肼不含碳且不形成有机目标产物；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-08-17",
+      "sourceRootId": "2026-08-15_2026-08-21_nature-synthesis",
+      "sourceSha256": "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+      "reviewQueueGitBlobSha": "adb3a59d624ed8a6da6495eb9a1699c25bab6726",
+      "stageBatchGitBlobSha": "42ebb70605f543ab6fa9498683fe41ecb284e596",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01139-9",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01139-9",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-08-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_nature-synthesis",
+        "stageBatchSha": "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01142-0",
+      "journal": "Nature Synthesis",
+      "title": "An enthalpy–entropy competition strategy enables moisture-stable and scalable perovskite photovoltaics",
+      "date": "2026-08-17",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "用N-丁基吡咯烷与PbI₂配位焓熵竞争优化钙钛矿组件印刷",
+      "preparativeTransformation": "调节无机钙钛矿中间配位相与薄膜退火结晶过程",
+      "generalityEvidence": "光伏组件面积、效率及湿热老化数据，不是有机底物和产物范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-08-17，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "溶剂配位策略未来可能用于有机合成过程，但原文没有证明这种迁移，不能拿器件效率证明有机制备一般性。",
+      "scopeAssessment": {
+        "primaryContribution": "用N-丁基吡咯烷与PbI₂配位焓熵竞争优化钙钛矿组件印刷",
+        "preparativeTransformation": "调节无机钙钛矿中间配位相与薄膜退火结晶过程",
+        "generalityEvidence": "光伏组件面积、效率及湿热老化数据，不是有机底物和产物范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-08-15_2026-08-21_nature-synthesis; sha256=68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+        "boundaryChallenge": "溶剂配位策略未来可能用于有机合成过程，但原文没有证明这种迁移，不能拿器件效率证明有机制备一般性。"
+      },
+      "firstPassReason": "原始论文聚焦大面积光伏电池成膜和缺陷控制，存在真实配位化学却没有报告新有机分子合成方法。",
+      "independentChallengeReason": "溶剂配位策略未来可能用于有机合成过程，但原文没有证明这种迁移，不能拿器件效率证明有机制备一般性。",
+      "reason": "用N-丁基吡咯烷与PbI₂配位焓熵竞争优化钙钛矿组件印刷。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：光伏组件面积、效率及湿热老化数据，不是有机底物和产物范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-08-17",
+      "sourceRootId": "2026-08-15_2026-08-21_nature-synthesis",
+      "sourceSha256": "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+      "reviewQueueGitBlobSha": "adb3a59d624ed8a6da6495eb9a1699c25bab6726",
+      "stageBatchGitBlobSha": "42ebb70605f543ab6fa9498683fe41ecb284e596",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01142-0",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01142-0",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-08-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_nature-synthesis",
+        "stageBatchSha": "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01138-w",
+      "journal": "Nature Synthesis",
+      "title": "Conductive three-dimensional molecular-cluster networks via rare-earth-directed assembly",
+      "date": "2026-08-26",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "稀土调控准芳香钼簇堆叠产生三维贯通导电晶态网络",
+      "preparativeTransformation": "含吡啶的钼簇与稀土离子自组装导电晶体",
+      "generalityEvidence": "有多种稀土晶体结构、电子输运和晶相证据，没有有机底物产品范围",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-08-26，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "即使存在有机吡啶配体，创新仍集中在无机晶态电子材料，不应仅凭有机配位结构把它纳入合成方法学。",
+      "scopeAssessment": {
+        "primaryContribution": "稀土调控准芳香钼簇堆叠产生三维贯通导电晶态网络",
+        "preparativeTransformation": "含吡啶的钼簇与稀土离子自组装导电晶体",
+        "generalityEvidence": "有多种稀土晶体结构、电子输运和晶相证据，没有有机底物产品范围",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-08-22_2026-08-31_nature-synthesis; sha256=96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "boundaryChallenge": "即使存在有机吡啶配体，创新仍集中在无机晶态电子材料，不应仅凭有机配位结构把它纳入合成方法学。"
+      },
+      "firstPassReason": "这确实是金属簇配位晶体合成，而不是作者独立提出有机C–C或C–杂原子键构建及有机产物纯化路线。",
+      "independentChallengeReason": "即使存在有机吡啶配体，创新仍集中在无机晶态电子材料，不应仅凭有机配位结构把它纳入合成方法学。",
+      "reason": "稀土调控准芳香钼簇堆叠产生三维贯通导电晶态网络。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：有多种稀土晶体结构、电子输运和晶相证据，没有有机底物产品范围；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-08-26",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+      "sourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+      "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+      "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01138-w",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01138-w",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageBatchSha": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01146-w",
+      "journal": "Nature Synthesis",
+      "title": "A coumarin-linked conjugated covalent organic framework for enhanced photocatalytic hydrogen evolution",
+      "date": "2026-09-08",
+      "publisherArticleType": "Article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "primaryContribution": "一锅芳乙腈与邻羟基苯甲醛缩合环化制备香豆素连接COF",
+      "preparativeTransformation": "构筑新型香豆素键连共价有机网络，与亚胺和烯基连接网络比较",
+      "generalityEvidence": "公开数据主要是光催化析氢量子效率和电荷寿命，单体/聚合反应通用性未充分呈现",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-09-08，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "但论文的主要论证是电子空穴分离和产氢性能，尚不能从公开摘要断定形成了一般的单体适用范围，保留明确待核。",
+      "scopeAssessment": {
+        "primaryContribution": "一锅芳乙腈与邻羟基苯甲醛缩合环化制备香豆素连接COF",
+        "preparativeTransformation": "构筑新型香豆素键连共价有机网络，与亚胺和烯基连接网络比较",
+        "generalityEvidence": "公开数据主要是光催化析氢量子效率和电荷寿命，单体/聚合反应通用性未充分呈现",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-09-08_2026-09-14_nature-synthesis; sha256=796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef",
+        "boundaryChallenge": "但论文的主要论证是电子空穴分离和产氢性能，尚不能从公开摘要断定形成了一般的单体适用范围，保留明确待核。"
+      },
+      "firstPassReason": "香豆素新连接化学可能是可迁移的聚合反应方法，不能因研究了光催化析氢就自动排除整个合成贡献。",
+      "independentChallengeReason": "但论文的主要论证是电子空穴分离和产氢性能，尚不能从公开摘要断定形成了一般的单体适用范围，保留明确待核。",
+      "reason": "一锅芳乙腈与邻羟基苯甲醛缩合环化制备香豆素连接COF。制备方法普适性证据仍待补核。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：公开数据主要是光催化析氢量子效率和电荷寿命，单体/聚合反应通用性未充分呈现；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-09-08",
+      "sourceRootId": "2026-09-08_2026-09-14_nature-synthesis",
+      "sourceSha256": "796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef",
+      "reviewQueueGitBlobSha": "9f59f80c0d2d37fda8391c12da47bfa0d46cce96",
+      "stageBatchGitBlobSha": "ea769868e1c0fd9e17469bb2bdd007c1988de899",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "evidenceNeeded": "香豆素COF单体组合与聚合反应范围、是否具独立的普适有机/高分子制备反应而不仅是水分解材料性能。",
+      "nextAction": "核对出版社可合法访问的详细实验、产物表征和开放支持信息，判断一般制备/合成路线贡献；在直接证据不足时继续保留pending，不把未获得全文写成原文不存在证据。",
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01146-w",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01146-w",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-09-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_nature-synthesis",
+        "stageBatchSha": "796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01163-9",
+      "journal": "Nature Synthesis",
+      "title": "Hierarchically porous metal–organic frameworks with red topology for hydrogen and methane storage",
+      "date": "2026-09-28",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "柔性炔基多齿有机连接体与金属氧簇构成超多孔red拓扑MOF",
+      "preparativeTransformation": "得到CU-6-Fe和CU-6-Cr配位晶体，控制孔径与气体吸附",
+      "generalityEvidence": "储氢与储甲烷的吸附容量是主指标，而非多种有机目标产物",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-09-28，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "链接体构象是通用网状晶体设计原理，但没有构成可迁移的小分子有机合成或聚合反应底物适用性证据。",
+      "scopeAssessment": {
+        "primaryContribution": "柔性炔基多齿有机连接体与金属氧簇构成超多孔red拓扑MOF",
+        "preparativeTransformation": "得到CU-6-Fe和CU-6-Cr配位晶体，控制孔径与气体吸附",
+        "generalityEvidence": "储氢与储甲烷的吸附容量是主指标，而非多种有机目标产物",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-09-22_2026-09-30_nature-synthesis; sha256=84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "boundaryChallenge": "链接体构象是通用网状晶体设计原理，但没有构成可迁移的小分子有机合成或聚合反应底物适用性证据。"
+      },
+      "firstPassReason": "虽然有机连接体与新型网状拓扑具有分子设计价值，论文主要成果是多孔储能材料与构效关系，不是新制备反应。",
+      "independentChallengeReason": "链接体构象是通用网状晶体设计原理，但没有构成可迁移的小分子有机合成或聚合反应底物适用性证据。",
+      "reason": "柔性炔基多齿有机连接体与金属氧簇构成超多孔red拓扑MOF。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：储氢与储甲烷的吸附容量是主指标，而非多种有机目标产物；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-09-28",
+      "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+      "sourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+      "reviewQueueGitBlobSha": "1e84d5cd078ac3667f49facbba660b290b9df479",
+      "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01163-9",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01163-9",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-09-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageBatchSha": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    },
+    {
+      "doi": "10.1038/s44160-026-01167-5",
+      "journal": "Nature Synthesis",
+      "title": "Geometric frustration in morphologically chiral nanoribbons of layered perovskites",
+      "date": "2026-09-29",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "金属卤化物钙钛矿的几何挫折驱动扭曲与手性纳米带",
+      "preparativeTransformation": "氢键网络与应变释放控制无手性层状晶体形成螺旋形貌",
+      "generalityEvidence": "原文对形貌、晶体动力学和手性光学有数据，但无分子手性合成",
+      "sourceEvidence": "Nature Synthesis官方Article页undefined；2026年首次在线日 2026-09-29，该日与冻结Crossref/OpenAlex来源一致。",
+      "boundaryChallenge": "纳米带的形态手性非常有趣，也可能用于手性材料，但不等于原文建立了可分离手性有机物的方法。",
+      "scopeAssessment": {
+        "primaryContribution": "金属卤化物钙钛矿的几何挫折驱动扭曲与手性纳米带",
+        "preparativeTransformation": "氢键网络与应变释放控制无手性层状晶体形成螺旋形貌",
+        "generalityEvidence": "原文对形貌、晶体动力学和手性光学有数据，但无分子手性合成",
+        "sourceEvidence": "官方undefined; sourceRoot=2026-09-22_2026-09-30_nature-synthesis; sha256=84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "boundaryChallenge": "纳米带的形态手性非常有趣，也可能用于手性材料，但不等于原文建立了可分离手性有机物的方法。"
+      },
+      "firstPassReason": "所谓手性是层状无机材料的宏观形态，并非具有分子立体中心的有机产物或轴手性小分子合成。",
+      "independentChallengeReason": "纳米带的形态手性非常有趣，也可能用于手性材料，但不等于原文建立了可分离手性有机物的方法。",
+      "reason": "金属卤化物钙钛矿的几何挫折驱动扭曲与手性纳米带。非一般有机或聚合物制备方法的中心贡献。",
+      "evidenceBasis": "官方文章摘要与可访问图文证据：原文对形貌、晶体动力学和手性光学有数据，但无分子手性合成；不从网页类别猜测制备范围，也不编造缺失数据。",
+      "publisherOnlineDate": "2026-09-29",
+      "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+      "sourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+      "reviewQueueGitBlobSha": "1e84d5cd078ac3667f49facbba660b290b9df479",
+      "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "noD1": true,
+        "noPdfSiBodyCapture": true,
+        "notPublication": true
+      },
+      "reviewMethod": "first-pass and separate adversarial challenge by same assistant, not separate human reviewer",
+      "publisherPage": "https://www.nature.com/articles/s44160-026-01167-5",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01167-5",
+        "publisherArticleType": "Article",
+        "publisherOnlineDate": "2026-09-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageBatchSha": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "figureFetched": false
+      }
+    }
+  ],
+  "guards": {
+    "noD1": true,
+    "noOwnerPermanentExclusion": true,
+    "noMediaOrPdf": true,
+    "noProductionData": true
+  }
+}

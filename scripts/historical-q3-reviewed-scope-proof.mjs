@@ -12,6 +12,15 @@ const check=(ok,msg)=>{if(!ok)throw Error(msg)};
 const normalize=s=>String(s||'').trim().toLowerCase();
 const sha40=s=>/^[a-f0-9]{40}$/.test(s||'');
 const sha64=s=>/^[a-f0-9]{64}$/.test(s||'');
+const trustedScienceFiles=new Map([
+  ['audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json','Nature Catalysis'],
+  ['audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json','Nature Catalysis'],
+  ['audit/historical-scope-assessments/2026-10-14-natsynth-13-original-two-pass.json','Nature Synthesis']
+]);
+const doiPatternByJournal={
+  'Nature Catalysis':/^10\.1038\/s41929-026-\d{5}-[0-9a-z]$/,
+  'Nature Synthesis':/^10\.1038\/s44160-026-\d{5}-[0-9a-z]$/
+};
 export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
   check(proof?.schemaVersion===REVIEWED_SCOPE_SCHEMA
     &&proof.mode==='frozen_source_proof_for_scientific_scope_reviews_not_publication'
@@ -23,10 +32,8 @@ export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
     &&proof.scientificEvidenceBlobSha===scienceGitBlobSha,
     'q3_reviewed_scope_frozen_science_hash_or_schema_mismatch');
   check(proof.sourceBranch==='staging/historical-archive-nightly'
-    &&[
-      'audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json',
-      'audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json'
-    ].includes(proof.scientificEvidenceFile)
+    &&trustedScienceFiles.get(proof.scientificEvidenceFile)===science.journal
+    &&Boolean(doiPatternByJournal[science.journal])
     &&proof.period==='2026-07-01..2026-09-30'
     &&science.period===proof.period
     &&proof.limits?.notPermanentOwnerExclusions===true
@@ -36,9 +43,8 @@ export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
   const scienceRows=new Map();
   for(const r of science.assessments){
     const id=normalize(r.doi);
-    check(/^10\.1038\/s41929-026-\d{5}-[0-9a-z]$/.test(id)
-      &&id===r.doi&&!scienceRows.has(id)
-      &&science.journal==='Nature Catalysis',
+    check(doiPatternByJournal[science.journal].test(id)
+      &&id===r.doi&&!scienceRows.has(id),
       'q3_reviewed_scope_science_doi_invalid:'+id);
     scienceRows.set(id,r);
   }
@@ -53,7 +59,7 @@ export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
       &&p.date===r.date&&p.publisherArticleType===r.publisherArticleType
       &&p.publisherPage===r.publisherPage
       &&p.scientificDecision===r.decision
-      &&p.journal==='Nature Catalysis'
+      &&p.journal===science.journal
       &&typeof p.sourceRootId==='string'
       &&p.sourceShardPath==='audit/historical-staging/review-queue/'+p.sourceRootId+'.json'
       &&sha40(p.stageBatchGitBlobSha)&&sha64(p.stageSourceSha256)
