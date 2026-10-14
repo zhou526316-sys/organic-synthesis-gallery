@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "reviewedAt": "2026-10-14T04:00:00Z",
+  "journal": "Nature Catalysis",
+  "period": "2026-07-01..2026-09-30",
+  "reviewMethod": "Same assistant performed a contribution-focused pass and a separate adversarial boundary pass; these are not independent human or model reviewers. No keyword or title-only decisions.",
+  "evidenceLevel": "DOI-exact official publisher article metadata and substantive public abstracts, with public HTML captions/main sections where returned. No claim of complete paywalled text or SI reading.",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+  "formalCatalogSnapshot": {"path": "public/toc-demand-live.json", "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b", "total": 1087},
+  "historicalAcademicSnapshot": {"path": "audit/historical-reviewed/approved-admissions.json", "sha": "1810870edb12c55356f935d12f910f3f7634b2f3", "include": 116, "pending": 2, "waiting08": 25},
+  "publisherIssueReceipts": ["audit/historical-publisher-issues/2026/nature-catalysis-issues-07-08-research.json", "audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json"],
+  "accounting": {
+    "assessmentCount": 15, "include": 0, "exclude": 14, "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false,
+    "explanation": "This supplemental ledger is deliberately not a permanent owner-exclusion list or an approved-admissions manifest. Current Q3 reconciliation does not consume it. Therefore do NOT subtract 14 or 15 from the generated 11423 queue count, add this pending to the original manifest pending=2, or report an increase in the existing 116 approvals. A later integration must reconcile immutable source rows, existing decisions and this provenance without editing publisher source shards."
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41929-026-01569-w", "date": "2026-07-02", "issue": 7, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01569-w", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "以7-烷基茶碱类双功能分子添加剂改善铂电极在强吸附阴离子存在时的氧还原表现。",
+      "preparativeTransformation": "研究对象是Pt表面的O2还原；添加剂作为功能分子参与表面调控。",
+      "generalityEvidence": "单晶、多晶和燃料电池验证的是电极适用性，不能作为新有机制备反应的底物范围。",
+      "firstPassReason": "作者以阴离子吸附抑制、含氧中间体转化和燃料电池阴极活性为主要证据，中心贡献不是从一类有机底物制备另一类目标产物的方法。",
+      "independentChallengeReason": "不能因其含分子添加剂就断言没有合成操作；但添加剂结构比较本身并不证明一个新的通用有机合成方法，因此仍不纳入。",
+      "provenanceNote": "Related Author Correction 10.1038/s41929-026-01591-y is a separate DOI and does not replace this original first-online date."
+    },
+    {
+      "doi": "10.1038/s41929-026-01571-2", "date": "2026-07-06", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01571-2", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "利用低温原子探针和原位拉曼揭示Na+杂质微结构与氧化物衍生Cu活性之间的关系。",
+      "preparativeTransformation": "实际研究CO2电还原及铜氧化物到工作态铜的转变。",
+      "generalityEvidence": "有无Na+和脉冲电解对照支持活性物种解释，不等于有机底物制备范围。",
+      "firstPassReason": "核心发现是电解质杂质稳定Cu+及其对CO2电解性能的作用，主要产出为催化剂工作态的机制认识，而非普适有机分子构建。",
+      "independentChallengeReason": "CO2转化确实可能生成多碳产物，脉冲操作也有化学意义；排除依据不是否认这些事实，而是论文没有以通用有机制备转化作为中心贡献。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01574-z", "date": "2026-07-08", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01574-z", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "建立停机保护电位策略以降低间歇CO电解中铜电极的氧化和碳酸盐积累。",
+      "preparativeTransformation": "CO电还原制多碳产物，包括用于经济性测算的乙酸生产。",
+      "generalityEvidence": "长时间运行和经济性分析证明工艺稳定性，而非多种有机底物的制备通用性。",
+      "firstPassReason": "论文围绕可再生电力启停、铜失活机理、保护电位和经济性展开，其主要创新是电解槽动态运行稳定化，不是新的有机反应方法。",
+      "independentChallengeReason": "承认乙酸是实际有机产物且受控断电具有工艺创新，但不能把运行时间或成本改进当成制备底物范围；此范围判断并不一概排斥交流或脉冲有机电合成。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01580-1", "date": "2026-08-14", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01580-1", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "鉴定甲烷部分氧化过程中Ni/Al2O3上的Ni–O活性结构。",
+      "preparativeTransformation": "CH4部分氧化为CO和H2合成气；工作态NiO表面结构受原位表征和DFT支持。",
+      "generalityEvidence": "证据集中在甲烷转化、合成气选择性和活性位，不是有机底物到目标有机产物的合成范围。",
+      "firstPassReason": "论文的直接制备目标是合成气、主要科学贡献是无机催化剂动态活性结构；没有因此建立符合网站范围的一般有机制备方法。",
+      "independentChallengeReason": "甲烷含C–H键且合成气可供下游有机合成使用，但不能把下游潜在用途归为本论文已经完成的有机产物制备，也不把DFT模型视为唯一机制证明。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01584-x", "date": "2026-07-30", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01584-x", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "通过流动池保护层及传质调控研究Cu催化CO2电还原中的C–C偶联机制。",
+      "preparativeTransformation": "CO2/CO电还原确有碳碳键形成和产物分布变化。",
+      "generalityEvidence": "电解槽构型、扩散长度和同位素共电解用于检验界面机制，不构成有机底物的制备范围。",
+      "firstPassReason": "论文将保护层作为控制传质的实验手段，主要回答流动池碳碳偶联的机制问题，不能仅因为C–C成键就自动认定为网站的有机方法学。",
+      "independentChallengeReason": "真实成键及同位素实验证据必须保留；但这里同位素用于机理追踪，不是普适标记合成方法，流动池与膜电极的对比也不是底物拓展。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01585-w", "date": "2026-07-30", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01585-w", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "合成介孔MoO2包覆Ni纳米颗粒电极，提高工业电流密度下的析氢活性和耐久性。",
+      "preparativeTransformation": "异相成核与退火构筑无机Ni/MoO2电极，水电解制氢。",
+      "generalityEvidence": "规模化电极制备和电解性能是材料及设备指标，不是有机合成底物通用性。",
+      "firstPassReason": "作者报道了真实的无机电极合成策略，但科学目标是析氢和阴离子交换膜电解水，未以制备有机分子或一般聚合反应为研究核心。",
+      "independentChallengeReason": "不能把标题中的synthetic strategy和规模化无机材料制备误读成有机方法学；排除不评价其催化价值，只执行网站既定研究对象边界。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01595-8", "date": "2026-08-14", "issue": 8, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01595-8", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "用18O示踪和在线电化学质谱解析Pt上甲醇氧化的氧迁移与C–O断裂路径。",
+      "preparativeTransformation": "甲醇电氧化生成CO2、碳酸盐或甲酸盐等产物。",
+      "generalityEvidence": "pH、表面氧和标记水/甲醇实验用于区分反应路径，不代表通用醇氧化合成范围。",
+      "firstPassReason": "研究的主要贡献是燃料电池及制氢相关甲醇氧化机制，而非以一系列有机底物制备相应目标化合物的方法；因此不纳入方法学目录。",
+      "independentChallengeReason": "甲醇、甲酸盐和C–O断裂都是真实化学事实，不能说没有有机转化；但单一能量载体的同位素机理研究与一般有机制备方法仍需区分，提出路径也不等于排他证明。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01559-y", "date": "2026-07-31", "issue": 8, "publisherArticleType": "Analysis", "publisherPage": "https://www.nature.com/articles/s41929-026-01559-y", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "四实验室轮比定量Rh/TiO2催化CO2加氢数据的不确定性及其对机器学习建模的影响。",
+      "preparativeTransformation": "CO2加氢制CO/CH4是性能测量对象；存在真实催化剂制备和实验。",
+      "generalityEvidence": "不同实验室、Rh负载和反应温度的比较是数据可重复性设计，非有机底物制备范围。",
+      "firstPassReason": "按作者实际研究内容排除：主要成果是跨实验室不确定度和建模特征选择，而非一般有机合成；同时保留出版社Analysis分类，不冒充普通Article。",
+      "independentChallengeReason": "Analysis并不天然等于没有原创实验；本研究确实实施催化实验，仍因主要贡献和产物范围不满足契约排除，而不是仅按栏目标签过滤。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01599-4", "date": "2026-08-13", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01599-4", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "DELINE单周转纳米成像揭示电催化表面水解离的动力学补偿。",
+      "preparativeTransformation": "水解离与联动检测反应服务于局域电催化速率成像。",
+      "generalityEvidence": "空间分辨率、动力学图像与表面位点差异不是有机产物的制备拓展。",
+      "firstPassReason": "论文核心是成像测量方法和水解离动力学，不是一般有机分子合成。公开作者论证与图注支持这一贡献定位，无需从标题猜测。",
+      "independentChallengeReason": "检测中的domino reaction可能涉及真实化学转化，但该转化在此用于测量放大，不能替代新有机制备方法的独立证据；不将8月19日的更正时间替代8月13日首发。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01601-z", "date": "2026-08-17", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01601-z", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "用纳米限域Cu催化剂微环境提高CO2到乙醇的选择性和电流密度。",
+      "preparativeTransformation": "CO2电还原形成乙醇，确有C–C成键和有机产物。",
+      "generalityEvidence": "纳米结构、局域CO2、乙醇/乙烯选择性及光谱/计算对照证明电极微环境作用，不构成通用有机合成范围。",
+      "firstPassReason": "主体是纳米限域催化材料和CO2电解性能优化，主要指标为法拉第效率、部分电流密度和中间体稳定性，而非多种有机底物制备方法。",
+      "independentChallengeReason": "乙醇合成是真实的，不能用没有有机产物来排除；反向核查后，纳入条件仍不能只由乙醇产率或单一转化性能满足，排除不扩大到所有异相有机电合成。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01608-6", "date": "2026-08-25", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01608-6", "decision": "pending", "firstPassDecision": "pending", "challengeDecision": "pending", "reviewPasses": 2,
+      "primaryContribution": "离子液体修饰Bi电极促进CO2与亚磷酸根的C–P偶联制膦甲酸。",
+      "preparativeTransformation": "实际生成膦甲酸，属于值得认真核实的药物相关C–P成键，不是仅生成燃料气体。",
+      "generalityEvidence": "官方摘要给出法拉第效率、电流密度和单位面积生成速率；本轮证据尚不足以确认分离制备、产品纯度/物料衡算和可迁移的反应范围。",
+      "firstPassReason": "真正的CO2/P(III)偶联和药物相关目标使其不同于纯水分解材料论文；但是否达到网站制备方法或路线准入证据仍需补核，不能仅凭目标名称判定通过。",
+      "independentChallengeReason": "不能因为Bi电极、离子液体和性能指标就自动排除，也不能把37.5%法拉第效率改写为分离收率。现有公开证据不能消除材料性能与制备方法的边界争议，保留待核而非制造确定结论。",
+      "nextAction": "核对作者公开实验中的膦甲酸分离、鉴定、纯度、制备规模与物料衡算，确认是否有可迁移的C–P合成证据，再独立复审；不触发历史PDF或图片批量补抓。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true
+    },
+    {
+      "doi": "10.1038/s41929-026-01603-x", "date": "2026-08-25", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01603-x", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "解析不同pH下Pt界面水与氢氧化反应的耦合及动力学差异。",
+      "preparativeTransformation": "H2电氧化、表面氢吸脱附和界面水重排是直接反应对象。",
+      "generalityEvidence": "H2/D2、酸碱条件与模拟比较属于界面机制验证，不是有机底物氢化或氘代制备拓展。",
+      "firstPassReason": "文章回答Pt氢氧化与界面水的物理化学机制，未以目标有机分子制备为主要贡献，因而不属于当前有机合成文献范围。",
+      "independentChallengeReason": "涉及氢和同位素不等于建立有机氢化/氘标记方法；不能将气体置换及同位素机理实验误记为合成底物范围。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01604-w", "date": "2026-08-31", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01604-w", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "结合XAS、红外和DFT解析配体修饰Ag附近去溶剂化Cs+的局域结构及部分共价作用。",
+      "preparativeTransformation": "主要反应是CO2还原为CO，阳离子与中间体相互作用降低过电位。",
+      "generalityEvidence": "比较的是界面阳离子结构、光谱与电催化动力学，不是有机底物到制备产物的通用转化。",
+      "firstPassReason": "作者的中心结论是阳离子效应超出纯静电解释及其在CO2到CO转化中的作用，属于界面电催化机制而非新有机制备方法。",
+      "independentChallengeReason": "配体和非共价/部分共价相互作用也会出现在有机催化中，但术语共现不能决定准入；本论文实际研究对象和制备输出仍不满足范围。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01607-7", "date": "2026-08-28", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01607-7", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "通过胶束限域构建高密度有序金属间纳米晶并提高燃料电池催化耐久性。",
+      "preparativeTransformation": "真正制备的是不同组成和载体上的无机金属间催化纳米晶。",
+      "generalityEvidence": "存在材料组成和载体通用性，但不是有机小分子制备范围；聚合物胶束在此作为模板。",
+      "firstPassReason": "纳米晶合成和燃料电池性能是核心科学贡献，研究对象属于催化材料，而非网站收录的一般有机制备或聚合反应方法。",
+      "independentChallengeReason": "不能否认这项工作的材料合成通用性，也不能将胶束模板误记为聚合新方法；240000小时为预测寿命，不应当作同等时长的实测运行。"
+    },
+    {
+      "doi": "10.1038/s41929-026-01605-9", "date": "2026-09-07", "issue": 9, "publisherArticleType": "Article", "publisherPage": "https://www.nature.com/articles/s41929-026-01605-9", "decision": "exclude", "firstPassDecision": "exclude", "challengeDecision": "exclude", "reviewPasses": 2,
+      "primaryContribution": "区分碱性析氢反应中Ni、NiO、NiHx及Ni(OH)2表面物种的作用。",
+      "preparativeTransformation": "水解离与析氢是直接反应；表面氧化物/氢化物是机制对象。",
+      "generalityEvidence": "电化学、表面表征和计算解析活性物种，并未建立有机底物制备范围。",
+      "firstPassReason": "论文主要解决镍电极析氢的表面物种归属，不是镍催化有机偶联、氢化或官能团化的新制备反应，因此不纳入。",
+      "independentChallengeReason": "同样出现Ni、氢化物和水解离，不能据此与镍催化有机合成混同；依据实际转化和主论证排除，而不是按元素或催化标签过滤。"
+    }
+  ],
+  "guards": {"notPublicationAuthority": true, "notOwnerPermanentExclusionList": true, "doNotModifyApprovedAdmissions": true, "doNotModifyOriginalSourceShards": true, "zeroProductionD1": true, "noMediaPdfBodySiAcquisition": true, "noNewTodayHotWechat": true, "noNewSchedule": true, "originalPendingTwoPreserved": true}
+}

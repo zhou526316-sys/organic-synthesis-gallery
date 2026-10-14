@@ -1,0 +1,26 @@
+name: Historical publisher receipt integrity
+
+on:
+  pull_request:
+    paths:
+      - 'audit/historical-publisher-issues/2026/nature-catalysis-issues-07-08-research.json'
+      - 'audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json'
+      - 'tests/historical-natcatal-q3-issue-receipts.test.mjs'
+      - '.github/workflows/historical-publisher-receipt-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  receipt-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check DOI, dates, category, scope evidence and authority partitions
+        run: node --test tests/historical-natcatal-q3-issue-receipts.test.mjs
