@@ -171,7 +171,7 @@ export function reconcileQ3({
         &&ev.sourceReviewQueuePath===
           'audit/historical-staging/review-queue/'+ev.sourceRootId+'.json'
         &&item.title===src.title))
-      &&ev.verificationKind='publisher_direct_article_type_and_original_work_provenance',
+      &&ev.verificationKind==='publisher_direct_article_type_and_original_work_provenance',
       'q3_nonresearch_publisher_evidence_invalid:'+id);
     publisherNonOriginal.add(id);
   }
