@@ -16,8 +16,8 @@
   "completeSourceFamilies": true,
   "stats": {
     "candidateOccurrences": 15,
-    "alreadyPublished": 0,
-    "approvedAwaiting08": 1,
+    "alreadyPublished": 1,
+    "approvedAwaiting08": 0,
     "evidencePending": 0,
     "requiresTwoPassReview": 14,
     "priorityP0": 1,
@@ -60,7 +60,7 @@
         "publisher_first_online_date_unverified",
         "discovered_window_date_mismatch"
       ],
-      "status": "two_pass_approved_awaiting_08",
+      "status": "already_published",
       "articleEvidenceReview": "not_performed_by_triage",
       "publicationRights": "unverified_no_full_abstract_or_body"
     },
