@@ -1,0 +1,361 @@
+[
+  {
+    "article": "today",
+    "paper": "10.1021/jacs.6c17662",
+    "lead": "today_Fig1B_lead",
+    "cover": {
+      "source_figure_id": "cover_featured",
+      "production_cover_image": "user_selected",
+      "pixel_equivalence": "exact_source_bytes",
+      "delivery_image_sha256": "41b359668c3bb7256be64c2fcdcf51f0d47a94f9bf5c63c04d3893f56d00f90c",
+      "canvas": {
+        "width": 1880,
+        "height": 800,
+        "background": "#FFFFFF"
+      },
+      "crop_235_1": "0_0_1_1",
+      "crop_1_1": "0.287234_0_0.712766_1",
+      "description": "Original PDF Fig1B screenshot without generated or modified chemistry; verified as source-only cover"
+    },
+    "placements": [
+      {
+        "section": 1,
+        "header": "为什么氢胺化已经成熟，迁移氢胺化却难得多？",
+        "positions": {
+          "1": [
+            "today_Fig1A"
+          ]
+        }
+      },
+      {
+        "section": 2,
+        "header": "第一处关键设计：为什么先把伯胺变成亚胺？",
+        "positions": {
+          "1": [
+            "today_Fig1C"
+          ]
+        }
+      },
+      {
+        "section": 3,
+        "header": "不是任意铁盐加上硅烷就可以：条件表究竟说明什么？",
+        "positions": {
+          "1": [
+            "today_Table1"
+          ],
+          "2": [
+            "today_SI_S8",
+            "today_SI_S9"
+          ]
+        }
+      },
+      {
+        "section": 4,
+        "header": "为什么是迁移，而不是直接加氢：底物本身给出一组检验",
+        "positions": {
+          "1": [
+            "today_Fig2"
+          ],
+          "2": [
+            "today_SI_S16"
+          ]
+        }
+      },
+      {
+        "section": 5,
+        "header": "β-氨基酸不是一个顺便展示的衍生化例子",
+        "positions": {
+          "1": [
+            "today_Fig3"
+          ],
+          "2": [
+            "today_Fig4"
+          ]
+        }
+      },
+      {
+        "section": 6,
+        "header": "两组 SI 实验，检验“氨基确实在分子内迁移”",
+        "positions": {
+          "1": [
+            "today_SI_S13"
+          ],
+          "2": [
+            "today_SI_S14"
+          ]
+        }
+      },
+      {
+        "section": 7,
+        "header": "有实际应用价值，也有现实反应代价",
+        "positions": {
+          "1": [
+            "today_Fig5"
+          ]
+        }
+      }
+    ],
+    "figures": [
+      {
+        "id": "today_Fig1B_lead",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1B_lead.png",
+        "caption": "原文 Fig. 1B：以烯丙胺为起点，在 Fe/硅烷体系下先让氨基发生 1,2-迁移，再得到位置改变的烷基胺。",
+        "source_figure": "Fig.1B"
+      },
+      {
+        "id": "today_Fig1A",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1A.png",
+        "caption": "原文 Fig. 1A：经典分子间、分子内 MHAT 氢胺化，与依赖氨基迁移的第三种反应设计对比。",
+        "source_figure": "Fig.1A"
+      },
+      {
+        "id": "today_Fig1C",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1C.png",
+        "caption": "原文 Fig. 1C：作者提出的 Fe–H/MHAT、3-exo-trig 环化、氨基迁移及二次 MHAT 级联；铁的具体价态与中间体均属机理模型。",
+        "source_figure": "Fig.1C"
+      },
+      {
+        "id": "today_Table1",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Table1.png",
+        "caption": "原文 Table 1：Fe(acac)₃、PhSiH₃、乙二醇和空气四项条件都具有明确的判别作用；模型产物经酸处理为胺盐。",
+        "source_figure": "Table 1"
+      },
+      {
+        "id": "today_SI_S8",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S8.png",
+        "caption": "SI Fig. S8：比较缺铁、缺硅烷、缺乙二醇等条件，明确哪些组分是反应必需的。",
+        "source_figure": "Fig.S8"
+      },
+      {
+        "id": "today_SI_S9",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S9.png",
+        "caption": "SI Fig. S9：对照 Fe(acac)₂、Co(acac)₃、溶剂、空气和硅烷；反应收率不能单独证明特定铁氢配位结构。",
+        "source_figure": "Fig.S9"
+      },
+      {
+        "id": "today_Fig2",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig2.png",
+        "caption": "原文 Fig. 2：环状、非环状和较拥挤内烯烃的胺基迁移；必须关注第二级烯丙胺的低选择性。",
+        "source_figure": "Fig.2"
+      },
+      {
+        "id": "today_SI_S16",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S16.png",
+        "caption": "SI Fig. S16：仲位烯丙亚胺不再发生高度选择性的氨基迁移，出现未迁移还原与两种迁移产物。",
+        "source_figure": "Fig.S16"
+      },
+      {
+        "id": "today_Fig3",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig3.png",
+        "caption": "原文 Fig. 3：多类 α-乙烯基氨基酸衍生物迁移后给出 β-甲基-β-氨基酸；部分产物的非对映比并不突出。",
+        "source_figure": "Fig.3"
+      },
+      {
+        "id": "today_Fig4",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig4.png",
+        "caption": "原文 Fig. 4：复杂药物相关 α-乙烯基氨基酸衍生物及其它功能化连接单元的迁移反应。",
+        "source_figure": "Fig.4"
+      },
+      {
+        "id": "today_SI_S13",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S13.png",
+        "caption": "SI Fig. S13：两个亚胺混合反应，未检测到交叉产物；只能对分子间迁移作约束，而非穷尽所有自由基路径。",
+        "source_figure": "Fig.S13"
+      },
+      {
+        "id": "today_SI_S14",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S14.png",
+        "caption": "SI Fig. S14：THF-d₈、CD₃OD 与 PhSiD₃ 等氘源对照的原始方案、产率和氘掺入信息。",
+        "source_figure": "Fig.S14"
+      },
+      {
+        "id": "today_Fig5",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig5.png",
+        "caption": "原文 Fig. 5：2-金刚烷乙胺（2-rimantadine）类似物的路线比较、24 mmol 放大和后续含氮产物衍生。",
+        "source_figure": "Fig.5"
+      },
+      {
+        "id": "cover_featured",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/cover_featured.png",
+        "caption": "原文 Fig. 1B 反应图封面",
+        "source_figure": "Fig.1B reaction source preserved from main paper"
+      }
+    ]
+  },
+  {
+    "article": "retro",
+    "paper": "10.1021/jacs.6c08353",
+    "lead": "retro_Fig1B_lead",
+    "cover": {
+      "source_figure_id": "cover_retrospective",
+      "production_cover_image": "user_selected",
+      "pixel_equivalence": "exact_source_bytes",
+      "delivery_image_sha256": "c12ec72a42fac2e011ecbc8d18f395fd89447a0bb75773cd7c0dff88c34e8699",
+      "canvas": {
+        "width": 800,
+        "height": 800,
+        "background": "#FFFFFF"
+      },
+      "crop_235_1": "0_0.287234_1_0.712766",
+      "crop_1_1": "0_0_1_1",
+      "description": "Original PDF Fig1B screenshot without generated or modified chemistry; verified as source-only cover"
+    },
+    "placements": [
+      {
+        "section": 1,
+        "header": "酶擅长做多环；选择性只做一环，反而更难吗？",
+        "positions": {
+          "1": [
+            "retro_Fig1A"
+          ]
+        }
+      },
+      {
+        "section": 2,
+        "header": "为什么酸催化剂单独几乎不起反应，加入 PFTB 后却变化巨大？",
+        "positions": {
+          "1": [
+            "retro_Table1"
+          ]
+        }
+      },
+      {
+        "section": 3,
+        "header": "一开始就形成 α-产物吗？动力学反而给出了相反答案",
+        "positions": {
+          "1": [
+            "retro_SI_S2"
+          ],
+          "2": [
+            "retro_SI_S3",
+            "retro_SI_S4"
+          ]
+        }
+      },
+      {
+        "section": 4,
+        "header": "催化剂空腔与氟代醇氢键网络，证据究竟到哪一步？",
+        "positions": {
+          "1": [
+            "retro_Fig3"
+          ],
+          "2": [
+            "retro_SI_S5_S6"
+          ]
+        }
+      },
+      {
+        "section": 5,
+        "header": "一个过渡态里，质子转移与 C–C 成键是否真正“同步”？",
+        "positions": {
+          "2": [
+            "retro_SI_S23",
+            "retro_SI_S24"
+          ]
+        }
+      },
+      {
+        "section": 6,
+        "header": "哪一侧手性选择性更高，取决于什么？",
+        "positions": {}
+      },
+      {
+        "section": 7,
+        "header": "从香料和视黄醛前体，到给鲨烯只做一次环化",
+        "positions": {
+          "1": [
+            "retro_Fig2"
+          ],
+          "2": [
+            "retro_Fig4"
+          ]
+        }
+      },
+      {
+        "section": 8,
+        "header": "这篇研究留下的设计原则与实际代价",
+        "positions": {}
+      }
+    ],
+    "figures": [
+      {
+        "id": "retro_Fig1B_lead",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig1B_lead.png",
+        "caption": "原文 Fig. 1B：受限空间内的手性 IDPi 与氟代醇协同，使链状香叶基二烯形成手性环香叶基骨架。",
+        "source_figure": "Fig.1B"
+      },
+      {
+        "id": "retro_Fig1A",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig1A.png",
+        "caption": "原文 Fig. 1A：香叶基环化骨架广泛出现在香料、视黄醛相关分子及多种萜类天然产物中。",
+        "source_figure": "Fig.1A"
+      },
+      {
+        "id": "retro_Table1",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Table1.png",
+        "caption": "原文 Table 1：IDPi 骨架变化主要影响 e.r.，PFTB、HFIP、TFE 的比较则暴露区域选择性和效率的显著变化。",
+        "source_figure": "Table 1"
+      },
+      {
+        "id": "retro_SI_S2",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S2.png",
+        "caption": "SI Fig. S2：时间分辨核磁显示 α、γ 两类产物在反应早期同时出现，随后 γ-产物逐渐减少。",
+        "source_figure": "Fig.S2"
+      },
+      {
+        "id": "retro_SI_S3",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S3.png",
+        "caption": "SI Fig. S3：随时间变化的 α/γ 产物 ee，对解释最终选择性中的后续异构化贡献有帮助。",
+        "source_figure": "Fig.S3"
+      },
+      {
+        "id": "retro_SI_S4",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S4.png",
+        "caption": "SI Fig. S4：γ-产物 4a 可以在催化条件下转成 α-产物 2a，反向对照不发生，界定了可发生的后续异构化。",
+        "source_figure": "Fig.S4"
+      },
+      {
+        "id": "retro_Fig3",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig3.png",
+        "caption": "原文 Fig. 3（A–F 完整原图）：包含时间分辨反应轨迹、PFTB 级数、同位素示踪、催化循环和两条对映路径的 DFT 模型。为防断图，完整原图置于此处；后文分别解读 C–F 子图，可点击放大。",
+        "source_figure": "Fig.3A-F"
+      },
+      {
+        "id": "retro_SI_S5_S6",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S5_S6.png",
+        "caption": "SI Fig. S5/S6：IDPi 与 PFTB 的 ¹H、³¹P 核磁滴定图，支持催化剂—添加剂相互作用。",
+        "source_figure": "Fig.S5-S6"
+      },
+      {
+        "id": "retro_SI_S23",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S23.png",
+        "caption": "SI Fig. S23：催化循环计算自由能剖面。能量数据属于所选模型的计算结果，不是实测速率常数。",
+        "source_figure": "Fig.S23"
+      },
+      {
+        "id": "retro_SI_S24",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S24.png",
+        "caption": "SI Fig. S24：TS1 与 TS1′ 的成键距离以及 IRC 曲线；图中的 C–H/C–C 键形成明显非同步。",
+        "source_figure": "Fig.S24"
+      },
+      {
+        "id": "retro_Fig2",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig2.png",
+        "caption": "原文 Fig. 2：链状香叶基二烯的 α/γ 两种产物、各自 e.r.、香料用途及后续多烯环化。",
+        "source_figure": "Fig.2"
+      },
+      {
+        "id": "retro_Fig4",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig4.png",
+        "caption": "原文 Fig. 4：三烯、视黄醛相关前体以及鲨烯的区域选择性单环化；不应将每个案例都归入“一锅多环化”。",
+        "source_figure": "Fig.4"
+      },
+      {
+        "id": "cover_retrospective",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/cover_retrospective.png",
+        "caption": "原文 Fig. 1B 反应图封面",
+        "source_figure": "Fig.1B reaction source preserved from main paper"
+      }
+    ]
+  }
+]

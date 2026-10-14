@@ -1,0 +1,327 @@
+{
+  "date": "2026-10-14",
+  "selectionAuthority": "user_uploaded_jacs_main_and_SI_and_20261014_selected_two_papers",
+  "editorialRevision": "2026-10-14-r1",
+  "paper": {
+    "doi": "10.1021/jacs.6c17662",
+    "journal": "JACS",
+    "title": "Migratory Hydroamination of Alkenes via Iron-Hydride Catalysis",
+    "authors": "Yuang Cui, Yizhou Chen, Hui Lv, Rao Liang, Beibei Zhan, Xiaheng Zhang"
+  },
+  "headline": "铁氢催化烯烃迁移氢胺化",
+  "kicker": "今日精选｜JACS",
+  "lead_figure_id": "today_Fig1B_lead",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "先看懂这项反应",
+      "text": "从化学键总账看，产物仍像一次烯烃加氢胺化：双键被饱和，分子得到 C–N 键。但最重要的区别是，氮不是由外部试剂直接加到双键上，而是从分子内原来的碳位置迁移到了相邻的碳位置。胺基迁移之后留下的是全新的烷基胺或 β-氨基酸骨架。"
+    },
+    {
+      "label": "核心反应路径",
+      "text": "想理解这篇论文，需要盯住一条很不寻常的路线：第一次金属氢原子转移产生自由基；自由基推动一个短暂的三元环式重排；迁移后的自由基再接受第二次氢原子转移。这不是传统“产生烷基自由基—捕获胺源”式氢胺化。"
+    }
+  ],
+  "sections": [
+    {
+      "eyebrow": "背景与突破",
+      "heading": "为什么氢胺化已经成熟，迁移氢胺化却难得多？",
+      "paragraphs": [
+        "以往 MHAT 氢胺化主要解决两种连接：外部含氮组分与烷基自由基偶联，或同一个分子中的氮进攻烯烃形成含氮环。张夏衡团队借鉴其此前的光氧化还原催化胺基 1,2-迁移研究，希望反其道而行之——不让氮被固定在原来的碳上，而是借自由基反应改写 C–N 键的连接位置。但此前的模型主要是活化的氨基酸衍生物，向普通烷基胺推广会遇到更强 C–N 键、不稳定的自由基，以及直接还原与迁移的竞争。",
+        "要让这条路线成立，至少有三道关：首先必须在正确的烯烃碳生成自由基；其次自由基要优先进入胺基迁移，而不是直接被淬灭；最后迁移必须在正确的相邻位置结束，尤其是内烯烃不能随意给出区域异构体。作者没有同时强行解决所有问题，而是利用中间体稳定性与可逆反应之间的差异逐步设计。"
+      ],
+      "figures": [
+        "today_Fig1A"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Fig1A"
+        ]
+      }
+    },
+    {
+      "eyebrow": "自由基迁移",
+      "heading": "第一处关键设计：为什么先把伯胺变成亚胺？",
+      "paragraphs": [
+        "游离胺如果只带一个不饱和侧链，不能保证自由基按预定路径让 C–N 键迁移。作者先让烯丙胺与 3,5-双三氟甲基苯甲醛缩合成亚胺，使 C=N 成为分子内自由基的受体。第一次 MHAT 之后的碳自由基向亚胺发生 3-exo-trig 环化，形成氮杂环丙基甲基自由基；这一中间体再经开环重排，断开旧 C–N 连接并形成迁移后的碳自由基。",
+        "这套设计借用了小环重排的“成环—开环”动力学优势，但要注意：图中的氮杂三元环自由基、Fe(III)–H 以及逐步发生的第二次 MHAT，属于作者据实验提出的路径，并非全部被直接捕获。当前证据较有力地支持分子内迁移与硅烷提供氢原子，对所有铁物种和过渡态则没有等强度的实验证明。"
+      ],
+      "figures": [
+        "today_Fig1C"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Fig1C"
+        ]
+      }
+    },
+    {
+      "eyebrow": "条件判别",
+      "heading": "不是任意铁盐加上硅烷就可以：条件表究竟说明什么？",
+      "paragraphs": [
+        "模型反应在 Fe(acac)₃（30 mol%）、PhSiH₃（4 当量）、乙二醇（3 当量）、THF、60 °C 条件下完成，酸处理后产物 3 的分离收率为 79%（酸处理前 GC 收率约 80%）。换成 Fe(acac)₂ 收率降到 47%，Co(acac)₃ 仅有 3%；去掉铁催化剂无目标产物，去掉硅烷也无法得到产物。这里 Fe(acac)₃ 的氧化态与配位环境可能影响 Fe–H 循环，但催化剂筛选本身不能确认每一种中间价态。",
+        "乙二醇的作用尤其值得研究：去掉后只得到 25%，而将空气改成氩气收率也仅 8%。作者认为乙二醇可能参与铁上的烷氧基配体交换，利用 Si–O 键形成推动活性 Fe–H 的再生；空气中的氧则可能帮助 Fe(II) 氧化回 Fe(III)。这些是与缺组分实验相符的解释，尚不能理解成 Fe–O、Fe–H 每一步都经原位谱学确认。形式上为氢胺化，不代表操作中没有当量硅烷消耗，也不代表整个铁循环不涉及氧化还原步骤。"
+      ],
+      "figures": [
+        "today_Table1",
+        "today_SI_S8",
+        "today_SI_S9"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Table1"
+        ],
+        "2": [
+          "today_SI_S8",
+          "today_SI_S9"
+        ]
+      }
+    },
+    {
+      "eyebrow": "竞争路径",
+      "heading": "为什么是迁移，而不是直接加氢：底物本身给出一组检验",
+      "paragraphs": [
+        "环戊基、环己基、金刚烷相关骨架，以及醚环等多种烯丙胺可以被转化，产物在几十到接近百分之百的分离收率范围内。即使是较拥挤的内烯烃，也能制得单一主导区域异构体，说明这种重排不是只能依靠端烯生成自由基。",
+        "但如果把有利于形成稳定三级碳自由基的底物换为仲位烯丙胺，选择性明显衰减。SI Fig. S16/S17 报告迁移产物与未迁移还原产物的混合物；三个组分各约 28–30%（两步合计 88%），不再呈现常规三级烯丙胺那样清晰的迁移优势。这正是作者“通过逐步提高碳自由基稳定性促迁移”这一设计逻辑的有效反证边界：当迁移后的自由基不再特别有利时，直接氢转移就会重新竞争。"
+      ],
+      "figures": [
+        "today_Fig2",
+        "today_SI_S16"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Fig2"
+        ],
+        "2": [
+          "today_SI_S16"
+        ]
+      }
+    },
+    {
+      "eyebrow": "底物拓展",
+      "heading": "β-氨基酸不是一个顺便展示的衍生化例子",
+      "paragraphs": [
+        "把氮移走一个碳位置，正好为 α-氨基酸到 β-氨基酸的结构转换提供思路。作者使用 α-乙烯基氨基酸衍生物，生成 β-甲基-β-氨基酸，其区域选择性总体明确，所报告的 19–23 产物分离收率为 59–83%。然而不同底物的非对映比从接近 1:1 到数比一不等；这项方法主要实现的是迁移区域控制，并不能据此称为成熟的高非对映选择性或不对称合成方法。",
+        "随后 Fig. 4 将多种药物与天然产物相关片段带入反应，包括多巴胺、西格列汀、氯雷他定及曲美他嗪来源的衍生物。示例 34–37 为 38–75% 分离收率，同时保护基和酯取代模式会进一步影响效率。重要的不是罗列这些药物名称，而是这种原位迁移能够在拥挤的、已有功能化的前体上发生，减少为改变氨基位置重建骨架的需求。"
+      ],
+      "figures": [
+        "today_Fig3",
+        "today_Fig4"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Fig3"
+        ],
+        "2": [
+          "today_Fig4"
+        ]
+      }
+    },
+    {
+      "eyebrow": "决定性实验",
+      "heading": "两组 SI 实验，检验“氨基确实在分子内迁移”",
+      "paragraphs": [
+        "将两种不同亚胺底物混合反应，GC–MS 未检测到预期的交叉产物，而分别得到各自迁移产物 44 和 8（在该实验中两步总收率分别为 56% 和 24%）。这支持新 C–N 位置来自底物分子内的胺基迁移，而不是游离含氮物种释放到溶液中再无选择性偶联。不过，交叉实验的阴性结果不足以单独区分“经氮杂环丙基自由基”与所有其他可能的分子内迁移路径。",
+        "氢从何来，则由同位素对照限定：换成 THF-d₈ 或氘代甲醇，没有检测到相应位置的氘引入；使用 PhSiD₃ 可在产物中检测到显著的氘标记，说明硅烷是此氢化过程的重要氢源。乙二醇的主要贡献因而不应被直接写成“把羟基上的 H 转移给碳自由基”，它与催化活性有关的解释需要另一组证据。"
+      ],
+      "figures": [
+        "today_SI_S13",
+        "today_SI_S14"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_SI_S13"
+        ],
+        "2": [
+          "today_SI_S14"
+        ]
+      }
+    },
+    {
+      "eyebrow": "应用与边界",
+      "heading": "有实际应用价值，也有现实反应代价",
+      "paragraphs": [
+        "作者展示了一条从 2-金刚烷酮出发的合成路线，五步以 49% 总收率得到 2-rimantadine 相关结构 44；对照旧路线为七步、约 29% 总收率。这是从实际路线长度而非单步收率来证明方法价值。对氨基酸产品 19，还完成了 24 mmol 规模、4.41 g、80% 分离收率的制备，并进一步经脱羧、氧化和水解形成其它药物相关胺骨架；这些后续反应有独立的条件与收率，不应全部视为一次 Fe–H 催化过程。",
+        "与此同时，30 mol% Fe(acac)₃、相对大量的 PhSiH₃、醇添加剂、空气参与，以及部分前体的多步制备都是方法的现实成本。内烯烃、仲位烯丙胺与部分 β-氨基酸还暴露出区域选择性或非对映选择性边界。若想发展真正可预测、低催化剂用量的自由基迁移方法，后续需要竞争速率、关键短寿命自由基的直接证据，以及对第二次 HAT 与迁移速率之间关系的定量研究。",
+        "这篇工作的启发在于：同样一个金属氢原子转移过程，若让中间自由基先发生可设计的基团迁移，再安排终止 HAT，就能从“在双键上加官能团”进入“改变官能团所在的位置”。 这个反应模式是否还能移植到其它 N、O 或 C 基团，取决于迁移前后自由基稳定性的真实差值和副反应速率，不能仅凭“迁移可行”直接外推。"
+      ],
+      "figures": [
+        "today_Fig5"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_Fig5"
+        ]
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "today_Fig1B_lead",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1B_lead.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.1B",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Fig. 1B：以烯丙胺为起点，在 Fe/硅烷体系下先让氨基发生 1,2-迁移，再得到位置改变的烷基胺。",
+      "display_width_pct": 90
+    },
+    {
+      "id": "today_Fig1A",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1A.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.1A",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Fig. 1A：经典分子间、分子内 MHAT 氢胺化，与依赖氨基迁移的第三种反应设计对比。",
+      "display_width_pct": 95
+    },
+    {
+      "id": "today_Fig1C",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig1C.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.1C",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Fig. 1C：作者提出的 Fe–H/MHAT、3-exo-trig 环化、氨基迁移及二次 MHAT 级联；铁的具体价态与中间体均属机理模型。",
+      "display_width_pct": 95
+    },
+    {
+      "id": "today_Table1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Table1.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Table 1",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 3,
+      "body": true,
+      "caption": "原文 Table 1：Fe(acac)₃、PhSiH₃、乙二醇和空气四项条件都具有明确的判别作用；模型产物经酸处理为胺盐。",
+      "display_width_pct": 95
+    },
+    {
+      "id": "today_SI_S8",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S8.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.S8",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 59,
+      "body": true,
+      "caption": "SI Fig. S8：比较缺铁、缺硅烷、缺乙二醇等条件，明确哪些组分是反应必需的。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "today_SI_S9",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S9.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.S9",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 59,
+      "body": true,
+      "caption": "SI Fig. S9：对照 Fe(acac)₂、Co(acac)₃、溶剂、空气和硅烷；反应收率不能单独证明特定铁氢配位结构。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "today_Fig2",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig2.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.2",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 4,
+      "body": true,
+      "caption": "原文 Fig. 2：环状、非环状和较拥挤内烯烃的胺基迁移；必须关注第二级烯丙胺的低选择性。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "today_SI_S16",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S16.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.S16",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 118,
+      "body": true,
+      "caption": "SI Fig. S16：仲位烯丙亚胺不再发生高度选择性的氨基迁移，出现未迁移还原与两种迁移产物。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "today_Fig3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig3.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.3",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 5,
+      "body": true,
+      "caption": "原文 Fig. 3：多类 α-乙烯基氨基酸衍生物迁移后给出 β-甲基-β-氨基酸；部分产物的非对映比并不突出。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "today_Fig4",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig4.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.4",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 6,
+      "body": true,
+      "caption": "原文 Fig. 4：复杂药物相关 α-乙烯基氨基酸衍生物及其它功能化连接单元的迁移反应。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "today_SI_S13",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S13.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.S13",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 114,
+      "body": true,
+      "caption": "SI Fig. S13：两个亚胺混合反应，未检测到交叉产物；只能对分子间迁移作约束，而非穷尽所有自由基路径。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "today_SI_S14",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_SI_S14.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.S14",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 115,
+      "body": true,
+      "caption": "SI Fig. S14：THF-d₈、CD₃OD 与 PhSiD₃ 等氘源对照的原始方案、产率和氘掺入信息。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "today_Fig5",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/today_Fig5.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.5",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 7,
+      "body": true,
+      "caption": "原文 Fig. 5：2-金刚烷乙胺（2-rimantadine）类似物的路线比较、24 mmol 放大和后续含氮产物衍生。",
+      "display_width_pct": 95
+    },
+    {
+      "id": "cover_featured",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/cover_featured.png",
+      "source_doi": "10.1021/jacs.6c17662",
+      "source_figure": "Fig.1B reaction source preserved from main paper",
+      "body": false,
+      "source_kind": "exact_original_paper_raster_unaltered",
+      "caption": "原文 Fig. 1B 反应图封面"
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_featured",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "41b359668c3bb7256be64c2fcdcf51f0d47a94f9bf5c63c04d3893f56d00f90c",
+    "canvas": {
+      "width": 1880,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0_1_1",
+    "crop_1_1": "0.287234_0_0.712766_1",
+    "description": "Original PDF Fig1B screenshot without generated or modified chemistry; verified as source-only cover"
+  },
+  "editorialIntent": "Science-led narration grounded in exact original main article and SI. Readers see Fig.1B under 先看懂这项反应. All claims have bounded evidence, including negative SI examples and catalyst-state/DFT uncertainty. Never conflate model with observation."
+}
