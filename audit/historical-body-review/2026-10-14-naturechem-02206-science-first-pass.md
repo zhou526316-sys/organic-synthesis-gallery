@@ -15,7 +15,7 @@
 
 1. **科学问题**：在有机硼酸酯络合物 1,2-迁移的各种亲电引发途径中，直接亲电胺化诱导生成游离 `β-amino boronic esters` 尚存在挑战；生成的游离胺比原 alkenyl boronate complex 更亲核，会消耗亲电胺化试剂，导致副反应。以此为前人研究边界，不将碳/卤/硫亲电迁移报道错误归为胺化先例。
 2. **实验优化证据**：由 O-(2,4-dinitrophenyl)hydroxylamine 起步仅 21% NMR yield；经其它胺化试剂筛选，O-diphenylphosphinylhydroxylamine（本文简称 DPPH）初为45%；THF 优化后67%，室温30min达到82% NMR yield；约1.05当量 DPPH 可行。这些均是模型反应的条件筛选数字，不可外推到所有底物。
-3. **核心反应与适用性**：alenyl (alkenyl) boronate complex 的亲电胺化经 aziridinium 和迁移构建游离 `β-amino boronic esters`；包括不同取代 alkenyl boronic esters、E/Z 立体控制、环状底物、药物/天然产物片段，并将 Shapiro 反应与 1,2-迁移串联，从 ketone-derived hydrazones 进入模块化合成。X 射线确定的部分立体构型支持 `anti-addition`，不把全部样品的最大 dr 视为普遍值。
+3. **核心反应与适用性**：alkenyl boronate complex 的亲电胺化经 aziridinium 和迁移构建游离 `β-amino boronic esters`；包括不同取代 alkenyl boronic esters、E/Z 立体控制、环状底物、药物/天然产物片段，并将 Shapiro 反应与 1,2-迁移串联，从 ketone-derived hydrazones 进入模块化合成。X 射线确定的部分立体构型支持 `anti-addition`，不把全部样品的最大 dr 视为普遍值。
 4. **真实局限和失败条件**：in situ lithium-halogen exchange 生成的部分 organolithium 条件失败；加入 LiBr 或 LiI 会加速 DPPH 分解，该结论有原文对照实验和 SI 指针。作者推测 THF 中 DPPH 的低溶解度及双相体系有助于避免新生游离胺过反应，但这是合理解释，而非所有微观浓度均被直接测量。
 5. **机理证据级别**：DFT 给出从 boronate complex 到 aziridinium 的 NH₂转移过渡态势垒约17.2 kcal/mol，并支持随后1,2迁移的分步路径；ReactIR 观测约1195 cm⁻¹ 瞬态信号，DFT 预测 aziridinium 相关振动约1193 cm⁻¹，与实验相符。应写“间接光谱与计算证据支持、信号被归属为aziridinium”，**不能写成作者分离并直接表征了该离子中间体**。
 6. **专业检索同名词陷阱**：本论文 `DPPH` = **O-diphenylphosphinylhydroxylamine**（亲电胺化试剂），并非常见自由基清除试剂 **2,2-diphenyl-1-picrylhydrazyl**。索引不能把本文因 DPPH 缩写误召回为 DPPH 自由基捕获实验；也不能推断本论文使用 LMCT/CPA，只因它属于有机合成和含过渡金属对照。
@@ -26,7 +26,7 @@
 - **必须复查的 SI**：Supplementary Figs. 1–16、Tables 1–9、LiBr/LiI 对照、失败底物、NMR 和计算坐标。仅凭网页主文段落不足以验证 SI 的每个数据点。
 - **版权独立审阅尚未完成**：本页面主文 CC BY4 已有强一手依据，但第三方图表材料的 credit line、公开索引片段展示边界、版本/全文哈希与 PDF/SI 授权仍需逐一确认。
 - **学术第二遍审阅尚未完成**：对科学事实做反向挑战、重新核对每个核心数值及机理推断强度，才能签署科学入库审核。
-- **不能直接将源 JATS 的结构计数替代65以内 DOI/section FTS 单元**：还需按原文章分节，剔除 Reference/Admin，保留来源本次正式 `catalogId` 和当前 DOI revision，核对每节 SHA、全文 SHA、证据权限，再由管理员独立执行安全导入。
+- **不能直接将源 JATS 的结构计数替代最多64个 DOI/section FTS 科学证据单元**：还需按原文章分节，剔除 Reference/Admin，保留来源本次正式 `catalogId` 和当前 DOI revision，核对每节 SHA、全文 SHA、证据权限，再由管理员独立执行安全导入。
 - 目前标记 `scienceFirstPass=completed_main_article_only`、`siReview=pending`、`rightsReview=article_level_cc_by_verified_third_party_pending`、`publicFtsImport=not_authorized`。
 
 此文件的目标是为真实科学正文索引积累**可复查、不过度推断的审阅证据**，不与旧文献入库本身的有机合成收录结论混同。
