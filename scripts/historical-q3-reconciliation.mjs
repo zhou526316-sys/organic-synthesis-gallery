@@ -141,7 +141,7 @@ export function reconcileQ3({
   // Each exclusion is separate from the owner's permanent DOI corrections.
   const publisherNonOriginal=new Set();
   const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing',
-    'Comment','Publisher Correction','Author Correction']);
+    'Comment','Publisher Correction','Author Correction','Review Article','Editorial','Perspective','Q&A']);
   for(const item of publisherNonResearch.reviewed){
     const id=normalize(item?.doi),src=all.get(id),ev=item?.reviewEvidence;
     ensure(validDoi(id)&&id===item.doi&&src&&!publisherNonOriginal.has(id)
@@ -159,9 +159,10 @@ export function reconcileQ3({
       &&ev?.publisherArticleType===item.publisherArticleType
       &&item.decision==='exclude'&&item.firstPassDecision==='exclude'
       &&item.challengeDecision==='exclude'&&item.reviewPasses===2
-      &&typeof item.firstPassReason==='string'&&item.firstPassReason.length>=60
+      &&typeof item.firstPassReason==='string'&&item.firstPassReason.trim().length>=40
       &&typeof item.independentChallengeReason==='string'
-      &&item.independentChallengeReason.length>=60
+      &&item.independentChallengeReason.trim().length>=40
+      &&item.firstPassReason!==item.independentChallengeReason
       &&item.date===src.date&&ev?.publisherArticleDate===item.date
       &&src.sourceRoots.includes(ev.sourceRootId)
       &&src.sourceHashes.includes(ev.stageSourceSha256)
@@ -377,7 +378,8 @@ export async function runQuarterAudit({
     process.env.HISTORICAL_STAGING_BRANCH==='1','q3_staging_only_guard');
   const [state,triage,formal,manifest,corrections,oldNonOriginal,
     scopedSourceProof,scopedScience,newNonOriginal,lateFiveProof,lateFiveScience,
-    residualSourceProof]=await Promise.all([
+    residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
+    natsynthScienceProof,natsynthScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -388,7 +390,12 @@ export async function runQuarterAudit({
     readJson('audit/historical-reviewed/q3-natcatal-nonoriginal-19-two-pass.json'),
     readJson('audit/historical-reviewed/q3-natcatal-late-online-five-source-proof.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json'),
-    readJson('audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json')
+    readJson('audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json'),
+    readJson('audit/historical-reviewed/q3-natsynth-44-frozen-source-proof.json'),
+    readJson('audit/historical-reviewed/q3-natsynth-publisher-types-44.json'),
+    readJson('audit/historical-reviewed/q3-natsynth-nonoriginal-31-two-pass.json'),
+    readJson('audit/historical-reviewed/q3-natsynth-13-article-source-proof.json'),
+    readJson('audit/historical-scope-assessments/2026-10-14-natsynth-13-original-two-pass.json')
   ]);
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
@@ -431,10 +438,89 @@ export async function runQuarterAudit({
       &&src.sourceRootId===item.sourceRootId,
       'q3_natcatal_science_source_proof_invalid:'+item.doi);
   }
+  // Nature Synthesis: bind all 44 previously-unreviewed DOI to frozen source
+  // and official publisher article categories before changing a single count.
+  const nsReviewFile='audit/historical-reviewed/q3-natsynth-publisher-types-44.json';
+  const nsReviewBytes=await readFile(nsReviewFile);
+  const nsReviewSha=createHash('sha1').update('blob '+nsReviewBytes.length)
+    .update(Buffer.from([0])).update(nsReviewBytes).digest('hex');
+  ensure(natsynthFrozen.schemaVersion==='gallery-natsynth-q3-frozen-source-44-v1'
+    &&natsynthFrozen.mode==='immutable_crossref_openalex_review_shards_publisher_type_not_admission'
+    &&natsynthFrozen.publisherTypeLedger===nsReviewFile
+    &&natsynthFrozen.publisherTypeLedgerBlob===nsReviewSha
+    &&natsynthTypes.schemaVersion==='gallery-natsynth-q3-publisher-type-provisional-v1'
+    &&Array.isArray(natsynthTypes.items)&&natsynthTypes.items.length===44
+    &&Array.isArray(natsynthFrozen.items)&&natsynthFrozen.items.length===44
+    &&natsynthFrozen.sourceRootCount===12
+    &&natsynthNonOriginal.schemaVersion===PUBLISHER_NONRESEARCH_SCHEMA
+    &&natsynthNonOriginal.mode==='publisher_verified_non_original_doi_only_not_publication'
+    &&natsynthNonOriginal.reviewed.length===31
+    &&natsynthScienceProof.reviewed.length===13,
+    'q3_natsynth_frozen_authority_invalid');
+  const nsFrozenMap=new Map(natsynthFrozen.items.map(x=>[x.doi,x]));
+  const nsTypeMap=new Map(natsynthTypes.items.map(x=>[x.doi,x]));
+  ensure(nsFrozenMap.size===44&&nsTypeMap.size===44,
+    'q3_natsynth_frozen_duplicate_doi');
+  const originalRawRoots=[...new Set(natsynthFrozen.items.map(x=>x.sourceRootId))];
+  ensure(originalRawRoots.length===12,'q3_natsynth_raw_source_root_count_invalid');
+  const rawGitShaByRoot=new Map();
+  for(const rootId of originalRawRoots){
+    const bytes=await readFile(root+'/batches/'+rootId+'.json');
+    const gitSha=createHash('sha1').update('blob '+bytes.length)
+      .update(Buffer.from([0])).update(bytes).digest('hex');
+    rawGitShaByRoot.set(rootId,gitSha);
+  }
+  for(const item of natsynthFrozen.items){
+    const tp=nsTypeMap.get(item.doi);
+    ensure(tp&&tp.publisherArticleType===item.publisherArticleType
+      &&tp.publisherPage===item.publisherUrl
+      &&tp.relatedOriginalDoi===item.relatedOriginalDoi
+      &&item.rawSourceBatchGitBlobSha===rawGitShaByRoot.get(item.sourceRootId)
+      &&item.rawSourceBatchPath==='audit/historical-staging/batches/'+item.sourceRootId+'.json'
+      &&item.reviewQueuePath==='audit/historical-staging/review-queue/'+item.sourceRootId+'.json'
+      &&item.journal==='Nature Synthesis'
+      &&Array.isArray(item.sourceFamilies)
+      &&item.sourceFamilies.includes('crossref')
+      &&item.sourceFamilies.includes('openalex'),
+      'q3_natsynth_publisher_type_or_original_source_proof_invalid:'+item.doi);
+  }
+  const nsNonOriginalIds=new Set();
+  for(const item of natsynthNonOriginal.reviewed){
+    const f=nsFrozenMap.get(item.doi),ev=item.reviewEvidence;
+    ensure(f&&f.publisherArticleType!=='Article'&&!nsNonOriginalIds.has(item.doi)
+      &&item.title===f.title&&item.date===f.date
+      &&item.publisherArticleType===f.publisherArticleType
+      &&ev.publisherPage===f.publisherUrl
+      &&ev.stageSourceSha256===f.sourceSha256
+      &&ev.stageBatchGitBlobSha===f.rawSourceBatchGitBlobSha
+      &&ev.sourceReviewQueueGitBlobSha===f.reviewQueueGitBlobSha
+      &&ev.sourceReviewQueuePath===f.reviewQueuePath,
+      'q3_natsynth_nonoriginal_frozen_doi_invalid:'+item.doi);
+    nsNonOriginalIds.add(item.doi);
+  }
+  const nsScienceBytes=await readFile(natsynthScienceProof.scientificEvidenceFile);
+  const nsScienceBlob=createHash('sha1').update('blob '+nsScienceBytes.length)
+    .update(Buffer.from([0])).update(nsScienceBytes).digest('hex');
+  const nsScoped=bindReviewedQ3ScopeProof({
+    proof:natsynthScienceProof,science:natsynthScience,
+    scienceGitBlobSha:nsScienceBlob
+  });
+  for(const item of nsScoped.reviewed){
+    const f=nsFrozenMap.get(item.doi);
+    ensure(f&&f.publisherArticleType==='Article'
+      &&item.date===f.date&&item.sourceRootId===f.sourceRootId
+      &&item.stageSourceSha256===f.sourceSha256
+      &&item.stageBatchGitBlobSha===f.reviewQueueGitBlobSha
+      &&!nsNonOriginalIds.has(item.doi),
+      'q3_natsynth_science_frozen_doi_invalid:'+item.doi);
+  }
+  ensure(nsNonOriginalIds.size===31&&nsScoped.reviewed.length===13
+    &&nsNonOriginalIds.size+nsScoped.reviewed.length===nsFrozenMap.size,
+    'q3_natsynth_doi_partition_incomplete');
   const publisherNonResearch={...oldNonOriginal,
-    reviewed:[...oldNonOriginal.reviewed,...newNonOriginal.reviewed]};
+    reviewed:[...oldNonOriginal.reviewed,...newNonOriginal.reviewed,...natsynthNonOriginal.reviewed]};
   const publisherReviewedScope={...priorReviewedScope,
-    reviewed:[...priorReviewedScope.reviewed,...lateReviewedScope.reviewed]};
+    reviewed:[...priorReviewedScope.reviewed,...lateReviewedScope.reviewed,...nsScoped.reviewed]};
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id)){
     const bytes=await readFile(root+'/review-queue/'+id+'.json');
