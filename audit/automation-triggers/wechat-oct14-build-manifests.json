@@ -12,6 +12,6 @@
     "10.1002/anie.2518487"
   ],
   "task": "Create source grounded manifests, source SHA editorial review gate from 27 original images; no WeChat API yet.",
-  "requestId": "owner-20-catalog-scope-after-branch-cut-rerun",
-  "retryReason": "Preparation branch baseline was cut before the main website correction was recorded; subtract the four owner-approved deleted DOIs by identity and reconcile with updated main after merge."
+  "requestId": "reviewed-manifests-json-serialization-fixed-v3",
+  "retryReason": "Exact source parse and original image verification passed; previous run only failed at final audit print due trailing comma that made edition tuple. Fixed generator."
 }
