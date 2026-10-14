@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "gallery-historical-2026-q3-orglett-two-original-synthetic-scope-two-pass-v1",
+  "reviewedAt": "2026-10-14T01:41:01.389Z",
+  "period": "2026-07-01..2026-09-30",
+  "mode": "publisher_first_online_and_original_abstract_two_pass_review_not_publication",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceBatchGitSha": {
+    "2026-08-15_2026-08-21_organic-letters": "9b28580b6638049b3007fea208c8d489c769ed79",
+    "2026-08-22_2026-08-31_organic-letters": "3eb3448b8f413701aed67f8e3f29d518400d7827"
+  },
+  "reviewed": [
+    {
+      "doi": "10.1021/acs.orglett.6c02967",
+      "journal": "Organic Letters",
+      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
+      "titleZh": "膦催化不对称立体专一性[3+2]环化合成氧杂环丁烷γ-螺内酰胺",
+      "date": "2026-08-21",
+      "authors": [
+        "Jie Hao",
+        "Jinxiu Zhang",
+        "Zirui Wang",
+        "Mengjun Wang",
+        "Min Xia",
+        "Zhen Wang",
+        "Manman Sun",
+        "Weijun Yao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "10978-10983",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02967"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过膦催化氧杂环丁烷取代MBH碳酸酯与芳基醛亚胺的形式[3+2]环化，原创性制备氧杂环丁烷γ-螺内酰胺。",
+      "evidenceBasis": "ACS Article History确证Published Online 2026-08-21；Organic Letters 2026, 28(35), 10978-10983。ACS公开摘要和期号目录确认真实产物制备及底物范围；首次在线日与冻结Crossref/OpenAlex窗口 2026-08-15_2026-08-21_organic-letters 的记录吻合，原始Git blob 9b28580b6638049b3007fea208c8d489c769ed79。 未复制完整原摘要、正文、SI、图像或PDF。",
+      "challengeReason": "第二遍独立反证：反应涉及特殊MBH碳酸酯与芳基醛亚胺，不能声称对所有亲核酯和亚胺有效；unexpected只是机制线索，不是合成方法的证明。然而官方摘要明确报告系列分离的螺内酰胺和E/Z可控，不是单一异常副产物，满足真实制备与系列转化标准。不能推断未经实验验证的过渡态或逐个底物的高收率。",
+      "scopeAssessment": {
+        "primaryContribution": "通过膦催化氧杂环丁烷取代MBH碳酸酯与芳基醛亚胺的形式[3+2]环化，原创性制备氧杂环丁烷γ-螺内酰胺。",
+        "preparativeTransformation": "以氧杂环丁烷Morita–Baylis–Hillman碳酸酯的γ碳及其酯基为成环片段，与芳基醛亚胺结合，实际形成含环外烯基醚的γ-螺内酰胺产品。",
+        "generalityEvidence": "ACS官方摘要表明有一系列可分离产物，报告中等至良好收率、对映选择性及环外烯基醚E/Z构型可控，但没有证明所有底物高ee或绝对普适性。",
+        "sourceEvidence": "ACS Article History确证Published Online 2026-08-21；Organic Letters 2026, 28(35), 10978-10983。ACS公开摘要和期号目录确认真实产物制备及底物范围；首次在线日与冻结Crossref/OpenAlex窗口 2026-08-15_2026-08-21_organic-letters 的记录吻合，原始Git blob 9b28580b6638049b3007fea208c8d489c769ed79。 未复制完整原摘要、正文、SI、图像或PDF。",
+        "boundaryChallenge": "第二遍独立反证：反应涉及特殊MBH碳酸酯与芳基醛亚胺，不能声称对所有亲核酯和亚胺有效；unexpected只是机制线索，不是合成方法的证明。然而官方摘要明确报告系列分离的螺内酰胺和E/Z可控，不是单一异常副产物，满足真实制备与系列转化标准。不能推断未经实验验证的过渡态或逐个底物的高收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02967",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02967/5282897/An-Unexpected-Phosphine-Catalyzed-Asymmetric-and",
+        "publisherOnlineDate": "2026-08-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_organic-letters",
+        "stageBatchSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_crosschecked_with_Crossref_OpenAlex_frozen_source",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过膦催化氧杂环丁烷取代MBH碳酸酯与芳基醛亚胺的形式[3+2]环化，原创性制备氧杂环丁烷γ-螺内酰胺。 以氧杂环丁烷Morita–Baylis–Hillman碳酸酯的γ碳及其酯基为成环片段，与芳基醛亚胺结合，实际形成含环外烯基醚的γ-螺内酰胺产品。 ACS官方摘要表明有一系列可分离产物，报告中等至良好收率、对映选择性及环外烯基醚E/Z构型可控，但没有证明所有底物高ee或绝对普适性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍独立反证：反应涉及特殊MBH碳酸酯与芳基醛亚胺，不能声称对所有亲核酯和亚胺有效；unexpected只是机制线索，不是合成方法的证明。然而官方摘要明确报告系列分离的螺内酰胺和E/Z可控，不是单一异常副产物，满足真实制备与系列转化标准。不能推断未经实验验证的过渡态或逐个底物的高收率。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍独立反证：反应涉及特殊MBH碳酸酯与芳基醛亚胺，不能声称对所有亲核酯和亚胺有效；unexpected只是机制线索，不是合成方法的证明。然而官方摘要明确报告系列分离的螺内酰胺和E/Z可控，不是单一异常副产物，满足真实制备与系列转化标准。不能推断未经实验验证的过渡态或逐个底物的高收率。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03282",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Asymmetric Hydrogenation of Aryl-Substituted Maleic Acid Diesters",
+      "titleZh": "镍催化芳基取代马来酸二酯的不对称氢化",
+      "date": "2026-08-26",
+      "authors": [
+        "Jiawei Han",
+        "Zhiling Wang",
+        "Yunshun Deng",
+        "Jianzhong Chen",
+        "Ilya D. Gridnev",
+        "Hai-Ming Guo",
+        "Wanbin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "11111-11116",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03282"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展镍催化芳基取代马来酸二酯的对映选择性氢化方法，制备手性芳基取代琥珀酸二酯及进一步衍生化的分子。",
+      "evidenceBasis": "ACS Article History确证Published Online 2026-08-26；Organic Letters 2026, 28(35), 11111-11116。ACS公开摘要和期号目录确认真实产物制备及底物范围；首次在线日与冻结Crossref/OpenAlex窗口 2026-08-22_2026-08-31_organic-letters 的记录吻合，原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827。 未复制完整原摘要、正文、SI、图像或PDF。",
+      "challengeReason": "第二遍独立反证：该工作仅声称特定芳基取代马来酸二酯，不能泛化为镍催化任意α,β-不饱和酯的高对映选择性氢化。氘标记与动力学研究只支持作者所提出的可能催化路径，不是对唯一镍氧化态循环的确证。作者报告实际系列产物及衍生化，明显不是单纯催化剂材料研究或计算结果，按有机制备范围纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "发展镍催化芳基取代马来酸二酯的对映选择性氢化方法，制备手性芳基取代琥珀酸二酯及进一步衍生化的分子。",
+        "preparativeTransformation": "芳基取代马来酸二酯的烯烃双键经镍催化立体选择性氢化后得到新的手性芳基取代琥珀酸二酯，作者还将产物转化为多种结构衍生物。",
+        "generalityEvidence": "ACS原始摘要明确较广底物适用性、官能团耐受性、最多99%分离收率及97% ee，并有手性产物衍生化；极值不能说成所有底物通用。",
+        "sourceEvidence": "ACS Article History确证Published Online 2026-08-26；Organic Letters 2026, 28(35), 11111-11116。ACS公开摘要和期号目录确认真实产物制备及底物范围；首次在线日与冻结Crossref/OpenAlex窗口 2026-08-22_2026-08-31_organic-letters 的记录吻合，原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827。 未复制完整原摘要、正文、SI、图像或PDF。",
+        "boundaryChallenge": "第二遍独立反证：该工作仅声称特定芳基取代马来酸二酯，不能泛化为镍催化任意α,β-不饱和酯的高对映选择性氢化。氘标记与动力学研究只支持作者所提出的可能催化路径，不是对唯一镍氧化态循环的确证。作者报告实际系列产物及衍生化，明显不是单纯催化剂材料研究或计算结果，按有机制备范围纳入。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03282",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/28/35/11111/5330134/Nickel-Catalyzed-Asymmetric-Hydrogenation-of-Aryl",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_crosschecked_with_Crossref_OpenAlex_frozen_source",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展镍催化芳基取代马来酸二酯的对映选择性氢化方法，制备手性芳基取代琥珀酸二酯及进一步衍生化的分子。 芳基取代马来酸二酯的烯烃双键经镍催化立体选择性氢化后得到新的手性芳基取代琥珀酸二酯，作者还将产物转化为多种结构衍生物。 ACS原始摘要明确较广底物适用性、官能团耐受性、最多99%分离收率及97% ee，并有手性产物衍生化；极值不能说成所有底物通用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍独立反证：该工作仅声称特定芳基取代马来酸二酯，不能泛化为镍催化任意α,β-不饱和酯的高对映选择性氢化。氘标记与动力学研究只支持作者所提出的可能催化路径，不是对唯一镍氧化态循环的确证。作者报告实际系列产物及衍生化，明显不是单纯催化剂材料研究或计算结果，按有机制备范围纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍独立反证：该工作仅声称特定芳基取代马来酸二酯，不能泛化为镍催化任意α,β-不饱和酯的高对映选择性氢化。氘标记与动力学研究只支持作者所提出的可能催化路径，不是对唯一镍氧化态循环的确证。作者报告实际系列产物及衍生化，明显不是单纯催化剂材料研究或计算结果，按有机制备范围纳入。"
+    }
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "solePublicationSlot": "08:00 Asia/Shanghai",
+    "q3MediaPolicy": "toc_only",
+    "noD1ReadOrWrite": true,
+    "noMediaWrites": true,
+    "noHistoricalPDFOrSIFigures": true,
+    "noDailyNewHotWechat": true,
+    "holdPublisherConflictingOnlineDateDois": [
+      "10.1021/acs.orglett.6c03028",
+      "10.1021/acs.joc.6c00852",
+      "10.1021/acs.orglett.6c02707"
+    ],
+    "noUnreviewedDOIAdmitted": true
+  }
+}
