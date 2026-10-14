@@ -556,7 +556,12 @@ export async function runQuarterAudit({
   ensure(pAll.size===66&&pNew.size===51,
     'q3_nchem_duplicate_source_doi');
   const nchemRoots=[...new Set(nchemFrozen.items.map(x=>x.sourceRootId))];
-  ensure(nchemRoots.length===12,'q3_nchem_source_root_count_invalid');
+  const allNchemRootIds=new Set(nchemCensus.sourceRoots.map(x=>x.rootId));
+  ensure(nchemCensus.sourceRoots.length===12&&allNchemRootIds.size===12
+    &&nchemRoots.length>0&&nchemRoots.length<=allNchemRootIds.size
+    &&nchemRoots.every(id=>allNchemRootIds.has(id))
+    &&nchemCensus.items.every(x=>allNchemRootIds.has(x.sourceRootId)),
+    'q3_nchem_source_root_count_invalid');
   const nchemRawHashes=new Map();
   for(const id of nchemRoots){
     const bytes=await readFile(root+'/batches/'+id+'.json');
