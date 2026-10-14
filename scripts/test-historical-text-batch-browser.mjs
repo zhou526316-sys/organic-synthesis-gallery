@@ -23,6 +23,7 @@ try{
   await page.goto('https://gallery.gczhouwld.com/');
   await page.evaluate(registry=>{
     window.__gm={};window.__opened=[];window.__closeCount=0;window.__requests=[];window.__alerts=[];
+    window.__registry=registry;
     window.GM_getValue=(key,def)=>Object.prototype.hasOwnProperty.call(window.__gm,key)?window.__gm[key]:def;
     window.GM_setValue=(key,value)=>{window.__gm[key]=value;};
     window.GM_deleteValue=key=>{delete window.__gm[key];};
@@ -251,6 +252,38 @@ try{
   assert.ok(serverSummaries.some(x=>x.includes('HTTP 403')&&x.includes('最终结果')));
   assert.ok(serverSummaries.some(x=>x.includes('HTTP 未知')&&x.includes('license_not_verified')));
 
+  // Opt-in handshake pilot: two previously unconfirmed ACS publisher jobs.
+  // Confirm one tries the official ACS article URL and one the DOI resolver.
+  await page.evaluate(async()=>{
+    const additions=[
+      {doi:'10.1021/jacs.test-reachability-a',date:'2026-09-11',journal:'JACS',title:'ACS no-response A'},
+      {doi:'10.1021/jacs.test-reachability-b',date:'2026-09-12',journal:'JACS',title:'ACS no-response B'}
+    ];
+    window.__registry.articles.push(...additions);
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    for(const entry of additions){
+      await window.__historicalDiagTest.batchDbOp(db,'attempts','put',{
+        doi:entry.doi,journal:entry.journal,status:'publisher_no_response',
+        stage:'publisher_wait',pageDoiVerified:false,httpStatus:null,checkedAt:Date.now()
+      });
+    }
+    db.close();
+  });
+  const reachability=page.getByRole('button',{name:'出版社回执核验（最多8篇）'});
+  assert.equal(await reachability.count(),1);
+  await reachability.click();
+  await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.attempted===2,null,{timeout:17000});
+  const probes=await page.evaluate(()=>window.__opened.slice(-2).map(x=>x.url));
+  assert.ok(probes[0].startsWith('https://pubs.acs.org/doi/10.1021/'),
+    'direct ACS path must be a DOI-bound publisher article route');
+  assert.ok(probes[1].startsWith('https://doi.org/10.1021/'),
+    'control route must keep normal DOI resolver');
+  assert.equal(probes.length,2,'pilot must not silently reopen the entire historical corpus');
+
   const pdfPage=await browser.newPage();
   await pdfPage.route('https://gallery.gczhouwld.com/**',route=>route.fulfill({
     status:200,contentType:'text/html',body:'<!doctype html><html><body><h1>PDF reader</h1></body></html>'
@@ -263,6 +296,6 @@ try{
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
     publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
-    fullCoverageLedger:true,bodySearchAllHits:27
+    fullCoverageLedger:true,bodySearchAllHits:27,reachabilityProbeRoutes:2
   }));
 }finally{await browser.close();}
