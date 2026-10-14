@@ -8,7 +8,7 @@ const TYPES=new Set(['failure_checkpoint','final_result']);
 const STAGES=new Set(['catalog','queued','publisher_open','publisher_page','publisher_doi',
   'license','body_extract','hash_verify','local_store','publisher_wait','finished','report_upload']);
 const REASONS=new Set(['started','publisher_unreachable','publisher_no_response','doi_unverified',
-  'license_not_verified','body_missing','page_unavailable','page_access_blocked','page_http_error',
+  'license_not_verified','license_pending_load','body_missing','page_unavailable','page_access_blocked','page_http_error',
   'too_large','timeout','invalid_response','capture_failed','unsupported_publisher',
   'response_hash_mismatch','storage_failure','local_storage_failed',
   'publisher_script_not_confirmed','report_upload_failed','saved_local','other']);
