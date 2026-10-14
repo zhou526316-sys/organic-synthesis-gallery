@@ -55,7 +55,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     get readyState(){readyReads++;return readyReads<=readyAfter?'loading':'complete';},
     querySelectorAll(selector){
       if(selector.startsWith('meta[name="citation_doi"'))return [{content:pageDoi}];
-      if(selector.startsWith('meta[name="citation_license_url"'))return [];
+      if(selector.startsWith('meta[name="citation_license_url"'))return license?[{content:license}]:[];
       if(selector.startsWith('link[rel="license"')){
         licenseReads++;return license&&licenseReads>licenseAfter?[{content:license}]:[];
       }
