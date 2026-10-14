@@ -8,7 +8,7 @@ import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
 import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../shared/historical-literature-policy.js';
 import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
-import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
+import { correctedPublisherDateForDisplay, publicationDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
@@ -632,14 +632,17 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
 
 function prettyDate(value: string, unverified = false): string {
   const unknown = language === 'zh' ? '发表日期待核实' : 'Publication date unverified';
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return unknown;
-  const [year, month, day] = value.split('-').map(Number);
+  // As-of must come from Beijing rather than the reader's time zone; a
+  // prospective publisher metadata value (e.g. Oct 15 on Oct 14) is NOT a
+  // first-online date, even when Crossref already deposited the record.
+  const claim = publicationDateForDisplay(value, beijingDate(), unverified);
+  if (!claim.date) return unknown;
+  const [year, month, day] = claim.date.split('-').map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value) return unknown;
   const shown = new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : 'en', {
     year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
   }).format(date);
-  return unverified ? `${shown} ${language === 'zh' ? '（待核实）' : '(unverified)'}` : shown;
+  return claim.unverified ? `${shown} ${language === 'zh' ? '（待核实）' : '(unverified)'}` : shown;
 }
 
 function sortableDate(paper: Paper): string {
@@ -931,7 +934,7 @@ function renderCards(): void {
     const localPdfButton = localPdfHref
       ? `<a class='local-pdf-button' href='${escapeHtml(localPdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '打开本地 PDF' : 'Open local PDF'}: ${visibleTitle(paper)}`)}'>${language === 'zh' ? '本地 PDF' : 'Local PDF'}</a>`
       : '';
-    return `<article class='card${editionClass}${retrospectiveCard ? ' historical-backfill-card' : ''}' data-media-policy='${mediaMode}' data-retrospective='${retrospectiveCard ? 'true' : 'false'}' data-ingestion-channel='${historicalBackfill ? 'historical_backfill' : 'normal'}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true || paper.date > beijingDate()))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${mediaMode === 'metadata_only' ? '' : tocMarkup(paper)}${mediaMode === 'standard' ? figureMarkup(paper) : ''}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
+    return `<article class='card${editionClass}${retrospectiveCard ? ' historical-backfill-card' : ''}' data-media-policy='${mediaMode}' data-retrospective='${retrospectiveCard ? 'true' : 'false'}' data-ingestion-channel='${historicalBackfill ? 'historical_backfill' : 'normal'}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(publicationDateForDisplay(paper.date, beijingDate(), paper.dateUnverified === true).date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date' title='${escapeHtml(language === 'zh' ? '仅显示有有效日期依据的首次在线发表日期；DOI 登记日不等于发表日' : 'First-online publication day; DOI deposit/creation dates are not publication dates')}' >${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true))}</span>${isNewToday(paper) ? `<span class='tag new' title='${escapeHtml(language === 'zh' ? '今日收录到 Gallery，不代表今日首次发表' : 'Added to Gallery today; not necessarily first published today')}'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${mediaMode === 'metadata_only' ? '' : tocMarkup(paper)}${mediaMode === 'standard' ? figureMarkup(paper) : ''}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -959,8 +962,13 @@ function mount(): void {
   const targetSet = new Set(targetJournals);
   const extraJournals = [...new Set(papers.map(paper => paper.journal).filter(journal => !targetSet.has(journal)))].sort();
   const journals = [...targetJournals, ...extraJournals];
-  const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  const latest = latestCollectionDate || dates[dates.length - 1] || '';
+  const asOfBeijingDay = beijingDate();
+  const dates = papers.map(paper =>
+    publicationDateForDisplay(paper.date, asOfBeijingDay, paper.dateUnverified === true))
+    .filter(value => value.date && !value.unverified)
+    .map(value => value.date).sort();
+  const latest = latestCollectionDate && latestCollectionDate <= asOfBeijingDay
+    ? latestCollectionDate : (dates[dates.length - 1] || '');
   const scopeNotice = architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent())
     ? t('limitedRead')
     : indexedViewDegraded && Boolean(query.trim() || dateFrom || dateTo)
