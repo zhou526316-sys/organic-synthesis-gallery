@@ -1,0 +1,87 @@
+name: One DOI independently reviewed science FTS import
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/import-reviewed-science-body-one.py'
+      - 'scripts/test-import-reviewed-science-body-one.py'
+      - '.github/workflows/import-reviewed-science-body-one.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/verified-science-fts-one.json'
+
+permissions:
+  contents: read
+concurrency:
+  group: reviewed-science-fts-one
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify independent main-article source rights and science contracts
+        run: |
+          python3 -m py_compile scripts/import-reviewed-science-body-one.py
+          python3 scripts/test-import-reviewed-science-body-one.py
+          python3 scripts/test-historical-oa-science-evidence.py
+          python3 - <<'PY'
+          import pathlib
+          p=pathlib.Path('scripts/import-reviewed-science-body-one.py').read_text()
+          assert 'publicUploadAllowed":True' in p
+          assert 'completeness":"partial"' in p
+          assert 'reviewed-public-body-section-v1' in p
+          assert 'BRIDGE_WRITE_TOKEN' in p
+          assert 'www.ebi.ac.uk' in p and 'api.gczhouwld.com' in p
+          assert 'sourceXmlSha256' in p
+          assert 'media.download' not in p.lower()
+          print('REVIEWED_BODY_IMPORT_GUARD', {'licensedDois':1,'sourceXmlPersisted':0,'pdfOrImageRequests':0})
+          PY
+
+  preflight:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Independently refetch authentic CC BY JATS and verify exact frozen scientific sections
+        run: |
+          python3 scripts/import-reviewed-science-body-one.py --mode=preflight \
+            --output="$RUNNER_TEMP/reviewed-science-one-preflight.json"
+      - name: Preserve NON-TEXT, exact DOI/revision/rights/section evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-science-one-preflight-${{ github.run_id }}
+          path: ${{ runner.temp }}/reviewed-science-one-preflight.json
+          retention-days: 14
+          if-no-files-found: warn
+
+  import:
+    if: github.event_name == 'push'
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Import exactly reviewed CC BY scientific paragraphs to owner-authenticated D1 FTS
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/main
+          python3 scripts/import-reviewed-science-body-one.py --mode=import \
+            --output="$RUNNER_TEMP/reviewed-science-one-import-receipt.json"
+      - name: Preserve sanitized LIVE import receipt, never article text
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-science-one-import-receipt-${{ github.run_id }}
+          path: ${{ runner.temp }}/reviewed-science-one-import-receipt.json
+          retention-days: 21
+          if-no-files-found: warn
