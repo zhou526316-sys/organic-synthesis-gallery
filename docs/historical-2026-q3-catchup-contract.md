@@ -300,3 +300,69 @@ identity. The Q3 census can only change its unfinished figures after a
 *successful* existing staging-only recount whose two outputs have the same
 `generatedAt`. This guard must be tested before each new class of
 historical approval rather than repeatedly rerunning the 192 metadata roots.
+
+
+## 2026-10-14: Nature Communications nine original synthetic research DOI
+
+The enormous Q3 Nature Communications metadata-source union (3,212 unique
+DOI, originally 50 formally catalogued) is not an academic include quota.
+Do not trust the keyword priority P0/P1: many "asymmetric" and "synthesis"
+titles are biology, materials or photophysical calculation, not actual
+preparative organic methods. This bounded group was selected for full
+DOI-specific publisher abstract and accessible Results review instead.
+
+The immutable source evidence lives in
+`audit/historical-reviewed/q3-natcomm-nine-frozen-source.json`: nine
+OriginalPaper DOI, true Nature Communications first-online dates, 2026
+volume 17 article numbers, author-order/source citation, six original
+reviewer roots with source SHA-256 plus raw and reviewer Git blob SHAs.
+Original Crossref/OpenAlex source batches and triage reviewer shards remain
+unchanged.
+
+Science and counter-evidence in
+`audit/historical-scope-assessments/2026-10-14-natcomm-nine-original-two-pass.json`:
+- Seven distinct general synthetic methods — SidM/PLP asymmetric coupling of
+  O-acetylserine and secondary nitroalkanes to gamma-tertiary-nitro amino
+  acids; Ru/TiO2 dehydration-reductive amination of glyceric and other
+  adjacent dihydroxy acids; native peptide lysine-lysine
+  (thio)urea-bridged macrocyclization; lanthanum stereosequence-controlled
+  cyclic polyester ring expansion; chirality-assisted regioselective
+  bifacial ladder polymer construction; photocatalytic tandem conversion
+  of ethylene/propylene and six aryl olefins with CO2/O2 into cyclic
+  carbonates; Co7 nitrosyl-shell electrochemical allene C-H coupling to
+  aldehydes with actual gram-scale isolated products.
+- Boundary scientific pending: bromide-mediated membraneless paired
+  H2/epoxide electrosynthesis DOI `10.1038/s41467-026-76617-x`. The
+  original Methods presents styrene as the actual model; 81–89% refers to
+  NMR-calculated styrene oxide yield, and ethylene/propylene are prospective
+  adaptations, not demonstrated general substrate scope. Do not
+  manufacture product-isolation or broader reactant evidence.
+- Out of scope: DOI `10.1038/s41467-026-77096-w` (3D shaped chiral light);
+  the reported ~30% is a **computed differential electron excitation**
+  of carvone enantiomers, not product enantioselectivity of an executed
+  chemical reaction.
+
+Only the seven individually double-reviewed preparative methods, with
+official authors, journal volume 17/article numbers, titleZh, original
+source hashes, accessible science scope and separate challenge are added
+to the immutable `approved-admissions.json` authority for the existing
+sole **Beijing 08:00 next release**. The original two unresolved ACS
+publication-date pendings are preserved. The scientific pending and
+computational-only exclude are separate, with original source proof in
+`audit/historical-scope-assessments/2026-10-14-natcomm-one-exclude-one-pending.json`
+and `audit/historical-reviewed/q3-natcomm-two-exceptions-source-proof.json`.
+
+Staging-only Q3 reconciliation must match all nine DOI science records,
+all six unchanged original raw source SHA and reviewer Git identities,
+seven current approval rows with actual author/DOI/citation/TOC-only
+fields, and two exception-proof DOI identities. Only an authenticated
+status-only reviewer queue refresh from the same raw source may explain
+a changed ephemeral reviewer blob after approval; never blanket-ignore
+hash differences. Recount results are **not** the same as formal
+publication: 08:00 remains the only writer, historic additions never
+become Today/Hot/WeChat new, Q3 TOC-only, no historical body
+images/SI/PDF, no D1 traffic.
+
+The 16-journal `publisherIssueResearchReconciliationComplete` is
+still false. Closing this nine-paper sample does not establish all
+Nature Communications issues or the 3,212 DOI are academically exhausted.

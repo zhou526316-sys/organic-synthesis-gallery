@@ -392,7 +392,8 @@ export async function runQuarterAudit({
     scopedSourceProof,scopedScience,newNonOriginal,lateFiveProof,lateFiveScience,
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
-    nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience]=await Promise.all([
+    nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
+    natcommFrozen,natcommFullScience,natcommExceptionProof,natcommExceptions]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -414,7 +415,11 @@ export async function runQuarterAudit({
     readJson('audit/historical-reviewed/q3-nchem-27-nonoriginal-two-pass.json'),
     readJson('audit/historical-reviewed/q3-nchem-21-scope-source-proof.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
-    readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json')
+    readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
+    readJson('audit/historical-reviewed/q3-natcomm-nine-frozen-source.json'),
+    readJson('audit/historical-scope-assessments/2026-10-14-natcomm-nine-original-two-pass.json'),
+    readJson('audit/historical-reviewed/q3-natcomm-two-exceptions-source-proof.json'),
+    readJson('audit/historical-scope-assessments/2026-10-14-natcomm-one-exclude-one-pending.json')
   ]);
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
@@ -680,12 +685,122 @@ export async function runQuarterAudit({
   ensure(nchemExcludedIds.size===27&&exceptionSet.size===21
     &&admissionSet.size===3&&nchemExcludedIds.size+exceptionSet.size+admissionSet.size===pNew.size,
     'q3_nchem_51_partition_incomplete');
+  // Nature Communications: nine DOI-specific original Article science assessments.
+  // Seven actual synthetic method approvals belong solely to existing 08:00 writer;
+  // a computational paper and a single-olefin paired electrolysis stay independent.
+  const natcommFullPath='audit/historical-scope-assessments/2026-10-14-natcomm-nine-original-two-pass.json';
+  const natcommProofPath='audit/historical-reviewed/q3-natcomm-nine-frozen-source.json';
+  const ncSourceBytes=await readFile(natcommProofPath);
+  const ncSourceGitBlob=createHash('sha1').update('blob '+ncSourceBytes.length)
+    .update(Buffer.from([0])).update(ncSourceBytes).digest('hex');
+  const ncScienceBytes=await readFile(natcommFullPath);
+  const ncFullGitBlob=createHash('sha1').update('blob '+ncScienceBytes.length)
+    .update(Buffer.from([0])).update(ncScienceBytes).digest('hex');
+  ensure(natcommFrozen.schemaVersion==='gallery-historical-natcomm-q3-nine-frozen-source-v1'
+    &&natcommFrozen.mode==='DOI_exact_provenance_from_immutable_Crossref_OpenAlex_batch_not_publication'
+    &&natcommFrozen.period==='2026-07-01..2026-09-30'
+    &&natcommFrozen.sourceBranch==='staging/historical-archive-nightly'
+    &&natcommFrozen.journal==='Nature Communications'
+    &&natcommFrozen.sourceRootCount===6
+    &&Array.isArray(natcommFrozen.rows)&&natcommFrozen.rows.length===9
+    &&natcommFullScience.schemaVersion==='gallery-historical-supplemental-scope-assessment-v1'
+    &&natcommFullScience.mode==='academic_assessment_only_not_admission_authority'
+    &&natcommFullScience.accounting.assessmentCount===9
+    &&natcommFullScience.accounting.include===7
+    &&natcommFullScience.accounting.exclude===1
+    &&natcommFullScience.accounting.evidencePending===1
+    &&natcommFullScience.assessments.length===9
+    &&manifest.reviewedNatureCommunicationsNew?.auditedScienceGitBlobSha===ncFullGitBlob
+    &&manifest.reviewedNatureCommunicationsNew?.sourceProofBlobSha===ncSourceGitBlob,
+    'q3_natcomm_nine_frozen_science_or_manifest_hash_invalid');
+  const ncByDoi=new Map(natcommFrozen.rows.map(x=>[x.doi,x]));
+  const ncByScience=new Map(natcommFullScience.assessments.map(x=>[x.doi,x]));
+  const ncApproved=new Map(manifest.accepted.map(x=>[x.doi,x]));
+  const ncRoots=new Map(),ncDecisionCounts={include:0,exclude:0,pending:0};
+  ensure(ncByDoi.size===9&&ncByScience.size===9,'q3_natcomm_nine_duplicate_doi');
+  for(const source of natcommFrozen.rows){
+    const review=ncByScience.get(source.doi);
+    const approval=ncApproved.get(source.doi);
+    ensure(review&&review.doi===source.doi
+      &&review.publisherArticleType==='Article'
+      &&review.publisherPage===source.publisherPage
+      &&review.title===source.title&&review.date===source.date
+      &&review.decision===review.firstPassDecision
+      &&review.decision===review.challengeDecision
+      &&review.reviewPasses===2
+      &&['include','exclude','pending'].includes(review.decision)
+      &&typeof review.generalityEvidence==='string'&&review.generalityEvidence.length>45
+      &&typeof review.firstPassReason==='string'&&review.firstPassReason.length>65
+      &&typeof review.independentChallengeReason==='string'&&review.independentChallengeReason.length>45
+      &&review.firstPassReason!==review.independentChallengeReason
+      &&source.journal==='Nature Communications'
+      &&source.sourceFlags?.length===0
+      &&Array.isArray(source.sourceFamilies)
+      &&source.sourceFamilies.includes('crossref')
+      &&source.sourceFamilies.includes('openalex')
+      &&source.reviewQueuePath==='audit/historical-staging/review-queue/'+source.sourceRootId+'.json'
+      &&source.originalBatchPath==='audit/historical-staging/batches/'+source.sourceRootId+'.json',
+      'q3_natcomm_scientific_or_publisher_source_invalid:'+source.doi);
+    const prior=ncRoots.get(source.sourceRootId);
+    const candidate={rawGitSha:source.originalBatchGitBlobSha,
+      sourceSha:source.sourceSha256,pinnedReviewerGitSha:source.reviewQueueGitBlobSha};
+    ensure(!prior||Object.keys(candidate).every(k=>prior[k]===candidate[k]),
+      'q3_natcomm_source_root_proof_conflict:'+source.sourceRootId);
+    ncRoots.set(source.sourceRootId,candidate);
+    ncDecisionCounts[review.decision]++;
+    if(review.decision==='include'){
+      ensure(approval&&approval.decision==='include'
+        &&approval.reviewPasses===2&&approval.challengeDecision==='include'
+        &&approval.journal===source.journal&&approval.title===source.title
+        &&approval.date===source.date&&approval.citation?.doi===source.doi
+        &&approval.citation?.articleNumber===source.citation?.articleNumber
+        &&Array.isArray(approval.authors)
+        &&JSON.stringify(approval.authors)===JSON.stringify(source.authors)
+        &&approval.reviewEvidence?.publisherPage===source.publisherPage
+        &&approval.reviewEvidence?.publisherOnlineDate===source.date
+        &&approval.reviewEvidence?.stageBatchId===source.sourceRootId
+        &&approval.reviewEvidence?.stageBatchSha===source.originalBatchGitBlobSha
+        &&approval.reviewEvidence?.stageSourceSha256===source.sourceSha256
+        &&approval.reviewEvidence?.sourceReviewQueueGitBlobSha===source.reviewQueueGitBlobSha
+        &&approval.scopeAssessment?.primaryContribution===review.primaryContribution
+        &&approval.scopeAssessment?.generalityEvidence===review.generalityEvidence
+        &&approval.scopeAssessment?.boundaryChallenge===review.boundaryChallenge
+        &&approval.ingestionChannel==='historical_backfill'
+        &&approval.mediaPolicy==='toc_only'
+        &&approval.new===false&&approval.addedDate==='',
+        'q3_natcomm_nine_include_cannot_bypass_authorizer:'+source.doi);
+    }else ensure(!approval,
+      'q3_natcomm_nine_exception_cannot_enter_admission:'+source.doi);
+  }
+  ensure(ncRoots.size===6&&ncDecisionCounts.include===7
+    &&ncDecisionCounts.exclude===1&&ncDecisionCounts.pending===1,
+    'q3_natcomm_nine_decision_partition_invalid');
+  const ncExceptionBytes=await readFile(natcommExceptionProof.scientificEvidenceFile);
+  const ncExceptionSha=createHash('sha1').update('blob '+ncExceptionBytes.length)
+    .update(Buffer.from([0])).update(ncExceptionBytes).digest('hex');
+  const ncExceptionScope=bindReviewedQ3ScopeProof({
+    proof:natcommExceptionProof,science:natcommExceptions,
+    scienceGitBlobSha:ncExceptionSha
+  });
+  ensure(natcommExceptions.parentFullScienceGitBlobSha===ncFullGitBlob
+    &&natcommExceptions.parentFullScienceFile===natcommFullPath
+    &&ncExceptionScope.reviewed.length===2,
+    'q3_natcomm_exception_parent_science_invalid');
+  for(const exception of ncExceptionScope.reviewed){
+    const source=ncByDoi.get(exception.doi),full=ncByScience.get(exception.doi);
+    ensure(source&&full&&full.decision===exception.scientificDecision
+      &&source.date===exception.date
+      &&source.reviewQueueGitBlobSha===exception.stageBatchGitBlobSha
+      &&source.sourceSha256===exception.stageSourceSha256
+      &&source.sourceRootId===exception.sourceRootId,
+      'q3_natcomm_science_exception_source_invalid:'+exception.doi);
+  }
   const publisherNonResearch={...oldNonOriginal,
     reviewed:[...oldNonOriginal.reviewed,...newNonOriginal.reviewed,
       ...natsynthNonOriginal.reviewed,...nchemNonOriginal.reviewed]};
   const publisherReviewedScope={...priorReviewedScope,
     reviewed:[...priorReviewedScope.reviewed,...lateReviewedScope.reviewed,
-      ...nsScoped.reviewed,...nchemScoped.reviewed]};
+      ...nsScoped.reviewed,...nchemScoped.reviewed,...ncExceptionScope.reviewed]};
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id)){
     const bytes=await readFile(root+'/review-queue/'+id+'.json');
@@ -732,6 +847,33 @@ export async function runQuarterAudit({
     ensure(currentReviewerGitBlobSha!==oldSha,
       'q3_nchem_refresh_misidentified_old_blob:'+rootId);
     reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,new Set([oldSha]));
+  }
+  // New Nature Communications approvals can legitimately alter only ephemeral
+  // reviewer-shard statuses. Reconstruct byte-for-byte from immutable raw
+  // source with current protected DOI partitions before accepting prior hash.
+  for(const [rootId,p] of ncRoots){
+    const shard=shardsByRoot.get(rootId);
+    ensure(shard,'q3_natcomm_missing_frozen_source_root:'+rootId);
+    const rawBatchText=await readFile(root+'/batches/'+rootId+'.json','utf8');
+    const rawBytes=Buffer.from(rawBatchText,'utf8');
+    const rawSha=createHash('sha256').update(rawBytes).digest('hex');
+    const rawGit=createHash('sha1').update('blob '+rawBytes.length)
+      .update(Buffer.from([0])).update(rawBytes).digest('hex');
+    ensure(rawSha===p.sourceSha&&rawGit===p.rawGitSha,
+      'q3_natcomm_immutable_raw_source_changed:'+rootId);
+    if(shard.gitBlobSha===p.pinnedReviewerGitSha)continue;
+    const {gitBlobSha:currentReviewerGitBlobSha,...persistedReviewerShard}=shard;
+    const historicalBlob=verifyHistoricalReviewerStatusRefresh({
+      rawBatchText,reviewerShard:persistedReviewerShard,rootId,
+      expectedRawSha256:p.sourceSha,expectedRawGitBlobSha:p.rawGitSha,
+      previousReviewerGitBlobSha:p.pinnedReviewerGitSha,
+      published:publishedIds,approved:approvedIds,pending:pendingIds
+    });
+    ensure(currentReviewerGitBlobSha!==historicalBlob,
+      'q3_natcomm_status_refresh_not_proven:'+rootId);
+    const aliases=reviewerQueueHistoricalBlobAliasesByRoot.get(rootId)||new Set();
+    aliases.add(historicalBlob);
+    reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,aliases);
   }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,

@@ -1,0 +1,569 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "journal": "Nature Communications",
+  "period": "2026-07-01..2026-09-30",
+  "reviewedAt": "2026-10-14",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcomm-nine-frozen-source.json",
+  "reviewMethod": "Two paper-specific passes by same assistant; no claim of two independent human reviewers.",
+  "evidenceLevel": "official DOI Article, publisher abstracts and accessible main text/table/figure captions only, no downloaded PDF or SI",
+  "accounting": {
+    "assessmentCount": 9,
+    "include": 7,
+    "exclude": 1,
+    "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41467-026-76059-5",
+      "journal": "Nature Communications",
+      "title": "Bifacial ladder polymers enabled by chirality-assisted synthesis that exhibit self-assembly and chirality-induced spin selectivity",
+      "date": "2026-08-03",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76059-5",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "提出手性单体几何约束引导的双面差异梯形共轭高分子合成，解决梯化反应的连接位点选择性与两面功能取向保留。",
+      "preparativeTransformation": "C2手性2,8-二溴茚并芴与二硼酸酯经Suzuki–Miyaura聚合形成前驱链，再以内炔为受体经Friedel–Crafts型分子内梯化形成双面不同侧链的刚性双股高分子。",
+      "generalityEvidence": "Fig.2–5包括梯化位点模型、两种对映体的聚合路线、前驱链与梯化产物的结构数据，确立两面功能区分。薄膜CD和自旋选择性是性能数据，并非分离收率。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76059-5；官方上线日期2026-08-03，冻结Crossref/OpenAlex来源分片2026-08-01_2026-08-07_nature-communications，原始batch SHA a355058e58a1e82dd2b3957e2a994a1c94ee1e0f，审稿队列SHA 125ff3b3062ec3b798090c56e376d40a9848b926。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "材料功能突出且梯化反应本身已有先例；但C2手性单体对不同位置连接实施几何门控，核心新意是可转移的聚合物结构与选择性控制。不可声称适用所有单体，不能把自旋极化当成合成ee。",
+      "scopeAssessment": {
+        "primaryContribution": "提出手性单体几何约束引导的双面差异梯形共轭高分子合成，解决梯化反应的连接位点选择性与两面功能取向保留。",
+        "preparativeTransformation": "C2手性2,8-二溴茚并芴与二硼酸酯经Suzuki–Miyaura聚合形成前驱链，再以内炔为受体经Friedel–Crafts型分子内梯化形成双面不同侧链的刚性双股高分子。",
+        "generalityEvidence": "Fig.2–5包括梯化位点模型、两种对映体的聚合路线、前驱链与梯化产物的结构数据，确立两面功能区分。薄膜CD和自旋选择性是性能数据，并非分离收率。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76059-5；官方上线日期2026-08-03，冻结Crossref/OpenAlex来源分片2026-08-01_2026-08-07_nature-communications，原始batch SHA a355058e58a1e82dd2b3957e2a994a1c94ee1e0f，审稿队列SHA 125ff3b3062ec3b798090c56e376d40a9848b926。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "材料功能突出且梯化反应本身已有先例；但C2手性单体对不同位置连接实施几何门控，核心新意是可转移的聚合物结构与选择性控制。不可声称适用所有单体，不能把自旋极化当成合成ee。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：提出手性单体几何约束引导的双面差异梯形共轭高分子合成，解决梯化反应的连接位点选择性与两面功能取向保留。 C2手性2,8-二溴茚并芴与二硼酸酯经Suzuki–Miyaura聚合形成前驱链，再以内炔为受体经Friedel–Crafts型分子内梯化形成双面不同侧链的刚性双股高分子。 实验证据：Fig.2–5包括梯化位点模型、两种对映体的聚合路线、前驱链与梯化产物的结构数据，确立两面功能区分。薄膜CD和自旋选择性是性能数据，并非分离收率。",
+      "independentChallengeReason": "材料功能突出且梯化反应本身已有先例；但C2手性单体对不同位置连接实施几何门控，核心新意是可转移的聚合物结构与选择性控制。不可声称适用所有单体，不能把自旋极化当成合成ee。",
+      "reason": "提出手性单体几何约束引导的双面差异梯形共轭高分子合成，解决梯化反应的连接位点选择性与两面功能取向保留。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Fig.2–5包括梯化位点模型、两种对映体的聚合路线、前驱链与梯化产物的结构数据，确立两面功能区分。薄膜CD和自旋选择性是性能数据，并非分离收率。 反证和局限：材料功能突出且梯化反应本身已有先例；但C2手性单体对不同位置连接实施几何门控，核心新意是可转移的聚合物结构与选择性控制。不可声称适用所有单体，不能把自旋极化当成合成ee。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76059-5",
+        "publisherOnlineDate": "2026-08-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_nature-communications",
+        "stageBatchSha": "a355058e58a1e82dd2b3957e2a994a1c94ee1e0f",
+        "sourceReviewQueueGitBlobSha": "125ff3b3062ec3b798090c56e376d40a9848b926",
+        "stageSourceSha256": "e51f8a6bcee571539e3ec94c09f54975d7fa2090d8e8e84ee91e214430d816ac",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-01_2026-08-07_nature-communications",
+      "stageSourceSha256": "e51f8a6bcee571539e3ec94c09f54975d7fa2090d8e8e84ee91e214430d816ac",
+      "stageBatchGitBlobSha": "125ff3b3062ec3b798090c56e376d40a9848b926",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-76275-z",
+      "journal": "Nature Communications",
+      "title": "Multifunctional metal-organic frameworks for direct photosynthesis of cyclic carbonates from gaseous olefins",
+      "date": "2026-08-04",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76275-z",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "通过集成氧活化、烯烃C–H活化和Lewis酸催化，建立气态烯烃直接光催化转化为环状碳酸酯的串联合成。",
+      "preparativeTransformation": "以乙烯或丙烯、CO2、O2为反应伙伴，RE-BTTD-AC/TBAB催化先形成环氧化物，再与CO2环加成生成碳酸乙烯酯和碳酸丙烯酯；拓展六种芳基烯烃。",
+      "generalityEvidence": "Fig.3报道EC/PC生成速率96.02与640.03 μmol g−1 h−1、选择性95%/93%；Fig.4另测试六个芳基烯烃并用13CO2/18O2同位素验证原子来源。模拟烟气下苯乙烯转化85%、碳酸酯选择性25%，均不是分离收率。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76275-z；官方上线日期2026-08-04，冻结Crossref/OpenAlex来源分片2026-08-01_2026-08-07_nature-communications，原始batch SHA a355058e58a1e82dd2b3957e2a994a1c94ee1e0f，审稿队列SHA 125ff3b3062ec3b798090c56e376d40a9848b926。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "催化剂框架结构及720小时耐久是重点，但原文也真正完成两种低碳烯烃和六类芳基烯烃的有机制备与C–O成键。按实验证据纳入，但不能把速率或选择性冒充孤立收率，也不能称模拟烟气实验全为高选择性。",
+      "scopeAssessment": {
+        "primaryContribution": "通过集成氧活化、烯烃C–H活化和Lewis酸催化，建立气态烯烃直接光催化转化为环状碳酸酯的串联合成。",
+        "preparativeTransformation": "以乙烯或丙烯、CO2、O2为反应伙伴，RE-BTTD-AC/TBAB催化先形成环氧化物，再与CO2环加成生成碳酸乙烯酯和碳酸丙烯酯；拓展六种芳基烯烃。",
+        "generalityEvidence": "Fig.3报道EC/PC生成速率96.02与640.03 μmol g−1 h−1、选择性95%/93%；Fig.4另测试六个芳基烯烃并用13CO2/18O2同位素验证原子来源。模拟烟气下苯乙烯转化85%、碳酸酯选择性25%，均不是分离收率。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76275-z；官方上线日期2026-08-04，冻结Crossref/OpenAlex来源分片2026-08-01_2026-08-07_nature-communications，原始batch SHA a355058e58a1e82dd2b3957e2a994a1c94ee1e0f，审稿队列SHA 125ff3b3062ec3b798090c56e376d40a9848b926。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "催化剂框架结构及720小时耐久是重点，但原文也真正完成两种低碳烯烃和六类芳基烯烃的有机制备与C–O成键。按实验证据纳入，但不能把速率或选择性冒充孤立收率，也不能称模拟烟气实验全为高选择性。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：通过集成氧活化、烯烃C–H活化和Lewis酸催化，建立气态烯烃直接光催化转化为环状碳酸酯的串联合成。 以乙烯或丙烯、CO2、O2为反应伙伴，RE-BTTD-AC/TBAB催化先形成环氧化物，再与CO2环加成生成碳酸乙烯酯和碳酸丙烯酯；拓展六种芳基烯烃。 实验证据：Fig.3报道EC/PC生成速率96.02与640.03 μmol g−1 h−1、选择性95%/93%；Fig.4另测试六个芳基烯烃并用13CO2/18O2同位素验证原子来源。模拟烟气下苯乙烯转化85%、碳酸酯选择性25%，均不是分离收率。",
+      "independentChallengeReason": "催化剂框架结构及720小时耐久是重点，但原文也真正完成两种低碳烯烃和六类芳基烯烃的有机制备与C–O成键。按实验证据纳入，但不能把速率或选择性冒充孤立收率，也不能称模拟烟气实验全为高选择性。",
+      "reason": "通过集成氧活化、烯烃C–H活化和Lewis酸催化，建立气态烯烃直接光催化转化为环状碳酸酯的串联合成。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Fig.3报道EC/PC生成速率96.02与640.03 μmol g−1 h−1、选择性95%/93%；Fig.4另测试六个芳基烯烃并用13CO2/18O2同位素验证原子来源。模拟烟气下苯乙烯转化85%、碳酸酯选择性25%，均不是分离收率。 反证和局限：催化剂框架结构及720小时耐久是重点，但原文也真正完成两种低碳烯烃和六类芳基烯烃的有机制备与C–O成键。按实验证据纳入，但不能把速率或选择性冒充孤立收率，也不能称模拟烟气实验全为高选择性。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76275-z",
+        "publisherOnlineDate": "2026-08-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_nature-communications",
+        "stageBatchSha": "a355058e58a1e82dd2b3957e2a994a1c94ee1e0f",
+        "sourceReviewQueueGitBlobSha": "125ff3b3062ec3b798090c56e376d40a9848b926",
+        "stageSourceSha256": "e51f8a6bcee571539e3ec94c09f54975d7fa2090d8e8e84ee91e214430d816ac",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-01_2026-08-07_nature-communications",
+      "stageSourceSha256": "e51f8a6bcee571539e3ec94c09f54975d7fa2090d8e8e84ee91e214430d816ac",
+      "stageBatchGitBlobSha": "125ff3b3062ec3b798090c56e376d40a9848b926",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-76516-1",
+      "journal": "Nature Communications",
+      "title": "Synthesis of adaptive 15N-nitrosyl-Co7 nanocluster for electrocatalytic C–H functionalization",
+      "date": "2026-08-08",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76516-1",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "设计亚硝酰基保护壳层Co7纳米簇电催化体系，实现高电流联烯C–H键活化并与醛形成C–C键。",
+      "preparativeTransformation": "在Co7-I催化的石墨毡阳极/不锈钢阴极体系中，联烯被活化后与取代醛发生亲核加成，形成有机C–C键和相应醇产物。",
+      "generalityEvidence": "Fig.4包含电子效应醛3b–3j、硫醚胺和碘基团3k–3m、不同位阻取代/杂环受体及联烯变体，明确柱层析分离收率；20 mmol反应制得3.4 g产物3a、61%分离收率，Co7-I为0.5 mol%，800 mA电解4小时。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76516-1；官方上线日期2026-08-08，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "15N标记只用于验证Co7–NO簇结构和催化机制，不是15N有机产品。虽突出纳米材料，却有广泛联烯/醛偶联及克级实证。联烯碳负离子模型属实验/计算支持的机制，不可视作唯一已直接观测途径。",
+      "scopeAssessment": {
+        "primaryContribution": "设计亚硝酰基保护壳层Co7纳米簇电催化体系，实现高电流联烯C–H键活化并与醛形成C–C键。",
+        "preparativeTransformation": "在Co7-I催化的石墨毡阳极/不锈钢阴极体系中，联烯被活化后与取代醛发生亲核加成，形成有机C–C键和相应醇产物。",
+        "generalityEvidence": "Fig.4包含电子效应醛3b–3j、硫醚胺和碘基团3k–3m、不同位阻取代/杂环受体及联烯变体，明确柱层析分离收率；20 mmol反应制得3.4 g产物3a、61%分离收率，Co7-I为0.5 mol%，800 mA电解4小时。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76516-1；官方上线日期2026-08-08，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "15N标记只用于验证Co7–NO簇结构和催化机制，不是15N有机产品。虽突出纳米材料，却有广泛联烯/醛偶联及克级实证。联烯碳负离子模型属实验/计算支持的机制，不可视作唯一已直接观测途径。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：设计亚硝酰基保护壳层Co7纳米簇电催化体系，实现高电流联烯C–H键活化并与醛形成C–C键。 在Co7-I催化的石墨毡阳极/不锈钢阴极体系中，联烯被活化后与取代醛发生亲核加成，形成有机C–C键和相应醇产物。 实验证据：Fig.4包含电子效应醛3b–3j、硫醚胺和碘基团3k–3m、不同位阻取代/杂环受体及联烯变体，明确柱层析分离收率；20 mmol反应制得3.4 g产物3a、61%分离收率，Co7-I为0.5 mol%，800 mA电解4小时。",
+      "independentChallengeReason": "15N标记只用于验证Co7–NO簇结构和催化机制，不是15N有机产品。虽突出纳米材料，却有广泛联烯/醛偶联及克级实证。联烯碳负离子模型属实验/计算支持的机制，不可视作唯一已直接观测途径。",
+      "reason": "设计亚硝酰基保护壳层Co7纳米簇电催化体系，实现高电流联烯C–H键活化并与醛形成C–C键。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Fig.4包含电子效应醛3b–3j、硫醚胺和碘基团3k–3m、不同位阻取代/杂环受体及联烯变体，明确柱层析分离收率；20 mmol反应制得3.4 g产物3a、61%分离收率，Co7-I为0.5 mol%，800 mA电解4小时。 反证和局限：15N标记只用于验证Co7–NO簇结构和催化机制，不是15N有机产品。虽突出纳米材料，却有广泛联烯/醛偶联及克级实证。联烯碳负离子模型属实验/计算支持的机制，不可视作唯一已直接观测途径。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76516-1",
+        "publisherOnlineDate": "2026-08-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-communications",
+        "stageBatchSha": "b3922c3e7dcf4fa518b34df77c45c0bf837eab87",
+        "sourceReviewQueueGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+        "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-08_2026-08-14_nature-communications",
+      "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+      "stageBatchGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-76617-x",
+      "journal": "Nature Communications",
+      "title": "Bromide-mediated paired electrosynthesis of hydrogen and epoxide",
+      "date": "2026-08-11",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76617-x",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "primaryContribution": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+      "preparativeTransformation": "Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。",
+      "generalityEvidence": "Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76617-x；官方上线日期2026-08-11，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "scopeAssessment": {
+        "primaryContribution": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+        "preparativeTransformation": "Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。",
+        "generalityEvidence": "Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76617-x；官方上线日期2026-08-11，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。 Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。 实验证据：Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+      "independentChallengeReason": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "reason": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。 反证和局限：苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76617-x",
+        "publisherOnlineDate": "2026-08-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-communications",
+        "stageBatchSha": "b3922c3e7dcf4fa518b34df77c45c0bf837eab87",
+        "sourceReviewQueueGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+        "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-08_2026-08-14_nature-communications",
+      "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+      "stageBatchGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "evidenceNeeded": "核实本篇公开正文或合法可访问SI是否报告多种不同烯烃实操产品及表征、环氧化物分离产率；不得把乙烯/丙烯的未来反应器设计当成已完成实验。",
+      "nextAction": "核对公开正文及合法开放补充信息中的具体烯烃底物范围和分离表征；在证据不足时保持待核，不下载或公开历史付费PDF、SI、图片。",
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-76813-9",
+      "journal": "Nature Communications",
+      "title": "A pyridoxal phosphate-dependent enzyme platform for stereoselective synthesis of γ-tertiary-nitro-noncanonical amino acids",
+      "date": "2026-08-19",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76813-9",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "将PLP依赖SidM酶重定向为γ-季碳硝基非天然α-氨基酸的立体选择性C–C成键平台。",
+      "preparativeTransformation": "O-乙酰丝氨酸和仲硝基烷烃在PLP酶位点偶联，生成γ位含叔硝基立体中心的非天然α-氨基酸，并可调控γ位相对构型。",
+      "generalityEvidence": "Fig.3给出硝基烷烃底物拓展、Fig.4酶进化改变甚至反转立体选择；最高99%收率、99%de。Fig.5使用5 mmol底物，细胞裂解液得到1.3 g、97%分离收率和99%de；某反转构型例仅28%分离收率，不得一概称都高产。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76813-9；官方上线日期2026-08-19，冻结Crossref/OpenAlex来源分片2026-08-15_2026-08-21_nature-communications，原始batch SHA 80f640f140bd41d22c6e7cdf9a4046e9a5331568，审稿队列SHA acfd1cc100c56f7db817b1dd5a51a851d6874fe2。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "酶工程和突变体研究较多，但此文有真实产品范围、分离氨基酸、双重立体控制及克级操作，主要贡献是新的酶促不对称合成能力。突变体数量绝不能代替底物数量。",
+      "scopeAssessment": {
+        "primaryContribution": "将PLP依赖SidM酶重定向为γ-季碳硝基非天然α-氨基酸的立体选择性C–C成键平台。",
+        "preparativeTransformation": "O-乙酰丝氨酸和仲硝基烷烃在PLP酶位点偶联，生成γ位含叔硝基立体中心的非天然α-氨基酸，并可调控γ位相对构型。",
+        "generalityEvidence": "Fig.3给出硝基烷烃底物拓展、Fig.4酶进化改变甚至反转立体选择；最高99%收率、99%de。Fig.5使用5 mmol底物，细胞裂解液得到1.3 g、97%分离收率和99%de；某反转构型例仅28%分离收率，不得一概称都高产。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76813-9；官方上线日期2026-08-19，冻结Crossref/OpenAlex来源分片2026-08-15_2026-08-21_nature-communications，原始batch SHA 80f640f140bd41d22c6e7cdf9a4046e9a5331568，审稿队列SHA acfd1cc100c56f7db817b1dd5a51a851d6874fe2。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "酶工程和突变体研究较多，但此文有真实产品范围、分离氨基酸、双重立体控制及克级操作，主要贡献是新的酶促不对称合成能力。突变体数量绝不能代替底物数量。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：将PLP依赖SidM酶重定向为γ-季碳硝基非天然α-氨基酸的立体选择性C–C成键平台。 O-乙酰丝氨酸和仲硝基烷烃在PLP酶位点偶联，生成γ位含叔硝基立体中心的非天然α-氨基酸，并可调控γ位相对构型。 实验证据：Fig.3给出硝基烷烃底物拓展、Fig.4酶进化改变甚至反转立体选择；最高99%收率、99%de。Fig.5使用5 mmol底物，细胞裂解液得到1.3 g、97%分离收率和99%de；某反转构型例仅28%分离收率，不得一概称都高产。",
+      "independentChallengeReason": "酶工程和突变体研究较多，但此文有真实产品范围、分离氨基酸、双重立体控制及克级操作，主要贡献是新的酶促不对称合成能力。突变体数量绝不能代替底物数量。",
+      "reason": "将PLP依赖SidM酶重定向为γ-季碳硝基非天然α-氨基酸的立体选择性C–C成键平台。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Fig.3给出硝基烷烃底物拓展、Fig.4酶进化改变甚至反转立体选择；最高99%收率、99%de。Fig.5使用5 mmol底物，细胞裂解液得到1.3 g、97%分离收率和99%de；某反转构型例仅28%分离收率，不得一概称都高产。 反证和局限：酶工程和突变体研究较多，但此文有真实产品范围、分离氨基酸、双重立体控制及克级操作，主要贡献是新的酶促不对称合成能力。突变体数量绝不能代替底物数量。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76813-9",
+        "publisherOnlineDate": "2026-08-19",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_nature-communications",
+        "stageBatchSha": "80f640f140bd41d22c6e7cdf9a4046e9a5331568",
+        "sourceReviewQueueGitBlobSha": "acfd1cc100c56f7db817b1dd5a51a851d6874fe2",
+        "stageSourceSha256": "ccbce6419292fbcff256d90cccb600595964b4dcfe1b8200f6c182283a7bdb31",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-15_2026-08-21_nature-communications",
+      "stageSourceSha256": "ccbce6419292fbcff256d90cccb600595964b4dcfe1b8200f6c182283a7bdb31",
+      "stageBatchGitBlobSha": "acfd1cc100c56f7db817b1dd5a51a851d6874fe2",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-77053-7",
+      "journal": "Nature Communications",
+      "title": "Ru-enabled dehydration-reductive amination of α-, β-hydroxy acids into amino acids",
+      "date": "2026-08-22",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77053-7",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "利用TiO2负载单原子Ru实现多羟基酸脱水—还原胺化，构筑氨基酸而非沿传统α-酮酸路线。",
+      "preparativeTransformation": "以甘油酸及其他邻位α/β羟基羧酸为有机底物，在NH3/H2和碱存在下，经α-H消除、β-OH脱除及还原胺化生成丙氨酸等氨基酸C–N键。",
+      "generalityEvidence": "原文报告甘油酸→丙氨酸58.9%产率，并以Table 2检查多种羟基酸；Fig.3–6包括Ru结构、其他金属及路径研究。不能将58.9%推广到所有底物或无证据断言均为分离收率。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77053-7；官方上线日期2026-08-22，冻结Crossref/OpenAlex来源分片2026-08-22_2026-08-31_nature-communications，原始batch SHA 5570659ab9447f7ffbfcd4d222aadea3790546bd，审稿队列SHA 691dfc873c2853eb146c684d1fd2371534bf97a9。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "Ru单原子位点与催化机制占相当篇幅，但Table2实际提供多个有机底物与产物转化，核心包括新胺化合成能力。作者的烯醇/烯醇盐路径由对照与计算支持，不应声称已排他验证。",
+      "scopeAssessment": {
+        "primaryContribution": "利用TiO2负载单原子Ru实现多羟基酸脱水—还原胺化，构筑氨基酸而非沿传统α-酮酸路线。",
+        "preparativeTransformation": "以甘油酸及其他邻位α/β羟基羧酸为有机底物，在NH3/H2和碱存在下，经α-H消除、β-OH脱除及还原胺化生成丙氨酸等氨基酸C–N键。",
+        "generalityEvidence": "原文报告甘油酸→丙氨酸58.9%产率，并以Table 2检查多种羟基酸；Fig.3–6包括Ru结构、其他金属及路径研究。不能将58.9%推广到所有底物或无证据断言均为分离收率。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77053-7；官方上线日期2026-08-22，冻结Crossref/OpenAlex来源分片2026-08-22_2026-08-31_nature-communications，原始batch SHA 5570659ab9447f7ffbfcd4d222aadea3790546bd，审稿队列SHA 691dfc873c2853eb146c684d1fd2371534bf97a9。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "Ru单原子位点与催化机制占相当篇幅，但Table2实际提供多个有机底物与产物转化，核心包括新胺化合成能力。作者的烯醇/烯醇盐路径由对照与计算支持，不应声称已排他验证。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：利用TiO2负载单原子Ru实现多羟基酸脱水—还原胺化，构筑氨基酸而非沿传统α-酮酸路线。 以甘油酸及其他邻位α/β羟基羧酸为有机底物，在NH3/H2和碱存在下，经α-H消除、β-OH脱除及还原胺化生成丙氨酸等氨基酸C–N键。 实验证据：原文报告甘油酸→丙氨酸58.9%产率，并以Table 2检查多种羟基酸；Fig.3–6包括Ru结构、其他金属及路径研究。不能将58.9%推广到所有底物或无证据断言均为分离收率。",
+      "independentChallengeReason": "Ru单原子位点与催化机制占相当篇幅，但Table2实际提供多个有机底物与产物转化，核心包括新胺化合成能力。作者的烯醇/烯醇盐路径由对照与计算支持，不应声称已排他验证。",
+      "reason": "利用TiO2负载单原子Ru实现多羟基酸脱水—还原胺化，构筑氨基酸而非沿传统α-酮酸路线。",
+      "evidenceBasis": "真实Publisher结果与制备范围：原文报告甘油酸→丙氨酸58.9%产率，并以Table 2检查多种羟基酸；Fig.3–6包括Ru结构、其他金属及路径研究。不能将58.9%推广到所有底物或无证据断言均为分离收率。 反证和局限：Ru单原子位点与催化机制占相当篇幅，但Table2实际提供多个有机底物与产物转化，核心包括新胺化合成能力。作者的烯醇/烯醇盐路径由对照与计算支持，不应声称已排他验证。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77053-7",
+        "publisherOnlineDate": "2026-08-22",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_nature-communications",
+        "stageBatchSha": "5570659ab9447f7ffbfcd4d222aadea3790546bd",
+        "sourceReviewQueueGitBlobSha": "691dfc873c2853eb146c684d1fd2371534bf97a9",
+        "stageSourceSha256": "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-22_2026-08-31_nature-communications",
+      "stageSourceSha256": "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3",
+      "stageBatchGitBlobSha": "691dfc873c2853eb146c684d1fd2371534bf97a9",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-77301-w",
+      "journal": "Nature Communications",
+      "title": "Macrocyclization of native peptides through (thio)urea crosslinking of two amines",
+      "date": "2026-09-02",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77301-w",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "以CDI/TCDI连接天然肽两个赖氨酸氨基，开发单桥/双桥脲与硫脲连接的选择性大环肽合成。",
+      "preparativeTransformation": "不同Lys间距的天然肽ε-氨基经羰基二咪唑或硫羰基二咪唑形成脲/硫脲桥，进一步以1,3-丙二胺在一锅两步中实现双硫脲桥宏环。",
+      "generalityEvidence": "Fig.2–3报告赖氨酸间距及未保护亲核残基兼容；Fig.5双硫脲桥，Fig.6对RGD和Anoplin类似物应用。未保护Anoplin只经LC-MS观测，N端Fmoc保护Anoplin则成功制备宏环23a/23b；部分为HPLC产率而非分离收率。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77301-w；官方上线日期2026-09-02，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "肽活性筛选是后续应用，但核心是有不同肽序列、桥型与胺位置的真实共价宏环构建，不是一个天然产物活性分析。必须保留未保护Anoplin未成功分离的局限。",
+      "scopeAssessment": {
+        "primaryContribution": "以CDI/TCDI连接天然肽两个赖氨酸氨基，开发单桥/双桥脲与硫脲连接的选择性大环肽合成。",
+        "preparativeTransformation": "不同Lys间距的天然肽ε-氨基经羰基二咪唑或硫羰基二咪唑形成脲/硫脲桥，进一步以1,3-丙二胺在一锅两步中实现双硫脲桥宏环。",
+        "generalityEvidence": "Fig.2–3报告赖氨酸间距及未保护亲核残基兼容；Fig.5双硫脲桥，Fig.6对RGD和Anoplin类似物应用。未保护Anoplin只经LC-MS观测，N端Fmoc保护Anoplin则成功制备宏环23a/23b；部分为HPLC产率而非分离收率。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77301-w；官方上线日期2026-09-02，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "肽活性筛选是后续应用，但核心是有不同肽序列、桥型与胺位置的真实共价宏环构建，不是一个天然产物活性分析。必须保留未保护Anoplin未成功分离的局限。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：以CDI/TCDI连接天然肽两个赖氨酸氨基，开发单桥/双桥脲与硫脲连接的选择性大环肽合成。 不同Lys间距的天然肽ε-氨基经羰基二咪唑或硫羰基二咪唑形成脲/硫脲桥，进一步以1,3-丙二胺在一锅两步中实现双硫脲桥宏环。 实验证据：Fig.2–3报告赖氨酸间距及未保护亲核残基兼容；Fig.5双硫脲桥，Fig.6对RGD和Anoplin类似物应用。未保护Anoplin只经LC-MS观测，N端Fmoc保护Anoplin则成功制备宏环23a/23b；部分为HPLC产率而非分离收率。",
+      "independentChallengeReason": "肽活性筛选是后续应用，但核心是有不同肽序列、桥型与胺位置的真实共价宏环构建，不是一个天然产物活性分析。必须保留未保护Anoplin未成功分离的局限。",
+      "reason": "以CDI/TCDI连接天然肽两个赖氨酸氨基，开发单桥/双桥脲与硫脲连接的选择性大环肽合成。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Fig.2–3报告赖氨酸间距及未保护亲核残基兼容；Fig.5双硫脲桥，Fig.6对RGD和Anoplin类似物应用。未保护Anoplin只经LC-MS观测，N端Fmoc保护Anoplin则成功制备宏环23a/23b；部分为HPLC产率而非分离收率。 反证和局限：肽活性筛选是后续应用，但核心是有不同肽序列、桥型与胺位置的真实共价宏环构建，不是一个天然产物活性分析。必须保留未保护Anoplin未成功分离的局限。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77301-w",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_nature-communications",
+        "stageBatchSha": "7503729802ebfb648e3f2807d5f5ebec3589ae66",
+        "sourceReviewQueueGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+        "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-09-01_2026-09-07_nature-communications",
+      "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+      "stageBatchGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-77096-w",
+      "journal": "Nature Communications",
+      "title": "Shaping light in 3D for direct asymmetric photochemistry: a 1000-fold enantioselectivity enhancement",
+      "date": "2026-09-04",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77096-w",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+      "preparativeTransformation": "模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。",
+      "generalityEvidence": "约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77096-w；官方上线日期2026-09-04，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "scopeAssessment": {
+        "primaryContribution": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+        "preparativeTransformation": "模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。",
+        "generalityEvidence": "约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77096-w；官方上线日期2026-09-04，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。 模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。 实验证据：约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+      "independentChallengeReason": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "reason": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+      "evidenceBasis": "真实Publisher结果与制备范围：约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。 反证和局限：理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77096-w",
+        "publisherOnlineDate": "2026-09-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_nature-communications",
+        "stageBatchSha": "7503729802ebfb648e3f2807d5f5ebec3589ae66",
+        "sourceReviewQueueGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+        "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-09-01_2026-09-07_nature-communications",
+      "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+      "stageBatchGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-77071-5",
+      "journal": "Nature Communications",
+      "title": "Stereosequence- and topology-controlled synthesis of cyclic polyesters",
+      "date": "2026-09-08",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77071-5",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "primaryContribution": "报道镧催化氨基酸源O-羧酸酐的等规环扩张聚合，单一体系同步控制环状聚酯立构序列和分子拓扑。",
+      "preparativeTransformation": "不同手性O-羧酸酐经镧催化环扩张聚合生成环状立构嵌段聚α-羟基酸，反手性共单体一锅共聚可得到梯度环状聚酯。",
+      "generalityEvidence": "原文支持多种侧基的聚酯合成，分子量超过100 kDa、Ð<1.1、等规度Pm>0.90；反手性共单体一锅形成超过90 kDa梯度环形共聚物。断裂强度与阻氧性能属于后续材料性质而非合成产率。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77071-5；官方上线日期2026-09-08，冻结Crossref/OpenAlex来源分片2026-09-08_2026-09-14_nature-communications，原始batch SHA 4191bc97e0f458365262c7bac4cd0a615cc6320f，审稿队列SHA 4ecabb756c702279c42506da4786a358ecb5152e。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "循环聚合、等规控制分别已有研究，但将两者与手性单体序列设计集中到通用镧催化体系，是明确聚合合成能力。不能把该规律拓展到所有单体或用力学性能替代制备通用性。",
+      "scopeAssessment": {
+        "primaryContribution": "报道镧催化氨基酸源O-羧酸酐的等规环扩张聚合，单一体系同步控制环状聚酯立构序列和分子拓扑。",
+        "preparativeTransformation": "不同手性O-羧酸酐经镧催化环扩张聚合生成环状立构嵌段聚α-羟基酸，反手性共单体一锅共聚可得到梯度环状聚酯。",
+        "generalityEvidence": "原文支持多种侧基的聚酯合成，分子量超过100 kDa、Ð<1.1、等规度Pm>0.90；反手性共单体一锅形成超过90 kDa梯度环形共聚物。断裂强度与阻氧性能属于后续材料性质而非合成产率。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77071-5；官方上线日期2026-09-08，冻结Crossref/OpenAlex来源分片2026-09-08_2026-09-14_nature-communications，原始batch SHA 4191bc97e0f458365262c7bac4cd0a615cc6320f，审稿队列SHA 4ecabb756c702279c42506da4786a358ecb5152e。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "循环聚合、等规控制分别已有研究，但将两者与手性单体序列设计集中到通用镧催化体系，是明确聚合合成能力。不能把该规律拓展到所有单体或用力学性能替代制备通用性。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：报道镧催化氨基酸源O-羧酸酐的等规环扩张聚合，单一体系同步控制环状聚酯立构序列和分子拓扑。 不同手性O-羧酸酐经镧催化环扩张聚合生成环状立构嵌段聚α-羟基酸，反手性共单体一锅共聚可得到梯度环状聚酯。 实验证据：原文支持多种侧基的聚酯合成，分子量超过100 kDa、Ð<1.1、等规度Pm>0.90；反手性共单体一锅形成超过90 kDa梯度环形共聚物。断裂强度与阻氧性能属于后续材料性质而非合成产率。",
+      "independentChallengeReason": "循环聚合、等规控制分别已有研究，但将两者与手性单体序列设计集中到通用镧催化体系，是明确聚合合成能力。不能把该规律拓展到所有单体或用力学性能替代制备通用性。",
+      "reason": "报道镧催化氨基酸源O-羧酸酐的等规环扩张聚合，单一体系同步控制环状聚酯立构序列和分子拓扑。",
+      "evidenceBasis": "真实Publisher结果与制备范围：原文支持多种侧基的聚酯合成，分子量超过100 kDa、Ð<1.1、等规度Pm>0.90；反手性共单体一锅形成超过90 kDa梯度环形共聚物。断裂强度与阻氧性能属于后续材料性质而非合成产率。 反证和局限：循环聚合、等规控制分别已有研究，但将两者与手性单体序列设计集中到通用镧催化体系，是明确聚合合成能力。不能把该规律拓展到所有单体或用力学性能替代制备通用性。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77071-5",
+        "publisherOnlineDate": "2026-09-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_nature-communications",
+        "stageBatchSha": "4191bc97e0f458365262c7bac4cd0a615cc6320f",
+        "sourceReviewQueueGitBlobSha": "4ecabb756c702279c42506da4786a358ecb5152e",
+        "stageSourceSha256": "08b2cb29c7c6fae493c194173587311530339d26cbfe8e1220964deb9c22eac0",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-09-08_2026-09-14_nature-communications",
+      "stageSourceSha256": "08b2cb29c7c6fae493c194173587311530339d26cbfe8e1220964deb9c22eac0",
+      "stageBatchGitBlobSha": "4ecabb756c702279c42506da4786a358ecb5152e",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    }
+  ],
+  "guards": {
+    "noOwnerPermanentExclusion": true,
+    "noAdmissionUntilSeparateVerifiedManifest": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noTodayHotWeChat": true
+  }
+}
