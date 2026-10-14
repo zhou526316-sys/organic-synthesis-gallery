@@ -187,3 +187,17 @@ test('DOI hash, official type, duplicate science, protected admitted DOI collisi
  assert.throws(()=>reconcileQ3({...x,manifest:{accepted:[records[0],{...records[0]}],pending:[]}}),
    /q3_formal_doi_partition_conflict/);
 });
+
+test('complete 66-DOI publisher census spans twelve historical windows; 51 reviewed DOI use only eleven',()=>{
+  const all=new Set(census.sourceRoots.map(x=>x.rootId));
+  const reviewed=new Set(source.items.map(x=>x.sourceRootId));
+  assert.equal(all.size,12);
+  assert.equal(reviewed.size,11);
+  assert.ok([...reviewed].every(x=>all.has(x)));
+  assert.ok(census.items.every(x=>all.has(x.sourceRootId)));
+  const previouslyKnownOnly=[...all].filter(x=>!reviewed.has(x));
+  assert.deepEqual(previouslyKnownOnly,['2026-08-01_2026-08-07_nature-chemistry']);
+  for(const row of census.items.filter(x=>previouslyKnownOnly.includes(x.sourceRootId)))
+    assert.notEqual(row.originalStatus,'unfinished',
+      'a real unfinished paper cannot be dropped because the shard lacks a new review');
+});
