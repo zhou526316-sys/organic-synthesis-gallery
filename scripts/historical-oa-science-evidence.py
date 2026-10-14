@@ -177,10 +177,12 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
     # 60-character FTS row. Preserve its hash and explicitly downgrade
     # completeness until a future human-reviewed merge preserves the source.
     all_units = units + short_fragments
-    if not all_units or paragraphs < 2 or not any(
-        t in {"results", "scope", "mechanism", "experimental"} for t,_,_,_ in all_units
-    ):
+    scientific_chars = sum(len(text) for _,_,text,_ in all_units)
+    if not all_units or paragraphs < 2 or scientific_chars < 450:
         raise ValueError("science_content_missing_or_abstract_only")
+    science_classified = any(
+        t in {"results", "scope", "mechanism", "experimental"} for t,_,_,_ in all_units
+    )
     if len(all_units) + len(captions) > MAX_EVIDENCE_UNITS:
         raise ValueError("science_unit_capacity_exceeded")
     total_bytes = sum(len(s.encode("utf-8")) for _,_,s,_ in all_units)
@@ -202,13 +204,14 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
         f"s{i:03d}\n{heading[:200]}\n{text}" for i,(_, heading,text,_) in enumerate(units,1)
     )
     kinds = Counter(t for t,_,_,_ in all_units)
-    complete = kinds["results"]>0 and kinds["conclusion"]>0 and len(units)>=3 and not short_fragments
+    complete = science_classified and kinds["results"]>0 and kinds["conclusion"]>0 and len(units)>=3 and not short_fragments
     return {
         "state":"science_sections_mapped_pending_independent_review" if units else "science_fragments_only_pending_review",
         "source":"Europe PMC official CC BY JATS","doi":expected_doi,
         "xmlSha256":actual_xml_sha,"licenseKindSignal":license_kind,
         "scienceSectionUnits":len(units),"scientificParagraphs":paragraphs,
         "shortScienceFragmentCount":len(short_fragments),
+        "scienceClassificationEvidence":"recognized_science_heading" if science_classified else "unclassified_maintext_pending_review",
         "scienceCharacters":sum(len(s) for _,_,s,_ in all_units),
         "scienceTextBytes":total_bytes,"captionEvidenceCount":len(captions),
         "completenessCandidate":"complete_candidate" if complete else "partial",
