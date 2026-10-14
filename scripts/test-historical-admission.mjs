@@ -928,3 +928,45 @@ test('three new individually publisher-dated ACS original syntheses are deduplic
  const iron=root.accepted.find(x=>x.doi==='10.1021/acs.joc.5c03189');
  assert.match(iron.challengeReason,/LMCT/);
 });
+
+
+test('four independent verified 2026-Q3 original methods retain source fingerprints and scientific caveats',()=>{
+ const expected=[["10.1021/acscatal.6c02607","2026-07-13","a755e26f93efd287a279c7f9a9ffea343e3e095a","ACS Catalysis"],["10.1021/acs.orglett.6c03221","2026-09-02","80aca4837373541c9ba22bdcae30cd0bd2f64511","Organic Letters"],["10.1021/acs.orglett.6c03207","2026-09-02","80aca4837373541c9ba22bdcae30cd0bd2f64511","Organic Letters"],["10.1021/acs.joc.6c01737","2026-09-21","0a6b4fb5580453d2b101f2f94030ee7f9c473541","JOC"]];
+ const first=new Set(),second=new Set();
+ for(const [doi,date,sourceSha,journal] of expected){
+  const x=root.accepted.find(v=>v.doi===doi);
+  assert.ok(x,doi);assert.equal(root.accepted.filter(v=>v.doi===doi).length,1);
+  assert.equal(x.date,date);assert.equal(x.journal,journal);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,sourceSha);
+  assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(z=>z.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>170);
+  assert.ok(x.independentPasses[1].reason.length>130);
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(sourceSha));
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(doi));
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.new,false);assert.equal(x.addedDate,'');
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.equal(x.reviewEvidence.abstractCopied,false);
+  assert.equal(x.reviewEvidence.figureFetched,false);
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.citation.year,2026);
+  first.add(x.independentPasses[0].reason);
+  second.add(x.independentPasses[1].reason);
+ }
+ assert.equal(first.size,4);assert.equal(second.size,4);
+ assert.equal(root.summary.include,108);
+ assert.equal(root.summary.checked,110);
+ assert.equal(root.summary.pending,2);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acscatal.6c02607').challengeReason,/13种/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c03221').challengeReason,/99% ee/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c03207').challengeReason,/酚羟基/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01737').challengeReason,/交流电/);
+ const hold=JSON.parse(readFileSync('audit/historical-reviewed/2026-10-14-q3-four-acs-original-methods-two-pass.json','utf8'));
+ assert.equal(hold.reviewed.length,4);
+ assert.equal(hold.newUnadmittedSourceDateConcern[0].status,'unfinished_require_official_CCS_article_history_before_academic_approval');
+ assert.equal(root.accepted.some(x=>x.doi==='10.31635/ccschem.026.202608043'),false);
+ for(const doi of hold.continuedHolds)assert.equal(root.accepted.some(x=>x.doi===doi),false);
+});

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "catalogId": "f263e943427a16c8fa52c828d786fb90fc7366d6e01bd74e1b2b1bd148d69870",
+  "formalDois": 1087,
+  "formalHistoricalDated": 826,
+  "historicalUndated": 10,
+  "windowSize": 20,
+  "completedOffsets": [
+    0,
+    20,
+    40,
+    60,
+    80,
+    100,
+    120,
+    140,
+    160,
+    180
+  ],
+  "nextOffset": 200,
+  "hasMore": true,
+  "scannedUniqueDoi": 200,
+  "results": {
+    "needs_independent_review": 26,
+    "reuse_restricted": 31,
+    "pmc_oa_missing": 83,
+    "metadata_doi_missing": 53,
+    "license_unknown": 5,
+    "science_incomplete": 2
+  },
+  "sourceWorkflowRuns": [
+    38499910931,
+    38500108635,
+    38500247352,
+    38500454607,
+    38500747243,
+    38504373021,
+    38504561119,
+    38504755673,
+    38504913899,
+    38505066519
+  ],
+  "publicBodyImports": 0,
+  "rawXmlPersisted": 0,
+  "pdfDownloads": 0,
+  "publisherBrowserVisits": 0,
+  "integrityRule": "Do not merge reports with any other catalogId; validate current Pages and every DOI/revision before continuing; human scientific and license review separately required.",
+  "verifiedAt": "2026-10-14T03:17:00Z"
+}
