@@ -1,0 +1,358 @@
+{
+  "schemaVersion": "gallery-historical-2026-q3-acs-four-methods-independent-two-pass-v1",
+  "reviewedAt": "2026-10-14T03:06:57.929Z",
+  "period": "2026-07-01..2026-09-30",
+  "mode": "publisher_frozen_crossref_openalex_two_pass_scope_review_not_publication",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceBatchGitSha": {
+    "2026-07-08_2026-07-14_acs-catalysis": "a755e26f93efd287a279c7f9a9ffea343e3e095a",
+    "2026-09-01_2026-09-07_organic-letters": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+    "2026-09-15_2026-09-21_joc": "0a6b4fb5580453d2b101f2f94030ee7f9c473541"
+  },
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+  "formalCatalogSnapshot": {
+    "source": "public/toc-demand-live.json",
+    "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
+    "total": 1087,
+    "readScope": "GitHub_main_only_not_live_D1"
+  },
+  "originalAccepted": 104,
+  "originalPending": 2,
+  "reviewed": [
+    {
+      "doi": "10.1021/acscatal.6c02607",
+      "journal": "ACS Catalysis",
+      "title": "Chemo-enzymatic Total Synthesis and Combinatorial Biosynthesis of Maculalactones Enables Discovery of Anticancer Agents",
+      "titleZh": "MacE/MacF酶催化的maculalactones全合成及组合生物合成拓展",
+      "date": "2026-07-13",
+      "authors": [
+        "Xiaoqi Ji",
+        "Manuel Einsiedler",
+        "Paul M. D’Agostino",
+        "Renato H. Weiße",
+        "Norbert Sträter",
+        "Jennifer Herrmann",
+        "Rolf Müller",
+        "Tobias A. M. Gulder"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14450-14461",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02607"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过MacE/MacF酶体系的化学—酶法一锅制备与人工组合生物合成，建立γ-丁内酯类maculalactones天然产物及其类似物可编程制备平台；核心合成贡献不只是酶序列或药理筛选。",
+      "evidenceBasis": "ACS Catalysis OA article DOI页面Article History展示Published Online 2026-07-13、issue 2026-08-07，作者摘要及公开主文Fig.2—4证实MacE/MacF与At4CL1的化学—酶法制备，Fig.3C给出13个分离产物，上限96%，后续E. coli人工BGC合成含吲哚产物；冻结Crossref和OpenAlex 2026-07-08..14同证。 ACS原始出处：https://pubs.acs.org/doi/abs/10.1021/acscatal.6c02607；本篇官方或出版社索引 Article Published Online 2026-07-13；冻结staging来源批次 2026-07-08_2026-07-14_acs-catalysis，Git blob SHA a755e26f93efd287a279c7f9a9ffea343e3e095a。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+      "challengeReason": "第二遍最强反对理由：其余大量工作涉及蛋白截短工程与药物细胞毒性，不能直接将表型或96次分析型转化称作有机合成的一般性。原文确有独立的一锅制备、13种可分离γ-丁内酯，以及含吲哚的新产物结构表征，满足合成平台而非仅蛋白工程。极限产率96%不是各底物共有；组合基因簇在细胞中的产物应与体外一锅制备13种分开。",
+      "scopeAssessment": {
+        "primaryContribution": "通过MacE/MacF酶体系的化学—酶法一锅制备与人工组合生物合成，建立γ-丁内酯类maculalactones天然产物及其类似物可编程制备平台；核心合成贡献不只是酶序列或药理筛选。",
+        "preparativeTransformation": "MacE催化苯丙酮酸衍生物间的酰偶姻缩合，MacF与经At4CL1活化的肉桂酸衍生物共同将前体转化为多芳基取代γ-丁内酯maculalactones；通过异源人工基因簇另获得含吲哚取代的拓展类似物。",
+        "generalityEvidence": "ACS开放原文Fig.3比较八类苯丙酮酸与十二类肉桂酸前体、96组酶转化筛选，并实实际分离制备13种maculalactone衍生物，最高分离收率96%；组合生物合成确实分离表征全新含吲哚类似物26和另一类似物27。96组筛查不等同96种分离样品，最高值仅是上限。",
+        "sourceEvidence": "ACS Catalysis OA article DOI页面Article History展示Published Online 2026-07-13、issue 2026-08-07，作者摘要及公开主文Fig.2—4证实MacE/MacF与At4CL1的化学—酶法制备，Fig.3C给出13个分离产物，上限96%，后续E. coli人工BGC合成含吲哚产物；冻结Crossref和OpenAlex 2026-07-08..14同证。 ACS原始出处：https://pubs.acs.org/doi/abs/10.1021/acscatal.6c02607；本篇官方或出版社索引 Article Published Online 2026-07-13；冻结staging来源批次 2026-07-08_2026-07-14_acs-catalysis，Git blob SHA a755e26f93efd287a279c7f9a9ffea343e3e095a。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+        "boundaryChallenge": "可纳入的是经过分离与表征的真实γ-丁内酯天然产物类似物合成路线，不能以抗肿瘤数据或酶基因数作为通用底物范围；MacE/MacF催化多芳基取代maculalactone不代表对所有内酯骨架普适。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c02607",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/abs/10.1021/acscatal.6c02607",
+        "publisherOnlineDate": "2026-07-13",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_acs-catalysis",
+        "stageBatchSha": "a755e26f93efd287a279c7f9a9ffea343e3e095a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_2026-07-13;public_Open_Access_Fig3",
+        "originalPublisherJournalName": "ACS Catalysis",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍确认文章的主要合成贡献、原料—产物实转化及可分离制备证据。通过MacE/MacF酶体系的化学—酶法一锅制备与人工组合生物合成，建立γ-丁内酯类maculalactones天然产物及其类似物可编程制备平台；核心合成贡献不只是酶序列或药理筛选。 MacE催化苯丙酮酸衍生物间的酰偶姻缩合，MacF与经At4CL1活化的肉桂酸衍生物共同将前体转化为多芳基取代γ-丁内酯maculalactones；通过异源人工基因簇另获得含吲哚取代的拓展类似物。 ACS开放原文Fig.3比较八类苯丙酮酸与十二类肉桂酸前体、96组酶转化筛选，并实实际分离制备13种maculalactone衍生物，最高分离收率96%；组合生物合成确实分离表征全新含吲哚类似物26和另一类似物27。96组筛查不等同96种分离样品，最高值仅是上限。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍最强反对理由：其余大量工作涉及蛋白截短工程与药物细胞毒性，不能直接将表型或96次分析型转化称作有机合成的一般性。原文确有独立的一锅制备、13种可分离γ-丁内酯，以及含吲哚的新产物结构表征，满足合成平台而非仅蛋白工程。极限产率96%不是各底物共有；组合基因簇在细胞中的产物应与体外一锅制备13种分开。 可纳入的是经过分离与表征的真实γ-丁内酯天然产物类似物合成路线，不能以抗肿瘤数据或酶基因数作为通用底物范围；MacE/MacF催化多芳基取代maculalactone不代表对所有内酯骨架普适。"
+        }
+      ],
+      "reviewRationaleSecondPass": "可纳入的是经过分离与表征的真实γ-丁内酯天然产物类似物合成路线，不能以抗肿瘤数据或酶基因数作为通用底物范围；MacE/MacF催化多芳基取代maculalactone不代表对所有内酯骨架普适。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03221",
+      "journal": "Organic Letters",
+      "title": "Enantioselective (3 + 2) Cycloaddition of Oxazepines and Bicyclo[1.1.0]butanes Catalyzed by Chiral-at-Metal Rh(III) Complexes",
+      "titleZh": "手性金属中心Rh(III)催化氧氮杂䓬与双环丁烷不对称[3+2]环加成构筑氮杂双环[2.1.1]己烷",
+      "date": "2026-09-02",
+      "authors": [
+        "Shijie Zhu",
+        "Qingqing Chen",
+        "Ning Liu",
+        "Hao Zhang",
+        "Zhifei Zhao",
+        "Shao-Chuan Li",
+        "Yakun Sun",
+        "Liang Xu",
+        "Shi-Wu Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11607-11612",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03221"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发手性金属中心Rh(III)络合物催化的氧氮杂䓬和双环[1.1.0]丁烷不对称[3+2]环加成，合成用于药物化学结构替代的手性氮杂双环[2.1.1]己烷（aza-BCH）骨架。",
+      "evidenceBasis": "ACS Organic Letters实际文章 URL（28卷37期11607—11612页）索引日期为2026-09-02并有Article History Published Online 2026-09-02；同作者同DOI的ACS Figshare索引亦标2026-09-02，披露aza-BCH制备收率和ee；Crossref/OpenAlex冻结候选一致。 ACS原始出处：https://pubs.acs.org/orlef7/article/28/37/11607/5405828/Enantioselective-3-2-Cycloaddition-of-Oxazepines；本篇官方或出版社索引 Article Published Online 2026-09-02；冻结staging来源批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+      "challengeReason": "第二遍最强挑战：BCB与杂环氧氮杂䓬形成aza-BCH的术语容易混淆，不能把产物写成未变化的BCB，也不能仅据99% ee上限虚构全部产物绝对构型及放大尺寸。作者的实际原始工作由不同底物构筑可分离的杂双环骨架并报告范围，属真实制备方法；金属中心手性催化的构型来源有实验支持但不声称排他性机理。",
+      "scopeAssessment": {
+        "primaryContribution": "开发手性金属中心Rh(III)络合物催化的氧氮杂䓬和双环[1.1.0]丁烷不对称[3+2]环加成，合成用于药物化学结构替代的手性氮杂双环[2.1.1]己烷（aza-BCH）骨架。",
+        "preparativeTransformation": "通过氧氮杂䓬与高张力双环[1.1.0]丁烷（BCB）的金属催化环加成和张力释放，生成保留氮原子的立体富集氮杂双环[2.1.1]己烷衍生物，建立多环立体中心。",
+        "generalityEvidence": "ACS开放摘要及ACS Figshare同行文章公开摘录显示得到多种aza-BCH衍生物，分离收率50%—96%、最高99% ee，且有放大实验及产物衍生化；数据为范围与单独上限，不推断任意底物均达99% ee。",
+        "sourceEvidence": "ACS Organic Letters实际文章 URL（28卷37期11607—11612页）索引日期为2026-09-02并有Article History Published Online 2026-09-02；同作者同DOI的ACS Figshare索引亦标2026-09-02，披露aza-BCH制备收率和ee；Crossref/OpenAlex冻结候选一致。 ACS原始出处：https://pubs.acs.org/orlef7/article/28/37/11607/5405828/Enantioselective-3-2-Cycloaddition-of-Oxazepines；本篇官方或出版社索引 Article Published Online 2026-09-02；冻结staging来源批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+        "boundaryChallenge": "该研究解决了药物骨架aza-BCH的不对称可制备性而非仅报告催化剂金属中心结构；实际合成范围及可转化产物构成纳入依据。限制为所测试的氧氮杂䓬/BCB伙伴，不能扩展为所有氮杂环或所有双环烷烃的普遍方法。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03221",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/28/37/11607/5405828/Enantioselective-3-2-Cycloaddition-of-Oxazepines",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_original_Article_History_indexed_Published_Online_2026-09-02;ACS_figshare_public_abstract",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍确认文章的主要合成贡献、原料—产物实转化及可分离制备证据。开发手性金属中心Rh(III)络合物催化的氧氮杂䓬和双环[1.1.0]丁烷不对称[3+2]环加成，合成用于药物化学结构替代的手性氮杂双环[2.1.1]己烷（aza-BCH）骨架。 通过氧氮杂䓬与高张力双环[1.1.0]丁烷（BCB）的金属催化环加成和张力释放，生成保留氮原子的立体富集氮杂双环[2.1.1]己烷衍生物，建立多环立体中心。 ACS开放摘要及ACS Figshare同行文章公开摘录显示得到多种aza-BCH衍生物，分离收率50%—96%、最高99% ee，且有放大实验及产物衍生化；数据为范围与单独上限，不推断任意底物均达99% ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍最强挑战：BCB与杂环氧氮杂䓬形成aza-BCH的术语容易混淆，不能把产物写成未变化的BCB，也不能仅据99% ee上限虚构全部产物绝对构型及放大尺寸。作者的实际原始工作由不同底物构筑可分离的杂双环骨架并报告范围，属真实制备方法；金属中心手性催化的构型来源有实验支持但不声称排他性机理。 该研究解决了药物骨架aza-BCH的不对称可制备性而非仅报告催化剂金属中心结构；实际合成范围及可转化产物构成纳入依据。限制为所测试的氧氮杂䓬/BCB伙伴，不能扩展为所有氮杂环或所有双环烷烃的普遍方法。"
+        }
+      ],
+      "reviewRationaleSecondPass": "该研究解决了药物骨架aza-BCH的不对称可制备性而非仅报告催化剂金属中心结构；实际合成范围及可转化产物构成纳入依据。限制为所测试的氧氮杂䓬/BCB伙伴，不能扩展为所有氮杂环或所有双环烷烃的普遍方法。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03207",
+      "journal": "Organic Letters",
+      "title": "Pd-Catalyzed Asymmetric Tandem Allylic Alkylation/Etherification: Enantioselective Access to Medium-Sized Oxa-spirocycles",
+      "titleZh": "Pd催化不对称串联烯丙基烷基化与醚化高效构建手性中环氧杂螺环",
+      "date": "2026-09-02",
+      "authors": [
+        "Da-Quan Ai",
+        "Qun Li",
+        "Yan-Ping Zhang",
+        "Zhen-Hua Wang",
+        "Jian-Qiang Zhao",
+        "Lei Yang",
+        "Quan-Zhong Liu",
+        "Wei-Cheng Yuan",
+        "Yong You"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11588-11594",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03207"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立Pd催化不对称串联烯丙基烷基化/醚化合成手性中环氧杂螺环的方法，突破传统不对称烯丙基取代更易适用于小环而中环氧杂螺环制备受限的问题。",
+      "evidenceBasis": "ACS Org. Lett. 28(37) 11588—11594 的出版社文章索引日期2026-09-02、同日期Crossref和OpenAlex冻结候选、ACS官方期目录确认Article DOI，公开作者摘要见独立索引；实际核查自由酚羟基及第一步烷基化的控制实验描述。 ACS原始出处：https://pubs.acs.org/orlef7/article/28/37/11588/5405827/Pd-Catalyzed-Asymmetric-Tandem-Allylic-Alkylation；本篇官方或出版社索引 Article Published Online 2026-09-02；冻结staging来源批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+      "challengeReason": "第二遍质疑：题目中的Pd串联反应若只证明制备一种螺环不应自动纳入。作者确实报告不同中环氧杂螺环的分离与收率/ee拓展、克级及衍生化，因此是制备方法。第一步烷基化控制绝对构型的实验不构成对全部中间体和唯一过渡态的证明；自由酚羟基必要性不能偷换成所有含氧芳环均通用。",
+      "scopeAssessment": {
+        "primaryContribution": "建立Pd催化不对称串联烯丙基烷基化/醚化合成手性中环氧杂螺环的方法，突破传统不对称烯丙基取代更易适用于小环而中环氧杂螺环制备受限的问题。",
+        "preparativeTransformation": "利用具有自由酚羟基的烯丙基反应体系，在Pd催化下依次发生烯丙基烷基化形成碳骨架和醚化形成C–O环键，获得中环氧杂螺环化合物；第一步烯丙基烷基化在控制实验中被指向为主要立体构型决定过程。",
+        "generalityEvidence": "ACS文章公开摘要对应文献索引提供了中环氧杂螺环底物拓展、最高98%分离收率与最高95% ee、克级实验和多样性衍生转化；控制实验表明游离酚羟基对立体控制至关重要。上限来自不同样品不据此保证单一产物双最高。",
+        "sourceEvidence": "ACS Org. Lett. 28(37) 11588—11594 的出版社文章索引日期2026-09-02、同日期Crossref和OpenAlex冻结候选、ACS官方期目录确认Article DOI，公开作者摘要见独立索引；实际核查自由酚羟基及第一步烷基化的控制实验描述。 ACS原始出处：https://pubs.acs.org/orlef7/article/28/37/11588/5405827/Pd-Catalyzed-Asymmetric-Tandem-Allylic-Alkylation；本篇官方或出版社索引 Article Published Online 2026-09-02；冻结staging来源批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+        "boundaryChallenge": "最重要的限制是中环构建依赖具体烯丙基/酚羟基排列，不能把已有一般性Pd不对称烯丙基取代适用范围直接复制到此新串联；克级演示不代表工业过程可直接放大。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03207",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/28/37/11588/5405827/Pd-Catalyzed-Asymmetric-Tandem-Allylic-Alkylation",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_original_research_article_indexed_Published_Online_2026-09-02;Crossref_OpenAlex_corrob",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍确认文章的主要合成贡献、原料—产物实转化及可分离制备证据。建立Pd催化不对称串联烯丙基烷基化/醚化合成手性中环氧杂螺环的方法，突破传统不对称烯丙基取代更易适用于小环而中环氧杂螺环制备受限的问题。 利用具有自由酚羟基的烯丙基反应体系，在Pd催化下依次发生烯丙基烷基化形成碳骨架和醚化形成C–O环键，获得中环氧杂螺环化合物；第一步烯丙基烷基化在控制实验中被指向为主要立体构型决定过程。 ACS文章公开摘要对应文献索引提供了中环氧杂螺环底物拓展、最高98%分离收率与最高95% ee、克级实验和多样性衍生转化；控制实验表明游离酚羟基对立体控制至关重要。上限来自不同样品不据此保证单一产物双最高。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍质疑：题目中的Pd串联反应若只证明制备一种螺环不应自动纳入。作者确实报告不同中环氧杂螺环的分离与收率/ee拓展、克级及衍生化，因此是制备方法。第一步烷基化控制绝对构型的实验不构成对全部中间体和唯一过渡态的证明；自由酚羟基必要性不能偷换成所有含氧芳环均通用。 最重要的限制是中环构建依赖具体烯丙基/酚羟基排列，不能把已有一般性Pd不对称烯丙基取代适用范围直接复制到此新串联；克级演示不代表工业过程可直接放大。"
+        }
+      ],
+      "reviewRationaleSecondPass": "最重要的限制是中环构建依赖具体烯丙基/酚羟基排列，不能把已有一般性Pd不对称烯丙基取代适用范围直接复制到此新串联；克级演示不代表工业过程可直接放大。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01737",
+      "journal": "JOC",
+      "title": "Electrochemical Sequential Cross-Dehydrogenative Coupling for the Chemoselective Synthesis of Bis(arylthio)-Substituted Biphenyl Diamines",
+      "titleZh": "电流调控的连续交叉脱氢偶联选择性构建芳硫取代联苯二胺",
+      "date": "2026-09-21",
+      "authors": [
+        "Xiaoliang Xu",
+        "Xiaohan Jin",
+        "Mei Chen",
+        "Xingmei Hu",
+        "Xi Li",
+        "Yueran Zhu",
+        "Wenhui Ma",
+        "Yiren Xu",
+        "Jianqiang Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "39",
+        "pages": "13270-13279",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01737"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展不依赖外加化学氧化剂和过渡金属催化剂的电化学分步交叉脱氢偶联制备方法，以电流及乙酸调控先成C–C、后成C–S键的选择性，获得双芳硫基取代联苯二胺。",
+      "evidenceBasis": "ACS JOC官方文章Article History索引Published Online 2026-09-21，91卷39期13270—13279页；公开文章摘要解释电位差、电流/乙酸促C–C与C–S逐序形成，并给出1.9 g与96%最高收率，冻结Crossref/OpenAlex 2026-09-15..21 DOIs元数据一致。 ACS原始出处：https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01737/5434725/Electrochemical-Sequential-Cross-Dehydrogenative；本篇官方或出版社索引 Article Published Online 2026-09-21；冻结staging来源批次 2026-09-15_2026-09-21_joc，Git blob SHA 0a6b4fb5580453d2b101f2f94030ee7f9c473541。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+      "challengeReason": "独立第二遍挑战：产物可作功能材料/单体，容易被误排为材料工作；但主要实验贡献是苯胺/硫酚两类原料经可推广的电流控制两种键形成并分离产物，材料属性属下游用途。不得把无需外加氧化剂解释为不存在阳极电化学氧化；也不可将本研究的电流调控误写为交替极性交流电，更不能虚构电流值或波形。",
+      "scopeAssessment": {
+        "primaryContribution": "发展不依赖外加化学氧化剂和过渡金属催化剂的电化学分步交叉脱氢偶联制备方法，以电流及乙酸调控先成C–C、后成C–S键的选择性，获得双芳硫基取代联苯二胺。",
+        "preparativeTransformation": "芳胺的C(sp²)–H键在电化学氧化条件下形成联苯C(sp²)–C(sp²)键，随后与芳硫酚S–H伴随的C(sp²)–H位点形成两侧C(sp²)–S键，一锅得到对称3,3′-双(芳硫基)-4,4′-联苯二胺。",
+        "generalityEvidence": "JOC公开原始摘要报告不同苯胺与硫酚的制备范围、较广官能团耐受性、分离收率最高96%、1.9 g级制备。产物有机硫材料及聚合物单体应用只是衍生用途，不能代替真实底物范围。",
+        "sourceEvidence": "ACS JOC官方文章Article History索引Published Online 2026-09-21，91卷39期13270—13279页；公开文章摘要解释电位差、电流/乙酸促C–C与C–S逐序形成，并给出1.9 g与96%最高收率，冻结Crossref/OpenAlex 2026-09-15..21 DOIs元数据一致。 ACS原始出处：https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01737/5434725/Electrochemical-Sequential-Cross-Dehydrogenative；本篇官方或出版社索引 Article Published Online 2026-09-21；冻结staging来源批次 2026-09-15_2026-09-21_joc，Git blob SHA 0a6b4fb5580453d2b101f2f94030ee7f9c473541。未抓取历史全文、SI、正文图片或PDF；公开摘要未转存全文。",
+        "boundaryChallenge": "真正一般性是这一类芳胺与硫酚衍生物的有机合成，而非通用的所有C–C/C–S氧化交叉偶联；选择性受底物氧化电位、抑制硫醇过氧化及乙酸调节限制。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01737",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01737/5434725/Electrochemical-Sequential-Cross-Dehydrogenative",
+        "publisherOnlineDate": "2026-09-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_original_Article_History_Published_Online_2026-09-21;DOI_edition",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍确认文章的主要合成贡献、原料—产物实转化及可分离制备证据。发展不依赖外加化学氧化剂和过渡金属催化剂的电化学分步交叉脱氢偶联制备方法，以电流及乙酸调控先成C–C、后成C–S键的选择性，获得双芳硫基取代联苯二胺。 芳胺的C(sp²)–H键在电化学氧化条件下形成联苯C(sp²)–C(sp²)键，随后与芳硫酚S–H伴随的C(sp²)–H位点形成两侧C(sp²)–S键，一锅得到对称3,3′-双(芳硫基)-4,4′-联苯二胺。 JOC公开原始摘要报告不同苯胺与硫酚的制备范围、较广官能团耐受性、分离收率最高96%、1.9 g级制备。产物有机硫材料及聚合物单体应用只是衍生用途，不能代替真实底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍挑战：产物可作功能材料/单体，容易被误排为材料工作；但主要实验贡献是苯胺/硫酚两类原料经可推广的电流控制两种键形成并分离产物，材料属性属下游用途。不得把无需外加氧化剂解释为不存在阳极电化学氧化；也不可将本研究的电流调控误写为交替极性交流电，更不能虚构电流值或波形。 真正一般性是这一类芳胺与硫酚衍生物的有机合成，而非通用的所有C–C/C–S氧化交叉偶联；选择性受底物氧化电位、抑制硫醇过氧化及乙酸调节限制。"
+        }
+      ],
+      "reviewRationaleSecondPass": "真正一般性是这一类芳胺与硫酚衍生物的有机合成，而非通用的所有C–C/C–S氧化交叉偶联；选择性受底物氧化电位、抑制硫醇过氧化及乙酸调节限制。"
+    }
+  ],
+  "continuedHolds": [
+    "10.1021/acs.orglett.6c03028",
+    "10.1021/acs.orglett.6c02707",
+    "10.1021/acs.joc.6c00852",
+    "10.1021/acs.orglett.6c03224"
+  ],
+  "newUnadmittedSourceDateConcern": [
+    {
+      "doi": "10.31635/ccschem.026.202608043",
+      "originalStageApiDate": "2026-08-22",
+      "conflictingThirdPartyDate": "2026-06-30",
+      "status": "unfinished_require_official_CCS_article_history_before_academic_approval",
+      "notManifestPending": true
+    }
+  ],
+  "guards": {
+    "noPublication": true,
+    "noProductionD1": true,
+    "noBodyImagesSiOrPdf": true,
+    "noAbstractReplication": true,
+    "q3MediaPolicy": "toc_only",
+    "new": false,
+    "soleWriter": "2026-10-15T08:00:00+08:00",
+    "noTodayHotWechat": true
+  }
+}
