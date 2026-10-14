@@ -194,4 +194,55 @@ test('native-browser RSC listing is tried before GM, protects 403 and foreign re
  assert.equal(await c.rscPublisherListingHtmlCandidates(j,traces,'https://publisher.attacker.invalid/en/results?doi=10.1039/d6sc06421c'),null);
  assert.equal(requests.length,beforeRequests);
 });
+test('RSC exact DOI issue/search is the only listing fallback; no duplicate legacy article frames',async()=>{
+ const suffix='d6sc02777f',doi='10.1039/'+suffix;
+ const listing='https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+ const issue='https://pubs.rsc.org/sc/issue/17/32';
+ const opened=[],events=[],reads=[];
+ const ctx=vm.createContext({
+  URL,String,Number,Array,Map,Promise,Date,encodeURIComponent,
+  location:{hostname:'pubs.rsc.org',origin:'https://pubs.rsc.org',
+    href:'https://pubs.rsc.org/en/content/articlelanding/2026/sc/'+suffix},
+  normalizeDoi:x=>String(x||'').toLowerCase(),
+  rscSilverchairArticleForJob:()=>false,
+  rscRouteParts:()=>({suffix,year:'2026',code:'sc'}),
+  rscIssuePageUrls:()=>[],
+  rscSearchResultUrl:()=>listing,
+  rscNativeAjaxGraphicalAbstractCandidates:async()=>[],
+  rscPublisherListingHtmlCandidates:async(_,__,url)=>{reads.push(url);return [];},
+  pushTrace:(_,e)=>events.push(e),
+  document:{createElement:()=>{opened.push('iframe');throw Error('unnecessary_RSC_hidden_iframe');}}
+ });
+ vm.runInContext(extract('iframeSourceUrls')+'\n'+extract('iframeCandidates'),ctx);
+ const job={doi,publisher:'rsc'};
+ assert.deepEqual(Array.from(ctx.iframeSourceUrls(job)),[listing]);
+ assert.deepEqual(Array.from(await ctx.iframeCandidates(job,[])),[]);
+ assert.deepEqual(reads,[listing]);
+ assert.equal(opened.length,0);
+ assert.ok(events.some(x=>x.event==='no_candidate_no_duplicate_iframe'));
+ // Preserve a linked real publisher issue instead of searching when present.
+ ctx.rscIssuePageUrls=()=>[issue];
+ assert.deepEqual(Array.from(ctx.iframeSourceUrls(job)),[issue]);
+ const expected=[{url:'https://rscj.silverchair-cdn.com/rscj/publisher/verified.png',kind:'official'}];
+ ctx.rscPublisherListingHtmlCandidates=async(_,__,url)=>{assert.equal(url,issue);return expected;};
+ assert.equal((await ctx.iframeCandidates(job,[]))[0].kind,'official');
+ assert.equal(opened.length,0);
+});
+test('RSC listing transport failure must not start an extra hidden-iframe permission attempt',async()=>{
+ const doi='10.1039/d6sc02777f',url='https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+ let frames=0,checks=0;const events=[];
+ const ctx=vm.createContext({
+  Array,Map,Promise,Date,
+  rscNativeAjaxGraphicalAbstractCandidates:async()=>[],
+  iframeSourceUrls:()=>[url],
+  rscPublisherListingHtmlCandidates:async()=>{checks++;return null;},
+  pushTrace:(_,v)=>events.push(v),
+  document:{createElement:()=>{frames++;throw Error('hidden_frame_not_allowed');}}
+ });
+ vm.runInContext(extract('iframeCandidates'),ctx);
+ assert.equal((await ctx.iframeCandidates({doi,publisher:'rsc'},[])).length,0);
+ assert.equal(checks,1);
+ assert.equal(frames,0);
+ assert.ok(events.some(x=>x.event==='no_candidate_no_duplicate_iframe'&&x.message==='source_not_verified'));
+});
 console.log('TM_OCT10_RSC_INVENTORY_REGRESSION',JSON.stringify({tests:6,productionWrites:0,publisherNetworkRequests:0}));
