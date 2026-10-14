@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "gallery-historical-q3-reviewed-scope-source-proof-v1",
+  "mode": "frozen_source_proof_for_scientific_scope_reviews_not_publication",
+  "period": "2026-07-01..2026-09-30",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "scientificEvidenceFile": "audit/historical-scope-assessments/2026-10-14-natcomm-one-exclude-one-pending.json",
+  "reviewed": [
+    {
+      "doi": "10.1038/s41467-026-76617-x",
+      "journal": "Nature Communications",
+      "date": "2026-08-11",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76617-x",
+      "scientificDecision": "pending",
+      "sourceRootId": "2026-08-08_2026-08-14_nature-communications",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-communications.json",
+      "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+      "stageBatchGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77096-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-04",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77096-w",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-communications",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-communications.json",
+      "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+      "stageBatchGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "scopeExclude": 1,
+    "scopeEvidencePending": 1
+  },
+  "limits": {
+    "notPermanentOwnerExclusions": true,
+    "notAcademicAdmissions": true,
+    "sourceShardsRemainImmutable": true,
+    "noPdfOrMedia": true,
+    "noD1": true
+  }
+}
