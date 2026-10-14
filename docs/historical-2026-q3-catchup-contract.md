@@ -94,3 +94,54 @@ Faradaic efficiency is not isolated chemical yield.
 This read-only integration must not modify original source shards, the
 `approved-admissions.json` include/pending manifest, owner DOI exclusions,
 main literature catalog, media/PDF acquisition or the sole 08:00 publication.
+
+
+## 2026-10-14 Nature Catalysis remaining Q3 source cohort (24 DOI)
+
+After the separate previously validated 15 Nature Catalysis Research-item scientific
+assessments, 24 unique source DOI remained in the same frozen 192-root Q3
+metadata union. They are *not* a publisher-approved total-issue closure list.
+Read the immutable proof under
+`audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json`
+before using any of the subsequent results.
+
+New DOI-specific evidence is split by publisher type, with no irreversible
+owner-level exclusion:
+- 19 officially classified as **non-original independent studies**, consisting
+  of 9 News & Views, 4 Research Highlights, 2 Research Briefings, one
+  Comment, 2 Author Corrections, and one Publisher Correction. Audit:
+  `audit/historical-reviewed/q3-natcatal-nonoriginal-19-two-pass.json`.
+  Keep the original article's own DOI separate; a commentary about valid
+  synthetic chemistry cannot become an additional original literature entry.
+- 5 original **Articles** independently challenged for *the actual primary
+  preparative contribution*, not filtered by labels: four out-of-scope
+  electrocatalysis/materials/mechanism methods; one evidence-pending
+  `10.1038/s41929-026-01611-x` (AzcA-mediated enzymatic pyrimidine to
+  triazine skeletal rearrangement within azacytidine biosynthesis). In-vitro
+  LC-MS is real biochemical transformation evidence, but the isolated
+  preparative scope and broader use of the enzymes remain to be checked.
+  Audit:
+  `audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json`
+  and
+  `audit/historical-reviewed/q3-natcatal-late-online-five-source-proof.json`.
+
+The original earlier scientific pending
+`10.1038/s41929-026-01608-6` (electrosynthetic foscarnet) remains pending
+independently; its Faradaic efficiency is not the isolated yield. Neither this
+nor the AzcA evidence-pending DOI should be rewritten as a permanent exclude
+or added to the existing admission manifest's two different original pending.
+
+The quarterly reconciliation can mark 19 separately as
+`sourcePublisherNonResearchExcluded`, four as
+`sourcePublisherReviewedScopeExcluded`, and one as
+`sourcePublisherReviewedScopePending` once it **actually** runs from staging.
+The frozen source unique DOI count must remain 12,286; if no other inputs
+change, unfinished would move from 11,408 to 11,384, but this is a
+**prediction only until same-generation coverage and worklist are reread
+from a successful staging job**.
+
+Do not infer Nature Catalysis's complete online-first/issue inventory
+from classification of its known Crossref/OpenAlex source rows. Never
+enrich historical DOI with paid HTML/PDF/figures or surface these
+backfilled DOI in Today's New/Hot/WeChat. The only formal admission remains
+Beijing 08:00 after existing provenance and science gates.

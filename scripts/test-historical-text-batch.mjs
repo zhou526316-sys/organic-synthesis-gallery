@@ -5,13 +5,13 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.7/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.7'/);
+assert.match(original,/\/\/ @version\s+0\.2\.8/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.8'/);
 assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v026'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false,
   routePath='/doi/'+DOI,routeHash='#gallery-historical-job='+TOKEN}={}){
@@ -158,6 +158,33 @@ test('official catalog API paginates formal DOI and includes metadata-only histo
   assert.equal(calls.length,3);
   assert.ok(calls.every(x=>!x.includes('toc-demand-live')));
   assert.equal(new URL(calls[1]).searchParams.get('dateTo'),'2026-09-30');
+});
+
+test('full DOI OA mode includes October papers and undated formal members',async()=>{
+  const {context}=fixture();
+  const catalogId='a'.repeat(64),revision='b'.repeat(64);
+  const all=[
+    {doi:DOI,firstOnlineDate:'2026-09-14',journal:'JACS',revision},
+    {doi:'10.1234/unknown-date',firstOnlineDate:null,journal:'JOC',revision},
+    {doi:'10.1002/anie.2026new',firstOnlineDate:'2026-10-13',journal:'Angew',revision}
+  ];
+  const queries=[];
+  context.GM_xmlhttpRequest=options=>{
+    queries.push(options.url);
+    const url=new URL(options.url);
+    const payload=url.pathname.endsWith('/release-delivery.json')
+      ?{architectureCatalogId:catalogId,dois:all.map(x=>x.doi),productionCards:3}
+      :{readPathActive:true,enabled:true,catalogId,matched:all.length,
+        items:all,hasMore:false,nextCursor:null};
+    queueMicrotask(()=>options.onload({status:200,responseText:JSON.stringify(payload)}));
+  };
+  const result=await context.__batchTest.batchLoadCanonicalCatalog(true);
+  assert.equal(result.articles.length,3);
+  assert.equal(result.formalCount,3);
+  assert.equal(result.articles.find(x=>x.doi==='10.1234/unknown-date').date,'');
+  assert.ok(queries.every(x=>!x.includes('toc-demand-live')));
+  assert.ok(queries.every(x=>!x.includes('dateTo=')));
+  assert.equal(context.__batchTest.batchHistoricalPapers(result).length,1);
 });
 
 test('canonical DOI loader rejects stale index version and unpublished entries',async()=>{

@@ -23,7 +23,10 @@ export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
     &&proof.scientificEvidenceBlobSha===scienceGitBlobSha,
     'q3_reviewed_scope_frozen_science_hash_or_schema_mismatch');
   check(proof.sourceBranch==='staging/historical-archive-nightly'
-    &&proof.scientificEvidenceFile==='audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json'
+    &&[
+      'audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json',
+      'audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json'
+    ].includes(proof.scientificEvidenceFile)
     &&proof.period==='2026-07-01..2026-09-30'
     &&science.period===proof.period
     &&proof.limits?.notPermanentOwnerExclusions===true
