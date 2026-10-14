@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "correctionId": "scope-correction-20261014012549272",
+  "mode": "deletion_only_verified_independently",
+  "deliveryVerified": true,
+  "repoAndDeployedCards": 1087,
+  "removedDois": [
+    "10.1002/anie.2518487",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1038/s41467-026-78512-x"
+  ],
+  "originalPendingDois": [
+    "10.1021/acs.joc.6c01296",
+    "10.31635/ccschem.026.202608538"
+  ],
+  "unreviewedDois": [
+    "10.1021/acscatal.6c06400",
+    "10.1038/s41467-026-77262-0"
+  ],
+  "unreviewedCandidates": [
+    {
+      "doi": "10.1021/acscatal.6c06400",
+      "title": "Divergent Kinetics and Rate-Determining Steps for 1-Butene and 2-Butene Hydroformylation with a Bidentate Phosphoramidite Ligand: A Combined Experimental and Density Functional Theory Study",
+      "journal": "ACS Catalysis",
+      "date": "2026-10-13"
+    },
+    {
+      "doi": "10.1038/s41467-026-77262-0",
+      "title": "Integrated multi-omics identifies distinct immune signatures with diagnostic and therapeutic implications in immune checkpoint inhibitor-induced myocarditis",
+      "journal": "Nature Communications",
+      "date": null
+    }
+  ],
+  "auditGeneratedAt": "2026-10-14T01:28:45.691Z",
+  "auditCatalogCount": 1091,
+  "auditFreshForDeletion": false,
+  "qualityGateOk": false,
+  "qualityGateStatus": "unreviewed_discovery_not_closed",
+  "qualityGateFailures": [
+    "discovery: unresolved DOI is neither formal pending nor reviewed next-slot carryover"
+  ],
+  "warnings": [
+    "publisher live source unavailable: Nature",
+    "publisher live source unavailable: Science",
+    "publisher live source unavailable: Nature Catalysis",
+    "publisher live source unavailable: Nature Synthesis",
+    "publisher live source unavailable: Nature Chemistry",
+    "publisher live source unavailable: Nature Communications",
+    "publisher live source unavailable: JACS",
+    "publisher live source unavailable: Angew",
+    "publisher live source unavailable: ACS Catalysis",
+    "publisher live source unavailable: Organic Letters",
+    "publisher live source unavailable: Chem",
+    "publisher live source blocked: Chemical Science",
+    "publisher live source unavailable: CCS Chemistry",
+    "publisher live source unavailable: Science Advances",
+    "publisher live source blocked: Green Chemistry",
+    "publisher live source unavailable: JOC",
+    "discovery: 4 healthy cross-source coverage warning(s) retained; publication may pass but closure/verifiedThrough must remain held",
+    "Publication subset verified; 2 DOI(s) remain pending. This is not full semantic closure.",
+    "closure source lag remains: 7"
+  ],
+  "noNewAdmissions": true,
+  "formalPublicationSlot": "2026-10-14T08:00:00+08:00",
+  "note": "The 4 DOI deletion and published DOI-set parity are verified. An unrelated unresolved discovery candidate is not automatically approved, excluded, or treated as a formal pending review. Do not advance verifiedThrough. Refresh paired audit and finish scope review separately.",
+  "classifiedAt": "2026-10-14T02:05:53.596Z"
+}

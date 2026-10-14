@@ -1,0 +1,342 @@
+{
+  "schemaVersion": "gallery-historical-2026-q3-rsc-four-source-dated-two-pass-v1",
+  "reviewedAt": "2026-10-13T14:05:40.689Z",
+  "mode": "publisher_date_or_NLM_epublish_verified_original_organic_synthesis_scope_two_pass_not_publication",
+  "period": "2026-07-01..2026-09-30",
+  "sourceBatchGitSha": {
+    "2026-07-08_2026-07-14_chemical-science": "12def19ecb8634d2c042f2ff5b88a41e7320d9a6",
+    "2026-08-15_2026-08-21_chemical-science": "5c83c1766a593fc8fd856e02a941e8f09340b319",
+    "2026-07-22_2026-07-31_green-chemistry": "3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22",
+    "2026-09-15_2026-09-21_green-chemistry": "c269a7de443c62a777b870983678a3494327e641"
+  },
+  "sourceDateConflictWarning": "all four Crossref staging records lacked day precision; only dated publisher-index or NLM original record used",
+  "holdDoi": "10.1039/d6sc05552d",
+  "reviewed": [
+    {
+      "doi": "10.1039/d6sc05170g",
+      "journal": "Chemical Science",
+      "title": "Enantioconvergent access to 1,1-diarylmethine silanes and germanes through nickel/photoredox-catalyzed cross-electrophile coupling",
+      "titleZh": "镍/光氧化还原协同催化对映汇聚交叉亲电偶联合成1,1-二芳基甲基硅烷与锗烷",
+      "date": "2026-07-09",
+      "authors": [
+        "Emilio G. A. Acuña-Bolomey",
+        "Nektarios Kranidiotis-Hisatomi",
+        "Elisabeth Irran",
+        "Martin Oestreich"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "34",
+        "pages": "16388-16394",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc05170g"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展Ni/光氧化还原双催化的对映汇聚C(sp³)–C(sp²)交叉亲电偶联，直接制备手性1,1-二芳基甲基硅烷与锗烷。",
+      "evidenceBasis": "NLM DOI精确记录的Article Date 2026-07-09（不同于期刊Issue Date 2026-09-02）；通讯作者柏林工大成果页亦称7月9日Advance Article。原RSC站点当前浏览无法直接读取，不宣称已从出版社HTML直接目睹首发字段。 元始批次 2026-07-08_2026-07-14_chemical-science GitHub blob SHA 12def19ecb8634d2c042f2ff5b88a41e7320d9a6，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：期刊交付PubMed原始摘要确证硅烷和锗烷两类产物、温和条件及高对映选择性；公开的RSC原始论文摘录同时提示常规TMS/TBDMS取代的α-氯苄硅烷在所考察条件下无法给出目标偶联物，硅环丁烷取代具有重要结构依赖性；锗烷系列效率较低，不能称全部硅烷和锗烷通用。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+      "challengeReason": "第二遍挑战是否只是硅/锗手性材料应用：反应实质为外消旋C–Cl亲电体与芳基溴化物成键并实现碳立体中心对映汇聚，属于有机制备方法；但对映控制机理不能仅凭作者假设宣布唯一，所需硅环丁烷结构与锗烷效率限制必须保留。",
+      "scopeAssessment": {
+        "primaryContribution": "发展Ni/光氧化还原双催化的对映汇聚C(sp³)–C(sp²)交叉亲电偶联，直接制备手性1,1-二芳基甲基硅烷与锗烷。",
+        "preparativeTransformation": "外消旋α-氯苄基硅烷或锗烷与芳基溴化物在镍和光催化剂协同作用、Hantzsch酯有机还原剂参与下生成新C(sp³)–C(sp²)键，并在原苄基碳位建立手性。",
+        "generalityEvidence": "期刊交付PubMed原始摘要确证硅烷和锗烷两类产物、温和条件及高对映选择性；公开的RSC原始论文摘录同时提示常规TMS/TBDMS取代的α-氯苄硅烷在所考察条件下无法给出目标偶联物，硅环丁烷取代具有重要结构依赖性；锗烷系列效率较低，不能称全部硅烷和锗烷通用。",
+        "sourceEvidence": "NLM DOI精确记录的Article Date 2026-07-09（不同于期刊Issue Date 2026-09-02）；通讯作者柏林工大成果页亦称7月9日Advance Article。原RSC站点当前浏览无法直接读取，不宣称已从出版社HTML直接目睹首发字段。 元始批次 2026-07-08_2026-07-14_chemical-science GitHub blob SHA 12def19ecb8634d2c042f2ff5b88a41e7320d9a6，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：期刊交付PubMed原始摘要确证硅烷和锗烷两类产物、温和条件及高对映选择性；公开的RSC原始论文摘录同时提示常规TMS/TBDMS取代的α-氯苄硅烷在所考察条件下无法给出目标偶联物，硅环丁烷取代具有重要结构依赖性；锗烷系列效率较低，不能称全部硅烷和锗烷通用。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+        "boundaryChallenge": "对两种亲电体的真实偶联证据能够支持方法学；不将普通α-氯苄基硅烷的失败夸作整个α-硅碳自由基领域不能偶联，也不将硅/锗化合物的潜在应用代替实际底物范围。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc05170g",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc05170g",
+        "publisherOnlineDate": "2026-07-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_chemical-science",
+        "stageBatchSha": "12def19ecb8634d2c042f2ff5b88a41e7320d9a6",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_plus_TUBerlin_author_advance_article",
+          "journalSuppliedDate": "2026-07-09",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42459919/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13370581/",
+          "publicationStatus": "epublish",
+          "institutionalAuthorSource": "https://www.tu.berlin/en/organometallics/publications/publications-1",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        },
+        "originalPublisherJournalName": "Chemical Science"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展Ni/光氧化还原双催化的对映汇聚C(sp³)–C(sp²)交叉亲电偶联，直接制备手性1,1-二芳基甲基硅烷与锗烷。 外消旋α-氯苄基硅烷或锗烷与芳基溴化物在镍和光催化剂协同作用、Hantzsch酯有机还原剂参与下生成新C(sp³)–C(sp²)键，并在原苄基碳位建立手性。 期刊交付PubMed原始摘要确证硅烷和锗烷两类产物、温和条件及高对映选择性；公开的RSC原始论文摘录同时提示常规TMS/TBDMS取代的α-氯苄硅烷在所考察条件下无法给出目标偶联物，硅环丁烷取代具有重要结构依赖性；锗烷系列效率较低，不能称全部硅烷和锗烷通用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战是否只是硅/锗手性材料应用：反应实质为外消旋C–Cl亲电体与芳基溴化物成键并实现碳立体中心对映汇聚，属于有机制备方法；但对映控制机理不能仅凭作者假设宣布唯一，所需硅环丁烷结构与锗烷效率限制必须保留。 对两种亲电体的真实偶联证据能够支持方法学；不将普通α-氯苄基硅烷的失败夸作整个α-硅碳自由基领域不能偶联，也不将硅/锗化合物的潜在应用代替实际底物范围。"
+        }
+      ],
+      "reviewRationaleSecondPass": "对两种亲电体的真实偶联证据能够支持方法学；不将普通α-氯苄基硅烷的失败夸作整个α-硅碳自由基领域不能偶联，也不将硅/锗化合物的潜在应用代替实际底物范围。"
+    },
+    {
+      "doi": "10.1039/d6sc05630j",
+      "journal": "Chemical Science",
+      "title": "Nickel-catalyzed asymmetric hydrogenation of α,β-unsaturated ester phosphonates",
+      "titleZh": "镍催化α,β-不饱和酯基膦酸酯不对称氢化合成手性膦酸酯",
+      "date": "2026-08-21",
+      "authors": [
+        "Hanlin Wei",
+        "Yicong Luo",
+        "Jiawei Han",
+        "Majid Hussain",
+        "Ivan S. Golovanov",
+        "Jianzhong Chen",
+        "Ilya D. Gridnev",
+        "Wanbin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc05630j"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展手性镍催化体系使富电子吸引性的α,β-不饱和酯基膦酸酯选择性氢化，避免将此前常见贵金属不对称氢化视为唯一可行的制备途径。",
+      "evidenceBasis": "NLM精确DOI期刊电子发表日期2026-08-21（ahead of print），原RSC首发字段目前不可直接读取，不能以历史Crossref只有年的记录当精确日期证据。 元始批次 2026-08-15_2026-08-21_chemical-science GitHub blob SHA 5c83c1766a593fc8fd856e02a941e8f09340b319，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：NLM PubMed载有作者原始摘要，明确产物最高99%收率、最高99% ee，底物与催化剂比S/C可达1000；该类产物用于谷氨酸膦酸酯类似物、fosmidomycin衍生物和β-氨基膦酸衍生物的制备，是报告的合成用途而非每个底物同时达到这些上限。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+      "challengeReason": "独立第二遍核查镍价态或Ni–H迁移插入的立体控制是否被直接观测：作者实验与DFT共同支持动力学区域选择和弱非共价相互作用影响，但不能写为直接证实的唯一分子机制，也不能把S/C=1000作为所有底物适用的恒定值。",
+      "scopeAssessment": {
+        "primaryContribution": "发展手性镍催化体系使富电子吸引性的α,β-不饱和酯基膦酸酯选择性氢化，避免将此前常见贵金属不对称氢化视为唯一可行的制备途径。",
+        "preparativeTransformation": "α,β-不饱和酯基膦酸酯的C=C键在手性Ni氢化催化体系中被选择性还原，生成含手性α-取代碳中心、保留酯/膦酸酯官能团的合成砌块。",
+        "generalityEvidence": "NLM PubMed载有作者原始摘要，明确产物最高99%收率、最高99% ee，底物与催化剂比S/C可达1000；该类产物用于谷氨酸膦酸酯类似物、fosmidomycin衍生物和β-氨基膦酸衍生物的制备，是报告的合成用途而非每个底物同时达到这些上限。",
+        "sourceEvidence": "NLM精确DOI期刊电子发表日期2026-08-21（ahead of print），原RSC首发字段目前不可直接读取，不能以历史Crossref只有年的记录当精确日期证据。 元始批次 2026-08-15_2026-08-21_chemical-science GitHub blob SHA 5c83c1766a593fc8fd856e02a941e8f09340b319，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：NLM PubMed载有作者原始摘要，明确产物最高99%收率、最高99% ee，底物与催化剂比S/C可达1000；该类产物用于谷氨酸膦酸酯类似物、fosmidomycin衍生物和β-氨基膦酸衍生物的制备，是报告的合成用途而非每个底物同时达到这些上限。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+        "boundaryChallenge": "论文以新不对称氢化条件与可分离的手性有机膦酸酯产物为主要贡献，而非仅报道配位化学/计算或药效筛选；范围和后期转化具制备依据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc05630j",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc05630j",
+        "publisherOnlineDate": "2026-08-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_chemical-science",
+        "stageBatchSha": "5c83c1766a593fc8fd856e02a941e8f09340b319",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "journalSuppliedDate": "2026-08-21",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42630991/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13496377/",
+          "publicationStatus": "aheadofprint",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        },
+        "originalPublisherJournalName": "Chemical Science"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展手性镍催化体系使富电子吸引性的α,β-不饱和酯基膦酸酯选择性氢化，避免将此前常见贵金属不对称氢化视为唯一可行的制备途径。 α,β-不饱和酯基膦酸酯的C=C键在手性Ni氢化催化体系中被选择性还原，生成含手性α-取代碳中心、保留酯/膦酸酯官能团的合成砌块。 NLM PubMed载有作者原始摘要，明确产物最高99%收率、最高99% ee，底物与催化剂比S/C可达1000；该类产物用于谷氨酸膦酸酯类似物、fosmidomycin衍生物和β-氨基膦酸衍生物的制备，是报告的合成用途而非每个底物同时达到这些上限。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍核查镍价态或Ni–H迁移插入的立体控制是否被直接观测：作者实验与DFT共同支持动力学区域选择和弱非共价相互作用影响，但不能写为直接证实的唯一分子机制，也不能把S/C=1000作为所有底物适用的恒定值。 论文以新不对称氢化条件与可分离的手性有机膦酸酯产物为主要贡献，而非仅报道配位化学/计算或药效筛选；范围和后期转化具制备依据。"
+        }
+      ],
+      "reviewRationaleSecondPass": "论文以新不对称氢化条件与可分离的手性有机膦酸酯产物为主要贡献，而非仅报道配位化学/计算或药效筛选；范围和后期转化具制备依据。"
+    },
+    {
+      "doi": "10.1039/d6gc01864e",
+      "journal": "Green Chemistry",
+      "title": "Cobaltaphotoredox catalysed synthesis of spiro compounds: utilizing the inherent photoredox properties of naphthoquinones",
+      "titleZh": "利用萘醌本征光氧化还原活性实现钴/光双催化C–H活化螺环合成",
+      "date": "2026-07-31",
+      "authors": [
+        "Tamanna Sharma",
+        "Sachin",
+        "Upendra Sharma"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "13396-13403",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01864e"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出无需额外外加光催化剂的Co(II)/萘醌光化学协同C–H活化螺环化方法，制备新型螺环有机骨架。",
+      "evidenceBasis": "RSC官方DOI Article History明确First published 31 July 2026，区分Received 27 March与Accepted 18 July；Crossref阶段仅有年份，不能代替其首发日期。 元始批次 2026-07-22_2026-07-31_green-chemistry GitHub blob SHA 3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：RSC原始摘要明确在温和条件下直接制备螺环骨架，并给出产物进一步衍生化；循环回收溶剂6次是工艺指标而不是6个独立底物或合成应用。公开机理证据包括H/D、KIE、荧光淬灭、EPR、XPS、光开关及分离钴杂环中间体的反应。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+      "challengeReason": "第二遍区分螺环合成与光敏萘醌的机理角色：作者证据说明照光及萘醌关键，仍不构成整个Co双催化基本循环每一步皆被直接观察；6次溶剂复用和in silico抗病靶点筛选不能代替真实制备一般性。",
+      "scopeAssessment": {
+        "primaryContribution": "提出无需额外外加光催化剂的Co(II)/萘醌光化学协同C–H活化螺环化方法，制备新型螺环有机骨架。",
+        "preparativeTransformation": "苯甲酰胺类底物与萘醌在钴催化C–H活化及蓝光促进下发生螺环化，形成多取代spirocyclic scaffold，萘醌既参与化学骨架构建又具有本征光响应。",
+        "generalityEvidence": "RSC原始摘要明确在温和条件下直接制备螺环骨架，并给出产物进一步衍生化；循环回收溶剂6次是工艺指标而不是6个独立底物或合成应用。公开机理证据包括H/D、KIE、荧光淬灭、EPR、XPS、光开关及分离钴杂环中间体的反应。",
+        "sourceEvidence": "RSC官方DOI Article History明确First published 31 July 2026，区分Received 27 March与Accepted 18 July；Crossref阶段仅有年份，不能代替其首发日期。 元始批次 2026-07-22_2026-07-31_green-chemistry GitHub blob SHA 3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：RSC原始摘要明确在温和条件下直接制备螺环骨架，并给出产物进一步衍生化；循环回收溶剂6次是工艺指标而不是6个独立底物或合成应用。公开机理证据包括H/D、KIE、荧光淬灭、EPR、XPS、光开关及分离钴杂环中间体的反应。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+        "boundaryChallenge": "该文具明确苯甲酰胺C–H官能化、萘醌成环形成可分离螺环和产物后续转化，不仅是萘醌光谱或生物活性研究；不能把未经实测的生物活性推广为药物用途。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc01864e",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc01864e",
+        "publisherOnlineDate": "2026-07-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_green-chemistry",
+        "stageBatchSha": "3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_official_article_history_direct_fetch_blocked",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_official_first_published_index",
+          "publisherFirstPublished": "2026-07-31",
+          "publisherEntryUrl": "https://doi.org/10.1039/d6gc01864e",
+          "directPublisherFirstPublishedSearchIndexed": true,
+          "recordCrossrefDate": "unverified_year_only"
+        },
+        "originalPublisherJournalName": "Green Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "提出无需额外外加光催化剂的Co(II)/萘醌光化学协同C–H活化螺环化方法，制备新型螺环有机骨架。 苯甲酰胺类底物与萘醌在钴催化C–H活化及蓝光促进下发生螺环化，形成多取代spirocyclic scaffold，萘醌既参与化学骨架构建又具有本征光响应。 RSC原始摘要明确在温和条件下直接制备螺环骨架，并给出产物进一步衍生化；循环回收溶剂6次是工艺指标而不是6个独立底物或合成应用。公开机理证据包括H/D、KIE、荧光淬灭、EPR、XPS、光开关及分离钴杂环中间体的反应。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍区分螺环合成与光敏萘醌的机理角色：作者证据说明照光及萘醌关键，仍不构成整个Co双催化基本循环每一步皆被直接观察；6次溶剂复用和in silico抗病靶点筛选不能代替真实制备一般性。 该文具明确苯甲酰胺C–H官能化、萘醌成环形成可分离螺环和产物后续转化，不仅是萘醌光谱或生物活性研究；不能把未经实测的生物活性推广为药物用途。"
+        }
+      ],
+      "reviewRationaleSecondPass": "该文具明确苯甲酰胺C–H官能化、萘醌成环形成可分离螺环和产物后续转化，不仅是萘醌光谱或生物活性研究；不能把未经实测的生物活性推广为药物用途。"
+    },
+    {
+      "doi": "10.1039/d6gc03080g",
+      "journal": "Green Chemistry",
+      "title": "Solvent- and catalyst-free mechanochemical synthesis of primary sulfinamidines",
+      "titleZh": "无溶剂、无催化剂机械化学胺化合成伯亚磺脒（sulfinamidine）",
+      "date": "2026-09-17",
+      "authors": [
+        "Tianhao Zhang",
+        "Shulei Pan",
+        "Carsten Bolm"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "39",
+        "pages": "15570-15574",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03080g"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立无外加有机溶剂、无催化剂、室温球磨胺化策略，直接合成此前较难制备的伯亚磺脒类S(IV)含氮有机砌块。",
+      "evidenceBasis": "RSC官方Article History明确First published 17 September 2026（Received 26 May、Accepted 16 September）；冻结Crossref record createdDate=2026-09-17，仅作时间旁证而不决定出版日。 元始批次 2026-09-15_2026-09-21_green-chemistry GitHub blob SHA c269a7de443c62a777b870983678a3494327e641，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：RSC公开摘要明确多种官能团耐受、各类伯亚磺脒产物中等至优良收率，以及一锅两步合成S(VI)类似物。公开论文优化说明模型反应最优高达98%产率、需3.25当量K₂CO₃，因此‘无催化剂’并不等于‘无碱’或‘无固体添加剂’，也不应声称全生命周期零溶剂。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+      "challengeReason": "第二遍特别审查所谓绿色工艺是否只有指标没有合成普适性：正式范围基于多种S–N产物与后期一锅转化而非PMI；无外加有机溶剂不能外推为分析、纯化均无溶剂；K₂CO₃为计量碱，非催化剂。",
+      "scopeAssessment": {
+        "primaryContribution": "建立无外加有机溶剂、无催化剂、室温球磨胺化策略，直接合成此前较难制备的伯亚磺脒类S(IV)含氮有机砌块。",
+        "preparativeTransformation": "次磺酰胺（sulfenamide）与可商购O-(4-硝基苯甲酰基)羟胺在球磨条件、碳酸钾参与下发生氮转移/胺化生成伯级sulfinamidine，随后可一锅两步氧化转化为硫(VI) sulfonimidamide。",
+        "generalityEvidence": "RSC公开摘要明确多种官能团耐受、各类伯亚磺脒产物中等至优良收率，以及一锅两步合成S(VI)类似物。公开论文优化说明模型反应最优高达98%产率、需3.25当量K₂CO₃，因此‘无催化剂’并不等于‘无碱’或‘无固体添加剂’，也不应声称全生命周期零溶剂。",
+        "sourceEvidence": "RSC官方Article History明确First published 17 September 2026（Received 26 May、Accepted 16 September）；冻结Crossref record createdDate=2026-09-17，仅作时间旁证而不决定出版日。 元始批次 2026-09-15_2026-09-21_green-chemistry GitHub blob SHA c269a7de443c62a777b870983678a3494327e641，来源族: crossref（Crossref只有年份/日期为空）；书目来自原始RSC期刊名、作者与跨源数据，文中确实报道的合成依据为：RSC公开摘要明确多种官能团耐受、各类伯亚磺脒产物中等至优良收率，以及一锅两步合成S(VI)类似物。公开论文优化说明模型反应最优高达98%产率、需3.25当量K₂CO₃，因此‘无催化剂’并不等于‘无碱’或‘无固体添加剂’，也不应声称全生命周期零溶剂。 本审稿未抓取历史PDF、正文图、SI或复制完整摘要。",
+        "boundaryChallenge": "不同取代硫烯酰胺的实际胺化和后续S(VI)制备满足通用有机制备；与无外加催化剂/反应溶剂相容的真实条件限制需完整保留。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc03080g",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc03080g",
+        "publisherOnlineDate": "2026-09-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_green-chemistry",
+        "stageBatchSha": "c269a7de443c62a777b870983678a3494327e641",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_official_article_history_direct_fetch_blocked",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_official_first_published_index",
+          "publisherFirstPublished": "2026-09-17",
+          "publisherEntryUrl": "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03080G/1357474/am/Solvent-and-catalyst-free-mechanochemical",
+          "directPublisherFirstPublishedSearchIndexed": true,
+          "recordCrossrefDate": "unverified_year_only",
+          "sourceDateCreationNotUsed": true
+        },
+        "originalPublisherJournalName": "Green Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "建立无外加有机溶剂、无催化剂、室温球磨胺化策略，直接合成此前较难制备的伯亚磺脒类S(IV)含氮有机砌块。 次磺酰胺（sulfenamide）与可商购O-(4-硝基苯甲酰基)羟胺在球磨条件、碳酸钾参与下发生氮转移/胺化生成伯级sulfinamidine，随后可一锅两步氧化转化为硫(VI) sulfonimidamide。 RSC公开摘要明确多种官能团耐受、各类伯亚磺脒产物中等至优良收率，以及一锅两步合成S(VI)类似物。公开论文优化说明模型反应最优高达98%产率、需3.25当量K₂CO₃，因此‘无催化剂’并不等于‘无碱’或‘无固体添加剂’，也不应声称全生命周期零溶剂。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍特别审查所谓绿色工艺是否只有指标没有合成普适性：正式范围基于多种S–N产物与后期一锅转化而非PMI；无外加有机溶剂不能外推为分析、纯化均无溶剂；K₂CO₃为计量碱，非催化剂。 不同取代硫烯酰胺的实际胺化和后续S(VI)制备满足通用有机制备；与无外加催化剂/反应溶剂相容的真实条件限制需完整保留。"
+        }
+      ],
+      "reviewRationaleSecondPass": "不同取代硫烯酰胺的实际胺化和后续S(VI)制备满足通用有机制备；与无外加催化剂/反应溶剂相容的真实条件限制需完整保留。"
+    }
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "uniqueFormalReleaseSlot": "08:00 Asia/Shanghai",
+    "tocOnly": true,
+    "noProductionD1": true,
+    "noPDFBodyFiguresSI": true,
+    "noDailyNewHotWeChat": true,
+    "noPreprintUpgradedWithoutFinalReview": true,
+    "olderTwoAuthoritativePendingUnchanged": true
+  }
+}

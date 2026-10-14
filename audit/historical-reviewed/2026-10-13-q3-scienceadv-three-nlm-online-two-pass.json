@@ -1,0 +1,270 @@
+{
+  "schemaVersion": "gallery-historical-q3-scienceadv-three-NLM-article-date-v1",
+  "reviewedAt": "2026-10-13T12:03:22.359Z",
+  "period": "2026-07-01..2026-09-30",
+  "mode": "two_pass_original_research_academic_review_not_release",
+  "dateSource": "NLM PubMed Epub / ArticleDate of primary AAAS Science Advances papers; source Crossref issue dates preserved and explicitly separated",
+  "sourceRoots": {
+    "2026-07-15_2026-07-21_science-advances": "022c24c12dfb71cfe3703352b13822e90ea2f2f5",
+    "2026-08-08_2026-08-14_science-advances": "b3333a0b72bdf78820f68bfeeb3c273029f9524a",
+    "2026-07-22_2026-07-31_science-advances": "d871cc041a63ae8b1724ed8c6115de79616d1fac"
+  },
+  "reviewed": [
+    {
+      "doi": "10.1126/sciadv.aeh8194",
+      "journal": "Science Advances",
+      "title": "Palladium-catalyzed enantioselective alkenylation of acyclic alkenols: Broad scope with alkenyl bromides",
+      "titleZh": "钯催化非环状烯醇与烯基溴化物的不对称Heck烯基化及选择性β-H消除",
+      "date": "2026-08-12",
+      "authors": [
+        "Jun Chen",
+        "Hong-Mei Guo",
+        "Jasmine X. Yan",
+        "Chong Liu",
+        "Debabrata Maiti",
+        "Haibo Ge"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "33",
+        "pages": "",
+        "articleNumber": "eaeh8194",
+        "doi": "10.1126/sciadv.aeh8194"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用3,3′-卤代BINOL手性配体调控Pd催化烯醇与烯基溴化物的分子间对映选择性Heck烯基化，形成具有明确立体控制的烯基取代羰基化合物，重点解决区域选择性β-H消除和沿烷基链的催化剂迁移，而非简单考察金属催化剂光谱。",
+      "evidenceBasis": "Exact original Science Advances DOI 10.1126/sciadv.aeh8194, NLM PubMed PMID 42585335 and PMC PMC13464635 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-08-12 (explicit_Epub_2026_08_12) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-08-08_2026-08-14_science-advances, immutable GitHub batch blob b3333a0b72bdf78820f68bfeeb3c273029f9524a, has journal/issue/source date 2026-08-14. These differ by 2 day(s); source issue/collection date MUST NOT overwrite explicit Epub/ArticleDate. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeh8194; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances原始论文与NLM摘要确认多类烯基溴化物、伯烯醇与消旋仲烯醇均能反应，存在区域和对映控制，也展示了三取代烯醇及四种立体异构体的合成应用。手性配体3,3′-二氯取代BINOL与β-H消除途径控制由机制实验提示，不能虚报所有底物同等高ee。",
+      "challengeReason": "两遍重点区分“烯醇 Heck α-烯基化与β-H消除生成羰基”同简单经典Heck烯烃产物：其新颖性依赖配体控制消除位点与迁移、四异构体可控获得。NLM明确 Epub 2026-08-12，Crossref/OpenAlex来源2026-08-14对应期号；日期冲突源是不同字段，采用Epub而不记为不可解二次争议。",
+      "scopeAssessment": {
+        "primaryContribution": "利用3,3′-卤代BINOL手性配体调控Pd催化烯醇与烯基溴化物的分子间对映选择性Heck烯基化，形成具有明确立体控制的烯基取代羰基化合物，重点解决区域选择性β-H消除和沿烷基链的催化剂迁移，而非简单考察金属催化剂光谱。",
+        "preparativeTransformation": "非环状伯烯醇或外消旋仲烯醇与烯基溴化物发生Pd催化C–C烯基化；在BINOL衍生配体调控下发生β-H消除和链迁移，输出烯基取代的醛/酮类羰基产物；扩展至三取代烯醇，并可立体分歧制备四种立体异构体。",
+        "generalityEvidence": "Science Advances原始论文与NLM摘要确认多类烯基溴化物、伯烯醇与消旋仲烯醇均能反应，存在区域和对映控制，也展示了三取代烯醇及四种立体异构体的合成应用。手性配体3,3′-二氯取代BINOL与β-H消除途径控制由机制实验提示，不能虚报所有底物同等高ee。",
+        "sourceEvidence": "Exact original Science Advances DOI 10.1126/sciadv.aeh8194, NLM PubMed PMID 42585335 and PMC PMC13464635 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-08-12 (explicit_Epub_2026_08_12) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-08-08_2026-08-14_science-advances, immutable GitHub batch blob b3333a0b72bdf78820f68bfeeb3c273029f9524a, has journal/issue/source date 2026-08-14. These differ by 2 day(s); source issue/collection date MUST NOT overwrite explicit Epub/ArticleDate. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeh8194; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances原始论文与NLM摘要确认多类烯基溴化物、伯烯醇与消旋仲烯醇均能反应，存在区域和对映控制，也展示了三取代烯醇及四种立体异构体的合成应用。手性配体3,3′-二氯取代BINOL与β-H消除途径控制由机制实验提示，不能虚报所有底物同等高ee。",
+        "boundaryChallenge": "反向质疑该反应是否仅发现BINOL配体加速而没有一般性合成贡献：作者通过不同烯基溴和多类开链烯醇建立实际羰基化合物合成与四构型立体分歧策略，符合方法学；但没有声明无需全部还原当量或任意烯烃均适用。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.science.org/doi/10.1126/sciadv.aeh8194",
+        "publisherOnlineDate": "2026-08-12",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_science-advances",
+        "stageBatchSha": "b3333a0b72bdf78820f68bfeeb3c273029f9524a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherLiveArticlePageRead": false,
+        "firstOnlineDateEvidence": {
+          "tier": "journal_supplied_NLM_PubMed_ArticleDate_or_Epub_crosschecked_with_AAAS_original_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42585335/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13464635/",
+          "sourcePublicationDate": "2026-08-14",
+          "journalSuppliedElectronicDate": "2026-08-12",
+          "sourcePublicationDateIsNotFirstOnline": true,
+          "status": "explicit_Epub_2026_08_12"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用3,3′-卤代BINOL手性配体调控Pd催化烯醇与烯基溴化物的分子间对映选择性Heck烯基化，形成具有明确立体控制的烯基取代羰基化合物，重点解决区域选择性β-H消除和沿烷基链的催化剂迁移，而非简单考察金属催化剂光谱。 非环状伯烯醇或外消旋仲烯醇与烯基溴化物发生Pd催化C–C烯基化；在BINOL衍生配体调控下发生β-H消除和链迁移，输出烯基取代的醛/酮类羰基产物；扩展至三取代烯醇，并可立体分歧制备四种立体异构体。 Science Advances原始论文与NLM摘要确认多类烯基溴化物、伯烯醇与消旋仲烯醇均能反应，存在区域和对映控制，也展示了三取代烯醇及四种立体异构体的合成应用。手性配体3,3′-二氯取代BINOL与β-H消除途径控制由机制实验提示，不能虚报所有底物同等高ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "两遍重点区分“烯醇 Heck α-烯基化与β-H消除生成羰基”同简单经典Heck烯烃产物：其新颖性依赖配体控制消除位点与迁移、四异构体可控获得。NLM明确 Epub 2026-08-12，Crossref/OpenAlex来源2026-08-14对应期号；日期冲突源是不同字段，采用Epub而不记为不可解二次争议。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向质疑该反应是否仅发现BINOL配体加速而没有一般性合成贡献：作者通过不同烯基溴和多类开链烯醇建立实际羰基化合物合成与四构型立体分歧策略，符合方法学；但没有声明无需全部还原当量或任意烯烃均适用。"
+    },
+    {
+      "doi": "10.1126/sciadv.aeg0999",
+      "journal": "Science Advances",
+      "title": "Asymmetric radical NHC organocatalysis–enabled highly enantioselective acylation of inert C(sp 2 )─C(sp 3 ) bonds",
+      "titleZh": "手性中环噻唑鎓NHC催化惰性芳基–烷基碳碳键自由基重排及不对称酰化",
+      "date": "2026-07-17",
+      "authors": [
+        "Qing-Zhu Li",
+        "Mei-Hao He",
+        "Peng-Tao Wang",
+        "Long-Hai Hong",
+        "Ting Qi",
+        "Xin-Xin Kou",
+        "Dong-Yang Xiang",
+        "Wan-Cong Liu",
+        "Zi-Jie Xing",
+        "Xiang Zhang",
+        "Jun-Long Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "29",
+        "pages": "",
+        "articleNumber": "eaeg0999",
+        "doi": "10.1126/sciadv.aeg0999"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者设计中环骨架和C2对称手性单元的噻唑鎓NHC前催化剂，使以往难控制的惰性芳基–烷基C(sp²)–C(sp³)键参与自由基Smiles型重排与不对称酰化，形成可分离对映富集羰基化合物；这不是单纯的新NHC合成或过渡态理论研究。",
+      "evidenceBasis": "Exact original Science Advances DOI 10.1126/sciadv.aeg0999, NLM PubMed PMID 42467759 and PMC PMC13378574 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-07-17 (NLM_ArticleDate_2026_07_17) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-07-15_2026-07-21_science-advances, immutable GitHub batch blob 022c24c12dfb71cfe3703352b13822e90ea2f2f5, has journal/issue/source date 2026-07-17. Dates agree. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeg0999; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances原文报道超过70个底物实例、最高99%产率、99:1 rr与99.5:0.5 er，并对非对称二芳基酰胺的芳基迁移选择性和多类醛范围作了实验验证；正文限定邻位取代芳醛反应性降低，部分烷基醛在此不对称条件下不反应，不能夸大为对所有醛成立。",
+      "challengeReason": "机制中的自由基来源与手性NHC作用来自控制实验与DFT支持，非各中间体直接捕获。不能把研究说成无外加碱（作者使用K3PO4）、也不能把无光/无金属误写成不需任何活化；第一遍与第二遍均依据真实产物范围确认纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "作者设计中环骨架和C2对称手性单元的噻唑鎓NHC前催化剂，使以往难控制的惰性芳基–烷基C(sp²)–C(sp³)键参与自由基Smiles型重排与不对称酰化，形成可分离对映富集羰基化合物；这不是单纯的新NHC合成或过渡态理论研究。",
+        "preparativeTransformation": "3,3-二芳基取代酰胺与芳基/杂芳基醛在中环手性噻唑鎓NHC和碱条件下通过Smiles型芳基迁移与C(sp²)–C(sp³)键裂解的自由基路径完成酰化重组，使原本不活泼的C–C键转换为新手性酰化产物；作者在无光和无过渡金属催化体系下实际制备。",
+        "generalityEvidence": "Science Advances原文报道超过70个底物实例、最高99%产率、99:1 rr与99.5:0.5 er，并对非对称二芳基酰胺的芳基迁移选择性和多类醛范围作了实验验证；正文限定邻位取代芳醛反应性降低，部分烷基醛在此不对称条件下不反应，不能夸大为对所有醛成立。",
+        "sourceEvidence": "Exact original Science Advances DOI 10.1126/sciadv.aeg0999, NLM PubMed PMID 42467759 and PMC PMC13378574 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-07-17 (NLM_ArticleDate_2026_07_17) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-07-15_2026-07-21_science-advances, immutable GitHub batch blob 022c24c12dfb71cfe3703352b13822e90ea2f2f5, has journal/issue/source date 2026-07-17. Dates agree. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeg0999; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances原文报道超过70个底物实例、最高99%产率、99:1 rr与99.5:0.5 er，并对非对称二芳基酰胺的芳基迁移选择性和多类醛范围作了实验验证；正文限定邻位取代芳醛反应性降低，部分烷基醛在此不对称条件下不反应，不能夸大为对所有醛成立。",
+        "boundaryChallenge": "第二遍反查Smiles型重排是否只用于材料基团迁移机理探针：原文有70余具体产物、高对映选择性、药物或糖衍生底物后期转化，明确可迁移合成能力。'inert C–C activation'不等于不经任何底物预设计；芳基苄位稳定自由基的底物要求应保留。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.science.org/doi/10.1126/sciadv.aeg0999",
+        "publisherOnlineDate": "2026-07-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_science-advances",
+        "stageBatchSha": "022c24c12dfb71cfe3703352b13822e90ea2f2f5",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherLiveArticlePageRead": false,
+        "firstOnlineDateEvidence": {
+          "tier": "journal_supplied_NLM_PubMed_ArticleDate_or_Epub_crosschecked_with_AAAS_original_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42467759/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13378574/",
+          "sourcePublicationDate": "2026-07-17",
+          "journalSuppliedElectronicDate": "2026-07-17",
+          "sourcePublicationDateIsNotFirstOnline": false,
+          "status": "NLM_ArticleDate_2026_07_17"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者设计中环骨架和C2对称手性单元的噻唑鎓NHC前催化剂，使以往难控制的惰性芳基–烷基C(sp²)–C(sp³)键参与自由基Smiles型重排与不对称酰化，形成可分离对映富集羰基化合物；这不是单纯的新NHC合成或过渡态理论研究。 3,3-二芳基取代酰胺与芳基/杂芳基醛在中环手性噻唑鎓NHC和碱条件下通过Smiles型芳基迁移与C(sp²)–C(sp³)键裂解的自由基路径完成酰化重组，使原本不活泼的C–C键转换为新手性酰化产物；作者在无光和无过渡金属催化体系下实际制备。 Science Advances原文报道超过70个底物实例、最高99%产率、99:1 rr与99.5:0.5 er，并对非对称二芳基酰胺的芳基迁移选择性和多类醛范围作了实验验证；正文限定邻位取代芳醛反应性降低，部分烷基醛在此不对称条件下不反应，不能夸大为对所有醛成立。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "机制中的自由基来源与手性NHC作用来自控制实验与DFT支持，非各中间体直接捕获。不能把研究说成无外加碱（作者使用K3PO4）、也不能把无光/无金属误写成不需任何活化；第一遍与第二遍均依据真实产物范围确认纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍反查Smiles型重排是否只用于材料基团迁移机理探针：原文有70余具体产物、高对映选择性、药物或糖衍生底物后期转化，明确可迁移合成能力。'inert C–C activation'不等于不经任何底物预设计；芳基苄位稳定自由基的底物要求应保留。"
+    },
+    {
+      "doi": "10.1126/sciadv.aeh2073",
+      "journal": "Science Advances",
+      "title": "Catalytic asymmetric synthesis of inherently chiral tricyclic diazepinones: Access to (+)-telenzepine",
+      "titleZh": "有机催化不对称N–H烷基化锁定三环二氮杂卓酮固有手性并合成（+）-Telenzepine",
+      "date": "2026-07-23",
+      "authors": [
+        "Cui Zhang",
+        "Xiang-Tao Kong",
+        "Chuanjun Song",
+        "Yun-Xuan Chen",
+        "Xiao Xiao",
+        "Shi-Kun Jia",
+        "Guang-Jian Mei"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "30",
+        "pages": "",
+        "articleNumber": "eaeh2073",
+        "doi": "10.1126/sciadv.aeh2073"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过晚期有机催化不对称N–H烷基化在鞍形三环diazepinone骨架中引入扭转应变，将原本易翻转的柔性前体锁定成固有手性构象；该方法不依赖局部传统手性中心，完成了具有生物活性的(+)-telenzepine的对映选择性合成与绝对构型确定。",
+      "evidenceBasis": "Exact original Science Advances DOI 10.1126/sciadv.aeh2073, NLM PubMed PMID 42490447 and PMC PMC13394482 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-07-23 (NLM_ArticleDate_2026_07_23) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-07-22_2026-07-31_science-advances, immutable GitHub batch blob d871cc041a63ae8b1724ed8c6115de79616d1fac, has journal/issue/source date 2026-07-24. These differ by 1 day(s); source issue/collection date MUST NOT overwrite explicit Epub/ArticleDate. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeh2073; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances期刊原始研究摘要明确多种固有手性三环二氮杂卓酮实例、外消旋底物的动力学拆分，以及药物(+)-telenzepine的对映选择性合成和绝对构型确认。原摘要没有声明完整从廉价原料到天然产物的全合成，不可将其误标为天然产物全合成。",
+      "challengeReason": "二遍挑战是否将固有手性错当作轴手性和中心碳立体中心：该体系是分子整体鞍形构象被N–H烷基化引入的扭转应变锁定，不能声称传统C手性中心构筑。NLM给2026-07-23 ArticleDate而期刊2026-07-24为期号出版，必须存双日期字段；只有已支持的前体与产物可主张。",
+      "scopeAssessment": {
+        "primaryContribution": "通过晚期有机催化不对称N–H烷基化在鞍形三环diazepinone骨架中引入扭转应变，将原本易翻转的柔性前体锁定成固有手性构象；该方法不依赖局部传统手性中心，完成了具有生物活性的(+)-telenzepine的对映选择性合成与绝对构型确定。",
+        "preparativeTransformation": "非手性前体三环二氮杂卓酮在手性有机催化条件下进行N–H烷基化，构筑N–C键并用位阻诱导构象锁定获得固有手性环状酰胺；同类动态构象/外消旋底物经动力学拆分也可提供对映富集产物。",
+        "generalityEvidence": "Science Advances期刊原始研究摘要明确多种固有手性三环二氮杂卓酮实例、外消旋底物的动力学拆分，以及药物(+)-telenzepine的对映选择性合成和绝对构型确认。原摘要没有声明完整从廉价原料到天然产物的全合成，不可将其误标为天然产物全合成。",
+        "sourceEvidence": "Exact original Science Advances DOI 10.1126/sciadv.aeh2073, NLM PubMed PMID 42490447 and PMC PMC13394482 containing the publisher-origin research article. NLM journal-supplied electronic Article Date 2026-07-23 (NLM_ArticleDate_2026_07_23) is the first-online criterion; independent Crossref/OpenAlex historic source from 2026-07-22_2026-07-31_science-advances, immutable GitHub batch blob d871cc041a63ae8b1724ed8c6115de79616d1fac, has journal/issue/source date 2026-07-24. These differ by 1 day(s); source issue/collection date MUST NOT overwrite explicit Epub/ArticleDate. Science.org original landing URL https://www.science.org/doi/10.1126/sciadv.aeh2073; official publisher full-HTML readback is not represented as completed, but NLM/PMC contains the original article and direct primary-research content. Actual preparative evidence: Science Advances期刊原始研究摘要明确多种固有手性三环二氮杂卓酮实例、外消旋底物的动力学拆分，以及药物(+)-telenzepine的对映选择性合成和绝对构型确认。原摘要没有声明完整从廉价原料到天然产物的全合成，不可将其误标为天然产物全合成。",
+        "boundaryChallenge": "严格检查N–H烷基化是否只为药物前体简单保护基变化或构象测量：作者针对可翻转三环骨架通过催化不对称烷基化直接赋予分离稳定的固有手性，并展示目标药物，属于实质不对称合成策略。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.science.org/doi/10.1126/sciadv.aeh2073",
+        "publisherOnlineDate": "2026-07-23",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_science-advances",
+        "stageBatchSha": "d871cc041a63ae8b1724ed8c6115de79616d1fac",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherLiveArticlePageRead": false,
+        "firstOnlineDateEvidence": {
+          "tier": "journal_supplied_NLM_PubMed_ArticleDate_or_Epub_crosschecked_with_AAAS_original_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42490447/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13394482/",
+          "sourcePublicationDate": "2026-07-24",
+          "journalSuppliedElectronicDate": "2026-07-23",
+          "sourcePublicationDateIsNotFirstOnline": true,
+          "status": "NLM_ArticleDate_2026_07_23"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过晚期有机催化不对称N–H烷基化在鞍形三环diazepinone骨架中引入扭转应变，将原本易翻转的柔性前体锁定成固有手性构象；该方法不依赖局部传统手性中心，完成了具有生物活性的(+)-telenzepine的对映选择性合成与绝对构型确定。 非手性前体三环二氮杂卓酮在手性有机催化条件下进行N–H烷基化，构筑N–C键并用位阻诱导构象锁定获得固有手性环状酰胺；同类动态构象/外消旋底物经动力学拆分也可提供对映富集产物。 Science Advances期刊原始研究摘要明确多种固有手性三环二氮杂卓酮实例、外消旋底物的动力学拆分，以及药物(+)-telenzepine的对映选择性合成和绝对构型确认。原摘要没有声明完整从廉价原料到天然产物的全合成，不可将其误标为天然产物全合成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二遍挑战是否将固有手性错当作轴手性和中心碳立体中心：该体系是分子整体鞍形构象被N–H烷基化引入的扭转应变锁定，不能声称传统C手性中心构筑。NLM给2026-07-23 ArticleDate而期刊2026-07-24为期号出版，必须存双日期字段；只有已支持的前体与产物可主张。"
+        }
+      ],
+      "reviewRationaleSecondPass": "严格检查N–H烷基化是否只为药物前体简单保护基变化或构象测量：作者针对可翻转三环骨架通过催化不对称烷基化直接赋予分离稳定的固有手性，并展示目标药物，属于实质不对称合成策略。"
+    }
+  ],
+  "guards": {
+    "noCloudflareD1": true,
+    "noProductionRelease": true,
+    "soleBeijing08Only": true,
+    "Q3TocOnly": true,
+    "noBodySIOrPDF": true,
+    "notDailyNewHotWeChat": true,
+    "noCrossrefDateOverwrite": true,
+    "publisherResearchQuarterIncomplete": true
+  }
+}

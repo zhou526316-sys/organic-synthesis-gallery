@@ -1,4 +1,5 @@
 import { searchEnrichmentReady, searchFtsExpression, searchTermAlternatives } from './literature-search-enrichment.js';
+import {publicBodyReadReady} from './literature-body-search.js';
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
 export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
@@ -462,13 +463,18 @@ export async function queryLiteratureCatalogView(env,{
     const originalCandidate='i.doi IN (SELECT f.doi FROM literature_catalog_fts f'
       +' WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?)';
     const enriched=!baseOnly && await searchEnrichmentReady(env,catalogId);
+    const licensedBody=!baseOnly && await publicBodyReadReady(env,catalogId);
     const enrichmentCandidate='i.doi IN (SELECT e.doi FROM literature_search_enrichment_fts e'
       +' WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?)';
+    const licensedBodyCandidate='i.doi IN (SELECT b.doi FROM literature_body_sections_fts b'
+      +' WHERE b.catalog_id=? AND literature_body_sections_fts MATCH ?)';
     where.push('(('+originalCandidate+' AND ('+termsSql+'))'
-      +(enriched?' OR '+enrichmentCandidate:'')+')');
+      +(enriched?' OR '+enrichmentCandidate:'')
+      +(licensedBody?' OR '+licensedBodyCandidate:'')+')');
     args.push(catalogId,match);
     for(const term of terms)for(const _ of fields)args.push(term);
     if(enriched)args.push(catalogId,match);
+    if(licensedBody)args.push(catalogId,match);
   }
   if(view.selectedJournals.length){
     where.push(`i.journal IN (${view.selectedJournals.map(()=>'?').join(',')})`);

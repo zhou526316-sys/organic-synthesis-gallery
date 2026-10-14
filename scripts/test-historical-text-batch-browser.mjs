@@ -23,6 +23,7 @@ try{
   await page.goto('https://gallery.gczhouwld.com/');
   await page.evaluate(registry=>{
     window.__gm={};window.__opened=[];window.__closeCount=0;window.__requests=[];window.__alerts=[];
+    window.__registry=registry;
     window.GM_getValue=(key,def)=>Object.prototype.hasOwnProperty.call(window.__gm,key)?window.__gm[key]:def;
     window.GM_setValue=(key,value)=>{window.__gm[key]=value;};
     window.GM_deleteValue=key=>{delete window.__gm[key];};
@@ -129,7 +130,7 @@ try{
   const search=page.getByPlaceholder('检索本机正文（LMCT/CO₂等）');
   await search.fill('LMCT');
   await search.press('Enter');
-  await page.getByText(doiOld[0]+' · Mechanistic Studies').waitFor({timeout:5000});
+  await page.getByText(doiOld[0]+' · 正文 · Mechanistic Studies').waitFor({timeout:5000});
   await start.click();
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
     && window.__gm['gallery-historical-text-batch-v2:state']?.attempted===0,null,{timeout:10000});
@@ -140,7 +141,43 @@ try{
   assert.equal(await page.evaluate(()=>window.__opened.length),2,
     'targeted ACS sample does not revisit saved or never-failed articles');
 
+  await page.getByRole('button',{name:'全库正文覆盖'}).click();
+  await page.getByText('正式目录 3 篇；已核实日期的历史 DOI 2 篇').waitFor({timeout:5000});
+  assert.ok((await page.locator('#osg-historical-batch').innerText())
+    .includes('本机已存科学正文 2 篇；从未访问 0 篇'));
+
+  // A real local DOI corpus may have more than 20 matches. Count ALL and page
+  // the display; do not silently claim only 20 relevant science articles exist.
+  await page.evaluate(async()=>{
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    await new Promise((resolve,reject)=>{
+      const tx=db.transaction('packets','readwrite');
+      const store=tx.objectStore('packets');
+      for(let i=0;i<25;i++){
+        const doi='10.1021/jacs.local-body-'+i;
+        store.put({doi,packet:{doi,sections:[
+          {type:'mechanism',heading:'Mechanistic Studies',text:'The LMCT pathway was probed experimentally.'}
+        ],captions:[],tables:[]}});
+      }
+      tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+    });
+    db.close();
+  });
+  await search.fill('LMCT');
+  await search.press('Enter');
+  await page.getByText(/本机正文命中 27 篇/).waitFor({timeout:5000});
+  await page.getByRole('button',{name:/显示更多命中（剩余 7 篇）/}).click();
+  const localLinks=page.locator('#osg-historical-batch a[href^="https://doi.org/"]');
+  assert.equal(await localLinks.count(),27,'every local matching DOI remains accessible via pagination');
+
   // The browser-side outbox is durable before a token is configured.
+  assert.equal(await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).count(),1);
+  await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).click();
+  assert.equal(await page.evaluate(()=>window.__opened.length),2,
+    'journal-balanced pilot must not reopen already saved articles');
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
   assert.equal(pendingBefore,2,'one terminal diagnostic receipt per DOI must be queued');
   await page.getByRole('button',{name:'配置诊断密钥'}).click();
@@ -215,6 +252,38 @@ try{
   assert.ok(serverSummaries.some(x=>x.includes('HTTP 403')&&x.includes('最终结果')));
   assert.ok(serverSummaries.some(x=>x.includes('HTTP 未知')&&x.includes('license_not_verified')));
 
+  // Opt-in handshake pilot: two previously unconfirmed ACS publisher jobs.
+  // Confirm one tries the official ACS article URL and one the DOI resolver.
+  await page.evaluate(async()=>{
+    const additions=[
+      {doi:'10.1021/jacs.test-reachability-a',date:'2026-09-11',journal:'JACS',title:'ACS no-response A'},
+      {doi:'10.1021/jacs.test-reachability-b',date:'2026-09-12',journal:'JACS',title:'ACS no-response B'}
+    ];
+    window.__registry.articles.push(...additions);
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    for(const entry of additions){
+      await window.__historicalDiagTest.batchDbOp(db,'attempts','put',{
+        doi:entry.doi,journal:entry.journal,status:'publisher_no_response',
+        stage:'publisher_wait',pageDoiVerified:false,httpStatus:null,checkedAt:Date.now()
+      });
+    }
+    db.close();
+  });
+  const reachability=page.getByRole('button',{name:'出版社回执核验（最多8篇）'});
+  assert.equal(await reachability.count(),1);
+  await reachability.click();
+  await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.attempted===2,null,{timeout:17000});
+  const probes=await page.evaluate(()=>window.__opened.slice(-2).map(x=>x.url));
+  assert.ok(probes[0].startsWith('https://pubs.acs.org/doi/10.1021/'),
+    'direct ACS path must be a DOI-bound publisher article route');
+  assert.ok(probes[1].startsWith('https://doi.org/10.1021/'),
+    'control route must keep normal DOI resolver');
+  assert.equal(probes.length,2,'pilot must not silently reopen the entire historical corpus');
+
   const pdfPage=await browser.newPage();
   await pdfPage.route('https://gallery.gczhouwld.com/**',route=>route.fulfill({
     status:200,contentType:'text/html',body:'<!doctype html><html><body><h1>PDF reader</h1></body></html>'
@@ -226,6 +295,7 @@ try{
   await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true
+    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
+    fullCoverageLedger:true,bodySearchAllHits:27,reachabilityProbeRoutes:2
   }));
 }finally{await browser.close();}

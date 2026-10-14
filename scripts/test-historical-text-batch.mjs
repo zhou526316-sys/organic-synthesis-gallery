@@ -5,14 +5,16 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.4/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.4'/);
+assert.match(original,/\/\/ @version\s+0\.2\.7/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.7'/);
+assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v026'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false,
+  routePath='/doi/'+DOI,routeHash='#gallery-historical-job='+TOKEN}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -36,7 +38,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   const figure={textContent:'Scheme 1. Photoredox reaction mechanism',id:'',className:'',parentElement:footer,closest(){return null;}};
   const table={textContent:'Table 1. Reaction optimization data',id:'',className:'',parentElement:footer,closest(){return null;}};
   const root={querySelectorAll(selector){
-    if(selector==='h2,h3,p')return nodes;
+    if(selector==='h2,h3,h4,p')return nodes;
     if(selector.startsWith('figure figcaption'))return [figure];
     if(selector==='table')return [table];
     if(selector==='p,span,small,div')return acsNotice?[copyrightNode]:[];
@@ -52,6 +54,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     get readyState(){readyReads++;return readyReads<=readyAfter?'loading':'complete';},
     querySelectorAll(selector){
       if(selector.startsWith('meta[name="citation_doi"'))return [{content:pageDoi}];
+      if(selector.startsWith('meta[name="citation_license_url"'))return [];
       if(selector.startsWith('link[rel="license"')){
         licenseReads++;return license&&licenseReads>licenseAfter?[{content:license}]:[];
       }
@@ -62,7 +65,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   };
   const context={
     location:{hostname:'pubs.acs.org',origin:'https://pubs.acs.org',
-      pathname:'/doi/'+DOI,hash:'#gallery-historical-job='+TOKEN},
+      pathname:routePath,hash:routeHash},
     document,window:{alert(){},confirm:()=>true},TextEncoder,Blob,crypto:webcrypto,URL,URLSearchParams,
     performance:{getEntriesByType:()=>[{responseStatus:navigationStatus||0}]},
     GM_getValue:(key,def)=>values.has(key)?values.get(key):def,
@@ -82,6 +85,43 @@ const registry={pairedCaptureRegistry:true,webpageDoiCount:5,articles:[
   {doi:'10.1021/acs.orglett.2026fake',date:'2025-01-01',journal:'Organic Letters'},
   {doi:DOI,date:'2026-09-14',journal:'JACS'}
 ]};
+
+test('DOI-bound article structure remains metadata only when no reusable licence exists',async()=>{
+  const x=fixture({license:''});
+  const meta=x.context.__batchTest.batchBodyStructure(x.root);
+  assert.equal(meta.presence,'scientific_sections');
+  assert.ok(meta.scienceChars>=250);
+  assert.equal(x.context.__batchTest.batchReuseRights(x.root).signal,'unverified');
+  await x.context.__batchTest.batchWorker();
+  const outcome=x.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(outcome.status,'license_not_verified');
+  assert.equal(outcome.rightsSignal,'unverified');
+  assert.equal(outcome.bodyEvidence.presence,'scientific_sections');
+  assert.equal(outcome.packet,undefined);
+});
+test('licensed scientific packet remains partial unless manuscript completeness is evidenced',async()=>{
+  const x=fixture();
+  await x.context.__batchTest.batchWorker();
+  const row=x.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(row.status,'ok');
+  assert.equal(row.packet.bodyCompleteness,'partial');
+  assert.ok(row.packet.coverage.scienceSectionCount>=1);
+  assert.equal(row.packet.publicUploadAllowed,false);
+});
+test('balanced pilot selects at most twelve previously checked DOI without relaunching 403',()=>{
+  const api=fixture().context.__batchTest;
+  const papers=Array.from({length:21},(_,i)=>({doi:'10.1021/jacs.test'+i,journal:'JACS'}))
+    .concat(Array.from({length:8},(_,i)=>({doi:'10.1038/test'+i,journal:'Nature Chemistry'})))
+    .concat([{doi:'10.1126/sciadv.test',journal:'Science Advances'}]);
+  const attempts=papers.map(p=>({doi:p.doi,status:'license_not_verified',pageDoiVerified:true}));
+  attempts[1].httpStatus=403;
+  const sample=api.batchSelectCandidates(papers,new Set(),attempts,true,'pilot');
+  assert.equal(sample.length,12);
+  assert.equal(sample.some(p=>p.doi===papers[1].doi),false);
+  assert.ok(sample.some(p=>p.journal==='Nature Chemistry'));
+  assert.ok(sample.some(p=>p.journal==='Science Advances'));
+  assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'pilot').length,0);
+});
 test('batch only selects unique formal historical DOI',()=>{
   const {context}=fixture();
   const rows=context.__batchTest.batchHistoricalPapers(registry);
@@ -205,20 +245,66 @@ test('abstract-only pages are not falsely accepted as historical fulltext',async
   await x.context.__batchTest.batchWorker();
   assert.equal(x.values.get('gallery-historical-text-batch-v2:result')?.status,'body_missing');
 });
+test('no-response classification distinguishes absent script heartbeat from unfinished publisher worker',()=>{
+  const api=fixture().context.__batchTest;
+  assert.equal(api.batchUnconfirmedPublisherResult(false).reasonCode,'publisher_script_not_confirmed');
+  assert.equal(api.batchUnconfirmedPublisherResult(false).httpStatus,null);
+  assert.equal(api.batchUnconfirmedPublisherResult(true).reasonCode,'publisher_no_response');
+});
+test('real ACS DOI route with missing citation DOI only proves publisher script activation, not paper identity',async()=>{
+  const metaOnly=fixture({pageDoi:'',routeHash:'',navigationStatus:403,
+    routePath:'/orlef7/article/doi/'+DOI+'/5442045/Article'});
+  const api=metaOnly.context.__batchTest;
+  assert.equal(api.batchPathBindsCurrentJob({doi:DOI}),true);
+  await api.batchWorker();
+  const returned=metaOnly.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(returned.status,'page_http_error');
+  assert.equal(returned.httpStatus,403);
+  assert.equal(returned.pageDoiVerified,false);
+  assert.equal(returned.packet,undefined);
+  const unrelated=fixture({pageDoi:'',routeHash:'',navigationStatus:403,
+    routePath:'/orlef7/article/doi/10.1021/jacs.other/5442045/Article'});
+  assert.equal(unrelated.context.__batchTest.batchPathBindsCurrentJob({doi:DOI}),false);
+  await unrelated.context.__batchTest.batchWorker();
+  assert.equal(unrelated.values.has('gallery-historical-text-batch-v2:result'),false);
+});
+test('reachability pilot samples max eight previous publisher non-responses, not rights blocks or HTTP 429',()=>{
+  const api=fixture().context.__batchTest;
+  const papers=[
+    ...Array.from({length:12},(_,i)=>({doi:'10.1021/jacs.reach'+i,journal:'JACS'})),
+    ...Array.from({length:7},(_,i)=>({doi:'10.1038/s41557-reach'+i,journal:'Nature Chemistry'})),
+    ...Array.from({length:3},(_,i)=>({doi:'10.1126/sciadv.reach'+i,journal:'Science Advances'}))
+  ];
+  const attempts=papers.map(p=>({doi:p.doi,status:'publisher_no_response',pageDoiVerified:false}));
+  attempts[0].httpStatus=429;
+  attempts[1].status='license_not_verified';
+  attempts[2].status='page_access_blocked';
+  const selected=api.batchSelectCandidates(papers,new Set(),attempts,true,'reachability');
+  assert.equal(selected.length,8);
+  assert.equal(selected.some(p=>p.doi===papers[0].doi),false);
+  assert.equal(selected.some(p=>p.doi===papers[1].doi),false);
+  assert.equal(selected.some(p=>p.doi===papers[2].doi),false);
+  assert.ok(selected.some(p=>p.journal==='Nature Chemistry'));
+  assert.ok(selected.some(p=>p.journal==='Science Advances'));
+  assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'reachability').length,0);
+});
 test('historical batch does not write into media, PDF or Evidence interfaces',()=>{
   const body=original.replace(/\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==/,'');
   for(const forbidden of [
     'osg-toc-v6:','/api/article-summary/fulltext/import','/api/private-pdf/import',
     'api/local-captures/import','importBodyFigure','capturePrivatePdf','GM_download('
   ])assert.ok(!body.includes(forbidden),'isolation breach: '+forbidden);
-  assert.ok(original.includes("GM_openInTab('https://doi.org/'"));
+  assert.ok(original.includes('GM_openInTab(prefix+paper.doi'));
   assert.ok(original.includes('一键补抓全部缺项'));
   assert.ok(original.includes('BATCH_MIN_GAP_MS=2000'));
 });
 
 test('retry policy separates temporary errors from license and access blocks',()=>{
   const api=fixture().context.__batchTest;
-  assert.equal(api.batchRetryAllowed({status:'timeout'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:true},false),true);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),false);
+  assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},true),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
   assert.equal(api.batchRetryAllowed({status:'storage_failure'},false),true);
   assert.equal(api.batchRetryAllowed({status:'response_hash_mismatch'},false),true);
@@ -242,6 +328,54 @@ test('ACS licence review samples at most ten genuine prior blocks, not the full 
   assert.ok(result.every(p=>p.doi.startsWith('10.1021/')&&p.doi!==papers[0].doi&&p.doi!==papers[2].doi));
   assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'blocked').length,0);
   assert.equal(api.batchSelectCandidates(papers,new Set(),[],false,'all').length,papers.length);
+});
+test('old DOI-verified ambiguous licensing/body is rechecked exactly once after parser upgrade',()=>{
+  const api=fixture().context.__batchTest;
+  const prior={doi:DOI,status:'license_not_verified',pageDoiVerified:true,captureRevision:'old'};
+  assert.equal(api.batchRetryAllowed(prior,false),true);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v026'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,status:'body_missing',captureRevision:'old'},false),true);
+  assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,httpStatus:429},false),false);
+  const papers=[{doi:DOI},{doi:'10.1021/acs.joc.other'}];
+  const chosen=api.batchSelectCandidates(papers,new Set(),[prior],false,'all');
+  assert.equal(chosen.length,2,'previous rights unknown and never-attempted both remain in corpus sweep');
+});
+test('full inventory reports actual formal DOI, saved science, unresolved rights and never-attempted separately',()=>{
+  const api=fixture().context.__batchTest;
+  const catalog={pairedCaptureRegistry:true,webpageDoiCount:4,formalCount:6,articles:[
+    {doi:DOI,date:'2026-09-01',journal:'JACS'},
+    {doi:'10.1021/jacs.other1',date:'2026-09-02',journal:'JACS'},
+    {doi:'10.1021/jacs.other2',date:'2026-09-03',journal:'JACS'},
+    {doi:'10.1021/jacs.undated',date:'',journal:'JACS'}
+  ]};
+  const rows=[{doi:'10.1021/jacs.other1',status:'license_not_verified',pageDoiVerified:true}];
+  const c=api.batchCoverageSummary(catalog,[DOI],rows);
+  assert.equal(c.formalDois,6);
+  assert.equal(c.historicalWithVerifiedDate,3);
+  assert.equal(c.historicalWithoutVerifiedDate,1);
+  assert.equal(c.savedLocal,1);
+  assert.equal(c.licensePending,1);
+  assert.equal(c.neverAttempted,1);
+  assert.equal(c.parserRecheckEligible,1);
+  assert.equal(c.scheduledByNormalBatch,2);
+});
+test('local body search includes core chapters captions and tables, not only first 20',()=>{
+  const api=fixture().context.__batchTest;
+  assert.ok(api.batchLocalSearchTerms('LMCT').includes('ligand-to-metal charge transfer'));
+  const p={doi:DOI,sections:[
+    {type:'introduction',heading:'Background',text:'LMCT was discussed in prior work.'},
+    {type:'mechanism',heading:'Mechanistic Studies',text:'The ligand-to-metal charge transfer is established by spectroscopy.'}
+  ],captions:[{label:'Scheme 2',text:'LMCT mechanism'}],tables:[{label:'Table 1',text:'LMCT control'}]};
+  const chosen=api.batchLocalEvidenceMatch(p,api.batchLocalSearchTerms('LMCT'));
+  assert.equal(chosen.type,'mechanism');
+  assert.equal(chosen.kind,'正文');
+  const cap=api.batchLocalEvidenceMatch({...p,sections:[]},['lmct']);
+  assert.equal(cap.kind,'图注');
+  const tab=api.batchLocalEvidenceMatch({...p,sections:[],captions:[]},['lmct']);
+  assert.equal(tab.kind,'表格');
+  assert.equal(api.batchLocalEvidenceMatch({...p,sections:[{type:'results',text:'Hydrogenation only.'}],captions:[],tables:[]},['lmct']),null);
 });
 test('publisher evidence HTTP 403 is recorded only from observed navigation status',async()=>{
   const noEvidence=fixture({navigationStatus:null});

@@ -1,0 +1,70 @@
+name: Historical scientific OA source validation (read-only)
+on:
+  workflow_dispatch:
+    inputs:
+      offset:
+        description: Zero-based offset in the formal historical DOI worklist
+        type: number
+        default: 0
+      limit:
+        description: Maximum audited OA sources in this window (1 to 20)
+        type: number
+        default: 20
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/lib/historical-open-xml-pilot.mjs'
+      - 'scripts/audit-historical-open-science-oa.mjs'
+      - 'scripts/test-historical-open-science-oa.mjs'
+      - '.github/workflows/historical-open-science-oa.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/historical-open-science-oa.yml'
+permissions:
+  contents: read
+concurrency:
+  group: historical-open-science-source-validation
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify source parser and offline non-writing contract
+        run: |
+          node --check scripts/lib/historical-open-xml-pilot.mjs
+          node --check scripts/audit-historical-open-science-oa.mjs
+          node --test scripts/test-historical-open-science-oa.mjs
+          node scripts/audit-historical-open-science-oa.mjs --dry-run --limit=20 --output=/tmp/historical-oa-offline.json
+          node -e "const x=require('/tmp/historical-oa-offline.json');if(x.xmlOriginalsPersisted||x.publicBodyImports||x.publisherVisits||x.pdfDownloads||x.candidateDois>20)process.exit(1)"
+  source-pilot:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Scan one exact published-DOI OA window (no protected article requests)
+        env:
+          OA_OFFSET: ${{ inputs.offset || 0 }}
+          OA_LIMIT: ${{ inputs.limit || 20 }}
+        run: |
+          node scripts/audit-historical-open-science-oa.mjs --limit="$OA_LIMIT" --offset="$OA_OFFSET" --output=/tmp/real-historical-oa-evidence.json
+      - name: Preserve only DOI/source/rights/science-count records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-oa-source-evidence-${{ github.run_id }}
+          path: /tmp/real-historical-oa-evidence.json
+          retention-days: 7
+          if-no-files-found: warn

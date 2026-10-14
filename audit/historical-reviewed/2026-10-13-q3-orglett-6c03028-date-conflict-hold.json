@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "gallery-historical-publisher-date-conflict-hold-v1",
+  "generatedAt": "2026-10-13T13:03:34.413Z",
+  "doi": "10.1021/acs.orglett.6c03028",
+  "journal": "Organic Letters",
+  "title": "Organocatalytic Enantioselective Synthesis of C–N Axially Chiral N -Arylindole Amino Esters via Oxidative Esterification with Dynamic Kinetic Resolution",
+  "authors": [
+    "Guowei Yuan",
+    "Jinna Han",
+    "Yanqi Fan",
+    "Jie Huang",
+    "Xinshu Fu",
+    "Donghui Wei",
+    "Zhenqian Fu"
+  ],
+  "citation": {
+    "year": 2026,
+    "volume": "28",
+    "issue": "32",
+    "pages": "10403-10408",
+    "articleNumber": "",
+    "doi": "10.1021/acs.orglett.6c03028"
+  },
+  "status": "pending_exact_first_online_date_not_approved",
+  "scopeFirstPass": "provisional_include_requires_date_resolution",
+  "scopeEvidence": "ACS原始Letter公开摘要报道NHC催化N-磺酰胺基氨基醛的动态动力学拆分氧化酯化，制备C–N轴手性N-芳基吲哚氨基酯，具有多个底物、3 mol%催化剂、克级实验。合成贡献独立成立，但精确Published Online日期需一致证据。",
+  "secondPassChallenge": "尽管两个ACS官方页面的相同DOI、作者、标题、卷期页码与摘要一致，Published Online却显示不同的7月30/31日。单凭网站URL选择偏好不能证明哪个为真正最早发表日；保留争议且不纳入准入清单。",
+  "source": {
+    "branch": "staging/historical-archive-nightly",
+    "batch": "2026-07-22_2026-07-31_organic-letters",
+    "gitBlobSha": "67f6960bccfa31a1d2477390309426061dc65563",
+    "sourceFamilies": [
+      "crossref",
+      "openalex"
+    ],
+    "sourceCandidateDate": "2026-07-30",
+    "sourceDateField": "crossref_openalex_metadata_not_publisher_authority"
+  },
+  "publisherConflictingClaims": [
+    {
+      "url": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03028/5237535/Organocatalytic-Enantioselective-Synthesis-of-C-N",
+      "publishedOnline": "2026-07-31",
+      "origin": "ACS DOI-centered publisher Article History"
+    },
+    {
+      "url": "https://pubs.acs.org/orlef7/article-abstract/28/32/10403/5237535",
+      "publishedOnline": "2026-07-30",
+      "origin": "ACS issue-based original publisher Article History"
+    }
+  ],
+  "nextEvidence": "核对ACS后台在线首次页面时间/修订历史以及Crossref original published-online vs update/deposit，有权威证据再转为独立双遍include。若确认两个时间都是发行元数据差异，保留双值并标记不确定，绝不静默选一个。",
+  "notInApprovedAdmissions": true,
+  "notAdditionalManifestPendingYet": true,
+  "guards": {
+    "noPublication": true,
+    "noD1": true,
+    "noPDF": true,
+    "noAutoDateResolution": true,
+    "Q3Only": true
+  }
+}
