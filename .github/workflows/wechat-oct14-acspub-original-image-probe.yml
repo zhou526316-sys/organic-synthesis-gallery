@@ -1,0 +1,44 @@
+name: WeChat Oct14 JACS original publisher image probe
+on:
+  push:
+    branches: [wechat-oct14-two-jacs-preparation]
+    paths:
+      - audit/automation-triggers/wechat-oct14-acspub-figure-probe.json
+permissions:
+  contents: read
+jobs:
+  test-public-original-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe real publisher images; never use synthetic chemistry
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json, io
+          from PIL import Image
+          ids=['jacs.6c17662','jacs.6c08353']
+          logs=[]
+          for doi in ids:
+            short='ja'+doi.split('.')[-1].split('c')[0]+'c'+doi.split('c')[-1]
+            # DOI jacs.6c17662 -> ja6c17662
+            short='ja'+doi.removeprefix('jacs.')
+            for n in [1,2,3,4,5,6]:
+              url=f'https://pubs.acs.org/cms/10.1021/{doi}/asset/images/large/{short}_{n:04d}.jpeg'
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/155.0 Safari/537.36','Accept':'image/jpeg,image/*;q=0.9,*/*;q=0.8','Referer':'https://pubs.acs.org/doi/10.1021/'+doi})
+              try:
+                with urllib.request.urlopen(req,timeout=12) as rsp:
+                  b=rsp.read(4_000_000);meta={'code':rsp.status,'type':rsp.headers.get('Content-Type'),'bytes':len(b)}
+                try: meta['dimensions']=Image.open(io.BytesIO(b)).size
+                except Exception as e:meta['decode_error']=str(e)[:90]
+              except Exception as e:meta={'error':str(e)[:120]}
+              logs.append({'doi':doi,'figure':n,**meta})
+          print(json.dumps({'originalFigureProbe':logs},ensure_ascii=False,indent=2))
+          open('/tmp/original-figure-probe.json','w').write(json.dumps(logs,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct14-acspub-figure-probe
+          path: /tmp/original-figure-probe.json
+          retention-days: 7
