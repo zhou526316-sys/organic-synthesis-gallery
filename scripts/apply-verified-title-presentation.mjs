@@ -135,10 +135,10 @@ export function trustedPublishedTitleBaseline(marker) {
   if (!Number.isSafeInteger(marker.previousProductionCards) || !Array.isArray(marker.removedDois)
     || marker.removedDois.length === 0) return false;
   const removed = marker.removedDois.map(norm);
-  if (removed.some(x=>!/^10\\.\\d{4,9}\\/\\S+$/.test(x))
+  if (removed.some(x=>!/^10\.\d{4,9}\/\S+$/.test(x))
     || new Set(removed).size !== removed.length
     || marker.previousProductionCards-marker.productionCards !== removed.length) return false;
-  if (!/^2026-\\d{2}-\\d{2}T08:00:00\\+08:00$/.test(marker.lastFixedPublicationSlot)
+  if (!/^2026-\d{2}-\d{2}T08:00:00\+08:00$/.test(marker.lastFixedPublicationSlot)
     || !/^[a-f0-9]{40}$/.test(marker.previousMarkerBlobSha)) return false;
   return true;
 }
