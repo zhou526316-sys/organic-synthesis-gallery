@@ -49,7 +49,7 @@ test('31 publisher non-original types cannot masquerade as genuine preparative A
     assert.equal(row.title,src.title);
     assert.equal(row.date,src.date);
     assert.equal(ev.publisherArticleType,src.publisherArticleType);
-    assert.equal(ev.publisherPage,src.publisherUrl);
+    assert.equal(ev.publisherPage,src.publisherPage);
     assert.equal(ev.stageSourceSha256,src.sourceSha256);
     assert.equal(ev.stageBatchGitBlobSha,src.rawSourceBatchGitBlobSha);
     assert.equal(ev.sourceReviewQueueGitBlobSha,src.reviewQueueGitBlobSha);
