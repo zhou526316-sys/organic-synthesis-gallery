@@ -187,9 +187,10 @@ export function reconcileQ3({
       &&a.publisherArticleType===proof.publisherArticleType
       &&a.publisherPage===proof.publisherPage
       &&['Article','Analysis'].includes(a.publisherArticleType)
-      &&['primaryContribution','preparativeTransformation','generalityEvidence',
-        'firstPassReason','independentChallengeReason'].every(k=>
-          typeof a[k]==='string'&&a[k].length>=25)
+      &&['primaryContribution','preparativeTransformation','generalityEvidence']
+        .every(k=>typeof a[k]==='string'&&a[k].trim().length>=10)
+      &&['firstPassReason','independentChallengeReason']
+        .every(k=>typeof a[k]==='string'&&a[k].trim().length>=40)
       &&a.firstPassReason!==a.independentChallengeReason
       &&(a.decision!=='pending'||(
         a.missingEvidenceMustNotMeanNoEvidenceExists===true
