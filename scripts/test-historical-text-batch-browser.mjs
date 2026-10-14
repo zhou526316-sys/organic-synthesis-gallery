@@ -213,6 +213,8 @@ try{
   assert.equal(oaReport.newPacket.pdfDownloaded,false);
   assert.ok(oaReport.newPacket.sourceXmlSha256.length===64);
   assert.ok(oaReport.newPacket.sections.length>=2);
+  await page.getByRole('button',{name:'全库正文覆盖'}).click();
+  await page.getByText(/全库本机已存科学正文 3 篇/).waitFor({timeout:5000});
   assert.ok(oaReport.requests.some(x=>new URL(x.url).pathname==='/api/literature/catalog-view'
     &&!new URL(x.url).searchParams.has('dateTo')));
   assert.ok(oaReport.requests.some(x=>new URL(x.url).hostname==='www.ebi.ac.uk'));
