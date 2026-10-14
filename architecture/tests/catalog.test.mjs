@@ -64,6 +64,39 @@ test('invalid, unknown and future dates remain explicitly accounted', () => {
   assert.equal(b.partitions.date_invalid.length, 1); assert.equal(b.partitions.date_unknown.length, 1); assert.equal(b.partitions.future.length, 1);
   assert.equal(verifyCatalog(b.files).records, 3);
 });
+test('DOI-scoped JOC prospective Crossref date stays unknown in indexed first-online record without altering protected card bytes', () => {
+  const raw = {doi:'10.1021/acs.joc.6c01769',journal:'JOC',
+    title:'Practical C(sp3)–F Bond Construction via Metal-Free Heterogeneous Photodecarboxylative Fluorination in Continuous Flow',
+    date:'2026-10-15',addedDate:'2026-10-14',authors:['Example'],new:true};
+  const snapshot=JSON.stringify(raw);
+  const b=buildCatalog([raw],{source,asOfDate:'2026-10-14'});
+  assert.equal(b.records.length,1);
+  assert.equal(b.records[0].firstOnlineDate,null);
+  assert.equal(b.records[0].datePrecision,'unknown');
+  assert.equal(b.records[0].paper.date,'2026-10-15');
+  assert.equal(JSON.stringify(raw),snapshot);
+  assert.equal(b.partitions.date_unknown.length,1);
+  assert.equal(b.partitions.future.length,0);
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
+test('explicit unverified nonempty dates stay unknown without losing original evidence', () => {
+  const raw=paper(19,'2026-10-03',{dateUnverified:true,createdDate:'2026-10-02'});
+  const b=build([raw]);
+  assert.equal(b.records[0].firstOnlineDate,null);
+  assert.equal(b.records[0].datePrecision,'unknown');
+  assert.equal(b.records[0].paper.createdDate,'2026-10-02');
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
+test('publisher-verified DOI-specific date remains a real calendar day in indexed presentation', () => {
+  const raw={doi:'10.1126/sciadv.aed4187',journal:'Science Advances',
+    date:'2026-10-09',dateUnverified:true,addedDate:'2026-10-08',title:'Verified historical date',
+    authors:['Example']};
+  const b=buildCatalog([raw],{source,asOfDate:'2026-10-14'});
+  assert.equal(b.records[0].firstOnlineDate,'2026-10-07');
+  assert.equal(b.records[0].datePrecision,'day');
+  assert.equal(b.records[0].paper.date,'2026-10-09');
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
 test('capacity shards retain all records', () => {
   const rows = Array.from({ length: 10 }, (_, i) => paper(i));
   const b = build(rows, { maxShardBytes: 1100 });
