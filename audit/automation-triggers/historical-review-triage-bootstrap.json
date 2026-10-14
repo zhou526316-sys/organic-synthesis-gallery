@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Q3_history_staging_only_recount_after_650_chinese_evidence_gate_fix",
+  "purpose": "Q3_hist_staging_recount_after_24_more_NatCatal_originality_and_science_verdicts",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T05:50:36.679Z",
-  "reason": "One bounded recovery of failed Q3-only run 38518015247 after PR #650 merge a952fbf68ffd82b3165bbce1d27011c3520c0e2e; DOI/source Git SHA evidence matched but old validation erroneously required >=25 JS characters for every Chinese descriptive field. Fixed short Chinese evidence while retaining >=40 character independent challenge reasons. Existing source records and science decisions unchanged. Verify 14 independent science exclusions and one evidence pending; 116 approved and 2 original pending unchanged. Staging-only Git sources, zero D1, no media or off-slot release. Expected 11408 unfinished after real readback only.",
+  "requestedAt": "2026-10-14T06:15:40.350Z",
+  "reason": "CI-green merged PR #652 (9c6ad501eb8fceefe7de6811cf20b2e4e4c6b070) adds official DOI exact 19 Nature Catalysis publisher non-original types (9 News & Views,4 Research Highlights,2 Research Briefings,1 Comment,2 Author Corrections,1 Publisher Correction) and 5 original Article science reviews (4 academic exclude,1 pending AzcA skeletal editing). Recount frozen 2026-Q3 192 roots in staging only. Combined expected publisher nonoriginal 24, academic-science excludes 18, additional evidence pending 2, original manifest pending 2 and accepted 116 unchanged; candidate source union 12286 and real Q3 formal 820 unchanged unless genuinely newer main inputs. Forecast unfinished 11408 to 11384 only AFTER actual run, do not assert before same-generation evidence readback. Zero D1, zero media/PDF/HTML retrieval, zero off-slot publication, no scope owner updates. Publisher Research issue completeness remains unproven.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_Q3_NatCatal_15_reviewed_retry_650_fix_language_threshold_no_double_release",
+  "triggerScope": "20261014_natcatal_all_53_doi_reviewed_19_nonoriginal_4_science_exclude_1_science_pending_24_delta_run_on_existing_staging_only",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -23,13 +23,13 @@
   "expectedAcademicInclude": 116,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
-  "publisherNonResearchExactCount": 5,
+  "publisherNonResearchExactCount": 24,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
   "trustedScopeCorrectionsSha": "109be3cc5abedc62f744431e34faa0552564782d",
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "a952fbf68ffd82b3165bbce1d27011c3520c0e2e",
+  "lastRelatedMergeCommit": "9c6ad501eb8fceefe7de6811cf20b2e4e4c6b070",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -51,9 +51,14 @@
   "noProductionDeploymentClaims": true,
   "reviewedPublisherScopeSourceProofFile": "audit/historical-reviewed/q3-natcatal-scope-source-proof.json",
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
-  "expectedScopeScienceExcluded": 14,
-  "expectedAdditionalEvidencePending": 1,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11408,
+  "expectedScopeScienceExcluded": 18,
+  "expectedAdditionalEvidencePending": 2,
+  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11384,
   "retryOfRunId": 38518015247,
-  "retryCause": "q3_reviewed_scope_provenance_or_science_conflict_01571-2_due_24_char_Chinese_description"
+  "retryCause": "q3_reviewed_scope_provenance_or_science_conflict_01571-2_due_24_char_Chinese_description",
+  "retainOwnerPermanentCorrections": true,
+  "pendingSupplementalDoiExact": [
+    "10.1038/s41929-026-01608-6",
+    "10.1038/s41929-026-01611-x"
+  ]
 }
