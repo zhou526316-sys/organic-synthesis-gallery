@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.65
+// @version      6.2.66
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.65';
+  var INSTALL_REVISION = '6.2.66';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -2650,7 +2650,7 @@ function embeddedJobDois(value) {
   // when the RSC article shell lacks the original TOC/figure DOM. This is a
   // bounded, first-party, same-session fallback for TWO verified Oct-09 gaps.
   // A PDF first-page preview, generic image, or foreign article is never TOC.
-  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261012-doi-card-semantic-provenance-v3';
+  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261014-single-firstparty-listing-no-duplicate-iframe-v4';
   function rscNativeAjaxBoundRoute(job) {
     var doi=normalizeDoi(job&&job.doi);
     if(!/^10\.1039\/[a-z][0-9][a-z]{2}[a-z0-9]+$/i.test(doi)
@@ -3434,9 +3434,13 @@ function embeddedJobDois(value) {
       }
       var rscParts=rscRouteParts(job);
       if(rscParts){
-        add('https://pubs.rsc.org/en/content/articlelanding/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
-        add('https://pubs.rsc.org/en/content/articlehtml/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
-        rscIssuePageUrls(job,document,location.href).forEach(add);
+        // The two legacy articlelanding/articlehtml iframe routes redirect to
+        // this DOI's Silverchair shell and yielded no official artwork. Never
+        // wait up to 15 seconds per duplicate frame. Check only ONE real
+        // publisher-linked issue card or exact DOI search listing.
+        var originalIssue=rscIssuePageUrls(job,document,location.href);
+        if(originalIssue.length)add(originalIssue[0]);
+        else add(rscSearchResultUrl(job));
       }
     } else if (publisher === 'ccs' && /(?:^|\.)chinesechemsoc\.org$/.test(location.hostname)) {
       ccsTocIndexUrls(job,document,location.href).forEach(add);
@@ -3539,13 +3543,16 @@ function embeddedJobDois(value) {
     var best = [];
     for (var u = 0; u < urls.length; u += 1) {
       var url = urls[u];
-      if(job.publisher==='rsc' && rscSilverchairArticleForJob(job,location.href)){
+      if(job.publisher==='rsc'){
+        // The verified first-party listing reader already includes a bounded
+        // same-session browser read and a GM transport fallback when eligible.
+        // Hidden iframes on RSC returned empty or repeated redirects; they
+        // multiply wall time but do not add source evidence.
         var listingRows=await rscPublisherListingHtmlCandidates(job,trace,url);
-        if(listingRows!==null){
-          if(listingRows.length)return listingRows;
-          // A verified static first-party listing needs no second empty iframe.
-          continue;
-        }
+        if(listingRows&&listingRows.length)return listingRows;
+        pushTrace(trace,{stage:'rsc_listing_html',event:'no_candidate_no_duplicate_iframe',
+          status:'none',message:listingRows===null?'source_not_verified':'no_doi_bound_official_graphic'});
+        continue;
       }
       pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_start', status: 'start', url: url });
       try {
