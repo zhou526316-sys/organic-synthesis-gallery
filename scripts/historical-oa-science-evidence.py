@@ -117,7 +117,21 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
     body = next((e for e in root.iter() if lname(e.tag) == "body"), None)
     if body is None:
         raise ValueError("science_body_missing")
-    units, headings, paragraphs = [], [], 0
+    units, short_fragments, headings, paragraphs = [], [], [], 0
+    # Publication-side administrative statements are not scientific evidence.
+    ADMIN_HEADINGS = ("data availability", "code availability", "rights and permissions",
+        "additional information", "ethics declarations", "author information",
+        "acknowledgements", "acknowledgments", "funding information",
+        "conflict of interest", "competing interests", "supplementary information")
+    def include_piece(typ, heading, text, n):
+        # Keep short *authentic* scientific fragments as a separate hash-
+        # evidenced completeness gap. They are never fabricated/padded to pass
+        # the 60-char FTS threshold, but also never discard the whole article.
+        record=(typ, heading, text, n)
+        if len(text) < 60:
+            short_fragments.append(record)
+        else:
+            units.append(record)
     # Top-level paragraphs outside any section are still scientific content.
     top = direct_science_paragraphs(body)
     if top:
@@ -127,6 +141,8 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
             continue
         title = find_direct_child(sec, "title")
         h = element_text(title) or "Untitled main article section"
+        if h.lower().startswith(ADMIN_HEADINGS):
+            continue
         texts = direct_science_paragraphs(sec)
         if texts:
             headings.append((h, kind(h), texts))
@@ -138,19 +154,12 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
                 raise ValueError("one_science_paragraph_too_large")
             trial = norm(" ".join([*current, p]))
             if len(trial) > MAX_SECTION_CHARS and current:
-                text = norm(" ".join(current))
-                if len(text) >= 60:
-                    units.append((typ, heading, text, len(current)))
-                else:
-                    raise ValueError("section_under_minimum_character_count")
+                include_piece(typ, heading, norm(" ".join(current)), len(current))
                 current = [p]
             else:
                 current.append(p)
         if current:
-            text = norm(" ".join(current))
-            if len(text) < 60:
-                raise ValueError("section_under_minimum_character_count")
-            units.append((typ, heading, text, len(current)))
+            include_piece(typ, heading, norm(" ".join(current)), len(current))
     # Caption evidence is counted but not imported or mixed with scientific
     # prose until image/third-party credit review has separately passed.
     captions = []
@@ -164,35 +173,48 @@ def parse_science_jats(xml_bytes, expected_doi, expected_xml_sha=None):
                 captions.append({"sourceType": tag, "sourceId": node.attrib.get("id") or None,
                     "chars": len(caption), "sha256": digest(caption),
                     "mediaCreditReview": "pending_separate_asset_review"})
-    if not units or paragraphs < 2 or not any(t in {"results", "scope", "mechanism", "experimental"} for t,_,_,_ in units):
+    # A short segment is scientific evidence, but not an eligible standalone
+    # 60-character FTS row. Preserve its hash and explicitly downgrade
+    # completeness until a future human-reviewed merge preserves the source.
+    all_units = units + short_fragments
+    if not all_units or paragraphs < 2 or not any(
+        t in {"results", "scope", "mechanism", "experimental"} for t,_,_,_ in all_units
+    ):
         raise ValueError("science_content_missing_or_abstract_only")
-    if len(units) > MAX_EVIDENCE_UNITS or len(units) + len(captions) > MAX_EVIDENCE_UNITS:
+    if len(all_units) + len(captions) > MAX_EVIDENCE_UNITS:
         raise ValueError("science_unit_capacity_exceeded")
-    total_bytes = sum(len(s.encode("utf-8")) for _,_,s,_ in units)
+    total_bytes = sum(len(s.encode("utf-8")) for _,_,s,_ in all_units)
     if total_bytes > MAX_SCIENCE_BYTES:
         raise ValueError("science_byte_budget_exceeded")
-    # Matches the public FTS model's canonical source hashing of sections only.
     manifest_units = []
     for i, (typ, heading, text, n) in enumerate(units, 1):
         manifest_units.append({"sectionId":f"s{i:03d}", "type":typ,
             "heading":heading[:200], "paragraphs":n,
             "chars":len(text),"bytes":len(text.encode("utf-8")),
             "sectionSha256":digest(text)})
+    short_manifest = [
+        {"type":typ,"heading":heading[:200],"paragraphs":n,
+         "chars":len(text),"sha256":digest(text),
+         "reviewStatus":"source_short_fragment_pending_safe_merge"}
+        for typ,heading,text,n in short_fragments
+    ]
     canonical = "\n\n".join(
         f"s{i:03d}\n{heading[:200]}\n{text}" for i,(_, heading,text,_) in enumerate(units,1)
     )
-    kinds = Counter(t for t,_,_,_ in units)
-    complete = kinds["results"]>0 and kinds["conclusion"]>0 and len(units)>=3
+    kinds = Counter(t for t,_,_,_ in all_units)
+    complete = kinds["results"]>0 and kinds["conclusion"]>0 and len(units)>=3 and not short_fragments
     return {
-        "state":"science_sections_mapped_pending_independent_review",
+        "state":"science_sections_mapped_pending_independent_review" if units else "science_fragments_only_pending_review",
         "source":"Europe PMC official CC BY JATS","doi":expected_doi,
         "xmlSha256":actual_xml_sha,"licenseKindSignal":license_kind,
         "scienceSectionUnits":len(units),"scientificParagraphs":paragraphs,
-        "scienceCharacters":sum(len(s) for _,_,s,_ in units),
+        "shortScienceFragmentCount":len(short_fragments),
+        "scienceCharacters":sum(len(s) for _,_,s,_ in all_units),
         "scienceTextBytes":total_bytes,"captionEvidenceCount":len(captions),
         "completenessCandidate":"complete_candidate" if complete else "partial",
         "canonicalSectionsSha256":digest(canonical),
-        "sections":manifest_units,"captions":captions,
+        "sections":manifest_units,"shortScienceFragments":short_manifest,"captions":captions,
+        "canonicalIndexScope":"index_candidate_only_pending_short_fragment_merges" if short_fragments else "all_parsed_science_units",
         "publicFtsImported":False,"publicUploadAllowed":False,"originalXmlPersisted":False,
         "articleTextPersisted":False,"siOrPdfDownloaded":False
     }
