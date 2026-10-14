@@ -125,6 +125,27 @@ export function applyVerifiedTitlePresentation({ baseline, supplement, receipt, 
     proofs,
   };
 }
+export function metadataTitlePresentationMarkerAuthorized(marker) {
+  // The Pages authorization job independently verifies the full immutable
+  // marker/parent chain before this derived, non-admitting presentation pass.
+  const validSlot = value => /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(String(value || ''));
+  if (!Number.isInteger(marker?.productionCards) || marker.productionCards <= 0) return false;
+  if (marker?.mode === 'slot-release') return marker.schemaVersion === 2 && validSlot(marker.publicationSlot);
+  if (marker?.mode !== 'scope-correction') return false;
+  const shavalid = value => /^[0-9a-f]{40}$/.test(String(value || ''));
+  return marker.schemaVersion === 3
+    && marker.releasePolicy === 'deletion-only'
+    && validSlot(marker.lastFixedPublicationSlot)
+    && Array.isArray(marker.publishableDois) && marker.publishableDois.length === 0
+    && Array.isArray(marker.removedDois) && marker.removedDois.length > 0
+    && new Set(marker.removedDois).size === marker.removedDois.length
+    && marker.removedDois.every(doi => /^10\.\d{4,9}\/\S+$/.test(String(doi)))
+    && shavalid(marker.previousMarkerBlobSha)
+    && shavalid(marker.previousReleaseCommit)
+    && shavalid(marker.correctionReviewBlobSha)
+    && marker.authorityFile === 'audit/scope-removal-authority.json';
+}
+
 export async function applyVerifiedTitlePresentationToPages(root = process.cwd()) {
   const file = p => path.resolve(root,p);
   const [markerText, reportText, baselineText, supplementText] = await Promise.all([
@@ -134,8 +155,8 @@ export async function applyVerifiedTitlePresentationToPages(root = process.cwd()
     readFile(file('public/literature-supplement.json'),'utf8'),
   ]);
   const marker = JSON.parse(markerText);
-  assert(marker?.mode === 'slot-release' && Number.isInteger(marker.productionCards)
-    && marker.productionCards > 0, 'metadata_presentation_requires_published_fixed_slot_baseline');
+  assert(metadataTitlePresentationMarkerAuthorized(marker),
+    'metadata_presentation_requires_authorized_published_or_deletion_only_baseline');
   assert(shaBlob(Buffer.from(baselineText)) === marker.protectedBlobs?.['public/papers.gz.b64'],
     'fixed_slot_baseline_unverified');
   const members = new Set();
