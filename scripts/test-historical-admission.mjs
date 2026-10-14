@@ -885,3 +885,32 @@ test('ten newly audited 2026 Q3 ACS originals preserve real online dates, indepe
  const amine=root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01352');
  assert.match(amine.challengeReason,/BINAM/);
 });
+
+
+test('2026-10-14 two Q3 Organic Letters original synthetic studies have frozen ACS first-online and second-pass evidence',()=>{
+  const exact=[
+    ['10.1021/acs.orglett.6c02967','2026-08-21','10978-10983'],
+    ['10.1021/acs.orglett.6c03282','2026-08-26','11111-11116']
+  ];
+  for(const [doi,date,pages] of exact){
+    const row=root.accepted.find(x=>x.doi===doi);
+    assert.ok(row,doi);
+    assert.equal(row.date,date);
+    assert.equal(row.citation.pages,pages);
+    assert.equal(row.reviewEvidence.publisherOnlineDate,date);
+    assert.equal(row.reviewPasses,2);
+    assert.equal(row.challengeDecision,'include');
+    assert.equal(row.mediaPolicy,'toc_only');
+    assert.equal(row.ingestionChannel,'historical_backfill');
+    assert.equal(row.new,false);
+    assert.equal(row.addedDate,'');
+    assert.equal(row.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    assert.equal(row.reviewEvidence.abstractCopied,false);
+    assert.equal(row.reviewEvidence.figureFetched,false);
+    assert.equal(row.reviewEvidence.pdfFetched,false);
+    assert.ok(row.independentPasses.length===2);
+  }
+  assert.equal(root.summary.include,root.accepted.length);
+  assert.equal(root.summary.pending,2);
+  assert.equal(root.summary.checked,root.accepted.length+root.pending.length);
+});
