@@ -66,5 +66,23 @@ class SourceEvidenceTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"science_content_missing_or_abstract_only"):
             source.parse_science_jats(raw,DOI)
 
+    def test_short_science_fragment_is_hashed_and_never_falsely_completes_article(self):
+        raw=fixture().replace(
+            b"</body>",b"<sec><title>Experimental note</title><p>Very brief note.</p></sec></body>")
+        result=source.parse_science_jats(raw,DOI)
+        self.assertEqual(result["state"],"science_sections_mapped_pending_independent_review")
+        self.assertEqual(result["shortScienceFragmentCount"],1)
+        self.assertEqual(result["completenessCandidate"],"partial")
+        self.assertEqual(len(result["shortScienceFragments"][0]["sha256"]),64)
+        self.assertEqual(result["publicFtsImported"],False)
+        self.assertNotIn("Very brief note.",json.dumps(result))
+    def test_administrative_data_availability_not_in_scientific_sections(self):
+        raw=fixture().replace(b"</body>",(
+            b"<sec><title>Data availability</title><p>All article data are in the "
+            b"main paper or supplementary files and administration documents.</p></sec></body>"))
+        result=source.parse_science_jats(raw,DOI)
+        self.assertEqual(result["shortScienceFragmentCount"],0)
+        self.assertTrue(all("Data availability" not in x["heading"] for x in result["sections"]))
+
 if __name__=="__main__":
     unittest.main()
