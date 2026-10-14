@@ -123,7 +123,7 @@ jobs:
         run: |
           test -s scripts/test-result-window.mjs
           test -s architecture/tests/published-reader.test.mjs
-          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs scripts/test-publisher-date-display-fix.mjs architecture/tests/published-reader.test.mjs
+          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs scripts/test-publisher-date-display-fix.mjs architecture/tests/published-reader.test.mjs architecture/tests/catalog.test.mjs
       - name: Resolve trusted main deployment snapshot
         id: resolve
         run: node scripts/pages-release-delivery.mjs resolve
