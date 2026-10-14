@@ -50,7 +50,12 @@
         "publisherPdfFetched": false,
         "figureFetched": false
       },
-      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers",
+      "primaryContribution": "等离子体预活化CO2和CO之后送至铜气体扩散电极，改变C3+烃和含氧产物分布",
+      "preparativeTransformation": "非热等离子体产生激发态碳物种，铜电极还原产生甲醇、乙炔、乙烷、丙烷、丁烷及丁醇等；CO2与CO共进料可提高C3+和醇类生产率",
+      "generalityEvidence": "作者公开摘要对CO2、CO进料组合、产物分析、原位光谱和等离子体动力学模拟提供实验证据；但没有由不同有机底物到分离目标小分子的可推广制备范围或手性/基团构建方法",
+      "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01609-5；首发日期2026-09-07；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+      "boundaryChallenge": "不能用材料关键词自动排除CO2电合成。反向核对后仍未发现有机合成所需的底物变换或产品分离通用性；3.3倍与1.5倍是生产率变化而非有机产物分离收率，因而建议排除。"
     },
     {
       "doi": "10.1038/s41929-026-01611-x",
@@ -90,7 +95,12 @@
         "publisherPdfFetched": false,
         "figureFetched": false
       },
-      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers",
+      "primaryContribution": "鉴定抗癌核苷5-氮杂胞苷的天然生物合成基因簇与AzcE、AzcA、AzcB/C催化的杂环骨架编辑序列",
+      "preparativeTransformation": "AzcE转化GTP为三氨基嘧啶酮；AzcA断裂与重组C–N骨架生成1,3,5-三嗪-2-羧酸中间体；AzcB/C经TPP依赖脱羧得到5-氮杂胞嘧啶",
+      "generalityEvidence": "Nature官方摘要明确体外反应LC–MS、结构和DFT分析，证明特定代谢物生物合成和异常酶反应；但公开材料未证实分离制备规模、离体底物范围或能够独立应用于有机制备的酶改造",
+      "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01611-x；首发日期2026-09-07；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+      "boundaryChallenge": "避免过度排除重要酶促骨架编辑。第二遍确认其确有新C–N重组反应，可能具备通用制备能力；尚无分离/底物接受度/产物应用证据，保留具体证据待核而非以标题归类结案。"
     },
     {
       "doi": "10.1038/s41929-026-01613-9",
@@ -127,7 +137,12 @@
         "publisherPdfFetched": false,
         "figureFetched": false
       },
-      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers",
+      "primaryContribution": "利用同位素原位表面增强拉曼光谱和DFT重新归属碱性析氧镍阳极表面NiO2/NiOOH物种",
+      "preparativeTransformation": "OER条件下镍氧化物表面的氧化、水解离及振动光谱归属，强调NiO2终止态、泛频和Stark效应",
+      "generalityEvidence": "论文通过H/D同位素、不同金属氧化物和DFT比较验证电极表面结构判断；没有合成小分子目标产物的底物体系",
+      "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01613-9；首发日期2026-09-11；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+      "boundaryChallenge": "原位光谱创新可以迁移到有机电合成的机理研究，但潜在应用不是本论文已验证的有机制备方法，因此排除。"
     },
     {
       "doi": "10.1038/s41929-026-01612-w",
@@ -164,7 +179,12 @@
         "publisherPdfFetched": false,
         "figureFetched": false
       },
-      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers",
+      "primaryContribution": "通过原位三维原子分辨电镜追踪铂纳米颗粒在催化一氧化碳氧化过程中的单原子位点变化",
+      "preparativeTransformation": "Pt颗粒在CO氧化过程的吸附位点、原子配位环境变化与反应动力学相关联",
+      "generalityEvidence": "作者展示活化/失活/再活化循环及Langmuir、Taylor位点共存；属于活性位点表征，不是有机底物范围",
+      "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01612-w；首发日期2026-09-21；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+      "boundaryChallenge": "虽然该方法可能为异相有机催化提供高价值观察手段，但不能以潜在工具价值当作论文已提供一般制备路线，排除。"
     },
     {
       "doi": "10.1038/s41929-026-01615-7",
@@ -201,7 +221,12 @@
         "publisherPdfFetched": false,
         "figureFetched": false
       },
-      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers",
+      "primaryContribution": "研究Cr掺杂ZnO界面氧空位的位置、稳定性及其在合成气转烯烃和丙烷脱氢中的作用",
+      "preparativeTransformation": "以CO/H2制备烯烃及丙烷脱氢产烯烃等真实化学转化作为探针，定量联系氧空位与催化选择性",
+      "generalityEvidence": "实际数据包括原位时间分辨X射线谱、质谱、热量测定、反应动力学与DFT；关键变化是Cr–Ov位点而非可迁移有机底物制备拓展",
+      "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01615-7；首发日期2026-09-25；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+      "boundaryChallenge": "反向挑战认可它研究两种真实有机产物相关转化，但没有化学合成方法的一般性制备证据，主要结论服务于催化材料设计，故建议排除。"
     }
   ],
   "guards": {
