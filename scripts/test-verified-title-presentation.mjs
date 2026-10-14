@@ -36,3 +36,25 @@ assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,recei
 assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,receipt:{...receipt,pendingRowsAfter:1},members}));
 assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,receipt:{...receipt,resolved:[receipt.resolved[0],{...receipt.resolved[1],title:'Cloudflare checking your browser'}]},members}));
 console.log(JSON.stringify({ok:true,tests:12,contract:'unchanged_protected_inputs_and_fixed_DOI_membership'},null,2));
+
+
+import { trustedPublishedTitleBaseline } from './apply-verified-title-presentation.mjs';
+const scopeMarker={
+  mode:'scope-correction',releasePolicy:'deletion-only',
+  previousProductionCards:1091,productionCards:1087,
+  publishableDois:[],
+  removedDois:[
+    '10.1038/s41467-026-78512-x','10.1002/anie.2910902',
+    '10.1021/acscatal.6c06095','10.1002/anie.2518487'
+  ],
+  lastFixedPublicationSlot:'2026-10-14T08:00:00+08:00',
+  previousMarkerBlobSha:'ad43e69dd5536ee245a5f6c781c28397686defe3'
+};
+assert.equal(trustedPublishedTitleBaseline(scopeMarker),true);
+assert.equal(trustedPublishedTitleBaseline({mode:'slot-release',productionCards:1087}),true);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,releasePolicy:'auto-admit'}),false);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,publishableDois:['10.1021/jacs.6c00001']}),false);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,productionCards:1086}),false);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,removedDois:[scopeMarker.removedDois[0],scopeMarker.removedDois[0],scopeMarker.removedDois[2],scopeMarker.removedDois[3]]}),false);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,lastFixedPublicationSlot:'2026-10-14T18:00:00+08:00'}),false);
+assert.equal(trustedPublishedTitleBaseline({...scopeMarker,previousMarkerBlobSha:'x'}),false);

@@ -125,6 +125,24 @@ export function applyVerifiedTitlePresentation({ baseline, supplement, receipt, 
     proofs,
   };
 }
+/** A deletion-only scope correction is still anchored to the last genuine 08:00 slot.
+ * This does not accept corrections that admit literature or modify the release calendar. */
+export function trustedPublishedTitleBaseline(marker) {
+  if (!marker || !Number.isSafeInteger(marker.productionCards) || marker.productionCards <= 0) return false;
+  if (marker.mode === 'slot-release') return true;
+  if (marker.mode !== 'scope-correction' || marker.releasePolicy !== 'deletion-only') return false;
+  if (!Array.isArray(marker.publishableDois) || marker.publishableDois.length !== 0) return false;
+  if (!Number.isSafeInteger(marker.previousProductionCards) || !Array.isArray(marker.removedDois)
+    || marker.removedDois.length === 0) return false;
+  const removed = marker.removedDois.map(norm);
+  if (removed.some(x=>!/^10\.\d{4,9}\/\S+$/.test(x))
+    || new Set(removed).size !== removed.length
+    || marker.previousProductionCards-marker.productionCards !== removed.length) return false;
+  if (!/^2026-\d{2}-\d{2}T08:00:00\+08:00$/.test(marker.lastFixedPublicationSlot)
+    || !/^[a-f0-9]{40}$/.test(marker.previousMarkerBlobSha)) return false;
+  return true;
+}
+
 export async function applyVerifiedTitlePresentationToPages(root = process.cwd()) {
   const file = p => path.resolve(root,p);
   const [markerText, reportText, baselineText, supplementText] = await Promise.all([
@@ -134,8 +152,7 @@ export async function applyVerifiedTitlePresentationToPages(root = process.cwd()
     readFile(file('public/literature-supplement.json'),'utf8'),
   ]);
   const marker = JSON.parse(markerText);
-  assert(marker?.mode === 'slot-release' && Number.isInteger(marker.productionCards)
-    && marker.productionCards > 0, 'metadata_presentation_requires_published_fixed_slot_baseline');
+  assert(trustedPublishedTitleBaseline(marker), 'metadata_presentation_requires_published_fixed_slot_baseline');
   assert(shaBlob(Buffer.from(baselineText)) === marker.protectedBlobs?.['public/papers.gz.b64'],
     'fixed_slot_baseline_unverified');
   const members = new Set();
