@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "context": "Post-deployment scope-correction reconciliation",
+  "checkedAt": "2026-10-14T02:05:49.766Z",
+  "finishedAt": "2026-10-14T02:05:50.126Z",
+  "sourceCommit": "58d017e282910b94ae9d24aab39273176d01426a",
+  "markerCommit": "08466480df08a8cfe2bc2de66cf08c478d2d2545",
+  "correctionId": "scope-correction-20261014012549272",
+  "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery",
+  "repositoryDois": 1087,
+  "deployedDois": 1087,
+  "exactDoiSetMatch": true,
+  "removedDoisAbsent": [
+    "10.1038/s41467-026-78512-x",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1002/anie.2518487"
+  ],
+  "retainedDoisVerified": 1087,
+  "requiredDeployedFiles": [
+    "papers.gz.b64",
+    "total-synthesis.json",
+    "manual-supplement.json",
+    "final-audit-supplement.json",
+    "curated-supplement.json",
+    "automation-supplement.json",
+    "rolling-supplement.json",
+    "literature-supplement.json"
+  ],
+  "verificationRun": "38499076355",
+  "upstreamPagesRun": null,
+  "productionDataModified": false,
+  "semanticReviewReperformed": false,
+  "mediaFetched": false
+}

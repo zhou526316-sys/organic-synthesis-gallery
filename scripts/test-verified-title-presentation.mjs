@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { applyVerifiedTitlePresentation } from './apply-verified-title-presentation.mjs';
+import { applyVerifiedTitlePresentation, metadataTitlePresentationMarkerAuthorized } from './apply-verified-title-presentation.mjs';
 const a='10.1021/acs.orglett.6c00001', b='10.1021/acs.orglett.6c00002';
 const base=[
   {doi:a,title:'Title Pending Verification',journal:'Organic Letters',date:'2026-08-04',authors:['A Author'],new:false},
@@ -36,3 +36,24 @@ assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,recei
 assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,receipt:{...receipt,pendingRowsAfter:1},members}));
 assert.throws(()=>applyVerifiedTitlePresentation({baseline:base,supplement,receipt:{...receipt,resolved:[receipt.resolved[0],{...receipt.resolved[1],title:'Cloudflare checking your browser'}]},members}));
 console.log(JSON.stringify({ok:true,tests:12,contract:'unchanged_protected_inputs_and_fixed_DOI_membership'},null,2));
+
+const validFixed = {schemaVersion:2,mode:'slot-release',releasePolicy:'per-doi',
+  publicationSlot:'2026-10-14T08:00:00+08:00',productionCards:1091};
+const deleted = {schemaVersion:3,mode:'scope-correction',releasePolicy:'deletion-only',
+  lastFixedPublicationSlot:'2026-10-14T08:00:00+08:00',productionCards:1087,
+  publishableDois:[],removedDois:['10.1002/anie.2910902'],
+  previousMarkerBlobSha:'a'.repeat(40),previousReleaseCommit:'b'.repeat(40),
+  correctionReviewBlobSha:'c'.repeat(40),authorityFile:'audit/scope-removal-authority.json'};
+assert.equal(metadataTitlePresentationMarkerAuthorized(validFixed),true);
+assert.equal(metadataTitlePresentationMarkerAuthorized(deleted),true);
+for(const broken of [
+ {...deleted,publishableDois:['10.1021/new-admission']},
+ {...deleted,releasePolicy:'per-doi'},
+ {...deleted,lastFixedPublicationSlot:'2026-10-14T18:00:00+08:00'},
+ {...deleted,removedDois:[]},
+ {...deleted,previousMarkerBlobSha:''},
+ {...deleted,authorityFile:'audit/unknown-authority.json'},
+ {...deleted,mode:'slot-release'},
+ {...deleted,productionCards:0},
+])assert.equal(metadataTitlePresentationMarkerAuthorized(broken),false);
+assert.equal(metadataTitlePresentationMarkerAuthorized({mode:'unknown',productionCards:1087}),false);

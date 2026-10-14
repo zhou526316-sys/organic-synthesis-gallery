@@ -49,6 +49,8 @@ on:
       - 'cloudflare/scripts/verify-static-media-integrity.mjs'
       - 'cloudflare/scripts/sanitize-static-media.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'scripts/apply-verified-title-presentation.mjs'
+      - 'scripts/test-verified-title-presentation.mjs'
       - 'cloudflare/scripts/new-body-auto-validation.mjs'
       - 'cloudflare/scripts/merge-new-body-auto.mjs'
       - 'audit/media-auto-policy.json'
@@ -129,6 +131,7 @@ jobs:
         if: steps.resolve.outputs.should_deploy == 'true'
         run: |
           node scripts/test-pages-literature-authorization.mjs
+          node scripts/test-verified-title-presentation.mjs
           node scripts/test-one-time-owner-catchup-20261013.mjs
       - name: Enforce fixed literature publication slot
         if: steps.resolve.outputs.should_deploy == 'true'
@@ -271,7 +274,7 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs dist
           test -s dist/gallery-historical-text-pilot.user.js
           node --check dist/gallery-historical-text-pilot.user.js
-          grep -F "// @version      0.2.6" dist/gallery-historical-text-pilot.user.js
+          grep -F "// @version      0.2.7" dist/gallery-historical-text-pilot.user.js
           grep -F "一键补抓全部缺项" dist/gallery-historical-text-pilot.user.js
           grep -F "publicUploadAllowed:false" dist/gallery-historical-text-pilot.user.js
           grep -F "gallery-literature-doi-registry" src/main.ts

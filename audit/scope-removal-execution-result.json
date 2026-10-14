@@ -1,18 +1,21 @@
 {
   "ok": true,
-  "id": "scope-correction-20261005012904928",
+  "id": "scope-correction-20261014012549272",
   "mode": "deletion-only",
-  "correctedAt": "2026-10-05T01:29:04.928Z",
-  "previousReleaseCommit": "c188319b557dfe718f492fba3c4750d6c7db0aaf",
+  "correctedAt": "2026-10-14T01:25:49.272Z",
+  "previousReleaseCommit": "7fce2d5d78897531dfef49b4e15272c232a18e5f",
   "removedDois": [
-    "10.1039/d6gc04274k"
+    "10.1038/s41467-026-78512-x",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1002/anie.2518487"
   ],
-  "beforeCards": 798,
-  "afterCards": 797,
-  "reviewFile": "audit/scope-rechecks/scope-correction-20261005012904928.json",
+  "beforeCards": 1091,
+  "afterCards": 1087,
+  "reviewFile": "audit/scope-rechecks/scope-correction-20261014012549272.json",
   "files": [
     "public/rolling-supplement.json",
-    "audit/scope-rechecks/scope-correction-20261005012904928.json",
+    "audit/scope-rechecks/scope-correction-20261014012549272.json",
     "audit/publication-release-state.json",
     "audit/literature-update-state.json",
     "audit/scope-removal-execution-result.json"

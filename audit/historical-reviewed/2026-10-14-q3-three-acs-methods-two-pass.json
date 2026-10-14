@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "gallery-historical-2026-q3-acs-three-original-synthesis-two-pass-v1",
+  "reviewedAt": "2026-10-14T02:04:37.749Z",
+  "period": "2026-07-01..2026-09-30",
+  "mode": "official_publisher_first_online_and_original_abstract_independent_two_pass_scope_not_publication",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceBatchGitSha": {
+    "2026-08-15_2026-08-21_organic-letters": "9b28580b6638049b3007fea208c8d489c769ed79",
+    "2026-08-22_2026-08-31_organic-letters": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+    "2026-07-22_2026-07-31_joc": "9181de94c2f59b0fb77a470f802a143699524037"
+  },
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+  "formalCatalogSnapshot": {
+    "source": "public/toc-demand-live.json",
+    "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
+    "total": 1087
+  },
+  "reviewed": [
+    {
+      "doi": "10.1021/acs.orglett.6c02967",
+      "journal": "Organic Letters",
+      "title": "An Unexpected Phosphine-Catalyzed Asymmetric and Stereospecific [3+2] Cyclization for the Construction of Oxetane γ-Spirolactams",
+      "titleZh": "膦催化氧杂环丁烷MBH碳酸酯与芳香醛亚胺的不对称[3+2]环化，立体专一构筑γ-螺内酰胺",
+      "date": "2026-08-21",
+      "authors": [
+        "Jie Hao",
+        "Jinxiu Zhang",
+        "Zirui Wang",
+        "Mengjun Wang",
+        "Min Xia",
+        "Zhen Wang",
+        "Manman Sun",
+        "Weijun Yao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "10978-10983",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02967"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以膦催化的不对称[3+2]环化建立可迁移的氧杂环丁烷γ-螺内酰胺骨架制备方法，同时控制螺环中心及外环乙烯基醚的立体化学。",
+      "evidenceBasis": "DOI 10.1021/acs.orglett.6c02967; ACS Organic Letters official Article History Published Online 2026-08-21; frozen Crossref+OpenAlex staging 2026-08-15_2026-08-21_organic-letters, original Git blob 9b28580b6638049b3007fea208c8d489c769ed79. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS公开摘要明确报告一系列氧杂环丁烷γ-螺内酰胺，产率和对映选择性为中等至良好，且产物外环乙烯基醚E/Z构型可以通过反应控制进行立体专一的选择性制备；未从这一摘要外推统一的ee上限或底物具体数量。 来源链接https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02967/5282897/An-Unexpected-Phosphine-Catalyzed-Asymmetric-and；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+      "challengeReason": "第二遍重点挑战：环化包含MBH碳酸酯的γ-碳和酯部分，不能简单套用一般MBH[3+2]环加成机理。公开摘要所说的stereospecific E/Z控制是产物外环双键的几何构型，不等于报告所有底物均有高ee；应保留中等至良好产率和对映控制的原始边界。",
+      "scopeAssessment": {
+        "primaryContribution": "以膦催化的不对称[3+2]环化建立可迁移的氧杂环丁烷γ-螺内酰胺骨架制备方法，同时控制螺环中心及外环乙烯基醚的立体化学。",
+        "preparativeTransformation": "氧杂环丁烷Morita–Baylis–Hillman（MBH）碳酸酯和芳香醛亚胺参与膦催化[3+2]环化，碳酸酯反应伙伴的γ-碳与酯部分进入新生γ-螺内酰胺，产物保留外环乙烯基醚。",
+        "generalityEvidence": "ACS公开摘要明确报告一系列氧杂环丁烷γ-螺内酰胺，产率和对映选择性为中等至良好，且产物外环乙烯基醚E/Z构型可以通过反应控制进行立体专一的选择性制备；未从这一摘要外推统一的ee上限或底物具体数量。",
+        "sourceEvidence": "DOI 10.1021/acs.orglett.6c02967; ACS Organic Letters official Article History Published Online 2026-08-21; frozen Crossref+OpenAlex staging 2026-08-15_2026-08-21_organic-letters, original Git blob 9b28580b6638049b3007fea208c8d489c769ed79. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS公开摘要明确报告一系列氧杂环丁烷γ-螺内酰胺，产率和对映选择性为中等至良好，且产物外环乙烯基醚E/Z构型可以通过反应控制进行立体专一的选择性制备；未从这一摘要外推统一的ee上限或底物具体数量。 来源链接https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02967/5282897/An-Unexpected-Phosphine-Catalyzed-Asymmetric-and；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+        "boundaryChallenge": "与仅展示一个有机产物或单一成像功能不同，这里存在MBH碳酸酯/芳香醛亚胺两类真实反应伙伴和可变螺环内酰胺合成；但摘要不足以证明广泛脂肪亚胺兼容或完整绝对构型机理。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02967",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02967/5282897/An-Unexpected-Phosphine-Catalyzed-Asymmetric-and",
+        "publisherOnlineDate": "2026-08-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_organic-letters",
+        "stageBatchSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_crosschecked_with_Crossref_OpenAlex_frozen_source",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍按主要制备贡献核对：以膦催化的不对称[3+2]环化建立可迁移的氧杂环丁烷γ-螺内酰胺骨架制备方法，同时控制螺环中心及外环乙烯基醚的立体化学。 氧杂环丁烷Morita–Baylis–Hillman（MBH）碳酸酯和芳香醛亚胺参与膦催化[3+2]环化，碳酸酯反应伙伴的γ-碳与酯部分进入新生γ-螺内酰胺，产物保留外环乙烯基醚。 ACS公开摘要明确报告一系列氧杂环丁烷γ-螺内酰胺，产率和对映选择性为中等至良好，且产物外环乙烯基醚E/Z构型可以通过反应控制进行立体专一的选择性制备；未从这一摘要外推统一的ee上限或底物具体数量。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍重点挑战：环化包含MBH碳酸酯的γ-碳和酯部分，不能简单套用一般MBH[3+2]环加成机理。公开摘要所说的stereospecific E/Z控制是产物外环双键的几何构型，不等于报告所有底物均有高ee；应保留中等至良好产率和对映控制的原始边界。 与仅展示一个有机产物或单一成像功能不同，这里存在MBH碳酸酯/芳香醛亚胺两类真实反应伙伴和可变螺环内酰胺合成；但摘要不足以证明广泛脂肪亚胺兼容或完整绝对构型机理。"
+        }
+      ],
+      "reviewRationaleSecondPass": "与仅展示一个有机产物或单一成像功能不同，这里存在MBH碳酸酯/芳香醛亚胺两类真实反应伙伴和可变螺环内酰胺合成；但摘要不足以证明广泛脂肪亚胺兼容或完整绝对构型机理。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03282",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Asymmetric Hydrogenation of Aryl-Substituted Maleic Acid Diesters",
+      "titleZh": "镍催化芳基取代马来酸二酯的不对称氢化合成手性琥珀酸二酯",
+      "date": "2026-08-26",
+      "authors": [
+        "Jiawei Han",
+        "Zhiling Wang",
+        "Yunshun Deng",
+        "Jianzhong Chen",
+        "Ilya D. Gridnev",
+        "Hai-Ming Guo",
+        "Wanbin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "11111-11116",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03282"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展镍催化芳基取代马来酸二酯的不对称氢化方法，直接得到芳基取代手性琥珀酸二酯中间体，并验证下游手性衍生物制备能力。",
+      "evidenceBasis": "DOI 10.1021/acs.orglett.6c03282; ACS Organic Letters official Article History Published Online 2026-08-26; frozen Crossref+OpenAlex staging 2026-08-22_2026-08-31_organic-letters, original Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS原文摘要逐字明确方法具有较广底物范围和良好官能团耐受性，目标产物最高分离收率99%、最高97% ee，并能转为结构多样的手性衍生物；氘标记与动力学实验提供机理线索。最高值不代表所有底物。 来源链接https://pubs.acs.org/orlef7/article/28/35/11111/5330134/Nickel-Catalyzed-Asymmetric-Hydrogenation-of-Aryl；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+      "challengeReason": "第二遍反证：作者用氘代实验与动力学给出可行的催化通路，但这些结果不等于排他性证明唯一的镍氢中间体或具体氢迁移过渡态。产率99%与97% ee是全体系的分别最高值，不得误写成同一个底物同时取得；对芳基取代的范围限定必须保留。",
+      "scopeAssessment": {
+        "primaryContribution": "发展镍催化芳基取代马来酸二酯的不对称氢化方法，直接得到芳基取代手性琥珀酸二酯中间体，并验证下游手性衍生物制备能力。",
+        "preparativeTransformation": "芳基取代马来酸二酯的C=C键经镍催化对映选择性氢化，转化为具有新立体中心的芳基取代琥珀酸二酯，保留双酯官能团用于后续转化。",
+        "generalityEvidence": "ACS原文摘要逐字明确方法具有较广底物范围和良好官能团耐受性，目标产物最高分离收率99%、最高97% ee，并能转为结构多样的手性衍生物；氘标记与动力学实验提供机理线索。最高值不代表所有底物。",
+        "sourceEvidence": "DOI 10.1021/acs.orglett.6c03282; ACS Organic Letters official Article History Published Online 2026-08-26; frozen Crossref+OpenAlex staging 2026-08-22_2026-08-31_organic-letters, original Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS原文摘要逐字明确方法具有较广底物范围和良好官能团耐受性，目标产物最高分离收率99%、最高97% ee，并能转为结构多样的手性衍生物；氘标记与动力学实验提供机理线索。最高值不代表所有底物。 来源链接https://pubs.acs.org/orlef7/article/28/35/11111/5330134/Nickel-Catalyzed-Asymmetric-Hydrogenation-of-Aryl；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+        "boundaryChallenge": "研究的主要贡献是可推广有机不对称氢化制备，不是以单一Ni配合物谱学或生物活性为主；但不能据此宣布对所有马来酸酯、非芳基烯烃或难氢化底物同样适用。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03282",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/orlef7/article/28/35/11111/5330134/Nickel-Catalyzed-Asymmetric-Hydrogenation-of-Aryl",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_crosschecked_with_Crossref_OpenAlex_frozen_source",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍按主要制备贡献核对：发展镍催化芳基取代马来酸二酯的不对称氢化方法，直接得到芳基取代手性琥珀酸二酯中间体，并验证下游手性衍生物制备能力。 芳基取代马来酸二酯的C=C键经镍催化对映选择性氢化，转化为具有新立体中心的芳基取代琥珀酸二酯，保留双酯官能团用于后续转化。 ACS原文摘要逐字明确方法具有较广底物范围和良好官能团耐受性，目标产物最高分离收率99%、最高97% ee，并能转为结构多样的手性衍生物；氘标记与动力学实验提供机理线索。最高值不代表所有底物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：作者用氘代实验与动力学给出可行的催化通路，但这些结果不等于排他性证明唯一的镍氢中间体或具体氢迁移过渡态。产率99%与97% ee是全体系的分别最高值，不得误写成同一个底物同时取得；对芳基取代的范围限定必须保留。 研究的主要贡献是可推广有机不对称氢化制备，不是以单一Ni配合物谱学或生物活性为主；但不能据此宣布对所有马来酸酯、非芳基烯烃或难氢化底物同样适用。"
+        }
+      ],
+      "reviewRationaleSecondPass": "研究的主要贡献是可推广有机不对称氢化制备，不是以单一Ni配合物谱学或生物活性为主；但不能据此宣布对所有马来酸酯、非芳基烯烃或难氢化底物同样适用。"
+    },
+    {
+      "doi": "10.1021/acs.joc.5c03189",
+      "journal": "JOC",
+      "title": "Iron-Catalyzed Photoinduced Decarboxylative Cascade Process for the Synthesis of Functionalized Pyrazolones and Evaluation of Biological Activity",
+      "titleZh": "铁光催化羧酸脱羧级联构筑官能化吡唑酮及其生物活性研究",
+      "date": "2026-07-29",
+      "authors": [
+        "Xinran Zhang",
+        "Huilin Ling",
+        "Xiaojia Liu",
+        "Shuo Ren",
+        "Guangshun Sun",
+        "Xiangyin Wang",
+        "Yongye Lu",
+        "Yanan Gao",
+        "Qikun Yin",
+        "Xianhe Fang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10576-10581",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c03189"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发可见光下廉价铁光催化剂促进的羧酸脱羧级联构建官能化吡唑酮的方法学，生物活性测试属于后续应用而非唯一核心贡献。",
+      "evidenceBasis": "DOI 10.1021/acs.joc.5c03189; ACS JOC official Article History Published Online 2026-07-29; frozen Crossref+OpenAlex staging 2026-07-22_2026-07-31_joc, original Git blob 9181de94c2f59b0fb77a470f802a143699524037. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS JOC官方摘要报告多种羧酸与N-丙烯酰腙两类伙伴兼容，具广泛底物范围；部分制备产物开展NO生成抑制和PANC-1细胞抗增殖测试，其中3al的IC50为14.3 μM。生物测试证明产物用途，不是合成一般性的替代证据。 来源链接https://pubs.acs.org/joceah/article/91/31/10576/5236389/Iron-Catalyzed-Photoinduced-Decarboxylative；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+      "challengeReason": "第二遍质疑：摘要支持真实脱羧级联生成吡唑酮，但未授权对Fe价态循环、LMCT具体配位方式或自由基寿命作确定性断言。仅3al报告PANC-1的14.3 μM，3ak为NO生成抑制测试，两种生物读数不得混成同一结果。",
+      "scopeAssessment": {
+        "primaryContribution": "开发可见光下廉价铁光催化剂促进的羧酸脱羧级联构建官能化吡唑酮的方法学，生物活性测试属于后续应用而非唯一核心贡献。",
+        "preparativeTransformation": "羧酸作为烷基前体参与光诱导铁催化脱羧，和N-丙烯酰腙类底物级联反应，形成烷基官能化的吡唑酮杂环产物；论文强调以羧酸直接作烷基化源。",
+        "generalityEvidence": "ACS JOC官方摘要报告多种羧酸与N-丙烯酰腙两类伙伴兼容，具广泛底物范围；部分制备产物开展NO生成抑制和PANC-1细胞抗增殖测试，其中3al的IC50为14.3 μM。生物测试证明产物用途，不是合成一般性的替代证据。",
+        "sourceEvidence": "DOI 10.1021/acs.joc.5c03189; ACS JOC official Article History Published Online 2026-07-29; frozen Crossref+OpenAlex staging 2026-07-22_2026-07-31_joc, original Git blob 9181de94c2f59b0fb77a470f802a143699524037. 作者、卷期页与两家独立元数据来源一致。ACS官方公开摘要的文章特定制备证据：ACS JOC官方摘要报告多种羧酸与N-丙烯酰腙两类伙伴兼容，具广泛底物范围；部分制备产物开展NO生成抑制和PANC-1细胞抗增殖测试，其中3al的IC50为14.3 μM。生物测试证明产物用途，不是合成一般性的替代证据。 来源链接https://pubs.acs.org/joceah/article/91/31/10576/5236389/Iron-Catalyzed-Photoinduced-Decarboxylative；未采集旧文献正文图、SI、PDF，也未搬运全文摘要。",
+        "boundaryChallenge": "尽管文章后半部分有生物活性检测，但前半部分建立了羧酸和N-丙烯酰腙的制备范围，因此不能以有药理实验为理由排除；然而不可将抗癌活性泛化到所有吡唑酮产物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.5c03189",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/joceah/article/91/31/10576/5236389/Iron-Catalyzed-Photoinduced-Decarboxylative",
+        "publisherOnlineDate": "2026-07-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Article_History_Published_Online_crosschecked_with_Crossref_OpenAlex_frozen_source",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍按主要制备贡献核对：开发可见光下廉价铁光催化剂促进的羧酸脱羧级联构建官能化吡唑酮的方法学，生物活性测试属于后续应用而非唯一核心贡献。 羧酸作为烷基前体参与光诱导铁催化脱羧，和N-丙烯酰腙类底物级联反应，形成烷基官能化的吡唑酮杂环产物；论文强调以羧酸直接作烷基化源。 ACS JOC官方摘要报告多种羧酸与N-丙烯酰腙两类伙伴兼容，具广泛底物范围；部分制备产物开展NO生成抑制和PANC-1细胞抗增殖测试，其中3al的IC50为14.3 μM。生物测试证明产物用途，不是合成一般性的替代证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍质疑：摘要支持真实脱羧级联生成吡唑酮，但未授权对Fe价态循环、LMCT具体配位方式或自由基寿命作确定性断言。仅3al报告PANC-1的14.3 μM，3ak为NO生成抑制测试，两种生物读数不得混成同一结果。 尽管文章后半部分有生物活性检测，但前半部分建立了羧酸和N-丙烯酰腙的制备范围，因此不能以有药理实验为理由排除；然而不可将抗癌活性泛化到所有吡唑酮产物。"
+        }
+      ],
+      "reviewRationaleSecondPass": "尽管文章后半部分有生物活性检测，但前半部分建立了羧酸和N-丙烯酰腙的制备范围，因此不能以有药理实验为理由排除；然而不可将抗癌活性泛化到所有吡唑酮产物。"
+    }
+  ],
+  "untouchedDateHolds": [
+    "10.1021/acs.orglett.6c03028",
+    "10.1021/acs.orglett.6c02707",
+    "10.1021/acs.joc.6c00852",
+    "10.1021/acs.orglett.6c03224"
+  ],
+  "excludedAlreadyPresent": [
+    "10.1021/acs.orglett.6c03265",
+    "10.1021/acs.orglett.6c03485"
+  ],
+  "guards": {
+    "noDirectPublication": true,
+    "doNotEnterTodayHotWechat": true,
+    "q3TocOnly": true,
+    "noImagesOrSIOrPDF": true,
+    "noProductionD1": true
+  }
+}
