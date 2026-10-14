@@ -1,0 +1,45 @@
+name: Read verified scientific body FTS live coverage (owner only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verified-body-coverage-live-read.yml'
+      - 'audit/automation-triggers/verified-body-coverage-live-read.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/verified-body-coverage-live-read.yml'
+      - 'scripts/audit-verified-body-coverage-live.mjs'
+permissions:
+  contents: read
+concurrency:
+  group: verified-scientific-body-live-coverage
+  cancel-in-progress: false
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify read-only audit syntax and zero mutation routes
+        run: |
+          node --check scripts/audit-verified-body-coverage-live.mjs
+          ! grep -qE 'method:.POST.|method:.PUT.|method:.PATCH.' scripts/audit-verified-body-coverage-live.mjs
+      - name: Query bound production catalog and reviewed body FTS counts only
+        if: github.event_name == 'push'
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node scripts/audit-verified-body-coverage-live.mjs \
+            --output="$RUNNER_TEMP/verified-body-live-coverage.json"
+      - name: Preserve a sanitized read-only summary
+        if: always() && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-body-coverage-read-${{ github.run_id }}
+          path: ${{ runner.temp }}/verified-body-live-coverage.json
+          retention-days: 7
+          if-no-files-found: warn
