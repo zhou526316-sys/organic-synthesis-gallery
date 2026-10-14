@@ -1,20 +1,20 @@
 {
   "schemaVersion": "gallery-history-review-worklist-v1",
   "mode": "scientific_review_worklist_only_not_scope_decision",
-  "producedAt": "2026-10-14T03:19:32.496Z",
+  "producedAt": "2026-10-14T03:43:43.490Z",
   "sourceCompletedRoots": 375,
   "uniqueCandidateDois": 55969,
   "statusCounts": {
     "alreadyPublished": 866,
-    "approvedAwaiting08": 17,
+    "approvedAwaiting08": 25,
     "sourcePending": 2,
     "explicitlyExcluded": 6,
-    "needsReview": 55078
+    "needsReview": 55070
   },
   "maximumRows": 320,
   "selected": 320,
   "distinctReviewDois": 320,
-  "remainingUnselectedRequiresReview": 54758,
+  "remainingUnselectedRequiresReview": 54750,
   "byJournal": {
     "JACS": 20,
     "Angew": 20,
@@ -1384,18 +1384,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01643",
+      "doi": "10.1021/acs.joc.6c01432",
       "journal": "JOC",
-      "title": "Accessing Sterically Congested Benzannulated Cyclic Aryl Ethers via Photoredox Decarboxylative Giese-Type C2–C3 Bond Formation",
-      "date": "2026-09-16",
+      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
+      "date": "2026-09-13",
       "year": "2026",
-      "firstAuthor": "Igor Topalović",
+      "firstAuthor": "Simon J. Cooper",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-09-15_2026-09-21_joc"
+        "2026-09-08_2026-09-14_joc"
       ],
       "sourceFingerprints": [
-        "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648"
+        "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -1729,12 +1729,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01432",
+      "doi": "10.1021/acs.joc.6c01788",
       "journal": "JOC",
-      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
-      "date": "2026-09-13",
+      "title": "Highly Enantioselective Synthesis of Chiral Thiourea Derivatives via a Three-Component Mannich Reaction",
+      "date": "2026-09-08",
       "year": "2026",
-      "firstAuthor": "Simon J. Cooper",
+      "firstAuthor": "Zhe Li",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-08_2026-09-14_joc"
@@ -2072,18 +2072,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01788",
+      "doi": "10.1021/acs.joc.6c01058",
       "journal": "JOC",
-      "title": "Highly Enantioselective Synthesis of Chiral Thiourea Derivatives via a Three-Component Mannich Reaction",
-      "date": "2026-09-08",
+      "title": "BOQUIPHY-Fullerene C60 Dyad: An Asymmetric Boron Chromophore as a Donor Platform for Photodynamic Inactivation",
+      "date": "2026-09-07",
       "year": "2026",
-      "firstAuthor": "Zhe Li",
+      "firstAuthor": "Edwin J. Gonzalez Lopez",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-09-08_2026-09-14_joc"
+        "2026-09-01_2026-09-07_joc"
       ],
       "sourceFingerprints": [
-        "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
+        "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -2415,12 +2415,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01058",
+      "doi": "10.1021/acs.joc.6c01509",
       "journal": "JOC",
-      "title": "BOQUIPHY-Fullerene C60 Dyad: An Asymmetric Boron Chromophore as a Donor Platform for Photodynamic Inactivation",
+      "title": "Photoredox-Neutral Ni-Catalyzed Regio- and Diastereoselective Synthesis of Vicinal Amino Alcohols",
       "date": "2026-09-07",
       "year": "2026",
-      "firstAuthor": "Edwin J. Gonzalez Lopez",
+      "firstAuthor": "Tao Huang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_joc"
@@ -2766,12 +2766,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01509",
+      "doi": "10.1021/acs.joc.6c01562",
       "journal": "JOC",
-      "title": "Photoredox-Neutral Ni-Catalyzed Regio- and Diastereoselective Synthesis of Vicinal Amino Alcohols",
-      "date": "2026-09-07",
+      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "date": "2026-09-04",
       "year": "2026",
-      "firstAuthor": "Tao Huang",
+      "firstAuthor": "Yu Chen",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_joc"
@@ -3449,12 +3449,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01562",
+      "doi": "10.1021/acs.joc.6c01602",
       "journal": "JOC",
-      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "title": "Concise Total Synthesis of Streptospherin A",
       "date": "2026-09-04",
       "year": "2026",
-      "firstAuthor": "Yu Chen",
+      "firstAuthor": "Rakuto Ohta",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_joc"
@@ -3796,12 +3796,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01602",
+      "doi": "10.1021/acs.joc.6c00954",
       "journal": "JOC",
-      "title": "Concise Total Synthesis of Streptospherin A",
-      "date": "2026-09-04",
+      "title": "Chalcogen-Bond-Assisted Catalytic Asymmetric Synthesis of Eight-Membered Cyclic Hemiacetal Esters",
+      "date": "2026-09-03",
       "year": "2026",
-      "firstAuthor": "Rakuto Ohta",
+      "firstAuthor": "Ruirui Jing",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_joc"
@@ -4139,12 +4139,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c00954",
+      "doi": "10.1021/acs.joc.6c01263",
       "journal": "JOC",
-      "title": "Chalcogen-Bond-Assisted Catalytic Asymmetric Synthesis of Eight-Membered Cyclic Hemiacetal Esters",
-      "date": "2026-09-03",
+      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
+      "date": "2026-09-01",
       "year": "2026",
-      "firstAuthor": "Ruirui Jing",
+      "firstAuthor": "Xing-Pin Wei",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_joc"
@@ -4160,18 +4160,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c11377",
+      "doi": "10.1021/jacs.6c09779",
       "journal": "JACS",
-      "title": "Overriding Intrinsic Site-Selectivity in Nickel(II)-Catalyzed Enantioselective Methylene C(sp3)–H Alkynylation",
-      "date": "2026-08-04",
+      "title": "Molecular Engineering of Asymmetric Cyanines with Hybridized Local and Charge-Transfer Characteristics for NIR-II Imaging-Guided Type I/II Photodynamic Therapy",
+      "date": "2026-07-23",
       "year": "2026",
-      "firstAuthor": "Fei Yao",
+      "firstAuthor": "Ruixue Yang",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-01_2026-08-07_jacs"
+        "2026-07-22_2026-07-31_jacs"
       ],
       "sourceFingerprints": [
-        "aa212c945869655c06bbe97d1ee6db873540d6b926406f509cac1df0439f0fb9"
+        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4482,18 +4482,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01263",
+      "doi": "10.1021/acs.joc.6c00852",
       "journal": "JOC",
-      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
-      "date": "2026-09-01",
+      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
+      "date": "2026-08-31",
       "year": "2026",
-      "firstAuthor": "Xing-Pin Wei",
+      "firstAuthor": "Liqiao Han",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-09-01_2026-09-07_joc"
+        "2026-08-22_2026-08-31_joc"
       ],
       "sourceFingerprints": [
-        "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+        "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4503,18 +4503,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c12029",
+      "doi": "10.1021/jacs.6c10014",
       "journal": "JACS",
-      "title": "Atropisomeric Aryl–Hydrazone Frameworks: Discovery and Organocatalytic Enantioselective Construction",
-      "date": "2026-08-03",
+      "title": "Chemical Synthesis of Asymmetric Nucleosomes Reveals Intramolecular Activation of UHRF1 E3 Ligase by H3K9me3",
+      "date": "2026-07-22",
       "year": "2026",
-      "firstAuthor": "Feng Zhang",
+      "firstAuthor": "Ziyu Xu",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-01_2026-08-07_jacs"
+        "2026-07-22_2026-07-31_jacs"
       ],
       "sourceFingerprints": [
-        "aa212c945869655c06bbe97d1ee6db873540d6b926406f509cac1df0439f0fb9"
+        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4827,12 +4827,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c00852",
+      "doi": "10.1021/acs.joc.6c01757",
       "journal": "JOC",
-      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
-      "date": "2026-08-31",
+      "title": "Iridium-Catalyzed Enantioselective N -Allylation of Aminoquinones with Racemic Allylic Alcohols",
+      "date": "2026-08-29",
       "year": "2026",
-      "firstAuthor": "Liqiao Han",
+      "firstAuthor": "Shiliu Chen",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_joc"
@@ -4848,18 +4848,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c09779",
+      "doi": "10.1021/jacs.6c07080",
       "journal": "JACS",
-      "title": "Molecular Engineering of Asymmetric Cyanines with Hybridized Local and Charge-Transfer Characteristics for NIR-II Imaging-Guided Type I/II Photodynamic Therapy",
-      "date": "2026-07-23",
+      "title": "Steric Hindrance of Proton Donors Modulates Heterogeneous Electrochemical Nitrogen Reduction Reaction Selectivity in Nonaqueous Electrolytes",
+      "date": "2026-07-11",
       "year": "2026",
-      "firstAuthor": "Ruixue Yang",
+      "firstAuthor": "Dongmin Park",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-22_2026-07-31_jacs"
+        "2026-07-08_2026-07-14_jacs"
       ],
       "sourceFingerprints": [
-        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
+        "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5172,12 +5172,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01757",
+      "doi": "10.1021/acs.joc.6c01588",
       "journal": "JOC",
-      "title": "Iridium-Catalyzed Enantioselective N -Allylation of Aminoquinones with Racemic Allylic Alcohols",
-      "date": "2026-08-29",
+      "title": "Asymmetric Mannich Reactions Promoted by a Bifunctional Charge-Activated Thiourea Catalyst",
+      "date": "2026-08-24",
       "year": "2026",
-      "firstAuthor": "Shiliu Chen",
+      "firstAuthor": "Josiah K. Nisly",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_joc"
@@ -5193,18 +5193,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c10014",
+      "doi": "10.1021/jacs.6c08814",
       "journal": "JACS",
-      "title": "Chemical Synthesis of Asymmetric Nucleosomes Reveals Intramolecular Activation of UHRF1 E3 Ligase by H3K9me3",
-      "date": "2026-07-22",
+      "title": "Ultrastrong Polyketone Hot-Melt Adhesives Enabled by Ni-Catalyzed Carbonylative Polymerization",
+      "date": "2026-07-08",
       "year": "2026",
-      "firstAuthor": "Ziyu Xu",
+      "firstAuthor": "Shi-Huan Li",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-22_2026-07-31_jacs"
+        "2026-07-08_2026-07-14_jacs"
       ],
       "sourceFingerprints": [
-        "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
+        "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5517,18 +5517,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01588",
+      "doi": "10.1021/acs.joc.6c01396",
       "journal": "JOC",
-      "title": "Asymmetric Mannich Reactions Promoted by a Bifunctional Charge-Activated Thiourea Catalyst",
-      "date": "2026-08-24",
+      "title": "Visible-Light Photoredox-Catalyzed Reductive Coupling of Heteroaryl Chlorides with Alkenes",
+      "date": "2026-08-13",
       "year": "2026",
-      "firstAuthor": "Josiah K. Nisly",
+      "firstAuthor": "Yu-Qing Tang",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_joc"
+        "2026-08-08_2026-08-14_joc"
       ],
       "sourceFingerprints": [
-        "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
+        "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5538,18 +5538,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c11520",
+      "doi": "10.1021/jacs.6c09884",
       "journal": "JACS",
-      "title": "Droplet-Enhanced Asymmetric Catalysis: Squaramide-Derived Pseudopeptide for Enantioselective Addition Reactions",
-      "date": "2026-07-20",
+      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
+      "date": "2026-07-01",
       "year": "2026",
-      "firstAuthor": "Qipeng Chen",
+      "firstAuthor": "Guo-Feng Li",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-15_2026-07-21_jacs"
+        "2026-07-01_2026-07-07_jacs"
       ],
       "sourceFingerprints": [
-        "b553780e3a48003a35b52b1c8cdff99ef5754d1ae7488751140e5dd9b59b714c"
+        "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5866,12 +5866,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c00672",
+      "doi": "10.1021/acs.joc.6c01205",
       "journal": "JOC",
-      "title": "Visible Light-Mediated Direct Decarboxylative Giese Amidations without a Photocatalyst─Batch and Flow",
-      "date": "2026-08-13",
+      "title": "Enantioselective Total Synthesis of (+)-Bisabosqual A and Studies on Late-Stage C(sp3)–H Functionalization Approaches to Bisabosquals",
+      "date": "2026-08-12",
       "year": "2026",
-      "firstAuthor": "Samuel L. Nickels",
+      "firstAuthor": "James P. Shephard",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-08_2026-08-14_joc"
@@ -6223,18 +6223,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c07080",
+      "doi": "10.1021/jacs.6c08562",
       "journal": "JACS",
-      "title": "Steric Hindrance of Proton Donors Modulates Heterogeneous Electrochemical Nitrogen Reduction Reaction Selectivity in Nonaqueous Electrolytes",
-      "date": "2026-07-11",
+      "title": "Photoelectrocatalysis-Enabled C(sp 3 )–C(sp 3 ) Cross-Coupling of Carboxylic Acids with Alkyl Halides",
+      "date": "2026-06-30",
       "year": "2026",
-      "firstAuthor": "Dongmin Park",
+      "firstAuthor": "Jian-Feng Guo",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-08_2026-07-14_jacs"
+        "2026-06-01_2026-06-30_jacs"
       ],
       "sourceFingerprints": [
-        "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
+        "a7808d3232aff0d49582e56d0b6f0843493516eab5f24c9e6a11d77d8adff2cd"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -6556,12 +6556,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01396",
+      "doi": "10.1021/acs.joc.6c01290",
       "journal": "JOC",
-      "title": "Visible-Light Photoredox-Catalyzed Reductive Coupling of Heteroaryl Chlorides with Alkenes",
-      "date": "2026-08-13",
+      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
+      "date": "2026-08-11",
       "year": "2026",
-      "firstAuthor": "Yu-Qing Tang",
+      "firstAuthor": "Mrinmoy Manash Bharali",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-08_2026-08-14_joc"
@@ -6577,18 +6577,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/jacs.6c08814",
+      "doi": "10.1021/jacs.6c06627",
       "journal": "JACS",
-      "title": "Ultrastrong Polyketone Hot-Melt Adhesives Enabled by Ni-Catalyzed Carbonylative Polymerization",
-      "date": "2026-07-08",
+      "title": "Electrochemically Assisted Synthesis of Covalent Organic Frameworks via In Situ Oxidation of Alcohol Monomers",
+      "date": "2026-06-29",
       "year": "2026",
-      "firstAuthor": "Shi-Huan Li",
+      "firstAuthor": "Yukun Li",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-08_2026-07-14_jacs"
+        "2026-06-01_2026-06-30_jacs"
       ],
       "sourceFingerprints": [
-        "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
+        "a7808d3232aff0d49582e56d0b6f0843493516eab5f24c9e6a11d77d8adff2cd"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -6907,12 +6907,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.joc.6c01205",
+      "doi": "10.1021/acs.joc.6c01064",
       "journal": "JOC",
-      "title": "Enantioselective Total Synthesis of (+)-Bisabosqual A and Studies on Late-Stage C(sp3)–H Functionalization Approaches to Bisabosquals",
-      "date": "2026-08-12",
+      "title": "Electrochemical Synthesis of β-Arylamino Ketones from Tertiary Anilines and Silyl Enol Ethers",
+      "date": "2026-08-10",
       "year": "2026",
-      "firstAuthor": "James P. Shephard",
+      "firstAuthor": "Yingli Xu",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-08_2026-08-14_joc"
