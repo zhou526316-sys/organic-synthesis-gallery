@@ -1,0 +1,37 @@
+name: WeChat Oct14 original-figure ZIP transfer probe
+on:
+  push:
+    branches: [wechat-oct14-two-jacs-preparation]
+    paths:
+      - audit/automation-triggers/wechat-oct14-asset-transfer-probe.json
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect short-lived Adobe-signed archive as bytes only
+        env:
+          SOURCE_LINK: https://at.adobe.com/RTuxMN9RC1K1gIAU
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, zipfile, pathlib, os, hashlib, json
+          req=urllib.request.Request(os.environ["SOURCE_LINK"],headers={"User-Agent":"Mozilla/5.0","Accept":"application/zip,application/octet-stream;q=0.9,*/*;q=0.5"})
+          try:
+            with urllib.request.urlopen(req, timeout=35) as response:
+              data=response.read(8_000_000)
+              result={"status":response.status,"mime":response.headers.get("content-type",""),"bytes":len(data),"prefix":data[:16].hex(),"target_host":urllib.request.urlparse(response.url).hostname}
+          except Exception as exc:
+            result={"status":"fetch_failed","error_type":type(exc).__name__,"error":str(exc)[:220]}
+            data=b""
+          if data[:2]==b"PK":
+            archive=pathlib.Path("/tmp/transfer.zip");archive.write_bytes(data)
+            with zipfile.ZipFile(archive) as z:
+              result["zip_files"]=len(z.namelist())
+              result["contains_today_fig1b"]=any(n.endswith("today_Fig1B_lead.png") for n in z.namelist())
+              result["contains_retro_fig3"]=any(n.endswith("retro_Fig3.png") for n in z.namelist())
+          print(json.dumps(result,ensure_ascii=False))
+          PY

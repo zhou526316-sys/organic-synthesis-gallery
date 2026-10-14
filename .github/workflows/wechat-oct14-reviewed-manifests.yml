@@ -1,0 +1,37 @@
+name: WeChat Oct14 reviewed source manifests & SHA gate
+on:
+  push:
+    branches: [wechat-oct14-two-jacs-preparation]
+    paths:
+      - audit/automation-triggers/wechat-oct14-build-manifests.json
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build source-grounded manifests and date-correct review gate
+        run: python3 scripts/wechat-oct14-build-manifests.py
+      - name: Validate original source-byte image paths and native headline presence
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          d=pathlib.Path.cwd()
+          a=json.loads((d/"public/wechat-featured/2026-10-14.json").read_text())
+          b=json.loads((d/"public/wechat-retrospective/idpi-asymmetric-geranyl-cyclization-20261014.json").read_text())
+          g=json.loads((d/"audit/wechat-working/2026-10-14-review-gate.json").read_text())
+          assert a["lead_figure_id"]=="today_Fig1B_lead" and b["lead_figure_id"]=="retro_Fig1B_lead"
+          assert len(g["assets"])==27 and len(a["figures"])==14 and len(b["figures"])==13
+          assert g["expectedJournalTotal"]==20 and all(x["repo_path"].startswith("public/wechat-assets/reviewed/2026-10-14-r1/") for m in (a,b) for x in m["figures"])
+          print("two science manuscripts, original Figures 1B and corrected 20-journal roundup ready")
+          PY
+      - name: Commit source text, original image map and hash gate
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-editions/2026-10-14.json public/wechat-featured/2026-10-14.json public/wechat-retrospective/idpi-asymmetric-geranyl-cyclization-20261014.json audit/wechat-working/2026-10-14-r1-publication-science-review.json audit/wechat-working/2026-10-14-r1-images-only.json audit/wechat-working/2026-10-14-review-gate.json
+          git diff --cached --check
+          git commit -m 'editorial(wechat): reviewed Oct14 double JACS full science and 27 original figures'
+          git push origin HEAD:wechat-oct14-two-jacs-preparation

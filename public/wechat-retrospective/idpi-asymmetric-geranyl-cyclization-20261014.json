@@ -1,0 +1,318 @@
+{
+  "date": "2026-10-14",
+  "selectionAuthority": "user_uploaded_jacs_main_and_SI_and_20261014_selected_two_papers",
+  "editorialRevision": "2026-10-14-r1",
+  "paper": {
+    "doi": "10.1021/jacs.6c08353",
+    "journal": "JACS",
+    "title": "Catalytic Asymmetric Cationic Geranyl Cyclizations",
+    "authors": "Na Luo, Mathias Turberg, Nobuya Tsuji, Markus Leutzsch, Sebastian Brunen, Benjamin List"
+  },
+  "headline": "手性 IDPi 催化香叶基衍生物的不对称阳离子环化",
+  "kicker": "往期精选｜JACS",
+  "lead_figure_id": "retro_Fig1B_lead",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "先看懂这项反应",
+      "text": "把一条柔性的含双键萜类前体折叠成具有明确绝对构型的环，是模仿萜类环化酶的经典梦想。Benjamin List 团队让受限强手性 Brønsted 酸 IDPi 与氟代醇 PFTB 配合，使简单链状香叶基二烯实现不对称环化，获得具有高对映选择性的环香叶基骨架。值得深入的地方却不止“酸催化能做出手性环”：作者试图解决环在哪里闭合、生成哪个双键位置的产物，以及含有更多双键时怎样适时停止环化。"
+    }
+  ],
+  "sections": [
+    {
+      "eyebrow": "目标与约束",
+      "heading": "酶擅长做多环；选择性只做一环，反而更难吗？",
+      "paragraphs": [
+        "萜类环化酶能够在特定折叠构象下触发多烯连续成环，并把立体信息沿反应链传递。合成化学已有许多仿生多环化成果，但使用没有强电子偏向的末端双键，在柔性链中只选择一对双键完成一次不对称成环并终止，往往更难通用化：阳离子可能继续捕获后续双键；不同脱质子位置又会给 α、γ 等双键异构产物。",
+        "作者此前已使用强受限手性 IDPi 推动多烯级联生成 ambrox。本篇却把研究目标往前移了一步：先掌控最初那一个环是怎样形成的，再观察是否能在别的双键还存在时把反应停住。其核心不是追求最长的环化级联，而是把初始成环的立体识别与后续环化/异构化的选择分开研究。"
+      ],
+      "figures": [
+        "retro_Fig1A"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_Fig1A"
+        ]
+      }
+    },
+    {
+      "eyebrow": "两个选择性",
+      "heading": "为什么酸催化剂单独几乎不起反应，加入 PFTB 后却变化巨大？",
+      "paragraphs": [
+        "以链状二烯 1a 为模型，仅用 2 mol% IDPi 5a，反应几乎不进行。加入 2 当量全氟叔丁醇（PFTB）后，环化物 2a 的收率达到约 92%，但 e.r. 只有 78:22。将催化剂逐步调整为更适合包裹底物的 5d，收率保持在约 95%，e.r. 升至 95:5。这两组优化回答了不同的问题：强酸活性不足时先借助添加剂增强反应性；手性区分不足时则要调整受限催化空腔。",
+        "更有意味的是氟代醇的相互替换。在同一种 IDPi 5d 下，HFIP 可以使 γ-环化产物 4a 比例上升（α:γ 约 67:33），TFE 更使其变为约 31:69。但两种产物的 e.r. 在这些体系下仍可很高。因此不能把氟代醇简单说成“增强酸性、提高 ee 的溶剂”。作者观察到，它明显影响反应效率和产物区域分布；对映选择性则更直接地受到 IDPi 空间约束。这提供了一种重要的方法学思路：不同催化组分可以分别调控不同层次的选择性，但其作用不是完全独立的。"
+      ],
+      "figures": [
+        "retro_Table1"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_Table1"
+        ]
+      }
+    },
+    {
+      "eyebrow": "时间演化",
+      "heading": "一开始就形成 α-产物吗？动力学反而给出了相反答案",
+      "paragraphs": [
+        "最容易误解的是表中的“主要生成 α-产物”。作者用时间分辨 ¹H NMR 监测 1a 反应，看到 α-产物 2a 和 γ-产物 4a 在反应初期同时出现；随后 4a 持续减少而 2a 增加。将 4a 单独重新置于反应条件下，它可以转化为 2a；把 2a 单独投入则基本不反向转化。于是 4a 可以视为在这套条件下较早生成的动力学产物，2a 则逐渐成为较稳定的主产物。",
+        "这一发现决定了怎样阅读前面的氟代醇筛选。最终 α/γ 比例不只反映两条初始环化通道竞争，也可能记录着γ 向 α 的后续转化程度。换句话说，改变 PFTB/HFIP/TFE 后观察到不同产物比，不足以把所有变化都归结为“第一次 C–C 成键发生了不同区域选择”；要区分原始成环、脱质子和异构化，必须结合时间过程与产物回投实验。"
+      ],
+      "figures": [
+        "retro_SI_S2",
+        "retro_SI_S3",
+        "retro_SI_S4"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_SI_S2"
+        ],
+        "2": [
+          "retro_SI_S3",
+          "retro_SI_S4"
+        ]
+      }
+    },
+    {
+      "eyebrow": "催化组装",
+      "heading": "催化剂空腔与氟代醇氢键网络，证据究竟到哪一步？",
+      "paragraphs": [
+        "首先是溶液状态：低温 ¹H 与 ³¹P NMR 滴定中，随着 PFTB 加入，IDPi 的芳香与叔丁基信号发生变化，说明二者能够形成可辨认的相互作用组装体。随后 VTNA 给出 PFTB 的表观反应级数约 1.3，与 PFTB 对反应速率的协同参与相符。关键是，1.3 并非一个可以直接取整的计量数；实验本身并没有证明活性络合物必然、始终具有两个 PFTB 分子。",
+        "作者进一步使用 PFTB–OD 测得 KIE ≈ 3.45。这个看起来很有力的数值其实需要谨慎：SI 和 DFT 将其主要解释为酸/添加剂体系中 H/D 交换及催化剂相关的同位素效应，并非直接证明 PFTB 把氘转移到 C–C 成键的决速过渡态。读这种复杂氢键协同体系时，KIE 能提示涉及可交换质子的过程，却未必能唯一确认转移氢的具体来源与发生时刻。"
+      ],
+      "figures": [
+        "retro_Fig3",
+        "retro_SI_S5_S6"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_Fig3"
+        ],
+        "2": [
+          "retro_SI_S5_S6"
+        ]
+      }
+    },
+    {
+      "eyebrow": "非同步过渡态",
+      "heading": "一个过渡态里，质子转移与 C–C 成键是否真正“同步”？",
+      "paragraphs": [
+        "PFTB–OD 标记实验显示，产物 2a 的 C3 赤道向 Hb 有氘掺入（约 23%），C9 甲基也有显著氘掺入，但 C5 未观察到对应掺入。把这些结果与 4a→2a 的时间轨迹放在一起，可支持一种特定折叠方向的质子化—成环，以及随后在 γ/α 产物间发生的可逆质子化与脱质子过程。但这些标记并不能单独给出一个唯一的过渡态结构。",
+        "计算带来了更精细的认识。作者选择含 两个显式 PFTB 的 IDPi 模型，在对映异构过渡态中计算得到约 1.4 kcal mol⁻¹ 的能量差，与实验高对映选择性相符。其 SI Fig. S24 的 IRC 分析却显示：在最初质子化的过渡态附近，新的 C–C 键距离仍大于 3 Å；C–H 键的形成先推进，C–C 键才沿后续反应坐标开始缩短。作者因此将其描述为高度非同步的协同过程，而不是两根键在同一瞬间等进度形成。这也是“仿酶反应”在物理有机层面值得解释的内容：体系可在一个高度预组织的反应环境中，沿着不同时序的成键坐标前进。"
+      ],
+      "figures": [
+        "retro_SI_S23",
+        "retro_SI_S24"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "retro_SI_S23",
+          "retro_SI_S24"
+        ]
+      }
+    },
+    {
+      "eyebrow": "手性起源",
+      "heading": "哪一侧手性选择性更高，取决于什么？",
+      "paragraphs": [
+        "（原文 Fig. 3E–F 的催化循环与对映过渡态模型见前面的完整 Fig. 3，此处着重解释证据强度。）",
+        "计算中的主对映体过渡态与 IDPi 芴基之间出现更有利的 C–H···π 非共价相互作用；次要对映体的底物构象需要更宽松的活性空间，导致这些作用削弱。SI 的畸变—相互作用分解也支持“相互作用优势”是重要贡献。需要强调，这是一套经过构象搜索与计算支持的解释，而不是用光谱直接观察到两个对映过渡态的实物图片；其中两分子 PFTB 的取法是模型设定，应当与非整数 PFTB 级数区别开来。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "eyebrow": "实际应用",
+      "heading": "从香料和视黄醛前体，到给鲨烯只做一次环化",
+      "paragraphs": [
+        "底物拓展说明不同烷基与芳基取代可以获得具有高 e.r. 的环香叶基骨架，许多产物在较高收率下形成。但限制也很明确：带苯基的 1p 只有 56% 收率、84:16 e.r.；将末端双甲基改为环己基的 1q 不发生反应。对于香料相关 homogeranate 1r，γ-产物 4r 的 e.r. 达 99:1，但另一个 α-产物 2r 只有 76:24；对 pseudoionone 1s 的 α-产物，e.r. 也只有 70.5:29.5。因此，不能笼统写成“底物均具有极高的对映选择性”。",
+        "多烯底物的实验更能说明方法的适用性边界。可先通过手性 IDPi 得到可分离的单环化中间体，再通过升温或额外酸条件促发后续成环；一些三环萜类由此保留最初建立的立体信息。但后续促发的环化并不等于全都在起始 IDPi/PFTB 的单一步骤中完成。对于更柔性的含多双键链，仍有其它环化与异构化途径的竞争。",
+        "最引人注意的是鲨烯 10c：它带有多个几乎相似的烯烃，作者仍可使其在末端区域发生选择性单环化，得到产物 11c，报告 43% 收率、>20:1 区域异构体比、>99.9:0.1 e.r.。这给手性催化剂的底物预组织能力提供了有分量的实例，同时也提示离一般化尚有距离——对于更拥挤或结构不同的多烯，如何阻止第二次环化并保留预期产物，仍可能成为独立问题。"
+      ],
+      "figures": [
+        "retro_Fig2",
+        "retro_Fig4"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_Fig2"
+        ],
+        "2": [
+          "retro_Fig4"
+        ]
+      }
+    },
+    {
+      "eyebrow": "边界与启发",
+      "heading": "这篇研究留下的设计原则与实际代价",
+      "paragraphs": [
+        "如果只能记住一件事，应当是受限手性催化环境解决的是“哪一个对映面更有利”，而添加剂、反应时间及产物再异构化共同影响“最后得到哪个区域异构体”。这几个变量彼此耦合，却不是同一个选择性指标。未来开发新的多烯不对称单环化，可以通过调节氢键环境与及时截获动力学产物，更直接地控制环何时开始、在哪里停止。",
+        "实际代价同样重要：典型反应需 −50 °C、持续数天，有些底物需要更长时间或额外酸处理；PFTB 需两当量，部分基团导致活性与 e.r. 下降，甚至完全不反应。文章建立的是值得继续发展的仿酶催化原理，而不是一套已对所有天然产物底物都奏效的通用工艺。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "retro_Fig1B_lead",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig1B_lead.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.1B",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Fig. 1B：受限空间内的手性 IDPi 与氟代醇协同，使链状香叶基二烯形成手性环香叶基骨架。",
+      "display_width_pct": 90
+    },
+    {
+      "id": "retro_Fig1A",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig1A.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.1A",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Fig. 1A：香叶基环化骨架广泛出现在香料、视黄醛相关分子及多种萜类天然产物中。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "retro_Table1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Table1.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Table 1",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 2,
+      "body": true,
+      "caption": "原文 Table 1：IDPi 骨架变化主要影响 e.r.，PFTB、HFIP、TFE 的比较则暴露区域选择性和效率的显著变化。",
+      "display_width_pct": 95
+    },
+    {
+      "id": "retro_SI_S2",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S2.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S2",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 44,
+      "body": true,
+      "caption": "SI Fig. S2：时间分辨核磁显示 α、γ 两类产物在反应早期同时出现，随后 γ-产物逐渐减少。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "retro_SI_S3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S3.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S3",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 44,
+      "body": true,
+      "caption": "SI Fig. S3：随时间变化的 α/γ 产物 ee，对解释最终选择性中的后续异构化贡献有帮助。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "retro_SI_S4",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S4.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S4",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 47,
+      "body": true,
+      "caption": "SI Fig. S4：γ-产物 4a 可以在催化条件下转成 α-产物 2a，反向对照不发生，界定了可发生的后续异构化。",
+      "display_width_pct": 82
+    },
+    {
+      "id": "retro_Fig3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig3.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.3A-F",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 4,
+      "body": true,
+      "caption": "原文 Fig. 3（A–F 完整原图）：包含时间分辨反应轨迹、PFTB 级数、同位素示踪、催化循环和两条对映路径的 DFT 模型。为防断图，完整原图置于此处；后文分别解读 C–F 子图，可点击放大。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "retro_SI_S5_S6",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S5_S6.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S5-S6",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 48,
+      "body": true,
+      "caption": "SI Fig. S5/S6：IDPi 与 PFTB 的 ¹H、³¹P 核磁滴定图，支持催化剂—添加剂相互作用。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "retro_SI_S23",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S23.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S23",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 194,
+      "body": true,
+      "caption": "SI Fig. S23：催化循环计算自由能剖面。能量数据属于所选模型的计算结果，不是实测速率常数。",
+      "display_width_pct": 88
+    },
+    {
+      "id": "retro_SI_S24",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_SI_S24.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.S24",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 194,
+      "body": true,
+      "caption": "SI Fig. S24：TS1 与 TS1′ 的成键距离以及 IRC 曲线；图中的 C–H/C–C 键形成明显非同步。",
+      "display_width_pct": 94
+    },
+    {
+      "id": "retro_Fig2",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig2.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.2",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 3,
+      "body": true,
+      "caption": "原文 Fig. 2：链状香叶基二烯的 α/γ 两种产物、各自 e.r.、香料用途及后续多烯环化。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "retro_Fig4",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/retro_Fig4.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.4",
+      "source_kind": "exact_original_user_supplied_publisher_pdf_pixel_crop",
+      "source_pdf_page": 5,
+      "body": true,
+      "caption": "原文 Fig. 4：三烯、视黄醛相关前体以及鲨烯的区域选择性单环化；不应将每个案例都归入“一锅多环化”。",
+      "display_width_pct": 99
+    },
+    {
+      "id": "cover_retrospective",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-14-r1/cover_retrospective.png",
+      "source_doi": "10.1021/jacs.6c08353",
+      "source_figure": "Fig.1B reaction source preserved from main paper",
+      "body": false,
+      "source_kind": "exact_original_paper_raster_unaltered",
+      "caption": "原文 Fig. 1B 反应图封面"
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_retrospective",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "c12ec72a42fac2e011ecbc8d18f395fd89447a0bb75773cd7c0dff88c34e8699",
+    "canvas": {
+      "width": 800,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "crop_1_1": "0_0_1_1",
+    "description": "Original PDF Fig1B screenshot without generated or modified chemistry; verified as source-only cover"
+  },
+  "editorialIntent": "Science-led narration grounded in exact original main article and SI. Readers see Fig.1B under 先看懂这项反应. All claims have bounded evidence, including negative SI examples and catalyst-state/DFT uncertainty. Never conflate model with observation.",
+  "slug": "idpi-asymmetric-geranyl-cyclization-20261014",
+  "title": "有机合成文献日报｜10.14｜往期精选｜JACS：手性 IDPi 催化香叶基衍生物的不对称阳离子环化",
+  "digest": "List 团队使用受限手性 IDPi 与氟代醇协同，区分区域选择性、异构化和非同步过渡态。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c08353&summary=0"
+}

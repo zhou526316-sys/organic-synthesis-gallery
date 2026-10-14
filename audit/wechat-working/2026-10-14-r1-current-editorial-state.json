@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-14",
+  "publicationSlot": "2026-10-14T08:00:00+08:00",
+  "scope": "Two independent WeChat Official Account article drafts; no public send",
+  "selection": {
+    "featured": {
+      "doi": "10.1021/jacs.6c17662",
+      "title": "Migratory Hydroamination of Alkenes via Iron-Hydride Catalysis",
+      "authors": "Yuang Cui, Yizhou Chen, Hui Lv, Rao Liang, Beibei Zhan, Xiaheng Zhang",
+      "journal": "JACS",
+      "role": "2026-10-14 verified new article"
+    },
+    "retrospective": {
+      "doi": "10.1021/jacs.6c08353",
+      "title": "Catalytic Asymmetric Cationic Geranyl Cyclizations",
+      "authors": "Na Luo, Mathias Turberg, Nobuya Tsuji, Markus Leutzsch, Sebastian Brunen, Benjamin List",
+      "journal": "JACS",
+      "role": "2026-07-20 originally published"
+    }
+  },
+  "publicationSource": "audit/literature-update-state.json:lastPublication",
+  "newCount": 24,
+  "journalCounts": {
+    "JOC": 7,
+    "Organic Letters": 7,
+    "JACS": 2,
+    "Angew": 2,
+    "ACS Catalysis": 2,
+    "Nature Synthesis": 2,
+    "Nature Communications": 1,
+    "Chemical Science": 1
+  },
+  "manuscriptScience": {
+    "featured": "Fe(acac)3/PhSiH3-promoted MHAT to imine radical cyclization, 1,2-amino translocation and second MHAT. Discriminating evidence: 25% without ethylene glycol, 8% under Ar, 0% without Fe or hydrosilane; SI S16 secondary allyl imine competing nonmigrated, SI S13 no crossover, SI S14 PhSiD3 label; gram scale 24mmol 80%. All Fe oxidation states beyond isolated controls remain proposed.",
+    "retrospective": "List IDPi/PFTB geranyl selective cationic cyclization. Distinguish catalyst ee control from fluoroalcohol-modulated initial α/γ and γ→α isomerization. SI S2–S4 time/resubjection, SI S5–S6 NMR titrations, 1.3 apparent PFTB order, KIE3.45 not direct proof of PFTB proton donation, DFT async bond formation and enantiomeric ΔΔG‡1.4 kcal/mol; 1q no reaction, 1p 56%/84:16, squalene43%."
+  },
+  "originalRasters": {
+    "source": "four user-uploaded full main/SI PDFs; exact PDF-to-PNG crops, no AI redraw",
+    "featured": 13,
+    "retrospective": 12,
+    "total": 25,
+    "sourceRasterCovers": 2,
+    "openingLeadFigures": "Fig.1B from each article placed immediately below 先看懂这项反应",
+    "sourcePagesFeatured": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      59,
+      114,
+      115,
+      118
+    ],
+    "sourcePagesRetrospective": [
+      2,
+      3,
+      4,
+      5,
+      44,
+      47,
+      48,
+      194
+    ]
+  },
+  "localQA": {
+    "status": "original_source_independent_text_and_image_review_pass",
+    "mobileViewport": 390,
+    "desktopViewport": 980,
+    "noHorizontalOverflow": true,
+    "figuresDecoded": 25,
+    "cloudWechatVerified": false
+  },
+  "cloudBlocker": "Publisher image paths produced through local uploaded PDFs cannot yet be transferred into GitHub production asset repository via currently usable connector. Public ACS legacy figure URLs returned HTTP 410 Gone. Do not create empty or synthetic cloud figure placeholders.",
+  "cloudMutation": {
+    "draftAdded": false,
+    "draftUpdated": false,
+    "draftGetReadback": false,
+    "published": false
+  },
+  "nextSteps": [
+    "Stage exactly the 25 source-derived PNG rasters and 2 source-only covers in repository under immutable public/wechat-assets/reviewed/2026-10-14-r1/ via a verified binary upload channel.",
+    "Re-run text-only + images-only SHA/editorial gate based on actual committed assets. Do not pass gate before bytes exist.",
+    "Then one official existing/new 2026-10-14 draft write and draft/get verified two article order, cover, image order and exact two DOI summary=0 URLs; no group send."
+  ]
+}
