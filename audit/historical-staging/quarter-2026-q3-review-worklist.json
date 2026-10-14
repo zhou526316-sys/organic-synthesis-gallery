@@ -1,28 +1,27 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-14T07:55:41.007Z",
+  "generatedAt": "2026-10-14T09:43:53.455Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11340,
+  "totalUnreviewedCandidates": 11289,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
-    "Nature": 24,
-    "Science": 24,
-    "Nature Chemistry": 24,
-    "Nature Communications": 24,
+    "Nature": 27,
+    "Science": 27,
+    "Nature Communications": 26,
     "JACS": 24,
     "Angew": 24,
     "ACS Catalysis": 24,
     "Organic Letters": 24,
-    "Chem": 23,
-    "Chemical Science": 21,
-    "CCS Chemistry": 21,
-    "Science Advances": 21,
-    "Green Chemistry": 21,
-    "JOC": 21
+    "Chem": 24,
+    "Chemical Science": 24,
+    "CCS Chemistry": 24,
+    "Science Advances": 24,
+    "Green Chemistry": 24,
+    "JOC": 24
   },
   "byMonth": {
     "2026-07": 107,
@@ -30,12 +29,12 @@
     "2026-09": 106
   },
   "byPriority": {
-    "P1": 118,
-    "P0": 159,
-    "P2": 25,
-    "P3": 18
+    "P1": 125,
+    "P0": 163,
+    "P2": 17,
+    "P3": 15
   },
-  "requiringDateVerification": 44,
+  "requiringDateVerification": 50,
   "sourceWindowsComplete": true,
   "rows": [
     {
@@ -148,63 +147,6 @@
       ],
       "sourceHashes": [
         "4aca02121efe1d33ebc17f8e9063146cb1ca4b8cdac1187957f9384d522055d0"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02217-3",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-22",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Aggregation affords productive photocatalysis",
-      "firstAuthor": "Xueliang Shi",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02218-2",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-25",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Artificial photosynthetic reduction of nitrogen to ammonia at room temperature using natural seawater",
-      "firstAuthor": "Doha Zidouhia",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02249-9",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Deep reduction in electrosynthesis",
-      "firstAuthor": "Mickaël E. Avanthay",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -971,63 +913,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41557-026-02207-5",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-20",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "A modifying touch for metal–organic framework glasses",
-      "firstAuthor": "Søren S. Sørensen",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-15_2026-07-21_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "146c42899c8237bf9a774ee27b83d0ef5da11255e39be33832485482b1d8f232"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02230-6",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-21",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Genetically targeted dyes light up cell-specific abiotic synthesis",
-      "firstAuthor": "Ting Wu",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-15_2026-08-21_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02244-0",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-22",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Temperature and reproducibility in photocatalysis",
-      "firstAuthor": "Kaid Harper",
-      "priority": "P1",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41467-026-74290-8",
       "journal": "Nature Communications",
       "sourceWindowMonth": "2026-07",
@@ -1782,63 +1667,6 @@
       ],
       "sourceHashes": [
         "e9e69d731fbfe32c2f39a6f1aa37dbdb9c31b4957d8992d9d8f07ce3ec1c5d50"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02200-y",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-31",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Oleic acid at the heart of olive oil",
-      "firstAuthor": "Patricia O’Hara",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02223-5",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-12",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Tailoring packing sequences in van der Waals metal–organic frameworks",
-      "firstAuthor": "Mingyu Yang",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-08_2026-08-14_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "c1a4fc74b0343f764dbef2f2ec1910cdfcd42eace01168b18c8a0b00ec8c1fb1"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02262-y",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-29",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Linking vibrational energetics to carbon isotope separation in CO2 electrolysis",
-      "firstAuthor": "",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2605,63 +2433,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41557-026-02220-8",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-31",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "How webby is the wood-wide web?",
-      "firstAuthor": "Bruce C. Gibb",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02227-1",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Cyclopropanol can function as a caged dual-functional warhead for selective electrochemical bioconjugation",
-      "firstAuthor": "Shan Hu",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02257-9",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-25",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Catalyst-directed vibrational frequency disparity for isotopologue sieving in CO2 electrolysis",
-      "firstAuthor": "Ningce Zhang",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41467-026-75304-1",
       "journal": "Nature Communications",
       "sourceWindowMonth": "2026-07",
@@ -3421,63 +3192,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41557-026-02215-5",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-30",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Innovation without inventors",
-      "firstAuthor": "Jennifer M. Rampling",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02234-2",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Thalidomide and targeted protein degradation",
-      "firstAuthor": "Connor Delaney",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02251-1",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-24",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Programming semiconducting two-dimensional conjugated metal–organic frameworks via anisotropic reticular chemistry",
-      "firstAuthor": "Jianjun Zhang",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41467-026-75228-w",
       "journal": "Nature Communications",
       "sourceWindowMonth": "2026-07",
@@ -4232,63 +3946,6 @@
       ],
       "sourceHashes": [
         "4b98845bbbcdcd988ff3f47a68d289189aad11e09e2ea1da4b8f79898a3b8d1a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02209-3",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-27",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Deciphering the infrared spectrum of the hydrated proton using full-dimensional quantum dynamics",
-      "firstAuthor": "David Mendive-Tapia",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02236-0",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-28",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Organizing a conference",
-      "firstAuthor": "Shira Joudan",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02235-1",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-22",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Secondary-sphere hydrogen bonding promotes catalytic nitrate reduction at iron",
-      "firstAuthor": "Writhabrata Sarkar",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-22_2026-09-30_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5057,63 +4714,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41557-026-02221-7",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-27",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Solvent-bridged electrolytes for high-energy Li-ion batteries under extreme conditions",
-      "firstAuthor": "Yawei Chen",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02228-0",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-26",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "A general strategy towards multicolour fluorogenic peptides for wash-free bioassays",
-      "firstAuthor": "Man Sing Wong",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-22_2026-08-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02240-4",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-18",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Autonomous migration of a phosphate group along glycerol and inositol scaffolds driven by a phosphodiester reaction cycle",
-      "firstAuthor": "Patrick Alexander Hoffmann",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-15_2026-09-21_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "74772b49d94e5e9be64405fecec73d949ec30924ce9bbe69e8385b2c42f5efb1"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41467-026-76062-w",
       "journal": "Nature Communications",
       "sourceWindowMonth": "2026-07",
@@ -5877,63 +5477,6 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1038/s41557-026-02229-z",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-07",
-      "apiDateCandidate": "2026-07-27",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "On-support phosphitylation for oligonucleotide modification",
-      "firstAuthor": "",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-07-22_2026-07-31_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02219-1",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-20",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "Understanding and suppressing gas evolution in lithium metal batteries with ether-based electrolytes",
-      "firstAuthor": "Samantha T. Hung",
-      "priority": "P3",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-08-15_2026-08-21_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1038/s41557-026-02256-w",
-      "journal": "Nature Chemistry",
-      "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-17",
-      "publisherFirstOnlineDateVerified": false,
-      "title": "F-centre charge state and dynamism govern oxide electrocatalytic selectivity",
-      "firstAuthor": "Xiaoyuan Zhang",
-      "priority": "P2",
-      "flags": [],
-      "sourceRootIds": [
-        "2026-09-15_2026-09-21_nature-chemistry"
-      ],
-      "sourceHashes": [
-        "74772b49d94e5e9be64405fecec73d949ec30924ce9bbe69e8385b2c42f5efb1"
-      ],
-      "scopeReview": "not_started_requires_independent_two_pass",
-      "publicationAuthority": false
-    },
-    {
       "doi": "10.1038/s41467-026-75923-8",
       "journal": "Nature Communications",
       "sourceWindowMonth": "2026-07",
@@ -6255,13 +5798,487 @@
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103247",
+      "journal": "Chem",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Ultrafast in vivo spectroscopy reveals photosynthetic energy and charge transfer under physiological conditions",
+      "firstAuthor": "Rhea Kumar",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-01_2026-09-07_chem"
+      ],
+      "sourceHashes": [
+        "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6sc02950g",
+      "journal": "Chemical Science",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Photoinduced remote C–N/C bond formation via ring-opening 1,4-difunctionalization of methylenecyclobutanes",
+      "firstAuthor": "Yan Zhang",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_chemical-science"
+      ],
+      "sourceHashes": [
+        "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6sc03582e",
+      "journal": "Chemical Science",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Prominent signatures of energy transfer in action-detected spectra of a cyanobacterial photosynthetic protein",
+      "firstAuthor": "Sayan Ghosh",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-08-08_2026-08-14_chemical-science"
+      ],
+      "sourceHashes": [
+        "47db1aad79f94496f56856c0d73cd9f060eb1b7bce9ec046781483b4f0da5683"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6sc04187f",
+      "journal": "Chemical Science",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Enhancing biocatalytic retrosynthesis with a graph-to-graph model",
+      "firstAuthor": "Lina Dong",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-09-08_2026-09-14_chemical-science"
+      ],
+      "sourceHashes": [
+        "75df32e529d24f5e14920e0de1fd8c537cdaa9aaa33a97b6b581dce5d202af91"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607751",
+      "journal": "CCS Chemistry",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-10",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Transition-Metal-Catalyst-Free Direct α-Heteroarylation of Esters and Amides with Reformatsky Reagents",
+      "firstAuthor": "Yangxiao Li",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-08_2026-07-14_ccs-chemistry"
+      ],
+      "sourceHashes": [
+        "a97560f9012dc77f9f78a147d314150c15521656642bc153f706ee9437dcd88d"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202506792",
+      "journal": "CCS Chemistry",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Asymmetric Dual-Metal-Site Pairs in a Two-Dimensional Conductive Metal–Organic Framework for Efficient Alkaline Hydrogen Evolution",
+      "firstAuthor": "Yin-Qiang Zhang",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-01_2026-08-07_ccs-chemistry"
+      ],
+      "sourceHashes": [
+        "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202506913",
+      "journal": "CCS Chemistry",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Dihydrazino- Bay -Annulated-Perylene: Straightforward Synthesis, Oxidative States-Associated Aromaticity, and Stable Charge Transfer Complex",
+      "firstAuthor": "Teng Luo",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-01_2026-09-07_ccs-chemistry"
+      ],
+      "sourceHashes": [
+        "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee4031",
+      "journal": "Science Advances",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-10",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Redirecting radical phosphonylation via energy-transfer–enabled diradical rearrangement",
+      "firstAuthor": "Kai-Dian Li",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-08_2026-07-14_science-advances"
+      ],
+      "sourceHashes": [
+        "6360d01cff618165548f8d4785dfbde30e7ab69863453e86a3fad6b104a9d99c"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/sciadv.aec8768",
+      "journal": "Science Advances",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-14",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Differential condensation of FLO6 influences grain amylose synthesis in rice",
+      "firstAuthor": "Fei Liu",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-08_2026-08-14_science-advances"
+      ],
+      "sourceHashes": [
+        "75374f0a04cb5d0364459b16499131b6d227e39499c57f9592a2907a64d0f1df"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef9030",
+      "journal": "Science Advances",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-18",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Universal synthesis of high-entropy alloy nanostructures with femtosecond lasers",
+      "firstAuthor": "Zikang Su",
+      "priority": "P1",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-15_2026-09-21_science-advances"
+      ],
+      "sourceHashes": [
+        "2bef8245d3a9c255970cccab2102e7d636f7867ff0a0ad22292fa556b1a44cef"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6gc02175a",
+      "journal": "Green Chemistry",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Terpolymerization of epoxide, oxetane, and CO 2 for the synthesis of polycarbonates with high CO 2 contents, physical tunability, and enzymatic degradability",
+      "firstAuthor": "Kaito Niki",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-07-08_2026-07-14_green-chemistry"
+      ],
+      "sourceHashes": [
+        "22c590447087eb420fb365a3c799c195cc8622bae89f829bee6907c5daca658b"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6gc02058e",
+      "journal": "Green Chemistry",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Rapid and green aqueous synthesis of a porous hydrogen-bonded organic framework contrary to Wallach's rule",
+      "firstAuthor": "Jinkui Teng",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-08-01_2026-08-07_green-chemistry"
+      ],
+      "sourceHashes": [
+        "86d014a7496bdffab951ba987dbd4ff3bce07016327ddd56995289bf04a9e319"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d6gc03395d",
+      "journal": "Green Chemistry",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Greener solvent strategies for sustainable metal–organic framework synthesis: properties, solvent–framework interactions, and applications",
+      "firstAuthor": "Geng Huang",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "sourceRootIds": [
+        "2026-09-08_2026-09-14_green-chemistry"
+      ],
+      "sourceHashes": [
+        "2bec66519e21e0e1c444cf8fd593498b04d5e0da3a0f5e063a52a1f87e3415a2"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01242",
+      "journal": "JOC",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-01",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Photochemical Ni-Catalyzed Cross-Coupling of Aryl Bromides with Hydrazides",
+      "firstAuthor": "Fei Li",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-01_2026-07-07_joc"
+      ],
+      "sourceHashes": [
+        "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01394",
+      "journal": "JOC",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-10",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Organocatalyzed Asymmetric Formal [3+2] Cycloaddition between Cyclic Nitrones and Meldrum’s Acid for the Formal Total Synthesis of (−)-Crispine A",
+      "firstAuthor": "Yasunori Toda",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-08_2026-08-14_joc"
+      ],
+      "sourceHashes": [
+        "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01562",
+      "journal": "JOC",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-04",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "firstAuthor": "Yu Chen",
+      "priority": "P0",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-01_2026-09-07_joc"
+      ],
+      "sourceHashes": [
+        "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/d41586-026-02274-1",
+      "journal": "Nature",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-31",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "The forensic traces that can help catch poachers — July’s best science images",
+      "firstAuthor": "Dhruv Shenai",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_nature"
+      ],
+      "sourceHashes": [
+        "f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/d41586-026-02543-z",
+      "journal": "Nature",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-31",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "What’s your lab’s archetype? The answer could inform how you use AI",
+      "firstAuthor": "Jenna Ahart",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_nature"
+      ],
+      "sourceHashes": [
+        "777d9df409e32f83a8ecd054892ba83f6e49f6c6efae34c47d58f327c423f8f7"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/d41586-026-02201-4",
+      "journal": "Nature",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-30",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "I turn up late to meetings to dodge small talk. Am I wrong?",
+      "firstAuthor": "Rachael Pells",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-22_2026-09-30_nature"
+      ],
+      "sourceHashes": [
+        "b7c338c3d5e5baee5573a1dbd95b274e322d6b4c516e9a3605be434b31eaa989"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/science.adq7402",
+      "journal": "Science",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-30",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Toward an exact quantum many-body treatment of Kondo correlation in magnetic impurities",
+      "firstAuthor": "Tianyu Zhu",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_science"
+      ],
+      "sourceHashes": [
+        "46d727772b30df7c96374be4d4df0211343f61b8a9fd9e15b20fec80b2c103a4"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/science.aec3449",
+      "journal": "Science",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-27",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Genomic predisposition is associated with the direction of sex chromosome evolution",
+      "firstAuthor": "Yang Zhou",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_science"
+      ],
+      "sourceHashes": [
+        "2ea89f9a2f81dad12e0fc43bda6cceedd538138bdd99505ea1c03479504ae6a2"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1126/science.adu2107",
+      "journal": "Science",
+      "sourceWindowMonth": "2026-09",
+      "apiDateCandidate": "2026-09-24",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Two-dimensional topological quantum chemistry and catalog of topological materials",
+      "firstAuthor": "Urko Petralanda",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-09-22_2026-09-30_science"
+      ],
+      "sourceHashes": [
+        "4aca02121efe1d33ebc17f8e9063146cb1ca4b8cdac1187957f9384d522055d0"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41467-026-74482-2",
+      "journal": "Nature Communications",
+      "sourceWindowMonth": "2026-07",
+      "apiDateCandidate": "2026-07-31",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Accurate, transferable, and verifiable machine-learned interatomic potentials for layered materials",
+      "firstAuthor": "Johnathan D. Georgaras",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-07-22_2026-07-31_nature-communications"
+      ],
+      "sourceHashes": [
+        "7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76614-0",
+      "journal": "Nature Communications",
+      "sourceWindowMonth": "2026-08",
+      "apiDateCandidate": "2026-08-31",
+      "publisherFirstOnlineDateVerified": false,
+      "title": "Skull morphology of the extinct Tasmanian tiger suggests unique biting style",
+      "firstAuthor": "Vera Weisbecker",
+      "priority": "P3",
+      "flags": [],
+      "sourceRootIds": [
+        "2026-08-22_2026-08-31_nature-communications"
+      ],
+      "sourceHashes": [
+        "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3"
+      ],
+      "scopeReview": "not_started_requires_independent_two_pass",
+      "publicationAuthority": false
     }
   ],
   "noAutomaticAcademicDecision": true,
   "noCloudflareD1Access": true,
-  "verifiedPublisherNonResearchExcluded": 55,
-  "verifiedPublisherScopeExcluded": 29,
-  "verifiedPublisherScopeEvidencePending": 4,
+  "verifiedPublisherNonResearchExcluded": 82,
+  "verifiedPublisherScopeExcluded": 49,
+  "verifiedPublisherScopeEvidencePending": 5,
   "publisherScopeEvidencePending": [
     {
       "doi": "10.1038/s41929-026-01608-6",
@@ -6297,6 +6314,15 @@
       "evidenceNeeded": "公开数据主要是光催化析氢量子效率和电荷寿命，单体/聚合反应通用性未充分呈现",
       "nextAction": "核对出版社可合法访问的详细实验、产物表征和开放支持信息，判断一般制备/合成路线贡献；在直接证据不足时继续保留pending，不把未获得全文写成原文不存在证据。",
       "sourceRootId": "2026-09-08_2026-09-14_nature-synthesis",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1038/s41557-026-02226-2",
+      "journal": "Nature Chemistry",
+      "publisherFirstOnlineDate": "2026-09-02",
+      "evidenceNeeded": "公开正文报告不同碘取代模式、Pd/NaBH₄去保护与LC检测，还展示肽组装、活细胞膜蛋白相互作用及肿瘤免疫界面操控；一般制备产品分离和对多种非生物有机骨架的扩展仍需进一步确定。",
+      "nextAction": "补核该研究中实际制备与分离的多种骨架、保护基和功能团范围，将一般有机合成方法与活细胞化学操控明确区分后重新两遍审核；不得凭生物指标推断化学收率。",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-chemistry",
       "notOriginalManifestPending": true
     }
   ]
