@@ -3284,6 +3284,14 @@ def main() -> int:
     parser.add_argument("--publish", action="store_true", help="submit the updated draft for publication and wait for final status")
     args = parser.parse_args()
 
+    # Owner-authorized metadata-only edits preserve all body fields and their editorial hold.
+    metadata_request_path = ROOT / "audit/automation-triggers/wechat-publisher-request.json"
+    if metadata_request_path.exists():
+        metadata_request = json.loads(metadata_request_path.read_text(encoding="utf-8"))
+        if isinstance(metadata_request, dict) and metadata_request.get("action") == "update_covers_title_only":
+            from cover_title_patch import run as run_cover_title_patch
+            return run_cover_title_patch(sys.modules[__name__], args, metadata_request)
+
     retrospective = pending_retrospective_request()
     if retrospective:
         request, data = retrospective
