@@ -15,7 +15,7 @@ EXPECTED={"JOC":7,"Organic Letters":7,"Nature Synthesis":2,"JACS":2,"ACS Catalys
 
 def git_blob_sha(p):
     b=p.read_bytes()
-    return hashlib.sha1(("blob "+str(len(b))+"\\0").encode()+b).hexdigest()
+    return hashlib.sha1(("blob "+str(len(b))).encode()+bytes([0])+b).hexdigest()
 
 def parse_manuscript(path):
     source=path.read_text(encoding="utf8")
@@ -28,7 +28,7 @@ def parse_manuscript(path):
         item=" ".join(buffer).strip()
         buffer=[]
         if item and level and not item.startswith("> ") and not item.startswith("原文：") and not item.startswith("阅读原文：") and not item.startswith("Yuang Cui") and not item.startswith("Na Luo"):
-            item=re.sub(r"\\*\\*(.*?)\\*\\*",r"\\1",item)
+            item=re.sub(r"\*\*(.*?)\*\*",r"\1",item)
             parts["quick" if level=="quick" else "sections"][-1]["paragraphs"].append(item) if level!="quick" else parts["quick"].append(item)
     for line in lines:
         line=line.strip()
@@ -42,7 +42,7 @@ def parse_manuscript(path):
             flush();level="section"
             parts["sections"].append({"heading":line[4:],"paragraphs":[],"figureNames":[]})
             continue
-        image=re.match(r"^\\[\\[IMAGE:([^|]+)\\|(.+)\\]\\]$",line)
+        image=re.match(r"^\[\[IMAGE:([^|]+)\|(.+)\]\]$",line)
         if image:
             flush()
             if level=="quick":
@@ -180,7 +180,7 @@ def main():
     ]
     for path,obj in writes:
         path.parent.mkdir(parents=True,exist_ok=True)
-        path.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+"\\n",encoding="utf8")
+        path.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+chr(10),encoding="utf8")
     audit={
       "date":DATE,"revision":"2026-10-14-r1","reviewType":"independent_science_text_and_source_image_check",
       "sciencePapers":[FEATURED,RETRO],"corrections":{"journalCounts":counts,"publishedToday":20,"removedFour":REMOVED},
@@ -195,7 +195,7 @@ def main():
         "noContinuousShortenedControls":True},
       "status":"science_and_image_originality_pass; cloud_preview_pending",
       "publication":{"draftOnly":True,"sendAllowed":False}}
-    (REVIEW/"2026-10-14-r1-publication-science-review.json").write_text(json.dumps(audit,ensure_ascii=False,indent=2)+"\\n",encoding="utf8")
+    (REVIEW/"2026-10-14-r1-publication-science-review.json").write_text(json.dumps(audit,ensure_ascii=False,indent=2)+chr(10),encoding="utf8")
     # Construct a standalone image-only review artifact referencing each actual source.
     imageRows=[]
     for kind,m in [("today",today),("retro",retro)]:
@@ -205,7 +205,7 @@ def main():
                         for idx,s in enumerate(m["sections"])],
           "figures":[{"id":f["id"],"repo_path":f["repo_path"],"caption":f["caption"],
                        "source_figure":f["source_figure"]} for f in m["figures"]]})
-    (REVIEW/"2026-10-14-r1-images-only.json").write_text(json.dumps(imageRows,ensure_ascii=False,indent=2)+"\\n",encoding="utf8")
+    (REVIEW/"2026-10-14-r1-images-only.json").write_text(json.dumps(imageRows,ensure_ascii=False,indent=2)+chr(10),encoding="utf8")
     sources=["public/wechat-featured/"+DATE+".json",
          "public/wechat-retrospective/"+retro["slug"]+".json",
          "public/wechat-editions/"+DATE+".json",
@@ -230,7 +230,7 @@ def main():
           "https://gallery.gczhouwld.com/?"+urllib.parse.urlencode({"edition":DATE,"doi":FEATURED,"summary":"0"}),
           retro["source_url"]],
        "draftWriteAuthorized":True,"publicSendAuthorized":False,"publishId":None}
-    (REVIEW/(DATE+"-review-gate.json")).write_text(json.dumps(gate,ensure_ascii=False,indent=2)+"\\n",encoding="utf8")
+    (REVIEW/(DATE+"-review-gate.json")).write_text(json.dumps(gate,ensure_ascii=False,indent=2)+chr(10),encoding="utf8")
     print(json.dumps({"correctedToday":len(final),"perJournal":counts,"sourceImageCount":len(assets),
          "figureCount":[len(today["figures"])-1,len(retro["figures"])-1],
          "headlines":[edition["title"],retro["title"]],"sourcePaths":sources},ensure_ascii=False))
