@@ -35,7 +35,7 @@ export function bindReviewedQ3ScopeProof({proof,science,scienceGitBlobSha}={}){
     const id=normalize(r.doi);
     check(/^10\.1038\/s41929-026-\d{5}-[0-9a-z]$/.test(id)
       &&id===r.doi&&!scienceRows.has(id)
-      &&r.journal==='Nature Catalysis',
+      &&science.journal==='Nature Catalysis',
       'q3_reviewed_scope_science_doi_invalid:'+id);
     scienceRows.set(id,r);
   }
