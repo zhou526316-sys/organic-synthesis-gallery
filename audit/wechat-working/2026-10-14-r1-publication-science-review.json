@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-14",
+  "revision": "2026-10-14-r1",
+  "reviewType": "independent_science_text_and_source_image_check",
+  "sciencePapers": [
+    "10.1021/jacs.6c17662",
+    "10.1021/jacs.6c08353"
+  ],
+  "corrections": {
+    "journalCounts": {
+      "JOC": 7,
+      "ACS Catalysis": 1,
+      "JACS": 2,
+      "Nature Synthesis": 2,
+      "Organic Letters": 7,
+      "Chemical Science": 1
+    },
+    "publishedToday": 20,
+    "removedFour": [
+      "10.1038/s41467-026-78512-x",
+      "10.1002/anie.2910902",
+      "10.1021/acscatal.6c06095",
+      "10.1002/anie.2518487"
+    ]
+  },
+  "originalImageBytesVerified": 25,
+  "originalCoverImagesVerified": 2,
+  "sourcePdfContentBasis": "four user-provided main and SI PDFs",
+  "sourceTextOriginalReview": [
+    "audit/wechat-working/2026-10-14-r1-today-text-only.md",
+    "audit/wechat-working/2026-10-14-r1-retrospective-text-only.md"
+  ],
+  "independentImageAudit": "audit/wechat-working/2026-10-14-r1-original-figure-sha-review.json",
+  "design": {
+    "leadFigureBelowIntroTitle": true,
+    "figuresFollowExplanatoryParagraph": true,
+    "tocVerifiedNotInvented": true,
+    "chemicalStructureRedrawn": false,
+    "noContinuousShortenedControls": true
+  },
+  "status": "science_and_image_originality_pass; cloud_preview_pending",
+  "publication": {
+    "draftOnly": true,
+    "sendAllowed": false
+  }
+}
