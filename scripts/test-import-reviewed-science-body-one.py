@@ -39,11 +39,11 @@ class ReviewedScientificFtsTest(unittest.TestCase):
     def test_modified_science_cannot_enter_import(self):
         old=fixture.fixture()
         manifest=self.science_manifest(old)
-        xml=old.replace(b"Reproducible reaction procedures",b"Unreviewed changed reaction procedures")
+        xml=old.replace(b"We demonstrate the synthesis",b"We contest the synthesis")
         # The primary JATS SHA must match the evidence; no extracted text passes otherwise.
         with self.assertRaisesRegex(ValueError,"source_xml_sha_changed"):
             science.parse_science_jats(xml,pilot.DOI,manifest["xmlSha256"])
-        with self.assertRaisesRegex(ValueError,"original_scientific_source_evidence_changed"):
+        with self.assertRaisesRegex(ValueError,"source_xml_sha_changed"):
             pilot.extract_exact_sections(xml,manifest)
     def test_opaque_noncommercial_doi_mismatch_and_short_fragment_rejected(self):
         manifest=self.science_manifest(fixture.fixture())
@@ -54,7 +54,7 @@ class ReviewedScientificFtsTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             pilot.extract_exact_sections(bad,manifest)
         altered=fixture.fixture().replace(b"</body>",b"<sec><title>Methods note</title><p>Short.</p></sec></body>")
-        with self.assertRaisesRegex(ValueError,"original_scientific_source_evidence_changed"):
+        with self.assertRaisesRegex(ValueError,"source_xml_sha_changed"):
             pilot.extract_exact_sections(altered,manifest)
     def test_real_first_source_has_actual_dual_research_and_rights_review(self):
         src,old=pilot.source_record()
