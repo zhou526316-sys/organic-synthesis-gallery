@@ -59,7 +59,7 @@ test('Nature Catalysis Sep issue official Research has 10 Article DOI, 3 formal 
     academicEligibleAmongUnpublished:'unknown',fullQuarterPublisherComplete:false
   });
   assert.equal(catalysis.articles.length,10);
-  assert.equal(catalysis.formalSnapshot.dois,1091);
+  assert.equal(catalysis.formalSnapshot.dois,1087);
   assert.equal(catalysis.historicalAcademicSnapshot.include,101);
   assert.equal(new Set(catalysis.articles.map(x=>x.doi)).size,10);
   assert.deepEqual(catalysis.articles.filter(x=>x.formalCatalogReadback.present).map(x=>x.doi),[
@@ -95,7 +95,7 @@ test('publisher issue research receipt cannot be used to auto-include/exclude el
 });
 
 test('Nature Catalysis Sep historical issue census freezes readback against the 2026-10-14 main snapshot',()=>{
-  const a=cloneCatalysis();a.formalSnapshot.dois=984;
+  const a=cloneCatalysis();a.formalSnapshot.dois=1091;
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(a),/natcatal_current_snapshot/);
   const b=cloneCatalysis();b.historicalAcademicSnapshot.include=91;
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(b),/natcatal_current_snapshot/);

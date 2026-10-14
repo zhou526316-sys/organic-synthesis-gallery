@@ -235,8 +235,8 @@
   ],
   "formalSnapshot": {
     "source": "public/toc-demand-live.json",
-    "sha": "a231a898894a788d1cca7476ed289163c85c6c1a",
-    "dois": 1091,
+    "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
+    "dois": 1087,
     "mode": "GitHub_main_frozen_read_only_no_D1"
   },
   "counters": {
@@ -264,5 +264,6 @@
     "pending": 2
   },
   "reconciledAt": "2026-10-14T01:25:00Z",
-  "reconciliationExplanation": "Formal catalog 984→1091 and historical academic approvals 91→101; all ten Sep-issue DOI rechecked, with 3 exact formal date matches, 7 absent and no historical academic approval. The latter seven have NOT been scientifically adjudicated by issue enumeration."
+  "reconciliationExplanation": "Formal catalog 984→1091 and historical academic approvals 91→101; all ten Sep-issue DOI rechecked, with 3 exact formal date matches, 7 absent and no historical academic approval. The latter seven have NOT been scientifically adjudicated by issue enumeration.",
+  "reconciliationNote": "Restamped after authorized deletion-only scope correction changed GitHub main catalog 1091→1087 on 2026-10-14; the three formal Nature Catalysis Sep-issue DOI remain present with matching publisher dates, seven remain absent, and zero historically approved among the issue ten. Main sync_failed denotes repository readback only, not live deployment certification."
 }
