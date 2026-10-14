@@ -17,10 +17,12 @@ on:
       - 'scripts/audit-historical-open-science-oa.mjs'
       - 'scripts/test-historical-open-science-oa.mjs'
       - '.github/workflows/historical-open-science-oa.yml'
+      - 'scripts/lib/historical-oa-trigger.mjs'
   push:
     branches: [main]
     paths:
       - '.github/workflows/historical-open-science-oa.yml'
+      - 'audit/automation-triggers/historical-science-oa-window.json'
 permissions:
   contents: read
 concurrency:
@@ -38,6 +40,7 @@ jobs:
       - name: Verify source parser and offline non-writing contract
         run: |
           node --check scripts/lib/historical-open-xml-pilot.mjs
+          node --check scripts/lib/historical-oa-trigger.mjs
           node --check scripts/audit-historical-open-science-oa.mjs
           node --test scripts/test-historical-open-science-oa.mjs
           node scripts/audit-historical-open-science-oa.mjs --dry-run --limit=20 --output=/tmp/historical-oa-offline.json
@@ -51,15 +54,57 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Scan one exact published-DOI OA window (no protected article requests)
+      - name: Resolve reviewed, catalog-pinned and bounded source window
+        id: source_window
+        shell: bash
         env:
-          OA_OFFSET: ${{ inputs.offset || 0 }}
-          OA_LIMIT: ${{ inputs.limit || 20 }}
+          OA_EVENT: ${{ github.event_name }}
+          OA_DISPATCH_OFFSET: ${{ inputs.offset || 0 }}
+          OA_DISPATCH_LIMIT: ${{ inputs.limit || 20 }}
         run: |
-          node scripts/audit-historical-open-science-oa.mjs --limit="$OA_LIMIT" --offset="$OA_OFFSET" --output=/tmp/real-historical-oa-evidence.json
+          set -euo pipefail
+          if [ "$OA_EVENT" = workflow_dispatch ]; then
+            [[ "$OA_DISPATCH_OFFSET" =~ ^[0-9]+$ ]] && [[ "$OA_DISPATCH_LIMIT" =~ ^[0-9]+$ ]]
+            test "$OA_DISPATCH_LIMIT" -ge 1 && test "$OA_DISPATCH_LIMIT" -le 20
+            {
+              echo 'enabled=true'
+              echo "offset=$OA_DISPATCH_OFFSET"
+              echo "limit=$OA_DISPATCH_LIMIT"
+              echo 'catalog='
+            } >> "$GITHUB_OUTPUT"
+          else
+            # A workflow-only code release must not restart the old source window.
+            if ! git diff --name-only HEAD^ HEAD -- audit/automation-triggers/historical-science-oa-window.json \
+              | grep -qx 'audit/automation-triggers/historical-science-oa-window.json'; then
+              echo 'enabled=false' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            node --input-type=module <<'NODE'
+          import {readFileSync,appendFileSync} from 'node:fs';
+          import {normalizeOaTrigger} from './scripts/lib/historical-oa-trigger.mjs';
+          const raw=JSON.parse(readFileSync('audit/automation-triggers/historical-science-oa-window.json','utf8'));
+          const win=normalizeOaTrigger(raw);
+          appendFileSync(process.env.GITHUB_OUTPUT,
+            ['enabled=true','offset='+win.offset,'limit='+win.limit,
+              'catalog='+win.catalogId,''].join(String.fromCharCode(10)));
+          console.log('HISTORICAL_OA_WINDOW '+JSON.stringify({requestId:win.requestId,offset:win.offset,
+            limit:win.limit,catalogId:win.catalogId,readOnly:true}));
+          NODE
+          fi
+      - name: Scan one exact published-DOI OA window (no protected article requests)
+        if: steps.source_window.outputs.enabled == 'true'
+        env:
+          OA_OFFSET: ${{ steps.source_window.outputs.offset }}
+          OA_LIMIT: ${{ steps.source_window.outputs.limit }}
+          OA_CATALOG: ${{ steps.source_window.outputs.catalog }}
+        run: |
+          node scripts/audit-historical-open-science-oa.mjs --limit="$OA_LIMIT" \
+            --offset="$OA_OFFSET" --expected-catalog-id="$OA_CATALOG" \
+            --output=/tmp/real-historical-oa-evidence.json
       - name: Preserve only DOI/source/rights/science-count records
         if: always()
         uses: actions/upload-artifact@v4

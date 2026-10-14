@@ -42,3 +42,9 @@ Cloudflare D1 Workers Free 每次调用限制 50 个数据库查询，每条 SQL
 每次来源核查最多20个 DOI，按跨期刊固定顺序支持 `--offset=0,20,40,...` 的可重放无重复窗口；GitHub Actions `Historical scientific OA source validation (read-only)` 支持人工指定 `offset` 与 `limit`，并返回本次 `catalogId`、历史日期核验数、所处 offset、nextOffset 和剩余状态。正式目录代次变化时，重新核验目录，不能把两个不同 catalogId 的窗口错误拼接成同一全库验收。
 
 本扫描只访问已登记正式 DOI 的 Europe PMC 元数据及具有开放标志的官方 JATS，且仅保存 DOI／许可状态／科学章节计数／源码哈希；不上传 XML、文章原文、正文图、PDF、付费浏览器缓存，也不触碰原有 TOC 和私有 PDF 队列。**来源可用与章节数不等于通过科学/版权独立审阅，也不自动开启公共 FTS。** 只有获得逐篇来源证据与学术核对后，才可按正式独立章节审核接口导入。
+
+## 2026-10-14：正式 DOI 开放全文审计的可恢复分窗触发
+
+GitHub Actions 原有 `workflow_dispatch` 可指定 offset，但从多聊天持续回溯时缺少审计记录。新增独立的 `audit/automation-triggers/historical-science-oa-window.json` 主分支变更触发入口；每份请求必须包含 `schemaVersion:1`、6–91字符的 `requestId`、绑定当前正式目录的64位 `catalogId`、整数 `offset` 和 1–20 的 `limit`。只允许在该文件实际变更时触发对应的完整正式 DOI 来源核验，单独修改工作流文件不会重复扫描已有窗口。
+
+程序严格核对 Pages 正式清单与 `catalog-view` 的 DOI、revision、目录代次；一旦目标 catalogId 改变立即拒绝跨代次合并。输出仅为 DOI、期刊、源许可分类、科学章节结构计数和源码哈希；不存 JATS/XML 原文，不索取订阅全文/PDF，不把候选自动导入公共章节 FTS。GitHub CI 保留一份时间有限的审计产物，是否有开放许可及全文是否完整仍需每篇独立核实。此前窗口完成不等于以后新增 DOI 自动得到正文。
