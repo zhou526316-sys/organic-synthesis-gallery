@@ -1,0 +1,31 @@
+name: Historical Q3 reviewed-scope provenance
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/historical-q3-reviewed-scope-proof.mjs'
+      - 'scripts/test-historical-q3-reconciliation.mjs'
+      - 'scripts/test-historical-q3-publisher-scope-proof.mjs'
+      - 'audit/historical-reviewed/q3-natcatal-scope-source-proof.json'
+      - 'audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json'
+      - '.github/workflows/historical-q3-reviewed-scope-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate original Q3 scope/candidate-count contracts
+        run: node --test scripts/test-historical-q3-reconciliation.mjs
+      - name: Validate 15 exact DOI science decisions, source hashes, and new isolated counters
+        run: node --test scripts/test-historical-q3-publisher-scope-proof.mjs

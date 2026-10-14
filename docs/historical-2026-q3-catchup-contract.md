@@ -58,3 +58,39 @@ remains Beijing 08:00; no 18:00. July–September additions can request
 only an official TOC and retain existing valid media; pre-July additions
 are metadata_only. No old body figures, SI, PDFs, or daily-new/Hot/WeChat
 historical leakage. Never release unreviewed DOI just to hit 1,000.
+
+
+## 2026-10-14: DOI-provenance-bound publisher Research scope reviews
+
+The Nature Catalysis July–September issue receipts and the 15 paper-specific
+second-pass scientific challenges are *review evidence*, not publication.
+The original ledger is frozen at
+`audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json`.
+`audit/historical-reviewed/q3-natcatal-scope-source-proof.json` binds each
+DOI to its exact immutable 2026 Q3 Crossref/OpenAlex review shard by source
+root ID, source SHA-256 and Git blob SHA.
+
+After the staging-only reconciliation consumes this proof, it reports these
+as two **separate** statuses:
+- `sourcePublisherReviewedScopeExcluded`: academically reviewed out-of-scope
+  original papers; NOT owner permanent exclusions.
+- `sourcePublisherReviewedScopePending`: scientifically reviewed, evidence
+  still needed; NOT approved and NOT the two original manifest pendings.
+
+These DOI remain counted in the source discovery census. Only the
+`unfinishedQ3OrDateVerification` and bounded worklist can shrink, and only
+after the staging workflow actually re-runs successfully. No one should
+subtract a prediction from the previously generated 11,423 or assert that
+the quarterly publisher Research issue reconciliation is closed.
+
+Every reviewed DOI must still match its original frozen source date, journal,
+publisher Article/Analysis page, complete first/challenge science rationales
+and exact shard Git blob SHA. Any change, missing source row, owner correction,
+formal admission, or stale authority collision fails closed. The 2026-08-25
+foscarnet C–P study `10.1038/s41929-026-01608-6` stays evidence-pending
+until isolation/identification/overall preparative evidence are established;
+Faradaic efficiency is not isolated chemical yield.
+
+This read-only integration must not modify original source shards, the
+`approved-admissions.json` include/pending manifest, owner DOI exclusions,
+main literature catalog, media/PDF acquisition or the sole 08:00 publication.

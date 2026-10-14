@@ -6,6 +6,8 @@
 import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {bindReviewedQ3ScopeProof,EMPTY_REVIEWED_SCOPE,REVIEWED_SCOPE_AUTHORITY_SCHEMA} from './historical-q3-reviewed-scope-proof.mjs';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
 import {TRIAGE_SCHEMA} from './historical-review-triage.mjs';
 export const Q3_SCHEMA='gallery-historical-q3-source-and-scope-v1';
@@ -44,11 +46,13 @@ const cell=(journal,month)=>({journal,month,expectedSourceRoots:4,
   apiQ3DatedCandidates:0,undatedOrAmbiguousSourceCandidates:0,
   alreadyPublished:0,approvedWaiting08:0,sourcePending:0,explicitExcluded:0,
   publisherNonResearchExcluded:0,
+  publisherReviewedScopeExcluded:0,publisherReviewedScopePending:0,
   unreviewed:0,publisherResearchIssueComplete:false,
   firstOnlineDateFullyPublisherVerified:false});
 export function reconcileQ3({
   state,triage,shards,formal,manifest,corrections,
   publisherNonResearch=EMPTY_PUBLISHER_NONRESEARCH,
+  publisherReviewedScope=EMPTY_REVIEWED_SCOPE,
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
   ensure(state?.schema==='gallery-historical-nightly-staging-v1'
@@ -65,6 +69,10 @@ export function reconcileQ3({
     &&publisherNonResearch.mode==='publisher_verified_non_original_doi_only_not_publication'
     &&Array.isArray(publisherNonResearch.reviewed),
     'q3_nonresearch_ledger_untrusted_schema');
+  ensure(publisherReviewedScope?.schemaVersion===REVIEWED_SCOPE_AUTHORITY_SCHEMA
+    &&publisherReviewedScope.mode==='scientific_review_and_source_identity_only_not_publication'
+    &&Array.isArray(publisherReviewedScope.reviewed),
+    'q3_reviewed_scope_untrusted_adapter');
   ensure(Number.isSafeInteger(limit)&&limit>=1&&limit<=400
     &&Number.isSafeInteger(page)&&page>=0&&page<=10000
     &&reference===1000,'q3_reference_or_page_invalid');
@@ -76,7 +84,7 @@ export function reconcileQ3({
   const completed=new Set(state.completed);
   ensure(completed.size===state.completed.length,'q3_duplicate_completed_root');
   const missingRoots=expected.filter(x=>!completed.has(x.id)).map(x=>x.id);
-  const shardIds=new Set(),all=new Map();
+  const shardIds=new Set(),all=new Map(),gitBlobByRoot=new Map();
   let occurrences=0;
   for(const shard of shards){
     const spec=lookup.get(shard?.rootId);
@@ -89,6 +97,7 @@ export function reconcileQ3({
       &&shard.stats?.candidateOccurrences===shard.records.length,
       'q3_invalid_review_shard:'+shard?.rootId);
     shardIds.add(shard.rootId);
+    if(shard.gitBlobSha)gitBlobByRoot.set(shard.rootId,shard.gitBlobSha);
     cells.get(cellId(spec.journal,spec.month)).completedSourceRoots++;
     occurrences+=shard.records.length;
     for(const row of shard.records){
@@ -161,6 +170,46 @@ export function reconcileQ3({
     publisherNonOriginal.add(id);
   }
 
+  // Publisher original-research science verdicts are separate from owner corrections,
+  // publisher nonresearch categories and the original approval/pending manifest.
+  const reviewedScope=new Map();
+  for(const proof of publisherReviewedScope.reviewed){
+    const id=normalize(proof?.doi),a=proof?.assessment,source=all.get(id);
+    const path='/articles/'+id.split('/')[1];
+    let url;
+    try{url=new URL(proof?.publisherPage||'')}catch{url=null}
+    const articleUrlValid=['www.nature.com','nature.com'].includes(url?.hostname)
+      &&url?.pathname===path;
+    const validScience=proof?.scientificDecision===a?.decision
+      &&['exclude','pending'].includes(a?.decision)
+      &&a.firstPassDecision===a.decision&&a.challengeDecision===a.decision
+      &&a.reviewPasses===2&&a.date===proof.date
+      &&a.publisherArticleType===proof.publisherArticleType
+      &&a.publisherPage===proof.publisherPage
+      &&['Article','Analysis'].includes(a.publisherArticleType)
+      &&['primaryContribution','preparativeTransformation','generalityEvidence']
+        .every(k=>typeof a[k]==='string'&&a[k].trim().length>=10)
+      &&['firstPassReason','independentChallengeReason']
+        .every(k=>typeof a[k]==='string'&&a[k].trim().length>=40)
+      &&a.firstPassReason!==a.independentChallengeReason
+      &&(a.decision!=='pending'||(
+        a.missingEvidenceMustNotMeanNoEvidenceExists===true
+        &&typeof a.nextAction==='string'&&a.nextAction.length>=40));
+    ensure(source&&!reviewedScope.has(id)&&validScience&&articleUrlValid
+      &&proof.doi===id&&proof.journal===source.journal
+      &&proof.date===source.date&&knownDate(source)&&!source.dateConflict
+      &&!source.journalConflict
+      &&source.sourceRoots.includes(proof.sourceRootId)
+      &&source.sourceHashes.includes(proof.stageSourceSha256)
+      &&gitBlobByRoot.get(proof.sourceRootId)===proof.stageBatchGitBlobSha
+      &&proof.sourceShardPath==='audit/historical-staging/review-queue/'+proof.sourceRootId+'.json'
+      &&proof.sourceFamilies.every(f=>(source.sourceFamilies||[]).includes(f))
+      &&!pub.has(id)&&!accepted.has(id)&&!pending.has(id)
+      &&!excluded.has(id)&&!publisherNonOriginal.has(id),
+      'q3_reviewed_scope_provenance_or_science_conflict:'+id);
+    reviewedScope.set(id,proof);
+  }
+
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
     const c=cells.get(cellId(paper.journal,paper.date.slice(0,7)));
@@ -173,6 +222,7 @@ export function reconcileQ3({
     knownOutsideQ3:0,sourceJournalConflicts:0,sourceDateConflicts:0,
     sourceAlreadyPublished:0,sourceApprovedWaiting08:0,sourcePending:0,
     sourceExplicitlyExcluded:0,sourcePublisherNonResearchExcluded:0,
+    sourcePublisherReviewedScopeExcluded:0,sourcePublisherReviewedScopePending:0,
     unfinishedQ3OrDateVerification:0,
     formalQ3Count:formalCount,reviewedQ3Waiting08:0,
     missingFormalQ3FromSource:0,sourceCompletedRoots:shardIds.size,
@@ -206,13 +256,21 @@ export function reconcileQ3({
       accepted.has(row.doi)?'approved_waiting08':
       pending.has(row.doi)?'pending_date_or_scope':
       excluded.has(row.doi)?'explicit_excluded':
-      publisherNonOriginal.has(row.doi)?'publisher_nonresearch_excluded':'unfinished';
+      publisherNonOriginal.has(row.doi)?'publisher_nonresearch_excluded':
+      reviewedScope.get(row.doi)?.scientificDecision==='exclude'?'publisher_science_excluded':
+      reviewedScope.get(row.doi)?.scientificDecision==='pending'?'publisher_science_pending':'unfinished';
     if(status==='published'){c.alreadyPublished++;counters.sourceAlreadyPublished++;}
     if(status==='approved_waiting08'){c.approvedWaiting08++;counters.sourceApprovedWaiting08++;}
     if(status==='pending_date_or_scope'){c.sourcePending++;counters.sourcePending++;}
     if(status==='explicit_excluded'){c.explicitExcluded++;counters.sourceExplicitlyExcluded++;}
     if(status==='publisher_nonresearch_excluded'){
       c.publisherNonResearchExcluded++;counters.sourcePublisherNonResearchExcluded++;
+    }
+    if(status==='publisher_science_excluded'){
+      c.publisherReviewedScopeExcluded++;counters.sourcePublisherReviewedScopeExcluded++;
+    }
+    if(status==='publisher_science_pending'){
+      c.publisherReviewedScopePending++;counters.sourcePublisherReviewedScopePending++;
     }
     if(status!=='unfinished')continue;
     // An unquestionably out-of-Q3 first-online date remains in the global
@@ -276,7 +334,9 @@ export function reconcileQ3({
       noAutoInclusionOrExclusion:true,noEightEveningRelease:true,
       publisherOnlineDateNotEqualsCreatedDate:true,
       officialPublisherIssueCompletenessNotEstablished:true,
-      publisherNonResearchExclusionsAreDOISpecificOnly:true}};
+      publisherNonResearchExclusionsAreDOISpecificOnly:true,
+      publisherResearchScienceAssessmentNotOwnerPermanentExclusion:true,
+      publisherResearchEvidencePendingNotApproved:true}};
   const worklist={schemaVersion:Q3_SCHEMA,generatedAt,mode:'bounded_review_queue_not_admission',
     page,pageSize:limit,totalPages:Math.ceil(unreviewed.length/limit),
     totalUnreviewedCandidates:unreviewed.length,
@@ -284,7 +344,16 @@ export function reconcileQ3({
     byJournal,byMonth,byPriority,requiringDateVerification:requiringDate,
     sourceWindowsComplete:missingRoots.length===0,
     rows:selected,noAutomaticAcademicDecision:true,noCloudflareD1Access:true,
-    verifiedPublisherNonResearchExcluded:counters.sourcePublisherNonResearchExcluded};
+    verifiedPublisherNonResearchExcluded:counters.sourcePublisherNonResearchExcluded,
+    verifiedPublisherScopeExcluded:counters.sourcePublisherReviewedScopeExcluded,
+    verifiedPublisherScopeEvidencePending:counters.sourcePublisherReviewedScopePending,
+    publisherScopeEvidencePending:publisherReviewedScope.reviewed
+      .filter(x=>x.scientificDecision==='pending').map(x=>({
+        doi:x.doi,journal:x.journal,publisherFirstOnlineDate:x.date,
+        evidenceNeeded:x.assessment.generalityEvidence,
+        nextAction:x.assessment.nextAction,
+        sourceRootId:x.sourceRootId,notOriginalManifestPending:true
+      }))};
   return {coverage,worklist};
 }
 async function readJson(file){return JSON.parse(await readFile(file,'utf8'));}
@@ -300,18 +369,30 @@ export async function runQuarterAudit({
 }={}){
   ensure(process.env.HISTORICAL_STAGING_ONLY==='1'&&
     process.env.HISTORICAL_STAGING_BRANCH==='1','q3_staging_only_guard');
-  const [state,triage,formal,manifest,corrections,publisherNonResearch]=await Promise.all([
+  const [state,triage,formal,manifest,corrections,publisherNonResearch,
+    scopedSourceProof,scopedScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
     readJson('audit/literature-scope-corrections.json'),
-    readJson('audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json')
+    readJson('audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json'),
+    readJson('audit/historical-reviewed/q3-natcatal-scope-source-proof.json'),
+    readJson('audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json')
   ]);
+  const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
+  const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
+  const publisherReviewedScope=bindReviewedQ3ScopeProof({
+    proof:scopedSourceProof,science:scopedScience,scienceGitBlobSha
+  });
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
-  for(const id of state.completed)if(relevant.has(id))
-    shards.push(await readJson(root+'/review-queue/'+id+'.json'));
+  for(const id of state.completed)if(relevant.has(id)){
+    const bytes=await readFile(root+'/review-queue/'+id+'.json');
+    const gitBlobSha=createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex');
+    shards.push({...JSON.parse(bytes.toString('utf8')),gitBlobSha});
+  }
   const {coverage,worklist}=reconcileQ3({
-    state,triage,shards,formal,manifest,corrections,publisherNonResearch,page
+    state,triage,shards,formal,manifest,corrections,publisherNonResearch,
+    publisherReviewedScope,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);
   await writeAtomic(root+'/quarter-2026-q3-review-worklist.json',worklist);

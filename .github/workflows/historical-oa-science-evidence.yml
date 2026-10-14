@@ -1,0 +1,167 @@
+name: Historical OA genuine science sections (read-only, all candidates)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-oa-science-evidence.py'
+      - 'scripts/test-historical-oa-science-evidence.py'
+      - '.github/workflows/historical-oa-science-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/historical-oa-science-evidence.yml'
+      - 'audit/automation-triggers/historical-oa-science-evidence.json'
+permissions:
+  contents: read
+concurrency:
+  group: historical-oa-science-evidence-${{ github.event_name == 'pull_request' && github.head_ref || 'formal' }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline JATS DOI/license/section and rights safety tests
+        run: |
+          python3 scripts/test-historical-oa-science-evidence.py
+          python3 -m py_compile scripts/historical-oa-science-evidence.py
+          python3 - <<'PY'
+          import json
+          p=json.load(open('audit/body-source-review/2026-10-14-all-formal-oa-review-worklist.json'))
+          assert p['oaCandidateDois']==len(p['articles'])>0
+          assert all(x['pmcid'].startswith('PMC') and x['xmlSha256'] for x in p['articles'])
+          assert all(x['publicFtsIngested'] is False for x in p['articles'])
+          print('HIST_OA_SCIENCE_WORKLIST ',len(p['articles']),'real rights-science candidate DOI, no total 20 cap')
+          PY
+
+  plan:
+    if: github.event_name == 'push'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      matrix: ${{ steps.make.outputs.matrix }}
+      expected: ${{ steps.make.outputs.expected }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enumerate every pending CC BY OA scientific body candidate automatically
+        id: make
+        run: |
+          python3 - <<'PY'
+          import json,os
+          p=json.load(open('audit/body-source-review/2026-10-14-all-formal-oa-review-worklist.json'))
+          count=len(p['articles'])
+          shards=[{'offset':k,'count':min(10,count-k)} for k in range(0,count,10)]
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+            f.write('matrix='+json.dumps(shards,separators=(',',':'))+'\n')
+            f.write('expected='+str(count)+'\n')
+          print('HIST_OA_SCIENCE_PLAN',json.dumps({'oaCandidates':count,'technicalShards':len(shards),'allDoisIncluded':True}))
+          PY
+
+  audit:
+    needs: plan
+    if: needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read genuine DOI-bound CC BY Europe PMC scientific JATS and keep only hashes
+        env:
+          SOURCE_OFFSET: ${{ matrix.offset }}
+          SOURCE_COUNT: ${{ matrix.count }}
+        run: |
+          python3 scripts/historical-oa-science-evidence.py \
+            --offset="$SOURCE_OFFSET" --count="$SOURCE_COUNT" \
+            --output="$RUNNER_TEMP/science-$SOURCE_OFFSET.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-science-evidence-${{ matrix.offset }}
+          path: ${{ runner.temp }}/science-${{ matrix.offset }}.json
+          retention-days: 14
+          if-no-files-found: warn
+
+  aggregate:
+    if: always() && needs.plan.result == 'success'
+    needs: [plan, audit]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: historical-science-evidence-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/science-reports
+      - name: Bind all 47 expected DOI/offset members, reject any silent source gaps
+        env:
+          EXPECTED_COUNT: ${{ needs.plan.outputs.expected }}
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib,collections
+          w=json.load(open('audit/body-source-review/2026-10-14-all-formal-oa-review-worklist.json'))
+          expected=w['articles']
+          assert int(os.environ['EXPECTED_COUNT'])==len(expected)
+          parts={}
+          for f in pathlib.Path(os.environ['RUNNER_TEMP'],'science-reports').glob('science-*.json'):
+            j=json.loads(f.read_text())
+            if j['offset'] in parts:raise SystemExit('duplicate_science_window')
+            parts[j['offset']]=j
+          report={'schemaVersion':1,'readOnly':True,'sourceCatalogId':w['catalogId'],
+            'formalDois':w['formalDois'],'plannedOaCandidates':len(expected),'byState':{},
+            'completedDois':0,'scienceSectionUnits':0,'missingDois':[],'reports':[],
+            'rawXmlPersisted':0,'publicFtsImported':0,'noArticleTextSaved':True}
+          for offset in range(0,len(expected),10):
+            n=min(10,len(expected)-offset);part=parts.get(offset)
+            if not part or part.get('count')!=n or len(part.get('entries',[]))!=n:
+              report['missingDois'] += [x['doi'] for x in expected[offset:offset+n]]
+              continue
+            for i,x in enumerate(part['entries']):
+              if x.get('doi')!=expected[offset+i]['doi']:
+                raise SystemExit('science_exact_doi_order_mismatch')
+              state=x['state'];report['byState'][state]=report['byState'].get(state,0)+1
+              if state=='science_sections_mapped_pending_independent_review':
+                report['completedDois']+=1
+                report['scienceSectionUnits']+=x['scienceSectionUnits']
+              report['reports'].append(x)
+          report['completeSourceAudit']=not report['missingDois'] and sum(report['byState'].values())==len(expected)
+          dest=pathlib.Path(os.environ['RUNNER_TEMP'],'historical-oa-science-evidence-summary.json')
+          dest.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          print('HIST_OA_SCIENCE_AGGREGATE',json.dumps({k:v for k,v in report.items() if k not in ('reports','missingDois')}))
+          if not report['completeSourceAudit']:raise SystemExit('science_source_windows_incomplete')
+          PY
+      - name: Preserve read-only hash/section structural evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-oa-science-hash-only-summary-${{ github.run_id }}
+          path: ${{ runner.temp }}/historical-oa-science-evidence-summary.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Persist DOI-specific genuine science hashes, never source prose
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('node:fs');
+            const file=process.env.RUNNER_TEMP+'/historical-oa-science-evidence-summary.json';
+            if(!fs.existsSync(file))return core.setFailed('Science source summary unavailable');
+            const j=JSON.parse(fs.readFileSync(file,'utf8'));
+            if(j.noArticleTextSaved!==true||j.rawXmlPersisted!==0||j.publicFtsImported!==0)
+              return core.setFailed('Science evidence raw-content boundary violated');
+            const path='audit/body-source-review/2026-10-14-oa-science-section-hashes-'+context.runId+'.json';
+            const content=Buffer.from(JSON.stringify(j,null,2)+'\n').toString('base64');
+            const result=await github.rest.repos.createOrUpdateFileContents({
+              owner:context.repo.owner,repo:context.repo.repo,branch:'main',
+              path,content,message:'audit(body): preserve hash-only authentic OA scientific sections '+context.runId});
+            core.info('OA_SCIENCE_EVIDENCE_SAVED '+path+' '+result.data.commit.sha);
