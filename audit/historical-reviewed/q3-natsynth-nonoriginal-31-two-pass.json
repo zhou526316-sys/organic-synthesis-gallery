@@ -1,0 +1,1194 @@
+{
+  "schemaVersion": "gallery-historical-q3-publisher-type-exclusions-v1",
+  "mode": "publisher_verified_non_original_doi_only_not_publication",
+  "period": "2026-07-01..2026-09-30",
+  "journal": "Nature Synthesis",
+  "reviewedAt": "2026-10-14",
+  "sourceProofFile": "audit/historical-reviewed/q3-natsynth-44-frozen-source-proof.json",
+  "reviewMethod": "two separate article-specific challenges by same assistant, not two independent human reviewers",
+  "summary": {
+    "reviewed": 31,
+    "typeCounts": {
+      "News & Views": 8,
+      "Research Briefing": 6,
+      "Research Highlight": 6,
+      "Q&A": 1,
+      "Comment": 3,
+      "Review Article": 2,
+      "Perspective": 1,
+      "Author Correction": 3,
+      "Editorial": 1
+    }
+  },
+  "reviewed": [
+    {
+      "doi": "10.1038/s44160-026-01098-1",
+      "journal": "Nature Synthesis",
+      "title": "Automated exploration of the Biginelli reaction hyperspace",
+      "date": "2026-07-02",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "对自动化 Biginelli 反应高维搜索的前人原创研究进行 News & Views 解读，主要阐述高通量反应探测与谱图分解的发现意义。",
+      "independentChallengeReason": "评论引用的是 Matuszczyk 团队在另一 DOI 下的机器人平台与反应空间实验；即便涉及新的含氮杂环产品，也不能把解读文章冒充另一项独立实验方法。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01098-1记载 Article Type News & Views 和 Published日期 2026-07-02；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01098-1",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-synthesis",
+        "stageSourceSha256": "19f2503f14271aa0b4e45fe21e884e04490ee8b43ac3e1be1798ddffa165d94c",
+        "stageBatchGitBlobSha": "46ff8f509ac790ad0b1175a8741c26903d12c19e",
+        "reviewQueueGitBlobSha": "d04794595c973ba9b847bb261c78276a490ec813",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01096-3",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01103-7",
+      "journal": "Nature Synthesis",
+      "title": "Electrophotocatalysis for direct vicinal dichlorination of carboxylic acids",
+      "date": "2026-07-02",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍脂肪羧酸光电催化脱羧与邻位氯化串联的实际方法，属于其他作者原创文章的 News & Views。",
+      "independentChallengeReason": "羧酸到邻位二氯化物的转化、1,2-二氯乙烷氯源及复杂分子后期修饰属于 5 月首发原论文 01088-3 的实验，而不是这篇 7 月解读的原创合成。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01103-7记载 Article Type News & Views 和 Published日期 2026-07-02；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01103-7",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-synthesis",
+        "stageSourceSha256": "19f2503f14271aa0b4e45fe21e884e04490ee8b43ac3e1be1798ddffa165d94c",
+        "stageBatchGitBlobSha": "46ff8f509ac790ad0b1175a8741c26903d12c19e",
+        "reviewQueueGitBlobSha": "d04794595c973ba9b847bb261c78276a490ec813",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01088-3",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01110-8",
+      "journal": "Nature Synthesis",
+      "title": "Programmable assembly lines in E. coli enable the synthesis of macrolide antibiotics",
+      "date": "2026-07-03",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍在大肠杆菌内重组聚酮合酶模块并产生大环抗生素的成果，为所述科研成果的 Research Briefing。",
+      "independentChallengeReason": "大环内酯衍生物合成很有方法学价值，但其重构 pikromycin 合酶原创论文 01108-2 首发 6 月29日；不应挪用简报7月3日日期补成Q3原创论文。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01110-8记载 Article Type Research Briefing 和 Published日期 2026-07-03；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01110-8",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-03",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-synthesis",
+        "stageSourceSha256": "19f2503f14271aa0b4e45fe21e884e04490ee8b43ac3e1be1798ddffa165d94c",
+        "stageBatchGitBlobSha": "46ff8f509ac790ad0b1175a8741c26903d12c19e",
+        "reviewQueueGitBlobSha": "d04794595c973ba9b847bb261c78276a490ec813",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01108-2",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01109-1",
+      "journal": "Nature Synthesis",
+      "title": "Hydrogenation of viologens mediated by formic acid",
+      "date": "2026-07-14",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "阐述甲酸介导的紫精脱芳构化氢化形成哌啶骨架，是他组实验的 Research Briefing。",
+      "independentChallengeReason": "确有不同紫精分子、环状大分子等真实制备研究，其源论文 01099-0 已于 6 月23日在线；不得用本简报7月的日期重录同一有机氢化方法。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01109-1记载 Article Type Research Briefing 和 Published日期 2026-07-14；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01109-1",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-14",
+        "sourceRootId": "2026-07-08_2026-07-14_nature-synthesis",
+        "stageSourceSha256": "fd752435667434ce4ebe3a13f3984482efeb50a940e6788288f8ecede4f4974f",
+        "stageBatchGitBlobSha": "f017acaada189e0d6f36af7a99349b0d6ff830e5",
+        "reviewQueueGitBlobSha": "3cbb1bcf8edf24fb2244eb557aa4d02b9eae77be",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-08_2026-07-14_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01099-0",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01129-x",
+      "journal": "Nature Synthesis",
+      "title": "Rotaxane synthesis inside out",
+      "date": "2026-07-15",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "报道 Leigh 团队通过轴模板促进氢键辅助酰胺闭环合成轮烷，是编辑撰写的 Research Highlight。",
+      "independentChallengeReason": "该轮烷化学包含真实新环化与复杂分子拓扑合成，但研究报告发表于其他 Nature Chemistry 原始 DOI，当前亮点没有独立增加可检验的底物拓展。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01129-x记载 Article Type Research Highlight 和 Published日期 2026-07-15；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01129-x",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-07-15",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+        "stageSourceSha256": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "stageBatchGitBlobSha": "2a83f4b214272040b9f0e690908ca99d95b1615d",
+        "reviewQueueGitBlobSha": "377909bf87c761f97541dcf4a31f6798efc9bdab",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01117-1",
+      "journal": "Nature Synthesis",
+      "title": "Synthesis of a 524-atom bifurcated molecular knot",
+      "date": "2026-07-16",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "对 Dobson、Davies 与 Nitschke 等人合成524原子分叉分子结的原始研究作 Research Briefing。",
+      "independentChallengeReason": "其两次选择性亚胺缩合与金属模板合成是确切原创实验，但必须归于 01115-3 Article 而非这篇短简报；后者的范围判断仍须独立保留。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01117-1记载 Article Type Research Briefing 和 Published日期 2026-07-16；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01117-1",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-16",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+        "stageSourceSha256": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "stageBatchGitBlobSha": "2a83f4b214272040b9f0e690908ca99d95b1615d",
+        "reviewQueueGitBlobSha": "377909bf87c761f97541dcf4a31f6798efc9bdab",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01115-3",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01114-4",
+      "journal": "Nature Synthesis",
+      "title": "Autonomous laboratories and digital chemistry in industry",
+      "date": "2026-07-20",
+      "publisherArticleType": "Q&A",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "采用 Q&A 采访形式讨论工业自主实验室、数字化研发和 AI 辅助化学的实际部署思路。",
+      "independentChallengeReason": "受访者的工业合成经验与优化案例不是本 DOI 的新原始底物—产物数据；不应把访问或专家意见列为独立实验反应文献。",
+      "reason": "出版社标注Q&A；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01114-4记载 Article Type Q&A 和 Published日期 2026-07-20；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01114-4",
+        "publisherArticleType": "Q&A",
+        "publisherArticleDate": "2026-07-20",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+        "stageSourceSha256": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "stageBatchGitBlobSha": "2a83f4b214272040b9f0e690908ca99d95b1615d",
+        "reviewQueueGitBlobSha": "377909bf87c761f97541dcf4a31f6798efc9bdab",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01122-4",
+      "journal": "Nature Synthesis",
+      "title": "Membranes tame methanol in yeast",
+      "date": "2026-07-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "对酵母细胞膜脂重塑提升甲醇耐受和发酵产脂的外部研究作 News & Views 评述。",
+      "independentChallengeReason": "活细胞高甲醇培养及脂质产量提升是真实生物工艺，但属于被讨论的原创论文，不是解读文章下另行建立的新小分子制备反应。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01122-4记载 Article Type News & Views 和 Published日期 2026-07-20；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01122-4",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-20",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-synthesis",
+        "stageSourceSha256": "52369561903f4523b3aea75c4ae39bd0e8757cf38f19a1980fcfc8b646de2bec",
+        "stageBatchGitBlobSha": "2a83f4b214272040b9f0e690908ca99d95b1615d",
+        "reviewQueueGitBlobSha": "377909bf87c761f97541dcf4a31f6798efc9bdab",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01120-6",
+      "journal": "Nature Synthesis",
+      "title": "Self-driving laboratories need an autonomy safety harness",
+      "date": "2026-07-22",
+      "publisherArticleType": "Comment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论自驱动实验室需要从 AI 实验建议到监测、验证和证据回传的安全约束，官方文章类型为 Comment。",
+      "independentChallengeReason": "虽对自动有机合成实验设计与安全闭环有转移价值，但未在本篇提出新的通用有机制备转换或作者独立的底物分离产品范围。",
+      "reason": "出版社标注Comment；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01120-6记载 Article Type Comment 和 Published日期 2026-07-22；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01120-6",
+        "publisherArticleType": "Comment",
+        "publisherArticleDate": "2026-07-22",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageSourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+        "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01112-6",
+      "journal": "Nature Synthesis",
+      "title": "Electrochemical cross-electrophile coupling for carbon–heteroatom and heteroatom–heteroatom bond formation",
+      "date": "2026-07-23",
+      "publisherArticleType": "Review Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "宋林等人系统评述电化学交叉亲电偶联构建 C–杂原子与杂原子–杂原子键的文献，出版类型为 Review Article。",
+      "independentChallengeReason": "文中大量 C–N、C–P、C–B 等反应图来自已经发表的原始研究；不能依据综述包含丰富合成底物反应便按该 DOI 另建原创方法卡片。",
+      "reason": "出版社标注Review Article；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01112-6记载 Article Type Review Article 和 Published日期 2026-07-23；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01112-6",
+        "publisherArticleType": "Review Article",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageSourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+        "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01135-z",
+      "journal": "Nature Synthesis",
+      "title": "Cations control CO2 electroreduction",
+      "date": "2026-07-23",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论碱金属阳离子与氧化物衍生铜表面调控 CO₂ 还原动力学的已发表研究，出版类型 Research Highlight。",
+      "independentChallengeReason": "Na 离子陷入晶界与局部氧化物相是真实原研究的表征；解读中的活性提升不是新有机制备反应，且被评价的 Nature Catalysis 原文已有独立 DOI。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01135-z记载 Article Type Research Highlight 和 Published日期 2026-07-23；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01135-z",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-07-23",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageSourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+        "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01125-1",
+      "journal": "Nature Synthesis",
+      "title": "Scale-aware self-driving laboratories for multiscale process development",
+      "date": "2026-07-29",
+      "publisherArticleType": "Comment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "提出工业自驱动实验室跨规模验证、工艺放大和候选淘汰的理念，官方类型 Comment。",
+      "independentChallengeReason": "过程放大框架与技术管理建议不构成具体的有机反应制备证据；引用其他实验室案例不能代替作者在该 DOI 下提供的新底物—产物反应。",
+      "reason": "出版社标注Comment；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01125-1记载 Article Type Comment 和 Published日期 2026-07-29；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01125-1",
+        "publisherArticleType": "Comment",
+        "publisherArticleDate": "2026-07-29",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageSourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+        "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01136-y",
+      "journal": "Nature Synthesis",
+      "title": "Orbital order observation in intermetallic crystals",
+      "date": "2026-07-29",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读铝锗化物晶体表面轨道有序及磁结构分析的其他 Nature Physics 研究，官方类型 Research Highlight。",
+      "independentChallengeReason": "提及 Tb2CoAl4Ge2 的真实晶体生长与谱学，但属于物理材料研究的科学新闻，不具有独立有机分子合成方法学贡献。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01136-y记载 Article Type Research Highlight 和 Published日期 2026-07-29；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01136-y",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-07-29",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-synthesis",
+        "stageSourceSha256": "505bcad9c0b70151f068f949dfdac691a921b5ba474d9a30999cf854a102493f",
+        "stageBatchGitBlobSha": "86c388524c4e035c8e0b6a28b9557e3df618cab7",
+        "reviewQueueGitBlobSha": "c35924419a9cf1bd80756cc0aa0cef1fccecc33e",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01131-3",
+      "journal": "Nature Synthesis",
+      "title": "Towards self-driving laboratories in the biopharmaceutical industry",
+      "date": "2026-08-04",
+      "publisherArticleType": "Perspective",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论医药制造自驱动实验室软硬件和数据闭环整合前景，期刊标注 Perspective。",
+      "independentChallengeReason": "不同药物研发实践与案例属于研究视角整理，没有本篇自身开展的代表性反应底物范围或药物全合成路线，不能按题名中 laboratory 自动纳入。",
+      "reason": "出版社标注Perspective；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01131-3记载 Article Type Perspective 和 Published日期 2026-08-04；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01131-3",
+        "publisherArticleType": "Perspective",
+        "publisherArticleDate": "2026-08-04",
+        "sourceRootId": "2026-08-01_2026-08-07_nature-synthesis",
+        "stageSourceSha256": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+        "stageBatchGitBlobSha": "56ff3c8ed327d41349898fa67c5c4f7df5fac4f2",
+        "reviewQueueGitBlobSha": "3b9a322073d635f265c2b4d36d11ad1b001d11da",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01137-x",
+      "journal": "Nature Synthesis",
+      "title": "Acid-free activation of acyl hydrazides",
+      "date": "2026-08-10",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解释铁氰化物在中性 pH 活化肽酰肼并直接连接蛋白片段的方法学论文，为 News & Views。",
+      "independentChallengeReason": "肽酰肼氧化活化与肽连接确有通用制备价值，但实际实验由 Han 等人 01121-5 Article 报道且已正式收录，不得把 Watson 解读重复发表为另一原创论文。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01137-x记载 Article Type News & Views 和 Published日期 2026-08-10；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01137-x",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-10",
+        "sourceRootId": "2026-08-08_2026-08-14_nature-synthesis",
+        "stageSourceSha256": "f711f0eefe72a7a964d09131c23166912eae8f38b38dbb5e6f768d183c6a37d6",
+        "stageBatchGitBlobSha": "1448a2e9ee2c6665e1b404a6e61b055de907a695",
+        "reviewQueueGitBlobSha": "6e5806c909276ab15e38652c9d32be124a8c6960",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01121-5",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01141-1",
+      "journal": "Nature Synthesis",
+      "title": "Rapid and sustainable MXene synthesis",
+      "date": "2026-08-20",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "概述闪速焦耳加热与气相氯化/氟化制备 MXene 的作者研究成果，为 Research Briefing。",
+      "independentChallengeReason": "原研究确有九类 MAX 前体至 MXene 的材料制备实验，但它是 Xu 等人 01132-2 的原创研究；当前科研简报无另一个新实验 DOI，且MXene材料与有机合成边界另判。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01141-1记载 Article Type Research Briefing 和 Published日期 2026-08-20；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01141-1",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-synthesis",
+        "stageSourceSha256": "68b034708a4efb18eb029cce33914d22af64a98cd881be726a944e709b789eb7",
+        "stageBatchGitBlobSha": "42ebb70605f543ab6fa9498683fe41ecb284e596",
+        "reviewQueueGitBlobSha": "adb3a59d624ed8a6da6495eb9a1699c25bab6726",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-15_2026-08-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01132-2",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01145-x",
+      "journal": "Nature Synthesis",
+      "title": "Machine learning-empowered enzyme evolution unlocks all stereoisomers of chiral alcohols",
+      "date": "2026-08-24",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍机器学习引导醇脱氢酶进化以获取全部手性醇立体异构体的 Research Briefing。",
+      "independentChallengeReason": "酶不对称还原与多手性中心构建是真正的生物催化合成，然而创新实验属于 01144-y 已收录 Article；简报不能替代该实验或重收录。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01145-x记载 Article Type Research Briefing 和 Published日期 2026-08-24；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01145-x",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-08-24",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01144-y",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01124-2",
+      "journal": "Nature Synthesis",
+      "title": "A fast and energy-efficient catalytic pathway for stainless steel synthesis",
+      "date": "2026-08-26",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "阐述氧化镍和氧化铁在氢辅助条件下共还原获得 Fe–Ni 合金的 News & Views。",
+      "independentChallengeReason": "实际钢材或合金的热处理合成属于被讨论的材料研究 01086-5，本篇没有独立有机目标分子制备方法，也不能把合金产量当成有机合成放大量。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01124-2记载 Article Type News & Views 和 Published日期 2026-08-26；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01124-2",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-26",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01086-5",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01133-1",
+      "journal": "Nature Synthesis",
+      "title": "Accelerating synthesis at scale requires a coordinated ecosystem",
+      "date": "2026-08-26",
+      "publisherArticleType": "Comment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "提出规模化材料合成需要共享标准、数据和跨机构供应链协作体系，刊物标注 Comment。",
+      "independentChallengeReason": "文章确有材料合成规模化战略价值，但并不提出可复现的具体底物转化，也没有独立的一般有机合成反应及底物适用范围。",
+      "reason": "出版社标注Comment；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01133-1记载 Article Type Comment 和 Published日期 2026-08-26；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01133-1",
+        "publisherArticleType": "Comment",
+        "publisherArticleDate": "2026-08-26",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01154-w",
+      "journal": "Nature Synthesis",
+      "title": "Combining CO2 and bicycloalkanes for polyester production",
+      "date": "2026-08-27",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍二氧化碳与桥环烷烃开环交替共聚制聚酯及可解聚回收单体的外部实验，官方类型 Research Highlight。",
+      "independentChallengeReason": "原始聚合方法可具有广泛制备意义、回收 BCB >90% 是被评论原论文的实验证据；不能把此编辑型亮点误认成 Nature Synthesis 自己报告的另一条原始聚合论文。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01154-w记载 Article Type Research Highlight 和 Published日期 2026-08-27；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01154-w",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-08-27",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01156-8",
+      "journal": "Nature Synthesis",
+      "title": "Nanoconfined electrocatalytic CO2 reduction",
+      "date": "2026-08-27",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍纳米限域铜催化剂提高 CO₂ 到乙醇电还原法拉第效率的 Nature Catalysis 研究，类型 Research Highlight。",
+      "independentChallengeReason": "70.3% FE 与电流密度是被解读的原文技术数据而非此 DOI 自行制备乙醇的实验；原文已按材料与有机制备边界单独接受学术审核。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01156-8记载 Article Type Research Highlight 和 Published日期 2026-08-27；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01156-8",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-08-27",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01130-4",
+      "journal": "Nature Synthesis",
+      "title": "Designing heterogeneous electrocatalytic sites using reticular chemistry",
+      "date": "2026-08-28",
+      "publisherArticleType": "Review Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "评述 MOF/COF 网状化学对异相电催化位点局域微环境的调控和未来挑战，是 Review Article。",
+      "independentChallengeReason": "催化还原和活性位点设计是领域重要内容，但本综述的图示与反应属于已发表原始工作汇总，不是一个新的可通用制备反应。",
+      "reason": "出版社标注Review Article；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01130-4记载 Article Type Review Article 和 Published日期 2026-08-28；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01130-4",
+        "publisherArticleType": "Review Article",
+        "publisherArticleDate": "2026-08-28",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-synthesis",
+        "stageSourceSha256": "96f156420afe3e50aed298604108886a013ea1dcf6b9f724a1d8d20ae559b5fc",
+        "stageBatchGitBlobSha": "f129d288cc91fc42e3cdac106745a4a49084bb69",
+        "reviewQueueGitBlobSha": "465bc63a0d802954905dbb6372e8c846eec999a7",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01165-7",
+      "journal": "Nature Synthesis",
+      "title": "Author Correction: Accelerating synthesis at scale requires a coordinated ecosystem",
+      "date": "2026-09-02",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "更正自主实验室规模化材料合成 Comment 中 Varinia Bernales 的姓名拼写，官方类型 Author Correction。",
+      "independentChallengeReason": "该纠错可改善引文作者身份准确性，原 Comment 01133-1 仍须保留原始日期；不能把2026年9月的更正当作新合成方法研究。",
+      "reason": "出版社标注Author Correction；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01165-7记载 Article Type Author Correction 和 Published日期 2026-09-02；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01165-7",
+        "publisherArticleType": "Author Correction",
+        "publisherArticleDate": "2026-09-02",
+        "sourceRootId": "2026-09-01_2026-09-07_nature-synthesis",
+        "stageSourceSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+        "stageBatchGitBlobSha": "3e46a165dd06aee48c4607ff5eb2017244c55474",
+        "reviewQueueGitBlobSha": "d45f88759817e77e4b3e345f0e7604ed5bfdcc7d",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01133-1",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01166-6",
+      "journal": "Nature Synthesis",
+      "title": "Author Correction: Gram-per-litre-scale production of lutein by engineered Corynebacterium",
+      "date": "2026-09-07",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "更正工程化棒状杆菌生产叶黄素旧文支持信息中亲本菌株 CLUT0/CLUT1 的归属，属于 Author Correction。",
+      "independentChallengeReason": "更正涉及实验谱系应在原研究关联信息中保留，但其原始文献发表于2025年7月，本项2026年9月的补正并非新的叶黄素生产或有机合成方法。",
+      "reason": "出版社标注Author Correction；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01166-6记载 Article Type Author Correction 和 Published日期 2026-09-07；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01166-6",
+        "publisherArticleType": "Author Correction",
+        "publisherArticleDate": "2026-09-07",
+        "sourceRootId": "2026-09-01_2026-09-07_nature-synthesis",
+        "stageSourceSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+        "stageBatchGitBlobSha": "3e46a165dd06aee48c4607ff5eb2017244c55474",
+        "reviewQueueGitBlobSha": "d45f88759817e77e4b3e345f0e7604ed5bfdcc7d",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01153-x",
+      "journal": "Nature Synthesis",
+      "title": "Meet the editors",
+      "date": "2026-09-08",
+      "publisherArticleType": "Editorial",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Nature Synthesis 编辑部六位编辑介绍各自研究背景及稿件领域分工的 Editorial。",
+      "independentChallengeReason": "期刊对有机合成和材料化学的学科定义可能有启发，但编辑人事与研究兴趣不提供作者独立的有机底物到产物制备证据。",
+      "reason": "出版社标注Editorial；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01153-x记载 Article Type Editorial 和 Published日期 2026-09-08；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01153-x",
+        "publisherArticleType": "Editorial",
+        "publisherArticleDate": "2026-09-08",
+        "sourceRootId": "2026-09-08_2026-09-14_nature-synthesis",
+        "stageSourceSha256": "796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef",
+        "stageBatchGitBlobSha": "ea769868e1c0fd9e17469bb2bdd007c1988de899",
+        "reviewQueueGitBlobSha": "9f59f80c0d2d37fda8391c12da47bfa0d46cce96",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-08_2026-09-14_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01150-0",
+      "journal": "Nature Synthesis",
+      "title": "Strain-release strategy for access to diverse azabicyclic bioisosteres",
+      "date": "2026-09-09",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "总结张力释放策略模块化构筑桥环含氮药物电子等排体的 Article 研究，刊物明确标注 Research Briefing。",
+      "independentChallengeReason": "桥环氮杂分子的药物合成、立体控制和受体抑制剂改造属于原始论文 01149-7 的实验，既已收录，当前简报不得重复创建。",
+      "reason": "出版社标注Research Briefing；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01150-0记载 Article Type Research Briefing 和 Published日期 2026-09-09；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01150-0",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-09-09",
+        "sourceRootId": "2026-09-08_2026-09-14_nature-synthesis",
+        "stageSourceSha256": "796c94b03c2e369d6ee3e010d59e64b457569c16f4f971361cdefd671a3669ef",
+        "stageBatchGitBlobSha": "ea769868e1c0fd9e17469bb2bdd007c1988de899",
+        "reviewQueueGitBlobSha": "9f59f80c0d2d37fda8391c12da47bfa0d46cce96",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-08_2026-09-14_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01149-7",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01151-z",
+      "journal": "Nature Synthesis",
+      "title": "Rethinking selectivity in alkene hydrogenation",
+      "date": "2026-09-16",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论多功能膦参与烯烃氢化位点选择性反转的已发表方法，刊物类型 News & Views。",
+      "independentChallengeReason": "更高取代烯烃优先还原是原论文 01140-2 的反常选择性创新，评论并未另做独立催化实验；必须保留原始文献准确 DOI。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01151-z记载 Article Type News & Views 和 Published日期 2026-09-16；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01151-z",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-16",
+        "sourceRootId": "2026-09-15_2026-09-21_nature-synthesis",
+        "stageSourceSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+        "stageBatchGitBlobSha": "dad202e1f9c2f473ff3fcccfda049694e3b81179",
+        "reviewQueueGitBlobSha": "d6da4e35bb998b2040add932af7eb595020d4521",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-15_2026-09-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01140-2",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01159-5",
+      "journal": "Nature Synthesis",
+      "title": "Through-space conductive pathways for polyoxometalate electronics",
+      "date": "2026-09-18",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读稀土诱导钼簇 d–π···π–d 贯通导电网络的晶态材料研究，出版社 News & Views。",
+      "independentChallengeReason": "真实稀土簇自组装与导电测量由 01138-w 原文完成，评论不包含可独立验证的有机合成反应体系，也不应将其当作金属有机键构建原创新方法。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01159-5记载 Article Type News & Views 和 Published日期 2026-09-18；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01159-5",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-18",
+        "sourceRootId": "2026-09-15_2026-09-21_nature-synthesis",
+        "stageSourceSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+        "stageBatchGitBlobSha": "dad202e1f9c2f473ff3fcccfda049694e3b81179",
+        "reviewQueueGitBlobSha": "d6da4e35bb998b2040add932af7eb595020d4521",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-15_2026-09-21_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01138-w",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01157-7",
+      "journal": "Nature Synthesis",
+      "title": "Crystallization control for narrow-linewidth perovskite LEDs",
+      "date": "2026-09-23",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读钙钛矿发光二极管狭线宽绿蓝光调控和薄膜结晶的原创器件研究，出版社 News & Views。",
+      "independentChallengeReason": "外部原文 01100-w 的薄膜晶化和光谱数据可能有光电子价值，但该解读既非自身材料实验，更未展示有机分子制备方法。",
+      "reason": "出版社标注News & Views；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01157-7记载 Article Type News & Views 和 Published日期 2026-09-23；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01157-7",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-23",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageSourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+        "reviewQueueGitBlobSha": "1e84d5cd078ac3667f49facbba660b290b9df479",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01100-w",
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01196-0",
+      "journal": "Nature Synthesis",
+      "title": "Author Correction: Chemical reactivity from the perspective of enthalpic coupling",
+      "date": "2026-09-28",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "修正关于反应焓耦合的2026年3月论文中的一项参考文献引文，官方类型 Author Correction。",
+      "independentChallengeReason": "勘误只更改参考文献32的作者及书目信息，应关联原 DOI s44160-025-00986-2；不应依据9月28日更正发布日期新建Q3合成卡片。",
+      "reason": "出版社标注Author Correction；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01196-0记载 Article Type Author Correction 和 Published日期 2026-09-28；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01196-0",
+        "publisherArticleType": "Author Correction",
+        "publisherArticleDate": "2026-09-28",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageSourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+        "reviewQueueGitBlobSha": "1e84d5cd078ac3667f49facbba660b290b9df479",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    },
+    {
+      "doi": "10.1038/s44160-026-01169-3",
+      "journal": "Nature Synthesis",
+      "title": "Accelerated polymer design outpaces resistance",
+      "date": "2026-09-29",
+      "publisherArticleType": "Research Highlight",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "概述 Angew 论文中机器学习指导的抗真菌多组分聚合物自动筛选，刊物 Research Highlight。",
+      "independentChallengeReason": "PET–RAFT聚合与抗真菌活性筛选确有实验和配方范围，但那是被评论的 Angew 原文，不属于本编辑亮点自身完成的新聚合方法。",
+      "reason": "出版社标注Research Highlight；该DOI无单独原创制备反应数据，不创建原创方法学卡片。",
+      "evidenceBasis": "Nature Synthesis DOI精确出版社页面https://www.nature.com/articles/s44160-026-01169-3记载 Article Type Research Highlight 和 Published日期 2026-09-29；原文仅引用实际可核实的科技事实，不复制受保护内容。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01169-3",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-09-29",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageSourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+        "reviewQueueGitBlobSha": "1e84d5cd078ac3667f49facbba660b290b9df479",
+        "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-synthesis.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "flags": {
+        "notOriginalResearch": true,
+        "notOwnerPermanentExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "noPublisherMediaAcquisition": true
+      },
+      "reviewMethod": "same assistant two independent rounds not independent human reviewers"
+    }
+  ],
+  "guards": {
+    "noD1": true,
+    "noOwnerPermanentExclusion": true,
+    "noAcademicAdmission": true,
+    "noProductionWrites": true,
+    "noPdfOrMedia": true,
+    "originalResearchArticleSeparatelyVerified": true
+  }
+}
