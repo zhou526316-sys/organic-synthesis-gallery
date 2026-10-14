@@ -145,3 +145,51 @@ from classification of its known Crossref/OpenAlex source rows. Never
 enrich historical DOI with paid HTML/PDF/figures or surface these
 backfilled DOI in Today's New/Hot/WeChat. The only formal admission remains
 Beijing 08:00 after existing provenance and science gates.
+
+
+## 2026-10-14 Nature Synthesis DOI-exact historical cohort
+
+The frozen Q3 Crossref/OpenAlex reviewer-source union holds **63 Nature Synthesis
+DOIs**: 17 already in the formal catalog, two previously reviewed publisher
+non-original DOIs, and 44 individually checked here. This is a census of
+*known* metadata-source DOIs, never a certification of complete publisher
+online-first discovery. The earlier official July–October volume 5 issue
+Research receipts largely point to April–June first-online publications:
+the **issue display month is not the true first-online date**.
+
+Records:
+- `audit/historical-reviewed/q3-natsynth-publisher-types-44.json` —
+  exact publisher Article / Review Article / News & Views / Research
+  Highlight / Research Briefing / Perspective / Comment / Q&A /
+  Editorial / Author Correction type declarations.
+- `audit/historical-reviewed/q3-natsynth-44-frozen-source-proof.json` —
+  all 44 candidate DOI checked against unchanged 2026-Q3 staging DOI,
+  journal, published day, Crossref+OpenAlex, source SHA-256,
+  reviewer-shard Git blob SHA and original metadata-batch blob SHA.
+- `audit/historical-reviewed/q3-natsynth-nonoriginal-31-two-pass.json` —
+  31 official non-original research, review, correction and editorial
+  items, distinct from permanent owner exclusions and not duplicating the
+  DOI for any original synthetic methodology.
+- `audit/historical-scope-assessments/2026-10-14-natsynth-13-original-two-pass.json`
+  and `audit/historical-reviewed/q3-natsynth-13-article-source-proof.json` —
+  13 genuine original Articles: 11 individual evidence-backed
+  out-of-scope assessments and two **evidence pending** (524-atom
+  bifurcated molecular knot DOI `10.1038/s44160-026-01115-3` and
+  new coumarin-linked COF chemistry DOI `10.1038/s44160-026-01146-w`).
+  These pending articles do contain real covalent synthesis. Their
+  transferable organic or polymer preparative method scope, not merely
+  the product's existence, requires further evidence before inclusion.
+- The 2026-07-02 electrophotocatalytic vicinal dichlorination commentary
+  DOI `10.1038/s44160-026-01103-7` is **not** the method's actual
+  publication date. Its original Article DOI `10.1038/s44160-026-01088-3`
+  was first published **2026-05-26**. Likewise the July 3 Research
+  Briefing `10.1038/s44160-026-01110-8` summarizes original modular
+  macrolide biosynthesis DOI `10.1038/s44160-026-01108-2`, first
+  published **2026-06-29**. Neither original is a Q3-online discovery.
+
+No automatic include, permanent owner-exclusion modification,
+Today/Hot/WeChat historical leakage, media/SI/PDF retrieval, D1 access,
+Q3 issue closure or extra publication slot is authorized. Recalculate
+the verified source worklist only after its frozen DOI and two-pass
+scope-ledger hash gates succeed; the 11,384 prior unfinished Q3 number
+does not change until a **successful same-generation staging readback**.
