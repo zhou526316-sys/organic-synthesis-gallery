@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const source=rawSource.replace(
   "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender",
-  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp};\n"+
+  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
   "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender");
 const browser=await chromium.launch({headless:true});
 const doiOld=['10.1021/jacs.6c08636','10.1038/s44160-026-01100-1'];
@@ -62,16 +62,46 @@ try{
           :{stored:false,error:'unauthorized'})}));
         return;
       }
+      // Official DOI-exact public XML source simulation: this contains no
+      // publisher visit, PDF, private media upload or bypassed subscription.
+      if(url.hostname==='www.ebi.ac.uk'){
+        const doi=url.searchParams.get('query')?.replace(/^DOI:/,'')||'';
+        const isOctOa=doi==='10.1002/anie.2026new';
+        if(url.pathname.endsWith('/search')){
+          const result=isOctOa?[{doi,pmcid:'PMC123456',isOpenAccess:'Y'}]:[];
+          queueMicrotask(()=>options.onload({status:200,
+            responseText:JSON.stringify({resultList:{result}})}));
+          return;
+        }
+        if(url.pathname.endsWith('/PMC123456/fullTextXML')){
+          const article='10.1002/anie.2026new';
+          const science='A stereodefined organic synthetic approach functionalizes complex molecular building blocks under controlled conditions with isolated products. '.repeat(5);
+          const xml='<?xml version="1.0"?><article xmlns:xlink="http://www.w3.org/1999/xlink"><front><article-meta>'+
+            '<article-id pub-id-type="doi">'+article+'</article-id>'+
+            '<permissions><license xlink:href="https://creativecommons.org/licenses/by/4.0/">'+
+            '<license-p>This article is licensed under Creative Commons Attribution 4.0 International.</license-p>'+
+            '</license></permissions></article-meta></front>'+
+            '<body><sec><title>Results and discussion</title><p>'+science+'</p><p>'+science+
+            '</p></sec><sec><title>Conclusion</title><p>'+science+
+            '</p></sec><fig id="fig1"><caption><p>Verified synthetic reaction scope summary</p></caption></fig>'+
+            '</body></article>';
+          queueMicrotask(()=>options.onload({status:200,responseText:xml,
+            finalUrl:options.url}));
+          return;
+        }
+        throw Error('unexpected OA endpoint '+options.url);
+      }
       let payload;
       if(url.pathname.endsWith('/release-delivery.json'))
         payload={architectureCatalogId:id,productionCards:registry.articles.length,
           dois:registry.articles.map(x=>x.doi)};
       else if(url.pathname==='/api/literature/catalog-view'){
-        const old=registry.articles.filter(x=>x.date<'2026-10-01');
-        const slice=url.searchParams.get('cursor')==='page2'?old.slice(1):old.slice(0,1);
+        const all=!url.searchParams.has('dateTo');
+        const old=all?registry.articles:registry.articles.filter(x=>x.date<'2026-10-01');
+        const slice=all?old:(url.searchParams.get('cursor')==='page2'?old.slice(1):old.slice(0,1));
         payload={readPathActive:true,enabled:true,catalogId:id,matched:old.length,
-          hasMore:url.searchParams.get('cursor')!=='page2',
-          nextCursor:url.searchParams.get('cursor')==='page2'?null:'page2',
+          hasMore:!all&&url.searchParams.get('cursor')!=='page2',
+          nextCursor:!all&&url.searchParams.get('cursor')!=='page2'?'page2':null,
           items:slice.map(x=>({doi:x.doi,revision:'b'.repeat(64),title:x.title,
             firstOnlineDate:x.date,journal:x.journal}))};
       }else throw Error('unexpected historical network request '+options.url);
@@ -146,11 +176,84 @@ try{
   assert.ok((await page.locator('#osg-historical-batch').innerText())
     .includes('本机已存科学正文 2 篇；从未访问 0 篇'));
 
+
+  // Browser OA path reuses the same DOI-local search store and scans ALL
+  // formally published dates, including October. One click has no 20-DOI cap.
+  const sourceRunsBefore=await page.evaluate(()=>window.__requests.length);
+  const oaButton=page.getByRole('button',{name:'全库开放正文补抓（本机）'});
+  assert.equal(await oaButton.count(),1);
+  await oaButton.click();
+  await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.source==='europe_pmc_oa',
+    null,{timeout:18000});
+  const oaReport=await page.evaluate(async(sourceRunsBefore)=>{
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',2);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    const records=await Promise.all(['packets','oaAttempts'].map(store=>new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,'readonly');
+      const req=tx.objectStore(store).get('10.1002/anie.2026new');
+      req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);
+    })));
+    db.close();
+    return {state:window.__gm['gallery-historical-text-batch-v2:state'],
+      newPacket:records[0]?.packet,attempt:records[1],
+      requests:window.__requests.slice(sourceRunsBefore),
+      publisherTabs:window.__opened.length};
+  },sourceRunsBefore);
+  assert.equal(oaReport.state.attempted,1,'only the unsaved October DOI is scanned');
+  assert.equal(oaReport.state.saved,1);
+  assert.equal(oaReport.publisherTabs,2,'OA path must never open new publisher tabs');
+  assert.equal(oaReport.attempt.status,'saved_local');
+  assert.equal(oaReport.newPacket.doi,'10.1002/anie.2026new');
+  assert.equal(oaReport.newPacket.publisher,'europe_pmc_oa');
+  assert.equal(oaReport.newPacket.publicUploadAllowed,false);
+  assert.equal(oaReport.newPacket.mediaDownloaded,false);
+  assert.equal(oaReport.newPacket.pdfDownloaded,false);
+  assert.ok(oaReport.newPacket.sourceXmlSha256.length===64);
+  assert.ok(oaReport.newPacket.sections.length>=2);
+  await page.getByRole('button',{name:'全库正文覆盖'}).click();
+  await page.getByText(/全库本机已存科学正文 3 篇/).waitFor({timeout:5000});
+  assert.ok(oaReport.requests.some(x=>new URL(x.url).pathname==='/api/literature/catalog-view'
+    &&!new URL(x.url).searchParams.has('dateTo')));
+  assert.ok(oaReport.requests.some(x=>new URL(x.url).hostname==='www.ebi.ac.uk'));
+  assert.ok(!oaReport.requests.some(x=>x.method!=='GET'
+    ||/\/api\/(?:article-figures|private-pdf|media\/|admin\/literature-body-sections)/.test(x.url)));
+
+  const oaRejected=await page.evaluate(async()=>{
+    const article='10.1002/anie.2026new';
+    const paper={doi:article,date:'2026-10-13',journal:'Angew',title:'Original article'};
+    const base='<?xml version="1.0"?><article xmlns:xlink="http://www.w3.org/1999/xlink">'+
+      '<front><article-meta><article-id pub-id-type="doi">'+article+'</article-id>'+
+      '<permissions><license xlink:href="https://creativecommons.org/licenses/by/4.0/">'+
+      'This article is licensed CC BY.</license></permissions></article-meta></front>'+
+      '<body><sec><title>Results</title><p>'+
+      'Synthetic methods and reaction scopes need complete scientific identity verification. '.repeat(9)+
+      '</p><p>Reproducible reaction procedures and control evidence. '.repeat(5)+
+      '</p></sec></body></article>';
+    const wrong=base.replace(article,'10.1002/anie.not-the-article');
+    const nc=base.replaceAll('creativecommons.org/licenses/by/4.0',
+      'creativecommons.org/licenses/by-nc-nd/4.0');
+    const errors=[];
+    for(const xml of [wrong,nc]){
+      try{await __historicalDiagTest.batchParseOfficialOa(xml,paper,'PMC123456');errors.push('unexpected_pass');}
+      catch(e){errors.push(String(e.message));}
+    }
+    return errors;
+  });
+  assert.deepEqual(oaRejected,['oa_xml_doi_mismatch','oa_license_restricted'],
+    'wrong DOI or NC-ND content must be rejected before local storage');
+
+  await search.fill('stereodefined');
+  await search.press('Enter');
+  await page.getByText('10.1002/anie.2026new · 正文 · Results and discussion').waitFor({timeout:5000});
+
   // A real local DOI corpus may have more than 20 matches. Count ALL and page
   // the display; do not silently claim only 20 relevant science articles exist.
   await page.evaluate(async()=>{
     const db=await new Promise((resolve,reject)=>{
-      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      const req=indexedDB.open('gallery-historical-text-local-v2',2);
       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
     });
     await new Promise((resolve,reject)=>{
@@ -229,7 +332,7 @@ try{
   // A per-paper failure is visibly reviewable without any server connection.
   await page.evaluate(async()=>{
     const db=await new Promise((resolve,reject)=>{
-      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      const req=indexedDB.open('gallery-historical-text-local-v2',2);
       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
     });
     await __historicalDiagTest.batchDbOp(db,'attempts','put',{
@@ -261,7 +364,7 @@ try{
     ];
     window.__registry.articles.push(...additions);
     const db=await new Promise((resolve,reject)=>{
-      const req=indexedDB.open('gallery-historical-text-local-v2',1);
+      const req=indexedDB.open('gallery-historical-text-local-v2',2);
       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
     });
     for(const entry of additions){

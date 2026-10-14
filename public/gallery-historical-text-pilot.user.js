@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.7
+// @version      0.2.8
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -30,6 +30,7 @@
 // @grant        GM_xmlhttpRequest
 // @connect      gallery.gczhouwld.com
 // @connect      api.gczhouwld.com
+// @connect      www.ebi.ac.uk
 // @updateURL    https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // @downloadURL  https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // ==/UserScript==
@@ -280,7 +281,7 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.7';
+  const BATCH_SCRIPT_VERSION='0.2.8';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v026';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -289,6 +290,10 @@
   const BATCH_RESULT=BATCH_PREFIX+'result';
   const BATCH_LEASE=BATCH_PREFIX+'lease';
   const BATCH_DB='gallery-historical-text-local-v2';
+  const BATCH_OA_SOURCE_REVISION='europepmc-oa-science-v028';
+  const BATCH_OA_ENDPOINT='https://www.ebi.ac.uk/europepmc/webservices/rest/';
+  const BATCH_OA_MAX_XML_CHARS=2600000;
+  const BATCH_OA_MIN_GAP_MS=650;
   const BATCH_REPORT_ENDPOINT='https://api.gczhouwld.com/api/admin/historical-text/reports';
   const BATCH_DIAG_PREFIX=BATCH_PREFIX+'diagnostics-outbox-v1:';
   const BATCH_DIAG_TOKEN=BATCH_PREFIX+'diagnostics-owner-token';
@@ -338,7 +343,7 @@
       });
     });
   }
-  async function batchLoadCanonicalCatalog(){
+  async function batchLoadCanonicalCatalog(includeAllFormal=false){
     const release=await batchFetchJson(CANONICAL_RELEASE_URL);
     const catalogId=String(release.architectureCatalogId||'');
     if(!/^[0-9a-f]{64}$/.test(catalogId)
@@ -356,10 +361,8 @@
     const articles=[],seen=new Set();
     let cursor='',matched=null;
     for(let page=0;page<SOURCE_MAX_PAGES;page++){
-      const q=new URLSearchParams({
-        catalogId,sort:'oldest',dateTo:'2026-09-30',
-        limit:String(SOURCE_PAGE_LIMIT)
-      });
+      const q=new URLSearchParams({catalogId,sort:'oldest',limit:String(SOURCE_PAGE_LIMIT)});
+      if(!includeAllFormal)q.set('dateTo','2026-09-30');
       if(cursor)q.set('cursor',cursor);
       const response=await batchFetchJson(CANONICAL_INDEX_URL+'?'+q.toString());
       if(response.readPathActive!==true||response.enabled!==true
@@ -383,7 +386,8 @@
       if(articles.length>matched||articles.length>BATCH_DOI_LIMIT)
         throw Error('正式文献目录容量或去重异常');
       if(response.hasMore!==true){
-        if(articles.length!==matched||response.nextCursor)
+        if(articles.length!==matched||response.nextCursor
+          ||(includeAllFormal&&articles.length!==release.dois.length))
           throw Error('正式 DOI 分页缺项');
         return {pairedCaptureRegistry:true,webpageDoiCount:articles.length,
           formalCount:release.dois.length,publishedCatalogId:catalogId,articles};
@@ -393,6 +397,253 @@
       cursor=response.nextCursor;
     }
     throw Error('正式文献索引分页超过保护上限');
+  }
+
+
+  // Opt-in OPEN SCIENCE supplement: entire formal DOI list, NOT just old-date
+  // media queues. Only article-scoped CC BY/CC0 OA JATS can enter local IDB.
+  // Does not open publisher tabs, copy cookies, request PDFs/SI/images,
+  // modify the production media controller, or call public FTS import.
+  function batchOfficialOaGet(path,xml=false){
+    if(!/^\/(?:search\?|PMC\d{4,12}\/fullTextXML$)/.test(path))
+      return Promise.reject(Error('oa_source_path_invalid'));
+    return new Promise((resolve,reject)=>{
+      const url=BATCH_OA_ENDPOINT.replace(/\/$/,'')+path;
+      GM_xmlhttpRequest({method:'GET',url,timeout:16000,
+        headers:{accept:xml?'application/xml':'application/json'},
+        onload(response){
+          try{
+            if(response.finalUrl&&new URL(response.finalUrl).hostname!=='www.ebi.ac.uk')
+              throw Error('oa_source_redirect_untrusted');
+            const status=Number(response.status);
+            if(status===429)throw Error('source_rate_limited');
+            if(status===404)throw Error('source_not_found');
+            if(status!==200)throw Error('source_http_'+status);
+            const raw=String(response.responseText||'');
+            if(raw.length>(xml?BATCH_OA_MAX_XML_CHARS:800000))
+              throw Error('oa_source_too_large');
+            if(!raw)throw Error('oa_source_empty');
+            resolve(raw);
+          }catch(error){reject(error);}
+        },
+        ontimeout(){reject(Error('oa_source_timeout'));},
+        onerror(){reject(Error('oa_source_unavailable'))}
+      });
+    });
+  }
+  function batchOaDirectParagraphs(node){
+    const out=[],ignored=new Set(['sec','fig','table-wrap','ref-list','supplementary-material',
+      'permissions','ack','fn-group','app-group','boxed-text','disp-formula','list']);
+    const walk=parent=>{
+      for(const child of parent.children||[]){
+        const tag=String(child.localName||child.tagName||'').toLowerCase();
+        if(ignored.has(tag))continue;
+        if(tag==='p'){
+          const value=cleanText(child.textContent,18000);
+          if(value.length>=15)out.push(value);
+        }else walk(child);
+      }
+    };
+    walk(node);return out;
+  }
+  function batchOaScientificType(heading){
+    return /mechanis|kinetic|control experiment|spectroscop/i.test(heading)?'mechanism':
+      /result|discuss|scope|substrate|synthes|synthetic|optimization|screening/i.test(heading)?'results':
+      /experimental|methods|procedur/i.test(heading)?'experimental':
+      /conclusion|outlook|summary/i.test(heading)?'conclusion':
+      /introduct|background/i.test(heading)?'introduction':'other';
+  }
+  async function batchParseOfficialOa(xml,paper,pmcid){
+    if(typeof DOMParser!=='function'||typeof XMLSerializer!=='function')
+      throw Error('oa_xml_parser_unavailable');
+    const parsed=new DOMParser().parseFromString(xml,'application/xml');
+    if(parsed.getElementsByTagName('parsererror').length)
+      throw Error('oa_xml_parse_failed');
+    const meta=parsed.getElementsByTagName('article-meta')[0];
+    const doiNodes=meta?[...meta.getElementsByTagName('article-id')]:[];
+    const ids=[...new Set(doiNodes.filter(x=>x.getAttribute('pub-id-type')==='doi')
+      .map(x=>normalizeDoi(x.textContent)).filter(Boolean))];
+    if(ids.length!==1||ids[0]!==paper.doi)
+      throw Error('oa_xml_doi_mismatch');
+    const licenses=meta?[...meta.getElementsByTagName('license')]:[];
+    if(!licenses.length)throw Error('oa_license_unknown');
+    const serialized=licenses.map(x=>new XMLSerializer().serializeToString(x)).join('\n');
+    if(/by-nc|by-nd|noncommercial|no.?derivatives|all rights reserved/i.test(serialized))
+      throw Error('oa_license_restricted');
+    const rawMatches=[...serialized.matchAll(/https?:\/\/creativecommons\.org\/(licenses\/by\/(?:3\.0|4\.0)|publicdomain\/zero\/1\.0)\/?/gi)];
+    const paths=[...new Set(rawMatches.map(x=>x[1].toLowerCase()))];
+    if(paths.length!==1)throw Error('oa_license_unknown');
+    const licenseUrl='https://creativecommons.org/'+paths[0]+'/';
+    const body=parsed.getElementsByTagName('body')[0];
+    if(!body)throw Error('oa_science_missing');
+    const blocks=[],top=batchOaDirectParagraphs(body);
+    if(top.length)blocks.push({heading:'Main article introduction',texts:top});
+    for(const section of body.getElementsByTagName('sec')){
+      const title=[...section.children].find(x=>x.localName==='title');
+      const heading=cleanText(title?.textContent||'Unheaded scientific section',200);
+      if(EXCLUDE_HEADING.test(heading))continue;
+      const texts=batchOaDirectParagraphs(section);
+      if(texts.length)blocks.push({heading,texts});
+    }
+    const sections=[],captions=[],tables=[];
+    let chars=0,paragraphs=0;
+    for(const block of blocks){
+      let text='',part=1;
+      const put=()=>{
+        if(!text)return;
+        sections.push({type:batchOaScientificType(block.heading),
+          heading:block.heading+(part>1?' (part '+part+')':''),text,order:sections.length});
+        part++;text='';
+      };
+      for(const p of block.texts){
+        if(p.length>16000)throw Error('oa_science_section_oversize');
+        chars+=p.length;paragraphs++;
+        if(chars>240000||paragraphs>2000)throw Error('oa_science_too_large');
+        if(text&&text.length+2+p.length>16000)put();
+        text+=(text?'\n\n':'')+p;
+      }
+      put();
+      if(sections.length>160)throw Error('oa_science_too_large');
+    }
+    if(paragraphs<2||chars<450||!sections.length)
+      throw Error('oa_science_missing');
+    for(const el of [...body.getElementsByTagName('fig')]){
+      const cap=[...el.children].find(x=>x.localName==='caption');
+      const value=cleanText(cap?.textContent||'',6000);
+      if(value.length>=20&&captions.length<100)
+        captions.push({label:String(el.getAttribute('id')||'Figure').slice(0,70),text:value});
+    }
+    for(const el of [...body.getElementsByTagName('table-wrap')]){
+      const caption=[...el.children].find(x=>x.localName==='caption');
+      const table=[...el.children].find(x=>x.localName==='table');
+      const value=cleanText([caption?.textContent,table?.textContent].filter(Boolean).join(' '),9000);
+      if(value.length>=30&&tables.length<60)
+        tables.push({label:String(el.getAttribute('id')||'Table').slice(0,70),text:value});
+    }
+    const canonical=[...sections.map(x=>x.heading+'\n'+x.text),
+      ...captions.map(x=>x.label+'\n'+x.text),
+      ...tables.map(x=>x.label+'\n'+x.text)].join('\n');
+    const packet={schemaVersion:SCHEMA,doi:paper.doi,
+      publication:paper.date||'',journal:paper.journal,title:paper.title,
+      sourceUrl:BATCH_OA_ENDPOINT+pmcid+'/fullTextXML',
+      publisher:'europe_pmc_oa',sourceKind:'official_oa_jats',
+      sourceXmlSha256:await sha256(xml),sourceSha256:await sha256(canonical),
+      capturedAt:new Date().toISOString(),
+      rightsStatus:'local_only_permission_to_be_verified',
+      rightsBasis:paths[0],licenseUrl,
+      indexEligibility:'local_pilot_only',publicUploadAllowed:false,
+      pdfDownloaded:false,mediaDownloaded:false,siDownloaded:false,
+      paragraphs,characters:chars,sections,captions,tables,
+      bodyCompleteness:'partial',
+      completenessNote:'Open JATS science captured; publisher figures/SI and exact completeness not independently audited'};
+    if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS)
+      throw Error('oa_science_too_large');
+    return packet;
+  }
+  async function batchFetchOfficialOaPacket(paper){
+    const query='/search?'+new URLSearchParams({
+      query:'DOI:'+paper.doi,format:'json',resultType:'core',pageSize:'3'}).toString();
+    const metadata=JSON.parse(await batchOfficialOaGet(query));
+    const matches=(metadata?.resultList?.result||[])
+      .filter(row=>normalizeDoi(row.doi)===paper.doi);
+    if(matches.length!==1)throw Error('oa_metadata_doi_missing');
+    const entry=matches[0],pmcid=String(entry.pmcid||'');
+    if(entry.isOpenAccess!=='Y'||!/^PMC\d{4,12}$/.test(pmcid))
+      throw Error('oa_pmc_missing');
+    const xml=await batchOfficialOaGet('/'+pmcid+'/fullTextXML',true);
+    return batchParseOfficialOa(xml,paper,pmcid);
+  }
+  async function batchStartOfficialOa(){
+    if(batchActive)return;
+    const locked=GM_getValue(BATCH_LEASE,null);
+    if(locked&&locked.until>Date.now())
+      throw Error('独立正文补抓已有任务在本浏览器运行');
+    const catalog=await batchLoadCanonicalCatalog(true);
+    if(catalog.articles.length!==catalog.formalCount)
+      throw Error('OA扫描正式目录未覆盖全部DOI');
+    const db=await batchOpenDb();
+    let selected=[],previousCount=0;
+    try{
+      const saved=new Set(await batchDbOp(db,'packets','getAllKeys'));
+      const previous=new Map((await batchDbOp(db,'oaAttempts','getAll'))
+        .map(x=>[x.doi,x]));
+      previousCount=saved.size;
+      const stable=new Set(['oa_metadata_doi_missing','oa_pmc_missing',
+        'oa_license_restricted','oa_license_unknown','oa_science_missing',
+        'oa_science_too_large','oa_science_section_oversize','oa_xml_doi_mismatch']);
+      selected=catalog.articles.filter(row=>{
+        if(saved.has(row.doi))return false;
+        const prior=previous.get(row.doi);
+        return !(prior?.revision===row.revision
+          &&prior?.sourceRevision===BATCH_OA_SOURCE_REVISION
+          &&stable.has(prior.status));
+      });
+    }catch(e){db.close();throw e;}
+    if(!selected.length){
+      db.close();batchStatusWrite({state:'finished',source:'europe_pmc_oa',
+        total:0,attempted:0,saved:0,existing:previousCount,failed:0,
+        currentStage:'没有需要从官方OA来源重试的DOI'});
+      return;
+    }
+    if(!window.confirm('全正式文献目录 '+catalog.formalCount+' 篇；本轮将核验 '+selected.length+
+      ' 篇的官方开放许可/科学正文？\n只能保存经过文章级 CC BY/CC0 和 DOI 双重验证的正文至当前浏览器；'
+      +'不下载图片、PDF或SI，不上传至公共服务器，关闭浏览器后本机可继续。')){
+      db.close();return;
+    }
+    const next=GM_getValue(BATCH_LEASE,null);
+    if(next&&next.until>Date.now()){db.close();throw Error('本机已有独立正文任务占用租约');}
+    const runId=batchId();
+    batchActive=true;batchPaused=false;batchRunId=runId;
+    let attempted=0,saved=0,rightsPending=0,failed=0,rateLimited=false;
+    const leaseTimer=setInterval(()=>{
+      if(batchActive)GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
+    },4000);
+    GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
+    batchStatusWrite({state:'running',source:'europe_pmc_oa',runId,
+      total:selected.length,attempted:0,saved:0,failed:0,
+      rightsPending:0,existing:previousCount,lastError:'',
+      currentStage:'official_oa_source',startedAt:Date.now()});
+    try{
+      for(const row of selected){
+        if(batchPaused)break;
+        let status='oa_source_unavailable',packet=null;
+        batchStatusWrite({lastDoi:row.doi,currentStage:'Europe PMC 正式 DOI 探测'});
+        try{
+          packet=await batchFetchOfficialOaPacket(row);
+          const canonical=[...packet.sections.map(x=>x.heading+'\n'+x.text),
+            ...packet.captions.map(x=>x.label+'\n'+x.text),
+            ...packet.tables.map(x=>x.label+'\n'+x.text)].join('\n');
+          if(packet.sourceSha256!==await sha256(canonical))
+            throw Error('oa_science_hash_mismatch');
+          // Persist only after all DOI, rights, content and hash checks pass.
+          await batchDbOp(db,'packets','put',{doi:row.doi,packet,checkedAt:Date.now()});
+          status='saved_local';saved++;
+        }catch(e){
+          status=String(e?.message||'oa_source_unavailable').slice(0,70);
+          if(!/^oa_|^source_/.test(status))status='oa_source_unavailable';
+          if(status==='source_rate_limited')rateLimited=true;
+          if(status==='oa_license_restricted'||status==='oa_license_unknown')rightsPending++;
+          failed++;
+        }
+        attempted++;
+        try{
+          await batchDbOp(db,'oaAttempts','put',{doi:row.doi,journal:row.journal,
+            revision:row.revision,sourceRevision:BATCH_OA_SOURCE_REVISION,
+            status,checkedAt:Date.now(),runId,source:'europe_pmc_oa'});
+        }catch(_){batchStatusWrite({lastError:'本机OA诊断记录未成功保存：'+row.doi});}
+        batchStatusWrite({attempted,saved,rightsPending,failed,lastDoi:row.doi,
+          currentStage:status,lastError:status==='saved_local'?'':status});
+        if(rateLimited){batchStatusWrite({lastError:'官方OA接口限流；本轮已停止，未处理条目下次继续'});break;}
+        if(!batchPaused)await batchWait(BATCH_OA_MIN_GAP_MS);
+      }
+    }finally{
+      clearInterval(leaseTimer);
+      if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
+      db.close();batchActive=false;
+      batchStatusWrite({state:batchPaused||rateLimited?'paused':'finished',
+        attempted,saved,failed,rightsPending,finishedAt:Date.now()});
+      batchPaused=false;
+    }
   }
 
   function batchHistoricalPapers(catalog){
@@ -482,11 +733,12 @@
   function batchOpenDb(){
     return new Promise((resolve,reject)=>{
       if(typeof indexedDB==='undefined')return reject(Error('IndexedDB unavailable'));
-      const req=indexedDB.open(BATCH_DB,1);
+      const req=indexedDB.open(BATCH_DB,2);
       req.onupgradeneeded=()=>{
         const db=req.result;
         if(!db.objectStoreNames.contains('packets'))db.createObjectStore('packets',{keyPath:'doi'});
         if(!db.objectStoreNames.contains('attempts'))db.createObjectStore('attempts',{keyPath:'doi'});
+        if(!db.objectStoreNames.contains('oaAttempts'))db.createObjectStore('oaAttempts',{keyPath:'doi'});
       };
       req.onsuccess=()=>resolve(req.result);
       req.onerror=()=>reject(req.error||Error('local_storage_failed'));
@@ -835,6 +1087,7 @@
     message.style.cssText='margin:7px 0;font-size:12px;line-height:1.5;color:#41576e;white-space:pre-wrap';
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
+    const openOa=document.createElement('button');openOa.textContent='全库开放正文补抓（本机）';
     const coverageButton=document.createElement('button');coverageButton.textContent='全库正文覆盖';
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
@@ -862,10 +1115,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
+    for(const btn of [start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
+    controls.append(start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -894,6 +1147,7 @@
         +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
+      openOa.disabled=batchActive;
       coverageButton.disabled=false;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
@@ -902,18 +1156,22 @@
       coverageDetails.style.display='block';
       coverageDetails.textContent='正在对齐正式 DOI 与本机正文台账…';
       void (async()=>{
-        const catalog=await batchLoadCanonicalCatalog();
+        const catalog=await batchLoadCanonicalCatalog(true);
         const db=await batchOpenDb();
-        let keys,attempts;
+        let keys,attempts,oaAttempts;
         try{
           keys=await batchDbOp(db,'packets','getAllKeys');
           attempts=await batchDbOp(db,'attempts','getAll');
+          oaAttempts=await batchDbOp(db,'oaAttempts','getAll');
         }finally{db.close();}
+        const formalMembers=new Set(catalog.articles.map(x=>x.doi));
+        const savedFormal=keys.filter(x=>formalMembers.has(x)).length;
         const c=batchCoverageSummary(catalog,keys,attempts);
         const first=c.neverAttempted,post=c.parserRecheckEligible;
         coverageDetails.textContent=[
           '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
-          '历史日期待核验／非目标：'+c.historicalWithoutVerifiedDate+' 篇',
+          '其余正式 DOI（含10月以来和日期待核实）：'+c.historicalWithoutVerifiedDate+' 篇',
+          '全库本机已存科学正文 '+savedFormal+' 篇（含官方OA和出版社来源，未联网共享）；官方OA来源记录 '+oaAttempts.length+' 篇',
           '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
           '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
           '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
@@ -924,6 +1182,9 @@
       })().catch(()=>{coverageDetails.textContent=
         '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
     });
+    openOa.addEventListener('click',()=>void batchStartOfficialOa().catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
