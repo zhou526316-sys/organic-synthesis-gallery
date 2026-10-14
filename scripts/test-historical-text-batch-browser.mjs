@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const source=rawSource.replace(
   "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender",
-  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp};\n"+
+  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
   "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender");
 const browser=await chromium.launch({headless:true});
 const doiOld=['10.1021/jacs.6c08636','10.1038/s44160-026-01100-1'];
@@ -218,6 +218,31 @@ try{
   assert.ok(oaReport.requests.some(x=>new URL(x.url).hostname==='www.ebi.ac.uk'));
   assert.ok(!oaReport.requests.some(x=>x.method!=='GET'
     ||/\/api\/(?:article-figures|private-pdf|media\/|admin\/literature-body-sections)/.test(x.url)));
+
+  const oaRejected=await page.evaluate(async()=>{
+    const article='10.1002/anie.2026new';
+    const paper={doi:article,date:'2026-10-13',journal:'Angew',title:'Original article'};
+    const base='<?xml version="1.0"?><article xmlns:xlink="http://www.w3.org/1999/xlink">'+
+      '<front><article-meta><article-id pub-id-type="doi">'+article+'</article-id>'+
+      '<permissions><license xlink:href="https://creativecommons.org/licenses/by/4.0/">'+
+      'This article is licensed CC BY.</license></permissions></article-meta></front>'+
+      '<body><sec><title>Results</title><p>'+
+      'Synthetic methods and reaction scopes need complete scientific identity verification. '.repeat(9)+
+      '</p><p>Reproducible reaction procedures and control evidence. '.repeat(5)+
+      '</p></sec></body></article>';
+    const wrong=base.replace(article,'10.1002/anie.not-the-article');
+    const nc=base.replaceAll('creativecommons.org/licenses/by/4.0',
+      'creativecommons.org/licenses/by-nc-nd/4.0');
+    const errors=[];
+    for(const xml of [wrong,nc]){
+      try{await __historicalDiagTest.batchParseOfficialOa(xml,paper,'PMC123456');errors.push('unexpected_pass');}
+      catch(e){errors.push(String(e.message));}
+    }
+    return errors;
+  });
+  assert.deepEqual(oaRejected,['oa_xml_doi_mismatch','oa_license_restricted'],
+    'wrong DOI or NC-ND content must be rejected before local storage');
+
   await search.fill('stereodefined');
   await search.press('Enter');
   await page.getByText('10.1002/anie.2026new · 正文 · Results and discussion').waitFor({timeout:5000});
