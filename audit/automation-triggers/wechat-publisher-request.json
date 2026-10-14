@@ -1,37 +1,20 @@
 {
-  "requestId": "wechat-2026-10-14-r1-source-original-27-images-20-final-owner-approved",
+  "requestId": "wechat-oct14-owner-original-today-top-retro-center-metadata-only-v1",
   "publicationDate": "2026-10-14",
-  "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-14-r1",
-  "approvedGate": "audit/wechat-working/2026-10-14-review-gate.json",
+  "action": "update_covers_title_only",
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWK0GEUwdJcrzZUnUqTu1MZdQpaEILGEgEcWC4qU-DSzy",
   "expectedArticleCount": 2,
-  "expectedDois": [
-    "10.1021/jacs.6c17662",
-    "10.1021/jacs.6c08353"
-  ],
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-14&doi=10.1021%2Fjacs.6c17662&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c08353&summary=0",
-  "expectedReviewedBodyImages": 25,
-  "expectedReviewedAssets": 27,
-  "imageOriginalShaReview": "audit/wechat-working/2026-10-14-r1-original-figure-sha-review.json",
-  "publisherSourceQa": "audit/wechat-working/2026-10-14-r1-publication-science-review.json",
-  "sourceCoverSha256": {
-    "featured": "41b359668c3bb7256be64c2fcdcf51f0d47a94f9bf5c63c04d3893f56d00f90c",
-    "retrospective": "c12ec72a42fac2e011ecbc8d18f395fd89447a0bb75773cd7c0dff88c34e8699"
-  },
+  "expectedDois": ["10.1021/jacs.6c17662", "10.1021/jacs.6c08353"],
+  "planPath": "audit/wechat-working/2026-10-14-user-images-cover-title-plan.json",
+  "planSha256": "83ac872e06d43a95b369d1d3f76f5b622c8a57a2069b71686829d38ddc2dffe3",
   "draftOnly": true,
   "publicSendAuthorized": false,
+  "bodyChangeAuthorized": false,
   "requireDraftGetReadback": true,
-  "requireArticleOrderAndExactDois": true,
-  "linkOnly": false,
-  "noDuplicatePolicy": "20261014_date_scoped_single_new_draft_or_update_existing_no_fallback_duplicates",
-  "journalTotalCount": 20,
-  "excludedDOIs": [
-    "10.1038/s41467-026-78512-x",
-    "10.1002/anie.2910902",
-    "10.1021/acscatal.6c06095",
-    "10.1002/anie.2518487"
-  ],
-  "unchangedAssetFingerprints": true,
-  "reason": "User explicitly starts Oct14 two-paper Official Account draft after deleting four out-of-scope published papers. Final 08:00 daily count 20 (JOC7 OrgLett7 NatSynth2 JACS2 ACS Catal1 ChemSci1). First article is JACS 10.1021/jacs.6c17662 MHAT migratory hydroamination; second is JACS 10.1021/jacs.6c08353 List IDPi/PFTB asymmetric geranyl cyclization. Both manuscript text, main/SI evidence maps, 25 original figure rasters and 2 source-only covers SHA reviewed. Lead original Fig1B image immediately follows 先看懂 reaction guide. Create or reuse ONE Oct14 draft, exact DOI links, then official draft/get. Never freepublish or group-send."
+  "noNewDraft": true,
+  "todayAlignment": "top; vertical added white space below",
+  "retrospectiveAlignment": "center; balanced upper and lower white space",
+  "newRetrospectiveTitle": "往期精选｜JACS｜Benjamin List：手性 IDPi 催化香叶基衍生物的不对称阳离子环化",
+  "scope": "Change two cover image IDs, full-content wide/square crop coordinates, and second native title only. Preserve all body text, figures, author, digest, source links, comment settings, daily20 and whole-body editorial hold.",
+  "reason": "User explicitly requests direct API modification using the two uploaded original TOC images; do not add text, blue bands or redraw chemical structures. Latest interruption changes only retrospective alignment to center. Source pixel checks and immutable-body tests passed in run38519662578, PR651 merged."
 }
