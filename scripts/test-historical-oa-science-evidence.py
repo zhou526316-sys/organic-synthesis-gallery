@@ -59,13 +59,28 @@ class SourceEvidenceTest(unittest.TestCase):
                     "https://creativecommons.org/licenses/by-nc/4.0/"):
             with self.assertRaises(ValueError):
                 source.parse_science_jats(fixture(lic=lic),DOI)
-    def test_no_network_and_no_truncation_on_bad_body(self):
+    def test_substantial_unclassified_science_is_preserved_as_partial_not_missing(self):
         raw=fixture().replace(b"<title>Results and discussion</title>",
-                              b"<title>Administration</title>").replace(
+                              b"<title>General chemistry</title>").replace(
                               b"<title>Mechanistic studies</title>",b"<title>Other article heading</title>")
+        # Add a real scientific paragraph rather than padding an index row.
+        raw=raw.replace(b"</body>",(
+            b"<sec><title>Comparative transformations</title><p>"
+            b"Additional independent chemical observations explain which products were "
+            b"actually detected, their substrate limitations, and what control experiments "
+            b"did not establish for the proposed synthetic pathway.</p></sec></body>"))
+        result=source.parse_science_jats(raw,DOI)
+        self.assertEqual(result["scienceClassificationEvidence"],
+                         "unclassified_maintext_pending_review")
+        self.assertEqual(result["completenessCandidate"],"partial")
+        self.assertGreater(result["scienceSectionUnits"],0)
+    def test_genuinely_missing_science_is_rejected(self):
+        raw=fixture()
+        raw=raw.split(b"<body>")[0]+(
+            b"<body><sec><title>Introduction</title><p>Insufficient text.</p></sec></body>"
+        )+raw.split(b"</body>",1)[1]
         with self.assertRaisesRegex(ValueError,"science_content_missing_or_abstract_only"):
             source.parse_science_jats(raw,DOI)
-
     def test_short_science_fragment_is_hashed_and_never_falsely_completes_article(self):
         raw=fixture().replace(
             b"</body>",b"<sec><title>Experimental note</title><p>Very brief note.</p></sec></body>")
