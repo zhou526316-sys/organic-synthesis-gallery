@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261013-owner-historical-body-coverage-followup",
-  "requestedAt": "2026-10-13T13:00:00Z",
+  "requestId": "20261014-0846-527-completed-publisher-no-response",
+  "requestedAt": "2026-10-14T00:46:00Z",
   "mode": "read_only",
   "scope": "recent_200_metadata_events_only",
-  "purpose": "Diagnose user's v0.2.5 743 historical DOI ledger: 588 licence pending, 46 body missing, 27 access blocked, 15 transient and current 527 retry attempts",
+  "purpose": "Read only newest 200 sanitized attempts after user's completed 527/527 batch and separate publisher handler no-response from license or HTTP denied",
   "noSourceContent": true,
   "noPublisherAccess": true,
   "noWrites": true

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "owner_historical_Q3_reconciliation_after_2026-10-14_fixed08_all_91_approved_formally_admitted",
+  "purpose": "Q3_history_staging_only_recount_after_ten_Q3_ACS_original_scope_reviews_on_2026_10_14",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T00:50:04.004Z",
-  "reason": "Sole Oct14 08:00 writer already released 83 historical DOI, original 8 plus these 83 now all 91 academic approved are formally in main catalog of 1091 DOI (24 new nonhistorical that day). Recompute frozen Crossref/OpenAlex Q3 windows against CURRENT formal catalog; no PDF/media/fulltext, no D1 or public API query, no fixed-slot change. Preserve two authoritative date pending and separate ACS publisher-vs-publisher holds. Fully checked publication membership through main public/toc-demand-live.json, Q3 now 820 formal (was 743+77), expected approved_waiting08 zero.",
+  "requestedAt": "2026-10-14T01:07:46.603Z",
+  "reason": "PR #622 successfully merged to main as 7caf171771f06d9cb4e454452a01fd548f65ef3a after four independent green CI suites. Ten new real ACS DOI Q3 original organic syntheses have exact publisher first-online/independent science double review, are absent from current 1091 live-formal catalog and must await 2026-10-15 08:00 Beijing authorized writer. Earlier 91 approvals present in formal catalog from 2026-10-14 08:00. Recompute 2026-Q3 192/192 frozen source roots against latest main, zero production Cloudflare D1 or API calls, no TOC, SI, PDF or body-image acquisition, no off-slot publication, no new task. Hold 3 publisher-vs-publisher ACS date disputes.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_after_all_91_historic_approved_formal08_published_recount",
+  "triggerScope": "20261014_101_hist_approved_91_formal_10_waiting_next_08_original_ACS",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1091,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,8 +20,8 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 375,
   "expectedStageCompletedRoots": 375,
-  "expectedAcademicInclude": 91,
-  "academicDecisionSource": "current_main_91_historical_approved_all_present_in_1091_formal_catalog_post08",
+  "expectedAcademicInclude": 101,
+  "academicDecisionSource": "main_101_approved_of_which_91_already_formal_10_awaiting_2026_10_15_08",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 5,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "746022c86fe32fd3a839b25e8f7c2684f2a030ab",
+  "lastRelatedMergeCommit": "7caf171771f06d9cb4e454452a01fd548f65ef3a",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -39,5 +39,13 @@
   "reviewedNonOriginalNotYetInReconciler": "10.1039/d5sc08413j",
   "lastRelatedPublicationCommit": "cbd4e6165995eaca3889c9646dd37e9ae3f808f4",
   "catalogSnapshotSha": "a231a898894a788d1cca7476ed289163c85c6c1a",
-  "lastTriggerReason": "post_2026_10_14_0800_published_membership_reconciliation"
+  "lastTriggerReason": "post_2026_10_14_0800_published_membership_reconciliation",
+  "exactNextEligibleHistoricalPublicationSlot": "2026-10-15T08:00:00+08:00",
+  "previousHistoricalFormallyPresent": 91,
+  "newlyApprovedAwaiting08": 10,
+  "originalDateConflictHolds": [
+    "10.1021/acs.orglett.6c03028",
+    "10.1021/acs.orglett.6c02707",
+    "10.1021/acs.joc.6c00852"
+  ]
 }
