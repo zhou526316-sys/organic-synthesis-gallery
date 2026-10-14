@@ -82,6 +82,22 @@
     // No URL-suffix or title guessing, and no ambiguous DOI.
     return unique.length===1?unique[0]:'';
   }
+  function batchPathBindsCurrentJob(job){
+    // Only diagnose whether THIS publisher article route was reached. URL
+    // resemblance never substitutes for DOI metadata, license or text rights.
+    if(!job?.doi||!publisher(location.hostname))return false;
+    let path;try{path=decodeURIComponent(location.pathname).toLowerCase();}catch(_){return false;}
+    const doi=String(job.doi).toLowerCase();
+    const articleMarker='/doi/'+doi;
+    const pos=path.indexOf(articleMarker);
+    if(pos>=0&&(pos+articleMarker.length===path.length
+      ||path[pos+articleMarker.length]==='/'))return true;
+    if(doi.startsWith('10.1038/')){
+      const suffix=doi.split('/').slice(1).join('/');
+      return path==='/articles/'+suffix;
+    }
+    return false;
+  }
   function excluded(node, includeMedia=false){
     if(node.closest('nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]'))return true;
     if(!includeMedia&&node.closest('figure,table'))return true;
@@ -1413,8 +1429,14 @@
     let doi=pageDoi(),capture=null;
     // Unrelated tabs must not report into an active historical attempt.
     if(doi&&doi!==job.doi)return;
-    if(!doi&&!fragment)return;
+    if(!doi&&!fragment&&!batchPathBindsCurrentJob(job))return;
     reportStage('publisher_page');
+    // A DOI-bound canonical publisher route may lack a DOI meta tag when
+    // presenting an authentication challenge. Do not wait for nonexistent
+    // fulltext, and never claim DOI verification from the URL alone.
+    if(!doi&&batchPublisherPageBlocked()){
+      storeResult({status:'page_access_blocked',stage:'publisher_page'});return;
+    }
     if([403,429].includes(observedPageHttpStatus())){
       storeResult({status:'page_http_error',stage:'publisher_page'});return;
     }
@@ -1466,7 +1488,7 @@
       }
     }
     if(doi!==job.doi){
-      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
+      storeResult({status:'doi_unverified',stage:'publisher_doi'});return;
     }
     const root=document.querySelector('main article, article, main, [role="main"]');
     if(!batchArticlePageReady(root)&&!sawArticle){
