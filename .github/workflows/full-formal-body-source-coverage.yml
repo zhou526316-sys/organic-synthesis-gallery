@@ -1,0 +1,140 @@
+name: Full formal literature body source census (read-only)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/full-formal-body-source.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/full-formal-body-source-coverage.yml'
+      - 'scripts/full-formal-body-source-coverage.mjs'
+      - 'scripts/test-full-formal-body-source-coverage.mjs'
+      - 'scripts/lib/historical-open-xml-pilot.mjs'
+
+permissions:
+  contents: read
+concurrency:
+  group: full-formal-body-source-${{ github.event_name == 'pull_request' && github.head_ref || 'formal' }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify full-catalog and previous bounded reader compatibility
+        run: |
+          node --check scripts/full-formal-body-source-coverage.mjs
+          node --check scripts/lib/historical-open-xml-pilot.mjs
+          node --test scripts/test-full-formal-body-source-coverage.mjs scripts/test-historical-open-science-oa.mjs
+
+  plan:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      matrix: ${{ steps.shards.outputs.matrix }}
+      catalog_id: ${{ steps.shards.outputs.catalog_id }}
+      planned: ${{ steps.shards.outputs.planned }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Enumerate EVERY formally published DOI, including Oct and undated
+        run: |
+          node scripts/full-formal-body-source-coverage.mjs --plan --chunk-size=100 \
+            --output="$RUNNER_TEMP/full-formal-plan.json"
+      - name: Derive dynamic shard matrix for the ENTIRE current formal catalog
+        id: shards
+        run: |
+          echo "matrix=$(jq -c '.shards' "$RUNNER_TEMP/full-formal-plan.json")" >> "$GITHUB_OUTPUT"
+          echo "catalog_id=$(jq -r '.catalogId' "$RUNNER_TEMP/full-formal-plan.json")" >> "$GITHUB_OUTPUT"
+          echo "planned=$(jq -r '.totalFormalDois' "$RUNNER_TEMP/full-formal-plan.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-formal-body-source-plan
+          path: ${{ runner.temp }}/full-formal-plan.json
+          retention-days: 30
+
+  scan:
+    needs: plan
+    if: needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: full-formal-body-source-plan
+          path: ${{ runner.temp }}/source-plan
+      - name: Bounded technical shard, not a total DOI coverage limit
+        env:
+          SHARD_OFFSET: ${{ matrix.offset }}
+          SHARD_COUNT: ${{ matrix.count }}
+        run: |
+          node scripts/full-formal-body-source-coverage.mjs --scan \
+            --plan="$RUNNER_TEMP/source-plan/full-formal-plan.json" \
+            --offset="$SHARD_OFFSET" --count="$SHARD_COUNT" \
+            --output="$RUNNER_TEMP/window-$SHARD_OFFSET.json"
+      - name: Save source/rights/structure evidence even after shard interruption
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-formal-body-window-${{ matrix.offset }}
+          path: ${{ runner.temp }}/window-${{ matrix.offset }}.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  aggregate:
+    if: always() && needs.plan.result == 'success'
+    needs: [plan, scan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: full-formal-body-source-plan
+          path: ${{ runner.temp }}/source-plan
+      - name: Prepare optional shard collection
+        run: mkdir -p "$RUNNER_TEMP/shards"
+      - name: Download ALL available shard records
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: full-formal-body-window-*
+          path: ${{ runner.temp }}/shards
+          merge-multiple: true
+      - name: Verify exact formal DOI union, per-paper source statuses, and retry list
+        run: |
+          node scripts/full-formal-body-source-coverage.mjs --aggregate \
+            --plan="$RUNNER_TEMP/source-plan/full-formal-plan.json" \
+            --reports-dir="$RUNNER_TEMP/shards" \
+            --output="$RUNNER_TEMP/full-formal-body-source-summary.json"
+      - name: Preserve durable downloadable census result without article text
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-formal-body-source-summary-${{ github.run_id }}
+          path: ${{ runner.temp }}/full-formal-body-source-summary.json
+          retention-days: 30
+          if-no-files-found: warn
