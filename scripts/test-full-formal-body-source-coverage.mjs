@@ -35,6 +35,9 @@ test('one request covers all 1087 formal DOIs; 100 is only a technical shard siz
   assert.equal(validateFullPlan(p),p);
   const report=aggregateFullReports(p,reportsFor(p));
   assert.equal(report.enumeratedDois,1087);
+  assert.equal(report.doiLedger.length,1087);
+  assert.equal(report.doiLedger.filter(x=>x.publicFtsIndexed).length,0);
+  assert.equal(report.doiLedger.filter(x=>x.sourceStatus==='not_scanned').length,0);
   assert.equal(report.sourceCheckedDois,1087);
   assert.equal(report.sourceAuditComplete,true);
   assert.equal(report.rightsCandidateCount,11);
@@ -53,6 +56,7 @@ test('do not claim all-source completion when any shard is missing, rejected or 
   const reports=reportsFor(p);
   assert.equal(aggregateFullReports(p,reports.slice(0,-1)).sourceAuditComplete,false);
   assert.equal(aggregateFullReports(p,reports.slice(0,-1)).missingDois.length,5);
+  assert.equal(aggregateFullReports(p,reports.slice(0,-1)).doiLedger.filter(x=>x.sourceStatus==='not_scanned').length,5);
   reports[1].entries[0].state='provider_paused';
   let summary=aggregateFullReports(p,reports);
   assert.equal(summary.sourceAuditComplete,false);
