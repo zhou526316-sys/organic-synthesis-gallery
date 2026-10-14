@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "q3-publisher-date-verification-holds-v1",
+  "date": "2026-10-14",
+  "dateHolds": [
+    {
+      "doi": "10.1021/acs.orglett.6c02707",
+      "publisherOnlineDateOptions": [
+        "2026-07-30",
+        "2026-07-31"
+      ],
+      "status": "unresolved"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00852",
+      "publisherOnlineDateOptions": [
+        "2026-08-31",
+        "2026-09-01"
+      ],
+      "status": "unresolved"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102990",
+      "apiWindow": "2026-08",
+      "independentOnlineEvidence": "2026-03-27",
+      "status": "publisher_confirmation_needed"
+    }
+  ],
+  "decision": "no_date_overrides_and_no_admissions"
+}
