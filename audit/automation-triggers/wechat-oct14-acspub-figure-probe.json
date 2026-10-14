@@ -6,5 +6,6 @@
   ],
   "testOnly": true,
   "noWeChatWrites": true,
-  "description": "Probe whether GitHub Actions can retrieve original publisher figures from ACS; use only to decide whether cloud editorial images can be safely source-verified."
+  "description": "Probe whether GitHub Actions can retrieve original publisher figures from ACS; use only to decide whether cloud editorial images can be safely source-verified.",
+  "rerun": "no PIL dependency; establish 200/JPEG vs 403/HTML"
 }
