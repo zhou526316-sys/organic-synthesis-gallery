@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.7
+// @version      0.2.8
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -30,6 +30,7 @@
 // @grant        GM_xmlhttpRequest
 // @connect      gallery.gczhouwld.com
 // @connect      api.gczhouwld.com
+// @connect      www.ebi.ac.uk
 // @updateURL    https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // @downloadURL  https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // ==/UserScript==
@@ -280,7 +281,7 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.7';
+  const BATCH_SCRIPT_VERSION='0.2.8';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v026';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -289,6 +290,10 @@
   const BATCH_RESULT=BATCH_PREFIX+'result';
   const BATCH_LEASE=BATCH_PREFIX+'lease';
   const BATCH_DB='gallery-historical-text-local-v2';
+  const BATCH_OA_SOURCE_REVISION='europepmc-oa-science-v028';
+  const BATCH_OA_ENDPOINT='https://www.ebi.ac.uk/europepmc/webservices/rest/';
+  const BATCH_OA_MAX_XML_CHARS=2600000;
+  const BATCH_OA_MIN_GAP_MS=650;
   const BATCH_REPORT_ENDPOINT='https://api.gczhouwld.com/api/admin/historical-text/reports';
   const BATCH_DIAG_PREFIX=BATCH_PREFIX+'diagnostics-outbox-v1:';
   const BATCH_DIAG_TOKEN=BATCH_PREFIX+'diagnostics-owner-token';
@@ -338,7 +343,7 @@
       });
     });
   }
-  async function batchLoadCanonicalCatalog(){
+  async function batchLoadCanonicalCatalog(includeAllFormal=false){
     const release=await batchFetchJson(CANONICAL_RELEASE_URL);
     const catalogId=String(release.architectureCatalogId||'');
     if(!/^[0-9a-f]{64}$/.test(catalogId)
@@ -356,10 +361,8 @@
     const articles=[],seen=new Set();
     let cursor='',matched=null;
     for(let page=0;page<SOURCE_MAX_PAGES;page++){
-      const q=new URLSearchParams({
-        catalogId,sort:'oldest',dateTo:'2026-09-30',
-        limit:String(SOURCE_PAGE_LIMIT)
-      });
+      const q=new URLSearchParams({catalogId,sort:'oldest',limit:String(SOURCE_PAGE_LIMIT)});
+      if(!includeAllFormal)q.set('dateTo','2026-09-30');
       if(cursor)q.set('cursor',cursor);
       const response=await batchFetchJson(CANONICAL_INDEX_URL+'?'+q.toString());
       if(response.readPathActive!==true||response.enabled!==true
@@ -383,7 +386,8 @@
       if(articles.length>matched||articles.length>BATCH_DOI_LIMIT)
         throw Error('正式文献目录容量或去重异常');
       if(response.hasMore!==true){
-        if(articles.length!==matched||response.nextCursor)
+        if(articles.length!==matched||response.nextCursor
+          ||(includeAllFormal&&articles.length!==release.dois.length))
           throw Error('正式 DOI 分页缺项');
         return {pairedCaptureRegistry:true,webpageDoiCount:articles.length,
           formalCount:release.dois.length,publishedCatalogId:catalogId,articles};
@@ -482,11 +486,12 @@
   function batchOpenDb(){
     return new Promise((resolve,reject)=>{
       if(typeof indexedDB==='undefined')return reject(Error('IndexedDB unavailable'));
-      const req=indexedDB.open(BATCH_DB,1);
+      const req=indexedDB.open(BATCH_DB,2);
       req.onupgradeneeded=()=>{
         const db=req.result;
         if(!db.objectStoreNames.contains('packets'))db.createObjectStore('packets',{keyPath:'doi'});
         if(!db.objectStoreNames.contains('attempts'))db.createObjectStore('attempts',{keyPath:'doi'});
+        if(!db.objectStoreNames.contains('oaAttempts'))db.createObjectStore('oaAttempts',{keyPath:'doi'});
       };
       req.onsuccess=()=>resolve(req.result);
       req.onerror=()=>reject(req.error||Error('local_storage_failed'));
@@ -835,6 +840,7 @@
     message.style.cssText='margin:7px 0;font-size:12px;line-height:1.5;color:#41576e;white-space:pre-wrap';
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
+    const openOa=document.createElement('button');openOa.textContent='全库开放正文补抓（本机）';
     const coverageButton=document.createElement('button');coverageButton.textContent='全库正文覆盖';
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
@@ -862,10 +868,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
+    for(const btn of [start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
+    controls.append(start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -894,6 +900,7 @@
         +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
+      openOa.disabled=batchActive;
       coverageButton.disabled=false;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
@@ -913,7 +920,7 @@
         const first=c.neverAttempted,post=c.parserRecheckEligible;
         coverageDetails.textContent=[
           '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
-          '历史日期待核验／非目标：'+c.historicalWithoutVerifiedDate+' 篇',
+          '其余正式 DOI（含10月以来和日期待核实）：'+c.historicalWithoutVerifiedDate+' 篇',
           '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
           '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
           '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
@@ -924,6 +931,9 @@
       })().catch(()=>{coverageDetails.textContent=
         '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
     });
+    openOa.addEventListener('click',()=>void batchStartOfficialOa().catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
