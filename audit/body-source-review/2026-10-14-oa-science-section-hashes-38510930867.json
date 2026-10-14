@@ -1,0 +1,2123 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "sourceCatalogId": "f263e943427a16c8fa52c828d786fb90fc7366d6e01bd74e1b2b1bd148d69870",
+  "formalDois": 1087,
+  "plannedOaCandidates": 47,
+  "byState": {
+    "science_sections_mapped_pending_independent_review": 12,
+    "section_under_minimum_character_count": 26,
+    "science_content_missing_or_abstract_only": 9
+  },
+  "completedDois": 12,
+  "scienceSectionUnits": 106,
+  "missingDois": [],
+  "reports": [
+    {
+      "doi": "10.1038/s41557-026-02206-6",
+      "journal": "Nature Chemistry",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "96d5f10017f50b8e8efaa739652f33553b1e5b844014f01ccbe5532a1a970a63",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 8,
+      "scientificParagraphs": 19,
+      "scienceCharacters": 28309,
+      "scienceTextBytes": 28498,
+      "captionEvidenceCount": 6,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "f15de6176de5336e2c98484a5c60e78ba34a5948e1feb0aec896b25a1729fe07",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "other",
+          "heading": "Main",
+          "paragraphs": 3,
+          "chars": 4884,
+          "bytes": 4904,
+          "sectionSha256": "a9c769085d6ee07f1bbf412c8f9857f3bf634743117e2f1ea593ed144ccfdba5"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results and discussion",
+          "paragraphs": 7,
+          "chars": 13466,
+          "bytes": 13545,
+          "sectionSha256": "a598d849f57a5004462440b67fe22f1110cf56f85b357a6cca3def46fdbe6405"
+        },
+        {
+          "sectionId": "s003",
+          "type": "mechanism",
+          "heading": "Mechanistic studies",
+          "paragraphs": 4,
+          "chars": 5317,
+          "bytes": 5382,
+          "sectionSha256": "230dd31b73c9cf4e87c0ddf9584e1d5b549ef7db6d823a8da273a4bb6509604b"
+        },
+        {
+          "sectionId": "s004",
+          "type": "conclusion",
+          "heading": "Conclusion",
+          "paragraphs": 1,
+          "chars": 1279,
+          "bytes": 1280,
+          "sectionSha256": "77b582671ae04a9413e8fdb161fa80b8070ca35f797fefda02ad08fa0079f711"
+        },
+        {
+          "sectionId": "s005",
+          "type": "experimental",
+          "heading": "General procedure for the synthesis of β-amino boronic esters from alkenyl boronic esters and organolithium compounds",
+          "paragraphs": 1,
+          "chars": 1181,
+          "bytes": 1189,
+          "sectionSha256": "035cad67efa781daa82f16be46cce25d0e5d654cb56ee6528bb66fe4f1126f91"
+        },
+        {
+          "sectionId": "s006",
+          "type": "experimental",
+          "heading": "General procedure for the synthesis of β-amino boronic esters from boronic esters and in situ formed alkenyl-lithium species",
+          "paragraphs": 1,
+          "chars": 1570,
+          "bytes": 1582,
+          "sectionSha256": "cc0448473608f6e38c0f5265bd7fff40810bedb6f99594a179ef9af1ad654887"
+        },
+        {
+          "sectionId": "s007",
+          "type": "other",
+          "heading": "Online content",
+          "paragraphs": 1,
+          "chars": 335,
+          "bytes": 335,
+          "sectionSha256": "dceb163e13e2bf7a4483b3e7cf9f01c58fa5a92abbe586a8897ae1199b6c25e0"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Supplementary information",
+          "paragraphs": 1,
+          "chars": 277,
+          "bytes": 281,
+          "sectionSha256": "c76e42d2a67a3b7075d4bc8720d0b18aa574b2268ae6fb52cebe4a4ffc7412c6"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig1",
+          "chars": 551,
+          "sha256": "8aca9d2a1d511c8a1174bc93318f744103414fc40443b5079c91be31724a75e4",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig2",
+          "chars": 618,
+          "sha256": "06ef47a1ffd51100b436103c44ed8f2cfb71cf21ccde3606503bfd8eb15c2eff",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig3",
+          "chars": 625,
+          "sha256": "7d134713a5242007f00611fd2dbdee6e490d7388095940bfbc893c366189c762",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab1",
+          "chars": 91,
+          "sha256": "f7213828bb853cb720fe6a5efe6cdf70ab1e588382c67cb6dee0a7ade4d6d008",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab2",
+          "chars": 125,
+          "sha256": "7a57d4681dc1e4049fb30aafd038542ba0326c866c51788d07e6be4c10b011bd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab3",
+          "chars": 105,
+          "sha256": "f491dda1f51c66033715877fbcb1a1f0f20ee4c8c487a74ab09d4f94f58aaa7b",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01587-8",
+      "journal": "Nature Catalysis",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41929-026-01576-x",
+      "journal": "Nature Catalysis",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41586-026-11108-z",
+      "journal": "Nature",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41557-026-02214-6",
+      "journal": "Nature Chemistry",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "d301c54680ebb62fd41a3d738493694b9c6133619f686d8d06eb5b04d3d00146",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 17,
+      "scientificParagraphs": 29,
+      "scienceCharacters": 26707,
+      "scienceTextBytes": 26959,
+      "captionEvidenceCount": 5,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "616b785af6850cc65d00bd3b790439644159253291e34d55225327e2141e786e",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "other",
+          "heading": "Main",
+          "paragraphs": 2,
+          "chars": 5225,
+          "bytes": 5281,
+          "sectionSha256": "df4fa71c4ee6ad22560086b7651e42f74db3ff0903cd2bc8550cdd7c1a673047"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results",
+          "paragraphs": 9,
+          "chars": 15243,
+          "bytes": 15425,
+          "sectionSha256": "abcaa3d248ac26ecc2392f5b537b923a5eda9e9fe1eda50c8325a50d24f2f1e7"
+        },
+        {
+          "sectionId": "s003",
+          "type": "results",
+          "heading": "Results",
+          "paragraphs": 1,
+          "chars": 828,
+          "bytes": 831,
+          "sectionSha256": "cbec57d1cd861358903dcfba76413da7179f29773539b2a09185642f31d58e39"
+        },
+        {
+          "sectionId": "s004",
+          "type": "results",
+          "heading": "Discussion",
+          "paragraphs": 1,
+          "chars": 1722,
+          "bytes": 1724,
+          "sectionSha256": "af62f8e357fbd205b8b0b912b84fa3f80f9114ccb2d79774311b9c4fe2c8c366"
+        },
+        {
+          "sectionId": "s005",
+          "type": "experimental",
+          "heading": "Methods",
+          "paragraphs": 1,
+          "chars": 1062,
+          "bytes": 1070,
+          "sectionSha256": "f7311df86bc333d8cf4b508faaa4c73b5f1cd4a8c79f99e757b84bcc92c9fc43"
+        },
+        {
+          "sectionId": "s006",
+          "type": "conclusion",
+          "heading": "Reporting summary",
+          "paragraphs": 1,
+          "chars": 117,
+          "bytes": 117,
+          "sectionSha256": "2c39e203db2b3ea5b8e9d3b536f99e007414a33bf948a682824c9bd553d01c85"
+        },
+        {
+          "sectionId": "s007",
+          "type": "other",
+          "heading": "Online content",
+          "paragraphs": 1,
+          "chars": 335,
+          "bytes": 335,
+          "sectionSha256": "b068d922057c7922eaeebfb83157065df9864cd78b9877951973a1654ed4edca"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Acknowledgements",
+          "paragraphs": 1,
+          "chars": 284,
+          "bytes": 284,
+          "sectionSha256": "2ac04a8721e5ee3d96df7322517aac5d63d7d1810067f03cdac461446c15c9dd"
+        },
+        {
+          "sectionId": "s009",
+          "type": "other",
+          "heading": "Author contributions",
+          "paragraphs": 1,
+          "chars": 447,
+          "bytes": 447,
+          "sectionSha256": "ff6cc8108c317f664b248ef2c8f2a362002cb37928a04f3bb776f2acf6065562"
+        },
+        {
+          "sectionId": "s010",
+          "type": "other",
+          "heading": "Peer review information",
+          "paragraphs": 1,
+          "chars": 183,
+          "bytes": 184,
+          "sectionSha256": "f6d9702e63f0f7d8a52a3618d05ee29d9c31683493b5525b848374fef9bb73f0"
+        },
+        {
+          "sectionId": "s011",
+          "type": "other",
+          "heading": "Funding",
+          "paragraphs": 1,
+          "chars": 155,
+          "bytes": 155,
+          "sectionSha256": "77d75993fc3147a2de447742f91e47639b812bee8c11d9c25622bde186ca54d9"
+        },
+        {
+          "sectionId": "s012",
+          "type": "other",
+          "heading": "Data availability",
+          "paragraphs": 1,
+          "chars": 192,
+          "bytes": 192,
+          "sectionSha256": "6105a36a044933a0ccd0ff0d30fa820424484f5e281989e4beb5a6cb515275cd"
+        },
+        {
+          "sectionId": "s013",
+          "type": "other",
+          "heading": "Code availability",
+          "paragraphs": 1,
+          "chars": 170,
+          "bytes": 170,
+          "sectionSha256": "406c6a7f053fc44b4cfadda6a50e16e2c7b44d20eb853040664d1c7d2d567bda"
+        },
+        {
+          "sectionId": "s014",
+          "type": "other",
+          "heading": "Competing interests",
+          "paragraphs": 1,
+          "chars": 119,
+          "bytes": 119,
+          "sectionSha256": "c47bc59340a2f2105946c526b6d6ef134013863c063044cc6dfb147591eb9a9e"
+        },
+        {
+          "sectionId": "s015",
+          "type": "other",
+          "heading": "Contributor Information",
+          "paragraphs": 3,
+          "chars": 154,
+          "bytes": 154,
+          "sectionSha256": "7e1dcc925c20f940822bfe470b5975a461b557165389cc2b87f48affd3dcbb59"
+        },
+        {
+          "sectionId": "s016",
+          "type": "other",
+          "heading": "Supplementary information",
+          "paragraphs": 1,
+          "chars": 108,
+          "bytes": 108,
+          "sectionSha256": "b6230999944fa8052e2ae9a85c75f8eb5d0fa5bae20adaf3582b48ed2571d901"
+        },
+        {
+          "sectionId": "s017",
+          "type": "other",
+          "heading": "Data Availability Statement",
+          "paragraphs": 2,
+          "chars": 363,
+          "bytes": 363,
+          "sectionSha256": "bafd158a90c71af3731c6aa3241fe0e0a99090c788623f4302abcd191e310530"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig1",
+          "chars": 685,
+          "sha256": "d505db2a0e77343ec7615e2e45bc083a407d2f33546c89855bc3225c12002f43",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig2",
+          "chars": 1318,
+          "sha256": "c59b427e9b5e01e963a563481c3b0681564026bad8adc1507c0ca24aed73ec18",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig3",
+          "chars": 383,
+          "sha256": "533c5aefb88fa0a31f2cce8f74070646bc0697d4e8ff5890a5383f39503b3d13",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig4",
+          "chars": 82,
+          "sha256": "d7bc44178b1c1922f4b2f24b61968208843e545f5a5a20cb248bbb34f90c5b50",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig5",
+          "chars": 751,
+          "sha256": "0b89c7b2c42f16ef1e2632b406684830f926d9a737d8789741f07229f57b3d25",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01566-z",
+      "journal": "Nature Catalysis",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41586-026-11009-1",
+      "journal": "Nature",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1039/d6sc05207j",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1002/anie.4933839",
+      "journal": "Angew",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1002/anie.8336123",
+      "journal": "Angew",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41557-026-02238-y",
+      "journal": "Nature Chemistry",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "fbd7138aea96fe97c2d3911a49d309ddbc8a3361eb137cd388837913a8a9157e",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 12,
+      "scientificParagraphs": 24,
+      "scienceCharacters": 26608,
+      "scienceTextBytes": 26751,
+      "captionEvidenceCount": 6,
+      "completenessCandidate": "partial",
+      "canonicalSectionsSha256": "6550ef70faa11d3bbb1a52dcd6d17e12c6b3523d4938c49ac29d0fd3cc3bd933",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction / unheaded main text",
+          "paragraphs": 4,
+          "chars": 5243,
+          "bytes": 5251,
+          "sectionSha256": "e6bfc51b955290a0c7cfcd38b13c0b144995ce8aeddbc125a7220eb00290cc8a"
+        },
+        {
+          "sectionId": "s002",
+          "type": "other",
+          "heading": "Reaction design and optimization",
+          "paragraphs": 3,
+          "chars": 3776,
+          "bytes": 3803,
+          "sectionSha256": "17c36feb5a23dd27ddfcd674de3ab4733175c3fc69eac3ed6311dbda00a5f7c2"
+        },
+        {
+          "sectionId": "s003",
+          "type": "scope",
+          "heading": "Substrate scope",
+          "paragraphs": 5,
+          "chars": 6549,
+          "bytes": 6586,
+          "sectionSha256": "f764a36376bdec8eab569ba1aa85a3109dd70271dd654b1640cbc2b4af56e5c7"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "Product derivatization",
+          "paragraphs": 1,
+          "chars": 1386,
+          "bytes": 1392,
+          "sectionSha256": "f3791b96ff5ea0d7b23603a75f02e329ae79f47903a0db96c1742d0b698b4d11"
+        },
+        {
+          "sectionId": "s005",
+          "type": "other",
+          "heading": "Computational studies",
+          "paragraphs": 4,
+          "chars": 5759,
+          "bytes": 5820,
+          "sectionSha256": "dddf2037ac486b0faa7c40f85f4db272358d08ac1d6cd772889a3b0df2472c66"
+        },
+        {
+          "sectionId": "s006",
+          "type": "conclusion",
+          "heading": "Conclusion",
+          "paragraphs": 1,
+          "chars": 1400,
+          "bytes": 1400,
+          "sectionSha256": "a3c3417dba7ffdc146b2cbdad35229c31c2db584c768c10f2dfc818f7cf0c8dd"
+        },
+        {
+          "sectionId": "s007",
+          "type": "experimental",
+          "heading": "General procedure for intramolecular [2 + 2] cyclization",
+          "paragraphs": 1,
+          "chars": 607,
+          "bytes": 609,
+          "sectionSha256": "c21361503a384857d0986380777d554255806a5f71acabca8fd93d098e2dd148"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Supplementary Material",
+          "paragraphs": 1,
+          "chars": 134,
+          "bytes": 134,
+          "sectionSha256": "80ae54502b0fa41f9c78192b4d3479488080acb1a443ae8d0b25ad0406a6f5bf"
+        },
+        {
+          "sectionId": "s009",
+          "type": "other",
+          "heading": "Acknowledgements",
+          "paragraphs": 1,
+          "chars": 381,
+          "bytes": 381,
+          "sectionSha256": "8d7fd0d8d72d5f4eaef83b32a9ade624dc55e1ed6ff80431abac8db432438a3f"
+        },
+        {
+          "sectionId": "s010",
+          "type": "other",
+          "heading": "Funding",
+          "paragraphs": 1,
+          "chars": 397,
+          "bytes": 399,
+          "sectionSha256": "a780975df35747400d19164d758eced62d1e0975a99ec42ec5a41c02e5da1dcd"
+        },
+        {
+          "sectionId": "s011",
+          "type": "other",
+          "heading": "Data availability",
+          "paragraphs": 1,
+          "chars": 488,
+          "bytes": 488,
+          "sectionSha256": "3d8ae5ac9206adac80ae3433f58c2c43973957f086051f72222f1b1a487fd268"
+        },
+        {
+          "sectionId": "s012",
+          "type": "other",
+          "heading": "Data Availability Statement",
+          "paragraphs": 1,
+          "chars": 488,
+          "bytes": 488,
+          "sectionSha256": "3d8ae5ac9206adac80ae3433f58c2c43973957f086051f72222f1b1a487fd268"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "F1",
+          "chars": 661,
+          "sha256": "f9ec7aca3d1441e7a03e65718691573f630dbe6c924354f8b8b7cc5120774324",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "F2",
+          "chars": 988,
+          "sha256": "b66804c26cf886e7ce234141f54e87bf92f1cb4259e43684a3725fa632233194",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "F3",
+          "chars": 695,
+          "sha256": "de097b136a349b5ee97aa3f2f87889efe80a75cd2881e1a67deedcfc53ede773",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "F4",
+          "chars": 1412,
+          "sha256": "5ec920e577c0ddd49f9fc2212865d596f1503832249eb50e1fd88cc8ac1edbbd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "T1",
+          "chars": 51,
+          "sha256": "210fadcb87f757c508540b2a49c02a9db2db5e2c3bfbe0a5dcc6e95e61b1d050",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "T2",
+          "chars": 51,
+          "sha256": "19a0cdf12e65b9f840a232b06fa58faf85aaf12772143ca9356e7bad77597b21",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02247-x",
+      "journal": "Nature Chemistry",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1002/anie.6933953",
+      "journal": "Angew",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1021/jacs.6c05089",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "681df7cff5fc3f04ca1414b606029ecbfe6636c09a889ccf085a8f1af258ca36",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 12,
+      "scientificParagraphs": 27,
+      "scienceCharacters": 25523,
+      "scienceTextBytes": 25900,
+      "captionEvidenceCount": 13,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "d137232ff5dd82ed15696761130470ce17c8252a161a6a252139f51febd9a565",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 4,
+          "chars": 4760,
+          "bytes": 4850,
+          "sectionSha256": "b1615907aa347fef919a27b3e7de1f8f8d7433cbada6615ee6ddb908ff60def5"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results and Discussion",
+          "paragraphs": 2,
+          "chars": 2281,
+          "bytes": 2303,
+          "sectionSha256": "d3585c4f0a5995e208f635f4217307312d72238f1bafa0a8fb9c58244dbfb689"
+        },
+        {
+          "sectionId": "s003",
+          "type": "scope",
+          "heading": "Aryl Halide Scope",
+          "paragraphs": 4,
+          "chars": 3979,
+          "bytes": 4028,
+          "sectionSha256": "367a207a6974f9bbcb07e7860c9a69e1b41dfcce59a5760954c729b91c14de85"
+        },
+        {
+          "sectionId": "s004",
+          "type": "scope",
+          "heading": "N -Pyridinium Amine Scope",
+          "paragraphs": 3,
+          "chars": 2575,
+          "bytes": 2621,
+          "sectionSha256": "d9f4eaba8b7bfafd88e4a70231ba58d727971ac7a1e049643a36751be7f6ffc7"
+        },
+        {
+          "sectionId": "s005",
+          "type": "other",
+          "heading": "Late-Stage Functionalization",
+          "paragraphs": 1,
+          "chars": 950,
+          "bytes": 955,
+          "sectionSha256": "fc13ba68883ab8dd02796fb3faa57c181788e736ca969d015b8f947833182c0b"
+        },
+        {
+          "sectionId": "s006",
+          "type": "other",
+          "heading": "Build-and-Couple Amine Synthesis",
+          "paragraphs": 1,
+          "chars": 808,
+          "bytes": 822,
+          "sectionSha256": "2cc118bd97e409d7329efc275f60683bae5c6483649c6d9efa020f90bf391743"
+        },
+        {
+          "sectionId": "s007",
+          "type": "other",
+          "heading": "Diamination of Olefins",
+          "paragraphs": 1,
+          "chars": 632,
+          "bytes": 634,
+          "sectionSha256": "23b2fb7901282216b17b923fbcbd45ae1609370d6af605157f9cb424a24d6034"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Step Economic Synthesis",
+          "paragraphs": 1,
+          "chars": 445,
+          "bytes": 459,
+          "sectionSha256": "2546b5b4d30d7bc52498f515a046c039c15f34b9a628fc4237f5e40a81612997"
+        },
+        {
+          "sectionId": "s009",
+          "type": "other",
+          "heading": "C–N XEC with Volatile Amines",
+          "paragraphs": 1,
+          "chars": 793,
+          "bytes": 801,
+          "sectionSha256": "325f85fb4a936a110983cde6250b9dcef896b246f49bdcf8bea63f52306e02b3"
+        },
+        {
+          "sectionId": "s010",
+          "type": "mechanism",
+          "heading": "Reaction Mechanism of C–N XEC",
+          "paragraphs": 6,
+          "chars": 5955,
+          "bytes": 6057,
+          "sectionSha256": "332bbc787ef4232e6bdb462465cf2eda15df3dc6549857bbc3196f2438c7863a"
+        },
+        {
+          "sectionId": "s011",
+          "type": "other",
+          "heading": "Native Amine Functionalization",
+          "paragraphs": 2,
+          "chars": 1393,
+          "bytes": 1401,
+          "sectionSha256": "8d74b5834d4c186fcb88c987766e47081534ce41b04546628676bf34b393cf06"
+        },
+        {
+          "sectionId": "s012",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 952,
+          "bytes": 969,
+          "sectionSha256": "43bebc678702756ea2486f7b92aed5e0a9ab5f0272c883fbb327bb3937e91834"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 763,
+          "sha256": "4ae8e8435beca16ecdb0a3bab257aa5b6144bbdf96b2f1e317cf1c318697e68d",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 718,
+          "sha256": "da34dd71a5481fabfe40a821ce8159a52c5fa192b1f72e270d41354392f3b507",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 223,
+          "sha256": "f8674281790b05cfde003108a5ba5036107e6e8eefdda662176877a2a00c869f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 718,
+          "sha256": "da34dd71a5481fabfe40a821ce8159a52c5fa192b1f72e270d41354392f3b507",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig5",
+          "chars": 738,
+          "sha256": "c9331e11db4d97a323032b9e102fa6ec7ee4c6db9c0da91e2217804bb1555319",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig6",
+          "chars": 1120,
+          "sha256": "d216b6bbea770d7cfd20409620c01778147d61282e698dc9b5dbac806f9e2d12",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig7",
+          "chars": 239,
+          "sha256": "f4de319b0e09b3d40ad05bbd74cc365e3c974218f3231b2c5048f9c5b6e74533",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig8",
+          "chars": 104,
+          "sha256": "6680daad7a4c5fb84579b5b3e8db2f28b586dfdf16a5387912d4b62c22a1bb1f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig9",
+          "chars": 115,
+          "sha256": "3ec4eb304b6acb4c45b6d752d9c96ad60cc0944cc1f5504cbd7e87e0e16fe57f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig10",
+          "chars": 296,
+          "sha256": "67b061fb04f3febee3f92c0bd94b2a700c388de2ed234f65a978ad3252247e25",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig11",
+          "chars": 73,
+          "sha256": "9b144c9e6058b63d96e677f1bfcba4dc1e710df936fe1348b87ba7151c6c75d9",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig12",
+          "chars": 512,
+          "sha256": "fe93dca75f6381fc6e6aac09a7df11b9c62981ce87716e5fda28e288ffd8e57d",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "tbl1",
+          "chars": 23,
+          "sha256": "0e87cb9f8cca6c4987ec19e8407ef661053951a0db2312ed46098e62c68aab1f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1039/d6sc05410b",
+      "journal": "Chemical Science",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "abaf845fdba50520de1594b939988d0e16b5dbc1bf8d143cb03870f027b11ad8",
+      "licenseKindSignal": "cc-by-3.0",
+      "scienceSectionUnits": 14,
+      "scientificParagraphs": 45,
+      "scienceCharacters": 30034,
+      "scienceTextBytes": 30188,
+      "captionEvidenceCount": 19,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "59ba60ebbb63013d82fa272e13780e0f645a65c3667d40ba69b987f098406309",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 9,
+          "chars": 5281,
+          "bytes": 5321,
+          "sectionSha256": "7cbab880252e1b3117153d2619465763e7332fae9568396ded329def3f1f5e34"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results and discussion",
+          "paragraphs": 7,
+          "chars": 4403,
+          "bytes": 4413,
+          "sectionSha256": "a051b21b2578fa2c859b1675b3876e8043e9b7511f35e83caf853851b6f16205"
+        },
+        {
+          "sectionId": "s003",
+          "type": "other",
+          "heading": "Expansion to boronate esters",
+          "paragraphs": 4,
+          "chars": 2898,
+          "bytes": 2900,
+          "sectionSha256": "4756bc33da7abd0dc6321feda964ddd1fe70f62f34a03d35da641da76de5368a"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "Expansion to acyclic enones",
+          "paragraphs": 6,
+          "chars": 4304,
+          "bytes": 4304,
+          "sectionSha256": "84e97125e961d4c1554e8d500cc967cac9100e7b9a82af811929cad30018b27c"
+        },
+        {
+          "sectionId": "s005",
+          "type": "other",
+          "heading": "Expansion to the C2 position of indole",
+          "paragraphs": 1,
+          "chars": 604,
+          "bytes": 606,
+          "sectionSha256": "b4898fe3c8261270f367f6b6d0f17da1248e11fac45fc5cfc7ae81547e5fc22f"
+        },
+        {
+          "sectionId": "s006",
+          "type": "other",
+          "heading": "Expansion to quaternary chiral centers",
+          "paragraphs": 2,
+          "chars": 802,
+          "bytes": 802,
+          "sectionSha256": "706954bb2d372d9e8fdc9f8ec09ee79f8a9d549accb201fbd09575a40bdbf62c"
+        },
+        {
+          "sectionId": "s007",
+          "type": "mechanism",
+          "heading": "Initial mechanistic studies",
+          "paragraphs": 1,
+          "chars": 729,
+          "bytes": 736,
+          "sectionSha256": "518fe9b53c35734840e39acbb3927f8a7db168f162978e0c28ab5b5a242553c3"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Investigation of ligand requirements for cyclic and acyclic enones",
+          "paragraphs": 2,
+          "chars": 853,
+          "bytes": 855,
+          "sectionSha256": "bd1ee543c9186c8e99510d6a8b7554907770efd6db0478fdb5267612f4d5e823"
+        },
+        {
+          "sectionId": "s009",
+          "type": "other",
+          "heading": "DFT studies on the S-ligand with cyclic and acyclic enones",
+          "paragraphs": 2,
+          "chars": 1863,
+          "bytes": 1875,
+          "sectionSha256": "01ad56de555619ce32424e293ff463ad3f02e5da028824fff7d39767fe0b0912"
+        },
+        {
+          "sectionId": "s010",
+          "type": "other",
+          "heading": "DFT studies on use of the S-ligand cyclic enones and BINAP with acyclic enones",
+          "paragraphs": 4,
+          "chars": 2876,
+          "bytes": 2910,
+          "sectionSha256": "2485b4abaeccc6950ad7bdf74201cc48ed62403d45164aabef0dcbe2a33fcbdf"
+        },
+        {
+          "sectionId": "s011",
+          "type": "other",
+          "heading": "The final cyclization step",
+          "paragraphs": 4,
+          "chars": 3960,
+          "bytes": 3999,
+          "sectionSha256": "e2db4a3acb279aedcec28bd79da2edf16d874a5fd73011c2dae49dc602d3fc31"
+        },
+        {
+          "sectionId": "s012",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 982,
+          "bytes": 988,
+          "sectionSha256": "3f2b8f75a39d9541d20f11c2cc842f9641eac907e557b23d587d85f7314c6699"
+        },
+        {
+          "sectionId": "s013",
+          "type": "other",
+          "heading": "Author contributions",
+          "paragraphs": 1,
+          "chars": 391,
+          "bytes": 391,
+          "sectionSha256": "58ed90075ed6137c627e61609b757c508136cefb13fd0da27602d7481af316a4"
+        },
+        {
+          "sectionId": "s014",
+          "type": "other",
+          "heading": "Conflicts of interest",
+          "paragraphs": 1,
+          "chars": 88,
+          "bytes": 88,
+          "sectionSha256": "d7bd38ebbdf4ba78753b31da81076407b002eb803955b9b3c7e7547404603f52"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 45,
+          "sha256": "6f58f6bb23c62a5556d332c98ebf25440d1f0d304dd38eddb3399e8920069761",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 65,
+          "sha256": "20d32a03f5251111a870fd978aed98c938d5aafb23c9a2074318bdd28089b3b4",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch1",
+          "chars": 22,
+          "sha256": "614fefe4b8fb909f03b0b24ac4c72f7d97f47e69cc418148297dfd3b4a5c2b18",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 98,
+          "sha256": "ea35d60a080a10ff7ba104f605a22c1365daedf2d7ed41607b18679d1d794c38",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch2",
+          "chars": 44,
+          "sha256": "dc115dfa9acef943bda2b3105fc3402437b219f3a05d7bb6b67b00349116dc06",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch3",
+          "chars": 110,
+          "sha256": "09a0b33d94ac5429117d8336594d0eec677b7e2196ab7990da85f2ecaa521702",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch4",
+          "chars": 45,
+          "sha256": "1db60e34663509e8c1ff0cad8a513e851dd3e16b82b1e47e90239a2a52062cc5",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch5",
+          "chars": 111,
+          "sha256": "a5a4df4de88b29c6e8327dfb2ad97fe781b3fcb45232365633788ae3a97e7c85",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch6",
+          "chars": 178,
+          "sha256": "3dc66da0a3cfb94f4ba5bacab5396a219ef4e671c61abea212067ec8d7d4890f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch7",
+          "chars": 51,
+          "sha256": "82c73ed2264a0f9d398710fce137b2d301f03c032c946221bcaa3e97f4d46b4e",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch8",
+          "chars": 53,
+          "sha256": "b373d90fa91d650ac930e23d8a1a8e3573f41d7fce41f11d91f4f1e017a1e3cb",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch9",
+          "chars": 76,
+          "sha256": "72c4c4ec2a8e7ed49512dcf00a6fea69de80a01e436303f766b8f93a65c999f5",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch10",
+          "chars": 48,
+          "sha256": "2e401e34be4e3812e6f34c4418aed79a1fce69fd5daaad3464b4bc3aea6fab49",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch11",
+          "chars": 79,
+          "sha256": "96be8f745f58f7cc00e369c46e1d8c6c337f40290965d2cf6c4d0682e3c9ffae",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch12",
+          "chars": 44,
+          "sha256": "3e1fbeda8baf602b944736c84d69533cc5e84db5391e79ef6ca0227c6feaec29",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 345,
+          "sha256": "82ed63197577e37d180e1ca1b7552afef66bef16d504df0b863e66ba279dfa74",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig5",
+          "chars": 328,
+          "sha256": "a4db54ca3666b15ff2803bc0b33e88ffc343f808b94f88d77fed78700ffccedd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch13",
+          "chars": 43,
+          "sha256": "6e0d3e62a492a7b8d5c7be7dc5f8b1133838beaa75c121e8e2ee8ddea3efd30f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig6",
+          "chars": 211,
+          "sha256": "2a7e7d4194f2405e1bba4984267adb61d98ecb5fb964214acf37f40cfa9636b5",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1039/d6sc03931f",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1039/d6sc04627d",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1039/d6sc05170g",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1039/d6sc04861g",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1021/jacs.6c05580",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "78c1aa05dba3ef0765dacad6d89bb2ac6d8ecf9a88db0e6c47a5f1806e11bf9c",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 9,
+      "scientificParagraphs": 36,
+      "scienceCharacters": 37352,
+      "scienceTextBytes": 37543,
+      "captionEvidenceCount": 18,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "b317b5302adc115836284471be1ea7ee3bf5e4535bff596bb0e7e1cbe4b77997",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 5,
+          "chars": 6252,
+          "bytes": 6283,
+          "sectionSha256": "f4f356e7819a7ed79cabe5a82ea668d483e6c862f51fb2b33cf21d9fc495601d"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Retrosynthetic Analysis and Strategic Considerations",
+          "paragraphs": 7,
+          "chars": 6493,
+          "bytes": 6541,
+          "sectionSha256": "be398bac2bd8d3a0f3e0e62dff9e7513911a59b26c2749fe450f8a8c031a2e06"
+        },
+        {
+          "sectionId": "s003",
+          "type": "other",
+          "heading": "The Spiroacetal Fragment",
+          "paragraphs": 6,
+          "chars": 6425,
+          "bytes": 6471,
+          "sectionSha256": "f5e60afb889c256abd492b4f86d543dbfb1a87cf32b9245290c82fab2fc5fd05"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "First Substructure Verification",
+          "paragraphs": 2,
+          "chars": 1063,
+          "bytes": 1069,
+          "sectionSha256": "141ace0011280aded479621180f0473682a672ba59c0e0220bf8fd8cade81389"
+        },
+        {
+          "sectionId": "s005",
+          "type": "other",
+          "heading": "The Central Segment",
+          "paragraphs": 6,
+          "chars": 7452,
+          "bytes": 7481,
+          "sectionSha256": "8300a4759b7af52f1d0fbf7e18cd6915f2d2b81c1e70a93ccfa65b27385d2e16"
+        },
+        {
+          "sectionId": "s006",
+          "type": "other",
+          "heading": "A Massive Alert",
+          "paragraphs": 6,
+          "chars": 4587,
+          "bytes": 4594,
+          "sectionSha256": "df40192a0b3ac659dff6649b379de54c5fbd0c4019b7ddf64af5f560d850854a"
+        },
+        {
+          "sectionId": "s007",
+          "type": "other",
+          "heading": "The Revised Central Fragment",
+          "paragraphs": 2,
+          "chars": 2581,
+          "bytes": 2587,
+          "sectionSha256": "14960619564cb4a9230bb7f651cf797a3e89d2e3f212f990141c8af4aa2d3421"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "A Critical Substructure Authentication",
+          "paragraphs": 1,
+          "chars": 711,
+          "bytes": 721,
+          "sectionSha256": "d0a33b14ba16ce33c34eec900d9ba5d953941acf642df011aca06a24aad96635"
+        },
+        {
+          "sectionId": "s009",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 1788,
+          "bytes": 1796,
+          "sectionSha256": "831b8145980ba3653f75927ec42140e65ce7e63f040abd20a449991b47575ed8"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "sch1",
+          "chars": 28,
+          "sha256": "3f7df6d30ee5f4a86092de3ddbc4a139a7eb6d371d2ed03ba39d54b21e93e787",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch2",
+          "chars": 50,
+          "sha256": "bef6d354452465947c6c992c3c8469818885a8800bca8daffc952ca91ec45043",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch3",
+          "chars": 167,
+          "sha256": "a2c69d0a127a2752dc3138d4713cf2f7efca7a4ca9148ce5bf904361ea59661a",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch4",
+          "chars": 121,
+          "sha256": "a513a0f38e765a8def526aa7a88b4784a0f313b07c1a71d9e64a78d27429e848",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch5",
+          "chars": 828,
+          "sha256": "a175e1e3f36514ed593e0fe4ca5b066e1d30b3b7e6d040c30345d059c2102e40",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 104,
+          "sha256": "9eeb1a2586922214d40f2550ecc2b35a27ef72b97378a6a6ec36a93f2dbb757e",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch6",
+          "chars": 859,
+          "sha256": "4e8ccaaca0d695e2b7a3c971e768bdf9c630a7a3c94544ea92417161d4a1b51f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch7",
+          "chars": 512,
+          "sha256": "ab49a31a240efb37b411ddc47a95a09ad20fb00bf899e0d99e135af4d5ad434e",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch8",
+          "chars": 925,
+          "sha256": "acd34cc83059959dc5a1cd88f5bd76beb82902fb0707d8301fa182542d14a9dc",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch9",
+          "chars": 637,
+          "sha256": "8f97c020205246d88ae8c35915bcd6e7e9836f8dd9659c24fe7df7a60ed799b7",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch10",
+          "chars": 851,
+          "sha256": "4bf01abad1a349be39e81ecf8414d95dce9428e45ee6a67a230b19088f3266ce",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch11",
+          "chars": 207,
+          "sha256": "bfb55030d92613a59fd40f525030b58a90608e92ad00f1fa8dcb0ac937b4f886",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch12",
+          "chars": 220,
+          "sha256": "f2a7707c74946b3dcb0905ea179e91d08ac4a2f35c17225d65379464b4a418b6",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 184,
+          "sha256": "cfc20833ef026292a85b35e46eac1dc33905f485b3c444566a6f437a40f0a1b9",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch13",
+          "chars": 306,
+          "sha256": "fd0bc4016f6f5e5ef247bc4afd5ccaaff3d91138e89c257cd544b3d141733e8c",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 170,
+          "sha256": "05dbe8aed84d172042044e9374fe2daf2b2cdf7dd3f383a7b81996c4b2f2a43e",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch14",
+          "chars": 517,
+          "sha256": "4baf8758b10c040d1be1890c44269c3d4581e5277eeb3794887a740d572cb8bf",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 210,
+          "sha256": "06ada828c7c6db54bb49a10ecc91c404ef6e0794748dfc31a0b1864385edccd6",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09931",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "6dd5f2fc7b545241dd9a398bbe351a58c953493d0fb60a2ded7107e097972229",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 8,
+      "scientificParagraphs": 33,
+      "scienceCharacters": 28012,
+      "scienceTextBytes": 28117,
+      "captionEvidenceCount": 6,
+      "completenessCandidate": "partial",
+      "canonicalSectionsSha256": "6dd6ca11e86c2921b13ddfe0bcc3c66afc895c6b05829a7383cf5782d782153a",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 6,
+          "chars": 5474,
+          "bytes": 5484,
+          "sectionSha256": "45f35c20cb2fb04d4e8875808d89c819f3f8897133075abb366282bf43f717ec"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Retrosynthetic Analysis",
+          "paragraphs": 2,
+          "chars": 1216,
+          "bytes": 1216,
+          "sectionSha256": "70700cb464bcca599c65d3c915942eb891b0283ab4d47da7ec959d3d345da130"
+        },
+        {
+          "sectionId": "s003",
+          "type": "other",
+          "heading": "Synthesis of the Proposed Pre-rhabdobranin B",
+          "paragraphs": 4,
+          "chars": 3195,
+          "bytes": 3207,
+          "sectionSha256": "343b8e8bd607b5f6372ba0d56b2b2d4f145c3327c1e9ea7378de6b5e83b3012b"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "Stereochemical Reassignment of (pre)­rhabdobranin",
+          "paragraphs": 7,
+          "chars": 5020,
+          "bytes": 5044,
+          "sectionSha256": "4007e461ad76c4cf7edef130eb416a4306580e7caeb65167f0e5ebf17de4d093"
+        },
+        {
+          "sectionId": "s005",
+          "type": "mechanism",
+          "heading": "A Secondary Resistance Mechanism",
+          "paragraphs": 2,
+          "chars": 1464,
+          "bytes": 1467,
+          "sectionSha256": "e5086a5aac6454fef4e37ceef72683856cf5ce2c41bfb37dbd4aeff2e2104455"
+        },
+        {
+          "sectionId": "s006",
+          "type": "other",
+          "heading": "Bioactivity Analysis",
+          "paragraphs": 4,
+          "chars": 5676,
+          "bytes": 5717,
+          "sectionSha256": "0cb999f8c9f04f06dc23ccf6d0b326453bdf615e4610fd80bd5513d20b2a72ad"
+        },
+        {
+          "sectionId": "s007",
+          "type": "other",
+          "heading": "Rhabdobranin Inhibits Protein Biosynthesis",
+          "paragraphs": 3,
+          "chars": 2102,
+          "bytes": 2105,
+          "sectionSha256": "b314b36b5316cc7fd61663d11561cf3986aeaf0fbb5db7aba6651685202c50cd"
+        },
+        {
+          "sectionId": "s008",
+          "type": "results",
+          "heading": "Discussion & Conclusions",
+          "paragraphs": 5,
+          "chars": 3865,
+          "bytes": 3877,
+          "sectionSha256": "586c17499d55ebe144afa45811e6afe4fdf070219d24d49b65b77892324a47cf"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 1035,
+          "sha256": "23e5914dd0f1e7533e27e2697b9201d101ede51140bb417d029451cf31e52e37",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch1",
+          "chars": 75,
+          "sha256": "4a7087be8187a5780cb61725a7fa3d3e8678e1bb3da1b1dba015129f09b84621",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch2",
+          "chars": 57,
+          "sha256": "86f160d61396d170f63fb1377e369e4d548af8d5edac0f0a2a00a33e8a6b720a",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 464,
+          "sha256": "6b1dce3c0b6371bef0ca670346c7034aee5c4eb039a3b7ec16734cc2d2b24878",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 39,
+          "sha256": "771c5097ff0c8cb1b7699ae0e0bda7ba87d42fcdad0609fa7fb31f8012412dcd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 2378,
+          "sha256": "1521739e0517a1a60867af83b26c10d3200cf5146ca5871813a9c7a948427cc7",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05583",
+      "journal": "JACS",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c11571",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "729f620638680211f6b11b6a27a25b04718b90074bf6eec35c83753da92a0f6c",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 6,
+      "scientificParagraphs": 18,
+      "scienceCharacters": 28400,
+      "scienceTextBytes": 28498,
+      "captionEvidenceCount": 8,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "802426e2d063a6b6945f4f3035e2d1ebd84a12fb17cabeb788553364f324e8af",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 4,
+          "chars": 4365,
+          "bytes": 4365,
+          "sectionSha256": "4f6f96008a58ac698e08c46921ac5f91a4197e404bb49775a5af732b7f10e5a9"
+        },
+        {
+          "sectionId": "s002",
+          "type": "other",
+          "heading": "Condition A",
+          "paragraphs": 1,
+          "chars": 1101,
+          "bytes": 1103,
+          "sectionSha256": "73f4db428f26ef0a7a6a08170aed118464bb3791f71b9ddcc59948e235d664c5"
+        },
+        {
+          "sectionId": "s003",
+          "type": "other",
+          "heading": "Condition B",
+          "paragraphs": 1,
+          "chars": 1105,
+          "bytes": 1109,
+          "sectionSha256": "965fb3cac93542d2ed58675e8dc7b2612b752fbf98b2591905708d6d134988a7"
+        },
+        {
+          "sectionId": "s004",
+          "type": "results",
+          "heading": "Results and Discussion",
+          "paragraphs": 7,
+          "chars": 15411,
+          "bytes": 15479,
+          "sectionSha256": "c95ba590a64dcee2afd1938c356855495786b0ff2e45674eb584f55f17e154f3"
+        },
+        {
+          "sectionId": "s005",
+          "type": "results",
+          "heading": "Results and Discussion",
+          "paragraphs": 4,
+          "chars": 5466,
+          "bytes": 5490,
+          "sectionSha256": "98e2f5d336d79793f7413562e7a9437f7b6e1405e2173e3cb1a4620f81bfa296"
+        },
+        {
+          "sectionId": "s006",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 952,
+          "bytes": 952,
+          "sectionSha256": "5b69dbdb2430a48582030bcf44656c5afbd5d80e8dde711f33d873845c4e566e"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 103,
+          "sha256": "f8fc1bd440d1d49a95a882f3b844ee041bbf5bdc5959770744e22b27cfc2a7b2",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 532,
+          "sha256": "62c114681c67c753ce6f11050808e7c21809cdf957559593300a0d1867247393",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 23,
+          "sha256": "7326a870fd3d7673149281e1dc5b216ac1593f4685d064daf4da9d295ccc7ab6",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 27,
+          "sha256": "8691b16440a26c2496016c9779717eadb629cdf071a07b0e06761cb6ef6b69c4",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig5",
+          "chars": 19,
+          "sha256": "bfdee6f82bd60c837c6e089a0a6f43d0a150183d3474a7793be68ae0249c55fd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "tbl1",
+          "chars": 69,
+          "sha256": "b880eba56c335803b2000ff02e04498088172f5170ba0292e37d74c4b1d3e8bd",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "tbl2",
+          "chars": 75,
+          "sha256": "4cc5e7a78ef4d57dfd6af875977f7d366e851dad346bb64aa3cd93fd73ddaf59",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "tbl3",
+          "chars": 73,
+          "sha256": "95aba2d49e9419a75720000c604a6b6aa4d9fd885aa2bd67bb30a859fd592a70",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1039/d6sc06200h",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41929-026-01600-0",
+      "journal": "Nature Catalysis",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "6043393b9aebc198b01b6d0dc68ef1652fcb318151c1f17fc6bb0b9497b89092",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 8,
+      "scientificParagraphs": 16,
+      "scienceCharacters": 44517,
+      "scienceTextBytes": 44741,
+      "captionEvidenceCount": 7,
+      "completenessCandidate": "partial",
+      "canonicalSectionsSha256": "25bc1046a43a9655d6d54022ac529af97d884f18038b8715fbfaec1617a16d22",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "other",
+          "heading": "Main",
+          "paragraphs": 8,
+          "chars": 12340,
+          "bytes": 12380,
+          "sectionSha256": "8320499d776540586ecb7ee5bcdca441f6468f6ca1097f1315ef9aff5f56d775"
+        },
+        {
+          "sectionId": "s002",
+          "type": "other",
+          "heading": "Establishing conditions for anti-Markovnikov hydroalkylation",
+          "paragraphs": 1,
+          "chars": 4085,
+          "bytes": 4122,
+          "sectionSha256": "c7686d14930a18469a61494797fb72cef9f66c481fe0d32a37b2d21547da9016"
+        },
+        {
+          "sectionId": "s003",
+          "type": "scope",
+          "heading": "Scope and diversification of a nti -Markovnikov hydroalkylation",
+          "paragraphs": 2,
+          "chars": 11042,
+          "bytes": 11099,
+          "sectionSha256": "58b6f914da734c9dd0b78c02a918bac5f1a4526fbf3d297b97e57e8020307b98"
+        },
+        {
+          "sectionId": "s004",
+          "type": "scope",
+          "heading": "Scope and diversification of a nti -Markovnikov hydroalkylation",
+          "paragraphs": 1,
+          "chars": 6842,
+          "bytes": 6896,
+          "sectionSha256": "2fe477c0ecf5f04ae1d60da26ac2f8a73ee1b14c9ff0b51c5691340b5a40df11"
+        },
+        {
+          "sectionId": "s005",
+          "type": "mechanism",
+          "heading": "Mechanistic basis of anti-Markovnikov hydroalkylation",
+          "paragraphs": 1,
+          "chars": 8251,
+          "bytes": 8279,
+          "sectionSha256": "83be73bfc033580af73c6ccc58fcc21fd84f998b8c09af2c5182b8fec2c77cdb"
+        },
+        {
+          "sectionId": "s006",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 874,
+          "bytes": 874,
+          "sectionSha256": "e0e77dd05b60448f1a3ad3d1cfea6c4911de43243608189b9a4efad520f5461b"
+        },
+        {
+          "sectionId": "s007",
+          "type": "experimental",
+          "heading": "Methods",
+          "paragraphs": 1,
+          "chars": 994,
+          "bytes": 998,
+          "sectionSha256": "655837333675a03de34cdab7ea9cfc93534bad475cd3c23300602cff665abb73"
+        },
+        {
+          "sectionId": "s008",
+          "type": "other",
+          "heading": "Supplementary information",
+          "paragraphs": 1,
+          "chars": 89,
+          "bytes": 93,
+          "sectionSha256": "d44b77547b37d0bbe099430fdf16319b889e23de07ad83cfa3d345a49efb3fcb"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig1",
+          "chars": 505,
+          "sha256": "48dedab57c04686d00d86ce9b88750dee04a27cdd8575e2e7ed54c01680f56d1",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig2",
+          "chars": 1178,
+          "sha256": "6a6d45a26bbdbc58fc8674d4ec8f6d8d8955c3b2d16b6956ea1bbfdbfcde6334",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig3",
+          "chars": 1603,
+          "sha256": "3c4f524ffbfe9196a06549cb05729aa0a9a3653dbd503867f1c3670f73e47480",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "Fig4",
+          "chars": 532,
+          "sha256": "a6524db632cb8f9cd6c6fe1848e0dcfbfec7878ea2aff1d68296db3c6c52d0c1",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab1",
+          "chars": 81,
+          "sha256": "ea256eabb6d7a353727a9f85c328a62f45cef8a210d45ca1c278d3f6814fa871",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab2",
+          "chars": 86,
+          "sha256": "6cfb74c865764f594698334dcb84ac0c8fed8c563f0d1368c62ac2a7b535ffd0",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "Tab3",
+          "chars": 54,
+          "sha256": "4a737eadd9285e0e5f62497f2845ddb4ad0417e32ce12cbea605c27f6706f2ef",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10799",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "a6b81efa02f16ac0e36a8a1837e1bfc2c7b3b7ed7afae873651cf9de9e930716",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 5,
+      "scientificParagraphs": 12,
+      "scienceCharacters": 20921,
+      "scienceTextBytes": 21029,
+      "captionEvidenceCount": 5,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "92d4343046c860d677fafb9dd8021052d68bad06d3f7bbbf47d92123c5efa6c3",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 2,
+          "chars": 5186,
+          "bytes": 5214,
+          "sectionSha256": "23ed523004d7acf82f92635a7a38d818c2445a8672bea3503084661358a55f56"
+        },
+        {
+          "sectionId": "s002",
+          "type": "scope",
+          "heading": "Reaction Design, Development, and Scope",
+          "paragraphs": 4,
+          "chars": 7124,
+          "bytes": 7165,
+          "sectionSha256": "69441655ae284920a222d2eb39127776c0ad26c28c4d4cf462f91d19540a079d"
+        },
+        {
+          "sectionId": "s003",
+          "type": "results",
+          "heading": "Synthetic Applications",
+          "paragraphs": 3,
+          "chars": 4584,
+          "bytes": 4611,
+          "sectionSha256": "6810f566ddb03ddf7faaa703f27e1e070d5e237121634bb0e774ca53195567ff"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "Case Examples on Applicability for Fast Diversification in Drug Discovery",
+          "paragraphs": 2,
+          "chars": 3067,
+          "bytes": 3077,
+          "sectionSha256": "6a0f8dd3ff96e6a7315b3784c909451ea5c8389ee6b8da8ccd84b8a14805e13a"
+        },
+        {
+          "sectionId": "s005",
+          "type": "conclusion",
+          "heading": "Conclusions",
+          "paragraphs": 1,
+          "chars": 960,
+          "bytes": 962,
+          "sectionSha256": "5a901af9e8d54b58b431a2b29d594510953130056ad0acac6ad65697f090b3b7"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 448,
+          "sha256": "3a8f3211c858b1168af40b117e2ad9c96af1e151ef3a792c8f71a8a2d2f5e981",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig2",
+          "chars": 157,
+          "sha256": "69b672e60f1f3a14bd36081b355769f1141ede47ee0c193a1bc617262c58df67",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig3",
+          "chars": 254,
+          "sha256": "0d38f94d7226726246c841266476b005bedaad215981fcb9a00fb6ecb45f1cfe",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig4",
+          "chars": 131,
+          "sha256": "238ca4dd0a43a87247f8db094b42138774e1987c8fd6b83ee2aedfa35aea56ee",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "fig5",
+          "chars": 134,
+          "sha256": "496b8df7a3d5999559b779da9fe0cff7d46ccb6b63c30e429a1961a231e92848",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1039/d6sc04572c",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1039/d6sc05589c",
+      "journal": "Chemical Science",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1002/anie.9599258",
+      "journal": "Angew",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1002/anie.1537547",
+      "journal": "Angew",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "4283d5317a0017cf4243b18efdf4e932d191b8649f029a2d433a7313d6edfe71",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 4,
+      "scientificParagraphs": 18,
+      "scienceCharacters": 18571,
+      "scienceTextBytes": 18590,
+      "captionEvidenceCount": 0,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "5a6b167066fa4bdbd7332a66a3054561186d94d2e1e3b3f7746024c9b65fed7e",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 6,
+          "chars": 6695,
+          "bytes": 6697,
+          "sectionSha256": "201a56a1af6c70a7691addfe0b8be92adbdc1a6fe6aaefbb8e9c46295bf4ba7e"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results and Discussion",
+          "paragraphs": 9,
+          "chars": 9906,
+          "bytes": 9919,
+          "sectionSha256": "2e5e1505ffecd0c08338042bde27f27768974659d5bb7d9f695047feb6602343"
+        },
+        {
+          "sectionId": "s003",
+          "type": "conclusion",
+          "heading": "Conclusion",
+          "paragraphs": 2,
+          "chars": 1878,
+          "bytes": 1882,
+          "sectionSha256": "f56c8a44701249f8eb41d89889e717899ca8db734ee9cefc0330336f137182d2"
+        },
+        {
+          "sectionId": "s004",
+          "type": "other",
+          "heading": "Supplementary Material",
+          "paragraphs": 1,
+          "chars": 92,
+          "bytes": 92,
+          "sectionSha256": "85d3f32215eaf18d283953b7a639ae5b582d8e3209eab772d18cd1c96caf20a4"
+        }
+      ],
+      "captions": [],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1021/jacs.6c12509",
+      "journal": "JACS",
+      "state": "science_sections_mapped_pending_independent_review",
+      "source": "Europe PMC official CC BY JATS",
+      "xmlSha256": "7cc5fc32e5eadb33dd15691589029936ba76a5cefa1f29be2ffc7e4daaf71471",
+      "licenseKindSignal": "cc-by-4.0",
+      "scienceSectionUnits": 3,
+      "scientificParagraphs": 13,
+      "scienceCharacters": 21145,
+      "scienceTextBytes": 21293,
+      "captionEvidenceCount": 5,
+      "completenessCandidate": "complete_candidate",
+      "canonicalSectionsSha256": "e0a9e0cdcf66d6d4cf642426d385f1743ee4327a0e578540da466b95b491cc22",
+      "sections": [
+        {
+          "sectionId": "s001",
+          "type": "introduction",
+          "heading": "Introduction",
+          "paragraphs": 4,
+          "chars": 4576,
+          "bytes": 4624,
+          "sectionSha256": "cefbe24fbe36a05622634a67431935f19b20d3a06755d94aff25b4007d374ccf"
+        },
+        {
+          "sectionId": "s002",
+          "type": "results",
+          "heading": "Results and Discussion",
+          "paragraphs": 8,
+          "chars": 15231,
+          "bytes": 15317,
+          "sectionSha256": "1e3d8dd005483d8d8d9f94570ac673c57663fde7f828a2a2810a58500a43f1ac"
+        },
+        {
+          "sectionId": "s003",
+          "type": "conclusion",
+          "heading": "Conclusion",
+          "paragraphs": 1,
+          "chars": 1338,
+          "bytes": 1352,
+          "sectionSha256": "f937899f5a5e3808197019614d452f283eea244d183ed1c60e454424abb33a6f"
+        }
+      ],
+      "captions": [
+        {
+          "sourceType": "fig",
+          "sourceId": "fig1",
+          "chars": 126,
+          "sha256": "398c19d21bf69233633f9d98432d5191836e410f8321140fcbfd68670bf57846",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch1",
+          "chars": 85,
+          "sha256": "5aa19ad55e21765301edfa3835f889ab25752d6aaa1d4eabc0ca8f7fbf4c1eb2",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch2",
+          "chars": 81,
+          "sha256": "a25d5543e6782774f05f87478600e0e4a7c55cd8275a426c6345d51b57754683",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "fig",
+          "sourceId": "sch3",
+          "chars": 78,
+          "sha256": "f0797551b4589e8e34574452dde912f718b5387dbe4ed70896cfa744dab6108d",
+          "mediaCreditReview": "pending_separate_asset_review"
+        },
+        {
+          "sourceType": "table-wrap",
+          "sourceId": "tbl1",
+          "chars": 53,
+          "sha256": "c369d26a4e3fce6c78002c7630e038cdae5e40ef17662b03f5678976c163705f",
+          "mediaCreditReview": "pending_separate_asset_review"
+        }
+      ],
+      "publicFtsImported": false,
+      "publicUploadAllowed": false,
+      "originalXmlPersisted": false,
+      "articleTextPersisted": false,
+      "siOrPdfDownloaded": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76124-z",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1126/sciadv.aeg4594",
+      "journal": "Science Advances",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-76238-4",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-76282-0",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-76749-0",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-76150-x",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1038/s41467-026-75992-9",
+      "journal": "Nature Communications",
+      "state": "section_under_minimum_character_count"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01513",
+      "journal": "Organic Letters",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02331",
+      "journal": "Organic Letters",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03173",
+      "journal": "Organic Letters",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03304",
+      "journal": "Organic Letters",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c08262",
+      "journal": "JACS",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c08353",
+      "journal": "JACS",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c10840",
+      "journal": "JACS",
+      "state": "science_content_missing_or_abstract_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c12593",
+      "journal": "JACS",
+      "state": "science_content_missing_or_abstract_only"
+    }
+  ],
+  "rawXmlPersisted": 0,
+  "publicFtsImported": 0,
+  "noArticleTextSaved": true,
+  "completeSourceAudit": true
+}
