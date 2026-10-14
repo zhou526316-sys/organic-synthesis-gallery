@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261014-0846-527-completed-publisher-no-response",
-  "requestedAt": "2026-10-14T00:46:00Z",
+  "requestId": "20261014-1521-license-pending-fast-close-evidence",
+  "requestedAt": "2026-10-14T15:21:00+08:00",
   "mode": "read_only",
   "scope": "recent_200_metadata_events_only",
-  "purpose": "Read only newest 200 sanitized attempts after user's completed 527/527 batch and separate publisher handler no-response from license or HTTP denied",
+  "purpose": "Diagnose owner-reported most publisher article tabs automatically closing immediately with license_not_verified. Aggregate latest 200 non-prose diagnostic events by version, publisher, stage, reason and real HTTP status; do not modify browser, publisher, media or FTS production data.",
   "noSourceContent": true,
   "noPublisherAccess": true,
   "noWrites": true
