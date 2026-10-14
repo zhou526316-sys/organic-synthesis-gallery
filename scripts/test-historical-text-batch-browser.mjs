@@ -186,7 +186,7 @@ try{
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
     &&window.__gm['gallery-historical-text-batch-v2:state']?.source==='europe_pmc_oa',
     null,{timeout:18000});
-  const oaReport=await page.evaluate(async()=>{
+  const oaReport=await page.evaluate(async(sourceRunsBefore)=>{
     const db=await new Promise((resolve,reject)=>{
       const req=indexedDB.open('gallery-historical-text-local-v2',2);
       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
@@ -201,7 +201,7 @@ try{
       newPacket:records[0]?.packet,attempt:records[1],
       requests:window.__requests.slice(sourceRunsBefore),
       publisherTabs:window.__opened.length};
-  });
+  },sourceRunsBefore);
   assert.equal(oaReport.state.attempted,1,'only the unsaved October DOI is scanned');
   assert.equal(oaReport.state.saved,1);
   assert.equal(oaReport.publisherTabs,2,'OA path must never open new publisher tabs');
