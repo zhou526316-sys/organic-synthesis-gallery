@@ -388,18 +388,6 @@
   ],
   "attempts": [
     {
-      "id": "2026-07-22_2026-07-31_joc",
-      "journal": "JOC",
-      "range": {
-        "from": "2026-07-22",
-        "to": "2026-07-31"
-      },
-      "status": "source_enumeration_complete",
-      "count": 50,
-      "errors": [],
-      "at": "2026-10-12T05:32:20.771Z"
-    },
-    {
       "id": "2026-07-15_2026-07-21_jacs",
       "journal": "JACS",
       "range": {
@@ -4270,14 +4258,30 @@
         "openalex:http_504"
       ],
       "at": "2026-10-13T20:29:12.465Z"
+    },
+    {
+      "id": "2025-07-01_2025-07-31_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "attemptKind": "chronological",
+      "status": "incomplete_sources",
+      "count": 1029,
+      "errors": [
+        "issn_2041-1723:publication:crossref:truncated_or_inconsistent",
+        "openalex:http_401"
+      ],
+      "at": "2026-10-14T19:07:53.169Z"
     }
   ],
-  "publishedMembershipSnapshot": 984,
+  "publishedMembershipSnapshot": 1087,
   "lastRun": {
-    "processed": 5,
+    "processed": 1,
     "blocked": true,
     "deferredBudget": false,
-    "requests": 31,
+    "requests": 12,
     "skippedBeforeFoundingWindows": 0,
     "next": {
       "range": {
@@ -4286,7 +4290,7 @@
       },
       "journalIndex": 7
     },
-    "verifiedPublishedDois": 984,
+    "verifiedPublishedDois": 1087,
     "completeWindows": 375,
     "activeSplit": null,
     "rscCreatedRecheck": {
@@ -4298,8 +4302,8 @@
     "noPdf": true
   },
   "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch.",
-  "lastRunStarted": "2026-10-13T20:28:50.811Z",
-  "lastRunFinished": "2026-10-13T20:29:12.478Z",
+  "lastRunStarted": "2026-10-14T19:07:46.522Z",
+  "lastRunFinished": "2026-10-14T19:07:53.188Z",
   "rscCreatedRescue": {
     "version": "rsc-created-date-rescue-20261012-v1",
     "pending": [],
