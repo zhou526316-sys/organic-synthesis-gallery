@@ -8,6 +8,10 @@ on:
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
       - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
+      - 'audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json'
+      - 'scripts/test-historical-publisher-early-issues.mjs'
+      - 'scripts/verify-historical-publisher-early-issues.mjs'
+      - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-07-08-research.json'
       - '.github/workflows/historical-q3-regression.yml'
       - '.github/workflows/historical-triage-bootstrap.yml'
       - 'docs/historical-2026-q3-catchup-contract.md'
@@ -19,6 +23,10 @@ on:
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
       - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
+      - 'audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json'
+      - 'scripts/test-historical-publisher-early-issues.mjs'
+      - 'scripts/verify-historical-publisher-early-issues.mjs'
+      - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-07-08-research.json'
       - '.github/workflows/historical-q3-regression.yml'
 permissions:
   contents: read
@@ -42,6 +50,9 @@ jobs:
           node --check scripts/verify-historical-publisher-issues.mjs
           node --test scripts/test-historical-publisher-issue-receipts.mjs
           node scripts/verify-historical-publisher-issues.mjs
+          node --check scripts/verify-historical-publisher-early-issues.mjs
+          node --test scripts/test-historical-publisher-early-issues.mjs
+          node scripts/verify-historical-publisher-early-issues.mjs
       - name: Enforce no Cloudflare D1 access, no auto-include, no off-slot publication
         run: |
           grep -F "q3_staging_only_guard" scripts/historical-q3-reconciliation.mjs

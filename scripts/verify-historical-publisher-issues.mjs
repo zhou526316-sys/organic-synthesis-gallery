@@ -74,6 +74,75 @@ export function verifyResearchIssueReceipt(receipt){
     publisherIssueScopeComplete:true,fullQ3PeriodComplete:false,
     perArticleDatesFullyIndependentlyVerified:false};
 }
+export function verifyCatalysisIssueResearchReceipt(packet){
+  ensure(packet?.schemaVersion==='gallery-publisher-research-issue-receipt-v1'
+    &&packet.journal==='Nature Catalysis'&&packet.issn==='2520-1158'
+    &&packet.journalVolume===9&&packet.journalIssue===9
+    &&packet.issueMonth==='2026-09'
+    &&packet.issueUrl==='https://www.nature.com/natcatal/volumes/9/issues/9'
+    &&packet.sectionName==='Research'
+    &&packet.sourceTier==='official_Nature_Catalysis_complete_Research_issue_TOChref_and_Published_labels',
+    'natcatal_authority');
+  const snapshot=packet.formalSnapshot,academic=packet.historicalAcademicSnapshot;
+  ensure(snapshot?.source==='public/toc-demand-live.json'
+    &&/^[a-f0-9]{40}$/.test(snapshot.sha||'')
+    &&snapshot.dois===1087&&snapshot.mode==='GitHub_main_frozen_read_only_no_D1'
+    &&academic?.source==='audit/historical-reviewed/approved-admissions.json'
+    &&/^[a-f0-9]{40}$/.test(academic.sha||'')
+    &&academic.include===101&&academic.pending===2,
+    'natcatal_current_snapshot');
+  const g=packet.guards||{};
+  ensure(g.notGlobalQuarterPublisherComplete&&g.notPublicationAuthority
+    &&g.neverTreatIssueMonthAsDate&&g.doNotAutoApproveOrExcludeFromIssue
+    &&g.doNotAlterMainLiterature&&g.zeroProductionD1
+    &&g.noMediaPdfBodySiAcquisition&&g.noNewTodayHotWechat,
+    'natcatal_release_guards');
+  ensure(Array.isArray(packet.articles)&&packet.articles.length===10
+    &&packet.officialResearchEntryCount===10,'natcatal_Research_size');
+  const ids=new Set();let listedQ3=0,formal=0,absent=0,priorApproved=0;
+  for(const [i,row] of packet.articles.entries()){
+    const doi=String(row?.doi||'').toLowerCase();
+    ensure(/^10\.1038\/s41929-026-\d{5}-[0-9a-z]$/.test(doi)
+      &&doi===row.doi&&!ids.has(doi)
+      &&row.issueResearchOrder===i+1
+      &&row.publisherArticleType==='Article'
+      &&row.publisherArticleUrl==='https://www.nature.com/articles/'+doi.split('/')[1]
+      &&row.academicScopeDecision==='not_made_by_issue_enumeration'
+      &&row.flags?.yearMonthOfIssueMustNotReplaceArticleDate===true
+      &&row.flags?.noMediaOrPdfFetch===true
+      &&typeof row.title==='string'&&row.title.length>=22,
+      'natcatal_DOI_or_Article:'+doi);
+    ids.add(doi);
+    const date=row.publisherIssueListedDate;
+    ensure(parseDate(date)&&/^2026-(07|08|09)-\d\d$/.test(date),
+      'natcatal_date_not_Q3:'+doi);
+    listedQ3++;
+    if(row.formalCatalogReadback?.present===true){
+      formal++;
+      ensure(row.formalCatalogReadback.storedDate===date,
+        'natcatal_formal_date_mismatch:'+doi);
+    }else{
+      absent++;
+      ensure(row.formalCatalogReadback?.present===false
+        &&row.formalCatalogReadback?.storedDate===null,
+        'natcatal_absent_not_verified:'+doi);
+    }
+    if(row.historicalAcademicManifest?.acceptedPreviously===true)priorApproved++;
+    else ensure(row.historicalAcademicManifest?.acceptedPreviously===false,
+      'natcatal_accepted_status_unknown:'+doi);
+  }
+  const c=packet.counters||{};
+  ensure(listedQ3===10&&formal===3&&absent===7&&priorApproved===0
+    &&c.publisherResearchArticles===10&&c.articleDatesQ3===listedQ3
+    &&c.alreadyFormal===formal&&c.notFormal===absent
+    &&c.previouslyHistoricallyApproved===0
+    &&c.scopeEligibleAmongNotFormal==='unknown_requires_article_by_article_review',
+    'natcatal_counts');
+  return {originalResearch:10,Q3IssueListed:10,formal3:3,
+    missingFormal7:7,academicEligibleAmongUnpublished:'unknown',
+    fullQuarterPublisherComplete:false};
+}
+
 export function verifySavedReceipt(path='audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'){
   const packet=JSON.parse(readFileSync(path,'utf8'));
   return verifyResearchIssueReceipt(packet);
