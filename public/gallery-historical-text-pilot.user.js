@@ -708,6 +708,12 @@
         if(!/\bthis article is licensed under a creative commons\b/i.test(text))return;
         const urls=text.match(/https?:\/\/creativecommons\.org\/(?:licenses\/[\w.-]+(?:\/[\w.-]+)*|publicdomain\/zero\/1\.0)\/?/ig)||[];
         candidates.push(...urls);
+        // The current article's own legal section can state the complete
+        // attribution licence in text, without a clickable CC URL.
+        if(!/\b(?:non.?commercial|no.?derivatives|by-nc|by-nd)\b/i.test(text)){
+          const exact=/\bThis article is licensed under a Creative Commons Attribution (3\.0|4\.0) International License\b/i.exec(text);
+          if(exact)candidates.push('https://creativecommons.org/licenses/by/'+exact[1]+'/');
+        }
       });
       // ACS may display a DOI-specific CC BY copyright notice as visible
       // article metadata without a rel=license link or license URL.
