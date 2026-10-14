@@ -234,8 +234,10 @@
     }
   ],
   "formalSnapshot": {
-    "sha": "433d7e710d9035a7cd26175d4e835dfb7359c760",
-    "dois": 984
+    "source": "public/toc-demand-live.json",
+    "sha": "a231a898894a788d1cca7476ed289163c85c6c1a",
+    "dois": 1091,
+    "mode": "GitHub_main_frozen_read_only_no_D1"
   },
   "counters": {
     "publisherResearchArticles": 10,
@@ -254,5 +256,13 @@
     "zeroProductionD1": true,
     "noMediaPdfBodySiAcquisition": true,
     "noNewTodayHotWechat": true
-  }
+  },
+  "historicalAcademicSnapshot": {
+    "source": "audit/historical-reviewed/approved-admissions.json",
+    "sha": "16b09c9a2f77014b71a9c51cae508228cbfc80c2",
+    "include": 101,
+    "pending": 2
+  },
+  "reconciledAt": "2026-10-14T01:25:00Z",
+  "reconciliationExplanation": "Formal catalog 984→1091 and historical academic approvals 91→101; all ten Sep-issue DOI rechecked, with 3 exact formal date matches, 7 absent and no historical academic approval. The latter seven have NOT been scientifically adjudicated by issue enumeration."
 }

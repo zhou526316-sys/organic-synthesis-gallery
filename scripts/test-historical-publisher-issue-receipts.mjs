@@ -59,6 +59,8 @@ test('Nature Catalysis Sep issue official Research has 10 Article DOI, 3 formal 
     academicEligibleAmongUnpublished:'unknown',fullQuarterPublisherComplete:false
   });
   assert.equal(catalysis.articles.length,10);
+  assert.equal(catalysis.formalSnapshot.dois,1091);
+  assert.equal(catalysis.historicalAcademicSnapshot.include,101);
   assert.equal(new Set(catalysis.articles.map(x=>x.doi)).size,10);
   assert.deepEqual(catalysis.articles.filter(x=>x.formalCatalogReadback.present).map(x=>x.doi),[
     '10.1038/s41929-026-01578-9','10.1038/s41929-026-01579-8','10.1038/s41929-026-01600-0'
@@ -90,4 +92,13 @@ test('publisher issue research receipt cannot be used to auto-include/exclude el
   assert.ok(alreadyFormal?.formalCatalogReadback.present,'fixture must target an already formal DOI');
   alreadyFormal.formalCatalogReadback.storedDate='2026-07-14';
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(g),/natcatal_formal_date_mismatch/);
+});
+
+test('Nature Catalysis Sep historical issue census freezes readback against the 2026-10-14 main snapshot',()=>{
+  const a=cloneCatalysis();a.formalSnapshot.dois=984;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(a),/natcatal_current_snapshot/);
+  const b=cloneCatalysis();b.historicalAcademicSnapshot.include=91;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(b),/natcatal_current_snapshot/);
+  const c=cloneCatalysis();c.articles[5].formalCatalogReadback.present=true;
+  assert.throws(()=>verifyCatalysisIssueResearchReceipt(c),/natcatal_formal_date_mismatch|natcatal_counts/);
 });

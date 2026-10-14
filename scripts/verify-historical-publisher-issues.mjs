@@ -83,6 +83,14 @@ export function verifyCatalysisIssueResearchReceipt(packet){
     &&packet.sectionName==='Research'
     &&packet.sourceTier==='official_Nature_Catalysis_complete_Research_issue_TOChref_and_Published_labels',
     'natcatal_authority');
+  const snapshot=packet.formalSnapshot,academic=packet.historicalAcademicSnapshot;
+  ensure(snapshot?.source==='public/toc-demand-live.json'
+    &&/^[a-f0-9]{40}$/.test(snapshot.sha||'')
+    &&snapshot.dois===1091&&snapshot.mode==='GitHub_main_frozen_read_only_no_D1'
+    &&academic?.source==='audit/historical-reviewed/approved-admissions.json'
+    &&/^[a-f0-9]{40}$/.test(academic.sha||'')
+    &&academic.include===101&&academic.pending===2,
+    'natcatal_current_snapshot');
   const g=packet.guards||{};
   ensure(g.notGlobalQuarterPublisherComplete&&g.notPublicationAuthority
     &&g.neverTreatIssueMonthAsDate&&g.doNotAutoApproveOrExcludeFromIssue
