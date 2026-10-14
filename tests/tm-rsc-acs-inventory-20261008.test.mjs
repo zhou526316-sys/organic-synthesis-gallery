@@ -73,7 +73,9 @@ test('RSC Silverchair recovery reads only genuine publisher issue/search HTML an
  assert.equal((await ctx.run(job,[],url)).length,0);assert.equal(events.at(-1).event,'access_denied');
  ctx.gmRequest=async()=>({status:200,responseText:'<!doctype html><html></html>',finalUrl:'https://other.example/en/results'});
  assert.equal((await ctx.run(job,[],url)).length,0);assert.equal(events.at(-1).event,'redirect_rejected');
- assert.ok(src.includes("if(job.publisher==='rsc' && rscSilverchairArticleForJob(job,location.href))"));
+ assert.ok(src.includes("if(job.publisher==='rsc'){"));
+ assert.ok(src.includes("rscPublisherListingHtmlCandidates(job,trace,url)"));
+ assert.ok(src.includes("no_candidate_no_duplicate_iframe"));
 });
 test('ACS publisher binding report carries required controller revision, never overrides a final receipt',async()=>{
  let reported=null;
@@ -149,7 +151,7 @@ test('same DOI PDF first-page preview, unrelated DOI, publisher logo and nonpubl
  assert.equal(c.testFns.rscSilverchairVisualCandidates(job,{querySelectorAll:()=>[]},c.location.href).length,0,
   'Missing visual cannot be fabricated as successful capture');
 });
-test('old RSC hidden iframe retries are omitted on current Silverchair route only',()=>{
+test('RSC old article routes never duplicate publisher listing attempts',()=>{
  const c=routeContext();
  c.rscRouteParts=()=>({year:'2026',code:'gc',suffix:'d6gc04458a'});
  c.rscIssuePageUrls=()=>[];
@@ -168,7 +170,9 @@ test('old RSC hidden iframe retries are omitted on current Silverchair route onl
  assert.deepEqual(Array.from(c.iframeSourceUrlsForTest(j)),['https://pubs.rsc.org/gc/issue/34/8'],
    'one genuine DOI-verified publisher issue fallback is allowed');
  c.location.href='https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc04458a';
- assert.ok(c.iframeSourceUrlsForTest(j).length>=2);
+ assert.deepEqual(Array.from(c.iframeSourceUrlsForTest(j)),['https://pubs.rsc.org/gc/issue/34/8']);
+  c.rscIssuePageUrls=()=>[];
+  assert.deepEqual(Array.from(c.iframeSourceUrlsForTest(j)),['https://pubs.rsc.org/en/results?searchtext=10.1039%2Fd6gc04458a']);
 });
 
 test('five inventory layers never start more than two concurrent network tasks',async()=>{
