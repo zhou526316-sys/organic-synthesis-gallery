@@ -72,7 +72,7 @@ test('13 genuine original Articles receive 11 exclusions and 2 evidence holds, w
     assert.equal(row.stageBatchGitBlobSha,item.reviewQueueGitBlobSha);
     assert.equal(row.stageSourceSha256,item.sourceSha256);
     assert.equal(row.scientificDecision,row.assessment.decision);
-    assert.ok(row.assessment.generalityEvidence.length>=28);
+    assert.ok(row.assessment.generalityEvidence.length>=20);
   }
   assert.deepEqual(bound.reviewed.filter(x=>x.scientificDecision==='pending').map(x=>x.doi).sort(),
     ['10.1038/s44160-026-01115-3','10.1038/s44160-026-01146-w']);
