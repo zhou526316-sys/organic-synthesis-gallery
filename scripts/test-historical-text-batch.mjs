@@ -520,3 +520,14 @@ test('v026 checked DOI licence false negatives are rechecked only once after upg
   assert.equal(api.batchRetryAllowed({...old,httpStatus:429},false),false);
   assert.equal(api.batchRetryAllowed({...old,status:'license_pending_load'},false),true);
 });
+
+
+test('Pages artifact gate checks byte-for-byte installer and reviewed version rather than obsolete hardcode',async()=>{
+  const pages=await readFile('.github/workflows/github-pages.yml','utf8');
+  const marker=pages.slice(pages.indexOf('test -s dist/gallery-historical-text-pilot.user.js'),
+    pages.indexOf('grep -F "全库开放正文补抓（本机）"'));
+  assert.ok(marker.includes("assert.equal(published, original"),'same reviewed userscript must reach Pages');
+  assert.ok(marker.includes("patch >= 9"),'disallow rollback below user-approved 0.2.9');
+  assert.ok(marker.includes("BATCH_SCRIPT_VERSION"),'script metadata and diagnostic version must agree');
+  assert.ok(!marker.includes('grep -F "// @version      0.2.8"'),'stale version pin must not block a legitimate deployment');
+});
