@@ -1156,18 +1156,22 @@
       coverageDetails.style.display='block';
       coverageDetails.textContent='正在对齐正式 DOI 与本机正文台账…';
       void (async()=>{
-        const catalog=await batchLoadCanonicalCatalog();
+        const catalog=await batchLoadCanonicalCatalog(true);
         const db=await batchOpenDb();
-        let keys,attempts;
+        let keys,attempts,oaAttempts;
         try{
           keys=await batchDbOp(db,'packets','getAllKeys');
           attempts=await batchDbOp(db,'attempts','getAll');
+          oaAttempts=await batchDbOp(db,'oaAttempts','getAll');
         }finally{db.close();}
+        const formalMembers=new Set(catalog.articles.map(x=>x.doi));
+        const savedFormal=keys.filter(x=>formalMembers.has(x)).length;
         const c=batchCoverageSummary(catalog,keys,attempts);
         const first=c.neverAttempted,post=c.parserRecheckEligible;
         coverageDetails.textContent=[
           '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
           '其余正式 DOI（含10月以来和日期待核实）：'+c.historicalWithoutVerifiedDate+' 篇',
+          '全库本机已存科学正文 '+savedFormal+' 篇（含官方OA和出版社来源，未联网共享）；官方OA来源记录 '+oaAttempts.length+' 篇',
           '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
           '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
           '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
