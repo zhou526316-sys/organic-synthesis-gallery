@@ -1,5 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {parseJats,sample,matchMeta,loadPublishedHistorical} from './lib/historical-open-xml-pilot.mjs';
+import {normalizeOaTrigger} from './lib/historical-oa-trigger.mjs';
 const DOI='10.1038/s41467-026-77482-4',T='Organic synthesis catalysis experiment controls. '.repeat(20);
 const xml=(lic='https://creativecommons.org/licenses/by/4.0/',id=DOI,body=true)=>'<article><front><article-meta><article-id pub-id-type="doi">'+id+'</article-id><permissions><license xlink:href="'+lic+'"><license-p>Article license.</license-p></license></permissions></article-meta></front>'+
  (body?'<body><sec><title>Introduction</title><p>'+T+'</p></sec><sec><title>Results and Discussion</title><p>'+T+'</p></sec><sec><title>Conclusion</title><p>'+T+'</p></sec><fig><caption>'+T+'</caption></fig><table-wrap><caption>'+T+'</caption></table-wrap></body>':'')+'<back><ref-list/></back></article>';
@@ -71,4 +72,16 @@ test('paged DOI source scan covers each formal historical DOI once without a fix
  assert.equal(first.length,20);assert.equal(second.length,20);assert.equal(third.length,5);
  assert.equal(new Set([...first,...second,...third].map(x=>x.doi)).size,45);
  assert.equal(sample(reg,release,20,45).length,0);
+});
+
+test('owner-triggered OA source window must pin an approved catalog and a bounded page',()=>{
+ const x={schemaVersion:1,requestId:'histoa_20261014_0020',
+   catalogId:'a'.repeat(64),offset:20,limit:20};
+ assert.deepEqual(normalizeOaTrigger(x),{
+   requestId:x.requestId,catalogId:x.catalogId,offset:20,limit:20});
+ for(const bad of [
+   {...x,catalogId:'b'}, {...x,offset:-1}, {...x,offset:1.5},
+   {...x,limit:21}, {...x,limit:0}, {...x,extra:'raw_fulltext'},
+   {...x,requestId:'?'},{...x,schemaVersion:2}
+ ])assert.throws(()=>normalizeOaTrigger(bad),/trigger_/);
 });
