@@ -1,0 +1,1037 @@
+{
+  "schemaVersion": "gallery-historical-q3-publisher-type-exclusions-v1",
+  "mode": "publisher_verified_non_original_doi_only_not_publication",
+  "journal": "Nature Chemistry",
+  "period": "2026-07-01..2026-09-30",
+  "reviewedAt": "2026-10-14",
+  "sourceProofFile": "audit/historical-reviewed/q3-nchem-51-frozen-source-proof.json",
+  "reviewMethod": "same assistant first evidence review and separate adversarial challenge per DOI, not distinct independent human reviewers",
+  "summary": {
+    "reviewed": 27,
+    "types": {
+      "Thesis": 4,
+      "In Your Element": 4,
+      "Editorial": 1,
+      "Q&A": 1,
+      "News & Views": 9,
+      "Research Briefing": 4,
+      "Books & Arts": 1,
+      "Publisher Correction": 1,
+      "Comment": 1,
+      "Review Article": 1
+    }
+  },
+  "reviewed": [
+    {
+      "doi": "10.1038/s41557-026-02187-6",
+      "title": "First ladies of chemistry",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-02",
+      "publisherArticleType": "Thesis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "回顾早期女性化学家因制度及学术署名限制而被忽视的化学史贡献，属于Thesis人物与学科评论。",
+      "independentChallengeReason": "历史人物及成就具有科学史价值，但这篇文章没有开展有机反应实验；不能把受访或历史人物已经发表的研究当成本篇新合成成果。",
+      "reason": "出版社官方类型Thesis；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02187-6 + 2026在线文章目录；发表于2026-07-02；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02187-6",
+        "publisherArticleType": "Thesis",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-chemistry",
+        "stageSourceSha256": "de8e7a6c254afb4dde56edd6d449157919c13f249342ce0aea51bd164c05b3d4",
+        "stageBatchGitBlobSha": "50ea6bee09bc5ef659c17a821dd845225c8d2814",
+        "sourceReviewQueueGitBlobSha": "ae68bf278df2ed5ea348ba4e71a9bfa5a75624f9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02192-9",
+      "title": "How isoprene connects plants to global climate",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-02",
+      "publisherArticleType": "In Your Element",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解释植物排放异戊二烯如何连接大气、材料与气候化学，是In Your Element科普评述。",
+      "independentChallengeReason": "异戊二烯可参与重要工业聚合与天然产物路线，但文章讨论物质环境作用，不提供一个独立原创新有机制备反应或底物分离结果。",
+      "reason": "出版社官方类型In Your Element；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02192-9 + 2026在线文章目录；发表于2026-07-02；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02192-9",
+        "publisherArticleType": "In Your Element",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-chemistry",
+        "stageSourceSha256": "de8e7a6c254afb4dde56edd6d449157919c13f249342ce0aea51bd164c05b3d4",
+        "stageBatchGitBlobSha": "50ea6bee09bc5ef659c17a821dd845225c8d2814",
+        "sourceReviewQueueGitBlobSha": "ae68bf278df2ed5ea348ba4e71a9bfa5a75624f9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02205-7",
+      "title": "Setting a direction for molecular motors",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-02",
+      "publisherArticleType": "Editorial",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "作为分子转子与分子机器特辑导言，介绍360度旋转马达的研究挑战与专辑内容，为Editorial。",
+      "independentChallengeReason": "旋转分子马达可经多步有机合成制备，然而本篇是期刊编辑引言，并未提出新的可推广合成路线或反应选择性实验。",
+      "reason": "出版社官方类型Editorial；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02205-7 + 2026在线文章目录；发表于2026-07-02；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02205-7",
+        "publisherArticleType": "Editorial",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-chemistry",
+        "stageSourceSha256": "de8e7a6c254afb4dde56edd6d449157919c13f249342ce0aea51bd164c05b3d4",
+        "stageBatchGitBlobSha": "50ea6bee09bc5ef659c17a821dd845225c8d2814",
+        "sourceReviewQueueGitBlobSha": "ae68bf278df2ed5ea348ba4e71a9bfa5a75624f9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02210-w",
+      "title": "Driving movement in the field of molecular machines",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-02",
+      "publisherArticleType": "Q&A",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "以Q&A形式采访Ben Feringa关于分子马达、光开关和十年科研发展，报告研究者观点而非新实验。",
+      "independentChallengeReason": "Feringa的手性分子马达确实包含原创合成化学，但采访转述历史研究与建议并不构成这个DOI下新的产物制备论文。",
+      "reason": "出版社官方类型Q&A；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02210-w + 2026在线文章目录；发表于2026-07-02；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02210-w",
+        "publisherArticleType": "Q&A",
+        "publisherArticleDate": "2026-07-02",
+        "sourceRootId": "2026-07-01_2026-07-07_nature-chemistry",
+        "stageSourceSha256": "de8e7a6c254afb4dde56edd6d449157919c13f249342ce0aea51bd164c05b3d4",
+        "stageBatchGitBlobSha": "50ea6bee09bc5ef659c17a821dd845225c8d2814",
+        "sourceReviewQueueGitBlobSha": "ae68bf278df2ed5ea348ba4e71a9bfa5a75624f9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02207-5",
+      "title": "A modifying touch for metal–organic framework glasses",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读添加碱金属苯并咪唑盐调节MOF玻璃物性的一项已发表研究，出版社标为News & Views。",
+      "independentChallengeReason": "原始MOF玻璃的配位结构和流变改变是真实材料实验，但读者文章没有独立报道有机底物构建方法，不能重复入库。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02207-5 + 2026在线文章目录；发表于2026-07-20；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02207-5",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-20",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-chemistry",
+        "stageSourceSha256": "146c42899c8237bf9a774ee27b83d0ef5da11255e39be33832485482b1d8f232",
+        "stageBatchGitBlobSha": "0a7fa50d68736b869e2f7df982409356e01b632f",
+        "sourceReviewQueueGitBlobSha": "1519abfeba2ae4864b2ed7d8aaa3bd6204976fe9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02211-9",
+      "title": "Ladder-shaped molecules for the masses",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍高张力梯状烷烃的合成便利性与在环加成中释放应变的新原始成果，属于News & Views。",
+      "independentChallengeReason": "梯状分子可用于复杂药物骨架构建，值得追踪其原研究DOI；但该评论只解读别人的合成路线，不能将评论日期视为方法初次在线日期。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02211-9 + 2026在线文章目录；发表于2026-07-20；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02211-9",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-20",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-chemistry",
+        "stageSourceSha256": "146c42899c8237bf9a774ee27b83d0ef5da11255e39be33832485482b1d8f232",
+        "stageBatchGitBlobSha": "0a7fa50d68736b869e2f7df982409356e01b632f",
+        "sourceReviewQueueGitBlobSha": "1519abfeba2ae4864b2ed7d8aaa3bd6204976fe9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02216-4",
+      "title": "A gold nitrene for nitrogen-atom transfer chemistry",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-21",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读正式金(III)三重态金氮宾光生成与结构捕获的原始研究，出版社类型Research Briefing。",
+      "independentChallengeReason": "Au–N物种可参与C–H胺化和炔烃反应，但这篇简报基于Martin等人的原论文02152-3，并非另一次新催化合成实验。",
+      "reason": "出版社官方类型Research Briefing；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02216-4 + 2026在线文章目录；发表于2026-07-21；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02152-3",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02216-4",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-21",
+        "sourceRootId": "2026-07-15_2026-07-21_nature-chemistry",
+        "stageSourceSha256": "146c42899c8237bf9a774ee27b83d0ef5da11255e39be33832485482b1d8f232",
+        "stageBatchGitBlobSha": "0a7fa50d68736b869e2f7df982409356e01b632f",
+        "sourceReviewQueueGitBlobSha": "1519abfeba2ae4864b2ed7d8aaa3bd6204976fe9",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02217-3",
+      "title": "Aggregation affords productive photocatalysis",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-22",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论超分子染料聚集限制激发态弛豫从而提高光催化效率，是对已发表工作的News & Views。",
+      "independentChallengeReason": "聚集态光氧化还原确有合成潜力，但解读没有证明此独立DOI进行了新的底物通用性实验，不能因标题photocatalysis就重复收录。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02217-3 + 2026在线文章目录；发表于2026-07-22；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02217-3",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-22",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-chemistry",
+        "stageSourceSha256": "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639",
+        "stageBatchGitBlobSha": "7d34c3a103503b6a70984638926bbe3c8371087a",
+        "sourceReviewQueueGitBlobSha": "f16dd9a017dc805f31a29108902e36b743a41011",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02229-z",
+      "title": "On-support phosphitylation for oligonucleotide modification",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-27",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍将低价膦试剂直接在载体上的寡核苷酸链末端和内部修饰的研究，类型Research Briefing。",
+      "independentChallengeReason": "不同醇与核苷酸连接、合成寡核苷酸方法真实存在，但数据来自已正式收录的02214-6原创Article；简报不是第二篇研究。",
+      "reason": "出版社官方类型Research Briefing；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02229-z + 2026在线文章目录；发表于2026-07-27；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02214-6",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02229-z",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-07-27",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-chemistry",
+        "stageSourceSha256": "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639",
+        "stageBatchGitBlobSha": "7d34c3a103503b6a70984638926bbe3c8371087a",
+        "sourceReviewQueueGitBlobSha": "f16dd9a017dc805f31a29108902e36b743a41011",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02215-5",
+      "title": "Innovation without inventors",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-30",
+      "publisherArticleType": "Books & Arts",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "评论一本讨论化学史与炼金术时代的书籍，出版社Books & Arts，属于出版物书评。",
+      "independentChallengeReason": "书评涉及发明、实验及化学的社会历史意义，但本DOI未提供作者自己的反应条件或产物结构，不属于原创合成研究。",
+      "reason": "出版社官方类型Books & Arts；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02215-5 + 2026在线文章目录；发表于2026-07-30；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02215-5",
+        "publisherArticleType": "Books & Arts",
+        "publisherArticleDate": "2026-07-30",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-chemistry",
+        "stageSourceSha256": "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639",
+        "stageBatchGitBlobSha": "7d34c3a103503b6a70984638926bbe3c8371087a",
+        "sourceReviewQueueGitBlobSha": "f16dd9a017dc805f31a29108902e36b743a41011",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02200-y",
+      "title": "Oleic acid at the heart of olive oil",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-31",
+      "publisherArticleType": "In Your Element",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "从油酸的顺式双键结构讨论橄榄油物性与健康效应，是In Your Element分子科普栏目。",
+      "independentChallengeReason": "油酸可作为有机合成原料，但结构性质分析与历史用途不能替代本文完成了多种油酸转化的制备方法证据。",
+      "reason": "出版社官方类型In Your Element；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02200-y + 2026在线文章目录；发表于2026-07-31；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02200-y",
+        "publisherArticleType": "In Your Element",
+        "publisherArticleDate": "2026-07-31",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-chemistry",
+        "stageSourceSha256": "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639",
+        "stageBatchGitBlobSha": "7d34c3a103503b6a70984638926bbe3c8371087a",
+        "sourceReviewQueueGitBlobSha": "f16dd9a017dc805f31a29108902e36b743a41011",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02220-8",
+      "title": "How webby is the wood-wide web?",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-31",
+      "publisherArticleType": "Thesis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论植物与真菌之间所谓林间地下网络的证据与科学传播，出版社Thesis评论。 出版社Thesis栏目与本文叙述主体相符，属于二级科学传播而非首次发表于该DOI的实验文章。",
+      "independentChallengeReason": "植物代谢与分子信号具有化学研究价值，但文章不提出有机合成转化或全合成路线，也不提供独立产物分离。",
+      "reason": "出版社官方类型Thesis；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02220-8 + 2026在线文章目录；发表于2026-07-31；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02220-8",
+        "publisherArticleType": "Thesis",
+        "publisherArticleDate": "2026-07-31",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-chemistry",
+        "stageSourceSha256": "009fd9ab589b4c366a653768fde3fbdff2e302be1e34ae191f8b780351e31639",
+        "stageBatchGitBlobSha": "7d34c3a103503b6a70984638926bbe3c8371087a",
+        "sourceReviewQueueGitBlobSha": "f16dd9a017dc805f31a29108902e36b743a41011",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02223-5",
+      "title": "Tailoring packing sequences in van der Waals metal–organic frameworks",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-12",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读借溶剂调节超分子配体中间体而实现van der Waals MOF层堆垛控制的材料论文，是News & Views。",
+      "independentChallengeReason": "层堆垛及导电MOF的原创组装实验属于原研究，评论不能作为独立新分子合成；不能混淆材料成形和有机键形成。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02223-5 + 2026在线文章目录；发表于2026-08-12；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02223-5",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-12",
+        "sourceRootId": "2026-08-08_2026-08-14_nature-chemistry",
+        "stageSourceSha256": "c1a4fc74b0343f764dbef2f2ec1910cdfcd42eace01168b18c8a0b00ec8c1fb1",
+        "stageBatchGitBlobSha": "b306e3e7231927542959aefc1314b0ab191c82ee",
+        "sourceReviewQueueGitBlobSha": "9f28480e9ff04bb072cb6815b0df2d05ffc9f8d1",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02239-x",
+      "title": "When pathways trump orbitals in electrolyte design",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-20",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "评论通过替换容易被氧化的α氢来提高高压电池电解液耐氧化性的研究，是News & Views。",
+      "independentChallengeReason": "有机溶剂分子结构设计确实利用化学反应性，但本文解释材料电化学稳定机理，不提供新的有机制备反应范围。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02239-x + 2026在线文章目录；发表于2026-08-20；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02239-x",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-chemistry",
+        "stageSourceSha256": "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0",
+        "stageBatchGitBlobSha": "37740145fb266f21260a2d63721de43f393cb463",
+        "sourceReviewQueueGitBlobSha": "db53c65269f230f10d7038cbcf725ffa9f2e47a7",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-15_2026-08-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02250-2",
+      "title": "Publisher Correction: How webby is the wood-wide web?",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-20",
+      "publisherArticleType": "Publisher Correction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "更正先前关于植物真菌网络Thesis中的出版社文本与元数据，为Publisher Correction。",
+      "independentChallengeReason": "纠正条目需要关联原文章02220-8且保持原首发日，但勘误本身没有新的有机合成实验、底物或产品。",
+      "reason": "出版社官方类型Publisher Correction；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02250-2 + 2026在线文章目录；发表于2026-08-20；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02220-8",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02250-2",
+        "publisherArticleType": "Publisher Correction",
+        "publisherArticleDate": "2026-08-20",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-chemistry",
+        "stageSourceSha256": "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0",
+        "stageBatchGitBlobSha": "37740145fb266f21260a2d63721de43f393cb463",
+        "sourceReviewQueueGitBlobSha": "db53c65269f230f10d7038cbcf725ffa9f2e47a7",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-15_2026-08-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02230-6",
+      "title": "Genetically targeted dyes light up cell-specific abiotic synthesis",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-21",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "评论遗传靶向光催化有机染料在特定活细胞亚群实现定位有机反应，是News & Views。",
+      "independentChallengeReason": "细胞内人工有机合成确有方法学价值，但真实原创实验归属已正式收录的02195-6，评论不应再生成重复卡片。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02230-6 + 2026在线文章目录；发表于2026-08-21；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02195-6",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02230-6",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-21",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-chemistry",
+        "stageSourceSha256": "b2450822204e1a6638241c97ac8c86c7587a1fa3f73c90758f25b3b7cd960ff0",
+        "stageBatchGitBlobSha": "37740145fb266f21260a2d63721de43f393cb463",
+        "sourceReviewQueueGitBlobSha": "db53c65269f230f10d7038cbcf725ffa9f2e47a7",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-15_2026-08-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02234-2",
+      "title": "Thalidomide and targeted protein degradation",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-28",
+      "publisherArticleType": "In Your Element",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "回顾沙利度胺从药物灾难到靶向蛋白降解剂的发展史，为In Your Element。",
+      "independentChallengeReason": "沙利度胺及PROTAC包含真实合成化学，但本篇探讨药物历史和生物机制，而非报道一种新的可重复有机反应路线。",
+      "reason": "出版社官方类型In Your Element；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02234-2 + 2026在线文章目录；发表于2026-08-28；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02234-2",
+        "publisherArticleType": "In Your Element",
+        "publisherArticleDate": "2026-08-28",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-chemistry",
+        "stageSourceSha256": "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a",
+        "stageBatchGitBlobSha": "ec90ee5eaa30aee408fb2bce7753066ebf8b7478",
+        "sourceReviewQueueGitBlobSha": "61ab3a6c32154c2e3948cb26d92eadac139d101a",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02236-0",
+      "title": "Organizing a conference",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-28",
+      "publisherArticleType": "Thesis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍科学会议议程、职业发展与组织工作经验，出版社Thesis专栏。 Thesis栏目的会议组织经验不含有机反应的实际底物、产物及制备证据。",
+      "independentChallengeReason": "化学会议可能展示大量新的合成成果，但这篇组织经验文章自身没有催化条件、底物适用性或目标分子合成结果。",
+      "reason": "出版社官方类型Thesis；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02236-0 + 2026在线文章目录；发表于2026-08-28；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02236-0",
+        "publisherArticleType": "Thesis",
+        "publisherArticleDate": "2026-08-28",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-chemistry",
+        "stageSourceSha256": "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a",
+        "stageBatchGitBlobSha": "ec90ee5eaa30aee408fb2bce7753066ebf8b7478",
+        "sourceReviewQueueGitBlobSha": "61ab3a6c32154c2e3948cb26d92eadac139d101a",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02253-z",
+      "title": "Forging ammonia with iron and light from water and nitrogen",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-17",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读铁盐和钼催化剂协同光驱动N2与水合成氨研究，出版社标注News & Views。",
+      "independentChallengeReason": "N2固定制氨是重要原创能源化学，然而评论引用其他作者光合成数据，本DOI未建立新的有机制备方法。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02253-z + 2026在线文章目录；发表于2026-09-17；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02253-z",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-17",
+        "sourceRootId": "2026-09-15_2026-09-21_nature-chemistry",
+        "stageSourceSha256": "74772b49d94e5e9be64405fecec73d949ec30924ce9bbe69e8385b2c42f5efb1",
+        "stageBatchGitBlobSha": "34ccc88314cb9758bfb29200ef5787b3c2d5e813",
+        "sourceReviewQueueGitBlobSha": "50af06cb4a618451aa821075d854d813e3352476",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-15_2026-09-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02252-0",
+      "title": "Weaving two-dimensional peptide crystals",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-18",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "介绍金属引导的二维肽晶体机械编织技术及耐久材料，是News & Views。 出版社News & Views栏目与本文叙述主体相符，属于二级科学传播而非首次发表于该DOI的实验文章。",
+      "independentChallengeReason": "所评论原始研究可能涉及肽键和超分子装配，值得独立审查；评论本身未呈现可转移的多肽成键反应通用实验。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02252-0 + 2026在线文章目录；发表于2026-09-18；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02252-0",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-18",
+        "sourceRootId": "2026-09-15_2026-09-21_nature-chemistry",
+        "stageSourceSha256": "74772b49d94e5e9be64405fecec73d949ec30924ce9bbe69e8385b2c42f5efb1",
+        "stageBatchGitBlobSha": "34ccc88314cb9758bfb29200ef5787b3c2d5e813",
+        "sourceReviewQueueGitBlobSha": "50af06cb4a618451aa821075d854d813e3352476",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-15_2026-09-21_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02244-0",
+      "title": "Temperature and reproducibility in photocatalysis",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-22",
+      "publisherArticleType": "Comment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "围绕光催化研究温度控制、光源及报告规范讨论实验可重复性，官方文章类型Comment。",
+      "independentChallengeReason": "经验建议有助于有机光氧化还原实验设计，但论文没有新增催化剂底物组或独立合成产品，不是原创新反应。",
+      "reason": "出版社官方类型Comment；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02244-0 + 2026在线文章目录；发表于2026-09-22；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02244-0",
+        "publisherArticleType": "Comment",
+        "publisherArticleDate": "2026-09-22",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02259-7",
+      "title": "Avoiding the path of LIESST resistance",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-25",
+      "publisherArticleType": "News & Views",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读提升锰光磁开关高自旋态寿命以克服LIESST光激发态限制的研究，为News & Views。",
+      "independentChallengeReason": "锰配合物电子自旋态与光磁寿命是材料功能研究，属于其他作者的实验；本评论并未报告有机合成反应。",
+      "reason": "出版社官方类型News & Views；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02259-7 + 2026在线文章目录；发表于2026-09-25；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02259-7",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-25",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02277-5",
+      "title": "Unmasking phenylalanine interactions through bioorthogonal decaging",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-25",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "总结利用钯触发去除碘取代的笨丙氨酸保护基来调节蛋白相互作用，是Research Briefing。",
+      "independentChallengeReason": "活细胞的Phe脱保护确实为原始02226-2 Article所证明，本简报没有独立的氨基酸产品范围和新的方法。",
+      "reason": "出版社官方类型Research Briefing；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02277-5 + 2026在线文章目录；发表于2026-09-25；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02226-2",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02277-5",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-09-25",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02249-9",
+      "title": "Deep reduction in electrosynthesis",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-28",
+      "publisherArticleType": "Review Article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "系统梳理极负电位有机电合成的底物、还原反应和应对析氢副反应的方法，出版社Review Article。",
+      "independentChallengeReason": "综述包含很多有机合成转化与具体文献数据，但不是该DOI作者亲自报告一套新的通用制备方法，不能把其所引论文全部归为本篇原创。",
+      "reason": "出版社官方类型Review Article；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02249-9 + 2026在线文章目录；发表于2026-09-28；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02249-9",
+        "publisherArticleType": "Review Article",
+        "publisherArticleDate": "2026-09-28",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02262-y",
+      "title": "Linking vibrational energetics to carbon isotope separation in CO2 electrolysis",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-29",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "解读电催化CO2同位素筛分中催化剂改变振动能级引发13C富集的原文研究，Research Briefing。",
+      "independentChallengeReason": "13C分离的真实实验和机制推断见原始02257-9 Article，这篇简报并不提供新的有机标记反应或制备适用范围。",
+      "reason": "出版社官方类型Research Briefing；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02262-y + 2026在线文章目录；发表于2026-09-29；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02257-9",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02262-y",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-09-29",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02254-y",
+      "title": "The many lives of a universal solvent",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-30",
+      "publisherArticleType": "In Your Element",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "综述DMSO极化S–O键与甲基屏蔽作用对有机溶剂、生物冷冻和医疗等应用的意义，属于In Your Element。",
+      "independentChallengeReason": "DMSO可以参与氧转移、氧化和很多有机反应，但该科普文章不是新反应发明或具体合成条件报道，不能作为原创方法卡片。",
+      "reason": "出版社官方类型In Your Element；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02254-y + 2026在线文章目录；发表于2026-09-30；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02254-y",
+        "publisherArticleType": "In Your Element",
+        "publisherArticleDate": "2026-09-30",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1038/s41557-026-02255-x",
+      "title": "Bug bites",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-30",
+      "publisherArticleType": "Thesis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "讨论昆虫作为食物或污染物的化学与文化背景，是Nature Chemistry Thesis非研究栏目。",
+      "independentChallengeReason": "昆虫气味分子与食品化学有真实研究价值，但本篇没有新分子制备、催化转化、产物分离或反应一般性实验。",
+      "reason": "出版社官方类型Thesis；其主要贡献不是该DOI下独立的原创有机制备研究，不重复建卡。",
+      "evidenceBasis": "Nature Chemistry DOI精确出版社页https://www.nature.com/articles/s41557-026-02255-x + 2026在线文章目录；发表于2026-09-30；与冻结双来源数据同日。原文链接以该完整DOI为准。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02255-x",
+        "publisherArticleType": "Thesis",
+        "publisherArticleDate": "2026-09-30",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "sourceReviewQueueGitBlobSha": "fbe052ceef8c6f1d474a4564dd75fd017479d2e0",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_nature-chemistry.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "reviewMethod": "same_assistant_separate_article_specific_science_challenge_not_two_independent_humans"
+    }
+  ],
+  "guards": {
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOwnerPermanentExclusion": true,
+    "noAutoAdmission": true
+  }
+}

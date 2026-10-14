@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-14T03:33:48.883Z",
+  "generatedAt": "2026-10-14T08:33:53.260Z",
   "nextEligiblePublicationSlot": "2026-10-15T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 118,
-    "include": 116,
+    "checked": 121,
+    "include": 119,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -8368,6 +8368,240 @@
         }
       ],
       "reviewRationaleSecondPass": "方法依赖预装烯烃受体及α-芳氧羧酸布局，不能称为任意苯并氧杂环的普遍直接C–H环化；不为材料功能或天然产物图示而纳入，实际4—8元中五至八元环制备与底物分离才是根本。"
+    },
+    {
+      "doi": "10.1038/s41557-026-02228-0",
+      "journal": "Nature Chemistry",
+      "title": "A general strategy towards multicolour fluorogenic peptides for wash-free bioassays",
+      "titleZh": "通用多色荧光氨基酸及多肽的制备策略，实现免洗涤生物分析",
+      "date": "2026-08-26",
+      "authors": [
+        "Man Sing Wong",
+        "Lorena Mendive-Tapia",
+        "Utsa Karmakar",
+        "Lovelesh Vashist",
+        "Zandile Nare",
+        "Karolina Tokarczyk",
+        "Kohei Iijima",
+        "Kazuya Kikuchi",
+        "Syed Ali Abbas Abedi",
+        "Xiaogang Liu",
+        "Marc Vendrell"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02228-0"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "构建跨多类发色团的色氨酸内淬灭荧光氨基酸通用制备策略，并将这些氨基酸用于固相合成可激活多肽。",
+      "evidenceBasis": "Nature Chemistry DOI原始Article页面https://www.nature.com/articles/s41557-026-02228-0，首发日2026-08-26，出版社目录与冻结Crossref/OpenAlex一致。Nature Chemistry开放正文的设计与合成部分、Fig.2–4描述至少六种代表FgAA（10–15），另有近红外系列28–30；不同发色团骨架均可转化，后续制备多个可激活多肽，部分染料中间体实际分离收率40%和83%，并展示T细胞靶向探针。 最强反对意见是论文应用驱动、强调荧光成像与PD-1筛选。反向核查发现核心不仅优化亮度：作者建立跨不同染料骨架的可重复C–C键连接和可兼容SPPS的手性氨基酸砌块制备，提供实际多类别产物及多肽功能化路线；不能以生物成像用途自动排除。",
+      "challengeReason": "最强反对意见是论文应用驱动、强调荧光成像与PD-1筛选。反向核查发现核心不仅优化亮度：作者建立跨不同染料骨架的可重复C–C键连接和可兼容SPPS的手性氨基酸砌块制备，提供实际多类别产物及多肽功能化路线；不能以生物成像用途自动排除。",
+      "scopeAssessment": {
+        "primaryContribution": "构建跨多类发色团的色氨酸内淬灭荧光氨基酸通用制备策略，并将这些氨基酸用于固相合成可激活多肽。",
+        "preparativeTransformation": "以碘代罗丹明、硅罗丹明及其他染料基元为前体，经Pd催化C(sp²)–H偶联引入Fmoc保护色氨酸侧链，制备不同光谱的FgAA砌块，再用于Fmoc固相多肽合成。",
+        "generalityEvidence": "Nature Chemistry开放正文的设计与合成部分、Fig.2–4描述至少六种代表FgAA（10–15），另有近红外系列28–30；不同发色团骨架均可转化，后续制备多个可激活多肽，部分染料中间体实际分离收率40%和83%，并展示T细胞靶向探针。",
+        "sourceEvidence": "官方论文页https://www.nature.com/articles/s41557-026-02228-0，Official Published 2026-08-26，同一 DOI 的2026年Research目录及摘要/可见正文；对应 staging 2026-08-22_2026-08-31_nature-chemistry，原批次 Git blob ec90ee5eaa30aee408fb2bce7753066ebf8b7478，审稿source SHA-256 387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a。公开原文不复制为Gallery全文/SI/PDF；条件、产物数仅限原文能证明的部分。",
+        "boundaryChallenge": "最强反对意见是论文应用驱动、强调荧光成像与PD-1筛选。反向核查发现核心不仅优化亮度：作者建立跨不同染料骨架的可重复C–C键连接和可兼容SPPS的手性氨基酸砌块制备，提供实际多类别产物及多肽功能化路线；不能以生物成像用途自动排除。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02228-0",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_nature-chemistry",
+        "stageBatchSha": "ec90ee5eaa30aee408fb2bce7753066ebf8b7478",
+        "sourceReviewQueueGitBlobSha": "61ab3a6c32154c2e3948cb26d92eadac139d101a",
+        "stageSourceSha256": "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Chemistry_2026_Article_index_original_abstract_and_accessible_main"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次具体证据审核：构建跨多类发色团的色氨酸内淬灭荧光氨基酸通用制备策略，并将这些氨基酸用于固相合成可激活多肽。 以碘代罗丹明、硅罗丹明及其他染料基元为前体，经Pd催化C(sp²)–H偶联引入Fmoc保护色氨酸侧链，制备不同光谱的FgAA砌块，再用于Fmoc固相多肽合成。 Nature Chemistry开放正文的设计与合成部分、Fig.2–4描述至少六种代表FgAA（10–15），另有近红外系列28–30；不同发色团骨架均可转化，后续制备多个可激活多肽，部分染料中间体实际分离收率40%和83%，并展示T细胞靶向探针。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向质疑与学术范围边界：最强反对意见是论文应用驱动、强调荧光成像与PD-1筛选。反向核查发现核心不仅优化亮度：作者建立跨不同染料骨架的可重复C–C键连接和可兼容SPPS的手性氨基酸砌块制备，提供实际多类别产物及多肽功能化路线；不能以生物成像用途自动排除。"
+        }
+      ],
+      "reviewRationaleSecondPass": "最强反对意见是论文应用驱动、强调荧光成像与PD-1筛选。反向核查发现核心不仅优化亮度：作者建立跨不同染料骨架的可重复C–C键连接和可兼容SPPS的手性氨基酸砌块制备，提供实际多类别产物及多肽功能化路线；不能以生物成像用途自动排除。"
+    },
+    {
+      "doi": "10.1038/s41557-026-02227-1",
+      "journal": "Nature Chemistry",
+      "title": "Cyclopropanol can function as a caged dual-functional warhead for selective electrochemical bioconjugation",
+      "titleZh": "环丙醇作为可电化学触发的双功能基团，实现选择性蛋白生物偶联",
+      "date": "2026-08-28",
+      "authors": [
+        "Shan Hu",
+        "Xiaoying Lian",
+        "Jinnawat Jongkhumkrong",
+        "Öznur Ölmez Nalcıoğlu",
+        "Akshani Anjula Wijesooriya",
+        "Diqi Yan",
+        "James D. Sitter",
+        "Hao Liu",
+        "Michael Walla",
+        "William E. Cotham",
+        "Aaron K. Vannucci",
+        "Qian Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02227-1"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发现环丙醇可作为稳定而可电化学触发的双功能生物偶联基团，对蛋白中Asp/Glu酸性残基实现选择性共价标记。",
+      "evidenceBasis": "Nature Chemistry DOI原始Article页面https://www.nature.com/articles/s41557-026-02227-1，首发日2026-08-28，出版社目录与冻结Crossref/OpenAlex一致。Nature Chemistry公开摘要及Fig.2–6的逐图说明支持电化学条件优化、数类环丙醇衍生物生物偶联、荧光检测、蛋白质组学与活细胞膜脂标记；作者明确阐明Asp/Glu偏好和可用于不同细胞蛋白背景。出版社付费正文的精确分离收率未取得，故不编造。 最大范围风险是部分产物为蛋白标记而非可分离小分子，研究终点为生物成像。第二遍确认该工作创新是新的化学选择性和电触发共价接枝模式，已有不同探针和蛋白环境的适用证据，因而属于可迁移生物偶联方法；不能把蛋白组学数据误写成化学分离收率。",
+      "challengeReason": "最大范围风险是部分产物为蛋白标记而非可分离小分子，研究终点为生物成像。第二遍确认该工作创新是新的化学选择性和电触发共价接枝模式，已有不同探针和蛋白环境的适用证据，因而属于可迁移生物偶联方法；不能把蛋白组学数据误写成化学分离收率。",
+      "scopeAssessment": {
+        "primaryContribution": "发现环丙醇可作为稳定而可电化学触发的双功能生物偶联基团，对蛋白中Asp/Glu酸性残基实现选择性共价标记。",
+        "preparativeTransformation": "在温和电极条件下活化环丙醇生成β-卤代酮活性中间体，随后与蛋白酸性侧链发生选择性偶联；拓展荧光环丙醇探针及胆碱衍生化探针。",
+        "generalityEvidence": "Nature Chemistry公开摘要及Fig.2–6的逐图说明支持电化学条件优化、数类环丙醇衍生物生物偶联、荧光检测、蛋白质组学与活细胞膜脂标记；作者明确阐明Asp/Glu偏好和可用于不同细胞蛋白背景。出版社付费正文的精确分离收率未取得，故不编造。",
+        "sourceEvidence": "官方论文页https://www.nature.com/articles/s41557-026-02227-1，Official Published 2026-08-28，同一 DOI 的2026年Research目录及摘要/可见正文；对应 staging 2026-08-22_2026-08-31_nature-chemistry，原批次 Git blob ec90ee5eaa30aee408fb2bce7753066ebf8b7478，审稿source SHA-256 387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a。公开原文不复制为Gallery全文/SI/PDF；条件、产物数仅限原文能证明的部分。",
+        "boundaryChallenge": "最大范围风险是部分产物为蛋白标记而非可分离小分子，研究终点为生物成像。第二遍确认该工作创新是新的化学选择性和电触发共价接枝模式，已有不同探针和蛋白环境的适用证据，因而属于可迁移生物偶联方法；不能把蛋白组学数据误写成化学分离收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02227-1",
+        "publisherOnlineDate": "2026-08-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_nature-chemistry",
+        "stageBatchSha": "ec90ee5eaa30aee408fb2bce7753066ebf8b7478",
+        "sourceReviewQueueGitBlobSha": "61ab3a6c32154c2e3948cb26d92eadac139d101a",
+        "stageSourceSha256": "387b84828664c8b8282f8685c706413eb0576bda524e0567c687e6bf09f25e2a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Chemistry_2026_Article_index_original_abstract_and_accessible_main"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次具体证据审核：发现环丙醇可作为稳定而可电化学触发的双功能生物偶联基团，对蛋白中Asp/Glu酸性残基实现选择性共价标记。 在温和电极条件下活化环丙醇生成β-卤代酮活性中间体，随后与蛋白酸性侧链发生选择性偶联；拓展荧光环丙醇探针及胆碱衍生化探针。 Nature Chemistry公开摘要及Fig.2–6的逐图说明支持电化学条件优化、数类环丙醇衍生物生物偶联、荧光检测、蛋白质组学与活细胞膜脂标记；作者明确阐明Asp/Glu偏好和可用于不同细胞蛋白背景。出版社付费正文的精确分离收率未取得，故不编造。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向质疑与学术范围边界：最大范围风险是部分产物为蛋白标记而非可分离小分子，研究终点为生物成像。第二遍确认该工作创新是新的化学选择性和电触发共价接枝模式，已有不同探针和蛋白环境的适用证据，因而属于可迁移生物偶联方法；不能把蛋白组学数据误写成化学分离收率。"
+        }
+      ],
+      "reviewRationaleSecondPass": "最大范围风险是部分产物为蛋白标记而非可分离小分子，研究终点为生物成像。第二遍确认该工作创新是新的化学选择性和电触发共价接枝模式，已有不同探针和蛋白环境的适用证据，因而属于可迁移生物偶联方法；不能把蛋白组学数据误写成化学分离收率。"
+    },
+    {
+      "doi": "10.1038/s41557-026-02232-4",
+      "journal": "Nature Chemistry",
+      "title": "Lower-temperature bulk depolymerization of commercial polymethacrylates",
+      "titleZh": "商业聚甲基丙烯酸酯的低温本体解聚与单体高效回收",
+      "date": "2026-09-02",
+      "authors": [
+        "Richard Whitfield",
+        "Victoria Lohmann",
+        "Mikhail Agrachev",
+        "Hongsik Kim",
+        "Hyun Suk Wang",
+        "Nethmi De Alwis Watuthanthrige",
+        "Nghia P. Truong",
+        "Tae-Lim Choi",
+        "Gunnar Jeschke",
+        "Athina Anastasaki"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02232-4"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立N-羟基邻苯二甲酰亚胺诱导的聚甲基丙烯酸酯主链HAT断链—链式解聚，直接回收高纯原始单体。",
+      "evidenceBasis": "Nature Chemistry DOI原始Article页面https://www.nature.com/articles/s41557-026-02232-4，首发日2026-09-02，出版社目录与冻结Crossref/OpenAlex一致。Nature Chemistry全文摘要与主文显示商业聚合物无需预装端基或牺牲共聚单体，适用于阴离子、常规自由基及受控自由基聚合所制聚甲基丙烯酸酯，并覆盖超高分子量材料（超过10⁶ Da）；作者直接报告单体近90%回收以及单体直接分离，属于一般性有机单体制备方法。 最强反对是聚合材料回收而非传统向前合成。独立检查指出论文核心是新的可迁移自由基HAT–主链解聚化学，多个聚合物来源、未经预设计的商业塑料都能以分离单体为目标产品，不仅是力学/循环材料性能；但不能把所有塑料或聚烯烃都宣称适用。",
+      "challengeReason": "最强反对是聚合材料回收而非传统向前合成。独立检查指出论文核心是新的可迁移自由基HAT–主链解聚化学，多个聚合物来源、未经预设计的商业塑料都能以分离单体为目标产品，不仅是力学/循环材料性能；但不能把所有塑料或聚烯烃都宣称适用。",
+      "scopeAssessment": {
+        "primaryContribution": "建立N-羟基邻苯二甲酰亚胺诱导的聚甲基丙烯酸酯主链HAT断链—链式解聚，直接回收高纯原始单体。",
+        "preparativeTransformation": "以不同来源的聚甲基丙烯酸酯聚合物为起始物，在低温、无光、无溶剂本体条件下产生聚合物骨架碳自由基，触发解聚生成相应甲基丙烯酸酯单体。",
+        "generalityEvidence": "Nature Chemistry全文摘要与主文显示商业聚合物无需预装端基或牺牲共聚单体，适用于阴离子、常规自由基及受控自由基聚合所制聚甲基丙烯酸酯，并覆盖超高分子量材料（超过10⁶ Da）；作者直接报告单体近90%回收以及单体直接分离，属于一般性有机单体制备方法。",
+        "sourceEvidence": "官方论文页https://www.nature.com/articles/s41557-026-02232-4，Official Published 2026-09-02，同一 DOI 的2026年Research目录及摘要/可见正文；对应 staging 2026-09-01_2026-09-07_nature-chemistry，原批次 Git blob 00c183f13424ee9f5899a011f47e77c9f8dd631b，审稿source SHA-256 e32a5be810853883c57bdb4ce42782353a5427a36919a5c71585a086c5fa63ef。公开原文不复制为Gallery全文/SI/PDF；条件、产物数仅限原文能证明的部分。",
+        "boundaryChallenge": "最强反对是聚合材料回收而非传统向前合成。独立检查指出论文核心是新的可迁移自由基HAT–主链解聚化学，多个聚合物来源、未经预设计的商业塑料都能以分离单体为目标产品，不仅是力学/循环材料性能；但不能把所有塑料或聚烯烃都宣称适用。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02232-4",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_nature-chemistry",
+        "stageBatchSha": "00c183f13424ee9f5899a011f47e77c9f8dd631b",
+        "sourceReviewQueueGitBlobSha": "4637d71121068336531707154df70e118cee7ef2",
+        "stageSourceSha256": "e32a5be810853883c57bdb4ce42782353a5427a36919a5c71585a086c5fa63ef",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Chemistry_2026_Article_index_original_abstract_and_accessible_main"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次具体证据审核：建立N-羟基邻苯二甲酰亚胺诱导的聚甲基丙烯酸酯主链HAT断链—链式解聚，直接回收高纯原始单体。 以不同来源的聚甲基丙烯酸酯聚合物为起始物，在低温、无光、无溶剂本体条件下产生聚合物骨架碳自由基，触发解聚生成相应甲基丙烯酸酯单体。 Nature Chemistry全文摘要与主文显示商业聚合物无需预装端基或牺牲共聚单体，适用于阴离子、常规自由基及受控自由基聚合所制聚甲基丙烯酸酯，并覆盖超高分子量材料（超过10⁶ Da）；作者直接报告单体近90%回收以及单体直接分离，属于一般性有机单体制备方法。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向质疑与学术范围边界：最强反对是聚合材料回收而非传统向前合成。独立检查指出论文核心是新的可迁移自由基HAT–主链解聚化学，多个聚合物来源、未经预设计的商业塑料都能以分离单体为目标产品，不仅是力学/循环材料性能；但不能把所有塑料或聚烯烃都宣称适用。"
+        }
+      ],
+      "reviewRationaleSecondPass": "最强反对是聚合材料回收而非传统向前合成。独立检查指出论文核心是新的可迁移自由基HAT–主链解聚化学，多个聚合物来源、未经预设计的商业塑料都能以分离单体为目标产品，不仅是力学/循环材料性能；但不能把所有塑料或聚烯烃都宣称适用。"
     }
   ],
   "pending": [
@@ -8410,11 +8644,22 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
+  "note": "2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
   "currentCatalogReadback": {
-    "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
+    "sha": "af1aed70f4849c7a1fdd8f52d099b75bdae47435",
     "recordCount": 1087,
-    "readAt": "2026-10-14T03:33:48.883Z",
+    "readAt": "2026-10-14T08:33:53.264Z",
     "source": "GitHub_main_only_not_production_D1"
+  },
+  "reviewedNatureChemistryNew": {
+    "assessed": 24,
+    "included": 3,
+    "otherExcluded": 20,
+    "evidencePending": 1,
+    "nonOriginalSeparately": 27,
+    "evidenceSourceFile": "audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json",
+    "evidenceGitBlobSha": "d31ecf5c2cf52f736bc7510298eb8ce18d91fbd3",
+    "lastStageSourceProof": "audit/historical-reviewed/q3-nchem-51-frozen-source-proof.json",
+    "publishedWithoutSlot": false
   }
 }

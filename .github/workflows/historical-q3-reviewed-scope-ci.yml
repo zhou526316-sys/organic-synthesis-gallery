@@ -9,6 +9,14 @@ on:
       - 'scripts/test-historical-q3-publisher-scope-proof.mjs'
       - 'scripts/test-historical-q3-natcatal-residual-24.mjs'
       - 'scripts/test-historical-q3-natsynth-reviewed-44.mjs'
+      - 'scripts/test-historical-q3-nchem-51-reviewed.mjs'
+      - 'audit/historical-publisher-issues/2026/nature-chemistry-q3-2026-all-types-66.json'
+      - 'audit/historical-reviewed/q3-nchem-51-frozen-source-proof.json'
+      - 'audit/historical-reviewed/q3-nchem-27-nonoriginal-two-pass.json'
+      - 'audit/historical-reviewed/q3-nchem-21-scope-source-proof.json'
+      - 'audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'
+      - 'audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'
+      - 'audit/historical-reviewed/approved-admissions.json'
       - 'audit/historical-reviewed/q3-natsynth-44-frozen-source-proof.json'
       - 'audit/historical-reviewed/q3-natsynth-publisher-types-44.json'
       - 'audit/historical-reviewed/q3-natsynth-nonoriginal-31-two-pass.json'
@@ -44,3 +52,5 @@ jobs:
         run: node --test scripts/test-historical-q3-natcatal-residual-24.mjs
       - name: Validate 44 Nature Synthesis Q3 source DOI categories and substantive synthesis reviews
         run: node --test scripts/test-historical-q3-natsynth-reviewed-44.mjs
+      - name: Validate Nature Chemistry official 66 DOI date/type census and 51 DOI two-pass scopes
+        run: node --test scripts/test-historical-q3-nchem-51-reviewed.mjs
