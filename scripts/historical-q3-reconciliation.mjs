@@ -7,6 +7,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {verifyHistoricalReviewerStatusRefresh} from './historical-q3-reviewer-status-refresh.mjs';
 import {bindReviewedQ3ScopeProof,EMPTY_REVIEWED_SCOPE,REVIEWED_SCOPE_AUTHORITY_SCHEMA} from './historical-q3-reviewed-scope-proof.mjs';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
 import {TRIAGE_SCHEMA} from './historical-review-triage.mjs';
@@ -53,6 +54,7 @@ export function reconcileQ3({
   state,triage,shards,formal,manifest,corrections,
   publisherNonResearch=EMPTY_PUBLISHER_NONRESEARCH,
   publisherReviewedScope=EMPTY_REVIEWED_SCOPE,
+  reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
   ensure(state?.schema==='gallery-historical-nightly-staging-v1'
@@ -73,6 +75,12 @@ export function reconcileQ3({
     &&publisherReviewedScope.mode==='scientific_review_and_source_identity_only_not_publication'
     &&Array.isArray(publisherReviewedScope.reviewed),
     'q3_reviewed_scope_untrusted_adapter');
+  ensure(reviewerQueueHistoricalBlobAliasesByRoot instanceof Map
+    &&[...reviewerQueueHistoricalBlobAliasesByRoot].every(([rootId,aliases])=>
+      typeof rootId==='string'&&aliases instanceof Set
+      &&aliases.size>0&&aliases.size<=5
+      &&[...aliases].every(sha=>/^[0-9a-f]{40}$/.test(sha))),
+    'q3_review_queue_historical_blob_aliases_untrusted');
   ensure(Number.isSafeInteger(limit)&&limit>=1&&limit<=400
     &&Number.isSafeInteger(page)&&page>=0&&page<=10000
     &&reference===1000,'q3_reference_or_page_invalid');
@@ -97,7 +105,10 @@ export function reconcileQ3({
       &&shard.stats?.candidateOccurrences===shard.records.length,
       'q3_invalid_review_shard:'+shard?.rootId);
     shardIds.add(shard.rootId);
-    if(shard.gitBlobSha)gitBlobByRoot.set(shard.rootId,shard.gitBlobSha);
+    if(shard.gitBlobSha)gitBlobByRoot.set(shard.rootId,new Set([
+      shard.gitBlobSha,
+      ...(reviewerQueueHistoricalBlobAliasesByRoot.get(shard.rootId)||new Set())
+    ]));
     cells.get(cellId(spec.journal,spec.month)).completedSourceRoots++;
     occurrences+=shard.records.length;
     for(const row of shard.records){
@@ -169,7 +180,7 @@ export function reconcileQ3({
       &&src.sourceHashes.includes(ev.stageSourceSha256)
       &&/^[a-f0-9]{40}$/.test(ev.stageBatchGitBlobSha||'')
       &&(!ev.sourceReviewQueueGitBlobSha||(
-        ev.sourceReviewQueueGitBlobSha===gitBlobByRoot.get(ev.sourceRootId)
+        gitBlobByRoot.get(ev.sourceRootId)?.has(ev.sourceReviewQueueGitBlobSha)
         &&ev.sourceReviewQueuePath===
           'audit/historical-staging/review-queue/'+ev.sourceRootId+'.json'
         &&item.title===src.title))
@@ -209,7 +220,7 @@ export function reconcileQ3({
       &&!source.journalConflict
       &&source.sourceRoots.includes(proof.sourceRootId)
       &&source.sourceHashes.includes(proof.stageSourceSha256)
-      &&gitBlobByRoot.get(proof.sourceRootId)===proof.stageBatchGitBlobSha
+      &&gitBlobByRoot.get(proof.sourceRootId)?.has(proof.stageBatchGitBlobSha)
       &&proof.sourceShardPath==='audit/historical-staging/review-queue/'+proof.sourceRootId+'.json'
       &&proof.sourceFamilies.every(f=>(source.sourceFamilies||[]).includes(f))
       &&!pub.has(id)&&!accepted.has(id)&&!pending.has(id)
@@ -681,9 +692,50 @@ export async function runQuarterAudit({
     const gitBlobSha=createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex');
     shards.push({...JSON.parse(bytes.toString('utf8')),gitBlobSha});
   }
+  // Only a status-only, byte-for-byte deterministic rebuild from the same
+  // immutable publisher-source batch can authorize an older reviewer Git SHA
+  // after legitimate historical admissions changed current status counters.
+  // Current/reconstructed bytes remain auditable; no global hash bypass.
+  const nchemByRoot=new Map();
+  for(const evidence of nchemFrozen.items){
+    const rootId=evidence.sourceRootId;
+    const prior=nchemByRoot.get(rootId);
+    const next={
+      sourceSha:evidence.stageSourceSha256,
+      rawGitSha:evidence.originalBatchGitBlobSha,
+      pinnedReviewerGitSha:evidence.reviewQueueGitBlobSha
+    };
+    ensure(!prior||(
+      prior.sourceSha===next.sourceSha
+      &&prior.rawGitSha===next.rawGitSha
+      &&prior.pinnedReviewerGitSha===next.pinnedReviewerGitSha),
+      'q3_nchem_immutable_root_proof_disagrees:'+rootId);
+    nchemByRoot.set(rootId,next);
+  }
+  const shardsByRoot=new Map(shards.map(x=>[x.rootId,x]));
+  const reviewerQueueHistoricalBlobAliasesByRoot=new Map();
+  const publishedIds=new Set(formal.articles.map(x=>normalize(x.doi)));
+  const approvedIds=new Set(manifest.accepted.map(x=>normalize(x.doi)));
+  const pendingIds=new Set(manifest.pending.map(x=>normalize(x.doi)));
+  for(const [rootId,p] of nchemByRoot){
+    const shard=shardsByRoot.get(rootId);
+    ensure(shard,'q3_nchem_missing_frozen_source_root:'+rootId);
+    if(shard.gitBlobSha===p.pinnedReviewerGitSha)continue;
+    const rawBatchText=await readFile(root+'/batches/'+rootId+'.json','utf8');
+    const {gitBlobSha:currentReviewerGitBlobSha,...persistedReviewerShard}=shard;
+    const oldSha=verifyHistoricalReviewerStatusRefresh({
+      rawBatchText,reviewerShard:persistedReviewerShard,rootId,
+      expectedRawSha256:p.sourceSha,expectedRawGitBlobSha:p.rawGitSha,
+      previousReviewerGitBlobSha:p.pinnedReviewerGitSha,
+      published:publishedIds,approved:approvedIds,pending:pendingIds
+    });
+    ensure(currentReviewerGitBlobSha!==oldSha,
+      'q3_nchem_refresh_misidentified_old_blob:'+rootId);
+    reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,new Set([oldSha]));
+  }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
-    publisherReviewedScope,page
+    publisherReviewedScope,reviewerQueueHistoricalBlobAliasesByRoot,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);
   await writeAtomic(root+'/quarter-2026-q3-review-worklist.json',worklist);

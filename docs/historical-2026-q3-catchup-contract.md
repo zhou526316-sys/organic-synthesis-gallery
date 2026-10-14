@@ -260,3 +260,43 @@ no history inclusion in Today/Hot/WeChat, no pre-October
 body-media/SI/PDF retrieval, no Cloudflare production D1, no new
 18:00 publication task, no guessed publisher-first-online based on
 print issue. Preserve the still-false 16-journal Research-issue closure gate.
+
+
+## 2026-10-14: reviewer queue Git SHA changes after a valid 08:00 admission
+
+A historical `review-queue/<sourceRoot>.json` contains **mutable discovery
+status** and aggregate counts. When three publisher-verified Nature Chemistry
+DOI moved into `approved-admissions.json`, the *same unchanged raw*
+Crossref/OpenAlex source batches regenerated two Q3 reviewer queue files with
+new Git blob hashes; their old hashes had been frozen in publisher/audit
+receipts. The first authorized Q3 recount #38538114410 failed on a
+distinct 12 all-source versus 11 newly-reviewed window check, fixed in
+PR #657. The next recount #38539425019 correctly failed closed on the
+former reviewer-queue blob hash for DOI `10.1038/s41557-026-02234-2`
+(a non-original editorial in the same root as two newly approved Articles).
+Neither failed attempt overwrote the Q3 quarterly report.
+
+The safe fix **does not waive** a cryptographic identity:
+- The raw source batch must be **byte-for-byte identical** to its original
+  frozen Git SHA-1 and SHA-256.
+- The latest reviewer queue, including DOI identities, title, date, authors,
+  source families, scores, states, counters and order, must be **byte-for-byte
+  reproducible as a parsed deterministic JSON object** by the authoritative
+  `buildReviewShard` using the current main's formal/pending/approved sets
+  and original raw source. Changing any non-status item fails closed.
+- Only then, for that precisely verified original source root, may the
+  historical whole-reviewer-queue Git blob SHA in a previously frozen
+  scientific record be recognized as a **legacy receipt alias**. Both actual
+  current SHA and historical pinned SHA remain recorded as distinct values;
+  never rewrite an old receipt to pretend the current reviewer file has the
+  old hash. A hash alias is never granted to another root.
+- The three new original Nature Chemistry Articles still require valid
+  independently assessed synthetic scope, original DOI and authors,
+  publisher online-first dates, true Chinese titles, explicit 08:00-only
+  authority, and no unauthorized D1 or PDF/media writes.
+
+Review-source blob status is **not** the same as immutable original-source
+identity. The Q3 census can only change its unfinished figures after a
+*successful* existing staging-only recount whose two outputs have the same
+`generatedAt`. This guard must be tested before each new class of
+historical approval rather than repeatedly rerunning the 192 metadata roots.

@@ -201,3 +201,28 @@ test('complete 66-DOI publisher census spans twelve historical windows; 51 revie
     assert.notEqual(row.originalStatus,'unfinished',
       'a real unfinished paper cannot be dropped because the shard lacks a new review');
 });
+
+test('a verified old reviewer-shard Git SHA remains a proof alias only for the status-regenerated root',()=>{
+  const x=input();
+  const target='2026-08-22_2026-08-31_nature-chemistry';
+  const originals=x.shards;
+  const before=originals.find(sh=>sh.rootId===target);
+  assert.ok(before);
+  const refreshed=originals.map(sh=>sh.rootId===target
+    ?{...sh,gitBlobSha:'e'.repeat(40)}:sh);
+  assert.throws(()=>reconcileQ3({...x,shards:refreshed}),
+    /q3_nonresearch_publisher_evidence_invalid|q3_reviewed_scope_provenance_or_science_conflict/);
+  const historicalAliases=new Map([[target,new Set([before.gitBlobSha])]]);
+  const {coverage}=reconcileQ3({...x,shards:refreshed,
+    reviewerQueueHistoricalBlobAliasesByRoot:historicalAliases});
+  assert.equal(coverage.counters.uniqueSourceDois,51);
+  assert.equal(coverage.counters.sourceApprovedWaiting08,3);
+  assert.equal(coverage.counters.sourcePublisherNonResearchExcluded,27);
+  assert.equal(coverage.counters.sourcePublisherReviewedScopeExcluded,20);
+  assert.equal(coverage.counters.sourcePublisherReviewedScopePending,1);
+  const incorrectRoot='2026-09-01_2026-09-07_nature-chemistry';
+  assert.throws(()=>reconcileQ3({...x,shards:refreshed,
+    reviewerQueueHistoricalBlobAliasesByRoot:new Map([[incorrectRoot,
+      new Set([before.gitBlobSha])]])}),
+    /q3_nonresearch_publisher_evidence_invalid|q3_reviewed_scope_provenance_or_science_conflict/);
+});
