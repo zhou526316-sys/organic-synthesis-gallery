@@ -848,6 +848,33 @@ export async function runQuarterAudit({
       'q3_nchem_refresh_misidentified_old_blob:'+rootId);
     reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,new Set([oldSha]));
   }
+  // New Nature Communications approvals can legitimately alter only ephemeral
+  // reviewer-shard statuses. Reconstruct byte-for-byte from immutable raw
+  // source with current protected DOI partitions before accepting prior hash.
+  for(const [rootId,p] of ncRoots){
+    const shard=shardsByRoot.get(rootId);
+    ensure(shard,'q3_natcomm_missing_frozen_source_root:'+rootId);
+    const rawBatchText=await readFile(root+'/batches/'+rootId+'.json','utf8');
+    const rawBytes=Buffer.from(rawBatchText,'utf8');
+    const rawSha=createHash('sha256').update(rawBytes).digest('hex');
+    const rawGit=createHash('sha1').update('blob '+rawBytes.length)
+      .update(Buffer.from([0])).update(rawBytes).digest('hex');
+    ensure(rawSha===p.sourceSha&&rawGit===p.rawGitSha,
+      'q3_natcomm_immutable_raw_source_changed:'+rootId);
+    if(shard.gitBlobSha===p.pinnedReviewerGitSha)continue;
+    const {gitBlobSha:currentReviewerGitBlobSha,...persistedReviewerShard}=shard;
+    const historicalBlob=verifyHistoricalReviewerStatusRefresh({
+      rawBatchText,reviewerShard:persistedReviewerShard,rootId,
+      expectedRawSha256:p.sourceSha,expectedRawGitBlobSha:p.rawGitSha,
+      previousReviewerGitBlobSha:p.pinnedReviewerGitSha,
+      published:publishedIds,approved:approvedIds,pending:pendingIds
+    });
+    ensure(currentReviewerGitBlobSha!==historicalBlob,
+      'q3_natcomm_status_refresh_not_proven:'+rootId);
+    const aliases=reviewerQueueHistoricalBlobAliasesByRoot.get(rootId)||new Set();
+    aliases.add(historicalBlob);
+    reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,aliases);
+  }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
     publisherReviewedScope,reviewerQueueHistoricalBlobAliasesByRoot,page
