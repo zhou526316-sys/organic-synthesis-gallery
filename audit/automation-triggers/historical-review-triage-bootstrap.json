@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Q3_history_staging_only_recount_after_15_publisher_science_verdicts_20261014",
+  "purpose": "Q3_history_staging_only_recount_after_650_chinese_evidence_gate_fix",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T05:41:45.280Z",
-  "reason": "After CI-green merge PR #648 at 2026-10-14T05:40:53Z, safely merge current main into staging and rerun existing Q3 192-root read-only reconciliation. Exact 15 DOI Nature Catalysis publisher science verdicts have 14 out-of-scope and 1 evidence-pending; validate original frozen shard Git SHA, dates, and independent science challenges. Keep original 116 academic accepts, 2 old pendings, 25 waiting for only 2026-10-15 08:00 Beijing. Zero D1 queries or writes, zero production or media changes. Prediction 11408 unfinished is NOT a completed result until stage artifacts are written and read back. Publisher-issue Research closure remains false.",
+  "requestedAt": "2026-10-14T05:50:36.679Z",
+  "reason": "One bounded recovery of failed Q3-only run 38518015247 after PR #650 merge a952fbf68ffd82b3165bbce1d27011c3520c0e2e; DOI/source Git SHA evidence matched but old validation erroneously required >=25 JS characters for every Chinese descriptive field. Fixed short Chinese evidence while retaining >=40 character independent challenge reasons. Existing source records and science decisions unchanged. Verify 14 independent science exclusions and one evidence pending; 116 approved and 2 original pending unchanged. Staging-only Git sources, zero D1, no media or off-slot release. Expected 11408 unfinished after real readback only.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_Q3_NatCatal_15_reviewed_14_science_excluded_1_new_science_pending_116_manifest_1087_formal_no_published_changes",
+  "triggerScope": "20261014_Q3_NatCatal_15_reviewed_retry_650_fix_language_threshold_no_double_release",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "2130a1f4a7799200cf43829ddcadcd14829a454a",
+  "lastRelatedMergeCommit": "a952fbf68ffd82b3165bbce1d27011c3520c0e2e",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -53,5 +53,7 @@
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
   "expectedScopeScienceExcluded": 14,
   "expectedAdditionalEvidencePending": 1,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11408
+  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11408,
+  "retryOfRunId": 38518015247,
+  "retryCause": "q3_reviewed_scope_provenance_or_science_conflict_01571-2_due_24_char_Chinese_description"
 }
