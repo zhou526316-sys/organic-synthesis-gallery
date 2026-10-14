@@ -508,8 +508,8 @@
   },
   "formalCatalogSnapshot": {
     "source": "public/toc-demand-live.json",
-    "sha": "a231a898894a788d1cca7476ed289163c85c6c1a",
-    "total": 1091,
+    "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
+    "total": 1087,
     "readMode": "github_main_read_only_no_production_D1"
   },
   "guards": {
@@ -528,5 +528,6 @@
     "sha": "16b09c9a2f77014b71a9c51cae508228cbfc80c2",
     "acceptedTotal": 101,
     "pendingTotal": 2
-  }
+  },
+  "reconciliationNote": "Restamped after authorized 2026-10-14 deletion-only four-DOI scope correction changed GitHub main catalog 1091→1087; neither of the two Nature Synthesis pre-July DOI changed membership. The formal deployment phase was sync_failed when re-read, so this is repository catalog membership only."
 }

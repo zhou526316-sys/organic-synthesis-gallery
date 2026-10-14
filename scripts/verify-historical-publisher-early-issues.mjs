@@ -17,7 +17,7 @@ export function verifyEarlyNatsynthIssueReceipt(data){
   ensure(Array.isArray(data.issues)&&data.issues.length===2,'issues');
   const snap=data.formalCatalogSnapshot,approvedSnap=data.historicalManifestSnapshot;
   ensure(snap?.source==='public/toc-demand-live.json'&&/^[a-f0-9]{40}$/.test(snap.sha||'')
-    &&snap.total===1091&&snap.readMode==='github_main_read_only_no_production_D1'
+    &&snap.total===1087&&snap.readMode==='github_main_read_only_no_production_D1'
     &&approvedSnap?.source==='audit/historical-reviewed/approved-admissions.json'
     &&/^[a-f0-9]{40}$/.test(approvedSnap.sha||'')
     &&approvedSnap.acceptedTotal===101&&approvedSnap.pendingTotal===2,

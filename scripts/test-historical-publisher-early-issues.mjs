@@ -12,7 +12,7 @@ test('July and August cover issues each have 13 original Research DOI but all li
  assert.equal(a.individualLandingDatesIndependentlyVerified,false);
  assert.equal(a.publisherQ3CompletenessEstablished,false);
  assert.deepEqual(source.issues.map(x=>x.articleRows.length),[13,13]);
- assert.equal(source.formalCatalogSnapshot.total,1091);
+ assert.equal(source.formalCatalogSnapshot.total,1087);
  assert.deepEqual(source.counters.exactFormalDOIs,['10.1038/s44160-026-01023-6','10.1038/s44160-026-01036-1']);
  for(const issue of source.issues)for(const row of issue.articleRows){
    assert.ok(row.issueTocArticlePublishedDate<'2026-07-01');
@@ -41,7 +41,7 @@ test('2026-10-14 current readback: exactly two pre-July Nature Synthesis DOI are
  assert.throws(()=>verifyEarlyNatsynthIssueReceipt(b),/publisher_early_issue_current_catalog_membership/);
  const c=clone();c.counters.formalDOIsOfTheseResearchRows=0;
  assert.throws(()=>verifyEarlyNatsynthIssueReceipt(c),/publisher_early_issue_counters/);
- const d=clone();d.formalCatalogSnapshot.total=984;
+ const d=clone();d.formalCatalogSnapshot.total=1091;
  assert.throws(()=>verifyEarlyNatsynthIssueReceipt(d),/publisher_early_issue_current_readback_snapshot/);
  const e=clone();e.historicalManifestSnapshot.acceptedTotal=91;
  assert.throws(()=>verifyEarlyNatsynthIssueReceipt(e),/publisher_early_issue_current_readback_snapshot/);
