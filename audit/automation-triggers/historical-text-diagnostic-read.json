@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261014-1521-license-pending-fast-close-evidence",
-  "requestedAt": "2026-10-14T15:21:00+08:00",
+  "requestId": "20261014-2335-historical-text-v029-postrelease-readback",
+  "requestedAt": "2026-10-14T15:36:54.344Z",
   "mode": "read_only",
   "scope": "recent_200_metadata_events_only",
-  "purpose": "Diagnose owner-reported most publisher article tabs automatically closing immediately with license_not_verified. Aggregate latest 200 non-prose diagnostic events by version, publisher, stage, reason and real HTTP status; do not modify browser, publisher, media or FTS production data.",
+  "purpose": "Post-release v0.2.9 license hydration and bounded-tab diagnosis: count v0.2.9 final metadata events and reasons separately from v0.2.8, without accessing article texts. Do not treat absence of v0.2.9 data as a successful publisher replay.",
   "noSourceContent": true,
   "noPublisherAccess": true,
   "noWrites": true
