@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 const DOI=/^10\.\d{4,9}\/[^\s?#]{1,220}$/,PMCID=/^PMC\d{4,12}$/;
 export function doi(value){const x=String(value||'').toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'').trim();return DOI.test(x)?x:'';}
 const quota=[['Nature Communications',7],['Nature Synthesis',2],['Nature Chemistry',2],['Nature Catalysis',1],['Science Advances',1],['JACS',3],['ACS Catalysis',2],['Organic Letters',2]];
-export function sample(registry,release,limit=20){
+export function sample(registry,release,limit=20,offset=0){
  if(!Array.isArray(registry?.articles)||!Array.isArray(release?.dois)||release.dois.length!==release.productionCards||!/^[a-f0-9]{64}$/.test(String(release.architectureCatalogId||'')))throw Error('formal_release_invalid');
  const allowed=new Set(release.dois.map(doi));if(allowed.size!==release.dois.length)throw Error('formal_doi_duplicate');
  const g=new Map(),seen=new Set();
@@ -11,9 +11,11 @@ export function sample(registry,release,limit=20){
  // Prefer earliest eligible papers: repository OA deposits can lag online publication.
  for(const rows of g.values())rows.sort((a,b)=>a.date.localeCompare(b.date)||a.doi.localeCompare(b.doi));
  const selected=[],cap=Math.min(20,Math.max(1,Number(limit)||20));
- for(const [j,count] of quota){const rows=g.get(j)||[];for(let i=0;i<count&&rows.length&&selected.length<cap;i++)selected.push(rows.shift());}
- while(selected.length<cap){let changed=false;for(const j of [...g.keys()].sort()){const rows=g.get(j);if(rows.length&&selected.length<cap){selected.push(rows.shift());changed=true;}}if(!changed)break;}
- return selected;
+ const skipped=Math.max(0,Math.floor(Number(offset)||0));
+ const target=skipped+cap;
+ for(const [j,count] of quota){const rows=g.get(j)||[];for(let i=0;i<count&&rows.length&&selected.length<target;i++)selected.push(rows.shift());}
+ while(selected.length<target){let changed=false;for(const j of [...g.keys()].sort()){const rows=g.get(j);if(rows.length&&selected.length<target){selected.push(rows.shift());changed=true;}}if(!changed)break;}
+ return selected.slice(skipped,skipped+cap);
 }
 const clean=s=>String(s||'').replace(/<[^>]*>/g,' ').replace(/&#\d+;/g,' ').replace(/&\w+;/g,' ').replace(/\s+/g,' ').trim();
 export function parseJats(xml,expected){
@@ -60,7 +62,7 @@ export function matchMeta(input,id){
 }
 export async function limitedGet(url,kind='json',max=2800000){
  const u=new URL(url);
- if(u.protocol!=='https:'||!['www.ebi.ac.uk','gallery.gczhouwld.com'].includes(u.hostname)||u.username||u.password)throw Error('invalid_origin');
+ if(u.protocol!=='https:'||!['www.ebi.ac.uk','gallery.gczhouwld.com','api.gczhouwld.com'].includes(u.hostname)||u.username||u.password)throw Error('invalid_origin');
  const r=await fetch(u,{redirect:'error',signal:AbortSignal.timeout(16000)});
  if(r.status===429)throw Error('source_rate_limited');
  if(r.status===404)return '';
@@ -79,4 +81,49 @@ export async function inspect(row){
  const xml=await limitedGet('https://www.ebi.ac.uk/europepmc/webservices/rest/'+meta.pmcid+'/fullTextXML','xml');
  if(!xml)return {pmcid:meta.pmcid,state:'xml_unavailable'};
  return {pmcid:meta.pmcid,...parseJats(xml,row.doi)};
+}
+
+export async function loadPublishedHistorical({get=limitedGet,maxPages=100}={}){
+  // Authoritative formal bibliography and versioned read-only catalog, never
+  // the TOC/media-demand queue (which omits pre-July metadata_only archives).
+  const release=JSON.parse(await get('https://gallery.gczhouwld.com/release-delivery.json','json',6000000));
+  const id=String(release?.architectureCatalogId||'');
+  if(!/^[a-f0-9]{64}$/.test(id)||!Array.isArray(release.dois)
+    ||!Number.isSafeInteger(release.productionCards)
+    ||release.dois.length!==release.productionCards)throw Error('formal_release_invalid');
+  const allowed=new Set(release.dois.map(doi));
+  if(allowed.size!==release.dois.length||release.dois.some(x=>!doi(x)))throw Error('formal_doi_invalid');
+  const rows=[],seen=new Set();let matched=null,cursor='',finished=false;
+  for(let page=0;page<Math.max(1,Math.min(1000,Number(maxPages)||100));page++){
+    const url=new URL('https://api.gczhouwld.com/api/literature/catalog-view');
+    url.search=new URLSearchParams({catalogId:id,dateTo:'2026-09-30',sort:'oldest',limit:'100',
+      ...(cursor?{cursor}:{})}).toString();
+    const data=JSON.parse(await get(url.toString(),'json',2000000));
+    if(data.readPathActive!==true||data.enabled!==true||data.catalogId!==id
+      ||!Array.isArray(data.items)||data.items.length>100
+      ||!Number.isSafeInteger(data.matched)||data.matched<0)throw Error('formal_catalog_generation_unready');
+    if(matched===null)matched=data.matched;
+    else if(matched!==data.matched)throw Error('formal_catalog_page_count_changed');
+    for(const r of data.items){
+      const key=doi(r?.doi);
+      if(!key||!allowed.has(key)||seen.has(key)
+        ||!/^[a-f0-9]{64}$/.test(String(r?.revision||''))
+        ||!String(r?.journal||'').trim())throw Error('formal_catalog_member_invalid');
+      seen.add(key);
+      rows.push({doi:key,date:String(r.firstOnlineDate||''),journal:String(r.journal),revision:r.revision});
+    }
+    if(rows.length>matched)throw Error('formal_catalog_count_overflow');
+    if(data.hasMore!==true){
+      if(rows.length!==matched||data.nextCursor)throw Error('formal_catalog_incomplete');
+      finished=true;break;
+    }
+    if(!data.nextCursor||data.nextCursor===cursor||!data.items.length)
+      throw Error('formal_catalog_stalled_cursor');
+    cursor=data.nextCursor;
+  }
+  if(!finished)throw Error('formal_catalog_pagination_limit');
+  return {release,registry:{pairedCaptureRegistry:true,webpageDoiCount:rows.length,articles:rows},
+    historicalDated:rows.filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&r.date<'2026-10-01').length,
+    historicalUndated:rows.filter(r=>!/^\d{4}-\d{2}-\d{2}$/.test(r.date)).length,
+    matched:rows.length};
 }
