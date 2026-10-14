@@ -13,14 +13,17 @@ import {
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
-  bind(...args){this.args=args;return this;}
+  bind(...args){
+    if(args.length>100)throw Error('d1_bound_parameter_limit_exceeded');
+    this.args=args;return this;
+  }
   async run(){let v=this.db.prepare(this.sql).run(...this.args);return {meta:{changes:Number(v.changes||0)}};}
   async first(){return this.db.prepare(this.sql).get(...this.args)||null;}
   async all(){return {results:this.db.prepare(this.sql).all(...this.args)};}
 }
 class D1 {
-  constructor(){this.sqlite=new DatabaseSync(':memory:');}
-  prepare(sql){return new Statement(this.sqlite,sql);}
+  constructor(){this.sqlite=new DatabaseSync(':memory:');this.preparedCount=0;}
+  prepare(sql){this.preparedCount++;return new Statement(this.sqlite,sql);}
   async batch(stmts){
     this.sqlite.exec('BEGIN');
     try{for(const s of stmts)this.sqlite.prepare(s.sql).run(...s.args);this.sqlite.exec('COMMIT');}
@@ -135,28 +138,52 @@ test('reviewed public CC by sections can be indexed but remain private until exp
   conflict.rightsReview={...conflict.rightsReview,sourceSha256:conflict.sourceSha256};
   assert.equal((await importReviewedPublicBodySections(env,conflict)).status,409);
 });
-test('25 real-structure scientific sections import atomically; truncated replay cannot pretend complete',async t=>{
+test('33 scientific and figure-caption evidence units import atomically within Workers Free D1 SQL budget',async t=>{
   const env=await fixture(t),base=packet();
-  const sections=Array.from({length:25},(_,i)=>{
+  const sections=Array.from({length:33},(_,i)=>{
     const sectionId='s'+String(i+1).padStart(3,'0');
-    const type=i%2?'mechanism':'results';
-    const heading='Research section '+(i+1);
+    const type=i>=25?'figure_caption':i%2?'mechanism':'results';
+    const heading=i>=25?'Figure '+(i-24):'Research section '+(i+1);
     const text='Verified scientific original content with DOI-bound spectroscopy and synthesis examples. '.repeat(2)+' Section '+i;
     return {sectionId,type,heading,text,sha256:sha(text)};
   });
   const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
   const payload={...base,sections,sourceSha256,
     rightsReview:{...base.rightsReview,sourceSha256}};
+  const db=env.LITERATURE_INDEX_DB,priorQueries=db.preparedCount;
   const first=await importReviewedPublicBodySections(env,payload);
-  assert.equal(first.status,200);assert.equal(first.body.storedSections,25);
+  assert.equal(first.status,200);assert.equal(first.body.storedSections,33);
+  assert.ok(db.preparedCount-priorQueries<=50,
+    'whole DOI + science/figure evidence must fit Workers Free 50-query budget');
   const coverage=await getPublicBodyCoverage(env,GEN.catalogId);
-  assert.equal(coverage.body.verifiedDoi,1);assert.equal(coverage.body.verifiedSections,25);
+  assert.equal(coverage.body.verifiedDoi,1);assert.equal(coverage.body.verifiedSections,33);
   const repeated=await importReviewedPublicBodySections(env,payload);
   assert.equal(repeated.status,200);assert.equal(repeated.body.alreadyReviewed,true);
   env.LITERATURE_INDEX_DB.sqlite.prepare('DELETE FROM literature_body_sections_reviewed WHERE catalog_id=? AND doi=? AND section_id=?')
-    .run(GEN.catalogId,DOI,'s025');
+    .run(GEN.catalogId,DOI,'s033');
   const incomplete=await importReviewedPublicBodySections(env,payload);
   assert.equal(incomplete.status,409);assert.equal(incomplete.body.error,'body_reviewed_source_conflict');
+});
+test('64 complete source units remain within D1 100-parameter and 50-query ceilings',async t=>{
+  const env=await fixture(t),base=packet(),db=env.LITERATURE_INDEX_DB;
+  const sections=Array.from({length:64},(_,i)=>{
+    const text='Genuine scientific evidence fixture describing catalytic reaction experiments. '.repeat(2)+i;
+    return {sectionId:'s'+String(i+1).padStart(3,'0'),
+      type:i<32?'results':'figure_caption',
+      heading:i<32?'Synthetic methodology '+i:'Figure '+(i-31),
+      text,sha256:sha(text)};
+  });
+  const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
+  const payload={...base,sections,sourceSha256,
+    rightsReview:{...base.rightsReview,sourceSha256}};
+  const before=db.preparedCount;
+  const receipt=await importReviewedPublicBodySections(env,payload);
+  assert.equal(receipt.status,200);
+  assert.equal(receipt.body.storedSections,64);
+  assert.ok(db.preparedCount-before<=50,'source import exceeds Workers Free D1 query count');
+  const coverage=await getPublicBodyCoverage(env,GEN.catalogId);
+  assert.equal(coverage.body.verifiedDoi,1);
+  assert.equal(coverage.body.verifiedSections,64);
 });
 test('source-size and section-limit constraints never become partial public science',async t=>{
   const env=await fixture(t),base=packet();
@@ -165,7 +192,7 @@ test('source-size and section-limit constraints never become partial public scie
     return {sectionId:'s'+String(i+1).padStart(3,'0'),type:'results',
       heading:'Experimental results '+i,text,sha256:sha(text)};
   });
-  for(const sections of [mk(33,120),mk(20,15000)]){
+  for(const sections of [mk(65,120),mk(20,15000)]){
     const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
     const x={...base,sections,sourceSha256,
       rightsReview:{...base.rightsReview,sourceSha256}};

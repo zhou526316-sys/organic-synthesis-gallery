@@ -8,7 +8,11 @@ const RIGHTS={'cc-by-4.0':'https://creativecommons.org/licenses/by/4.0/',
   'cc0-1.0':'https://creativecommons.org/publicdomain/zero/1.0/'};
 const TYPES=new Set(['results','scope','mechanism','experimental','introduction',
   'conclusion','figure_caption','table','other']);
-const MAX_SCIENCE_SECTIONS=32;
+const MAX_SCIENCE_SECTIONS=64;
+// 5 x 16 columns = 80 bound parameters, below the D1 100-parameter limit.
+// At most 26 insert queries (13 content + 13 FTS) per atomic 64-unit import.
+const D1_ROWS_PER_INSERT=5;
+const D1_MAX_IMPORT_STATEMENTS=26;
 const MAX_SCIENCE_BYTES=240000;
 const FORBIDDEN=/^(?:references?|bibliography|acknowledgements?|rights and permissions|open access|license|copyright|associated content|author information)\b/i;
 const ready=new WeakSet();
@@ -137,17 +141,31 @@ export async function importReviewedPublicBodySections(env,input){
   }
   if(typeof db.batch!=='function')return resp(503,{error:'body_atomic_transaction_required'});
   const now=Date.now(),statements=[];
-  for(const s of n.sections){
-    statements.push(db.prepare('INSERT INTO literature_body_sections_reviewed '+
-      '(catalog_id,doi,revision,section_id,section_type,heading,body_text,section_sha,source_sha,'+
-      'license_kind,license_url,article_url,reviewer,reviewed_at,completeness,indexed_at)'+
-      ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').bind(
-        n.catalogId,n.doi,n.revision,s.sectionId,s.type,s.heading,s.text,s.sha,n.sourceSha,
-        n.licenseKind,n.licenseUrl,n.articleUrl,n.reviewer,n.reviewedAt,n.completeness,now));
+  // Each SQL statement carries <=80 parameters; each whole DOI import is
+  // one D1 transaction, not N separate subrequests for N science sections.
+  // Avoid exceeding 50 D1 queries/Worker invocation on Workers Free.
+  const sectionColumns='(catalog_id,doi,revision,section_id,section_type,heading,body_text,'+
+    'section_sha,source_sha,license_kind,license_url,article_url,reviewer,reviewed_at,'+
+    'completeness,indexed_at)';
+  const contentTuple='('+Array(16).fill('?').join(',')+')';
+  const searchTuple='(?,?,?,?)';
+  for(let offset=0;offset<n.sections.length;offset+=D1_ROWS_PER_INSERT){
+    const group=n.sections.slice(offset,offset+D1_ROWS_PER_INSERT);
+    const contentBindings=group.flatMap(s=>[
+      n.catalogId,n.doi,n.revision,s.sectionId,s.type,s.heading,s.text,s.sha,n.sourceSha,
+      n.licenseKind,n.licenseUrl,n.articleUrl,n.reviewer,n.reviewedAt,n.completeness,now
+    ]);
+    const searchBindings=group.flatMap(s=>[
+      n.catalogId,n.doi,s.sectionId,(s.heading+' '+s.text).toLowerCase()
+    ]);
+    statements.push(db.prepare('INSERT INTO literature_body_sections_reviewed '+sectionColumns+
+      ' VALUES '+group.map(()=>contentTuple).join(',')).bind(...contentBindings));
     statements.push(db.prepare('INSERT INTO literature_body_sections_fts '+
-      '(catalog_id,doi,section_id,searchable_text) VALUES (?,?,?,?)')
-      .bind(n.catalogId,n.doi,s.sectionId,(s.heading+' '+s.text).toLowerCase()));
+      '(catalog_id,doi,section_id,searchable_text) VALUES '+
+      group.map(()=>searchTuple).join(',')).bind(...searchBindings));
   }
+  if(statements.length>D1_MAX_IMPORT_STATEMENTS)
+    return resp(400,{error:'body_d1_query_budget_exceeded'});
   try{await db.batch(statements);}catch{return resp(500,{error:'body_atomic_import_failed'});}
   return resp(200,{ok:true,doi:n.doi,storedSections:n.sections.length,
     sourceSha256:n.sourceSha,licenseKind:n.licenseKind,publicEnabled:false});
