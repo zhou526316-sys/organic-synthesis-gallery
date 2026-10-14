@@ -885,3 +885,46 @@ test('ten newly audited 2026 Q3 ACS originals preserve real online dates, indepe
  const amine=root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01352');
  assert.match(amine.challengeReason,/BINAM/);
 });
+
+
+test('three new individually publisher-dated ACS original syntheses are deduplicated and safe for the next 08:00 slot',()=>{
+ const expected=[
+  ['10.1021/acs.orglett.6c02967','2026-08-21','9b28580b6638049b3007fea208c8d489c769ed79','Organic Letters'],
+  ['10.1021/acs.orglett.6c03282','2026-08-26','3eb3448b8f413701aed67f8e3f29d518400d7827','Organic Letters'],
+  ['10.1021/acs.joc.5c03189','2026-07-29','9181de94c2f59b0fb77a470f802a143699524037','JOC']
+ ];
+ const first=new Set(),challenges=new Set();
+ for(const [doi,date,sha,journal] of expected){
+  const rows=root.accepted.filter(x=>x.doi===doi);
+  assert.equal(rows.length,1,'one historical reviewed DOI '+doi);
+  const x=rows[0];
+  assert.equal(x.date,date);
+  assert.equal(x.journal,journal);
+  assert.equal(x.reviewEvidence.stageBatchSha,sha);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>115);
+  assert.ok(x.independentPasses[1].reason.length>90);
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(sha));
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(doi));
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.new,false);
+  assert.equal(x.addedDate,'');
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  first.add(x.independentPasses[0].reason);
+  challenges.add(x.independentPasses[1].reason);
+ }
+ assert.equal(first.size,3);
+ assert.equal(challenges.size,3);
+ assert.equal(root.pending.length,2);
+ for(const doi of ['10.1021/acs.orglett.6c03028','10.1021/acs.orglett.6c02707','10.1021/acs.joc.6c00852','10.1021/acs.orglett.6c03224'])
+  assert.equal(root.accepted.some(x=>x.doi===doi),false);
+ const ni=root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c03282');
+ assert.match(ni.challengeReason,/97% ee/);
+ const ox=root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c02967');
+ assert.match(ox.challengeReason,/E\/Z/);
+ const iron=root.accepted.find(x=>x.doi==='10.1021/acs.joc.5c03189');
+ assert.match(iron.challengeReason,/LMCT/);
+});
