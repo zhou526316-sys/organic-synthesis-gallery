@@ -1,38 +1,37 @@
 {
-  "requestId": "wechat-2026-10-13-r5-oct05-user-pdf-style-science-rebuild-once-20261013",
-  "publicationDate": "2026-10-13",
+  "requestId": "wechat-2026-10-14-r1-source-original-27-images-20-final-owner-approved",
+  "publicationDate": "2026-10-14",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-13-r5",
-  "approvedGate": "audit/wechat-working/2026-10-13-review-gate.json",
+  "editorialRevision": "2026-10-14-r1",
+  "approvedGate": "audit/wechat-working/2026-10-14-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1038/s44160-026-01189-z",
-    "10.1038/s41557-026-02213-7"
+    "10.1021/jacs.6c17662",
+    "10.1021/jacs.6c08353"
   ],
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0",
-  "expectedReviewedBodyImages": 22,
-  "expectedReviewedAssets": 24,
-  "sourceImportRunId": 38353006248,
-  "offlineVisualRunId": 38369533720,
-  "imageOriginalShaReview": "audit/wechat-working/2026-10-13-r2-source-image-qa.json",
-  "publisherSourceQa": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-14&doi=10.1021%2Fjacs.6c17662&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c08353&summary=0",
+  "expectedReviewedBodyImages": 25,
+  "expectedReviewedAssets": 27,
+  "imageOriginalShaReview": "audit/wechat-working/2026-10-14-r1-original-figure-sha-review.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-14-r1-publication-science-review.json",
   "sourceCoverSha256": {
-    "featured": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
-    "retrospective": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
+    "featured": "41b359668c3bb7256be64c2fcdcf51f0d47a94f9bf5c63c04d3893f56d00f90c",
+    "retrospective": "c12ec72a42fac2e011ecbc8d18f395fd89447a0bb75773cd7c0dff88c34e8699"
   },
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "noDuplicatePolicy": "strict_update_existing_oct13_media_id_only_refuse_mismatch_no_fallback_add",
-  "journalTotalCount": 12,
-  "reason": "Owner personally supplied printed Oct05 JACS published article as reference and rejected Oct13 R4 as unengaging. R5 science and editorial overhaul uses actual evidence: compact 2-point chemical guide, meaningful two-tier section hierarchy (not artificial numbered layers), detailed O/S ring opening/closure, O18/DFT constraints and failures; O/N amine-Lewis acid competition, isolated aminoalcohol, classic Mitsunobu failure, BEHT vs competing pathways, class-specific Lewis acids, bounded comparisons. Keep original 22 paper/SI raster bytes and covers, current 12 accurate Oct13 daily journal-card records, same exact Oct13 media_id and two DOI deep links. Independent 390px+desktop QA approved #38369533720. Execute exactly one existing-draft official API update and draft/get readback. No duplicate draft and NEVER publish/send.",
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
-  "expectedScienceCharacters": {
-    "NatureSynthesis": 3572,
-    "NatureChemistry": 3418
-  },
-  "unchangedAssetFingerprints": true
+  "noDuplicatePolicy": "20261014_date_scoped_single_new_draft_or_update_existing_no_fallback_duplicates",
+  "journalTotalCount": 20,
+  "excludedDOIs": [
+    "10.1038/s41467-026-78512-x",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1002/anie.2518487"
+  ],
+  "unchangedAssetFingerprints": true,
+  "reason": "User explicitly starts Oct14 two-paper Official Account draft after deleting four out-of-scope published papers. Final 08:00 daily count 20 (JOC7 OrgLett7 NatSynth2 JACS2 ACS Catal1 ChemSci1). First article is JACS 10.1021/jacs.6c17662 MHAT migratory hydroamination; second is JACS 10.1021/jacs.6c08353 List IDPi/PFTB asymmetric geranyl cyclization. Both manuscript text, main/SI evidence maps, 25 original figure rasters and 2 source-only covers SHA reviewed. Lead original Fig1B image immediately follows 先看懂 reaction guide. Create or reuse ONE Oct14 draft, exact DOI links, then official draft/get. Never freepublish or group-send."
 }
