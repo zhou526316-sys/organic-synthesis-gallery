@@ -1,16 +1,24 @@
 {
   "schemaVersion": 1,
   "mode": "confirmed-scope-removal",
-  "requestId": "user-immediate-scope-removal-20261005-d6gc04274k",
-  "reason": "The user explicitly excludes 10.1039/d6gc04274k. The 2026-10-05 prepublish evidence identifies it as a continuous PET glycolysis/recycling process centered on post-consumer polycotton waste and process engineering. Apply the existing authorized deletion-only transaction immediately; do not admit or modify any retained paper.",
+  "requestId": "user-scope-removal-four-20261014",
+  "reason": "The user explicitly excludes all four registered DOI despite the earlier 2026-10-14 formal include. Remove only these four production DOI records immediately through the existing deletion-only atomic correction, preserve evidence of real chemistry in previous reviews, and prevent reinclusion via the durable correction registry.",
+  "userInstruction": "10.1038/s41467-026-78512-x、10.1002/anie.2910902、10.1021/acscatal.6c06095、10.1002/anie.2518487 这四篇去掉，不属于范围之内，要记住",
   "authorityFile": "audit/scope-removal-authority.json",
   "removeDois": [
-    "10.1039/d6gc04274k"
+    "10.1038/s41467-026-78512-x",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1002/anie.2518487"
   ],
   "addDois": [],
   "retainPendingAndUnconfirmedBoundaryPapers": true,
-  "evidenceRegistryCommit": "7bb41aa2cc258eabfa2d1d19ce0eefee5ec3dc19",
-  "evidenceRegistryBlobSha": "cdb36d329454d0e836eef4774c01cfc148e6fdb1",
-  "separateMediaCorrectionDoi": "10.31635/ccschem.026.202507094",
-  "separateMediaCorrectionMustNotRemoveArticle": true
+  "evidenceRegistryBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+  "evidenceRegistryCommit": "b92976942d2ac15e86016a84d86834d4683bc3ce",
+  "originalReviewFile": "audit/review-2026-10-14-0800.json",
+  "originalPublicationSlot": "2026-10-14T08:00:00+08:00",
+  "expectedOriginalProductionCards": 1091,
+  "expectedAfterCorrectionCards": 1087,
+  "protectedFilesMayOnlyLoseExactRequestedDois": true,
+  "cannotChangeReleaseSchedules": true
 }
