@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-14",
+  "publicationSlot": "2026-10-14T08:00:00+08:00",
+  "revision": "2026-10-14-r1",
+  "status": "passed_verified_actual_two_jacs_official_draft_add_draft_get_readback_and_browser_visual",
+  "editorialPR": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/638",
+  "originalImageStagingRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38504635163",
+  "sourceManifestsBuildRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38505373194",
+  "officialWeChatDraftRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38505780958",
+  "actualCloudBrowserQA": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38506053269",
+  "proofSources": {
+    "receiptGitBlob": "801f3c13e524104f192bdd5d7ce502138ac5f3d3",
+    "cloudQAblob": "f426108f9af66dc7ea3e8eeecbe7527e83b54676",
+    "gateGitBlob": "f85d4c6becddb429a0f1569f3d86f14d3ecb7fb6"
+  },
+  "actualCloud": {
+    "stage": "draft_add",
+    "readback": "ok",
+    "mediaId": "KhELYUzvwADwB_l1xH1SWK0GEUwdJcrzZUnUqTu1MZdQpaEILGEgEcWC4qU-DSzy",
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/0c76a21a2bf4f1778f313235.html",
+    "newTodayCreated": true,
+    "publicationSubmitted": false,
+    "articleCount": 2,
+    "dailyNewCount": 20
+  },
+  "excludedDois": [
+    "10.1038/s41467-026-78512-x",
+    "10.1002/anie.2910902",
+    "10.1021/acscatal.6c06095",
+    "10.1002/anie.2518487"
+  ],
+  "journalCounts": {
+    "JOC": 7,
+    "Organic Letters": 7,
+    "Nature Synthesis": 2,
+    "JACS": 2,
+    "ACS Catalysis": 1,
+    "Chemical Science": 1
+  },
+  "selected": [
+    {
+      "slot": 1,
+      "doi": "10.1021/jacs.6c17662",
+      "title": "有机合成文献日报｜10.14｜今日精选｜JACS：铁氢催化烯烃迁移氢胺化",
+      "articleBodyFigures": 13
+    },
+    {
+      "slot": 2,
+      "doi": "10.1021/jacs.6c08353",
+      "title": "有机合成文献日报｜10.14｜往期精选｜JACS：手性 IDPi 催化香叶基衍生物的不对称阳离子环化",
+      "articleBodyFigures": 12
+    }
+  ],
+  "visual": {
+    "covers": 2,
+    "actualCloudImageTags": 28,
+    "decoded": 28,
+    "broken": 0,
+    "expectedPaperMainSI": 25,
+    "plusGalleryQr": 1,
+    "noHorizontalOverflowMobile390": true,
+    "noHorizontalOverflowDesktop980": true,
+    "screenshots": [
+      "audit/wechat-working/2026-10-14-r1-cloud-readback/today-mobile-header.png",
+      "audit/wechat-working/2026-10-14-r1-cloud-readback/retrospective-mobile-header.png",
+      "audit/wechat-working/2026-10-14-r1-cloud-readback/today-first-react.png",
+      "audit/wechat-working/2026-10-14-r1-cloud-readback/retro-first-react.png",
+      "audit/wechat-working/2026-10-14-r1-cloud-readback/desktop-main.png"
+    ]
+  },
+  "exactlyConfirmedDeepLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-14&doi=10.1021%2Fjacs.6c17662&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c08353&summary=0"
+  ],
+  "verificationBoundary": [
+    "The Official Account draft was created and read back; no public broadcast/freepublish was performed.",
+    "WeChat native mobile app local copy was not inspected; browser screenshots and full image decode passed.",
+    "Gallery card 20-second blue highlight behavior was not separately navigated in this editorial flow.",
+    "The old locally exported ZIP contains pre-correction 24 count; cloud source is the corrected 20-count, reviewed R1 manifest, not that obsolete HTML."
+  ],
+  "completedAtBeijing": "2026-10-14T11:26:00+08:00"
+}

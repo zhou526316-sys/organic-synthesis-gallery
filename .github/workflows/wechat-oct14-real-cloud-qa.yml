@@ -1,0 +1,67 @@
+name: WeChat Oct14 actual 20-paper JACS cloud draft (read only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - audit/automation-triggers/wechat-oct14-cloud-preview-check.json
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct14-cloud-readonly
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Ensure no cloud mutation and correct 20-paper result
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('audit/wechat-publisher/latest.json').read_text())
+          r=json.loads(Path('audit/automation-triggers/wechat-oct14-cloud-preview-check.json').read_text())
+          g=json.loads(Path('audit/wechat-working/2026-10-14-review-gate.json').read_text())
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          assert j['preview_url']==r['previewUrl'] and j['draft_readback']=='ok'
+          assert j['paper_count']==20 and j['article_count']==2 and j['publish_id'] is None
+          assert g['expectedJournalTotal']==20 and len(g['assets'])==27
+          PY
+      - name: Install Chromium only for read-only actual cloud screenshot check
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/wechat14chrome.log 2>&1 || { tail -60 /tmp/wechat14chrome.log; exit 1; }
+      - name: Browser-check source figures, 20 journals, 2 DOI links and 390px mobile
+        run: node scripts/wechat-oct14-real-cloud-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct14-twenty-paper-real-cloud-preview
+          path: audit/wechat-working/2026-10-14-r1-cloud-readback/
+          retention-days: 30
+      - name: Preserve browser acceptance result without touching WeChat
+        if: success()
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/oct14-qa
+          cp -a audit/wechat-working/2026-10-14-r1-cloud-readback/. /tmp/oct14-qa/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for i in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p audit/wechat-working/2026-10-14-r1-cloud-readback
+            cp -a /tmp/oct14-qa/. audit/wechat-working/2026-10-14-r1-cloud-readback/
+            git add audit/wechat-working/2026-10-14-r1-cloud-readback/
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: Oct14 real two-JACS WeChat draft/readback 20-paper and 25-original-image responsive QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1

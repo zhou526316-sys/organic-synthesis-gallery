@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
+import { correctedPublisherDateForDisplay, publicationDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
+import { readFileSync } from 'node:fs';
 
 const original = () => ({
   doi: '10.1126/sciadv.aed4187',
@@ -48,4 +49,85 @@ test('other old-date papers remain untouched, even with future-facing metadata',
     const record = { ...original(), doi };
     assert.strictEqual(correctedPublisherDateForDisplay(record), record);
   }
+});
+
+const pendingJocDois = [
+  '10.1021/acs.joc.6c01792',
+  '10.1021/acs.joc.6c01506',
+  '10.1021/acs.joc.6c01769',
+  '10.1021/acs.joc.6c01159',
+  '10.1021/acs.joc.6c01796',
+];
+
+test('future date is not displayed as an already-published day on the 14 Oct snapshot', () => {
+  assert.deepEqual(publicationDateForDisplay('2026-10-15', '2026-10-14', true),
+    { date: '', unverified: true, reason: 'future_unverified' });
+  assert.deepEqual(publicationDateForDisplay('2026-10-15', '2026-10-14', false),
+    { date: '', unverified: true, reason: 'future_unverified' });
+});
+
+test('the same DOI does not automatically become verified on the next calendar day', () => {
+  const p=publicationDateForDisplay('2026-10-15', '2026-10-15', true);
+  assert.equal(p.date,'2026-10-15');
+  assert.equal(p.unverified,true);
+  assert.equal(p.reason,'unverified');
+});
+
+test('a confirmed past date remains visible, but invalid calendar days cannot be displayed', () => {
+  assert.deepEqual(publicationDateForDisplay('2026-10-13','2026-10-14'),
+    {date:'2026-10-13',unverified:false,reason:'confirmed'});
+  assert.equal(publicationDateForDisplay('2026-02-29','2026-10-14').date,'');
+  assert.equal(publicationDateForDisplay('2026-10-99','2026-10-14').date,'');
+  assert.throws(()=>publicationDateForDisplay('2026-10-13','not-a-date'));
+});
+
+test('Chemical Science created-only metadata remains first-online date unknown', () => {
+  assert.deepEqual(publicationDateForDisplay('', '2026-10-14', true),
+    {date:'',unverified:true,reason:'missing_or_invalid'});
+  // The Crossref 2026-10-13 createdDate must never fill publication date.
+  const row={doi:'10.1039/d6sc06571f',journal:'Chemical Science',date:'',
+    createdDate:'2026-10-13',dateUnverified:true,addedDate:'2026-10-14'};
+  assert.strictEqual(correctedPublisherDateForDisplay(row),row);
+});
+
+test('all five exact JOC unverified dates survive the derived presentation layer', () => {
+  for(const doi of pendingJocDois) {
+    const source={doi,journal:'JOC',date:'2026-10-15',addedDate:'2026-10-14',
+      dateUnverified:false,title:'DOI-verified test article'};
+    const corrected=correctedPublisherDateForDisplay(source);
+    assert.equal(corrected.date,'2026-10-15'); // preserve Crossref source bytes
+    assert.equal(corrected.dateUnverified,true);
+    assert.strictEqual(source.dateUnverified,false);
+    assert.strictEqual(correctedPublisherDateForDisplay(corrected),corrected);
+  }
+});
+
+test('DOI-scoped override never changes a different journal, admission day, or published date', () => {
+  const base={doi:pendingJocDois[0],journal:'JOC',
+    date:'2026-10-15',addedDate:'2026-10-14',dateUnverified:false};
+  const alternatives=[
+    {...base,doi:'10.1021/acs.joc.other'},
+    {...base,journal:'Organic Letters'},
+    {...base,date:'2026-10-13'},
+    {...base,addedDate:'2026-10-13'},
+  ];
+  for(const item of alternatives)assert.strictEqual(correctedPublisherDateForDisplay(item),item);
+});
+
+test('original Oct 14 formal review confirms publisher date was unverified for every affected JOC DOI', () => {
+  const review=JSON.parse(readFileSync('audit/review-2026-10-14-0800.json','utf8'));
+  const rows=(review.accepted||[]).filter(x=>pendingJocDois.includes(x.doi));
+  assert.equal(rows.length,5);
+  for(const row of rows) {
+    assert.equal(row.dateUnverified,true);
+    assert.equal(row.date,'2026-10-15');
+    assert.equal(row.createdDate,'2026-10-13');
+    assert.equal(row.journal,'JOC');
+  }
+});
+
+test('next fixed-slot writer propagates unverified status even when review has a nonempty future date', () => {
+  const source=readFileSync('scripts/apply-fixed-slot-literature-release.mjs','utf8');
+  assert(source.includes("row.dateUnverified === true ? {"));
+  assert(!source.includes("row.dateUnverified === true && !row.date"));
 });

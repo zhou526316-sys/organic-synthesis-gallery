@@ -254,6 +254,30 @@ test('publisher-verified SciAdv card displays 7 Oct without pending-date label',
   await expect(card.locator('.tag.date')).not.toContainText(/2026-10-09|Oct 9|待核实|unverified/i);
 });
 
+test('future unverified JOC date is hidden on 14 Oct while admission stays correctly marked new', async ({ page }) => {
+  // Pin Beijing clock: do not make the CI outcome depend on the date of re-run.
+  await page.clock.install({ time: new Date('2026-10-14T03:04:00.000Z') });
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  await page.locator('#search').fill('10.1021/acs.joc.6c01769');
+  const joc = page.locator('#gallery > .card[data-doi="10.1021/acs.joc.6c01769"]');
+  await expect(joc).toBeVisible({ timeout: 30000 });
+  await expect(joc.locator('.tag.date')).toContainText(/发表日期待核实|Publication date unverified/);
+  await expect(joc.locator('.tag.date')).not.toContainText(/10月15|Oct 15|2026-10-15/);
+  await expect(joc).toHaveAttribute('data-date', '');
+  await expect(joc.locator('.tag.new')).toBeVisible();
+  await expect(joc.locator('.tag.date')).toHaveAttribute('title', /新增.*当天收入|New means newly added/);
+
+  await page.locator('#search').fill('10.1039/d6sc06571f');
+  const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
+  await expect(rsc).toBeVisible({ timeout: 30000 });
+  await expect(rsc.locator('.tag.date')).toContainText(/发表日期待核实|Publication date unverified/);
+  await expect(rsc.locator('.tag.new')).toBeVisible();
+});
+
 test('verified Hot bootstrap renders before all-time membership finishes', async ({ page }) => {
   const data = fixture();
   let releaseMembership!: () => void;

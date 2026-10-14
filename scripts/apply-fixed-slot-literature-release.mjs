@@ -136,7 +136,9 @@ for (const row of bundle.formalReview.accepted || []) {
   const card = {
     journal: row.journal, title: row.title, doi, date: row.date, url: `https://doi.org/${doi}`,
     new: true, authors: Array.isArray(row.authors) ? row.authors : [], addedDate: slot.slice(0, 10),
-    ...(row.dateUnverified === true && !row.date ? {
+    // Unknown and prospective Crossref dates must retain their audit flags.
+    // A nonempty row.date is NOT proof of a publisher-verified first-online day.
+    ...(row.dateUnverified === true ? {
       dateUnverified: true, createdDate: row.createdDate || '',
     } : {}),
   };

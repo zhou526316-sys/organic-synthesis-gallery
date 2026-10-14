@@ -83,7 +83,7 @@ export async function inspect(row){
  return {pmcid:meta.pmcid,...parseJats(xml,row.doi)};
 }
 
-export async function loadPublishedHistorical({get=limitedGet,maxPages=100}={}){
+export async function loadPublishedHistorical({get=limitedGet,maxPages=100,dateTo='2026-09-30'}={}){
   // Authoritative formal bibliography and versioned read-only catalog, never
   // the TOC/media-demand queue (which omits pre-July metadata_only archives).
   const release=JSON.parse(await get('https://gallery.gczhouwld.com/release-delivery.json','json',6000000));
@@ -96,7 +96,7 @@ export async function loadPublishedHistorical({get=limitedGet,maxPages=100}={}){
   const rows=[],seen=new Set();let matched=null,cursor='',finished=false;
   for(let page=0;page<Math.max(1,Math.min(1000,Number(maxPages)||100));page++){
     const url=new URL('https://api.gczhouwld.com/api/literature/catalog-view');
-    url.search=new URLSearchParams({catalogId:id,dateTo:'2026-09-30',sort:'oldest',limit:'100',
+    url.search=new URLSearchParams({catalogId:id,...(dateTo?{dateTo}:{}),sort:'oldest',limit:'100',
       ...(cursor?{cursor}:{})}).toString();
     const data=JSON.parse(await get(url.toString(),'json',2000000));
     if(data.readPathActive!==true||data.enabled!==true||data.catalogId!==id
