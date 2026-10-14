@@ -193,3 +193,70 @@ Q3 issue closure or extra publication slot is authorized. Recalculate
 the verified source worklist only after its frozen DOI and two-pass
 scope-ledger hash gates succeed; the 11,384 prior unfinished Q3 number
 does not change until a **successful same-generation staging readback**.
+
+
+## 2026-10-14 Nature Chemistry 66 official publisher Q3 online entries
+
+The official publisher **all-article online-first listing**, 2026 index pages
+1–4, was inspected DOI-by-DOI through the 1 July and 30 September boundaries:
+**66 official entries**, consisting of 37 Articles and 29 non-original
+secondary items. All 66 official publisher dates and DOI match the immutable
+2026-Q3 Crossref/OpenAlex reviewer source union **66/66**, with no
+publisher-index date difference. This is an *official index versus known
+metadata source* reconciliation, not a claim every hidden/off-index item has
+been discovered, or that global 16-journal issue completeness is complete.
+
+- `audit/historical-publisher-issues/2026/nature-chemistry-q3-2026-all-types-66.json`
+  preserves the four official 2026 index page URLs, each per-item
+  publisher date and Article type, plus source root/date hashes, with strict
+  index-snapshot limitations.
+- `audit/historical-reviewed/q3-nchem-51-frozen-source-proof.json`
+  records 51 hitherto unreviewed DOI (24 real Articles plus 27 secondary
+  items). Original 13 Article already formal, two previously verified
+  non-original are not duplicated.
+- `audit/historical-reviewed/q3-nchem-27-nonoriginal-two-pass.json`:
+  27 exact publisher-typed and contribution-challenged News & Views,
+  Briefings, Review, Editorial, Thesis, In Your Element, Q&A, book review,
+  correction and Comment records. No secondary article may be relabelled
+  as its linked original research DOI.
+- `audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json`:
+  actual article-specific scientific analysis of 24 original Articles,
+  preserving separate authentic synthesis evidence and adversarial
+  challenges. **Three academically qualified preparative methods**:
+  `10.1038/s41557-026-02228-0` multicolour fluorogenic amino-acid
+  building blocks compatible with Fmoc solid-phase peptide synthesis;
+  `10.1038/s41557-026-02227-1` electrochemically triggered cyclopropanol
+  bioconjugation preferentially targeting acidic protein residues; and
+  `10.1038/s41557-026-02232-4` HAT-initiated solvent-free, bulk
+  commercial polymethacrylate depolymerization with original monomer
+  recovery (about 90%). These constitute original synthetic modes and
+  scope, not automatic admission on the words 'fluorescence', 'protein' or
+  'polymer'. The latest journal pages offer online-first DOI citation,
+  not yet final pages; never fabricate volume and pages.
+- The three are recorded with original authors, source SHA, scientific
+  challenges, verified Chinese card titles and rights safeguards in
+  `audit/historical-reviewed/approved-admissions.json`, but **not
+  formally published**. Sole Beijing 08:00 admission writer continues
+  to own the release, not this history staging audit.
+- `audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json`
+  and `audit/historical-reviewed/q3-nchem-21-scope-source-proof.json`
+  record 20 original Articles outside the site's core transferable
+  organic preparative scope, plus one additional evidence-pending
+  `10.1038/s41557-026-02226-2` (Pd-triggered phenylalanine decaging).
+  This last hold is independent of the two old manifest date pending.
+  Missing preparative evidence is *not* a claim the original has none.
+
+The quarterly source census must stay 12,286; once the safe staging-only
+reconciliation truly completes, the new 51 DOI decisions should move
+non-original 55→82, original science exclude 29→49,
+additional science pending 4→5, academic approved 116→119,
+waiting sole Beijing 08:00 25→28 and unfinished 11,340→11,289
+**if no other authorized inputs changed**. These are just prospective
+checks, not the new authoritative figures until readback of both
+same-generation quarterly JSON files.
+
+Strict: no source-shard mutation, no owner permanent-exclusion changes,
+no history inclusion in Today/Hot/WeChat, no pre-October
+body-media/SI/PDF retrieval, no Cloudflare production D1, no new
+18:00 publication task, no guessed publisher-first-online based on
+print issue. Preserve the still-false 16-journal Research-issue closure gate.
