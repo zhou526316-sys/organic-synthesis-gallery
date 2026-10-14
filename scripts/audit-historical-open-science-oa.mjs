@@ -6,10 +6,15 @@ const flag=k=>process.argv.find(x=>x.startsWith('--'+k+'='))?.slice(k.length+3);
 const dry=process.argv.includes('--dry-run');
 const limit=Math.max(1,Math.min(20,Math.floor(Number(flag('limit')||20))));
 const offset=Math.max(0,Math.floor(Number(flag('offset')||0)));
+const expectedCatalogId=String(flag('expected-catalog-id')||'').trim();
+if(expectedCatalogId&&!/^[a-f0-9]{64}$/.test(expectedCatalogId))
+  throw Error('historical_oa_expected_catalog_id_invalid');
 const formal=dry?null:await loadPublishedHistorical();
 const registry=formal?.registry||JSON.parse(await readFile('public/toc-demand-live.json','utf8'));
 const release=formal?.release||{architectureCatalogId:'a'.repeat(64),
   dois:registry.articles.map(x=>x.doi),productionCards:registry.articles.length};
+if(expectedCatalogId&&release.architectureCatalogId!==expectedCatalogId)
+  throw Error('historical_oa_catalog_generation_changed');
 const list=sample(registry,release,limit,offset);
 const result={schemaVersion:'historical-science-oa-v2',readOnly:true,at:new Date().toISOString(),
   catalogId:release.architectureCatalogId,formalDois:release.dois.length,
