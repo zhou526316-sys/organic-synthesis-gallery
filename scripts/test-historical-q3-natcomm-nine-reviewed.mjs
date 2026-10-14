@@ -162,7 +162,10 @@ test('Q3 reviewer census counts all nine original DOI once and never conflates p
 });
 test('a mutated reviewer Git blob, authorizer collision, or tampered science decision is rejected',()=>{
   const s=mock();
-  assert.throws(()=>reconcileQ3({...s,shards:[{...s.shards[0],gitBlobSha:'c'.repeat(40)},...s.shards.slice(1)]}),
+  const affected=s.shards.findIndex(x=>x.records.some(y=>y.doi==='10.1038/s41467-026-76617-x'));
+  assert.ok(affected>=0);
+  assert.throws(()=>reconcileQ3({...s,shards:s.shards.map((r,i)=>
+    i===affected?{...r,gitBlobSha:'c'.repeat(40)}:r)}),
     /q3_reviewed_scope_provenance_or_science_conflict|q3_invalid_review_shard/);
   assert.throws(()=>reconcileQ3({...s,manifest:{accepted:[admitted[0],admitted[0]],pending:[]}}),
     /q3_formal_doi_partition_conflict/);
