@@ -16,7 +16,6 @@ jobs:
         run: |
           python3 - <<'PY'
           import urllib.request, urllib.error, json, io
-          from PIL import Image
           ids=['jacs.6c17662','jacs.6c08353']
           logs=[]
           for doi in ids:
@@ -29,8 +28,7 @@ jobs:
               try:
                 with urllib.request.urlopen(req,timeout=12) as rsp:
                   b=rsp.read(4_000_000);meta={'code':rsp.status,'type':rsp.headers.get('Content-Type'),'bytes':len(b)}
-                try: meta['dimensions']=Image.open(io.BytesIO(b)).size
-                except Exception as e:meta['decode_error']=str(e)[:90]
+                meta['isJPEG']=b[:3]==bytes.fromhex('ffd8ff')
               except Exception as e:meta={'error':str(e)[:120]}
               logs.append({'doi':doi,'figure':n,**meta})
           print(json.dumps({'originalFigureProbe':logs},ensure_ascii=False,indent=2))
