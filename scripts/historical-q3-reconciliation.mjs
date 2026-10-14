@@ -379,14 +379,14 @@ export async function runQuarterAudit({
     readJson('audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json')
   ]);
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
-  const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length+'\\0'.replace('\\0','\\u0000')).update(scienceBytes).digest('hex');
+  const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
   const publisherReviewedScope=bindReviewedQ3ScopeProof({
     proof:scopedSourceProof,science:scopedScience,scienceGitBlobSha
   });
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id)){
     const bytes=await readFile(root+'/review-queue/'+id+'.json');
-    const gitBlobSha=createHash('sha1').update('blob '+bytes.length+'\\0'.replace('\\0','\\u0000')).update(bytes).digest('hex');
+    const gitBlobSha=createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex');
     shards.push({...JSON.parse(bytes.toString('utf8')),gitBlobSha});
   }
   const {coverage,worklist}=reconcileQ3({
