@@ -32,3 +32,13 @@
 对 2026-10-13 真实来源验收复核发现，Science Advances DOI 10.1126/sciadv.aeg4594 有 25 个 JATS 科学节和 8 个正文 Figure；若每个图注作为独立证据单元，至少需要 33 条，因此 32 节导入上限不能保证保留全部正文科学证据。审核容量现在提高到每 DOI 64 个单元，原文总量继续不超过 240000 字节、各单元 60–16000 字符；超限拒绝，不允许冒充完整。
 
 Cloudflare D1 Workers Free 每次调用限制 50 个数据库查询，每条 SQL 最多 100 绑定参数（https://developers.cloudflare.com/d1/platform/limits/）。此前每节两个独立 INSERT 导致 25 节就至少 50 个写语句，算上认证／目录查询可能超过免费限额。现在每 5 条科学单元合并写一次正文和一次 FTS，每条正文 INSERT 最多 80 个绑定参数，64 条最多 26 个 INSERT 查询；所有写入仍在同一个 D1.batch 原子事务中并严格匹配 DOI、目录修订、每节 SHA 和总来源 SHA。不抬高收费额度，不修改公开搜索开关、原本 08:00 发布和 TOC/PDF 采集，不包含任何真实原文上传。
+
+## 2026-10-14：全正式 DOI 的合法 OA 来源扫描进度
+
+旧版 Europe PMC OA 原文结构试验从 `toc-demand-live.json` 媒体需求表挑20篇，而该表明确不含 `metadata_only` 文献，不能用于创刊以来历史正文的完整来源核验。
+
+现在非模拟来源核查必须先读取 Pages `release-delivery.json`，再按绑定的 `architectureCatalogId` 通过 `GET /api/literature/catalog-view?dateTo=2026-09-30&sort=oldest&limit=100` 完整、无重复、同代次分页，且逐 DOI 校验正式成员及 `revision`。发表日期未知必须保留为待核验，不可计作正文已取得。
+
+每次来源核查最多20个 DOI，按跨期刊固定顺序支持 `--offset=0,20,40,...` 的可重放无重复窗口；GitHub Actions `Historical scientific OA source validation (read-only)` 支持人工指定 `offset` 与 `limit`，并返回本次 `catalogId`、历史日期核验数、所处 offset、nextOffset 和剩余状态。正式目录代次变化时，重新核验目录，不能把两个不同 catalogId 的窗口错误拼接成同一全库验收。
+
+本扫描只访问已登记正式 DOI 的 Europe PMC 元数据及具有开放标志的官方 JATS，且仅保存 DOI／许可状态／科学章节计数／源码哈希；不上传 XML、文章原文、正文图、PDF、付费浏览器缓存，也不触碰原有 TOC 和私有 PDF 队列。**来源可用与章节数不等于通过科学/版权独立审阅，也不自动开启公共 FTS。** 只有获得逐篇来源证据与学术核对后，才可按正式独立章节审核接口导入。
