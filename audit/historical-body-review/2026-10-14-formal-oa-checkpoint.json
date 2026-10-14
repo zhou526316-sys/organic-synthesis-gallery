@@ -15,18 +15,19 @@
     100,
     120,
     140,
-    160
+    160,
+    180
   ],
-  "nextOffset": 180,
+  "nextOffset": 200,
   "hasMore": true,
-  "scannedUniqueDoi": 180,
+  "scannedUniqueDoi": 200,
   "results": {
-    "needs_independent_review": 22,
+    "needs_independent_review": 26,
     "reuse_restricted": 31,
-    "pmc_oa_missing": 74,
-    "metadata_doi_missing": 48,
-    "license_unknown": 4,
-    "science_incomplete": 1
+    "pmc_oa_missing": 83,
+    "metadata_doi_missing": 53,
+    "license_unknown": 5,
+    "science_incomplete": 2
   },
   "sourceWorkflowRuns": [
     38499910931,
@@ -37,12 +38,13 @@
     38504373021,
     38504561119,
     38504755673,
-    38504913899
+    38504913899,
+    38505066519
   ],
   "publicBodyImports": 0,
   "rawXmlPersisted": 0,
   "pdfDownloads": 0,
   "publisherBrowserVisits": 0,
   "integrityRule": "Do not merge reports with any other catalogId; validate current Pages and every DOI/revision before continuing; human scientific and license review separately required.",
-  "verifiedAt": "2026-10-14T03:13:00Z"
+  "verifiedAt": "2026-10-14T03:17:00Z"
 }
