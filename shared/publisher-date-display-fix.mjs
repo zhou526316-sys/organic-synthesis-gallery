@@ -11,6 +11,41 @@ const CORRECTION = Object.freeze({
   addedDate: '2026-10-08',
 });
 
+// Five JOC DOI were admitted on 2026-10-14 with Crossref published/online
+// date 2026-10-15 and createdDate 2026-10-13. The publisher first-online
+// date was NOT independently verified. The 2026-10-14 formal review records
+// dateUnverified=true for all five, but the old release writer accidentally
+// dropped that flag when the prospective date was nonempty.
+// This exact DOI/date/addedDate overlay repairs DISPLAY provenance only until
+// the next authorized fixed-slot data correction. Never backdate publication
+// using Crossref created/deposited dates.
+const JOC_FUTURE_DATE_PENDING = Object.freeze(new Set([
+  '10.1021/acs.joc.6c01792',
+  '10.1021/acs.joc.6c01506',
+  '10.1021/acs.joc.6c01769',
+  '10.1021/acs.joc.6c01159',
+  '10.1021/acs.joc.6c01796',
+]));
+
+function realCalendarDay(date) {
+  if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+  const [year, month, day] = date.split('-').map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
+  return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === date;
+}
+
+/** Return only a date that is safe to SHOW as a publication-day claim.
+ * Future publisher claims stay unknown until the actual calendar day.
+ * Existing DOI-specific unverified flags remain visible as uncertainty
+ * even after the date passes; this never promotes a provisional date.
+ */
+export function publicationDateForDisplay(date, asOfBeijingDay, unverified = false) {
+  if (!realCalendarDay(asOfBeijingDay)) throw new Error('invalid_beijing_as_of_date');
+  if (!realCalendarDay(date)) return {date: '', unverified: true, reason: 'missing_or_invalid'};
+  if (date > asOfBeijingDay) return {date: '', unverified: true, reason: 'future_unverified'};
+  return {date, unverified: unverified === true, reason: unverified === true ? 'unverified' : 'confirmed'};
+}
+
 /** Apply the verified date only to the in-memory display object.
  * It does not change source files, release markers, or publisher capture data.
  */
@@ -18,6 +53,10 @@ export function correctedPublisherDateForDisplay(paper) {
   if (!paper || typeof paper !== 'object') return paper;
   const doi = String(paper.doi || '').trim().toLowerCase()
     .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '');
+  if (JOC_FUTURE_DATE_PENDING.has(doi) && String(paper.journal || '').trim() === 'JOC'
+    && paper.date === '2026-10-15' && paper.addedDate === '2026-10-14') {
+    return paper.dateUnverified === true ? paper : { ...paper, dateUnverified: true };
+  }
   if (doi !== CORRECTION.doi
     || String(paper.journal || '').trim() !== CORRECTION.journal
     || paper.addedDate !== CORRECTION.addedDate

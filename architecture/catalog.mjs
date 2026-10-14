@@ -2,6 +2,7 @@ import { normalizeDoi } from '../shared/literature-identity.mjs';
 export { normalizeDoi } from '../shared/literature-identity.mjs';
 import { createHash } from 'node:crypto';
 import { cutoffFor, classifyDate, acquisitionEligibility, LIFECYCLE_RULE, parseDate } from '../shared/literature-lifecycle.mjs';
+import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
 export const SCHEMA = 'gallery-shadow-catalog-v1';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -38,8 +39,15 @@ export function buildCatalog(papers, { asOfDate, source, withdrawn = [], grants 
     assert(!seen.has(doi), `duplicate_doi:${doi}`);
     assert(!blocked.has(doi), `withdrawn_doi_in_input:${doi}`);
     seen.add(doi);
-    const firstOnlineDate = paper.firstOnlineDate ?? paper.date ?? null;
-    const datePrecision = paper.datePrecision ?? (typeof firstOnlineDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(firstOnlineDate) ? 'day' : 'unknown');
+    // Preserve the *raw* protected card and its revision unmodified. The
+    // derived architecture's firstOnlineDate is a claim about a verified
+    // publisher day, not an ACS/RSC prospective or DOI-created metadata date.
+    // DOI-scoped presentation evidence restores lost JOC dateUnverified flags.
+    const displayEvidence = correctedPublisherDateForDisplay(paper);
+    const firstOnlineDate = displayEvidence.dateUnverified === true
+      ? null : (displayEvidence.firstOnlineDate ?? displayEvidence.date ?? null);
+    const datePrecision = displayEvidence.dateUnverified === true
+      ? 'unknown' : (displayEvidence.datePrecision ?? (typeof firstOnlineDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(firstOnlineDate) ? 'day' : 'unknown'));
     return { doi, firstOnlineDate, datePrecision, addedDate: paper.addedDate ?? null,
       revision: digest(stable(paper)), paper };
   }).sort((a, b) => compare(a.doi, b.doi));
