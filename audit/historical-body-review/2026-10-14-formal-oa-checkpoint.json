@@ -11,28 +11,32 @@
     20,
     40,
     60,
-    80
+    80,
+    100
   ],
-  "nextOffset": 100,
+  "nextOffset": 120,
   "hasMore": true,
-  "scannedUniqueDoi": 100,
+  "scannedUniqueDoi": 120,
   "results": {
-    "needs_independent_review": 9,
-    "reuse_restricted": 21,
-    "pmc_oa_missing": 41,
-    "metadata_doi_missing": 28,
-    "license_unknown": 1
+    "needs_independent_review": 12,
+    "reuse_restricted": 23,
+    "pmc_oa_missing": 49,
+    "metadata_doi_missing": 33,
+    "license_unknown": 2,
+    "science_incomplete": 1
   },
   "sourceWorkflowRuns": [
     38499910931,
     38500108635,
     38500247352,
     38500454607,
-    38500747243
+    38500747243,
+    38504373021
   ],
   "publicBodyImports": 0,
   "rawXmlPersisted": 0,
   "pdfDownloads": 0,
   "publisherBrowserVisits": 0,
-  "integrityRule": "Do not merge reports with any other catalogId; validate current Pages and every DOI/revision before continuing; human scientific and license review separately required."
+  "integrityRule": "Do not merge reports with any other catalogId; validate current Pages and every DOI/revision before continuing; human scientific and license review separately required.",
+  "verifiedAt": "2026-10-14T03:05:00Z"
 }
