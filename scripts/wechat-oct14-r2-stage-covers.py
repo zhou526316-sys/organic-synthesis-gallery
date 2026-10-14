@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stage exactly two visually reviewed Oct14 R2 covers, not the 25 paper/SI figures."""
 import hashlib, io, json, os, pathlib, urllib.request, zipfile
-from PIL import Image
+import struct
 root=pathlib.Path.cwd()
 url=os.environ["ORIGINAL_COVER_ARCHIVE"]
 headers={"User-Agent":"Mozilla/5.0","Accept":"application/zip,application/octet-stream"}
@@ -17,8 +17,8 @@ assert set(z.namelist())==set(expected)|{"cover-transfer-manifest.json"},z.namel
 for name,(expectedsha,size,outname) in expected.items():
     contents=z.read(name);digest=hashlib.sha256(contents).hexdigest()
     if digest!=expectedsha:raise RuntimeError("Cover SHA mismatch "+name)
-    im=Image.open(io.BytesIO(contents));im.load()
-    if im.size!=size or im.format!="PNG":raise RuntimeError("Cover raster size/type mismatch")
+    if not contents.startswith(bytes.fromhex("89504e470d0a1a0a")) or struct.unpack(">II",contents[16:24])!=size:
+        raise RuntimeError("Cover PNG size/signature mismatch")
     p=root/"public/wechat-assets/reviewed/2026-10-14-r2"/outname
     p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(contents)
     print(json.dumps({"file":str(p),"SHA256":digest,"bytes":len(contents),"size":size}))
