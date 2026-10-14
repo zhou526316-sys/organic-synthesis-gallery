@@ -1435,32 +1435,20 @@
     "reviewComplete": true
   },
   "lastScopeCorrection": {
-    "id": "scope-correction-20261005012904928",
+    "id": "scope-correction-20261014012549272",
     "mode": "deletion-only",
-    "status": "verified",
-    "correctedAt": "2026-10-05T01:29:04.928Z",
+    "status": "awaiting_deployment",
+    "correctedAt": "2026-10-14T01:25:49.272Z",
     "removedDois": [
-      "10.1039/d6gc04274k"
+      "10.1038/s41467-026-78512-x",
+      "10.1002/anie.2910902",
+      "10.1021/acscatal.6c06095",
+      "10.1002/anie.2518487"
     ],
-    "beforeCards": 798,
-    "afterCards": 797,
-    "reviewFile": "audit/scope-rechecks/scope-correction-20261005012904928.json",
-    "reviewBlobSha": "e4ddeea31c2350431cf90d62a6e91fe903395399",
-    "deployedAt": "2026-10-05T01:48:48Z",
-    "deploymentRun": 37252457388,
-    "deploymentSourceCommit": "21b6f38e05760108ad853abdeb2b7d3c44ec0a54",
-    "markerBlobSha": "486ea67bdddca002293fa3ec910b5a28c7128e87",
-    "datasetSha256": "9ae042967e38bea2ef418682c3684df600d8ba6e942441c73687328e95551d1e",
-    "retainedCards": 797,
-    "removedDoisVerifiedAbsent": [
-      "10.1039/d6gc04274k"
-    ],
-    "deploymentVerifiedAt": "2026-10-05T02:12:35.820Z",
-    "verificationFile": "audit/scope-rechecks/scope-correction-20261005012904928-live-verified.json",
-    "verificationRun": "37254390068",
-    "repositoryDois": 797,
-    "deployedDois": 797,
-    "exactDoiSetMatch": true
+    "beforeCards": 1091,
+    "afterCards": 1087,
+    "reviewFile": "audit/scope-rechecks/scope-correction-20261014012549272.json",
+    "reviewBlobSha": "cb079721e700cce9d85f3f5e6bec92adfb6e9ead"
   },
   "lastAdmissionWebsiteSync": {
     "finishedAt": "2026-09-23T08:15:41+08:00",
