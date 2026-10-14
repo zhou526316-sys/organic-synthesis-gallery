@@ -1,4 +1,4 @@
-name: Oct14 owner supplied top-aligned covers and bounded metadata patch
+name: Oct14 owner supplied cover images and bounded metadata patch
 on:
   push:
     branches: [wechat-oct14-user-images-cover-title-only]
@@ -12,81 +12,22 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Install image decoder for source-pixel validation only
+      - name: Install deterministic image decoder and resizer
         run: python3 -m pip install --quiet Pillow==11.3.0
-      - name: Import owner sources and verify bottom-only added whitespace
+      - name: Original today above / retrospective centered, white padding only
         env:
-          SOURCE_ARCHIVE: https://at.adobe.com/WQquT3Fd15sehkHL
-        run: |
-          python3 - <<'PY'
-          import hashlib,io,json,os,pathlib,urllib.request,zipfile
-          from PIL import Image
-          root=pathlib.Path.cwd()
-          req=urllib.request.Request(os.environ['SOURCE_ARCHIVE'],headers={'User-Agent':'Mozilla/5.0','Accept':'application/zip'})
-          with urllib.request.urlopen(req,timeout=45) as r: raw=r.read(4_000_000)
-          assert hashlib.sha256(raw).hexdigest()=='2e3bd8f64f86eedfbda50d60581fde0bf2a12aef7ae56c55aaa7c4f7830f5247','Wrong selected image package'
-          z=zipfile.ZipFile(io.BytesIO(raw))
-          expected={'retro_original.png','today_cover.png','today_original.png','retro_wechat_atlas.png','today_wechat_atlas.png','retro_wide.png','retro_wide_native.png','today_square.png','retro_cover.png','cover_sources.json'}
-          assert set(z.namelist())==expected
-          target=root/'public/wechat-assets/reviewed/2026-10-14-owner-selected'
-          target.mkdir(parents=True,exist_ok=True)
-          for n in expected:
-              data=z.read(n)
-              if n.endswith('.png'):
-                  im=Image.open(io.BytesIO(data));im.load();assert im.width<3000 and im.height<=800
-              (target/n).write_bytes(data)
-          info=json.loads((target/'cover_sources.json').read_text())
-          assert info['verticalAlignment']=='top' and info['addedVerticalWhitespace']=='bottom_only'
-          originals=['84bc27066f1ff233fa6f3e8ad1923862e11ee8ceeb5f6b25f207205f5aa9c3a9','e8b8af1362a0e5acee8848420768a6750b3fb38508c09ef24e4f06fefced4a8b']
-          for i,row in enumerate(info['covers']):
-              source=target/row['source'];image=Image.open(source).convert('RGB')
-              assert hashlib.sha256(source.read_bytes()).hexdigest()==originals[i]==row['source_sha256']
-              assert row['paste_box'][1]==0,'Both covers must start at the top'
-              cover=Image.open(target/row['cover']).convert('RGB')
-              reference=Image.new('RGB',tuple(row['canvas_size']),'white')
-              reference.paste(image.resize(tuple(row['resize_size']),Image.Resampling.LANCZOS),tuple(row['paste_box'][:2]))
-              assert reference.tobytes()==cover.tobytes(),'Source figure modified beyond resizing/padding'
-              bottom=cover.crop((0,row['paste_box'][3],cover.width,cover.height))
-              assert bottom.getextrema()==((255,255),(255,255),(255,255)),'Bottom must be blank white'
-              atlas=Image.open(target/row['atlas']).convert('RGB')
-              assert atlas.size==(2680,800)
-              wanted=atlas.crop((0,0,1880,800) if i==0 else (1880,0,2680,800))
-              assert wanted.tobytes()==cover.tobytes(),'Wide/square crop differs from reviewed cover'
-              assert hashlib.sha256((target/row['atlas']).read_bytes()).hexdigest()==row['atlas_sha256']
-          fields=[('10.1021/jacs.6c17662','有机合成文献日报｜10.14｜今日精选｜JACS：铁氢催化烯烃迁移氢胺化','https://gallery.gczhouwld.com/?edition=2026-10-14&doi=10.1021%2Fjacs.6c17662&summary=0'),('10.1021/jacs.6c08353','有机合成文献日报｜10.14｜往期精选｜JACS：手性 IDPi 催化香叶基衍生物的不对称阳离子环化','https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c08353&summary=0')]
-          plan={'scopeApproval':'pass_covers_and_native_title_only','bodyApprovalGranted':False,'date':'2026-10-14','expectedExistingMediaId':'KhELYUzvwADwB_l1xH1SWK0GEUwdJcrzZUnUqTu1MZdQpaEILGEgEcWC4qU-DSzy','sources':originals,'articles':[],'verticalAlignment':'top','addedVerticalWhitespace':'bottom_only','note':'Use only latest two actual user images. No AI drawing, color bar, body changes or global editorial release. Separate 2.35:1 and 1:1 source-preserving crops from each single cover atlas. Both primary covers have all added vertical whitespace at the bottom.'}
-          for row,(doi,title,url) in zip(info['covers'],fields):
-              plan['articles'].append({'doi':doi,'expectedTitle':title,'newTitle':info['newRetrospectiveTitle'] if row['article']=='retro' else title,'sourceUrl':url,'assetPath':str((target/row['atlas']).relative_to(root)),'assetSha256':row['atlas_sha256'],'crop235':row['crop_235_1'],'crop11':row['crop_1_1'],'primarySize':row['canvas_size'],'primaryPasteBox':row['paste_box']})
-          output=root/'audit/wechat-working/2026-10-14-user-images-cover-title-plan.json'
-          output.write_text(json.dumps(plan,ensure_ascii=False,indent=2)+'\n')
-          source=root/'ops/wechat-publisher/create-draft.py'
-          text=source.read_text()
-          anchor='    args = parser.parse_args()\n\n    retrospective = pending_retrospective_request()'
-          replacement='''    args = parser.parse_args()
-          
-              # Scoped metadata edits never regenerate bodies or lift their editorial hold.
-              metadata_request_path = ROOT / "audit/automation-triggers/wechat-publisher-request.json"
-              if metadata_request_path.exists():
-                  metadata_request = json.loads(metadata_request_path.read_text(encoding="utf-8"))
-                  if isinstance(metadata_request, dict) and metadata_request.get("action") == "update_covers_title_only":
-                      from cover_title_patch import run as run_cover_title_patch
-                      return run_cover_title_patch(sys.modules[__name__], args, metadata_request)
-          
-              retrospective = pending_retrospective_request()'''
-          assert text.count(anchor)==1,'Publisher entrypoint changed, refuse guessed patch'
-          source.write_text(text.replace(anchor,replacement))
-          print(json.dumps({'sourcePixelsVerified':2,'topAligned':2,'bottomWhitespaceOnly':True,'covers':2,'newTitle':info['newRetrospectiveTitle'],'planSha256':hashlib.sha256(output.read_bytes()).hexdigest(),'fullBodyGateModified':False},ensure_ascii=False))
-          PY
-      - name: Compile metadata-only path and existing publisher
+          SOURCE_ARCHIVE: https://at.adobe.com/9aRxbUHWscLtKGmu
+        run: python3 scripts/wechat-owner-covers-align.py
+      - name: Compile scoped metadata handler and existing publisher
         run: python3 -m py_compile ops/wechat-publisher/create-draft.py ops/wechat-publisher/cover_title_patch.py
-      - name: Test immutable body fields and restricted metadata scope
+      - name: Prove no body mutation, idempotency and strict identity
         run: python3 scripts/test-wechat-owner-cover-title-only.py
-      - name: Commit approved assets and entrypoint only; omit temporary download workflow
+      - name: Commit verified assets and metadata entrypoint
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/wechat-assets/reviewed/2026-10-14-owner-selected/ audit/wechat-working/2026-10-14-user-images-cover-title-plan.json ops/wechat-publisher/create-draft.py
           git rm .github/workflows/wechat-oct14-usercover-prepare.yml
           git diff --cached --check
-          git commit -m 'wechat: owner source covers top-aligned with bottom blank, metadata-only handler and body hold unchanged'
+          git commit -m 'wechat: owner original covers today top and retro centered, immutable body metadata patch'
           git push origin HEAD:wechat-oct14-user-images-cover-title-only
