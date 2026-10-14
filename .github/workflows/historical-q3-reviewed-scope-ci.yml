@@ -10,6 +10,8 @@ on:
       - 'scripts/test-historical-q3-natcatal-residual-24.mjs'
       - 'scripts/test-historical-q3-natsynth-reviewed-44.mjs'
       - 'scripts/test-historical-q3-nchem-51-reviewed.mjs'
+      - 'scripts/historical-q3-reviewer-status-refresh.mjs'
+      - 'scripts/test-historical-q3-reviewer-status-refresh.mjs'
       - 'audit/historical-publisher-issues/2026/nature-chemistry-q3-2026-all-types-66.json'
       - 'audit/historical-reviewed/q3-nchem-51-frozen-source-proof.json'
       - 'audit/historical-reviewed/q3-nchem-27-nonoriginal-two-pass.json'
@@ -54,3 +56,5 @@ jobs:
         run: node --test scripts/test-historical-q3-natsynth-reviewed-44.mjs
       - name: Validate Nature Chemistry official 66 DOI date/type census and 51 DOI two-pass scopes
         run: node --test scripts/test-historical-q3-nchem-51-reviewed.mjs
+      - name: Cryptographically verify reviewed-queue status refresh against unchanged raw source
+        run: node --test scripts/test-historical-q3-reviewer-status-refresh.mjs
