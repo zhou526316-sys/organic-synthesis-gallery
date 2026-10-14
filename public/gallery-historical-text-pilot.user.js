@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.6
+// @version      0.2.7
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -264,7 +264,7 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.6';
+  const BATCH_SCRIPT_VERSION='0.2.7';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v026';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -282,6 +282,7 @@
   const BATCH_DIAG_MAX_PENDING=1500;
   const BATCH_DIAG_SCHEMA='historical-text-diagnostic-v1';
   const BATCH_LIMIT_MS=24000;
+  const BATCH_NO_HANDLER_PILOT_MS=10000; // pilot only; do not extend normal publisher waits.
   const BATCH_LEASE_MS=40000;
   const BATCH_RETRY_MS=0; // No blanket 24h lockout; reason-dependent rechecking below.
   const BATCH_MAX_RESPONSE_CHARS=350000;
@@ -636,6 +637,10 @@
     if(prior.status==='saved_local')return false;
     // Never treat a documented 403/429 or login challenge as a reason to force a visit.
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
+    // 527 already visited: no publisher-script evidence is not a reason for an
+    // unlimited new automatic sweep. The administrator may opt into a small pilot.
+    if(['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
+      &&prior.pageDoiVerified!==true)return manualBlocked===true;
     if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
       ||prior.status==='unsupported_publisher')return manualBlocked===true;
     // The scientific-body parser/ACS license adapter changed: re-evaluate prior
@@ -716,6 +721,7 @@
         +' · 科学正文字符量 '+Number(item.bodyEvidence.scienceChars||0));
       if(item.bodyCompleteness&&item.bodyCompleteness!=='not_saved')
         pieces.push('完整性：'+String(item.bodyCompleteness));
+      if(item.navigationMode)pieces.push('导航：'+(item.navigationMode==='acs_direct'?'ACS直接入口':'DOI解析入口'));
       if(item.reasonDetail)pieces.push('说明：'+String(item.reasonDetail).slice(0,70));
       details.textContent=pieces.join(' · ');
       row.append(link,details);area.append(row);
@@ -823,6 +829,8 @@
     const acsRecheck=document.createElement('button');acsRecheck.textContent='抽查 ACS 许可项（最多10篇）';
     const evidencePilot=document.createElement('button');
     evidencePilot.textContent='跨期刊正文证据核验（12篇）';
+    const receiptPilot=document.createElement('button');
+    receiptPilot.textContent='出版社回执核验（最多8篇）';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
@@ -838,10 +846,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,hide]){
+    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot);
+    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -911,6 +919,9 @@
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     evidencePilot.addEventListener('click',()=>void batchStart(true,'pilot').catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    receiptPilot.addEventListener('click',()=>void batchStart(true,'reachability').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     failures.addEventListener('click',()=>{
@@ -1061,13 +1072,22 @@
     shown=Math.min(matches.length,20);
     render();
   }
+  function batchUnconfirmedPublisherResult(sawProgress){
+    return sawProgress
+      ?{status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'}
+      :{status:'publisher_script_not_confirmed',stage:'publisher_wait',
+        reasonCode:'publisher_script_not_confirmed',pageDoiVerified:false,httpStatus:null};
+  }
   async function batchAwaitResponse(job){
     const start=Date.now();
-    let lastSeenStage='';
+    let lastSeenStage='',sawHandlerProgress=false;
     while(Date.now()-start<BATCH_LIMIT_MS){
       if(batchPaused)return {status:'paused'};
       const progress=GM_getValue(BATCH_PROGRESS,null);
       const progressIdentity=progress?.stage+'|'+(progress?.failed?'failed':'active');
+      if(progress?.runId===job.runId&&progress?.token===job.token){
+        sawHandlerProgress=true;
+      }
       if(progress?.runId===job.runId&&progress?.token===job.token
          &&progressIdentity!==lastSeenStage){
         lastSeenStage=progressIdentity;
@@ -1084,9 +1104,14 @@
       const value=GM_getValue(BATCH_RESULT,null);
       if(value&&value.token===job.token&&value.doi===job.doi
         &&value.runId===job.runId)return value;
+      // Small, opt-in reachability test: if no matching script heartbeat
+      // arrives, do not spend the normal 24 s pretending this is body failure.
+      if(job.pilotMode==='reachability'&&!sawHandlerProgress
+        &&Date.now()-start>=BATCH_NO_HANDLER_PILOT_MS)
+        return batchUnconfirmedPublisherResult(false);
       await batchWait(350);
     }
-    return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
+    return batchUnconfirmedPublisherResult(sawHandlerProgress);
   }
   function batchCoverageSummary(catalog,existingKeys,attemptRows){
     const papers=batchHistoricalPapers(catalog);
@@ -1128,6 +1153,9 @@
       if(mode==='acs_license'
         &&(batchPublisher(paper.doi)!=='acs'||prior?.status!=='license_not_verified'))
         continue;
+      if(mode==='reachability'&&(!prior||prior.pageDoiVerified===true
+        ||!['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
+        ||[403,429].includes(Number(prior.httpStatus||0))))continue;
       // Real publisher pilot is an explicitly initiated, bounded DOI sample.
       // Exclude observed publisher denial/challenge; do not bypass auth.
       if(mode==='pilot'&&(!prior||prior.pageDoiVerified!==true
@@ -1137,16 +1165,17 @@
       selected.push(paper);
       if(mode==='acs_license'&&selected.length>=10)break;
     }
-    if(mode==='pilot'){
+    if(mode==='pilot'||mode==='reachability'){
       const groups=new Map();
       for(const paper of selected){
         if(!groups.has(paper.journal))groups.set(paper.journal,[]);
         groups.get(paper.journal).push(paper);
       }
       const balanced=[];
-      while(balanced.length<12&&[...groups.values()].some(g=>g.length)){
+      const pilotLimit=mode==='reachability'?8:12;
+      while(balanced.length<pilotLimit&&[...groups.values()].some(g=>g.length)){
         for(const group of groups.values()){
-          if(group.length&&balanced.length<12)balanced.push(group.shift());
+          if(group.length&&balanced.length<pilotLimit)balanced.push(group.shift());
         }
       }
       return balanced;
@@ -1177,7 +1206,8 @@
         currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
       return;
     }
-    const label=mode==='pilot'?'跨期刊正文/许可证证据核验（不保证保存）'
+    const label=mode==='reachability'?'仅核验此前无回执的出版社脚本执行（最多8篇）'
+      :mode==='pilot'?'跨期刊正文/许可证证据核验（不保证保存）'
       :mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
       :mode==='blocked'?'重新检查此前已受阻的文章':'开始独立补抓';
     if(!window.confirm(label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。')){
@@ -1202,13 +1232,17 @@
       for(const paper of selected){
         if(batchPaused)break;
         const token=batchId();
+        const navigationMode=mode==='reachability'
+          &&batchPublisher(paper.doi)==='acs'&&attempted%2===0?'acs_direct':'doi_resolver';
         const job={runId,token,doi:paper.doi,publication:paper.publication,
-          title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
+          title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS,
+          pilotMode:mode==='reachability'?'reachability':'',navigationMode};
         GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);GM_setValue(BATCH_JOB,job);
         batchStatusWrite({lastDoi:paper.doi,currentStage:'publisher_open'});
         let result={status:'publisher_unreachable',stage:'publisher_open'};
         try{
-          batchTab=GM_openInTab('https://doi.org/'+paper.doi+'#gallery-historical-job='+token,
+          const prefix=navigationMode==='acs_direct'?'https://pubs.acs.org/doi/':'https://doi.org/';
+          batchTab=GM_openInTab(prefix+paper.doi+'#gallery-historical-job='+token,
             {active:false,insert:false,setParent:true});
           result=await batchAwaitResponse(job);
         }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
@@ -1265,7 +1299,7 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,
+          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,navigationMode,
           rightsSignal,bodyEvidence,bodyCompleteness:
             status==='saved_local'?String(result.packet?.bodyCompleteness||'partial'):'not_saved',
           reportEventId:''};
