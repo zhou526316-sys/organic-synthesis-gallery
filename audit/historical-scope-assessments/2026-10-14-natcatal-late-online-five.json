@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "reviewedAt": "2026-10-14",
+  "journal": "Nature Catalysis",
+  "period": "2026-07-01..2026-09-30",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json",
+  "reviewMethod": "same assistant performed two separated paper-specific review passes; not independent humans",
+  "evidenceLevel": "official DOI-exact Nature Catalysis article abstract and accessible article sections; paywalled full-text/SI not asserted",
+  "accounting": {
+    "assessmentCount": 5,
+    "include": 0,
+    "exclude": 4,
+    "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41929-026-01609-5",
+      "journal": "Nature Catalysis",
+      "title": "Unlocking reaction pathways for CO2 and CO electrocatalytic reduction to C3+ hydrocarbons and oxygenates using plasma activation",
+      "date": "2026-09-07",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "等离子体预活化CO2和CO之后送至铜气体扩散电极，改变C3+烃和含氧产物分布",
+        "preparativeTransformation": "非热等离子体产生激发态碳物种，铜电极还原产生甲醇、乙炔、乙烷、丙烷、丁烷及丁醇等；CO2与CO共进料可提高C3+和醇类生产率",
+        "generalityEvidence": "作者公开摘要对CO2、CO进料组合、产物分析、原位光谱和等离子体动力学模拟提供实验证据；但没有由不同有机底物到分离目标小分子的可推广制备范围或手性/基团构建方法",
+        "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01609-5；首发日期2026-09-07；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+        "boundaryChallenge": "不能用材料关键词自动排除CO2电合成。反向核对后仍未发现有机合成所需的底物变换或产品分离通用性；3.3倍与1.5倍是生产率变化而非有机产物分离收率，因而建议排除。"
+      },
+      "firstPassReason": "真正生成烃、醇、碳碳键，是化学合成而非纯电极材料现象；但是论文主要贡献是等离子体-电解槽耦合及产品选择性、生产率机制，属于化工能源转化而不是网站聚焦的制备有机方法学",
+      "independentChallengeReason": "不能用材料关键词自动排除CO2电合成。反向核对后仍未发现有机合成所需的底物变换或产品分离通用性；3.3倍与1.5倍是生产率变化而非有机产物分离收率，因而建议排除。",
+      "reason": "等离子体预活化CO2和CO之后送至铜气体扩散电极，改变C3+烃和含氧产物分布。学术范围结论：不作为通用有机制备方法独立收录。",
+      "evidenceBasis": "出版社Nature Catalysis正式标Article；作者公开摘要对CO2、CO进料组合、产物分析、原位光谱和等离子体动力学模拟提供实验证据；但没有由不同有机底物到分离目标小分子的可推广制备范围或手性/基团构建方法；核查来源DOI https://www.nature.com/articles/s41929-026-01609-5。未取得全部付费全文及SI时不推断未观察到的产率、克级规模或底物数。",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01609-5",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "stageSourceSha256": "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59",
+      "stageBatchGitBlobSha": "908d4e8cc5e9f560c90c4e9981000a14a2deacff",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "rights": {
+        "abstractVerbatimCopied": false,
+        "publisherBodyFetched": false,
+        "publisherPdfFetched": false,
+        "figureFetched": false
+      },
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01611-x",
+      "journal": "Nature Catalysis",
+      "title": "Enzymatic skeletal editing reaction forming the 1,3,5-triazine core during biosynthesis of the anticancer nucleoside analogue 5-azacytidine",
+      "date": "2026-09-07",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "鉴定抗癌核苷5-氮杂胞苷的天然生物合成基因簇与AzcE、AzcA、AzcB/C催化的杂环骨架编辑序列",
+        "preparativeTransformation": "AzcE转化GTP为三氨基嘧啶酮；AzcA断裂与重组C–N骨架生成1,3,5-三嗪-2-羧酸中间体；AzcB/C经TPP依赖脱羧得到5-氮杂胞嘧啶",
+        "generalityEvidence": "Nature官方摘要明确体外反应LC–MS、结构和DFT分析，证明特定代谢物生物合成和异常酶反应；但公开材料未证实分离制备规模、离体底物范围或能够独立应用于有机制备的酶改造",
+        "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01611-x；首发日期2026-09-07；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+        "boundaryChallenge": "避免过度排除重要酶促骨架编辑。第二遍确认其确有新C–N重组反应，可能具备通用制备能力；尚无分离/底物接受度/产物应用证据，保留具体证据待核而非以标题归类结案。"
+      },
+      "firstPassReason": "论文核心是生物合成途径发现，不可把单底物途径重构直接写为广谱有机合成方法；但AzcA实际实现独特氮杂环原子骨架编辑，且有体外转化证据，值得区别于纯生物序列或结构工程",
+      "independentChallengeReason": "避免过度排除重要酶促骨架编辑。第二遍确认其确有新C–N重组反应，可能具备通用制备能力；尚无分离/底物接受度/产物应用证据，保留具体证据待核而非以标题归类结案。",
+      "reason": "鉴定抗癌核苷5-氮杂胞苷的天然生物合成基因簇与AzcE、AzcA、AzcB/C催化的杂环骨架编辑序列。学术范围结论：证据待核而非排除。",
+      "evidenceBasis": "出版社Nature Catalysis正式标Article；Nature官方摘要明确体外反应LC–MS、结构和DFT分析，证明特定代谢物生物合成和异常酶反应；但公开材料未证实分离制备规模、离体底物范围或能够独立应用于有机制备的酶改造；核查来源DOI https://www.nature.com/articles/s41929-026-01611-x。未取得全部付费全文及SI时不推断未观察到的产率、克级规模或底物数。",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01611-x",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "stageSourceSha256": "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59",
+      "stageBatchGitBlobSha": "908d4e8cc5e9f560c90c4e9981000a14a2deacff",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "evidenceNeeded": "查核AzcA单酶离体底物接受度、含三嗪产物的分离与纯度、毫摩尔级制备、酶催化扩展至非天然底物及5-氮杂胞嘧啶/5-氮杂胞苷合成应用",
+      "nextAction": "优先获取出版社可合法阅读的详细实验与补充信息或作者公开数据，核对AzcA、AzcB/C离体制备、产物分离与非天然底物范围，再进行独立反向挑战；在证据不足时保留pending，不下载或公开历史PDF及图片。",
+      "rights": {
+        "abstractVerbatimCopied": false,
+        "publisherBodyFetched": false,
+        "publisherPdfFetched": false,
+        "figureFetched": false
+      },
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01613-9",
+      "journal": "Nature Catalysis",
+      "title": "Consequences of overtones in Raman spectra for assigning nickel anode surface structures as NiO2 during alkaline electrolysis",
+      "date": "2026-09-11",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "利用同位素原位表面增强拉曼光谱和DFT重新归属碱性析氧镍阳极表面NiO2/NiOOH物种",
+        "preparativeTransformation": "OER条件下镍氧化物表面的氧化、水解离及振动光谱归属，强调NiO2终止态、泛频和Stark效应",
+        "generalityEvidence": "论文通过H/D同位素、不同金属氧化物和DFT比较验证电极表面结构判断；没有合成小分子目标产物的底物体系",
+        "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01613-9；首发日期2026-09-11；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+        "boundaryChallenge": "原位光谱创新可以迁移到有机电合成的机理研究，但潜在应用不是本论文已验证的有机制备方法，因此排除。"
+      },
+      "firstPassReason": "主要问题为析氧机理及光谱指认，不是从有机反应物制备有机产物；Ni价态虽与有机电催化有联系，本文没有报告Ni催化C–C/C–N成键",
+      "independentChallengeReason": "原位光谱创新可以迁移到有机电合成的机理研究，但潜在应用不是本论文已验证的有机制备方法，因此排除。",
+      "reason": "利用同位素原位表面增强拉曼光谱和DFT重新归属碱性析氧镍阳极表面NiO2/NiOOH物种。学术范围结论：不作为通用有机制备方法独立收录。",
+      "evidenceBasis": "出版社Nature Catalysis正式标Article；论文通过H/D同位素、不同金属氧化物和DFT比较验证电极表面结构判断；没有合成小分子目标产物的底物体系；核查来源DOI https://www.nature.com/articles/s41929-026-01613-9。未取得全部付费全文及SI时不推断未观察到的产率、克级规模或底物数。",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01613-9",
+      "sourceRootId": "2026-09-08_2026-09-14_nature-catalysis",
+      "stageSourceSha256": "ce91a360b874087818e02ad8fa9b61472131e80de4fa3f672b1891f2a89a58ad",
+      "stageBatchGitBlobSha": "2040f425db56d6c46f34490e4606203c9c96ef9a",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "rights": {
+        "abstractVerbatimCopied": false,
+        "publisherBodyFetched": false,
+        "publisherPdfFetched": false,
+        "figureFetched": false
+      },
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01612-w",
+      "journal": "Nature Catalysis",
+      "title": "Operando single-atom tracking in individual Pt nanoparticles detects the coexistence of Langmuir and Taylor active sites",
+      "date": "2026-09-21",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "通过原位三维原子分辨电镜追踪铂纳米颗粒在催化一氧化碳氧化过程中的单原子位点变化",
+        "preparativeTransformation": "Pt颗粒在CO氧化过程的吸附位点、原子配位环境变化与反应动力学相关联",
+        "generalityEvidence": "作者展示活化/失活/再活化循环及Langmuir、Taylor位点共存；属于活性位点表征，不是有机底物范围",
+        "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01612-w；首发日期2026-09-21；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+        "boundaryChallenge": "虽然该方法可能为异相有机催化提供高价值观察手段，但不能以潜在工具价值当作论文已提供一般制备路线，排除。"
+      },
+      "firstPassReason": "原创新成就在原子级原位成像及催化位点动态机理，而非开发有机合成反应；CO转成CO2不能替代有机制备证据",
+      "independentChallengeReason": "虽然该方法可能为异相有机催化提供高价值观察手段，但不能以潜在工具价值当作论文已提供一般制备路线，排除。",
+      "reason": "通过原位三维原子分辨电镜追踪铂纳米颗粒在催化一氧化碳氧化过程中的单原子位点变化。学术范围结论：不作为通用有机制备方法独立收录。",
+      "evidenceBasis": "出版社Nature Catalysis正式标Article；作者展示活化/失活/再活化循环及Langmuir、Taylor位点共存；属于活性位点表征，不是有机底物范围；核查来源DOI https://www.nature.com/articles/s41929-026-01612-w。未取得全部付费全文及SI时不推断未观察到的产率、克级规模或底物数。",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01612-w",
+      "sourceRootId": "2026-09-15_2026-09-21_nature-catalysis",
+      "stageSourceSha256": "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2",
+      "stageBatchGitBlobSha": "f5e35437883b2d28030ef6c7499999ce3958642a",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "rights": {
+        "abstractVerbatimCopied": false,
+        "publisherBodyFetched": false,
+        "publisherPdfFetched": false,
+        "figureFetched": false
+      },
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+    },
+    {
+      "doi": "10.1038/s41929-026-01615-7",
+      "journal": "Nature Catalysis",
+      "title": "Preferential locations of catalytically active oxygen vacancies at Cr/ZnO interfaces during syngas conversion",
+      "date": "2026-09-25",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "研究Cr掺杂ZnO界面氧空位的位置、稳定性及其在合成气转烯烃和丙烷脱氢中的作用",
+        "preparativeTransformation": "以CO/H2制备烯烃及丙烷脱氢产烯烃等真实化学转化作为探针，定量联系氧空位与催化选择性",
+        "generalityEvidence": "实际数据包括原位时间分辨X射线谱、质谱、热量测定、反应动力学与DFT；关键变化是Cr–Ov位点而非可迁移有机底物制备拓展",
+        "sourceEvidence": "Nature Catalysis DOI精确公开Article/Abstract及可访问的图注与公开主文片段 https://www.nature.com/articles/s41929-026-01615-7；首发日期2026-09-25；冻结Crossref/OpenAlex同一DOI与相同日期；不复制受限正文或SI。",
+        "boundaryChallenge": "反向挑战认可它研究两种真实有机产物相关转化，但没有化学合成方法的一般性制备证据，主要结论服务于催化材料设计，故建议排除。"
+      },
+      "firstPassReason": "不能将合成气烯烃和丙烷脱氢产物抹去；但方法主体是异相催化剂活性位点的空间归属与结构性能，而非新制备反应模式",
+      "independentChallengeReason": "反向挑战认可它研究两种真实有机产物相关转化，但没有化学合成方法的一般性制备证据，主要结论服务于催化材料设计，故建议排除。",
+      "reason": "研究Cr掺杂ZnO界面氧空位的位置、稳定性及其在合成气转烯烃和丙烷脱氢中的作用。学术范围结论：不作为通用有机制备方法独立收录。",
+      "evidenceBasis": "出版社Nature Catalysis正式标Article；实际数据包括原位时间分辨X射线谱、质谱、热量测定、反应动力学与DFT；关键变化是Cr–Ov位点而非可迁移有机底物制备拓展；核查来源DOI https://www.nature.com/articles/s41929-026-01615-7。未取得全部付费全文及SI时不推断未观察到的产率、克级规模或底物数。",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01615-7",
+      "sourceRootId": "2026-09-22_2026-09-30_nature-catalysis",
+      "stageSourceSha256": "6cbff046c1de51d8d0cdbaabe69e04c2e8f07b5d737347ae1d11d39ed037684d",
+      "stageBatchGitBlobSha": "450fb275555579041ca0b0d7d90b328b7bc40791",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "rights": {
+        "abstractVerbatimCopied": false,
+        "publisherBodyFetched": false,
+        "publisherPdfFetched": false,
+        "figureFetched": false
+      },
+      "reviewMethod": "same assistant distinct evidence/challenge passes, not two different reviewers"
+    }
+  ],
+  "guards": {
+    "notOwnerPermanentExclusionList": true,
+    "noAcademicAdmission": true,
+    "noProductionWrites": true,
+    "noD1": true,
+    "noMediaPdfBodySi": true,
+    "noTodayHotWechat": true,
+    "noAdded08Release": true
+  }
+}
