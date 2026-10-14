@@ -96,8 +96,10 @@ export function aggregateOpenAlex(plan,reports){
     if(r.state==='verified'){
       metadataVerified.push(r);
       scopes[r.scope]=(scopes[r.scope]||0)+1;
-    }else if(r.state==='not_scanned'||r.state==='source_rate_limited'||
+    }else if(r.state==='not_scanned'||r.state==='provider_paused'||
+      r.state==='source_rate_limited'||r.state==='source_timeout'||
       r.state==='source_unavailable'||r.state==='source_non_json'||
+      r.state==='source_invalid_json'||r.state==='source_response_too_large'||
       r.state.startsWith('source_http_'))
       retryDois.push(r.doi);
   }
