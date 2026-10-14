@@ -15,7 +15,15 @@ export function verifyEarlyNatsynthIssueReceipt(data){
     data.guards?.noQ3FullPeriodClaim&&data.guards?.noScopeAutoApproval&&
     data.guards?.noProductionD1&&data.guards?.noMediaPdfCapture&&data.guards?.noFormalAdmission,'guards');
   ensure(Array.isArray(data.issues)&&data.issues.length===2,'issues');
-  const unique=new Set();let n=0;
+  const snap=data.formalCatalogSnapshot,approvedSnap=data.historicalManifestSnapshot;
+  ensure(snap?.source==='public/toc-demand-live.json'&&/^[a-f0-9]{40}$/.test(snap.sha||'')
+    &&snap.total===1091&&snap.readMode==='github_main_read_only_no_production_D1'
+    &&approvedSnap?.source==='audit/historical-reviewed/approved-admissions.json'
+    &&/^[a-f0-9]{40}$/.test(approvedSnap.sha||'')
+    &&approvedSnap.acceptedTotal===101&&approvedSnap.pendingTotal===2,
+    'current_readback_snapshot');
+  const expectedFormal=['10.1038/s44160-026-01023-6','10.1038/s44160-026-01036-1'];
+  const unique=new Set(),actualFormal=[];let n=0,approvedCount=0;
   for(const [j,issue] of data.issues.entries()){
     const mon=String(j+7).padStart(2,'0');
     ensure(issue.issue==='2026-'+mon&&issue.issueCoverMonth===mon
@@ -35,6 +43,12 @@ export function verifyEarlyNatsynthIssueReceipt(data){
         &&row.independentArticleLandingFirstOnlineVerified===false
         &&row.quarterFromPublisherIssueArticleDate==='2026-Q2_or_earlier'
         &&row.issueCoverMonthNotOnlineDate===true,'doi_date_'+doi);
+      const shouldBeFormal=expectedFormal.includes(doi);
+      ensure(row.formalCatalogReadback?.present===shouldBeFormal
+        &&row.formalCatalogReadback?.storedDate===(shouldBeFormal?row.issueTocArticlePublishedDate:null)
+        &&row.historicalAcademicManifestReadback?.approved===shouldBeFormal,
+        'current_catalog_membership:'+doi);
+      if(shouldBeFormal){actualFormal.push(doi);approvedCount++;}
       unique.add(doi);n++;
     }
   }
@@ -43,10 +57,13 @@ export function verifyEarlyNatsynthIssueReceipt(data){
     &&data.counters.ResearchDOIs===26
     &&data.counters.Q3BasedOnTOCArticlePublishedDates===0
     &&data.counters.preQ3BasedOnTOCArticleDates===26
-    &&data.counters.formalDOIsOfTheseResearchRows===0
+    &&data.counters.formalDOIsOfTheseResearchRows===actualFormal.length
+    &&actualFormal.length===2&&approvedCount===2
+    &&data.counters.historicallyApprovedOfTheseResearchRows===approvedCount
+    &&JSON.stringify([...(data.counters.exactFormalDOIs||[])].sort())===JSON.stringify(expectedFormal)
     &&data.counters.distinctDOIs===26,'counters');
   return {source:'Nature Synthesis',issues:2,ResearchDOIs:26,Q3FromIssuePublishedLabels:0,
-    allPreJuly2026ByIssuePublishedLabels:true,
+    allPreJuly2026ByIssuePublishedLabels:true,formalCatalogMemberResearchDOIs:actualFormal.length,
     individualLandingDatesIndependentlyVerified:false,
     publisherQ3CompletenessEstablished:false};
 }
