@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.8
+// @version      0.2.9
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -281,9 +281,9 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.8';
+  const BATCH_SCRIPT_VERSION='0.2.9';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
-  const BATCH_CAPTURE_REVISION='historic-body-evidence-v026';
+  const BATCH_CAPTURE_REVISION='historic-body-evidence-v029';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
@@ -303,6 +303,9 @@
   const BATCH_DIAG_MAX_PENDING=1500;
   const BATCH_DIAG_SCHEMA='historical-text-diagnostic-v1';
   const BATCH_LIMIT_MS=24000;
+  // Fast successes exit on real DOM evidence; only unresolved pages use this budget.
+  const BATCH_PUBLISHER_PROBE_MS=9500;
+  const BATCH_MAX_REVIEW_TABS=2;
   const BATCH_NO_HANDLER_PILOT_MS=10000; // pilot only; do not extend normal publisher waits.
   const BATCH_LEASE_MS=40000;
   const BATCH_RETRY_MS=0; // No blanket 24h lockout; reason-dependent rechecking below.
@@ -317,6 +320,7 @@
     'timeout','invalid_response','storage_failure','local_storage_failed',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
+  const batchReviewTabs=[];
   let batchDiagBusy=false,batchDiagStarted=false;
   const batchWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   function batchId(){
@@ -1648,10 +1652,11 @@
       .toLowerCase();
     return /access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in|challenge required|sign in to continue|automated requests blocked/i.test(sample);
   }
-  function batchArticlePageReady(root){
+  function batchArticlePageReady(root,evidence=null){
     if(!root||document.readyState==='loading')return false;
-    try{return root.querySelectorAll('h2,h3,h4,p').length>=2;}
-    catch(_){return false;}
+    // Static heading count is not a hydration or scientific-content signal.
+    const body=evidence||batchBodyStructure(root);
+    return ['scientific_sections','partial_science','abstract_only'].includes(body.presence);
   }
 
   async function batchWorker(){
@@ -1701,10 +1706,12 @@
     if([403,429].includes(observedPageHttpStatus())){
       storeResult({status:'page_http_error',stage:'publisher_page'});return;
     }
-    const begun=Date.now(),maxProbeMs=3200;
-    let sawArticle=false,sawLicense=false,unchangedReady=0;
-    let previousState='';
-    while(Date.now()-begun<=maxProbeMs&&Date.now()<job.expiresAt){
+    const begun=Date.now();
+    const probeUntil=Math.min(job.expiresAt-1200,begun+BATCH_PUBLISHER_PROBE_MS);
+    let sawArticle=false;
+    // DOI, scientific text and article-specific reuse permission hydrate independently.
+    // Relevant head/body DOM mutations drive checks; unchanged node counts do not.
+    while(Date.now()<probeUntil){
       doi=pageDoi();
       if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
@@ -1712,60 +1719,46 @@
         if(batchPublisherPageBlocked()){
           storeResult({status:'page_access_blocked',stage:'publisher_page'});return;
         }
+        if([403,429].includes(observedPageHttpStatus())){
+          storeResult({status:'page_http_error',stage:'publisher_page'});return;
+        }
         const root=document.querySelector('main article, article, main, [role="main"]');
-        const ready=batchArticlePageReady(root);
-        if(ready)sawArticle=true;
-        // DOI has already been verified. A structural count is not a licence
-        // to copy the text: it is deliberately metadata-only.
         bodyEvidence=batchBodyStructure(root);
+        const ready=batchArticlePageReady(root,bodyEvidence);
+        if(ready)sawArticle=true;
         const rights=batchReuseRights(root);
         rightsSignal=rights.signal;
-        const license=rights.license;
         sectionCount=bodyEvidence.sectionCount;evidenceChars=bodyEvidence.scienceChars;
-        reportStage('license');
-        if(license){
-          sawLicense=true;
-          reportStage('body_extract');
+        reportStage(rights.license?'body_extract':'license');
+        if(rights.license&&ready){
           try{
             capture=gather();
-            sectionCount=capture.sections.length;evidenceChars=capture.characterCount;
-            if(capture.characterCount>=250)break;
+            const verifiedScience=capture.sections.filter(row=>
+              ['results','mechanism','experimental'].includes(row.type))
+              .reduce((total,row)=>total+String(row.text||'').length,0);
+            if(verifiedScience>=250)break;
           }catch(_){capture=null;}
-        }else if(ready){
-          // Distinguish a stable rendered article missing its licence tag from
-          // a still-hydrating article; no CC licence => no text persistence.
-          const signature=String(root?.querySelectorAll('h2,h3,h4,p').length||0)
-            +':'+String(root?.querySelectorAll('section').length||0);
-          if(previousState===signature)unchangedReady++;
-          else unchangedReady=0;
-          previousState=signature;
-          if(unchangedReady>=1){
-            storeResult({status:'license_not_verified',stage:'license'});return;
-          }
         }
-        await batchAwaitPublisherDomChange(root,ready?420:320);
-      }else{
-        await batchAwaitPublisherDomChange(null,320);
-      }
+        await batchAwaitPublisherDomChange(root,ready?480:330);
+      }else await batchAwaitPublisherDomChange(null,330);
     }
-    if(doi!==job.doi){
-      storeResult({status:'doi_unverified',stage:'publisher_doi'});return;
-    }
+    if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
     const root=document.querySelector('main article, article, main, [role="main"]');
-    if(!batchArticlePageReady(root)&&!sawArticle){
-      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
-    }
     bodyEvidence=batchBodyStructure(root);
+    const ready=batchArticlePageReady(root,bodyEvidence);
+    if(!ready&&!sawArticle){storeResult({status:'page_unavailable',stage:'publisher_page'});return;}
     const rights=batchReuseRights(root);
     rightsSignal=rights.signal;
     const license=rights.license;
     sectionCount=bodyEvidence.sectionCount;evidenceChars=bodyEvidence.scienceChars;
     if(!license){
-      storeResult({status:'license_not_verified',stage:'license'});return;
+      // Distinguish an observed other licence from a not-yet-hydrated notice.
+      const checked=ready&&rights.signal==='other_license_declared';
+      storeResult({status:checked?'license_not_verified':'license_pending_load',
+        stage:checked?'license':'publisher_wait'});return;
     }
-    if(!capture){
-      storeResult({status:'body_missing',stage:'body_extract'});return;
-    }
+    if(!capture&&ready){try{capture=gather();}catch(_){capture=null;}}
+    if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const verifiedScientificChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
