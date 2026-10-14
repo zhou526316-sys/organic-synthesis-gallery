@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-14",
+  "revision": "2026-10-14-r2",
+  "status": "text_and_source_image_independent_review_pass_official_cloud_update_pending",
+  "ownerCorrections": {
+    "featured": "Existing Fig1B stays wholly above 198px native two-line title-safe dark band. No chemistry covered. Avoids white-on-white title.",
+    "retrospective": "Original headline drops 有机合成文献日报 and keeps 往期精选｜JACS：... The square cover is a visual abstraction of selective molecular folding, explicitly NOT a new chemical structure or proposed intermediate.",
+    "style": "Eliminate mechanical actual-cost coda and unsupported question headings. All headings must correspond to adjacent original experimental evidence."
+  },
+  "revisedParagraphEvidence": {
+    "todayLast": "Fe(acac)3 30mol%, PhSiH3 4 eq and glycol 3eq are explicit conditions; secondary allylamine competing reduction and poor beta-amino-acid dr are specific limits. No general cost claim.",
+    "retroLast": "−50℃/days, two eq PFTB and observed substrate or ee failures delimit applicability. Mechanistic lesson distinguishes initial regioselection, gamma-to-alpha isomerization, termination.",
+    "todayControl": "Iron/ligand/air assignments remain experiment-compatible proposals, not directly observed full catalytic cycle.",
+    "retroControl": "KIE and IRC computations bounded to model; terminal product alpha/gamma ratio includes isomerization."
+  },
+  "exactImages": {
+    "mainAndSIOriginalImageCount": 25,
+    "originalImagesChanged": false,
+    "featuredCover": "public/wechat-assets/reviewed/2026-10-14-r2/cover_featured.png",
+    "featuredCoverSHA256": "e5c09db82ea8f7d5fcf2484756d0af3d2bfb9d4c4f16f9143cd05509ce9816cb",
+    "featuredCoverDimensions": [
+      1880,
+      800
+    ],
+    "featuredBands": {
+      "sciencePixelsY": [
+        0,
+        594
+      ],
+      "whiteDividerY": [
+        594,
+        601
+      ],
+      "titleOnlyNavyY": [
+        602,
+        800
+      ]
+    },
+    "retroCover": "public/wechat-assets/reviewed/2026-10-14-r2/cover_retrospective.png",
+    "retroCoverSHA256": "0bab4bd15dbe65cfd78cd9766363a4ff2720f63381c414b977386398501c2bcc",
+    "retroCoverDimensions": [
+      800,
+      800
+    ],
+    "retroCoverKind": "editorial abstract concept, no molecular formula/chemical structures/transition state, cropped generative architectural motif combined with legible chemistry terms"
+  },
+  "sourceDocs": [
+    "audit/wechat-working/2026-10-14-r2-today-text-only.md",
+    "audit/wechat-working/2026-10-14-r2-retro-text-only.md",
+    "audit/wechat-working/2026-10-14-r2-images-only.json",
+    "audit/wechat-working/2026-10-14-r1-original-figure-sha-review.json"
+  ],
+  "allQuestionHeadingsReadAgainstAdjacentEvidence": true,
+  "previousCount": 20,
+  "journalStatisticsUnchanged": true,
+  "prePublishBrowserCheck": "pending; must assess native title overlay and square concept cover with actual WeChat draft/get",
+  "userPublicationAuthorized": false,
+  "createdNewDraft": false,
+  "notes": "All edits apply to the existing 2026-10-14 two-article media_id. The new covers replace the two prior cover rasters only, while 25 genuine main/SI body rasters and DOI links remain unchanged."
+}
