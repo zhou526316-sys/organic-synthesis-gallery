@@ -145,6 +145,20 @@ export function aggregateFullReports(plan,reports){
       pmcid:x.pmcid||null,license:x.license||null,grade:x.grade||'partial',
       sections:x.sections||0,paragraphs:x.paragraphs||0,figures:x.figures||0,
       tables:x.tables||0,xmlSha256:x.xmlSha256||null}));
+  // Durable DOI-by-DOI source ledger. This contains no article prose, PDF,
+  // figure payload, signed URLs, cookies or credentials.
+  const knownByDoi=new Map(articles.map(item=>[item.doi,item]));
+  const doiLedger=plan.rows.map(planned=>{
+    const item=knownByDoi.get(planned.doi),state=item?safeState(item.state):'not_scanned';
+    return {doi:planned.doi,journal:planned.journal,revision:planned.revision,
+      firstOnlineDate:planned.date||null,scope:planned.scope,
+      source:'Europe PMC',sourceStatus:state,
+      pmcid:item?.pmcid||null,licenseSignal:item?.license||null,
+      completenessCandidate:item?.grade||null,
+      scientificSections:item?.sections??null,figures:item?.figures??null,
+      tables:item?.tables??null,sourceXmlSha256:item?.xmlSha256||null,
+      rightsApproved:false,publicFtsIndexed:false};
+  });
   const sourceAuditComplete=missingDois.length===0&&
     retryEntries.length===0&&missingShards.length===0&&badShards.length===0;
   return {schemaVersion:SCHEMA,readOnly:true,generatedAt:new Date().toISOString(),
@@ -153,6 +167,7 @@ export function aggregateFullReports(plan,reports){
     sourceCheckedDois:seen.size-retryEntries.length,
     sourceAuditComplete,scopeCounts:plan.scopeCounts,byScope:scopes,byState:states,
     rightsCandidateCount:rightsCandidates.length,rightsCandidates,
+    doiLedger,
     missingShardOffsets:missingShards,badShardOffsets:badShards,
     missingDois,retryDois:retryEntries,
     publicBodyImports:0,rawXmlStored:0,pdfDownloads:0,publisherVisits:0,
