@@ -274,7 +274,23 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs dist
           test -s dist/gallery-historical-text-pilot.user.js
           node --check dist/gallery-historical-text-pilot.user.js
-          grep -F "// @version      0.2.8" dist/gallery-historical-text-pilot.user.js
+          # Verify this exact branch's installer source is what Pages will serve.
+          # Avoid a stale hardcoded version assertion preventing future legitimate releases.
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const original = fs.readFileSync('public/gallery-historical-text-pilot.user.js', 'utf8');
+          const published = fs.readFileSync('dist/gallery-historical-text-pilot.user.js', 'utf8');
+          assert.equal(published, original, 'Pages historical userscript must match reviewed main source byte-for-byte');
+          const match = /^\/\/ @version[ \t]+(\d+)\.(\d+)\.(\d+)[ \t]*$/m.exec(published);
+          assert.ok(match, 'Published installer must have a numeric Tampermonkey version');
+          const [major, minor, patch] = match.slice(1).map(Number);
+          assert.ok(major > 0 || minor > 2 || (minor === 2 && patch >= 9),
+            'Historical text installer must not roll back below the approved 0.2.9');
+          assert.ok(published.includes("const BATCH_SCRIPT_VERSION='"+match.slice(1).join('.')+"';"),
+            'Diagnostic script version must match installed Tampermonkey version');
+          console.log('HISTORICAL_TEXT_INSTALLER_ARTIFACT_VERIFIED '+match.slice(1).join('.'));
+          NODE
           grep -F "全库开放正文补抓（本机）" dist/gallery-historical-text-pilot.user.js
           grep -F "一键补抓全部缺项" dist/gallery-historical-text-pilot.user.js
           grep -F "publicUploadAllowed:false" dist/gallery-historical-text-pilot.user.js
