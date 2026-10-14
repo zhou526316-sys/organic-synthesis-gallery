@@ -1,0 +1,62 @@
+name: First independently reviewed CC BY scientific body canary (owner only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/first-reviewed-scientific-body-import.yml'
+      - 'scripts/import-first-approved-oa-body.py'
+      - 'scripts/test-first-reviewed-oa-body-import.py'
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/first-reviewed-scientific-body-import.json'
+permissions:
+  contents: read
+concurrency:
+  group: first-reviewed-scientific-body-import
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run offline DOI-bound scientific source and license tests
+        run: |
+          python3 -m py_compile scripts/import-first-approved-oa-body.py
+          python3 scripts/test-first-reviewed-oa-body-import.py
+          python3 scripts/test-historical-oa-science-evidence.py
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path("scripts/import-first-approved-oa-body.py").read_text()
+          assert "https://api.gczhouwld.com/api/admin/literature-body-sections/import" in src
+          assert "SOURCE_XML_SHA" in src and "publicSearchSwitchChanged" in src
+          assert "rawXmlPersisted" in src and "articleTextInArtifact" in src
+          assert "readOnly" in src and "scienceSectionCount" in src
+          assert "--import-reviewed" in src
+          print("CANARY_REVIEWED_BODY_TEST_OK no automatic content in public/search or Git")
+          PY
+  import:
+    if: github.event_name == 'push'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reproduce DOI-approved article XML, scientific source and rights hashes, then store ONLY section text in owner D1
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          python3 scripts/import-first-approved-oa-body.py \
+            --output="$RUNNER_TEMP/first-reviewed-scientific-body-import.json" \
+            --import-reviewed
+      - name: Preserve counts/hashes and controlled import receipt without source prose
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: first-reviewed-scientific-body-import-${{ github.run_id }}
+          path: ${{ runner.temp }}/first-reviewed-scientific-body-import.json
+          retention-days: 7
+          if-no-files-found: warn
