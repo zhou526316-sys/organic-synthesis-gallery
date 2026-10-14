@@ -140,7 +140,8 @@ export function reconcileQ3({
   // Exact publisher-verified commentary exclusions; never keyword inference.
   // Each exclusion is separate from the owner's permanent DOI corrections.
   const publisherNonOriginal=new Set();
-  const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing']);
+  const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing',
+    'Comment','Publisher Correction','Author Correction']);
   for(const item of publisherNonResearch.reviewed){
     const id=normalize(item?.doi),src=all.get(id),ev=item?.reviewEvidence;
     ensure(validDoi(id)&&id===item.doi&&src&&!publisherNonOriginal.has(id)
@@ -165,7 +166,12 @@ export function reconcileQ3({
       &&src.sourceRoots.includes(ev.sourceRootId)
       &&src.sourceHashes.includes(ev.stageSourceSha256)
       &&/^[a-f0-9]{40}$/.test(ev.stageBatchGitBlobSha||'')
-      &&ev.verificationKind==='publisher_direct_article_type_and_original_work_provenance',
+      &&(!ev.sourceReviewQueueGitBlobSha||(
+        ev.sourceReviewQueueGitBlobSha===gitBlobByRoot.get(ev.sourceRootId)
+        &&ev.sourceReviewQueuePath===
+          'audit/historical-staging/review-queue/'+ev.sourceRootId+'.json'
+        &&item.title===src.title))
+      &&ev.verificationKind='publisher_direct_article_type_and_original_work_provenance',
       'q3_nonresearch_publisher_evidence_invalid:'+id);
     publisherNonOriginal.add(id);
   }
@@ -369,21 +375,66 @@ export async function runQuarterAudit({
 }={}){
   ensure(process.env.HISTORICAL_STAGING_ONLY==='1'&&
     process.env.HISTORICAL_STAGING_BRANCH==='1','q3_staging_only_guard');
-  const [state,triage,formal,manifest,corrections,publisherNonResearch,
-    scopedSourceProof,scopedScience]=await Promise.all([
+  const [state,triage,formal,manifest,corrections,oldNonOriginal,
+    scopedSourceProof,scopedScience,newNonOriginal,lateFiveProof,lateFiveScience,
+    residualSourceProof]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
     readJson('audit/literature-scope-corrections.json'),
     readJson('audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json'),
     readJson('audit/historical-reviewed/q3-natcatal-scope-source-proof.json'),
-    readJson('audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json')
+    readJson('audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json'),
+    readJson('audit/historical-reviewed/q3-natcatal-nonoriginal-19-two-pass.json'),
+    readJson('audit/historical-reviewed/q3-natcatal-late-online-five-source-proof.json'),
+    readJson('audit/historical-scope-assessments/2026-10-14-natcatal-late-online-five.json'),
+    readJson('audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json')
   ]);
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
-  const publisherReviewedScope=bindReviewedQ3ScopeProof({
+  const priorReviewedScope=bindReviewedQ3ScopeProof({
     proof:scopedSourceProof,science:scopedScience,scienceGitBlobSha
   });
+  const lateBytes=await readFile(lateFiveProof.scientificEvidenceFile);
+  const lateBlobSha=createHash('sha1').update('blob '+lateBytes.length)
+    .update(Buffer.from([0])).update(lateBytes).digest('hex');
+  const lateReviewedScope=bindReviewedQ3ScopeProof({
+    proof:lateFiveProof,science:lateFiveScience,scienceGitBlobSha:lateBlobSha
+  });
+  ensure(newNonOriginal.schemaVersion===PUBLISHER_NONRESEARCH_SCHEMA
+    &&newNonOriginal.mode==='publisher_verified_non_original_doi_only_not_publication'
+    &&newNonOriginal.sourceProofFile==='audit/historical-reviewed/q3-natcatal-unfinished-24-source-proof.json'
+    &&newNonOriginal.reviewed.length===newNonOriginal.summary?.count
+    &&Array.isArray(newNonOriginal.reviewed)
+    &&residualSourceProof.schemaVersion==='gallery-q3-natcatal-unfinished-24-source-proof-v1'
+    &&residualSourceProof.mode==='frozen_publisher_research_triage_provenance_not_scientific_decision'
+    &&Array.isArray(residualSourceProof.rows)
+    &&newNonOriginal.reviewed.length+lateFiveProof.reviewed.length===residualSourceProof.rows.length,
+    'q3_natcatal_24_artifacts_mismatch');
+  const proofRows=new Map(residualSourceProof.rows.map(x=>[x.doi,x]));
+  ensure(proofRows.size===residualSourceProof.rows.length,
+    'q3_natcatal_24_duplicate_source_proof');
+  for(const item of newNonOriginal.reviewed){
+    const src=proofRows.get(item.doi),ev=item.reviewEvidence;
+    ensure(src&&src.date===item.date&&src.title===item.title
+      &&src.sourceRootId===ev.sourceRootId
+      &&src.sourceRootSha256===ev.stageSourceSha256
+      &&src.sourceShardGitBlobSha===ev.sourceReviewQueueGitBlobSha
+      &&src.sourceShardPath===ev.sourceReviewQueuePath,
+      'q3_natcatal_nonoriginal_source_proof_invalid:'+item.doi);
+  }
+  for(const item of lateReviewedScope.reviewed){
+    const src=proofRows.get(item.doi);
+    ensure(src&&src.date===item.date
+      &&src.sourceRootSha256===item.stageSourceSha256
+      &&src.sourceShardGitBlobSha===item.stageBatchGitBlobSha
+      &&src.sourceRootId===item.sourceRootId,
+      'q3_natcatal_science_source_proof_invalid:'+item.doi);
+  }
+  const publisherNonResearch={...oldNonOriginal,
+    reviewed:[...oldNonOriginal.reviewed,...newNonOriginal.reviewed]};
+  const publisherReviewedScope={...priorReviewedScope,
+    reviewed:[...priorReviewedScope.reviewed,...lateReviewedScope.reviewed]};
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id)){
     const bytes=await readFile(root+'/review-queue/'+id+'.json');
