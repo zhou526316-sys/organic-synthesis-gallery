@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "journal": "Nature Communications",
+  "period": "2026-07-01..2026-09-30",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcomm-nine-frozen-source.json",
+  "parentFullScienceFile": "audit/historical-scope-assessments/2026-10-14-natcomm-nine-original-two-pass.json",
+  "parentFullScienceGitBlobSha": "2eb57957a21ac63ebc8aacc4c3845cf7d8bed5b8",
+  "reviewedAt": "2026-10-14",
+  "reviewMethod": "Two paper-specific passes by same assistant; no claim of two independent human reviewers.",
+  "evidenceLevel": "official DOI Article, publisher abstracts and accessible main text/table/figure captions only, no downloaded PDF or SI",
+  "accounting": {
+    "assessmentCount": 2,
+    "include": 0,
+    "exclude": 1,
+    "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41467-026-76617-x",
+      "journal": "Nature Communications",
+      "title": "Bromide-mediated paired electrosynthesis of hydrogen and epoxide",
+      "date": "2026-08-11",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76617-x",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "primaryContribution": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+      "preparativeTransformation": "Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。",
+      "generalityEvidence": "Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76617-x；官方上线日期2026-08-11，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "scopeAssessment": {
+        "primaryContribution": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+        "preparativeTransformation": "Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。",
+        "generalityEvidence": "Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-76617-x；官方上线日期2026-08-11，冻结Crossref/OpenAlex来源分片2026-08-08_2026-08-14_nature-communications，原始batch SHA b3922c3e7dcf4fa518b34df77c45c0bf837eab87，审稿队列SHA 34cc4d97a8a95071476e8acf9250aca66d6f7c34。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。 Br−阳极氧化生成活性溴后作用苯乙烯，经溴醇中间体在碱性条件下环化为苯乙烯氧化物，阴极同步析氢。 实验证据：Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。",
+      "independentChallengeReason": "苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "reason": "提出溴介导无隔膜电解池同时析氢与环氧化物的配对电合成工艺。",
+      "evidenceBasis": "真实Publisher结果与制备范围：Table1记录苯乙烯模型环氧化物NMR定量产率81–89%及94–98%阳极法拉第效率；正文Methods明确苯乙烯是主要实验烯烃，乙烯与丙烯环氧化物主要是未来适配假设，当前未找到对应广泛产品范围。 反证和局限：苯乙烯环氧化的真实有机制备和工业配对电解改进不能直接排除，但单底物装置性能未必构成通用环氧化方法。摘要所说适用于广泛烯烃尚缺已制备分子与分离产率佐证，保留待核不凭标题凑数。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76617-x",
+        "publisherOnlineDate": "2026-08-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-communications",
+        "stageBatchSha": "b3922c3e7dcf4fa518b34df77c45c0bf837eab87",
+        "sourceReviewQueueGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+        "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-08-08_2026-08-14_nature-communications",
+      "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+      "stageBatchGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "evidenceNeeded": "核实本篇公开正文或合法可访问SI是否报告多种不同烯烃实操产品及表征、环氧化物分离产率；不得把乙烯/丙烯的未来反应器设计当成已完成实验。",
+      "nextAction": "核对公开正文及合法开放补充信息中的具体烯烃底物范围和分离表征；在证据不足时保持待核，不下载或公开历史付费PDF、SI、图片。",
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    },
+    {
+      "doi": "10.1038/s41467-026-77096-w",
+      "journal": "Nature Communications",
+      "title": "Shaping light in 3D for direct asymmetric photochemistry: a 1000-fold enantioselectivity enhancement",
+      "date": "2026-09-04",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77096-w",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "primaryContribution": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+      "preparativeTransformation": "模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。",
+      "generalityEvidence": "约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+      "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77096-w；官方上线日期2026-09-04，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+      "boundaryChallenge": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "scopeAssessment": {
+        "primaryContribution": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+        "preparativeTransformation": "模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。",
+        "generalityEvidence": "约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+        "sourceEvidence": "Nature Communications出版社原始DOI Article、摘要及公开Results和图表说明 https://www.nature.com/articles/s41467-026-77096-w；官方上线日期2026-09-04，冻结Crossref/OpenAlex来源分片2026-09-01_2026-09-07_nature-communications，原始batch SHA 7503729802ebfb648e3f2807d5f5ebec3589ae66，审稿队列SHA e995d3a509f00abcc3f630f8614087df1881f5ad。未下载或复制正文、图、SI或PDF。",
+        "boundaryChallenge": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。"
+      },
+      "firstPassReason": "第一遍核对实际化学制备贡献：用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。 模拟香芹酮对映体电子激发与电场交互，并未实施产物分离或新键构建的实际光化学制备。 实验证据：约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。",
+      "independentChallengeReason": "理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "reason": "用三维手性Lissajous电场进行从头电子结构计算，预测对映体激发概率的光学手性区别。",
+      "evidenceBasis": "真实Publisher结果与制备范围：约30%对映选择性是ab-initio计算的电子激发指标，1000倍提升是相对于常规圆偏振光约0.01%的预测；无实际反应产物ee、收率、底物范围。 反证和局限：理论控制分子手性激发有启发性，却不能把激发概率差异等同于有机不对称光合成的产物对映过量。尚未报道可验证的制备反应，因此超出网站主要收录范围。",
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77096-w",
+        "publisherOnlineDate": "2026-09-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_nature-communications",
+        "stageBatchSha": "7503729802ebfb648e3f2807d5f5ebec3589ae66",
+        "sourceReviewQueueGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+        "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "official_Nature_Communications_original_Article_open_abstract_and_readable_Results"
+      },
+      "sourceRootId": "2026-09-01_2026-09-07_nature-communications",
+      "stageSourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+      "stageBatchGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "guards": {
+        "noD1": true,
+        "noMediaPdfSiBody": true,
+        "noOwnerPermanentExclusion": true,
+        "noTodayHotWeChat": true,
+        "notPublication": true
+      },
+      "reviewMethod": "Same assistant performed distinct DOI-specific first scientific evidence pass and adversarial second pass, not separate human reviewers."
+    }
+  ],
+  "guards": {
+    "noOwnerPermanentExclusion": true,
+    "noAdmissionUntilSeparateVerifiedManifest": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noTodayHotWeChat": true
+  }
+}
