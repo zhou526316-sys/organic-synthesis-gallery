@@ -49,6 +49,8 @@ on:
       - 'cloudflare/scripts/verify-static-media-integrity.mjs'
       - 'cloudflare/scripts/sanitize-static-media.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'scripts/apply-verified-title-presentation.mjs'
+      - 'scripts/test-verified-title-presentation.mjs'
       - 'cloudflare/scripts/new-body-auto-validation.mjs'
       - 'cloudflare/scripts/merge-new-body-auto.mjs'
       - 'audit/media-auto-policy.json'
