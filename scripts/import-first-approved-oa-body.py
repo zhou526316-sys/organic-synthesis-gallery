@@ -156,7 +156,7 @@ def materialize_scientific_sections(xml_bytes,primary_audit,rights_review_note):
     license_text=" ".join(licences)
     if ("by-nc" in license_text.lower() or "by-nd" in license_text.lower() or
         "noncommercial" in license_text.lower() or
-        "https://creativecommons.org/licenses/by/4.0/" not in license_text.lower()):
+        not re.search(r"https?://creativecommons\.org/licenses/by/4\.0/?",license_text,re.I)):
         raise ValueError("source_publisher_article_cc_by4_not_verified")
     body=next((x for x in root.iter() if ltag(x)=="body"),None)
     if body is None:raise ValueError("source_science_body_missing")
@@ -242,6 +242,11 @@ def run(output,enable_import=False):
         if enable_import:
             auth=os.environ.get("BRIDGE_WRITE_TOKEN") or ""
             if not auth:raise ValueError("owner_authorization_not_configured")
+            # Fail closed if a new formal production catalog became authoritative
+            # between source science examination and the owner POST.
+            newest=load_catalog_verified()
+            if newest["catalogId"]!=release["catalogId"] or newest["revision"]!=release["revision"]:
+                raise ValueError("formal_catalog_changed_before_import")
             before=safe_cover(auth,release["catalogId"])
             if before.get("catalogId")!=release["catalogId"] or not isinstance(before.get("verifiedDoi"),int):
                 raise ValueError("production_fts_coverage_unavailable")
