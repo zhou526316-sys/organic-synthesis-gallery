@@ -149,7 +149,16 @@
       return /^https?:\/\//i.test(url)
         &&!/creativecommons\.org\/(?:licenses\/by\/(?:3\.0|4\.0)|publicdomain\/zero\/1\.0)/i.test(url);
     });
-    return {signal:declared?'other_license_declared':'unverified',license:null};
+    // A non-CC rights notice is evidenced only inside the exact current
+    // article, not by page footer, recommended papers or OA badges.
+    const explicitNotice=Array.from(root?.querySelectorAll('section')||[]).some(section=>{
+      if(typeof section.closest==='function'&&excluded(section,true))return false;
+      const title=cleanText(section.querySelector('h2,h3,h4')?.textContent||'',120);
+      if(!/^(?:rights and permissions|licen[cs](?:e|ing)?|copyright)\b/i.test(title))return false;
+      const body=cleanText(section.textContent,7000);
+      return body.length>=50&&/\b(?:all rights reserved|licensed under|copyright|licen[cs](?:e|ed))\b/i.test(body);
+    });
+    return {signal:declared||explicitNotice?'other_license_declared':'unverified',license:null};
   }
   function batchBodyCompleteness(capture){
     const sections=(capture?.sections||[]).filter(s=>s.type!=='abstract');
@@ -316,7 +325,7 @@
   // A genuine publisher 403/429 must not become 'invalid_response'.
   const BATCH_ERRORS=new Set(['doi_unverified','publisher_unreachable','page_unavailable',
     'page_access_blocked','page_http_error','publisher_no_response',
-    'publisher_script_not_confirmed','license_not_verified','body_missing','too_large',
+    'publisher_script_not_confirmed','license_not_verified','license_pending_load','body_missing','too_large',
     'timeout','invalid_response','storage_failure','local_storage_failed',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
@@ -763,7 +772,8 @@
     });
   }
   const BATCH_STATUS_LABELS={
-    saved_local:'已存入本机',license_not_verified:'文章网页尚未识别到可验证许可（不代表无权阅读）',
+    saved_local:'已存入本机',license_not_verified:'已检查本文许可声明，未确认可复用授权',
+    license_pending_load:'本文许可还可能在加载；等待结束后仍未核实（最近文章页供检查）',
     body_missing:'科学正文不足',doi_unverified:'出版社 DOI 不匹配',
     publisher_unreachable:'未能打开出版社页面',publisher_no_response:'出版社标签页未回传',
     timeout:'出版社页面无回执（原因未明）',page_unavailable:'文章页不可用',
@@ -808,7 +818,7 @@
       const eventId='htext_'+batchId();
       const sourceReason=String(reasonCode||'other');
       const allowed=['started','publisher_unreachable','publisher_no_response','doi_unverified',
-        'license_not_verified','body_missing','page_unavailable','page_access_blocked',
+        'license_not_verified','license_pending_load','body_missing','page_unavailable','page_access_blocked',
         'page_http_error','too_large','timeout','invalid_response','capture_failed',
         'unsupported_publisher','response_hash_mismatch','storage_failure',
         'local_storage_failed','publisher_script_not_confirmed','report_upload_failed',
@@ -904,6 +914,27 @@
     setInterval(()=>{void batchDrainReports();},10000);
     void batchDrainReports();
   }
+  // Keep at most two unresolved DOI-verified article tabs for inspection.
+  function batchFinishPublisherTab(tab,result,doi){
+    if(!tab)return false;
+    const uncertain=result?.pageDoiVerified===true
+      &&['license_pending_load','license_not_verified'].includes(result?.status)
+      &&![403,429].includes(Number(result?.httpStatus||0));
+    if(!uncertain){try{tab.close?.();}catch(_){};return false;}
+    batchReviewTabs.push({doi,tab});
+    while(batchReviewTabs.length>BATCH_MAX_REVIEW_TABS){
+      const oldest=batchReviewTabs.shift();
+      try{oldest?.tab?.close?.();}catch(_){}
+    }
+    batchStatusWrite({reviewTabs:batchReviewTabs.length,reviewLastDoi:doi});
+    return true;
+  }
+  function batchCloseReviewTabs(){
+    for(const item of batchReviewTabs.splice(0)){
+      try{item.tab?.close?.();}catch(_){}
+    }
+    batchStatusWrite({reviewTabs:0,reviewLastDoi:''});
+  }
   function batchRetryAllowed(prior,manualBlocked=false){
     if(!prior)return true;
     if(prior.status==='saved_local')return false;
@@ -917,10 +948,10 @@
       ||prior.status==='unsupported_publisher')return manualBlocked===true;
     // The scientific-body parser/ACS license adapter changed: re-evaluate prior
     // DOI-verified false negatives ONCE, and record the revision on the next attempt.
-    if((prior.status==='license_not_verified'||prior.status==='body_missing')
+    if((prior.status==='license_not_verified'||prior.status==='license_pending_load'||prior.status==='body_missing')
       &&prior.pageDoiVerified===true
       &&prior.captureRevision!==BATCH_CAPTURE_REVISION)return true;
-    if(prior.status==='license_not_verified'||prior.status==='body_missing')
+    if(prior.status==='license_not_verified'||prior.status==='license_pending_load'||prior.status==='body_missing')
       return manualBlocked===true;
     return true;
   }
@@ -930,6 +961,7 @@
   function batchStageForStatus(status){
     const code=String(status||'');
     if(code==='license_not_verified')return 'license';
+    if(code==='license_pending_load')return 'publisher_wait';
     if(code==='body_missing'||code==='capture_failed'||code==='too_large')return 'body_extract';
     if(code==='doi_unverified')return 'publisher_doi';
     if(['page_http_error','page_access_blocked','page_unavailable'].includes(code))return 'publisher_page';
@@ -1093,6 +1125,7 @@
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
     const openOa=document.createElement('button');openOa.textContent='全库开放正文补抓（本机）';
     const coverageButton=document.createElement('button');coverageButton.textContent='全库正文覆盖';
+    const closeReview=document.createElement('button');closeReview.textContent='关闭待核实页';
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
     const server=document.createElement('button');server.textContent='服务器报告';
@@ -1119,10 +1152,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
+    for(const btn of [start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,openOa,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
+    controls.append(start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -1135,6 +1168,7 @@
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
+        '留供检查的出版社页 '+Number(s.reviewTabs||0)+' / '+BATCH_MAX_REVIEW_TABS,
         s.currentStage?'当前阶段：'+s.currentStage:'',
         s.lastDoi?'当前/最近：'+s.lastDoi:'',
         s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
@@ -1186,6 +1220,7 @@
       })().catch(()=>{coverageDetails.textContent=
         '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
     });
+    closeReview.addEventListener('click',batchCloseReviewTabs);
     openOa.addEventListener('click',()=>void batchStartOfficialOa().catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
@@ -1408,7 +1443,7 @@
       if(saved.has(paper.doi)){coverage.savedLocal++;continue;}
       const prior=previous.get(paper.doi);
       if(!prior){coverage.neverAttempted++;continue;}
-      if(prior.status==='license_not_verified')coverage.licensePending++;
+      if(prior.status==='license_not_verified'||prior.status==='license_pending_load')coverage.licensePending++;
       else if(prior.status==='body_missing')coverage.bodyMissing++;
       else if(['page_access_blocked','page_http_error','doi_unverified'].includes(prior.status)
         ||[403,429].includes(Number(prior.httpStatus||0)))coverage.accessBlocked++;
@@ -1416,7 +1451,7 @@
         'storage_failure','local_storage_failed','response_hash_mismatch'].includes(prior.status))
         coverage.temporaryFailure++;
       else coverage.otherFailure++;
-      if((prior.status==='license_not_verified'||prior.status==='body_missing')
+      if((prior.status==='license_not_verified'||prior.status==='license_pending_load'||prior.status==='body_missing')
         &&prior.pageDoiVerified===true&&prior.captureRevision!==BATCH_CAPTURE_REVISION
         &&![403,429].includes(Number(prior.httpStatus||0)))coverage.parserRecheckEligible++;
     }
@@ -1432,7 +1467,7 @@
       const prior=previous.get(paper.doi);
       if(mode==='blocked'&&!prior)continue;
       if(mode==='acs_license'
-        &&(batchPublisher(paper.doi)!=='acs'||prior?.status!=='license_not_verified'))
+        &&(batchPublisher(paper.doi)!=='acs'||!['license_not_verified','license_pending_load'].includes(prior?.status)))
         continue;
       if(mode==='reachability'&&(!prior||prior.pageDoiVerified===true
         ||!['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
@@ -1440,7 +1475,7 @@
       // Real publisher pilot is an explicitly initiated, bounded DOI sample.
       // Exclude observed publisher denial/challenge; do not bypass auth.
       if(mode==='pilot'&&(!prior||prior.pageDoiVerified!==true
-        ||!['license_not_verified','body_missing'].includes(prior.status)
+        ||!['license_not_verified','license_pending_load','body_missing'].includes(prior.status)
         ||[403,429].includes(Number(prior.httpStatus||0))))continue;
       if(!batchRetryAllowed(prior,manualBlocked))continue;
       selected.push(paper);
@@ -1528,7 +1563,7 @@
           result=await batchAwaitResponse(job);
         }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
         finally{
-          try{batchTab?.close?.();}catch(_){}
+          batchFinishPublisherTab(batchTab,result,paper.doi);
           batchTab=null;GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
         }
         if(result.status==='paused')break;
@@ -1574,7 +1609,7 @@
             }catch(_){status='storage_failure';stage='local_store';}
           }
         }
-        if(status==='license_not_verified')rightsPending++;
+        if(status==='license_not_verified'||status==='license_pending_load')rightsPending++;
         else if(status!=='saved_local')failed++;
         const localRecord={doi:paper.doi,journal:paper.journal,status,reasonCode:status,
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
@@ -1788,6 +1823,7 @@
     // Historical upload sender and UI must not run on PDF or account pages.
     if(location.pathname==='/'||location.pathname==='/index.html'){
       batchUi=batchPanel();batchUi?.refresh();
+      if(typeof window.addEventListener==='function')window.addEventListener('pagehide',batchCloseReviewTabs,{once:true});
       batchStartDiagnostics();
     }
   }else{
