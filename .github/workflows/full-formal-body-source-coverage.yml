@@ -104,6 +104,8 @@ jobs:
   aggregate:
     if: always() && needs.plan.result == 'success'
     needs: [plan, scan]
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -138,3 +140,40 @@ jobs:
           path: ${{ runner.temp }}/full-formal-body-source-summary.json
           retention-days: 30
           if-no-files-found: warn
+
+      - name: Persist sanitized DOI-by-DOI coverage as an immutable main audit
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_CATALOG: ${{ needs.plan.outputs.catalog_id }}
+          EXPECTED_FORMAL_COUNT: ${{ needs.plan.outputs.planned }}
+        with:
+          script: |
+            const fs=require('node:fs');
+            const file=process.env.RUNNER_TEMP+'/full-formal-body-source-summary.json';
+            if(!fs.existsSync(file)) {
+              core.setFailed('No full-catalog summary generated; cannot preserve census');
+              return;
+            }
+            const summary=JSON.parse(fs.readFileSync(file,'utf8'));
+            if(summary.catalogId!==process.env.EXPECTED_CATALOG ||
+               summary.plannedFormalDois!==Number(process.env.EXPECTED_FORMAL_COUNT) ||
+               !Array.isArray(summary.doiLedger) ||
+               summary.doiLedger.length!==summary.plannedFormalDois ||
+               summary.publicBodyImports!==0) {
+              core.setFailed('Full source audit generation or DOI ledger invariant failed');
+              return;
+            }
+            const filePath='audit/body-source-full/census-'+process.env.GITHUB_RUN_ID+
+              '-'+summary.catalogId.slice(0,12)+'.json';
+            const content=Buffer.from(JSON.stringify(summary,null,2)+'\n').toString('base64');
+            try {
+              const saved=await github.rest.repos.createOrUpdateFileContents({
+                owner:context.repo.owner,repo:context.repo.repo,path:filePath,
+                branch:'main',message:'audit(body): persist formal DOI source census '+process.env.GITHUB_RUN_ID,
+                content
+              });
+              core.info('DURABLE_FULL_BODY_CENSUS '+filePath+' '+saved.data.commit.sha);
+            } catch (error) {
+              core.setFailed('Full DOI source evidence persistence failed: '+String(error?.message||error));
+            }
