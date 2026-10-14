@@ -957,8 +957,8 @@ test('four independent verified 2026-Q3 original methods retain source fingerpri
   second.add(x.independentPasses[1].reason);
  }
  assert.equal(first.size,4);assert.equal(second.size,4);
- assert.equal(root.summary.include,108);
- assert.equal(root.summary.checked,110);
+ assert.ok(root.summary.include>=108,'historical approved set may grow after this four-paper batch');
+ assert.equal(root.summary.checked,root.summary.include+root.pending.length);
  assert.equal(root.summary.pending,2);
  assert.match(root.accepted.find(x=>x.doi==='10.1021/acscatal.6c02607').challengeReason,/13种/);
  assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c03221').challengeReason,/99% ee/);
@@ -969,4 +969,51 @@ test('four independent verified 2026-Q3 original methods retain source fingerpri
  assert.equal(hold.newUnadmittedSourceDateConcern[0].status,'unfinished_require_official_CCS_article_history_before_academic_approval');
  assert.equal(root.accepted.some(x=>x.doi==='10.31635/ccschem.026.202608043'),false);
  for(const doi of hold.continuedHolds)assert.equal(root.accepted.some(x=>x.doi===doi),false);
+});
+
+
+test('eight new Q3 ACS originals have independent source-date and preparative scope evidence without off-slot release',()=>{
+ const expected=[["10.1021/jacs.6c11520","2026-07-20","8881d530f0490274d806ac23c1997e80de36b30f","JACS"],["10.1021/jacs.6c10750","2026-07-02","35a03263c6d870f0d068d84670816b9a963d9530","JACS"],["10.1021/jacs.6c12029","2026-08-03","d16386f0d2ce85ee73c8d3078fa93cddb3f9e091","JACS"],["10.1021/jacs.6c09649","2026-07-03","35a03263c6d870f0d068d84670816b9a963d9530","JACS"],["10.1021/jacs.6c11377","2026-08-04","d16386f0d2ce85ee73c8d3078fa93cddb3f9e091","JACS"],["10.1021/acs.orglett.6c02479","2026-07-23","67f6960bccfa31a1d2477390309426061dc65563","Organic Letters"],["10.1021/acs.joc.6c00672","2026-08-13","1e304fff3b34a0833ab461bd5381b34f722c798b","JOC"],["10.1021/acs.joc.6c01643","2026-09-17","0a6b4fb5580453d2b101f2f94030ee7f9c473541","JOC"]];
+ const first=new Set(),second=new Set(),scope=new Set();
+ for(const [doi,date,sha,journal] of expected){
+  const rows=root.accepted.filter(x=>x.doi===doi);
+  assert.equal(rows.length,1,doi);
+  const x=rows[0];
+  assert.equal(x.date,date,doi);
+  assert.equal(x.journal,journal);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,sha);
+  assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(y=>y.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>180);
+  assert.ok(x.independentPasses[1].reason.length>165);
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(doi));
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(sha));
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.new,false);assert.equal(x.addedDate,'');
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.equal(x.reviewEvidence.abstractCopied,false);
+  assert.equal(x.reviewEvidence.figureFetched,false);
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.citation.doi,doi);
+  first.add(x.independentPasses[0].reason);second.add(x.independentPasses[1].reason);scope.add(x.scopeAssessment.preparativeTransformation);
+ }
+ assert.equal(first.size,8);assert.equal(second.size,8);assert.equal(scope.size,8);
+ assert.ok(root.summary.include>=116);
+ assert.equal(root.summary.checked,root.summary.include+root.pending.length);
+ assert.equal(root.pending.length,2);
+ const audit=JSON.parse(readFileSync('audit/historical-reviewed/2026-10-14-q3-eight-acs-original-synthesis-two-pass.json','utf8'));
+ assert.equal(audit.reviewed.length,8);
+ const d=root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01643');
+ assert.equal(d.date,'2026-09-17');
+ assert.equal(d.reviewEvidence.firstOnlineDateEvidence.stageApiDate,'2026-09-16');
+ assert.equal(d.reviewEvidence.firstOnlineDateEvidence.authoritativeDate,'publisher_official_article_history');
+ assert.equal(d.reviewEvidence.firstOnlineDateEvidence.frozenSourceUnmodified,true);
+ assert.match(d.challengeReason,/立体选择性/);
+ const r=root.accepted.find(x=>x.doi==='10.1021/jacs.6c09649');
+ assert.match(r.challengeReason,/Ni介导/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/jacs.6c11377').challengeReason,/手性磷酸配体/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c00672').challengeReason,/氧化剂/);
+ for(const doi of audit.continuedDateHolds)assert.ok(!root.accepted.some(x=>x.doi===doi));
 });

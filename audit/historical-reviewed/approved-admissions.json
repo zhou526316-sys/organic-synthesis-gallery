@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-14T03:06:57.929Z",
+  "generatedAt": "2026-10-14T03:33:48.883Z",
   "nextEligiblePublicationSlot": "2026-10-15T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 110,
-    "include": 108,
+    "checked": 118,
+    "include": 116,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -7773,6 +7773,601 @@
         }
       ],
       "reviewRationaleSecondPass": "真正一般性是这一类芳胺与硫酚衍生物的有机合成，而非通用的所有C–C/C–S氧化交叉偶联；选择性受底物氧化电位、抑制硫醇过氧化及乙酸调节限制。"
+    },
+    {
+      "doi": "10.1021/jacs.6c11520",
+      "journal": "JACS",
+      "title": "Droplet-Enhanced Asymmetric Catalysis: Squaramide-Derived Pseudopeptide for Enantioselective Addition Reactions",
+      "titleZh": "液滴微环境增强方酰胺拟肽催化的不对称共轭加成反应",
+      "date": "2026-07-20",
+      "authors": [
+        "Qipeng Chen",
+        "Donghua He",
+        "Yongjin Zhang",
+        "Chenxi Qiao",
+        "Jun Liu",
+        "Guohua Liu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "29",
+        "pages": "31536-31545",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11520"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立由L-苯丙氨酸与L-叔亮氨酸衍生方酰胺组成的拟肽液滴催化系统，以液滴内局域底物富集和手性微环境促进真实的对映选择性碳碳键形成，提供相分离体系用于不对称小分子制备的催化设计。",
+      "evidenceBasis": "完整DOI 10.1021/jacs.6c11520。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c11520 首次 Published Online 2026-07-20；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS JACS作者摘要列出α-硝基砜与两类Michael受体和乙酰丙酮与β-硝基烯烃这三类实际合成反应；公开SI目录明确含手性产物实验与分析数据。论文比较液滴局域浓度和手性微环境的活性、选择性作用，未据摘要推测每一底物的收率、ee或规模。 来源为2026-07-15_2026-07-21_jacs，冻结 staging Git blob SHA 8881d530f0490274d806ac23c1997e80de36b30f；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "独立第二遍挑战：该研究的概念重点包含相分离液滴及酶模拟微环境，因此不能因为有催化剂组装就判定为有机制备方法。作者实际展示不同碳亲核体和受体的对映选择性加成及产物分析，具文章特定可转移的制备模式；但液滴介观机制不能当作所有产物选择性的唯一排他证明，也没有证据声称放大量产或任何底物普适。",
+      "scopeAssessment": {
+        "primaryContribution": "建立由L-苯丙氨酸与L-叔亮氨酸衍生方酰胺组成的拟肽液滴催化系统，以液滴内局域底物富集和手性微环境促进真实的对映选择性碳碳键形成，提供相分离体系用于不对称小分子制备的催化设计。",
+        "preparativeTransformation": "α-硝基砜对丙烯酸酯及烯酮的对映选择性共轭加成，以及乙酰丙酮对β-硝基烯烃的Michael加成，均构筑新的碳碳键并得到可表征手性有机产物，而非只监测液滴融合。",
+        "generalityEvidence": "ACS JACS作者摘要列出α-硝基砜与两类Michael受体和乙酰丙酮与β-硝基烯烃这三类实际合成反应；公开SI目录明确含手性产物实验与分析数据。论文比较液滴局域浓度和手性微环境的活性、选择性作用，未据摘要推测每一底物的收率、ee或规模。",
+        "sourceEvidence": "完整DOI 10.1021/jacs.6c11520。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c11520 首次 Published Online 2026-07-20；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS JACS作者摘要列出α-硝基砜与两类Michael受体和乙酰丙酮与β-硝基烯烃这三类实际合成反应；公开SI目录明确含手性产物实验与分析数据。论文比较液滴局域浓度和手性微环境的活性、选择性作用，未据摘要推测每一底物的收率、ee或规模。 来源为2026-07-15_2026-07-21_jacs，冻结 staging Git blob SHA 8881d530f0490274d806ac23c1997e80de36b30f；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "真实制备限于作者测试的共轭加成伙伴；局域浓度促进速率与手性微环境促进ee应分开论证。不是聚合物材料性能或单纯液滴物理观察。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c11520",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c11520",
+        "publisherOnlineDate": "2026-07-20",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_jacs",
+        "stageBatchSha": "8881d530f0490274d806ac23c1997e80de36b30f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JACS_Article_History_Published_Online_2026_07_20",
+        "originalPublisherJournalName": "Journal of the American Chemical Society",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：建立由L-苯丙氨酸与L-叔亮氨酸衍生方酰胺组成的拟肽液滴催化系统，以液滴内局域底物富集和手性微环境促进真实的对映选择性碳碳键形成，提供相分离体系用于不对称小分子制备的催化设计。 α-硝基砜对丙烯酸酯及烯酮的对映选择性共轭加成，以及乙酰丙酮对β-硝基烯烃的Michael加成，均构筑新的碳碳键并得到可表征手性有机产物，而非只监测液滴融合。 ACS JACS作者摘要列出α-硝基砜与两类Michael受体和乙酰丙酮与β-硝基烯烃这三类实际合成反应；公开SI目录明确含手性产物实验与分析数据。论文比较液滴局域浓度和手性微环境的活性、选择性作用，未据摘要推测每一底物的收率、ee或规模。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍挑战：该研究的概念重点包含相分离液滴及酶模拟微环境，因此不能因为有催化剂组装就判定为有机制备方法。作者实际展示不同碳亲核体和受体的对映选择性加成及产物分析，具文章特定可转移的制备模式；但液滴介观机制不能当作所有产物选择性的唯一排他证明，也没有证据声称放大量产或任何底物普适。 真实制备限于作者测试的共轭加成伙伴；局域浓度促进速率与手性微环境促进ee应分开论证。不是聚合物材料性能或单纯液滴物理观察。"
+        }
+      ],
+      "reviewRationaleSecondPass": "真实制备限于作者测试的共轭加成伙伴；局域浓度促进速率与手性微环境促进ee应分开论证。不是聚合物材料性能或单纯液滴物理观察。"
+    },
+    {
+      "doi": "10.1021/jacs.6c10750",
+      "journal": "JACS",
+      "title": "Iridium-Catalyzed Enantioselective C4-Alkylation of Indoles with α-Olefins and Styrenes",
+      "titleZh": "铱催化吲哚与α-烯烃及苯乙烯的C4位对映选择性烷基化",
+      "date": "2026-07-02",
+      "authors": [
+        "Kai Wang",
+        "Kai-Yuan Tian",
+        "Wen-Yao Wang",
+        "Zhen-Yu Song",
+        "Chao Fan",
+        "Qi-Lin Zhou"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28068-28074",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10750"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发Ir催化吲哚C4位区域及对映选择性烷基化方法，克服吲哚其他位置易反应的常规选择性障碍，直接获取C4位带手性中心的吲哚分子。",
+      "evidenceBasis": "完整DOI 10.1021/jacs.6c10750。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c10750 首次 Published Online 2026-07-02；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS原始摘要明确α-烯烃及苯乙烯两类烯烃伙伴和广泛底物范围，独占C4位区域选择性及优异对映控制；作者确认C3 N,N-二苄基酰胺导向基、手性螺环双亚磷酸酯配体均为控制关键，DFT讨论选择性来源。 来源为2026-07-01_2026-07-07_jacs，冻结 staging Git blob SHA 35a03263c6d870f0d068d84670816b9a963d9530；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍着重反驳过度推广：该反应并非所有未取代吲哚直接进行无导向的C4烷基化，作者明确依赖C3 N,N-二苄基酰胺。α-烯烃及苯乙烯构成可信两类合成伙伴，但不能凭摘要声称能兼容所有烯烃；DFT仅解释所提出路径的能量和立体模型，非绝对排他性机理。",
+      "scopeAssessment": {
+        "primaryContribution": "开发Ir催化吲哚C4位区域及对映选择性烷基化方法，克服吲哚其他位置易反应的常规选择性障碍，直接获取C4位带手性中心的吲哚分子。",
+        "preparativeTransformation": "带C3 N,N-二苄基酰胺导向基的吲哚与α-烯烃或苯乙烯类烯烃通过Ir催化C4位C–H官能化/烯烃插入形成新C(sp²)–C(sp³)键，得到C4侧链带立体中心的吲哚。",
+        "generalityEvidence": "ACS原始摘要明确α-烯烃及苯乙烯两类烯烃伙伴和广泛底物范围，独占C4位区域选择性及优异对映控制；作者确认C3 N,N-二苄基酰胺导向基、手性螺环双亚磷酸酯配体均为控制关键，DFT讨论选择性来源。",
+        "sourceEvidence": "完整DOI 10.1021/jacs.6c10750。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c10750 首次 Published Online 2026-07-02；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS原始摘要明确α-烯烃及苯乙烯两类烯烃伙伴和广泛底物范围，独占C4位区域选择性及优异对映控制；作者确认C3 N,N-二苄基酰胺导向基、手性螺环双亚磷酸酯配体均为控制关键，DFT讨论选择性来源。 来源为2026-07-01_2026-07-07_jacs，冻结 staging Git blob SHA 35a03263c6d870f0d068d84670816b9a963d9530；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "收录依据是吲哚C4位C–C键构建与多个有机产物，而不是仅Ir配体设计；转化依赖可安装的C3酰胺导向结构和螺环双亚磷酸酯配体。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c10750",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c10750",
+        "publisherOnlineDate": "2026-07-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_jacs",
+        "stageBatchSha": "35a03263c6d870f0d068d84670816b9a963d9530",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JACS_Article_History_Published_Online_2026_07_02",
+        "originalPublisherJournalName": "Journal of the American Chemical Society",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：开发Ir催化吲哚C4位区域及对映选择性烷基化方法，克服吲哚其他位置易反应的常规选择性障碍，直接获取C4位带手性中心的吲哚分子。 带C3 N,N-二苄基酰胺导向基的吲哚与α-烯烃或苯乙烯类烯烃通过Ir催化C4位C–H官能化/烯烃插入形成新C(sp²)–C(sp³)键，得到C4侧链带立体中心的吲哚。 ACS原始摘要明确α-烯烃及苯乙烯两类烯烃伙伴和广泛底物范围，独占C4位区域选择性及优异对映控制；作者确认C3 N,N-二苄基酰胺导向基、手性螺环双亚磷酸酯配体均为控制关键，DFT讨论选择性来源。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍着重反驳过度推广：该反应并非所有未取代吲哚直接进行无导向的C4烷基化，作者明确依赖C3 N,N-二苄基酰胺。α-烯烃及苯乙烯构成可信两类合成伙伴，但不能凭摘要声称能兼容所有烯烃；DFT仅解释所提出路径的能量和立体模型，非绝对排他性机理。 收录依据是吲哚C4位C–C键构建与多个有机产物，而不是仅Ir配体设计；转化依赖可安装的C3酰胺导向结构和螺环双亚磷酸酯配体。"
+        }
+      ],
+      "reviewRationaleSecondPass": "收录依据是吲哚C4位C–C键构建与多个有机产物，而不是仅Ir配体设计；转化依赖可安装的C3酰胺导向结构和螺环双亚磷酸酯配体。"
+    },
+    {
+      "doi": "10.1021/jacs.6c12029",
+      "journal": "JACS",
+      "title": "Atropisomeric Aryl–Hydrazone Frameworks: Discovery and Organocatalytic Enantioselective Construction",
+      "titleZh": "手性Brønsted酸催化轴手性芳基腙骨架的对映选择性构筑",
+      "date": "2026-08-03",
+      "authors": [
+        "Feng Zhang",
+        "Hai-Qin Lin",
+        "Yuan Cui",
+        "Cheng Li",
+        "Shi-Jiang He",
+        "Yong-Bin Wang",
+        "Shao-Hua Xiang",
+        "Bin Tan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "31",
+        "pages": "33959-33969",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c12029"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发现并提出轴手性芳基腙新骨架，发展手性Brønsted酸催化的对映选择性合成策略，既控制芳基腙轴手性又控制构型相关的Z/E选择性。",
+      "evidenceBasis": "完整DOI 10.1021/jacs.6c12029。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c12029 首次 Published Online 2026-08-03；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS出版社正式摘要记载芳基腙骨架多官能团兼容、显著Z/E和对映选择性及良好轴构型稳定性；手性酸的质子穿梭促进构型信息转移属于实验与机制解释，未由摘要虚构单个产物的具体收率或ee。 来源为2026-08-01_2026-08-07_jacs，冻结 staging Git blob SHA d16386f0d2ce85ee73c8d3078fa93cddb3f9e091；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍挑战：不能把肼进攻醌甲基化物之后的转化简单称为所有体系必经的单一质子穿梭路径；原文Brønsted酸空间选择与烯胺互变异构包含机理推断。文章实有不同芳基炔烃/肼类来源构筑隔离稳定的轴手性腙骨架，故不是仅研究稳定性或材料光学性能；而Z构型保留不等于任一腙都可保持单一Z。",
+      "scopeAssessment": {
+        "primaryContribution": "发现并提出轴手性芳基腙新骨架，发展手性Brønsted酸催化的对映选择性合成策略，既控制芳基腙轴手性又控制构型相关的Z/E选择性。",
+        "preparativeTransformation": "在手性Brønsted酸促进下，芳基炔烃生成瞬态轴手性乙烯基醌甲基化物，肼类亲核体进行加成形成芳基烯胺中间体，再经立体专一的烯胺-亚胺互变异构转化为Z构型轴手性芳基腙产物。",
+        "generalityEvidence": "JACS出版社正式摘要记载芳基腙骨架多官能团兼容、显著Z/E和对映选择性及良好轴构型稳定性；手性酸的质子穿梭促进构型信息转移属于实验与机制解释，未由摘要虚构单个产物的具体收率或ee。",
+        "sourceEvidence": "完整DOI 10.1021/jacs.6c12029。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c12029 首次 Published Online 2026-08-03；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS出版社正式摘要记载芳基腙骨架多官能团兼容、显著Z/E和对映选择性及良好轴构型稳定性；手性酸的质子穿梭促进构型信息转移属于实验与机制解释，未由摘要虚构单个产物的具体收率或ee。 来源为2026-08-01_2026-08-07_jacs，冻结 staging Git blob SHA d16386f0d2ce85ee73c8d3078fa93cddb3f9e091；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "一般性限定为可生成相关醌甲基化物的芳基炔烃及相容肼亲核体；不推广为全部腙骨架、所有酮或全类型轴手性化合物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c12029",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c12029",
+        "publisherOnlineDate": "2026-08-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_jacs",
+        "stageBatchSha": "d16386f0d2ce85ee73c8d3078fa93cddb3f9e091",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JACS_Article_History_Published_Online_2026_08_03",
+        "originalPublisherJournalName": "Journal of the American Chemical Society",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：发现并提出轴手性芳基腙新骨架，发展手性Brønsted酸催化的对映选择性合成策略，既控制芳基腙轴手性又控制构型相关的Z/E选择性。 在手性Brønsted酸促进下，芳基炔烃生成瞬态轴手性乙烯基醌甲基化物，肼类亲核体进行加成形成芳基烯胺中间体，再经立体专一的烯胺-亚胺互变异构转化为Z构型轴手性芳基腙产物。 JACS出版社正式摘要记载芳基腙骨架多官能团兼容、显著Z/E和对映选择性及良好轴构型稳定性；手性酸的质子穿梭促进构型信息转移属于实验与机制解释，未由摘要虚构单个产物的具体收率或ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：不能把肼进攻醌甲基化物之后的转化简单称为所有体系必经的单一质子穿梭路径；原文Brønsted酸空间选择与烯胺互变异构包含机理推断。文章实有不同芳基炔烃/肼类来源构筑隔离稳定的轴手性腙骨架，故不是仅研究稳定性或材料光学性能；而Z构型保留不等于任一腙都可保持单一Z。 一般性限定为可生成相关醌甲基化物的芳基炔烃及相容肼亲核体；不推广为全部腙骨架、所有酮或全类型轴手性化合物。"
+        }
+      ],
+      "reviewRationaleSecondPass": "一般性限定为可生成相关醌甲基化物的芳基炔烃及相容肼亲核体；不推广为全部腙骨架、所有酮或全类型轴手性化合物。"
+    },
+    {
+      "doi": "10.1021/jacs.6c09649",
+      "journal": "JACS",
+      "title": "A Ni-Mediated Cross-Coupling Approach to Deuterated 18 F- Fluoromethylated (Hetero)arenes",
+      "titleZh": "镍介导交叉偶联实现芳烃及杂芳烃的氘代18F单氟甲基化",
+      "date": "2026-07-03",
+      "authors": [
+        "Maddison Lovell",
+        "Sebastiano Ortalli",
+        "Raquel Sánchez-Bento",
+        "Matthew Tredwell",
+        "Joseph Ford",
+        "Véronique Gouverneur"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28049-28054",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09649"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立镍介导的芳基/杂芳基亲电伙伴18F,D₂-单氟甲基化交叉偶联制备方法，直接获得氘代PET示踪构件并减少依赖为SN2放射氟化专门设计的前体。",
+      "evidenceBasis": "完整DOI 10.1021/jacs.6c09649。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c09649 首次 Published Online 2026-07-03；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS开放作者摘要报告超过30种不同的(杂)芳烃底物、广泛官能团兼容，包含复杂生物活性分子；半自动化商用装置上实现放大并分离得到18F,D₂标记的PARP PET示踪剂。明确Ni介导而不是未经证实的循环催化。 来源为2026-07-01_2026-07-07_jacs，冻结 staging Git blob SHA 35a03263c6d870f0d068d84670816b9a963d9530；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍专门反对把生物医学PET应用文章一概排除：该研究具有30余种真实有机骨架的C–C连接放射标记合成、分离示踪剂与半自动化制备，方法学证据充分。核素制备与比活度受特殊放射化学环境制约，不能推出普通19F反应收率或无限规模；Ni介导不能自动改写为周转Ni催化，且PET标记不等于临床人体成像证据。",
+      "scopeAssessment": {
+        "primaryContribution": "建立镍介导的芳基/杂芳基亲电伙伴18F,D₂-单氟甲基化交叉偶联制备方法，直接获得氘代PET示踪构件并减少依赖为SN2放射氟化专门设计的前体。",
+        "preparativeTransformation": "芳基和杂芳基卤化物或拟卤化物经Ni介导交叉偶联安装含氘的放射性18F单氟甲基取代基，构筑Ar–CD₂–18F键，氘与氟18在同一末期合成步骤引入。",
+        "generalityEvidence": "JACS开放作者摘要报告超过30种不同的(杂)芳烃底物、广泛官能团兼容，包含复杂生物活性分子；半自动化商用装置上实现放大并分离得到18F,D₂标记的PARP PET示踪剂。明确Ni介导而不是未经证实的循环催化。",
+        "sourceEvidence": "完整DOI 10.1021/jacs.6c09649。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c09649 首次 Published Online 2026-07-03；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS开放作者摘要报告超过30种不同的(杂)芳烃底物、广泛官能团兼容，包含复杂生物活性分子；半自动化商用装置上实现放大并分离得到18F,D₂标记的PARP PET示踪剂。明确Ni介导而不是未经证实的循环催化。 来源为2026-07-01_2026-07-07_jacs，冻结 staging Git blob SHA 35a03263c6d870f0d068d84670816b9a963d9530；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "原创贡献是同一步安装D₂/18F的可推广芳基偶联制备，而非仅PET测量性能。过渡金属用量及辐射化学设备条件需依论文限定。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c09649",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c09649",
+        "publisherOnlineDate": "2026-07-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_jacs",
+        "stageBatchSha": "35a03263c6d870f0d068d84670816b9a963d9530",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JACS_Article_History_Published_Online_2026_07_03",
+        "originalPublisherJournalName": "Journal of the American Chemical Society",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：建立镍介导的芳基/杂芳基亲电伙伴18F,D₂-单氟甲基化交叉偶联制备方法，直接获得氘代PET示踪构件并减少依赖为SN2放射氟化专门设计的前体。 芳基和杂芳基卤化物或拟卤化物经Ni介导交叉偶联安装含氘的放射性18F单氟甲基取代基，构筑Ar–CD₂–18F键，氘与氟18在同一末期合成步骤引入。 JACS开放作者摘要报告超过30种不同的(杂)芳烃底物、广泛官能团兼容，包含复杂生物活性分子；半自动化商用装置上实现放大并分离得到18F,D₂标记的PARP PET示踪剂。明确Ni介导而不是未经证实的循环催化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍专门反对把生物医学PET应用文章一概排除：该研究具有30余种真实有机骨架的C–C连接放射标记合成、分离示踪剂与半自动化制备，方法学证据充分。核素制备与比活度受特殊放射化学环境制约，不能推出普通19F反应收率或无限规模；Ni介导不能自动改写为周转Ni催化，且PET标记不等于临床人体成像证据。 原创贡献是同一步安装D₂/18F的可推广芳基偶联制备，而非仅PET测量性能。过渡金属用量及辐射化学设备条件需依论文限定。"
+        }
+      ],
+      "reviewRationaleSecondPass": "原创贡献是同一步安装D₂/18F的可推广芳基偶联制备，而非仅PET测量性能。过渡金属用量及辐射化学设备条件需依论文限定。"
+    },
+    {
+      "doi": "10.1021/jacs.6c11377",
+      "journal": "JACS",
+      "title": "Overriding Intrinsic Site-Selectivity in Nickel(II)-Catalyzed Enantioselective Methylene C(sp3)–H Alkynylation",
+      "titleZh": "镍(II)/手性磷酸配体催化β-亚甲基C(sp³)–H键的位点及对映选择性炔基化",
+      "date": "2026-08-04",
+      "authors": [
+        "Fei Yao",
+        "Jia-Yi Bi",
+        "Gang Zhou",
+        "Wenkui Yuan",
+        "Bing-Feng Shi"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "32",
+        "pages": "34976-34984",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11377"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "报道稳定Ni(II)盐配合大位阻(R)-TCYP手性磷酸配体实现酰胺导向β-亚甲基C(sp³)–H对映选择性炔基化，克服有甲基C–H共存时天然易活化甲基而非亚甲基的位点偏好。",
+      "evidenceBasis": "完整DOI 10.1021/jacs.6c11377。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c11377 首次 Published Online 2026-08-04；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS原始摘要显示较广β-炔基酰胺底物范围，最高98%分离收率及99% ee；分离并以单晶X射线表征手性Ni(II)金属杂环中间体，结合实验将C–H断裂支持为速率及对映选择性决定步骤。 来源为2026-08-01_2026-08-07_jacs，冻结 staging Git blob SHA d16386f0d2ce85ee73c8d3078fa93cddb3f9e091；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍重点区分直接观察与推断：单晶Ni(II)金属杂环证明可形成特定金属中间体，但不能仅凭一晶体定出全部底物唯一催化路径；动力学与同位素/对照结果支持C–H断裂控速和控ee而不代表每个取代基均完全相同。该体系实际分离β-亚甲基炔基化酰胺并展示甲基共存竞争，所以不只是理论选择性研究；同时(R)-TCYP是配位手性磷酸配体，不能未经证实写成游离CPA离子对单独控制。",
+      "scopeAssessment": {
+        "primaryContribution": "报道稳定Ni(II)盐配合大位阻(R)-TCYP手性磷酸配体实现酰胺导向β-亚甲基C(sp³)–H对映选择性炔基化，克服有甲基C–H共存时天然易活化甲基而非亚甲基的位点偏好。",
+        "preparativeTransformation": "含β-亚甲基C–H的酰胺底物在Ni(II)/(R)-TCYP配体体系中优先发生β-CH₂ C–H断裂与炔基偶联，形成β-炔基化酰胺并建立新的立体中心；多种带β-甲基竞争位点的底物亦以亚甲基为主。",
+        "generalityEvidence": "JACS原始摘要显示较广β-炔基酰胺底物范围，最高98%分离收率及99% ee；分离并以单晶X射线表征手性Ni(II)金属杂环中间体，结合实验将C–H断裂支持为速率及对映选择性决定步骤。",
+        "sourceEvidence": "完整DOI 10.1021/jacs.6c11377。ACS JACS官方文章信息/Article History https://pubs.acs.org/doi/10.1021/jacs.6c11377 首次 Published Online 2026-08-04；冻结Crossref/OpenAlex公开书目日期与出版社一致；JACS原始摘要显示较广β-炔基酰胺底物范围，最高98%分离收率及99% ee；分离并以单晶X射线表征手性Ni(II)金属杂环中间体，结合实验将C–H断裂支持为速率及对映选择性决定步骤。 来源为2026-08-01_2026-08-07_jacs，冻结 staging Git blob SHA d16386f0d2ce85ee73c8d3078fa93cddb3f9e091；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "方法受酰胺导向、Ni(II)和特定大位阻手性磷酸配体约束，不能泛称所有未活化烷烃或无导向位点也有99% ee。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c11377",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c11377",
+        "publisherOnlineDate": "2026-08-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_jacs",
+        "stageBatchSha": "d16386f0d2ce85ee73c8d3078fa93cddb3f9e091",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JACS_Article_History_Published_Online_2026_08_04",
+        "originalPublisherJournalName": "Journal of the American Chemical Society",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：报道稳定Ni(II)盐配合大位阻(R)-TCYP手性磷酸配体实现酰胺导向β-亚甲基C(sp³)–H对映选择性炔基化，克服有甲基C–H共存时天然易活化甲基而非亚甲基的位点偏好。 含β-亚甲基C–H的酰胺底物在Ni(II)/(R)-TCYP配体体系中优先发生β-CH₂ C–H断裂与炔基偶联，形成β-炔基化酰胺并建立新的立体中心；多种带β-甲基竞争位点的底物亦以亚甲基为主。 JACS原始摘要显示较广β-炔基酰胺底物范围，最高98%分离收率及99% ee；分离并以单晶X射线表征手性Ni(II)金属杂环中间体，结合实验将C–H断裂支持为速率及对映选择性决定步骤。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍重点区分直接观察与推断：单晶Ni(II)金属杂环证明可形成特定金属中间体，但不能仅凭一晶体定出全部底物唯一催化路径；动力学与同位素/对照结果支持C–H断裂控速和控ee而不代表每个取代基均完全相同。该体系实际分离β-亚甲基炔基化酰胺并展示甲基共存竞争，所以不只是理论选择性研究；同时(R)-TCYP是配位手性磷酸配体，不能未经证实写成游离CPA离子对单独控制。 方法受酰胺导向、Ni(II)和特定大位阻手性磷酸配体约束，不能泛称所有未活化烷烃或无导向位点也有99% ee。"
+        }
+      ],
+      "reviewRationaleSecondPass": "方法受酰胺导向、Ni(II)和特定大位阻手性磷酸配体约束，不能泛称所有未活化烷烃或无导向位点也有99% ee。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02479",
+      "journal": "Organic Letters",
+      "title": "Chiral Amide-Enabled Cobalt-Catalyzed Enantioselective C–H Annulation for the Synthesis of P -Stereogenic Arylphosphinamides",
+      "titleZh": "手性酰胺配体辅助钴催化C–H环化构筑磷手性及轴手性芳基次膦酰胺",
+      "date": "2026-07-23",
+      "authors": [
+        "Chao-Wei Zhang",
+        "Xian-Qi Hu",
+        "Shao-Bai Yan",
+        "Jian-Qi Xiong",
+        "Wei-Liang Duan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9926-9931",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02479"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立Co(II)催化芳基次膦酰胺与炔烃的不对称C–H环化反应，通过可模块化氨基酸来源的手性羧酰胺配体诱导磷中心手性或轴手性产物。",
+      "evidenceBasis": "完整DOI 10.1021/acs.orglett.6c02479。ACS Organic Letters官方文章信息/Article History https://pubs.acs.org/doi/10.1021/acs.orglett.6c02479 首次 Published Online 2026-07-23；冻结Crossref/OpenAlex公开书目日期与出版社一致；Organic Letters官方摘要明确不同芳基次膦酰胺和炔烃制备P-stereogenic与轴手性磷酰胺，最高99%收率和98% ee，并以模块化氨基酸衍生羧酰胺作为手性控制配体。不能默认两种手性类型必同时存在于每个产物。 来源为2026-07-22_2026-07-31_organic-letters，冻结 staging Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍反向检查：不能因论文描述新配体或高ee就自动纳入，而须找到芳基次膦酰胺/炔烃到可分离有机磷骨架的具体制备。作者确实提供两类立体信息的产物范围；但Co(II)配合物的可能氧化态循环与C–H切断细节未由公开摘要唯一证明，且99%产率与98% ee分别为上限，不能直接宣称所有底物均达双最高。",
+      "scopeAssessment": {
+        "primaryContribution": "建立Co(II)催化芳基次膦酰胺与炔烃的不对称C–H环化反应，通过可模块化氨基酸来源的手性羧酰胺配体诱导磷中心手性或轴手性产物。",
+        "preparativeTransformation": "芳基次膦酰胺经Co(II)催化芳环C–H活化，与炔烃进行环化/官能化，构筑具有P-立体中心或C–C轴手性的芳基次膦酰胺类有机磷化合物。",
+        "generalityEvidence": "Organic Letters官方摘要明确不同芳基次膦酰胺和炔烃制备P-stereogenic与轴手性磷酰胺，最高99%收率和98% ee，并以模块化氨基酸衍生羧酰胺作为手性控制配体。不能默认两种手性类型必同时存在于每个产物。",
+        "sourceEvidence": "完整DOI 10.1021/acs.orglett.6c02479。ACS Organic Letters官方文章信息/Article History https://pubs.acs.org/doi/10.1021/acs.orglett.6c02479 首次 Published Online 2026-07-23；冻结Crossref/OpenAlex公开书目日期与出版社一致；Organic Letters官方摘要明确不同芳基次膦酰胺和炔烃制备P-stereogenic与轴手性磷酰胺，最高99%收率和98% ee，并以模块化氨基酸衍生羧酰胺作为手性控制配体。不能默认两种手性类型必同时存在于每个产物。 来源为2026-07-22_2026-07-31_organic-letters，冻结 staging Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "实际适用性限制在作者检验的芳基次膦酰胺/炔烃；手性氨基酸羧酰胺配体并非CPA，不能将其错称磷酸催化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02479",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02479",
+        "publisherOnlineDate": "2026-07-23",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Organic_Letters_Article_History_Published_Online_2026_07_23",
+        "originalPublisherJournalName": "Organic Letters",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：建立Co(II)催化芳基次膦酰胺与炔烃的不对称C–H环化反应，通过可模块化氨基酸来源的手性羧酰胺配体诱导磷中心手性或轴手性产物。 芳基次膦酰胺经Co(II)催化芳环C–H活化，与炔烃进行环化/官能化，构筑具有P-立体中心或C–C轴手性的芳基次膦酰胺类有机磷化合物。 Organic Letters官方摘要明确不同芳基次膦酰胺和炔烃制备P-stereogenic与轴手性磷酰胺，最高99%收率和98% ee，并以模块化氨基酸衍生羧酰胺作为手性控制配体。不能默认两种手性类型必同时存在于每个产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反向检查：不能因论文描述新配体或高ee就自动纳入，而须找到芳基次膦酰胺/炔烃到可分离有机磷骨架的具体制备。作者确实提供两类立体信息的产物范围；但Co(II)配合物的可能氧化态循环与C–H切断细节未由公开摘要唯一证明，且99%产率与98% ee分别为上限，不能直接宣称所有底物均达双最高。 实际适用性限制在作者检验的芳基次膦酰胺/炔烃；手性氨基酸羧酰胺配体并非CPA，不能将其错称磷酸催化。"
+        }
+      ],
+      "reviewRationaleSecondPass": "实际适用性限制在作者检验的芳基次膦酰胺/炔烃；手性氨基酸羧酰胺配体并非CPA，不能将其错称磷酸催化。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00672",
+      "journal": "JOC",
+      "title": "Visible Light-Mediated Direct Decarboxylative Giese Amidations without a Photocatalyst─Batch and Flow",
+      "titleZh": "无需外加光催化剂的可见光驱动脱羧Giese氨甲酰化：间歇与连续流制备",
+      "date": "2026-08-13",
+      "authors": [
+        "Samuel L. Nickels",
+        "David M. Kitcatt",
+        "Filipe Vilela",
+        "Ai-Lan Lee"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "34",
+        "pages": "11635-11641",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00672"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "改进草酰胺酸衍生自由基的Giese氨甲酰化制备，通过可见光及可能原位形成的电子给体–受体复合物（EDA）摆脱昂贵Ir光催化剂，并以连续流克级演示增强制备实用性。",
+      "evidenceBasis": "完整DOI 10.1021/acs.joc.6c00672。ACS JOC官方文章信息/Article History https://pubs.acs.org/doi/10.1021/acs.joc.6c00672 首次 Published Online 2026-08-13；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS JOC开放全文/官方摘要显示不同一级及二级酰胺来源的草酰胺酸、环状及链状Michael受体可在间歇和流动条件下反应；有克级连续流放大，来自leelamine的复杂草酰胺酸产物给78%收率，复杂受体组合亦报告65%。该条件不应未经验证泛称同样适合所有叔酰胺。 来源为2026-08-08_2026-08-14_joc，冻结 staging Git blob SHA 1e304fff3b34a0833ab461bd5381b34f722c798b；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍挑战：标题的'without a photocatalyst'仅代表无外加光催化剂，并非没有外加氧化剂、无自由基或纯热反应；论文使用化学氧化条件，EDA络合诱发过程是作者提出且由数据支持的解释而非直接捕获唯一激发态。与先前Ir催化版本相比核心改进是实质无Ir的制备及克级流动效率，因此可纳入，不能把本工作误作首次发现草酰胺酸Giese反应。",
+      "scopeAssessment": {
+        "primaryContribution": "改进草酰胺酸衍生自由基的Giese氨甲酰化制备，通过可见光及可能原位形成的电子给体–受体复合物（EDA）摆脱昂贵Ir光催化剂，并以连续流克级演示增强制备实用性。",
+        "preparativeTransformation": "草酰胺酸（oxamic acids）在光照氧化条件下脱羧生成氨甲酰基自由基，与环状或非环状电子缺陷烯烃进行Giese型共轭加成形成新的C–C键，生成带酰胺官能团的加成产物；并非通过新建C–N键完成酰胺化。",
+        "generalityEvidence": "ACS JOC开放全文/官方摘要显示不同一级及二级酰胺来源的草酰胺酸、环状及链状Michael受体可在间歇和流动条件下反应；有克级连续流放大，来自leelamine的复杂草酰胺酸产物给78%收率，复杂受体组合亦报告65%。该条件不应未经验证泛称同样适合所有叔酰胺。",
+        "sourceEvidence": "完整DOI 10.1021/acs.joc.6c00672。ACS JOC官方文章信息/Article History https://pubs.acs.org/doi/10.1021/acs.joc.6c00672 首次 Published Online 2026-08-13；冻结Crossref/OpenAlex公开书目日期与出版社一致；ACS JOC开放全文/官方摘要显示不同一级及二级酰胺来源的草酰胺酸、环状及链状Michael受体可在间歇和流动条件下反应；有克级连续流放大，来自leelamine的复杂草酰胺酸产物给78%收率，复杂受体组合亦报告65%。该条件不应未经验证泛称同样适合所有叔酰胺。 来源为2026-08-08_2026-08-14_joc，冻结 staging Git blob SHA 1e304fff3b34a0833ab461bd5381b34f722c798b；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "所测试的草酰胺酸和Michael受体范围可靠，连续流放大在特定设备下成立；不把78%特定复杂产物收率归于所有底物，也不将'无催化剂'扩大为无氧化剂。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00672",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00672",
+        "publisherOnlineDate": "2026-08-13",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_joc",
+        "stageBatchSha": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JOC_Article_History_Published_Online_2026_08_13_and_PMC_fulltext_public",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：改进草酰胺酸衍生自由基的Giese氨甲酰化制备，通过可见光及可能原位形成的电子给体–受体复合物（EDA）摆脱昂贵Ir光催化剂，并以连续流克级演示增强制备实用性。 草酰胺酸（oxamic acids）在光照氧化条件下脱羧生成氨甲酰基自由基，与环状或非环状电子缺陷烯烃进行Giese型共轭加成形成新的C–C键，生成带酰胺官能团的加成产物；并非通过新建C–N键完成酰胺化。 ACS JOC开放全文/官方摘要显示不同一级及二级酰胺来源的草酰胺酸、环状及链状Michael受体可在间歇和流动条件下反应；有克级连续流放大，来自leelamine的复杂草酰胺酸产物给78%收率，复杂受体组合亦报告65%。该条件不应未经验证泛称同样适合所有叔酰胺。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：标题的'without a photocatalyst'仅代表无外加光催化剂，并非没有外加氧化剂、无自由基或纯热反应；论文使用化学氧化条件，EDA络合诱发过程是作者提出且由数据支持的解释而非直接捕获唯一激发态。与先前Ir催化版本相比核心改进是实质无Ir的制备及克级流动效率，因此可纳入，不能把本工作误作首次发现草酰胺酸Giese反应。 所测试的草酰胺酸和Michael受体范围可靠，连续流放大在特定设备下成立；不把78%特定复杂产物收率归于所有底物，也不将'无催化剂'扩大为无氧化剂。"
+        }
+      ],
+      "reviewRationaleSecondPass": "所测试的草酰胺酸和Michael受体范围可靠，连续流放大在特定设备下成立；不把78%特定复杂产物收率归于所有底物，也不将'无催化剂'扩大为无氧化剂。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01643",
+      "journal": "JOC",
+      "title": "Accessing Sterically Congested Benzannulated Cyclic Aryl Ethers via Photoredox Decarboxylative Giese-Type C2–C3 Bond Formation",
+      "titleZh": "光氧化还原脱羧Giese型C2–C3成键构筑高位阻苯并稠合环状芳基醚",
+      "date": "2026-09-17",
+      "authors": [
+        "Igor Topalović",
+        "Markus Lange",
+        "Ivan Vilotijević"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13061-13067",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01643"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展4CzIPN介导的可见光脱羧分子内Giese型碳碳键形成，扩展五至八元苯并稠合含氧杂环，特别解决C2和C3相邻高取代/双季碳中心的合成困难。",
+      "evidenceBasis": "完整DOI 10.1021/acs.joc.6c01643。ACS JOC官方文章信息/Article History https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01643/5431720/Accessing-Sterically-Congested-Benzannulated 首次 Published Online 2026-09-17；原冻结Crossref/OpenAlex API日期为2026-09-16，与ACS 2026-09-17有一天差异；记录官方证据优先，不篡改冻结记录；ACS JOC全文开放可核对五、六、七、八元环的独立底物适用性、三级/二级/一级α-芳氧自由基前体；五元环代表产物及六元环常见80%—90%级收率，七/八元中环对自由基稳定性更敏感；报道稠合双季碳中心结构。多数具有两个可生成立体中心的产物dr近乎统计分布，不能描绘为立体选择性反应。 来源为2026-09-15_2026-09-21_joc，冻结 staging Git blob SHA 0a6b4fb5580453d2b101f2f94030ee7f9c473541；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+      "challengeReason": "第二遍挑战：已有烯烃Giese环化，但多数路线限五元环或低取代度；本篇真实报道六、七、八元含氧稠环和相邻季碳中心，可分离产物与实测范围构成区别。不得把能在紫外短波下无外加催化剂发生的局部观察，曲解为可见光标准条件无需4CzIPN；控制实验显示蓝光、碱和4CzIPN均关键，中环尤其一级自由基产率明显较低，立体选择性普遍不高。出版社Article History首发9月17日，冻结Crossref/OpenAlex staging却标9月16日，独立记录并优先官方，不直接修改原批次。",
+      "scopeAssessment": {
+        "primaryContribution": "发展4CzIPN介导的可见光脱羧分子内Giese型碳碳键形成，扩展五至八元苯并稠合含氧杂环，特别解决C2和C3相邻高取代/双季碳中心的合成困难。",
+        "preparativeTransformation": "α-芳氧基羧酸在光氧化还原体系下脱羧形成α-O-取代碳自由基，分子内加成至适当电子缺陷烯烃，构筑未来氧杂环C2–C3新键，得到2,3-二氢苯并呋喃、色满、苯并氧杂䓬及苯并氧杂辛环。",
+        "generalityEvidence": "ACS JOC全文开放可核对五、六、七、八元环的独立底物适用性、三级/二级/一级α-芳氧自由基前体；五元环代表产物及六元环常见80%—90%级收率，七/八元中环对自由基稳定性更敏感；报道稠合双季碳中心结构。多数具有两个可生成立体中心的产物dr近乎统计分布，不能描绘为立体选择性反应。",
+        "sourceEvidence": "完整DOI 10.1021/acs.joc.6c01643。ACS JOC官方文章信息/Article History https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01643/5431720/Accessing-Sterically-Congested-Benzannulated 首次 Published Online 2026-09-17；原冻结Crossref/OpenAlex API日期为2026-09-16，与ACS 2026-09-17有一天差异；记录官方证据优先，不篡改冻结记录；ACS JOC全文开放可核对五、六、七、八元环的独立底物适用性、三级/二级/一级α-芳氧自由基前体；五元环代表产物及六元环常见80%—90%级收率，七/八元中环对自由基稳定性更敏感；报道稠合双季碳中心结构。多数具有两个可生成立体中心的产物dr近乎统计分布，不能描绘为立体选择性反应。 来源为2026-09-15_2026-09-21_joc，冻结 staging Git blob SHA 0a6b4fb5580453d2b101f2f94030ee7f9c473541；官方公开摘要与必要文章特定开放章节已核对，不复制受保护全文、SI、图像或PDF。",
+        "boundaryChallenge": "方法依赖预装烯烃受体及α-芳氧羧酸布局，不能称为任意苯并氧杂环的普遍直接C–H环化；不为材料功能或天然产物图示而纳入，实际4—8元中五至八元环制备与底物分离才是根本。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01643",
+        "publisherArticleHistoryUrl": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01643/5431720/Accessing-Sterically-Congested-Benzannulated",
+        "publisherOnlineDate": "2026-09-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_JOC_Article_History_Published_Online_2026_09_17_supersedes_2026_09_16_crossref",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry",
+        "officialPublisherOnlineHistoryReadViaIndexedPage": true,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-09-16",
+          "officialPublisherFirstOnline": "2026-09-17",
+          "conflictKind": "source_versus_official_article_history_one_day",
+          "authoritativeDate": "publisher_official_article_history",
+          "frozenSourceUnmodified": true,
+          "independentOfficialArticleHistoryEvidenceUrl": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01643/5431720/Accessing-Sterically-Congested-Benzannulated"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "第一遍以论文主要制备贡献而非标题/期刊判定：发展4CzIPN介导的可见光脱羧分子内Giese型碳碳键形成，扩展五至八元苯并稠合含氧杂环，特别解决C2和C3相邻高取代/双季碳中心的合成困难。 α-芳氧基羧酸在光氧化还原体系下脱羧形成α-O-取代碳自由基，分子内加成至适当电子缺陷烯烃，构筑未来氧杂环C2–C3新键，得到2,3-二氢苯并呋喃、色满、苯并氧杂䓬及苯并氧杂辛环。 ACS JOC全文开放可核对五、六、七、八元环的独立底物适用性、三级/二级/一级α-芳氧自由基前体；五元环代表产物及六元环常见80%—90%级收率，七/八元中环对自由基稳定性更敏感；报道稠合双季碳中心结构。多数具有两个可生成立体中心的产物dr近乎统计分布，不能描绘为立体选择性反应。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：已有烯烃Giese环化，但多数路线限五元环或低取代度；本篇真实报道六、七、八元含氧稠环和相邻季碳中心，可分离产物与实测范围构成区别。不得把能在紫外短波下无外加催化剂发生的局部观察，曲解为可见光标准条件无需4CzIPN；控制实验显示蓝光、碱和4CzIPN均关键，中环尤其一级自由基产率明显较低，立体选择性普遍不高。出版社Article History首发9月17日，冻结Crossref/OpenAlex staging却标9月16日，独立记录并优先官方，不直接修改原批次。 方法依赖预装烯烃受体及α-芳氧羧酸布局，不能称为任意苯并氧杂环的普遍直接C–H环化；不为材料功能或天然产物图示而纳入，实际4—8元中五至八元环制备与底物分离才是根本。"
+        }
+      ],
+      "reviewRationaleSecondPass": "方法依赖预装烯烃受体及α-芳氧羧酸布局，不能称为任意苯并氧杂环的普遍直接C–H环化；不为材料功能或天然产物图示而纳入，实际4—8元中五至八元环制备与底物分离才是根本。"
     }
   ],
   "pending": [
@@ -7815,11 +8410,11 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
+  "note": "Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
   "currentCatalogReadback": {
     "sha": "c235b60ec55d5c8c1b95c5fe10ae12a336c66d1b",
     "recordCount": 1087,
-    "readAt": "2026-10-14T03:06:57.929Z",
+    "readAt": "2026-10-14T03:33:48.883Z",
     "source": "GitHub_main_only_not_production_D1"
   }
 }
