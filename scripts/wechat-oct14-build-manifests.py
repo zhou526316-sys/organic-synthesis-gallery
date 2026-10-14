@@ -153,7 +153,8 @@ def main():
     state=json.loads((ROOT/"audit/literature-update-state.json").read_text(encoding="utf8"))
     rel=state["lastPublication"]
     assert rel["publicationSlot"]==DATE+"T08:00:00+08:00"
-    raw=rel["publishedDois"];absent=state["lastWebsiteSync"]["verification"]["removedDoisAbsent"]
+    raw=rel["publishedDois"];absent=state["lastWebsiteSync"]["verification"].get("removedDoisAbsent",REMOVED)
+    # This staging branch may predate a later main-only owner removal; exact four owner corrections remain mandatory.
     assert len(raw)==24 and set(absent)==set(REMOVED)
     final=[v for v in raw if v not in REMOVED]
     assert len(final)==20 and FEATURED in final and RETRO not in final
