@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "requestId": "science_main_article_first_verified_public_fts_20261014",
+  "scope": "single DOI controlled first import followed by entire approved public rights queue as reviews complete; no 20-DOI overall pipeline cap",
+  "doi": "10.1038/s41557-026-02206-6",
+  "pmcid": "PMC13623650",
+  "expectedSourceXmlSha": "96d5f10017f50b8e8efaa739652f33553b1e5b844014f01ccbe5532a1a970a63",
+  "publisherLicense": "https://creativecommons.org/licenses/by/4.0/",
+  "scienceFirstPassFile": "audit/historical-body-review/2026-10-14-naturechem-02206-science-first-pass.md",
+  "scienceChallengeFile": "audit/historical-body-review/2026-10-14-naturechem-02206-science-challenge.md",
+  "mediaAndSupplementReview": "not_approved_not_imported",
+  "publicSearchReadSwitch": "keep_off",
+  "forbidOriginalXmlInGithub": true,
+  "forbidRawTextInGithub": true,
+  "authoritativeCatalogMustMatchAtExecution": true
+}
