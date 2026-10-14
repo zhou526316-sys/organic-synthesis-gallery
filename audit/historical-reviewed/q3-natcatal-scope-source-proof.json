@@ -1,0 +1,267 @@
+{
+  "schemaVersion": "gallery-historical-q3-reviewed-scope-source-proof-v1",
+  "mode": "frozen_source_proof_for_scientific_scope_reviews_not_publication",
+  "checkedDate": "2026-10-14",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceStateFile": "audit/historical-staging/state.json",
+  "sourceStateBlobSha": "99bac92a5c965c395c4e0bae63df823a09fc646d",
+  "scientificEvidenceFile": "audit/historical-scope-assessments/2026-10-14-nature-catalysis-issues-07-09.json",
+  "scientificEvidenceBlobSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
+  "period": "2026-07-01..2026-09-30",
+  "reviewed": [
+    {
+      "doi": "10.1038/s41929-026-01569-w",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-02",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01569-w",
+      "sourceRootId": "2026-07-01_2026-07-07_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-catalysis.json",
+      "stageSourceSha256": "5542186a39baf04cebc2c9373bd9c573abcf54b24fe1408b67e136f9aee34ba7",
+      "stageBatchGitBlobSha": "6c94d8baea1544816dbad2317220a20fa29ffeb8",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01571-2",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-06",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01571-2",
+      "sourceRootId": "2026-07-01_2026-07-07_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_nature-catalysis.json",
+      "stageSourceSha256": "5542186a39baf04cebc2c9373bd9c573abcf54b24fe1408b67e136f9aee34ba7",
+      "stageBatchGitBlobSha": "6c94d8baea1544816dbad2317220a20fa29ffeb8",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01574-z",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-08",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01574-z",
+      "sourceRootId": "2026-07-08_2026-07-14_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-08_2026-07-14_nature-catalysis.json",
+      "stageSourceSha256": "8ef735cef34acf7a00f29695daa67f8080c6dbb2424dea3257fddbadd6f09e3f",
+      "stageBatchGitBlobSha": "cce9d9088d867054ad915919e844e79e0d0a0edd",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01584-x",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-30",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01584-x",
+      "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-catalysis.json",
+      "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+      "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01585-w",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-30",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01585-w",
+      "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-catalysis.json",
+      "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+      "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01559-y",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-31",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Analysis",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01559-y",
+      "sourceRootId": "2026-07-22_2026-07-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-22_2026-07-31_nature-catalysis.json",
+      "stageSourceSha256": "7b57485223d104c0a77e27f8cb35805ba844d89c70de396e1ff89189bdf1a26e",
+      "stageBatchGitBlobSha": "d86ecf25349b23837d41d0e1f94057d73f8b2752",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01599-4",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-13",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01599-4",
+      "sourceRootId": "2026-08-08_2026-08-14_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-catalysis.json",
+      "stageSourceSha256": "ff3314d28365fd357fa923c30eb871a280e80123d0a394c5a562e6136056b558",
+      "stageBatchGitBlobSha": "c7de28472cd76613223deaed799656fe8987ff0c",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01580-1",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-14",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01580-1",
+      "sourceRootId": "2026-08-08_2026-08-14_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-catalysis.json",
+      "stageSourceSha256": "ff3314d28365fd357fa923c30eb871a280e80123d0a394c5a562e6136056b558",
+      "stageBatchGitBlobSha": "c7de28472cd76613223deaed799656fe8987ff0c",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01595-8",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-14",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01595-8",
+      "sourceRootId": "2026-08-08_2026-08-14_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-08_2026-08-14_nature-catalysis.json",
+      "stageSourceSha256": "ff3314d28365fd357fa923c30eb871a280e80123d0a394c5a562e6136056b558",
+      "stageBatchGitBlobSha": "c7de28472cd76613223deaed799656fe8987ff0c",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01601-z",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-17",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01601-z",
+      "sourceRootId": "2026-08-15_2026-08-21_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-15_2026-08-21_nature-catalysis.json",
+      "stageSourceSha256": "4bcd5d87d1f9529f0c61341b248c78edc3185930c786e478ddb86cccba5d4d00",
+      "stageBatchGitBlobSha": "f260bce09b33cf5968e6e0b43d3d842703b2520e",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01603-x",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-25",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01603-x",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-catalysis.json",
+      "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+      "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01608-6",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-25",
+      "scientificDecision": "pending",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01608-6",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-catalysis.json",
+      "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+      "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01607-7",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-28",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01607-7",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-catalysis.json",
+      "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+      "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01604-w",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-31",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01604-w",
+      "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-08-22_2026-08-31_nature-catalysis.json",
+      "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+      "stageBatchGitBlobSha": "50fc0702f63e1606edd3fece666b060d10f31edf",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01605-9",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-07",
+      "scientificDecision": "exclude",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41929-026-01605-9",
+      "sourceRootId": "2026-09-01_2026-09-07_nature-catalysis",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_nature-catalysis.json",
+      "stageSourceSha256": "daf6f9e922f2d713a11de06009f2720a805a1c5af2a564522f21798e890acf59",
+      "stageBatchGitBlobSha": "908d4e8cc5e9f560c90c4e9981000a14a2deacff",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "scopeExclude": 14,
+    "scopeEvidencePending": 1,
+    "sourceFamiliesBoth": 15
+  },
+  "limits": {
+    "notPermanentOwnerExclusions": true,
+    "notAcademicAdmissions": true,
+    "notProductionD1": true,
+    "noMediaOrPdf": true,
+    "notPublisherQuarterClosure": true,
+    "sourceShardsRemainImmutable": true
+  }
+}
