@@ -1,0 +1,53 @@
+{
+  "date":"2026-10-15",
+  "revision":"2026-10-15-r1",
+  "status":"official_draft_written_and_source_content_readback_verified",
+  "sourcePR":683,
+  "sourceMergeCommit":"17ca9862a1d397c98d6e8890e9defd1899c66833",
+  "ownerRequest":"直接写入草稿，有apikey",
+  "publicationSlot":"2026-10-15T08:00:00+08:00",
+  "officialReceipt":{
+    "stage":"draft_add",
+    "draft_readback":"ok",
+    "receiptTime":"2026-10-15T07:53:52.652961Z",
+    "receiptBlobSha":"709c63422425b5e82109b0f01fde0e11da32d000",
+    "mediaId":"KhELYUzvwADwB_l1xH1SWE19Pj0vRCRwKboBqBMzBwhc8kqBBleCJP2ALtXFeTK-",
+    "previewUrl":"https://relay.gczhouwld.com/wechat-preview/1722968db95d377cbac3f4c5.html",
+    "articleCount":2,
+    "paperCount":33,
+    "publishId":null
+  },
+  "articles":[
+    {"doi":"10.1038/s41586-026-11242-8","column":"今日精选","bodyFigures":15,"reviewedParagraphsPresent":23},
+    {"doi":"10.1126/science.aec6298","column":"往期精选","bodyFigures":18,"reviewedParagraphsPresent":27}
+  ],
+  "dailyJournals":{"Nature":1,"Nature Synthesis":2,"JACS":1,"ACS Catalysis":3,"CCS Chemistry":1,"JOC":16,"Organic Letters":9},
+  "coverTreatment":"Original main Fig.1B screenshots, uniform resizing and white padding only; no added text/bars or regenerated chemistry. Nature top aligned, Science centered square.",
+  "sourceProseChanged":false,
+  "sourceProseSerialization":"Markdown bold delimiters removed for existing escape-safe renderer; all paragraph wording verified in actual cloud text.",
+  "sourceImagePixelsChanged":false,
+  "sourceAuthorCompletion":"Only missing authors for the selected Nature DOI in rolling-supplement were filled from original supplied PDF p2; no DOI or date change.",
+  "browserQA":{
+    "run":38701987785,
+    "artifactId":11957200368,
+    "qaBlobSha":"de39db8a456ae2f6168496336ccaef5c99bcfbfc",
+    "originalScienceImages":33,
+    "covers":2,
+    "galleryQr":1,
+    "totalDecoded":36,
+    "brokenImages":0,
+    "allReviewedParagraphsPresent":50,
+    "exactDoiLinksVerified":true,
+    "mobile390HorizontalOverflow":false,
+    "desktop980HorizontalOverflow":false,
+    "manualInspection":"Opened the retrieved cloud screenshot contact sheet and desktop cover/entry view. Core scientific text and original panels are present. Some named opening screenshots landed farther down the article because of scrolling; they are not evidence of native-app viewport positioning."
+  },
+  "verificationLimits":[
+    "The preview is a relay rendering of official draft/get, not direct inspection in the user's WeChat mobile app.",
+    "Native white-title overlay and 1:1 crop appearance can differ across WeChat clients; no native-client cover perfection claim is made.",
+    "The Gallery entry retains grey miniature placeholders where its independent TOC sources are unavailable; this has not been represented as repaired.",
+    "Exact Gallery DOI URLs and summary=0 are checked; the site's 20-second highlight animation was not separately navigated."
+  ],
+  "previousOct14MediaNotTargeted":true,
+  "publicSendPerformed":false
+}
