@@ -1,0 +1,330 @@
+{
+  "schemaVersion": "gallery-historical-chem-first-online-date-proof-v1",
+  "mode": "publisher_first_online_provenance_only_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "periodOfSourceRoots": "2026-07-01..2026-09-30",
+  "checkedAgainst": "official_publisher_DOI_first_online_vs_frozen_Crossref_OpenAlex_sources",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "officialPublisher": "ScienceDirect / Chem (Elsevier)",
+  "sourceAuthority": "Original publisher Available online date outranks printed issue month and metadata source cohort label",
+  "evidenceScope": "Six DOI-specific publisher original Article first-online dates independently checked; pages indexed/search-visible, direct ScienceDirect live HTML sometimes blocked. No claim of whole full text/SI/PDF.",
+  "recordCount": 6,
+  "verifiedOutsideQ3": 3,
+  "verifiedInsideQ3": 3,
+  "verifiedSourceDateConflicts": 6,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.102952",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Electrochemical self-optimization for the synthesis of densely functionalized molecules",
+      "authors": [
+        "Eduardo Rial-Rodríguez",
+        "Florian L. Wagner",
+        "Thomas Fuchß",
+        "Alena Sommer",
+        "Johannes Krieger",
+        "Hans-Michael Eggenweiler",
+        "C. Oliver Kappe",
+        "Gabriele Laudadio"
+      ],
+      "sourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-03-19",
+      "originalQ3QueueOrigin": "2026-07-01_2026-07-07_chem",
+      "verifiedPublicationQuarter": "2026-Q1",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+      "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+      "originalSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426000185",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.102952",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "7",
+        "pages": "102952",
+        "articleNumber": "102952",
+        "doi": "10.1016/j.chempr.2026.102952",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Autonomous electrochemical reaction optimization uses three established chemistry examples; original work first appeared in March, not July issue.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103002",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Electrochemical reductive carboxylation with carbon dioxide using water as the reductant",
+      "authors": [
+        "Can-Ming Zhu",
+        "Jun-Li Li",
+        "Hao-Yuan Li",
+        "Huai-Gui Li",
+        "Tao Wen",
+        "Xiaofu Sun",
+        "Qing-Yuan Meng"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-03-30",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q1",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "5c8c8f3a6582b8c08b27166b0d532340c8189c12",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426000689",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103002",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "9",
+        "pages": "103002",
+        "articleNumber": "103002",
+        "doi": "10.1016/j.chempr.2026.103002",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Water-as-reductant Ni-catalyzed CO2 carboxylation and styrene hydrocarboxylation originally first online in March, not its September issue date.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103022",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Single-shot solid-phase synthesis of insulins and their A/B-chain heterodimeric analogs",
+      "authors": [
+        "Rui Zhao",
+        "Dongyang Han",
+        "Jiahui Tang",
+        "Yuan Gao",
+        "Qingyao Shu",
+        "Guo-Chao Chu",
+        "Jie Luo",
+        "Chaowei Shi",
+        "Pan Shi",
+        "Jing Shi",
+        "Yi-Ming Li",
+        "Lei Liu"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-04-14",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q1",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "5c8c8f3a6582b8c08b27166b0d532340c8189c12",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426000884",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103022",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "9",
+        "pages": "103022",
+        "articleNumber": "103022",
+        "doi": "10.1016/j.chempr.2026.103022",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Single-shot SPPS of insulins and related heterodimeric peptides using a temporary structural scaffold was April-online, not September-online.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103186",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Organopotassium for selective synthesis: Potassium-mediated anti-borylfunctionalization of alkynes",
+      "authors": [
+        "Ziwei Zhang",
+        "Takashi Kurogi",
+        "Hideki Yorimitsu"
+      ],
+      "sourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-29",
+      "originalQ3QueueOrigin": "2026-07-01_2026-07-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_day_is_not_first_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+      "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+      "originalSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002524",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103186",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103186",
+        "articleNumber": "103186",
+        "doi": "10.1016/j.chempr.2026.103186",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "independent_two_pass_synthesis_include_waiting_original_08_slot",
+      "publisherSynopsis": "Potassium-mediated anti-borylfunctionalization of alkynes broad anti-diboration scope and flow diversification, original July 29 online date.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103204",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "A triangle association strategy for de novo reaction discovery",
+      "authors": [
+        "Yuchen Bian",
+        "Xiaorui Wang",
+        "Xiaolong Ma",
+        "Haowen Zhong",
+        "Azizbek Pardaev",
+        "Longkang Sun",
+        "Simin Liu",
+        "Xiaoxue Wang",
+        "Tingjun Hou",
+        "Weibo Yang"
+      ],
+      "sourceDate": "2026-08-01",
+      "publisherFirstOnlineDate": "2026-08-18",
+      "originalQ3QueueOrigin": "2026-08-01_2026-08-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_day_is_not_first_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+      "reviewQueueGitBlobSha": "0c6f0757f3d1962b84684f87d24f7f79de19086d",
+      "originalSourceBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-08-01_2026-08-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002706",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103204",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103204",
+        "articleNumber": "103204",
+        "doi": "10.1016/j.chempr.2026.103204",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "independent_two_pass_synthesis_include_waiting_original_08_slot",
+      "publisherSynopsis": "Triangle association/DRCC discovers six unprecedented metal-catalyzed transformations, including functional silicon heterocycles and macrocycles, original August 18 online date.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103257",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Catalytic atroposelective macrocyclization for constructing dominant rotors in peptides",
+      "authors": [
+        "Linwei Zeng",
+        "Yang (Daniel) Ou",
+        "Tianyi Yang",
+        "Alexander Rowley",
+        "Peter Rukovanský",
+        "Andrew D. Bond",
+        "Andrei K. Yudin",
+        "David R. Spring"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-09-17",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_day_is_not_first_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "5c8c8f3a6582b8c08b27166b0d532340c8189c12",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003232",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103257",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103257",
+        "articleNumber": "103257",
+        "doi": "10.1016/j.chempr.2026.103257",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "independent_two_pass_synthesis_include_waiting_original_08_slot",
+      "publisherSynopsis": "RhAAC atroposelective peptide macrocyclization builds diverse stable triazole biaryl rotors, original September 17 online date.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "noFalseQ3ReviewOfQ1Article": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOffSlotPublisherWrite": true,
+    "noSilentReplacementOfOriginalDate": true
+  }
+}
