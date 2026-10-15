@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "q3-two-pass-seven-v1",
+  "stageRef": "0889539a147ad7e5fdbea08dae2e02ffa3c1328d",
+  "part": 1,
+  "rows": [
+    {
+      "doi": "10.1021/acs.joc.6c01376",
+      "publisherOnline": "2026-09-16",
+      "publisherUrl": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01376",
+      "publisherCategory": "research Article",
+      "rootId": "2026-09-15_2026-09-21_joc",
+      "sourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+      "rawBlob": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+      "queueBlob": "0291856081a86b8aba4e11d667f9e56b7757ac9e",
+      "scopeAssessment": {
+        "primaryContribution": "Cu(I)催化动态动力学拆分促进含氮环化的原创不对称合成方法。",
+        "preparativeTransformation": "消旋氮杂环丙烷经串联开环和环化形成手性六氢咪唑并[1,2-a]喹啉。",
+        "generalityEvidence": "ACS官方原始摘要报告系列分离产物，最高88%收率、>99:1 dr、94:6 er；最大值并非所有底物共同数据。",
+        "sourceEvidence": "ACS DOI原始研究；Article history Published Online 2026-09-16（不同于9月25日卷期日）；冻源DOI/标题/作者/日期与raw、review queue一致。",
+        "boundaryChallenge": "仅一类稠杂环并非通用所有氮杂环丙烷，但确有多底物制备和立体选择性数据，挑战后支持纳入。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "evidenceStatus": "verified_no_PDF_SI_or_media"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00718",
+      "publisherOnline": "2026-07-08",
+      "publisherUrl": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00718",
+      "publisherCategory": "research Article",
+      "rootId": "2026-07-08_2026-07-14_joc",
+      "sourceSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
+      "rawBlob": "ca8733105479188e6a163c0d161bb49add041ef0",
+      "queueBlob": "1957cc142582b5e8753d2320e1590240e9e17a46",
+      "scopeAssessment": {
+        "primaryContribution": "优化EstFF1羧酸酯酶使酰基转移具实际有机制备底物适用性。",
+        "preparativeTransformation": "乙酸乙烯酯向伯醇和芳基-烷基或烷基-烷基仲醇转移乙酰基，生成相应酯类。",
+        "generalityEvidence": "ACS原始摘要展示多类伯醇及仲醇底物、S构型高选择性酰基转移；高ee不等同所有产物分离定量收率。",
+        "sourceEvidence": "ACS官方Article DOI Published Online 2026-07-08；Crossref/OpenAlex冻结原始来源与review-queue身份一致。",
+        "boundaryChallenge": "突变策略属酶工程，但底物类别和产物有广泛制备证据，不能因蛋白设计主题而忽略真实催化合成方法。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "evidenceStatus": "verified_no_PDF_SI_or_media"
+    },
+    {
+      "doi": "10.1021/jacs.6c09884",
+      "publisherOnline": "2026-07-01",
+      "publisherUrl": "https://pubs.acs.org/doi/10.1021/jacs.6c09884",
+      "publisherCategory": "research Article",
+      "rootId": "2026-07-01_2026-07-07_jacs",
+      "sourceSha256": "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32",
+      "rawBlob": "35a03263c6d870f0d068d84670816b9a963d9530",
+      "queueBlob": "33b8d6bcce10d3cca61f7415dd0b3d348725b468",
+      "scopeAssessment": {
+        "primaryContribution": "开发光催化能量转移驱动的双自由基三组分羰基化构筑桥环酮骨架。",
+        "preparativeTransformation": "双环[1.1.0]丁烷、CO与烯烃/炔烃经多键构筑/环化形成4-氧代双环[3.1.1]庚烷/庚烯。",
+        "generalityEvidence": "JACS原始Article展示不同烯烃/炔烃三组分产物和羰基后续衍生；未从摘要虚构定量收率。",
+        "sourceEvidence": "ACS官方Article history Published Online 2026-07-01，Issue 07-15不得替代；冻源DOI/标题/作者/日期及SHA一致。",
+        "boundaryChallenge": "DFT解释竞争路径，未必证明每个自由基步骤是唯一过程；但实际多个产物系列构成实质制备方法。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "evidenceStatus": "verified_no_PDF_SI_or_media"
+    }
+  ]
+}
