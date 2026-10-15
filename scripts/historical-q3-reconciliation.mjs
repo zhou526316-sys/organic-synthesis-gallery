@@ -282,6 +282,7 @@ export function reconcileQ3({
     if(row.dateConflict)counters.sourceDateConflicts++;
     if(verifiedOutOfQ3){
       counters.knownOutsideQ3++;c.chemPublisherOutsideQ3++;
+      counters.chemPublisherVerifiedOutsideQ3++;
     }else if(candidateDateOk){
       counters.apiDatedQ3Candidates++;c.apiQ3DatedCandidates++;
     }else if(chemProvisional){
