@@ -38,3 +38,17 @@ The change in the accompanying PR touches **only** `scripts/audit-historical-tex
 ## Approval boundary for any further capture repair
 
 Before another userscript version is proposed, present exact publisher × failure-reason counts and if possible a reproducible real-user page where DOI metadata arrives after initial handler invocation. Suggested separate corrective items for explicit user approval: route/redirect-safe worker handshake while retaining DOI identity checks; time-bounded OA negative-source revalidation; safe upgrading of partial local packets. No authentication bypass, negative license inference, public upload or media-controller changes are authorized by this diagnostic-only PR.
+
+## Completed owner-only publisher × reason evidence (after PR #665 merge)
+
+- The read-only instrumentation was merged in [PR #665](https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/665), main commit `d20413edd20a5f3656b1fbdaf5daeeb3e87c0aac`, after Site quality, Target journal Tampermonkey regression, and Private PDF regression all passed.
+- Real GitHub Actions [#38665655983](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38665655983) owner-only D1 aggregation **succeeded** and `HISTORICAL_DIAGNOSTIC_PUBLISHER_BREAKDOWN_VERIFIED 133` passed. New data remained 200 events / 133 independent final attempts / 0.2.8 only / no 0.2.9 events, and `rawEventsReleased=0`, `bodyReleased=false`.
+- `publisher_script_not_confirmed`: **ACS 57**, Wiley 2, RSC 3; total 62. **57 of 62** of the old no-handler failures are concentrated at ACS, but no conclusion is drawn about actual v0.2.9 ACS success.
+- `license_not_verified`: **Wiley 20**, Nature 19, RSC 1, Science 1; total 41. These are not proof that any such paper permits fulltext re-use.
+- `page_http_error`: **RSC 10**, Wiley 6, ACS 4, Science 1; total 21. All 21 have real HTTP 403 evidence. The 64 unknown statuses must remain unknown.
+- Other: Nature 3 body_missing and 1 saved_local / 1 timeout; ACS 1 body_missing; Wiley 1 body_missing / 1 timeout; Science 1 body_missing. Every publisher/reason bin adds to the known total 133.
+- All versions in this sample are 0.2.8, even after the v0.2.9 installer deployment; no real publisher-session comparison can yet be computed.
+
+**Next evidence priority:** use the existing 8-DOI publisher reachability pilot on installed browser script 0.2.9 with both ACS direct and DOI-resolver navigation; inspect Tampermonkey host permissions/redirect target and genuinely observed browser states. Diagnose first; no extension permission speculation should be treated as proven. Separately test the existing 12-DOI delayed-license pilot for Wiley/Nature, then perform the ordinary all-eligible-DOI capture and independent all-formal-OA source pass. No 8/12/20 global cap; no third-party access-control bypass.
+
+**Modification scope:** PR #665 changed only the read-only aggregator/workflow and this audit note. It did **not** patch ACS capture, licence extraction, OA negative retry policy, or partial-packet upgrade; these remain separately approval-gated.
