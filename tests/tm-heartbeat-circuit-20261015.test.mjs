@@ -20,6 +20,7 @@ test('three consecutive missing publisher injections stop this pass, without mar
  assert.match(source,/s\.stopReason='publisher_script_missing_3_consecutive'/);
  assert.match(source,/s\.phase='capture_environment_blocked'/);
  assert.match(source,/if\(manualHeartbeatCircuitBreaker\(run,result\)\)/);
+ assert.match(source,/\|\|Number\(run\.consecutiveHeartbeatFailures\|\|0\)>0/,'next DOI gets a foreground recovery chance after a missing injection');
  assert.match(source,/if\(manualExecutionCurrent\(run\)\)\{\s*coverageStats\(run\)/);
 });
 
