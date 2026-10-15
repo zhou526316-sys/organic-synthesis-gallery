@@ -1,28 +1,28 @@
 {
-  "requestId": "wechat-2026-10-15-nature-science-reviewed-r1-official-draft",
+  "requestId": "wechat-oct15-r2-peer-reviewed-recreate-after-owner-deletion-v1",
   "publicationDate": "2026-10-15",
-  "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-15-r1",
+  "action": "recreate_reviewed_draft",
+  "editorialRevision": "2026-10-15-r2-peer-reviewed",
   "approvedGate": "audit/wechat-working/2026-10-15-review-gate.json",
+  "explicitNewDraftAuthorized": true,
+  "previousMediaId": "KhELYUzvwADwB_l1xH1SWE19Pj0vRCRwKboBqBMzBwhc8kqBBleCJP2ALtXFeTK-",
   "expectedArticleCount": 2,
   "expectedDois": ["10.1038/s41586-026-11242-8", "10.1126/science.aec6298"],
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-15&doi=10.1038%2Fs41586-026-11242-8&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1126%2Fscience.aec6298&summary=0",
   "expectedReviewedBodyImages": 33,
   "expectedReviewedAssets": 35,
-  "publisherSourceQa": "audit/wechat-working/2026-10-15-r1-nature-science/production-review.json",
   "journalTotalCount": 33,
-  "journalCounts": {"Nature":1,"Nature Synthesis":2,"JACS":1,"ACS Catalysis":3,"CCS Chemistry":1,"JOC":16,"Organic Letters":9},
+  "journalCounts": {"Nature": 1, "Nature Synthesis": 2, "JACS": 1, "ACS Catalysis": 3, "CCS Chemistry": 1, "JOC": 16, "Organic Letters": 9},
   "sourceCoverSha256": {
-    "featured":"7bc750dcdcf5d3c6e04385b170c6a3c9cf84cdf4ec05475f5d120ff63c1ab82e",
-    "retrospective":"ccc8d375e824b0d2d94e46ce8e7d45b9e18e0e72c5664756964d4327c32ea3a1"
+    "featured": "7bc750dcdcf5d3c6e04385b170c6a3c9cf84cdf4ec05475f5d120ff63c1ab82e",
+    "retrospective": "ccc8d375e824b0d2d94e46ce8e7d45b9e18e0e72c5664756964d4327c32ea3a1"
   },
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
-  "linkOnly": false,
-  "noDuplicatePolicy": "one_date_scoped_Oct15_draft_create_or_reuse_existing_Oct15_only_never_overwrite_Oct14",
   "unchangedAssetFingerprints": true,
-  "reason": "User explicitly requested immediate official draft creation using the configured API. Both delivered Nature/Science manuscripts, 15+18 original body/SI figures and screenshot-only covers have passed independent text/source-image review and actual production-renderer mobile/desktop checks. Preserve source scientific wording, two-card order, precise DOI links and the real 33-paper 08:00 journal totals. No added cover lettering, colored bars, or generated chemical structures. Create or update exactly the Oct15 edition, perform draft/get and return actual preview. Do not touch Oct14 draft and never group-send/freepublish."
+  "noDuplicatePolicy": "Exactly one newly created media id for this stable requestId; retain old media untouched, persist new id before readback, reuse it on safe retries and stop after any ambiguous creation response.",
+  "reason": "User reports publishing then deleting the previous posts and explicitly asks to optimize and regenerate drafts. PR692 merged at a2abf502e8e31ba6b56c373c02ac40c4506c3fca after all five integration workflows passed. Nature integrates documented referee questions, author experiments and residual second-round disagreement. Science explicitly distinguishes its supplied main/SI from absent referee records. Both titles, covers, 33 original main/SI figures and daily33 are preserved. Source text/image hashes and actual390/980px rendering passed independent review. Create a new two-article draft, never update or delete the previous media, and never publish or group-send."
 }
