@@ -7,6 +7,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {bindChemCrossSourceProof,EMPTY as EMPTY_CHEM_CROSS_SOURCE} from './historical-chem-cross-source-proof.mjs';
 import {verifyHistoricalReviewerStatusRefresh} from './historical-q3-reviewer-status-refresh.mjs';
 import {bindReviewedQ3ScopeProof,EMPTY_REVIEWED_SCOPE,REVIEWED_SCOPE_AUTHORITY_SCHEMA} from './historical-q3-reviewed-scope-proof.mjs';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
@@ -63,6 +64,7 @@ export function reconcileQ3({
   chemPublisherDates=EMPTY_CHEM_ONLINE_DATES,
   chemScienceApprovedDoiEvidence=[],
   chemSciencePendingEvidence=[],chemScienceExcludedEvidence=[],
+  chemCrossSourceDates=EMPTY_CHEM_CROSS_SOURCE,chemCrossSourcePendingEvidence=[],
   reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
@@ -451,6 +453,11 @@ export function reconcileQ3({
     chemReviewedExcluded.set(id,a);
   }
 
+  const {resolved:crossSourceResolved,sciencePending:crossSourceSciencePending}=
+    bindChemCrossSourceProof({dateEvidence:chemCrossSourceDates,
+      scienceAssessments:chemCrossSourcePendingEvidence,all,shards,gitBlobByRoot,
+      pub,accepted,pending,excluded,publisherNonOriginal,reviewedScope,
+      correctedChemDates,chemReviewedPending,chemReviewedExcluded});
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
     const c=cells.get(cellId(paper.journal,paper.date.slice(0,7)));
@@ -465,6 +472,7 @@ export function reconcileQ3({
     sourceExplicitlyExcluded:0,sourcePublisherNonResearchExcluded:0,
     sourcePublisherReviewedScopeExcluded:0,sourcePublisherReviewedScopePending:0,
     sourcePublisherDateDiscrepancies:0,sourcePublisherVerifiedOutsideQ3:0,
+    sourcePublisherDateConflictsResolved:0,
     unfinishedQ3OrDateVerification:0,
     formalQ3Count:formalCount,reviewedQ3Waiting08:0,
     missingFormalQ3FromSource:0,sourceCompletedRoots:shardIds.size,
@@ -485,8 +493,16 @@ export function reconcileQ3({
     c.uniqueSourceCandidates++;
     if(row.journalConflict)counters.sourceJournalConflicts++;
     if(row.dateConflict)counters.sourceDateConflicts++;
+    const officialCollision=crossSourceResolved.get(row.doi);
+    if(officialCollision){
+      counters.sourcePublisherDateConflictsResolved++;
+      counters.sourcePublisherDateDiscrepancies++;
+      c.publisherDateDiscrepancies++;
+    }
     if(candidateDateOk){
       counters.apiDatedQ3Candidates++;c.apiQ3DatedCandidates++;
+    }else if(officialCollision){
+      // Publisher proof is known; immutable contradictory source days still count.
     }else if(row.date&&/^\d{4}-\d\d-\d\d$/.test(row.date)
       &&!(row.flags||[]).some(x=>x.includes('unverified')||x.includes('mismatch'))
       &&!row.dateConflict){
@@ -507,6 +523,7 @@ export function reconcileQ3({
       reviewedScope.get(row.doi)?.scientificDecision==='pending'?'publisher_science_pending':
       chemReviewedExcluded.has(row.doi)?'publisher_science_excluded':
       chemReviewedPending.has(row.doi)?'publisher_science_pending':
+      crossSourceSciencePending.has(row.doi)?'publisher_science_pending':
       officialChem&&!publishedQ3(officialChem.publisherFirstOnlineDate)?'publisher_verified_outside_Q3':'unfinished';
     if(status==='published'){c.alreadyPublished++;counters.sourceAlreadyPublished++;}
     if(status==='approved_waiting08'){c.approvedWaiting08++;counters.sourceApprovedWaiting08++;}
@@ -532,13 +549,13 @@ export function reconcileQ3({
     c.unreviewed++;counters.unfinishedQ3OrDateVerification++;
     // A DOI can be academically unreviewed *and* have a separately verified
     // publisher-first-online day; do not relabel an official date as unknown.
-    const officialQ3Online=officialChem
-      && publishedQ3(officialChem.publisherFirstOnlineDate);
+    const officialQ3Online=(officialChem||officialCollision)
+      && publishedQ3((officialChem||officialCollision).publisherFirstOnlineDate);
     unreviewed.push({doi:row.doi,journal:row.journal,
       sourceWindowMonth:month,apiDateCandidate:candidateDateOk?row.date:'',
       publisherFirstOnlineDateVerified:Boolean(officialQ3Online),
       publisherFirstOnlineDate:officialQ3Online
-        ? officialChem.publisherFirstOnlineDate : null,
+        ? (officialChem||officialCollision).publisherFirstOnlineDate : null,
       title:row.title,
       firstAuthor:(row.authors||[])[0]||'',priority:row.priority||'P3',
       flags:[...new Set([...(row.flags||[]),
@@ -611,6 +628,15 @@ export function reconcileQ3({
       stageSourceDate:r.sourceDate,publisherFirstOnlineDate:r.publisherFirstOnlineDate,
       verifiedPublicationQuarter:r.verifiedPublicationQuarter,
       evidenceUrl:r.officialPublisherArticlePage,sourceRootId:r.originalQ3QueueOrigin})),
+    publisherSourceDateConflictsResolved:[...crossSourceResolved.values()].map(r=>({
+      doi:r.doi,journal:r.journal,publisherFirstOnlineDate:r.publisherFirstOnlineDate,
+      sourceDateDisagreement:r.originalSourceRows.map(x=>({
+        sourceRootId:x.rootId,sourceDate:x.sourceDate,
+        sourceRootSha256:x.sourceRootSha256
+      })),
+      evidenceUrl:r.officialPublisherArticlePage,
+      academicDecision:'evidence_pending_not_admitted'
+    })),
     publisherScopeEvidencePending:[
       ...publisherReviewedScope.reviewed
         .filter(x=>x.scientificDecision==='pending').map(x=>({
@@ -619,6 +645,12 @@ export function reconcileQ3({
           nextAction:x.assessment.nextAction,
           sourceRootId:x.sourceRootId,notOriginalManifestPending:true
         })),
+      ...[...crossSourceSciencePending.values()].map(a=>({
+        doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
+        evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
+        sourceRootIds:a.reviewEvidence.sourceRootIds,
+        notOriginalManifestPending:true
+      })),
       ...[...chemReviewedPending.values()].map(a=>({
         doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
         evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
