@@ -352,3 +352,74 @@ test('Chem publisher Perspectives and Insights are evidence-bound and cannot inv
     {stageSourceSha256:'0'.repeat(64)})}),
     /q3_nonresearch_publisher_evidence_invalid/);
 });
+
+
+test('three DOI-specific Chem Review/Perspective receipts remove only nonoriginal review work, retain original source count',()=>{
+  const roots=['2026-07-01_2026-07-07_chem',
+    '2026-08-01_2026-08-07_chem','2026-09-01_2026-09-07_chem'];
+  const papers=[
+    {doi:'10.1016/j.chempr.2026.103027',title:'DT C–H process Perspective',
+      root:roots[0],date:'2026-07-01',issue:'2026-07-09',
+      pii:'S2451929426000938',type:'Perspective',
+      relation:'multi_study_perspective'},
+    {doi:'10.1016/j.chempr.2026.103070',title:'Visible light carbonylation Review',
+      root:roots[1],date:'2026-08-01',issue:'2026-08-13',
+      pii:'S2451929426001361',type:'Review',relation:'multi_study_review'},
+    {doi:'10.1016/j.chempr.2026.103209',title:'CuAAC dynamic catalysis Perspective',
+      root:roots[2],date:'2026-09-01',issue:'2026-09-10',
+      pii:'S2451929426002755',type:'Perspective',
+      relation:'multi_study_perspective'}
+  ];
+  const shards=papers.map(p=>shard(p.root,'Chem',[{doi:p.doi,title:p.title,date:p.date}]));
+  const extended={...input,journals:[...journals,{name:'Chem'}],
+    state:{...state,completed:[...state.completed,...roots]},
+    triage:{...triage,rootSummaries:{...triage.rootSummaries,
+      ...Object.fromEntries(roots.map(id=>[id,{sourceSha256:sha(id)}]))}},
+    shards:[...input.shards,...shards]};
+  const reviewed=papers.map(p=>({
+    doi:p.doi,journal:'Chem',title:p.title,date:p.date,
+    publisherArticleType:p.type,underlyingOriginalResearchDoi:null,
+    decision:'exclude',firstPassDecision:'exclude',challengeDecision:'exclude',reviewPasses:2,
+    firstPassReason:'The Chem publisher classifies this as a Review or Perspective collecting prior research and original work published under other DOIs, not a new preparative experiment.',
+    independentChallengeReason:'Although the title mentions an important synthesis class, original DOI-specific chemistry resides in underlying cited literature and does not become a new synthetic-method Article.',
+    reviewEvidence:{
+      publisherPage:'https://www.sciencedirect.com/science/article/pii/'+p.pii,
+      publisherDoi:p.doi,publisherArticleType:p.type,
+      publisherArticleDate:null,publisherFirstOnlineDateVerified:false,
+      sourceDateNotPublisherFirstOnline:true,frozenSourceDate:p.date,
+      publisherIssueDate:p.issue,underlyingOriginalResearchDoi:null,
+      originalResearchRelation:p.relation,sourceRootId:p.root,
+      stageSourceSha256:sha(p.root),stageBatchGitBlobSha:'d'.repeat(40),
+      verificationKind:'publisher_direct_article_type_and_original_work_provenance'
+    }
+  }));
+  const publisherNonResearch={
+    schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+    mode:'publisher_verified_non_original_doi_only_not_publication',reviewed
+  };
+  const before=reconcileQ3(extended);
+  const after=reconcileQ3({...extended,publisherNonResearch});
+  assert.equal(after.coverage.counters.uniqueSourceDois,before.coverage.counters.uniqueSourceDois);
+  assert.equal(after.coverage.counters.sourcePublisherNonResearchExcluded,3);
+  assert.equal(after.coverage.counters.unfinishedQ3OrDateVerification,
+    before.coverage.counters.unfinishedQ3OrDateVerification-3);
+  assert.equal(after.coverage.counters.publisherIssueResearchReconciliationComplete,false);
+  for(const x of papers)assert.ok(!after.worklist.rows.some(p=>p.doi===x.doi));
+  const mutation=(id,patch)=>({...publisherNonResearch,
+    reviewed:reviewed.map((x,i)=>i!==id?x:{...x,reviewEvidence:{...x.reviewEvidence,...patch}})});
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:mutation(1,{originalResearchRelation:'multi_study_perspective'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:mutation(0,{originalResearchRelation:'multi_study_review'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:mutation(2,{publisherFirstOnlineDateVerified:true})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:mutation(1,{stageSourceSha256:'0'.repeat(64)})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:mutation(1,{publisherPage:'https://wrong.example/pii/S2451929426001361'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+});
