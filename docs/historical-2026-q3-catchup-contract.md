@@ -300,3 +300,63 @@ identity. The Q3 census can only change its unfinished figures after a
 *successful* existing staging-only recount whose two outputs have the same
 `generatedAt`. This guard must be tested before each new class of
 historical approval rather than repeatedly rerunning the 192 metadata roots.
+
+
+## 2026-10-15 Chem: true first-online dates must supersede issue-first-day metadata
+
+Chem (10.1016/j.chempr) historical Q3 Crossref/OpenAlex review shards contain
+147 DOI. Numerous candidate records have dates on 2026-07-01, 08-01 or
+09-01; those dates are NOT a general proof of publisher first online.
+A bounded DOI-specific original-ScienceDirect check identified five exact
+conflicts and preserves both frozen metadata date and publisher proof in
+`audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json`.
+
+Two 2026-08-01 source candidates are **originally published in Q1**:
+- `10.1016/j.chempr.2026.102968` iron-catalyzed carbene insertion/skeletal
+  editing; original publisher **26 March 2026**.
+- `10.1016/j.chempr.2026.102990` organocatalytic asymmetric axial boron
+  chemistry and boraspiranes; original publisher **27 March 2026**.
+They are scientifically interesting but cannot count as Q3 first-online;
+their eventual historical admission is a distinct pre-July `metadata_only`
+process, not an academic exclusion or user permanent DOI ban. Identical
+titles using DOI `103106` remain an open source-identity question; no
+automatic collapse, DOI rewrite or duplicate removal is authorized.
+
+Three confirmed original Q3 papers have different actual published days
+from the frozen source month-first-day:
+- `10.1016/j.chempr.2026.103211`: **21 August 2026**, cobalt/Salox
+  enantioselective C–H/N–H annulation building macrocyclic+mechanical planar
+  chiral rotaxanes, up to 85% yield, 93–99% ee. Frozen 2026-08-01 retained.
+- `10.1016/j.chempr.2026.103215`: **31 August 2026**, preformed chiral
+  binuclear Cu for trifluoromethylation/azidation of acrylates to
+  α-quaternary amino-acid precursors. Frozen 2026-08-01 retained. Cu
+  division of roles is author-proposed mechanism, not asserted unique proof.
+- `10.1016/j.chempr.2026.103249`: **16 September 2026**, metallaphotoredox
+  deoxygenative alcohol/alkyne hydroalkylation to regioselective hindered
+  olefins and later quaternary carbon scaffolds. Frozen 2026-09-01 retained.
+
+These three individually pass two paper-specific academic assessments,
+each with direct original preparative transformation, documented generality,
+and distinct adversarial challenge:
+`audit/historical-scope-assessments/2026-10-15-chem-three-q3-methods-two-pass.json`.
+Author/bibliographic/DOI records are attached to the existing
+`approved-admissions.json` only for the **next legal 2026-10-16 Beijing
+08:00** writer; no off-slot catch-up for the missed October 15 slot.
+Three include decisions DO NOT prove the other Chem DOI are in-range or have
+publisher-verified first-online dates.
+
+The read-only Q3 reconciliation must verify the original exact frozen
+Crossref/OpenAlex raw source SHA-256 and Git blobs; any regenerated reviewer
+queue blob is accepted only if a byte-for-byte deterministic status-only
+rebuild of that original source and the already authorized DOI sets is
+verified. It must preserve all 12,286 unique metadata source DOI. Two
+publisher-proven Q1 papers become `sourcePublisherVerifiedOutsideQ3`
+rather than synthetic scope exclusions; five provenance disagreements
+remain explicitly visible. Prospective Q3 unfinished count 11,289→11,284
+only after successful staging readback with no other changes.
+
+The independent quarterly `publisherIssueResearchReconciliationComplete`
+remains **false**. Neither a few publisher date proofs nor 147 discovered
+Chem DOI proves all Chem original Research/Early View Q3 publications have
+been enumerated. Do not claim any protected publisher PDF, SI, figure,
+body text or full abstracts were downloaded/republished by this audit.
