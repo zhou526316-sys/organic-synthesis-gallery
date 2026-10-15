@@ -19,6 +19,7 @@ test('Chem month-first source and date-conflict evidence is a complete frozen so
   assert.equal(audit.conflictingSourceDateDois.length,13);
   assert.equal(audit.summary.verifiedOfficialFirstOnline,6);
   assert.equal(audit.summary.officialFirstOnlineBeforeQ3,undefined);
+  assert.equal(audit.summary.publisherVerifiableOutsideQ3,3);
   assert.equal(audit.summary.officialFirstOnlineInQ3,3);
   assert.equal(audit.summary.publisherIssueDateWithoutOnlineEvidence,2);
   assert.deepEqual(audit.summary.candidateSourceFirstDates,{'2026-07-01':48,'2026-08-01':48,'2026-09-01':47});
