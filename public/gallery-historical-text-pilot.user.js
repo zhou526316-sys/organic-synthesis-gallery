@@ -337,27 +337,56 @@
     crypto.getRandomValues(bytes);
     return [...bytes].map(x=>x.toString(16).padStart(2,'0')).join('');
   }
-  function batchFetchJson(url){
+  // Prefer the same-origin browser path used by TOC for large, complete
+  // manifests; keep Tampermonkey as a bounded fallback for transient transport
+  // failures. A malformed or non-200 manifest is not silently accepted.
+  async function batchFetchJson(url){
+    const validate=response=>{
+      if(!response||typeof response!=='object'||Array.isArray(response))
+        throw Error('正式文献清单数据格式错误');
+      return response;
+    };
+    if(typeof fetch==='function'&&new URL(url).origin===location.origin){
+      let timer=null;
+      try{
+        const abort=new AbortController();
+        timer=setTimeout(()=>abort.abort(),10000);
+        const response=await fetch(url,{method:'GET',cache:'no-store',
+          credentials:'omit',headers:{accept:'application/json'},signal:abort.signal});
+        if(!response.ok)throw Error('正式清单 HTTP '+response.status);
+        const raw=await response.text();
+        if(raw.length>SOURCE_RESULT_MAX_BYTES)throw Error('正式清单超过容量保护');
+        return validate(JSON.parse(raw));
+      }catch(error){
+        const message=String(error?.message||'');
+        if(/正式清单 HTTP |正式清单超过容量保护/.test(message))
+          throw error; // HTTP denial or excessive payload is not a retry hint.
+      }finally{if(timer!==null)clearTimeout(timer);}
+    }
     return new Promise((resolve,reject)=>{
       GM_xmlhttpRequest({
         method:'GET',url,timeout:16000,headers:{accept:'application/json'},
         onload(response){
           try{
-            const body=String(response.responseText||'');
-            if(response.status!==200||body.length>SOURCE_RESULT_MAX_BYTES)
-              throw Error('正式目录读取受阻 HTTP '+String(response.status));
-            const parsed=JSON.parse(body);
-            if(!parsed||typeof parsed!=='object')throw Error('正式目录数据格式错误');
-            resolve(parsed);
+            const raw=String(response.responseText||'');
+            if(response.status!==200)throw Error('正式清单 HTTP '+String(response.status));
+            if(raw.length>SOURCE_RESULT_MAX_BYTES)throw Error('正式清单超过容量保护');
+            resolve(validate(JSON.parse(raw)));
           }catch(error){reject(error);}
         },
-        onerror(){reject(Error('正式文献索引网络访问失败'));},
-        ontimeout(){reject(Error('正式文献索引请求超时'))}
+        onerror(){reject(Error('正式清单浏览器及扩展传输失败'));},
+        ontimeout(){reject(Error('正式清单扩展网络请求超时'))}
       });
     });
   }
   async function batchLoadCanonicalCatalog(includeAllFormal=false){
-    const release=await batchFetchJson(CANONICAL_RELEASE_URL);
+    // The complete DOI registry already exists in one TOC-mainline manifest.
+    // Never page through /api/literature/catalog-view as a startup prerequisite.
+    // This is NOT the smaller "missing TOC" media subqueue.
+    const [release,queue]=await Promise.all([
+      batchFetchJson(CANONICAL_RELEASE_URL),
+      batchFetchJson(CATALOG_URL)
+    ]);
     const catalogId=String(release.architectureCatalogId||'');
     if(!/^[0-9a-f]{64}$/.test(catalogId)
       ||!Array.isArray(release.dois)
@@ -365,53 +394,38 @@
       ||release.dois.length!==release.productionCards
       ||release.dois.length>BATCH_DOI_LIMIT)
       throw Error('正式 Pages 文献目录版本不可信');
+    if(queue.pairedCaptureRegistry!==true||!Array.isArray(queue.articles)
+      ||queue.articles.length!==Number(queue.webpageDoiCount)
+      ||queue.articles.length!==release.dois.length
+      ||queue.articles.length>BATCH_DOI_LIMIT)
+      throw Error('TOC 完整 DOI 清单与正式发布清单数量不一致');
     const members=new Set();
     for(const raw of release.dois){
       const doi=normalizeDoi(raw);
-      if(!doi||members.has(doi))throw Error('正式 DOI 清单不一致');
+      if(!doi||members.has(doi))throw Error('正式 DOI 发布清单重复或无效');
       members.add(doi);
     }
     const articles=[],seen=new Set();
-    let cursor='',matched=null;
-    for(let page=0;page<SOURCE_MAX_PAGES;page++){
-      const q=new URLSearchParams({catalogId,sort:'oldest',limit:String(SOURCE_PAGE_LIMIT)});
-      if(!includeAllFormal)q.set('dateTo','2026-09-30');
-      if(cursor)q.set('cursor',cursor);
-      const response=await batchFetchJson(CANONICAL_INDEX_URL+'?'+q.toString());
-      if(response.readPathActive!==true||response.enabled!==true
-        ||response.catalogId!==catalogId||!Array.isArray(response.items)
-        ||!Number.isSafeInteger(response.matched)
-        ||response.items.length>SOURCE_PAGE_LIMIT)
-        throw Error('正式文献索引未就绪或目录版本不一致');
-      if(matched===null)matched=response.matched;
-      else if(matched!==response.matched)throw Error('正式目录分页数量发生变化');
-      for(const row of response.items){
-        const doi=normalizeDoi(row?.doi);
-        if(!doi||!members.has(doi)||seen.has(doi)
-          ||!/^[0-9a-f]{64}$/.test(String(row?.revision||''))
-          ||!String(row?.journal||'').trim())
-          throw Error('正式 DOI 分页存在未知或重复论文');
-        seen.add(doi);
-        articles.push({doi,date:String(row.firstOnlineDate||''),
-          title:String(row.title||'').slice(0,1000),journal:String(row.journal||'').slice(0,140),
-          revision:row.revision});
-      }
-      if(articles.length>matched||articles.length>BATCH_DOI_LIMIT)
-        throw Error('正式文献目录容量或去重异常');
-      if(response.hasMore!==true){
-        if(articles.length!==matched||response.nextCursor
-          ||(includeAllFormal&&articles.length!==release.dois.length))
-          throw Error('正式 DOI 分页缺项');
-        return {pairedCaptureRegistry:true,webpageDoiCount:articles.length,
-          formalCount:release.dois.length,publishedCatalogId:catalogId,articles};
-      }
-      if(!response.nextCursor||response.nextCursor===cursor||!response.items.length)
-        throw Error('正式文献索引分页无法前进');
-      cursor=response.nextCursor;
+    for(const row of queue.articles){
+      const doi=normalizeDoi(row?.doi);
+      const date=String(row?.date||'');
+      if(!doi||!members.has(doi)||seen.has(doi)
+        ||(date!==''&&!/^\d{4}-\d{2}-\d{2}$/.test(date))
+        ||!String(row?.journal||'').trim())
+        throw Error('TOC 清单包含未发布、重复 DOI 或无效文献元数据');
+      seen.add(doi);
+      if(includeAllFormal||(date&&date<CUTOFF))
+        articles.push({doi,date,title:String(row.title||'').slice(0,1000),
+          journal:String(row.journal||'').slice(0,140),
+          // Local OA retry generation only; NOT a verified article revision
+          // for the independent public FTS import process.
+          revision:catalogId});
     }
-    throw Error('正式文献索引分页超过保护上限');
+    if(seen.size!==members.size)throw Error('TOC 完整 DOI 集合与正式发布集合不一致');
+    return {pairedCaptureRegistry:true,webpageDoiCount:articles.length,
+      formalCount:members.size,publishedCatalogId:catalogId,articles,
+      registrySource:'complete_toc_manifest',registryGeneratedAt:String(queue.generatedAt||'')};
   }
-
 
   // Opt-in OPEN SCIENCE supplement: entire formal DOI list, NOT just old-date
   // media queues. Only article-scoped CC BY/CC0 OA JATS can enter local IDB.
