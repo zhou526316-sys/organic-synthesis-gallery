@@ -4,7 +4,7 @@
   "executionMode": "scheduled_noninteractive_main_only",
   "publicationSlot": "2026-10-16T08:00:00+08:00",
   "createdAt": "2026-10-15T23:19:30.488Z",
-  "updatedAt": "2026-10-15T23:20:31.640Z",
+  "updatedAt": "2026-10-15T23:23:53.756Z",
   "evidenceAsOf": "2026-10-15T23:19:30.488Z",
   "handoffGeneratedAt": "2026-10-15T23:09:40.165Z",
   "freshAuditGeneratedAt": "2026-10-15T23:09:40.165Z",
@@ -1125,12 +1125,12 @@
       "challengeReason": "相较纯基因簇研究，真实额外小分子底物和新骨架具有制备潜力；但突变产物数不能代替可迁移酶法制备范围。",
       "evidenceNeeded": "需取得底物—分离产物/收率及实际制备实验，判定中心贡献是否为通用萜类制备平台而非仅新天然生物合成和环化机理。",
       "attemptedEvidencePages": [
-        "https://doi.org/10.1002/anie.4309009",
-        "https://pubs.acs.org/doi/10.1002/anie.4309009"
+        "https://api.crossref.org/works/10.1002%2Fanie.4309009",
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.4309009"
       ],
       "evidencePages": [
-        "https://doi.org/10.1002/anie.4309009",
-        "https://pubs.acs.org/doi/10.1002/anie.4309009"
+        "https://api.crossref.org/works/10.1002%2Fanie.4309009",
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.4309009"
       ],
       "nextAction": "需取得底物—分离产物/收率及实际制备实验，判定中心贡献是否为通用萜类制备平台而非仅新天然生物合成和环化机理。",
       "nextReviewSlot": "2026-10-17T08:00:00+08:00",
@@ -1139,7 +1139,15 @@
       "lastReviewedAt": "2026-10-15T23:19:30.488Z",
       "originalDate": "2026-10-15",
       "reviewKind": "article_specific_preparative_evidence_gap",
-      "status": "pending"
+      "status": "pending",
+      "attemptedEvidenceChecks": [
+        {
+          "url": "https://onlinelibrary.wiley.com/doi/10.1002/anie.4309009",
+          "httpStatus": 403,
+          "observedAt": "2026-10-15T23:23:53.756Z",
+          "meaning": "public source access blocked; no assertion that preparative scope is absent"
+        }
+      ]
     },
     {
       "doi": "10.1002/anie.6302856",
@@ -1688,11 +1696,11 @@
       "challengeReason": "主要叙事是紫精激发态耦合工程；真实有机反应是纳入的反向依据，但一个最高产率不能代替底物/产物系列。",
       "evidenceNeeded": "需正文或SI的苯胺/马来酰亚胺底物表、分离产物与合成新能力，区分催化剂光物理展示与一般制备方法。",
       "attemptedEvidencePages": [
-        "https://doi.org/10.1021/jacs.6c17009",
+        "https://api.crossref.org/works/10.1021%2Fjacs.6c17009",
         "https://pubs.acs.org/doi/10.1021/jacs.6c17009"
       ],
       "evidencePages": [
-        "https://doi.org/10.1021/jacs.6c17009",
+        "https://api.crossref.org/works/10.1021%2Fjacs.6c17009",
         "https://pubs.acs.org/doi/10.1021/jacs.6c17009"
       ],
       "nextAction": "需正文或SI的苯胺/马来酰亚胺底物表、分离产物与合成新能力，区分催化剂光物理展示与一般制备方法。",
@@ -1702,7 +1710,15 @@
       "lastReviewedAt": "2026-10-15T23:19:30.488Z",
       "originalDate": "2026-10-15",
       "reviewKind": "article_specific_preparative_evidence_gap",
-      "status": "pending"
+      "status": "pending",
+      "attemptedEvidenceChecks": [
+        {
+          "url": "https://pubs.acs.org/doi/10.1021/jacs.6c17009",
+          "httpStatus": 403,
+          "observedAt": "2026-10-15T23:23:53.756Z",
+          "meaning": "public source access blocked; no assertion that preparative scope is absent"
+        }
+      ]
     },
     {
       "doi": "10.1021/jacs.6c13542",
@@ -5151,7 +5167,7 @@
       "journal": "Chemical Science",
       "title": "3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters)",
       "date": "",
-      "originalDate": "",
+      "originalDate": null,
       "originalDatePrecision": "unverified",
       "type": "journal-article",
       "firstPassDecision": "pending",
@@ -5298,7 +5314,7 @@
       "journal": "Chemical Science",
       "title": "Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes",
       "date": "",
-      "originalDate": "",
+      "originalDate": null,
       "originalDatePrecision": "unverified",
       "type": "journal-article",
       "firstPassDecision": "pending",
@@ -5430,16 +5446,25 @@
       "sourceReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewedAt": "2026-10-15T23:19:30.488Z",
-      "originalDate": "",
+      "originalDate": null,
       "reviewKind": "article_specific_preparative_evidence_gap",
-      "status": "pending"
+      "status": "pending",
+      "originalDatePrecision": "unverified",
+      "attemptedEvidenceChecks": [
+        {
+          "url": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06546e",
+          "httpStatus": 403,
+          "observedAt": "2026-10-15T23:23:53.756Z",
+          "meaning": "public source access blocked; no assertion that preparative scope is absent"
+        }
+      ]
     },
     {
       "doi": "10.1039/d6sc07058b",
       "journal": "Chemical Science",
       "title": "Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations",
       "date": "",
-      "originalDate": "",
+      "originalDate": null,
       "originalDatePrecision": "unverified",
       "type": "journal-article",
       "firstPassDecision": "pending",
@@ -5571,9 +5596,18 @@
       "sourceReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewedAt": "2026-10-15T23:19:30.488Z",
-      "originalDate": "",
+      "originalDate": null,
       "reviewKind": "article_specific_preparative_evidence_gap",
-      "status": "pending"
+      "status": "pending",
+      "originalDatePrecision": "unverified",
+      "attemptedEvidenceChecks": [
+        {
+          "url": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc05491a",
+          "httpStatus": 403,
+          "observedAt": "2026-10-15T23:23:53.756Z",
+          "meaning": "public source access blocked; no assertion that preparative scope is absent"
+        }
+      ]
     },
     {
       "doi": "10.1039/d6sc05970h",
@@ -5618,7 +5652,7 @@
       "journal": "Chemical Science",
       "title": "Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center",
       "date": "",
-      "originalDate": "",
+      "originalDate": null,
       "originalDatePrecision": "unverified",
       "type": "journal-article",
       "firstPassDecision": "pending",
@@ -5731,9 +5765,18 @@
       "sourceReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewFile": "audit/prepublish-review-2026-10-16-0800.json",
       "lastReviewedAt": "2026-10-15T23:19:30.488Z",
-      "originalDate": "",
+      "originalDate": null,
       "reviewKind": "article_specific_preparative_evidence_gap",
-      "status": "pending"
+      "status": "pending",
+      "originalDatePrecision": "unverified",
+      "attemptedEvidenceChecks": [
+        {
+          "url": "https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc05574e",
+          "httpStatus": 403,
+          "observedAt": "2026-10-15T23:23:53.756Z",
+          "meaning": "public source access blocked; no assertion that preparative scope is absent"
+        }
+      ]
     },
     {
       "doi": "10.1039/d6gc04852h",
@@ -5957,7 +6000,14 @@
     "sourceCoverageWarningCount": 4,
     "closureCoverageWarningCount": 5,
     "verifiedThroughHeld": true,
-    "actualStrictRunnerChecksCompleted": false
+    "actualStrictRunnerChecksCompleted": false,
+    "firstStrictGitHubRun": {
+      "runId": 38823044079,
+      "jobId": 116723935529,
+      "conclusion": "success",
+      "validatedReviewBlobSha": "0b73ee977c0054fe63d482f89e9f62b0de05d8fb",
+      "note": "首次完整strict检查已成功；本次只核正一个Wiley证据URL并补实际HTTP403回执，纳入/排除/pending集合不变。当前字节仍须由下一次既有push gate复核。"
+    }
   },
   "closure": {
     "verifiedThrough": "2026-09-18",
