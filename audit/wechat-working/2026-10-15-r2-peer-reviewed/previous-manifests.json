@@ -1,0 +1,2077 @@
+{
+  "nature": {
+    "date": "2026-10-15",
+    "editorialRevision": "2026-10-15-r1",
+    "headline": "碳原子催化转移实现 C–C σ 键的螺环拼接",
+    "title": "有机合成文献日报｜10.15｜今日精选｜Nature：碳原子催化转移实现 C–C σ 键的螺环拼接",
+    "kicker": "今日精选｜Nature",
+    "selectionAuthority": "owner_selected_source_papers_and_explicit_draft_write_request",
+    "paper": {
+      "doi": "10.1038/s41586-026-11242-8",
+      "journal": "Nature",
+      "title": "Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds",
+      "authors": "Hayato Fujimoto、Masayuki Mizutani、Kazuya Imachi、Teruki Nishioka、Reona Ikeda、Mamoru Tobisu",
+      "corresponding": "Hayato Fujimoto、Mamoru Tobisu"
+    },
+    "source_note": "依据用户提供的 Accelerated Article Preview、SI 与公开审稿文件；原图水印保留。",
+    "lead_figure_id": "N_lead",
+    "lead_figure_position": "after_first_quick_point",
+    "quick_points": [
+      {
+        "label": "先看懂这项反应",
+        "text": "用同一个碳原子，把两个联苯撑骨架拼成共用一个螺中心的三维分子：这个转化要先后打开两条 C–C σ 键，并在新碳上形成四条 C–C 键。Fujimoto、Tobisu 团队以 PINC 为碳原子等价体，借助铑催化实现了这一路径。"
+      },
+      {
+        "label": "研究问题",
+        "text": "难点不只是断键。碳源既要进入金属配位层，又不能占满催化剂；第一次插入形成的中间体还必须及时转入第二次反应。这篇工作的推进，正是围绕这两种竞争展开。"
+      }
+    ],
+    "sections": [
+      {
+        "eyebrow": "概念推进",
+        "heading": "从烯烃的 π 键反应，走向可控的 C–C σ 键活化",
+        "paragraphs": [
+          "以往的单碳转移螺环拼接多借助卡宾对烯烃的反应性，产物因而偏向螺戊烷。本篇选择联苯撑，是因为其中央受张力影响的 C–C 键可以对过渡金属发生氧化加成，从而为碳源进入金属环提供机会。",
+          "然而，联苯撑开环后也容易自身二聚，生成四亚苯。作者面对的不是一条已经准备好的“插碳通道”，而是怎样把熟悉的 C–C 活化引向新的产物。图 1A 描绘的是概念；实际验证的底物是联苯撑，不能据此推广为任意联苯或普通 C–C 单键。"
+        ],
+        "figures": [
+          "N_concept"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "N_concept"
+          ]
+        }
+      },
+      {
+        "eyebrow": "条件如何改变认识",
+        "heading": "PINC 既是碳源，也可能使催化剂失去活性",
+        "paragraphs": [
+          "PINC 被选中的一个关键理由，是异腈端能够在保留分子骨架时直接与金属配位，使碳转移有机会在金属配位层内发生。但这种有用的反应入口，也可能转成催化剂失活的原因。",
+          "原文图 2A 中，[Rh(cod)Cl]₂/dcype 配合分阶段升温和 PINC 缓慢滴加，模型产率为 72%；一次性加入 PINC 却只有 13%。更换为 Ni 或 Pd 没有得到目标螺环，而观察到四亚苯。能活化 C–C 键，并不意味着能完成后面的碳转移。",
+          "为什么少量、持续加入更有效？作者将过量 PINC 与铑前体反应，分离并表征了 Rh(PINC)₄Cl。把这个配合物直接用于反应，产率仅 12%。这将滴加效果与一个具体的低活性物种联系起来，而不只是一项经验操作。",
+          "可迁移的设计启示在这里：具有配位能力的试剂，其浓度可能同时影响目标成键和催化剂分布。要提高效率，未必应该继续提高试剂浓度；应先判断它是否把活性金属转成了另一种物种。本文的分离实验支持这一判断，但尚未给出完整的溶液物种定量。"
+        ],
+        "figures": [
+          "N_optimization",
+          "N_inactive"
+        ],
+        "figures_after_paragraph": {
+          "2": [
+            "N_optimization"
+          ],
+          "3": [
+            "N_inactive"
+          ]
+        }
+      },
+      {
+        "eyebrow": "将一个碳的两次转移分开",
+        "heading": "碳源得到确认，低温则截获可用的中间体",
+        "paragraphs": [
+          "¹³C 标记 PINC 的终端碳后，标签出现在产物螺中心，确认该碳来自 PINC。这里使用的是“原子碳等价体”：实验没有表明反应液中先释放了游离原子碳，再由它任意插入两条键。",
+          "把反应停在 90 °C，作者取得 77% 的中间体 4a，螺环产物未形成；分离的 4a 与另一分子联苯撑在更高温度下反应，则以 98% 收率得到螺环。这个称为 phosphazine 的中间体，使第一次与第二次碳转移可以分别研究。",
+          "这一结果还带来合成上的转折：既然第一次反应能停住，第二阶段就不必继续使用同一种联苯撑。温度控制由此不仅服务于反应效率，也为交叉拼接创造了选择不同组分的机会。"
+        ],
+        "figures": [
+          "N_isotope",
+          "N_intermediate"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "N_isotope"
+          ],
+          "2": [
+            "N_intermediate"
+          ]
+        }
+      },
+      {
+        "eyebrow": "底物范围与结构价值",
+        "heading": "先证明兼容性，再把分段反应用于不对称骨架",
+        "paragraphs": [
+          "原文图 3 包括溴、氰基、酯、酰胺和酮等取代结构；含羰基的螺二芴尤其体现了不同于强亲核有机金属路线的合成价值。1-取代及含氮联苯撑还表现出远端 C–C 键活化的区域选择性，但位阻和配位解释仍属于作者的机理分析。",
+          "图 4A 随后利用 90 °C 制备的 4 接入第二种联苯撑，获得非对称螺二芴，并展示双螺与 π 扩展结构。图中“77%/67%”等写法分别代表两个阶段，不能读成整个串联过程的单一分离收率。",
+          "第二阶段若改为烯烃，便可取得 σ–π 拼接的螺[2.4]骨架。不过图 4B 此时换用了 Rh₂(esp)₂。它说明先形成的中间体能通向另一类反应，不等于所有 σ–σ、σ–π 例子都由一套不变的铑催化条件完成。"
+        ],
+        "figures": [
+          "N_scope",
+          "N_cross",
+          "N_sigma_pi"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "N_scope"
+          ],
+          "2": [
+            "N_cross"
+          ],
+          "3": [
+            "N_sigma_pi"
+          ]
+        }
+      },
+      {
+        "eyebrow": "SI 改变了机制解读",
+        "heading": "重氮化合物单独失败，不能据此排除重氮路径",
+        "paragraphs": [
+          "作者提出 4a 受热后少量释放重氮物种，后者再进入铑卡宾转移。一个看似不利的对照是：直接使用预制重氮化合物 6a，目标产物为零。若阅读到这里便断言“重氮途径已排除”，就会漏掉 SI 中的补充实验。",
+          "含 PPh₃ 的补充操作仍能得到目标物：同加时为 18%，先预混两小时再反应的一组为 66%。两组同时存在溶剂差别，不能把差值全部归因于预混；但它们说明预制重氮物并非完全不能进入这条反应网络，也支持 4a 作为可用前体的解释。",
+          "PPh₃ 的作用还随阶段改变。从起始阶段就加入一当量 PPh₃，产率降为 14%；以分离的 4a 单独考察第二阶段，额外加入 PPh₃ 仍得到 93%。因此，“PPh₃ 抑制反应”与“PPh₃ 不影响反应”都不够准确，必须注明它出现在哪一段。"
+        ],
+        "figures": [
+          "N_diazo",
+          "N_phosphine"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "N_diazo"
+          ],
+          "3": [
+            "N_phosphine"
+          ]
+        }
+      },
+      {
+        "eyebrow": "计算给出的路径偏好",
+        "heading": "先打开 C–C 键，再形成铑卡宾更有利",
+        "paragraphs": [
+          "4a 释放 PPh₃、生成重氮物的计算势垒为 30.4 kcal mol⁻¹，与需要加热相符。但 SI 给出的产物侧自由能差仅为 +0.3 kcal mol⁻¹；单凭这个小差值，不宜进一步断言平衡“强烈偏向”4a。低瞬时重氮浓度是作者提出的工作模型，不是直接测得的浓度曲线。",
+          "原文图 5A 比较两种顺序：先对联苯撑氧化加成，或先形成铑卡宾。计算得到前者的路径更有利。图上各点为同一参考态下的相对自由能，不能把 14.8、7.2 等纵坐标逐一当成从前一个中间体起算的局部活化势垒。",
+          "据此，图 5B 将反应组织为两个循环：第一次经 PINC 配位、插入和还原消除形成 4；第二次由其衍生的重氮物在铑金属环中生成卡宾，再插入、还原消除，取得螺环。中间体分离、原子示踪与计算彼此支持，但没有把每个瞬态物种都变成直接观测。"
+        ],
+        "figures": [
+          "N_DFT",
+          "N_cycle"
+        ],
+        "figures_after_paragraph": {
+          "2": [
+            "N_DFT"
+          ],
+          "3": [
+            "N_cycle"
+          ]
+        }
+      },
+      {
+        "eyebrow": "方法的边界与可延伸之处",
+        "heading": "分段控制可以简化操作，但尚未成为通用的 σ 键编辑",
+        "paragraphs": [
+          "SI S13 还给出一锅交叉拼接：不分离 4、不补加第二份铑催化剂，即可取得 97% 的目标物；这一收率以第二个联苯撑为基准。另有以 10 mmol PINC 进行的放大，得到 1.57 g、50% 分离收率，证明方法能够进入克级制备。",
+          "与此同时，SI S31 的失败结构以及审稿往返明确限制了适用范围：联苯撑往往需要预先合成，所示醛、游离羟基、硝基等底物没有给出目标产物。不能把概念上的“一碳拼接”扩大为现成多芳烃普遍可用的三维化工具。",
+          "本文更值得延伸的是“如何安排反应次序”。控制 PINC 的供给、让 4 暂时累积，再使第二组分进入，能把几种互相竞争的过程拆开。下一步可用分段加料和原位物种监测检验各阶段的限制因素；能否推广到其他 σ 键或实现对映选择性，仍是待验证的研究方向。"
+        ],
+        "figures": [
+          "N_onepot",
+          "N_limits"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "N_onepot"
+          ],
+          "2": [
+            "N_limits"
+          ]
+        }
+      }
+    ],
+    "figures": [
+      {
+        "id": "N_lead",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_lead.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 1B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 20,
+            "normalized_rectangle": [
+              0,
+              0.405,
+              1,
+              1
+            ],
+            "pdf_rectangle": [
+              0.0,
+              117.045,
+              316.0,
+              289.0
+            ]
+          }
+        ],
+        "sha256": "462e2cc4652a170a07ee1ab298d84d9c71c48d38ad0dc869e98adec946cd4401",
+        "body": true,
+        "caption": "原文 Fig. 1B｜PINC 提供同一个螺碳；分别与两条 C–C σ 键，或与 σ 键和烯烃 π 键组合。",
+        "display_width_pct": 90
+      },
+      {
+        "id": "N_concept",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_concept.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 1A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 20,
+            "normalized_rectangle": [
+              0,
+              0,
+              1,
+              0.39
+            ],
+            "pdf_rectangle": [
+              0.0,
+              0.0,
+              316.0,
+              112.71000000000001
+            ]
+          }
+        ],
+        "sha256": "3d54eff3b90d9af6d7bc81a9ddb680b61a9a150b24a5e9ff1ad9153d28d367b3",
+        "body": true,
+        "caption": "原文 Fig. 1A｜概念性的 σ–σ 螺环拼接。实际验证的 σ 组分是联苯撑，不代表任意 C–C 单键。",
+        "display_width_pct": 88
+      },
+      {
+        "id": "N_optimization",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_optimization.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 2A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0,
+              0,
+              0.738,
+              0.563
+            ],
+            "pdf_rectangle": [
+              0.0,
+              0.0,
+              427.302,
+              222.385
+            ]
+          },
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0,
+              0.571,
+              0.394,
+              0.793
+            ],
+            "pdf_rectangle": [
+              0.0,
+              225.545,
+              228.126,
+              313.235
+            ]
+          }
+        ],
+        "sha256": "e0711250e98c7fc1f3180d36a52640bba5a78dec4fe82a834068a18a1eab0489",
+        "body": true,
+        "caption": "原文 Fig. 2A｜滴加与一次加入的对照，以及金属、配体筛选；下方配体结构来自同一原图。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_inactive",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_inactive.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 2B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0.742,
+              0,
+              1,
+              0.558
+            ],
+            "pdf_rectangle": [
+              429.618,
+              0.0,
+              579.0,
+              220.41000000000003
+            ]
+          }
+        ],
+        "sha256": "7d713660df25cc8c8d62c01805538e2c0dcfc772131c8001dc3285c86271d6cd",
+        "body": true,
+        "caption": "原文 Fig. 2B｜分离、表征的 Rh(PINC)₄Cl；过量 PINC 可占据铑的配位位点。",
+        "display_width_pct": 64
+      },
+      {
+        "id": "N_isotope",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_isotope.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 2C",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0.398,
+              0.57,
+              1,
+              0.797
+            ],
+            "pdf_rectangle": [
+              230.442,
+              225.14999999999998,
+              579.0,
+              314.815
+            ]
+          }
+        ],
+        "sha256": "75b5eae4c95efa074b491007713ac3cf21519db206d5033d80a12bd2af482c63",
+        "body": true,
+        "caption": "原文 Fig. 2C｜¹³C 标签最终出现在螺中心，确定碳源，不等于直接观察游离原子碳。",
+        "display_width_pct": 96
+      },
+      {
+        "id": "N_intermediate",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_intermediate.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 2D 与 SI S32",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0,
+              0.817,
+              1,
+              1
+            ],
+            "pdf_rectangle": [
+              0.0,
+              322.715,
+              579.0,
+              395.0
+            ]
+          },
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 32,
+            "normalized_rectangle": [
+              0.14,
+              0.483,
+              0.88,
+              0.586
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              406.6473517456055,
+              523.8816064453125,
+              493.3651099853515
+            ]
+          }
+        ],
+        "sha256": "cdc710550f4ea76ba5c59b15066f88ce0304d3c876a9ce24d2f9104b0e02c29b",
+        "body": true,
+        "caption": "原文 Fig. 2D 与 SI S32｜90 °C 得到中间体 4a；分离的 4a 在更高温度下可进入第二次碳转移。两幅保持各自原始条件。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_scope",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_scope.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 3",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 22,
+            "normalized_rectangle": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "pdf_rectangle": [
+              0.0,
+              0.0,
+              564.0,
+              431.0
+            ]
+          }
+        ],
+        "sha256": "80c941422aadeb3272bb0ac91217ef088b0deb7b28bff56a6d5ffff69e1f8500",
+        "body": true,
+        "caption": "原文 Fig. 3｜同类联苯撑的螺环拼接及不对称取代底物的远端 C–C 键选择性。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_cross",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_cross.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 4A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 23,
+            "normalized_rectangle": [
+              0,
+              0,
+              1,
+              0.664
+            ],
+            "pdf_rectangle": [
+              0.0,
+              0.0,
+              566.0,
+              371.84000000000003
+            ]
+          }
+        ],
+        "sha256": "8d8de27c3d68c5f814157616f8a876ffdf4f482b025aef877fe76a6ae2658644",
+        "body": true,
+        "caption": "原文 Fig. 4A｜先制备 4，再选择第二个 σ 组分；双螺产物、π 扩展例子及分阶段收率均保留。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_sigma_pi",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_sigma_pi.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 4B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 23,
+            "normalized_rectangle": [
+              0,
+              0.68,
+              1,
+              1
+            ],
+            "pdf_rectangle": [
+              0.0,
+              380.8,
+              566.0,
+              560.0
+            ]
+          }
+        ],
+        "sha256": "7f6a3fac90c6e62d13917b2ae234dbcd3a2f922cbdc739f031ae3bd28b76e36b",
+        "body": true,
+        "caption": "原文 Fig. 4B｜第二阶段改用 Rh₂(esp)₂ 和烯烃，实现 σ–π 螺环拼接；不是全程同一催化体系。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_diazo",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_diazo.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "SI S32、S34–S35",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 32,
+            "normalized_rectangle": [
+              0.14,
+              0.124,
+              0.89,
+              0.343
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              104.39807788085938,
+              529.8348065185547,
+              288.7785541381836
+            ]
+          },
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 34,
+            "normalized_rectangle": [
+              0.14,
+              0.666,
+              0.89,
+              0.785
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              560.7187086181641,
+              529.8348065185547,
+              660.9071865844727
+            ]
+          },
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 35,
+            "normalized_rectangle": [
+              0.14,
+              0.171,
+              0.86,
+              0.287
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              143.96831707763673,
+              511.97520629882814,
+              241.63103509521483
+            ]
+          }
+        ],
+        "sha256": "af48dae88647c121376d928f87e47d88c65e7e4eb51252332c11666df0ee914d",
+        "body": true,
+        "caption": "SI Scheme｜SI S32、S34–S35｜预制重氮化合物：无 PPh₃ 时未得目标物；含 PPh₃ 的两种操作分别给出 18% 与 66%。后两组还存在溶剂和预混操作差别。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_phosphine",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_phosphine.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "SI S33–S34",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 33,
+            "normalized_rectangle": [
+              0.14,
+              0.548,
+              0.86,
+              0.666
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              461.37215063476566,
+              511.97520629882814,
+              560.7187086181641
+            ]
+          },
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 34,
+            "normalized_rectangle": [
+              0.14,
+              0.23,
+              0.89,
+              0.352
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              193.64159606933595,
+              529.8348065185547,
+              296.355833984375
+            ]
+          }
+        ],
+        "sha256": "6459fbcf9722e8a42f050440c0f6720a5f5958b85d111dfc43b9aedd6aa92d18",
+        "body": true,
+        "caption": "SI Scheme｜SI S33–S34｜PPh₃ 从起始阶段加入与只用于独立第二阶段，结果分别为 14% 和 93%；不能写成始终抑制或始终无害。",
+        "display_width_pct": 94
+      },
+      {
+        "id": "N_DFT",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_DFT.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 5A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 24,
+            "normalized_rectangle": [
+              0,
+              0,
+              1,
+              0.595
+            ],
+            "pdf_rectangle": [
+              0.0,
+              0.0,
+              512.0,
+              317.135
+            ]
+          }
+        ],
+        "sha256": "41b3f34f1dcd3469488bc14ec604668ef8d318f532941c569d45c2be1e5e1512",
+        "body": true,
+        "caption": "原文 Fig. 5A｜计算比较“先 C–C 氧化加成”与“先形成铑卡宾”；纵轴为相对 Gibbs 自由能。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_cycle",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_cycle.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "原文图 5B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "s41586-026-11242-8_reference.pdf",
+            "pdf_page": 24,
+            "normalized_rectangle": [
+              0,
+              0.607,
+              1,
+              1
+            ],
+            "pdf_rectangle": [
+              0.0,
+              323.531,
+              512.0,
+              533.0
+            ]
+          }
+        ],
+        "sha256": "6bb2fe72101791d87ea1adcd24e951fec8dd0e2dd4215e9c3407ecc3e5b96b8b",
+        "body": true,
+        "caption": "原文 Fig. 5B｜作者提出的两个催化循环；中间体的分离证据与未直接观察的瞬态步骤须区别。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "N_onepot",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_onepot.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "SI S13",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 13,
+            "normalized_rectangle": [
+              0.13,
+              0.11,
+              0.89,
+              0.287
+            ],
+            "pdf_rectangle": [
+              77.39160095214844,
+              92.6111981201172,
+              529.8348065185547,
+              241.63103509521483
+            ]
+          }
+        ],
+        "sha256": "b234082237fcc2f420b19df2fa2fc39d9d1152182887466f2cb4189b4616515b",
+        "body": true,
+        "caption": "SI Scheme｜SI S13｜一锅交叉拼接实例：97% 以第二个联苯撑为计量基准，不能当作对全部投入组分的原子经济性。",
+        "display_width_pct": 94
+      },
+      {
+        "id": "N_limits",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/N_limits.png",
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "SI S31",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "41586_2026_11242_MOESM1_ESM.pdf",
+            "pdf_page": 31,
+            "normalized_rectangle": [
+              0.14,
+              0.12,
+              0.84,
+              0.347
+            ],
+            "pdf_rectangle": [
+              83.34480102539064,
+              101.03039794921875,
+              500.0688061523437,
+              292.1462340698242
+            ]
+          }
+        ],
+        "sha256": "97ae14788d012fefb442debc9f5e8755f0d077ce0623c281c36cd06aca48fd23",
+        "body": true,
+        "caption": "SI Scheme｜SI S31｜不成功的底物：醛、游离酚羟基、硝基等所示结构，以及 TMS 取代例子。仅限实际测试范围。",
+        "display_width_pct": 84
+      },
+      {
+        "id": "cover_nature",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/cover_nature.png",
+        "body": false,
+        "source_doi": "10.1038/s41586-026-11242-8",
+        "source_figure": "Original main Fig. 1B",
+        "source_kind": "original_lead_uniform_resize_white_padding_only",
+        "caption": "原文反应图，等比例缩放与补白，无新增文字或结构。"
+      }
+    ],
+    "cover": {
+      "source_figure_id": "cover_nature",
+      "filename": "cover_nature.png",
+      "production_cover_image": "user_selected",
+      "pixel_equivalence": "exact_source_bytes",
+      "delivery_image_sha256": "7bc750dcdcf5d3c6e04385b170c6a3c9cf84cdf4ec05475f5d120ff63c1ab82e",
+      "canvas": {
+        "width": 940,
+        "height": 400,
+        "background": "#FFFFFF"
+      },
+      "crop_235_1": "0_0_1_1",
+      "crop_1_1": "0.287234_0_0.712766_1",
+      "source_placement": {
+        "x": 117,
+        "y": 8,
+        "width": 705,
+        "height": 384
+      },
+      "description": "Original Fig.1B only. Uniform resize and white padding; no new type, colored bar, or drawn chemical structures."
+    },
+    "paragraph_evidence": [
+      {
+        "section": "从烯烃的 π 键反应，走向可控的 C–C σ 键活化",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "N:pp4–5; Fig1A"
+        ]
+      },
+      {
+        "section": "从烯烃的 π 键反应，走向可控的 C–C σ 键活化",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "N:pp5–6",
+          "NR:pp2–3,11,14–15"
+        ]
+      },
+      {
+        "section": "PINC 既是碳源，也可能使催化剂失去活性",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "N:pp4–6",
+          "NR:p12"
+        ]
+      },
+      {
+        "section": "PINC 既是碳源，也可能使催化剂失去活性",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "N:Fig2A; pp5–6"
+        ]
+      },
+      {
+        "section": "PINC 既是碳源，也可能使催化剂失去活性",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "N:Fig2B; pp6–7",
+          "NS:pp8–9"
+        ]
+      },
+      {
+        "section": "PINC 既是碳源，也可能使催化剂失去活性",
+        "paragraph": 4,
+        "level": "editorial_inference",
+        "source": [
+          "N:Fig2A–B"
+        ]
+      },
+      {
+        "section": "碳源得到确认，低温则截获可用的中间体",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "N:Fig2C; p7",
+          "NS:pp35–36"
+        ]
+      },
+      {
+        "section": "碳源得到确认，低温则截获可用的中间体",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "N:Fig2D; p7",
+          "NS:pp31–32"
+        ]
+      },
+      {
+        "section": "碳源得到确认，低温则截获可用的中间体",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "N:pp9–10; Fig4"
+        ]
+      },
+      {
+        "section": "先证明兼容性，再把分段反应用于不对称骨架",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "N:pp7–9; Fig3"
+        ]
+      },
+      {
+        "section": "先证明兼容性，再把分段反应用于不对称骨架",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "N:Fig4A caption; pp9–10,13",
+          "NS:pp11,22–25"
+        ]
+      },
+      {
+        "section": "先证明兼容性，再把分段反应用于不对称骨架",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "N:Fig4B caption; pp10,14",
+          "NS:p12"
+        ]
+      },
+      {
+        "section": "重氮化合物单独失败，不能据此排除重氮路径",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "N:pp10–11",
+          "NS:pp32,34–35"
+        ]
+      },
+      {
+        "section": "重氮化合物单独失败，不能据此排除重氮路径",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "NS:pp34–35",
+          "NR:p10"
+        ]
+      },
+      {
+        "section": "重氮化合物单独失败，不能据此排除重氮路径",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "NS:pp33–34",
+          "NR:pp9–10"
+        ]
+      },
+      {
+        "section": "先打开 C–C 键，再形成铑卡宾更有利",
+        "paragraph": 1,
+        "level": "source_qualification",
+        "source": [
+          "NS:p37",
+          "N:p11"
+        ]
+      },
+      {
+        "section": "先打开 C–C 键，再形成铑卡宾更有利",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "N:Fig5A; p11"
+        ]
+      },
+      {
+        "section": "先打开 C–C 键，再形成铑卡宾更有利",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "N:Fig5B; p12"
+        ]
+      },
+      {
+        "section": "分段控制可以简化操作，但尚未成为通用的 σ 键编辑",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "NS:pp12–13",
+          "NR:pp6–7"
+        ]
+      },
+      {
+        "section": "分段控制可以简化操作，但尚未成为通用的 σ 键编辑",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "NS:p31",
+          "NR:pp2–3,7,14–15"
+        ]
+      },
+      {
+        "section": "分段控制可以简化操作，但尚未成为通用的 σ 键编辑",
+        "paragraph": 3,
+        "level": "editorial_inference",
+        "source": [
+          "N:Fig2,4,5",
+          "NR:p12"
+        ]
+      }
+    ],
+    "editorialIntent": "Preserve all reviewed scientific prose and original figure order; source data/model/editorial-inference distinctions remain. No new scientific claims."
+  },
+  "science": {
+    "date": "2026-10-15",
+    "editorialRevision": "2026-10-15-r1",
+    "headline": "以氟化钾实现醇的催化 Appel 氟化",
+    "title": "往期精选｜Science｜Gouverneur、Aldridge：以氟化钾实现醇的催化 Appel 氟化",
+    "kicker": "往期精选｜Science",
+    "selectionAuthority": "owner_selected_source_papers_and_explicit_draft_write_request",
+    "paper": {
+      "doi": "10.1126/science.aec6298",
+      "journal": "Science",
+      "title": "Catalytic Appel fluorination of alcohols with potassium fluoride",
+      "authors": "Anirban Mondal、Job J. C. Struijs、Caleb J. N. Doyle 等",
+      "corresponding": "Véronique Gouverneur、Simon Aldridge"
+    },
+    "source_note": "依据用户提供的 Science 正文与 313 页 SI；本篇“催化”指氢键催化剂周转，磷试剂仍按当量使用。",
+    "lead_figure_id": "S_lead",
+    "lead_figure_position": "after_first_quick_point",
+    "quick_points": [
+      {
+        "label": "先看懂这项反应",
+        "text": "醇变成烷基氟化物，形式上只是把 OH 换成 F；但把经典 Appel 反应中的氯或溴换成氟，往往会让氟停留在稳定的 P–F 物种中，不能高效进攻碳。Gouverneur、Aldridge 团队同时重设磷试剂与氢键催化剂，让廉价 KF 进入这条反应路径。"
+      },
+      {
+        "label": "研究问题",
+        "text": "这项设计需要连续解决三个问题：避免氟被锁在磷上，让底物醇完成活化，以及让催化剂完成一次反应后还能继续工作。只有这样，进一步由手性催化剂控制氟的传递才有基础。"
+      }
+    ],
+    "sections": [
+      {
+        "eyebrow": "反应设计",
+        "heading": "不能只替换氟源，必须改变磷上会发生的竞争",
+        "paragraphs": [
+          "原文图 1A 指出，卤代膦鎓盐与氟离子容易形成 PPh₃F₂。早期用氯、溴膦鎓盐处理模型醇时，作者得到的仍是相应氯化物、溴化物。问题不仅在 KF 难溶，还在于磷试剂本身把体系导向了错误的含卤物种。",
+          "新戊氧基膦鎓盐 P1·BF₄ 的设计同时考虑了两条副反应：新戊基不利于自身发生 Arbuzov 型取代，又没有可进行 β 消除的结构。作者希望它与 KF 先生成单氟膦烷 P1–F，再与底物醇交换，而不是继续变成稳定的二氟膦烷。",
+          "双齿脲 U1 在 25 °C 下没有有效转化，换为可三点结合氟的双脲 U2 并升温后，反应明显改善。SI 表 S2 中，U2 条件可取得 97% 核磁收率，无脲时则只有 15%；不加 KF 没有产物，改用不含氟的 ClO₄⁻ 膦鎓盐仍能反应，支持 KF 是氟源。"
+        ],
+        "figures": [
+          "S_background",
+          "S_screen"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_background"
+          ],
+          "3": [
+            "S_screen"
+          ]
+        }
+      },
+      {
+        "eyebrow": "从反应能力到适用范围",
+        "heading": "伯醇兼容性与仲醇的消除竞争，要分开评价",
+        "paragraphs": [
+          "原文图 2 展示了伯醇、杂环及多种官能团。醛、酮在这些例子中可以保留，是区别于某些强反应性脱氧氟化试剂的有用结果。不过活泼苄醇往往需要降温并加入 18-crown-6，不能把所有底物的产率都归到图首的一套标准条件。",
+          "仲醇的问题转为取代与消除的竞争，作者进一步调整为 U3 等条件。手性醇常表现构型反转；环己醇和若干三级醇则以消除为主。成功的三级氟化物还可能依赖邻基参与，不能仅凭产物是三级 C–F 就推断普通三级醇都能直接氟化。",
+          "图 3A 将转化用于维生素、药物相关片段和复杂醇，说明该反应能进入功能较密集的分子环境。这些数据证明的是合成兼容性与制备能力，不等于新氟化物已被证实具有更好的药效。"
+        ],
+        "figures": [
+          "S_scope_primary",
+          "S_scope_secondary",
+          "S_biorelevant"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_scope_primary"
+          ],
+          "2": [
+            "S_scope_secondary"
+          ],
+          "3": [
+            "S_biorelevant"
+          ]
+        }
+      },
+      {
+        "eyebrow": "不对称反应的入口",
+        "heading": "邻基参与把“手性保留”转化为去对称化机会",
+        "paragraphs": [
+          "一般手性醇氟化多表现构型反转，但 β-氨基醇可出现净构型保留。作者由此提出氮先参与形成氮杂环丙鎓，再由氟开环的路径；这一中间体也为手性离子配对控制提供了机会，而不是直接对所有外消旋醇进行统一的对映选择性 SN2。",
+          "其关键是先经邻基参与形成可去对称化的三元环鎓离子，再由手性双脲结合的氟选择性开环。β-羟基硫化物的例子也以 meso 型硫鎓中间体解释。因此，外消旋底物获得高 e.r. 的结果依赖特定结构，不应扩写为一般醇的通用去外消旋。",
+          "实现不对称版本需要共同调整体系：磷试剂改用位阻较小的 P3·BF₄，溶剂改为 DME，并使用 BINAM 衍生手性双脲 U5。图 3B 的优化结果达 93% 核磁收率、96:4 e.r.；图 3C 同一代表产物的分离收率是 77%，两种收率不能互换。",
+          "SI 表 S17 为手性控制补上一个重要背景：相同 DME、4 °C、48 h 条件下，无手性脲仍能生成 34% 外消旋产物；U5 则给出 86%、96:4 e.r.。催化路径必须与这条背景反应竞争。结果支持催化剂能够施加手性控制，但本文没有由此建立普适的对映选择性过渡态模型。"
+        ],
+        "figures": [
+          "S_asym_screen",
+          "S_asym_scope",
+          "S_background_control"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_asym_screen"
+          ],
+          "3": [
+            "S_asym_scope"
+          ],
+          "4": [
+            "S_background_control"
+          ]
+        }
+      },
+      {
+        "eyebrow": "机制第一问：氟为何不再困住磷",
+        "heading": "单氟膦烷有直接结构证据，反位影响解释其反应性",
+        "paragraphs": [
+          "在 KF 存在下，低温 NMR 检测到 P1–F；借助 18-crown-6 还可将其分离并取得晶体结构。即使加入过量 KF，PPh₃F₂ 也只出现痕量。这里不仅有“未发现副产物”，还有目标单氟中间体的独立表征。",
+          "P1–F 的轴向 F 与新戊氧基接近线性排列。与 PPh₃F₂ 相比，P–F 从 1.669 Å 增至 1.717 Å，¹JPF 从 656 降至约 557 Hz；作者结合计算，将其归因于轴向烷氧基较强的反位影响。关键是更容易失去 F，而不是烷氧基被第二个 F 替换。",
+          "这套解释没有把 P–F 键“完全破坏”作为试剂设计目标，而是在保留可操作前体的同时，使其中的氟能在适当的结合环境下转移。其证据来自结构、耦合与计算的共同支持，不应只用一句“键长更长所以一定更活泼”替代全部分析。"
+        ],
+        "figures": [
+          "S_PF"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_PF"
+          ]
+        }
+      },
+      {
+        "eyebrow": "机制第二问：醇如何完成活化",
+        "heading": "氟先参与磷上交换，再作为亲核组分返回碳",
+        "paragraphs": [
+          "原文图 4B 的对照区分了两种看起来相近的磷试剂。P1·BF₄ 与模型醇直接混合，即使加热至 80 °C 也未观察到交换；预制的 P1–F 却能在没有脲催化剂时，与醇形成交换平衡。氟不只是最后一刻进攻碳的亲核试剂，它也参与了此前的磷上活化网络。",
+          "作者计算提出经氢键、离子对和双烷氧基膦烷完成交换的分步路径。不过 SI 明确说明若干过渡态未能定位，只给出势能扫描估计。实验已支持交换会发生；每一次 P–O、P–F 成断键的精确轨迹，仍属于计算模型所描述的层次。"
+        ],
+        "figures": [
+          "S_exchange"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_exchange"
+          ]
+        }
+      },
+      {
+        "eyebrow": "机制第三问：催化剂为何能周转",
+        "heading": "既要结合氟，也要避免被氧化膦占据",
+        "paragraphs": [
+          "U2 首先帮助固体 KF 进入溶液。低温 NMR 中，三个 N–H 均与氟产生可分辨耦合；其氟加合物的晶体结构也显示三点结合。原文图 4C 将这一结合模式，与 U2 对 OPPh₃ 较弱的结合放在一起比较。",
+          "这正是催化周转的另一道限制。双齿催化剂 U1、U6 的反应中可分离到与 OPPh₃ 的加合物；而在 MeCN 的结合测试中，U2 对 F⁻ 的 Kₐ 约为 10⁶ M⁻¹，对 OPPh₃ 仅约 14 M⁻¹。催化剂的优势不只是“氢键更强”，而是对所需阴离子与副产物具有明显的结合偏好。",
+          "U2 还参与已形成的 P–F 键活化。低温谱学可分辨 P1–F·U2 与膦鎓／氟–U2 离子对；计算提出，从两点结合转向三点结合，有利于把 F 从磷上拉入氢键环境。随后氟向被活化的碳背面进攻，释放氟化物和 OPPh₃。",
+          "由这组证据可提炼的设计原则是“选择性结合”，而不是一味增大所有底物的结合常数。一个氢键供体可以有效活化反应物，也可能被大量副产物占据。更换催化剂时，同时比较对氟和氧化膦的结合及周转表现，比单看 N–H 数量更有意义。"
+        ],
+        "figures": [
+          "S_bind",
+          "S_adducts",
+          "S_cycle"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_bind"
+          ],
+          "2": [
+            "S_adducts"
+          ],
+          "3": [
+            "S_cycle"
+          ]
+        }
+      },
+      {
+        "eyebrow": "能量图如何与实验衔接",
+        "heading": "催化剂改变离子化与氟传递，不代表释放裸氟",
+        "paragraphs": [
+          "原文图 4D 中，脲催化的氟抽取路径比无脲情形更有利，差值为 31.2 kJ mol⁻¹。后续 C–F 成键的 69.9 kJ mol⁻¹ 势垒从 IM1b 起算；它与图上的 TS1b 纵坐标 49.7 使用不同参考点，不能直接混用。",
+          "这幅计算图讨论的是非手性模型中的反应促进。它支持氢键束缚的氟仍能参与有效取代，却没有解释 U5 如何对每个不对称底物选择进攻方向。不对称实验结果与一般氟化机制可以互相联系，但不能把一张非手性 DFT 图升级为完整的对映选择性证据。"
+        ],
+        "figures": [
+          "S_DFT"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_DFT"
+          ]
+        }
+      },
+      {
+        "eyebrow": "制备意义与后续方向",
+        "heading": "催化周转、试剂回收和邻基加速，是三件不同的事",
+        "paragraphs": [
+          "原文图 5A 从 100 g OPPh₃ 制得约 148 g P1·BF₄，说明试剂制备有较大的批量验证。这里的“催化”仍指双脲：膦鎓试剂在氟化中按当量消耗，OPPh₃ 回收后还需另行转化才能再利用，不能写成磷试剂在同一锅中催化循环。",
+          "图 5B 进一步放大了四种转化。含醛伯醇可在保留醛基时得到 83% 的氟化产物；外消旋 β-氨基醇的克级不对称反应为 74%、95:5 e.r.。另一个有氨基邻基参与的底物，6 g 规模下不加脲仍给出 84%。因此，不能把所有成功底物的反应促进都归给 U2。",
+          "图 5C 则使用了由萤石路线制得的含氟组分，展示替代原料来源的可能性；它不是将矿石直接加入醇中。试剂与催化剂的回收支持后续工艺研究，但没有同时给出足以宣称零废弃或完整环境优势的量化评价。",
+          "下一步值得研究的，是怎样同时扩大邻基参与的不对称反应范围并压低背景氟化，以及如何在仲醇上进一步改善取代／消除比。本文将试剂结构、离子结合和催化周转连成了可检验的设计链条；这比把进展归结为“用便宜 KF 替代昂贵氟源”更能解释方法为何成立。"
+        ],
+        "figures": [
+          "S_scale_reagent",
+          "S_scale_reaction",
+          "S_fluorspar"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "S_scale_reagent"
+          ],
+          "2": [
+            "S_scale_reaction"
+          ],
+          "3": [
+            "S_fluorspar"
+          ]
+        }
+      }
+    ],
+    "figures": [
+      {
+        "id": "S_lead",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_lead.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 1B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 2,
+            "normalized_rectangle": [
+              0.065,
+              0.184,
+              0.934,
+              0.436
+            ],
+            "pdf_rectangle": [
+              38.61,
+              139.10399999999998,
+              554.796,
+              329.616
+            ]
+          }
+        ],
+        "sha256": "d781f34fbc77bab922dd05bfd7a0680759189d66c205a88779baae4b1f06f9b8",
+        "body": true,
+        "caption": "原文 Fig. 1B｜新戊氧基膦鎓盐与 KF，在氢键相转移催化下实现醇脱氧氟化。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_background",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_background.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 1A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 2,
+            "normalized_rectangle": [
+              0.065,
+              0.053,
+              0.934,
+              0.182
+            ],
+            "pdf_rectangle": [
+              38.61,
+              40.068,
+              554.796,
+              137.59199999999998
+            ]
+          }
+        ],
+        "sha256": "30da7fc28634f869feae85a5228709474caa960aedd268a76a1c5dbde263f571",
+        "body": true,
+        "caption": "原文 Fig. 1A｜经典 Appel 路线易被稳定的二氟膦烷截断，含氟物种不一定能高效向碳转移氟。",
+        "display_width_pct": 95
+      },
+      {
+        "id": "S_screen",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_screen.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "SI 表 S2",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298_sm.pdf",
+            "pdf_page": 21,
+            "normalized_rectangle": [
+              0.113,
+              0.115,
+              0.9,
+              0.913
+            ],
+            "pdf_rectangle": [
+              67.27116082763672,
+              96.82079803466797,
+              535.788006591797,
+              768.6729443969726
+            ]
+          },
+          {
+            "file": "science.aec6298_sm.pdf",
+            "pdf_page": 22,
+            "normalized_rectangle": [
+              0.12,
+              0.083,
+              0.89,
+              0.144
+            ],
+            "pdf_rectangle": [
+              71.43840087890625,
+              69.87935858154297,
+              529.8348065185547,
+              121.23647753906249
+            ]
+          }
+        ],
+        "sha256": "dcd90297bbdb53a4330738d0ba9a6b91437fbb2e4f580301c71d036a52b480ce",
+        "body": true,
+        "caption": "SI Table S2｜氢键催化剂、温度、磷试剂及 KF 对照；表格注明的是定量 NMR 收率。",
+        "display_width_pct": 97
+      },
+      {
+        "id": "S_scope_primary",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_scope_primary.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 2（上部）",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 3,
+            "normalized_rectangle": [
+              0.106,
+              0.054,
+              0.894,
+              0.589
+            ],
+            "pdf_rectangle": [
+              62.964,
+              40.824,
+              531.0360000000001,
+              445.284
+            ]
+          }
+        ],
+        "sha256": "6a36c5872653c85b36e3a42db3cc4a466f39b5bf6ee109b2cd36e2185d02fc39",
+        "body": true,
+        "caption": "原文 Fig. 2（上部）｜伯醇、杂环及部分仲醇例子；结构和所有产率均来自原图。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_scope_secondary",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_scope_secondary.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 2（下部与脚注）",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 3,
+            "normalized_rectangle": [
+              0.106,
+              0.59,
+              0.894,
+              0.875
+            ],
+            "pdf_rectangle": [
+              62.964,
+              446.03999999999996,
+              531.0360000000001,
+              661.5
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 3,
+            "normalized_rectangle": [
+              0.061,
+              0.896,
+              0.94,
+              0.954
+            ],
+            "pdf_rectangle": [
+              36.234,
+              677.376,
+              558.36,
+              721.2239999999999
+            ]
+          }
+        ],
+        "sha256": "af3816bc08e7a96b4441a64630c5e57ab9cca446119f3553534b780e27424532",
+        "body": true,
+        "caption": "原文 Fig. 2（下部与脚注）｜仲醇、邻基参与和失败底物。星号、不同反应条件及分离／NMR 收率的区分保留。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_biorelevant",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_biorelevant.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 3A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 4,
+            "normalized_rectangle": [
+              0.063,
+              0.054,
+              0.936,
+              0.487
+            ],
+            "pdf_rectangle": [
+              37.422,
+              40.824,
+              555.984,
+              368.17199999999997
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 4,
+            "normalized_rectangle": [
+              0.061,
+              0.824,
+              0.94,
+              0.908
+            ],
+            "pdf_rectangle": [
+              36.234,
+              622.944,
+              558.36,
+              686.448
+            ]
+          }
+        ],
+        "sha256": "fe329ada41f876996ef67a03bc07120a72282c47c00588cf3f79638e5aa6aee6",
+        "body": true,
+        "caption": "原文 Fig. 3A｜复杂及生物相关醇的转化；这些是合成示例，不是本研究完成的新药效评价。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_asym_screen",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_asym_screen.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 3B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 4,
+            "normalized_rectangle": [
+              0.07,
+              0.492,
+              0.602,
+              0.801
+            ],
+            "pdf_rectangle": [
+              41.580000000000005,
+              371.952,
+              357.58799999999997,
+              605.556
+            ]
+          }
+        ],
+        "sha256": "74fa6d77e6d5c225b6e60f66ff396c5651126c12894a2eab1b68af3c28bbb046",
+        "body": true,
+        "caption": "原文 Fig. 3B｜不对称体系需要共同调整磷试剂、溶剂、温度与手性双脲，而非简单替换一个催化剂。",
+        "display_width_pct": 98
+      },
+      {
+        "id": "S_asym_scope",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_asym_scope.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 3C",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 4,
+            "normalized_rectangle": [
+              0.607,
+              0.492,
+              0.934,
+              0.801
+            ],
+            "pdf_rectangle": [
+              360.558,
+              371.952,
+              554.796,
+              605.556
+            ]
+          }
+        ],
+        "sha256": "75e5e8d2e9b6a1fd1de11565fbedb9c4862c86ad83404d0b57fcb1471912f615",
+        "body": true,
+        "caption": "原文 Fig. 3C｜外消旋 β-氨基醇及 β-羟基硫化物的不对称转化；不代表一般外消旋醇均可适用。",
+        "display_width_pct": 70
+      },
+      {
+        "id": "S_background_control",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_background_control.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "SI 表 S17（跨页完整合并）",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298_sm.pdf",
+            "pdf_page": 33,
+            "normalized_rectangle": [
+              0.12,
+              0.428,
+              0.89,
+              0.866
+            ],
+            "pdf_rectangle": [
+              71.43840087890625,
+              360.34175268554685,
+              529.8348065185547,
+              729.1027052001953
+            ]
+          },
+          {
+            "file": "science.aec6298_sm.pdf",
+            "pdf_page": 34,
+            "normalized_rectangle": [
+              0.12,
+              0.08,
+              0.89,
+              0.447
+            ],
+            "pdf_rectangle": [
+              71.43840087890625,
+              67.3535986328125,
+              529.8348065185547,
+              376.33823236083987
+            ]
+          }
+        ],
+        "sha256": "9c9b12c0e0e829de75ed03b60fbd569552024f7ac3e01ac5746fc42b3f994698",
+        "body": true,
+        "caption": "SI Table S17（跨页完整合并）｜相同 DME/4 °C/48 h 条件下无手性脲仍有 34% 外消旋产物；U5 为 86%、96:4 e.r.。催化剂结构见原文 Fig. 3B。",
+        "display_width_pct": 91
+      },
+      {
+        "id": "S_PF",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_PF.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 4A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.211,
+              0.055,
+              0.561,
+              0.153
+            ],
+            "pdf_rectangle": [
+              125.33399999999999,
+              41.58,
+              333.23400000000004,
+              115.66799999999999
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.564,
+              0.067,
+              0.929,
+              0.153
+            ],
+            "pdf_rectangle": [
+              335.01599999999996,
+              50.652,
+              551.826,
+              115.66799999999999
+            ]
+          }
+        ],
+        "sha256": "22093558ecf8f85962e89cbbebedea784389f5e0ece1ba97c5f0cba2a679f232",
+        "body": true,
+        "caption": "原文 Fig. 4A｜单氟膦烷 P1–F 的形成、单晶结构及 P–F/P–O 键长比较。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_exchange",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_exchange.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 4B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.211,
+              0.155,
+              0.593,
+              0.276
+            ],
+            "pdf_rectangle": [
+              125.33399999999999,
+              117.17999999999999,
+              352.24199999999996,
+              208.656
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.598,
+              0.155,
+              0.929,
+              0.276
+            ],
+            "pdf_rectangle": [
+              355.212,
+              117.17999999999999,
+              551.826,
+              208.656
+            ]
+          }
+        ],
+        "sha256": "87ccc5874f02f6f8df62fa3cce488d71c0be86bba63e473242f0e45cd8727eb8",
+        "body": true,
+        "caption": "原文 Fig. 4B｜醇交换需要含氟的 P1–F；实验对照与计算模型并列。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_bind",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_bind.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 4C（上部）",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.211,
+              0.28,
+              0.929,
+              0.473
+            ],
+            "pdf_rectangle": [
+              125.33399999999999,
+              211.68,
+              551.826,
+              357.58799999999997
+            ]
+          }
+        ],
+        "sha256": "a4385b0aea20f8759aec2a0860e2859cb15d96497458f1dc519b1768e9a1dbf5",
+        "body": true,
+        "caption": "原文 Fig. 4C（上部）｜三点氢键结合的 NMR 与晶体证据，以及 U2 对 F⁻／OPPh₃ 的结合比较。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_adducts",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_adducts.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "SI 图 S24",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298_sm.pdf",
+            "pdf_page": 125,
+            "normalized_rectangle": [
+              0.12,
+              0.11,
+              0.895,
+              0.86
+            ],
+            "pdf_rectangle": [
+              71.43840087890625,
+              92.6111981201172,
+              532.8114065551758,
+              724.0511853027343
+            ]
+          }
+        ],
+        "sha256": "aad4b1bebf458e16ad214ee1b5fbf613f9c2a520e8477ff0d3a9f17d50443792",
+        "body": true,
+        "caption": "SI Fig. S24｜U1、U6 与 OPPh₃ 的加合物，和 U2 的两类结合几何。晶体结构不能单独代表溶液中所有物种。",
+        "display_width_pct": 85
+      },
+      {
+        "id": "S_cycle",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_cycle.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 4C（下部）",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.211,
+              0.476,
+              0.929,
+              0.705
+            ],
+            "pdf_rectangle": [
+              125.33399999999999,
+              359.856,
+              551.826,
+              532.98
+            ]
+          }
+        ],
+        "sha256": "476dca8e04af0094db294962b5ddb4486f66dab52065b70661de5a85f48af719",
+        "body": true,
+        "caption": "原文 Fig. 4C（下部）｜U2 促进 P–F 解离的谱学证据及拟议催化循环。膦鎓试剂仍是当量试剂。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_DFT",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_DFT.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 4D",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 5,
+            "normalized_rectangle": [
+              0.211,
+              0.71,
+              0.929,
+              0.91
+            ],
+            "pdf_rectangle": [
+              125.33399999999999,
+              536.76,
+              551.826,
+              687.96
+            ]
+          }
+        ],
+        "sha256": "6cf87a88310b1985747c93c8bf92b5d16c6a4999614b9d740aeda07956203b08",
+        "body": true,
+        "caption": "原文 Fig. 4D｜未催化／脲催化路径的计算比较。69.9 kJ mol⁻¹ 从 IM1b 起算，不是纵轴的 49.7。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_scale_reagent",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_scale_reagent.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 5A",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 7,
+            "normalized_rectangle": [
+              0.063,
+              0.054,
+              0.815,
+              0.173
+            ],
+            "pdf_rectangle": [
+              37.422,
+              40.824,
+              484.10999999999996,
+              130.78799999999998
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 7,
+            "normalized_rectangle": [
+              0.815,
+              0.054,
+              0.936,
+              0.182
+            ],
+            "pdf_rectangle": [
+              484.10999999999996,
+              40.824,
+              555.984,
+              137.59199999999998
+            ]
+          }
+        ],
+        "sha256": "0582e10b54a3ea9c12b379f2c967744c407fe4f7d3138c53d287ccaf0e370989",
+        "body": true,
+        "caption": "原文 Fig. 5A｜由 OPPh₃ 制备 148 g 膦鎓试剂；稳定性测试与试剂制备并非催化周转本身。",
+        "display_width_pct": 98
+      },
+      {
+        "id": "S_scale_reaction",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_scale_reaction.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 5B",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 7,
+            "normalized_rectangle": [
+              0.07,
+              0.174,
+              0.58,
+              0.191
+            ],
+            "pdf_rectangle": [
+              41.580000000000005,
+              131.54399999999998,
+              344.52,
+              144.39600000000002
+            ]
+          },
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 7,
+            "normalized_rectangle": [
+              0.063,
+              0.191,
+              0.936,
+              0.443
+            ],
+            "pdf_rectangle": [
+              37.422,
+              144.39600000000002,
+              555.984,
+              334.908
+            ]
+          }
+        ],
+        "sha256": "32b872d5654457616bdc1948e36f671575c1ef99c7286321f62da47255759e23",
+        "body": true,
+        "caption": "原文 Fig. 5B｜四类克级转化及脲／氧化膦回收，包括一个无需脲催化剂的邻基参与例子。",
+        "display_width_pct": 100
+      },
+      {
+        "id": "S_fluorspar",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/S_fluorspar.png",
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "原文图 5C",
+        "source_kind": "original_main_or_SI_source_pixels",
+        "source_rectangles": [
+          {
+            "file": "science.aec6298.pdf",
+            "pdf_page": 7,
+            "normalized_rectangle": [
+              0.063,
+              0.448,
+              0.936,
+              0.557
+            ],
+            "pdf_rectangle": [
+              37.422,
+              338.688,
+              555.984,
+              421.09200000000004
+            ]
+          }
+        ],
+        "sha256": "25c3374255ae4653f451539702aa4de6c0c4ab67ec935bed2b779796b824c415",
+        "body": true,
+        "caption": "原文 Fig. 5C｜使用由萤石路线制得的含氟组分；不是直接将矿石与醇混合进行氟化。",
+        "display_width_pct": 96
+      },
+      {
+        "id": "cover_science",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-15-r1/cover_science.png",
+        "body": false,
+        "source_doi": "10.1126/science.aec6298",
+        "source_figure": "Original main Fig. 1B",
+        "source_kind": "original_lead_uniform_resize_white_padding_only",
+        "caption": "原文反应图，等比例缩放与补白，无新增文字或结构。"
+      }
+    ],
+    "cover": {
+      "source_figure_id": "cover_science",
+      "filename": "cover_science.png",
+      "production_cover_image": "user_selected",
+      "pixel_equivalence": "exact_source_bytes",
+      "delivery_image_sha256": "ccc8d375e824b0d2d94e46ce8e7d45b9e18e0e72c5664756964d4327c32ea3a1",
+      "canvas": {
+        "width": 800,
+        "height": 800,
+        "background": "#FFFFFF"
+      },
+      "crop_235_1": "0_0.287234_1_0.712766",
+      "crop_1_1": "0_0_1_1",
+      "source_placement": {
+        "x": 8,
+        "y": 255,
+        "width": 784,
+        "height": 289
+      },
+      "description": "Original Fig.1B only. Uniform resize and white padding; no new type, colored bar, or drawn chemical structures."
+    },
+    "paragraph_evidence": [
+      {
+        "section": "不能只替换氟源，必须改变磷上会发生的竞争",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:p1; Fig1A"
+        ]
+      },
+      {
+        "section": "不能只替换氟源，必须改变磷上会发生的竞争",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "S:p1; Fig1B"
+        ]
+      },
+      {
+        "section": "不能只替换氟源，必须改变磷上会发生的竞争",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "SS:pp21–22",
+          "S:p1"
+        ]
+      },
+      {
+        "section": "伯醇兼容性与仲醇的消除竞争，要分开评价",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:pp2–3; Fig2",
+          "SS:pp35–36"
+        ]
+      },
+      {
+        "section": "伯醇兼容性与仲醇的消除竞争，要分开评价",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "S:p2; Fig2",
+          "SS:pp26–31"
+        ]
+      },
+      {
+        "section": "伯醇兼容性与仲醇的消除竞争，要分开评价",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "S:Fig3A; pp2,4"
+        ]
+      },
+      {
+        "section": "邻基参与把“手性保留”转化为去对称化机会",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:p2; Fig3B"
+        ]
+      },
+      {
+        "section": "邻基参与把“手性保留”转化为去对称化机会",
+        "paragraph": 2,
+        "level": "source_qualification",
+        "source": [
+          "S:p2; Fig3B–C"
+        ]
+      },
+      {
+        "section": "邻基参与把“手性保留”转化为去对称化机会",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "S:Fig3B–C; p4",
+          "SS:pp31–35"
+        ]
+      },
+      {
+        "section": "邻基参与把“手性保留”转化为去对称化机会",
+        "paragraph": 4,
+        "level": "source",
+        "source": [
+          "SS:pp33–34"
+        ]
+      },
+      {
+        "section": "单氟膦烷有直接结构证据，反位影响解释其反应性",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:pp2,6; Fig4A",
+          "SS:pp106–116"
+        ]
+      },
+      {
+        "section": "单氟膦烷有直接结构证据，反位影响解释其反应性",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "S:p6; Fig4A",
+          "SS:p116"
+        ]
+      },
+      {
+        "section": "单氟膦烷有直接结构证据，反位影响解释其反应性",
+        "paragraph": 3,
+        "level": "source_qualification",
+        "source": [
+          "S:p6"
+        ]
+      },
+      {
+        "section": "氟先参与磷上交换，再作为亲核组分返回碳",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:p6; Fig4B",
+          "SS:pp117–120"
+        ]
+      },
+      {
+        "section": "氟先参与磷上交换，再作为亲核组分返回碳",
+        "paragraph": 2,
+        "level": "source_qualification",
+        "source": [
+          "SS:pp143–147",
+          "S:p6"
+        ]
+      },
+      {
+        "section": "既要结合氟，也要避免被氧化膦占据",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:p6; Fig4C",
+          "SS:pp121–122"
+        ]
+      },
+      {
+        "section": "既要结合氟，也要避免被氧化膦占据",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "S:p6",
+          "SS:pp96–105,123–125"
+        ]
+      },
+      {
+        "section": "既要结合氟，也要避免被氧化膦占据",
+        "paragraph": 3,
+        "level": "source",
+        "source": [
+          "S:Fig4C; p6",
+          "SS:pp126–128"
+        ]
+      },
+      {
+        "section": "既要结合氟，也要避免被氧化膦占据",
+        "paragraph": 4,
+        "level": "editorial_inference",
+        "source": [
+          "S:Fig4C",
+          "SS:FigS24; TableS4"
+        ]
+      },
+      {
+        "section": "催化剂改变离子化与氟传递，不代表释放裸氟",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:Fig4D; p6",
+          "SS:pp149–150"
+        ]
+      },
+      {
+        "section": "催化剂改变离子化与氟传递，不代表释放裸氟",
+        "paragraph": 2,
+        "level": "source_qualification",
+        "source": [
+          "S:Fig3B–C,4D",
+          "SS:pp149–150"
+        ]
+      },
+      {
+        "section": "催化周转、试剂回收和邻基加速，是三件不同的事",
+        "paragraph": 1,
+        "level": "source",
+        "source": [
+          "S:Fig5A; pp7–8",
+          "SS:pp5–6"
+        ]
+      },
+      {
+        "section": "催化周转、试剂回收和邻基加速，是三件不同的事",
+        "paragraph": 2,
+        "level": "source",
+        "source": [
+          "S:Fig5B; p7",
+          "SS:pp37–38,134"
+        ]
+      },
+      {
+        "section": "催化周转、试剂回收和邻基加速，是三件不同的事",
+        "paragraph": 3,
+        "level": "source_qualification",
+        "source": [
+          "S:Fig5C; pp7–8"
+        ]
+      },
+      {
+        "section": "催化周转、试剂回收和邻基加速，是三件不同的事",
+        "paragraph": 4,
+        "level": "editorial_inference",
+        "source": [
+          "S:Fig2,3,4,5",
+          "SS:TablesS11,S17,S21"
+        ]
+      }
+    ],
+    "editorialIntent": "Preserve all reviewed scientific prose and original figure order; source data/model/editorial-inference distinctions remain. No new scientific claims.",
+    "slug": "kf-catalytic-appel-fluorination-20261015",
+    "source_url": "https://gallery.gczhouwld.com/?doi=10.1126%2Fscience.aec6298&summary=0",
+    "digest": "新戊氧基膦鎓试剂与氢键相转移催化协同，以 KF 实现醇的 Appel 氟化。"
+  },
+  "edition": {
+    "date": "2026-10-15",
+    "editorialRevision": "2026-10-15-r1",
+    "title": "有机合成文献日报｜10.15｜今日精选｜Nature：碳原子催化转移实现 C–C σ 键的螺环拼接",
+    "featured": "10.1038/s41586-026-11242-8",
+    "retrospective": "kf-catalytic-appel-fluorination-20261015",
+    "publicationMode": "draft_only",
+    "selectionAuthority": "owner_explicitly_requested_this_reviewed_Nature_Science_pair",
+    "digest": "今日更新按正式目录统计；今日精选解读单碳转移螺环拼接，往期精选解析 KF 参与的催化 Appel 氟化。",
+    "dailyReleaseSnapshot": {
+      "slot": "2026-10-15T08:00:00+08:00",
+      "count": 33,
+      "journals": {
+        "Nature": 1,
+        "Nature Synthesis": 2,
+        "JACS": 1,
+        "ACS Catalysis": 3,
+        "CCS Chemistry": 1,
+        "JOC": 16,
+        "Organic Letters": 9
+      },
+      "dois": [
+        "10.1038/s41586-026-11242-8",
+        "10.1038/s44160-026-01193-3",
+        "10.1038/s44160-026-01171-9",
+        "10.1021/jacs.6c08713",
+        "10.1021/acscatal.6c06300",
+        "10.1021/acscatal.6c06572",
+        "10.1021/acscatal.6c06668",
+        "10.31635/ccschem.026.202608538",
+        "10.1021/acs.joc.6c01740",
+        "10.1021/acs.joc.6c01282",
+        "10.1021/acs.joc.6c01017",
+        "10.1021/acs.joc.6c02068",
+        "10.1021/acs.joc.6c02150",
+        "10.1021/acs.joc.6c01479",
+        "10.1021/acs.joc.6c02023",
+        "10.1021/acs.joc.6c01481",
+        "10.1021/acs.joc.6c01561",
+        "10.1021/acs.joc.6c01857",
+        "10.1021/acs.joc.6c01777",
+        "10.1021/acs.joc.6c01296",
+        "10.1021/acs.joc.6c01552",
+        "10.1021/acs.joc.6c01813",
+        "10.1021/acs.joc.6c01500",
+        "10.1021/acs.joc.6c01717",
+        "10.1021/acs.orglett.6c03912",
+        "10.1021/acs.orglett.6c03862",
+        "10.1021/acs.orglett.6c04101",
+        "10.1021/acs.orglett.6c03872",
+        "10.1021/acs.orglett.6c04162",
+        "10.1021/acs.orglett.6c03859",
+        "10.1021/acs.orglett.6c04116",
+        "10.1021/acs.orglett.6c03795",
+        "10.1021/acs.orglett.6c04271"
+      ]
+    }
+  }
+}

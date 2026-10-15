@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "revision": "2026-10-15-r1",
+  "revision": "2026-10-15-r2-peer-reviewed",
   "articleCount": 2,
   "selectionDois": [
     "10.1038/s41586-026-11242-8",
@@ -13,31 +13,35 @@
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-15.json",
-      "blobSha": "9e3096d679300d62db54a321bdae386b582c9154"
+      "blobSha": "f602b9729d0ad9de7232998ff276ce47da32ea78"
     },
     {
       "path": "public/wechat-retrospective/kf-catalytic-appel-fluorination-20261015.json",
-      "blobSha": "34340534af8dab79bba3db7b9489054dd528a7dd"
+      "blobSha": "6018d3d2f086de95a2ab2434603d85f8348bf374"
     },
     {
       "path": "public/wechat-editions/2026-10-15.json",
-      "blobSha": "44f75442e6796ade620b75e380295cacfb53dc3f"
+      "blobSha": "43377eb8b97279f1d1033c766df0d8902cfc64b3"
     },
     {
-      "path": "audit/wechat-working/2026-10-15-r1-nature-science/nature-text-only.md",
-      "blobSha": "a8a38662ff7de2e7e86ca9957b2b3752af08638c"
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/nature-text-only.md",
+      "blobSha": "0a1047159790937d2854926202501a0c04e76418"
     },
     {
-      "path": "audit/wechat-working/2026-10-15-r1-nature-science/science-text-only.md",
-      "blobSha": "9daaebaa8a46022aed6e1afd8fbfa18d2928f496"
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/science-text-only.md",
+      "blobSha": "5ecf8d912bbfc53c36cf8694c25352c9d665a2ab"
     },
     {
-      "path": "audit/wechat-working/2026-10-15-r1-nature-science/images-only.json",
-      "blobSha": "cfdaec0d8460b98cec875fd15b44f2010aa5d6cd"
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/images-only.json",
+      "blobSha": "ece0a30ce094d44d7ee140541c1b67adb46b623d"
     },
     {
-      "path": "audit/wechat-working/2026-10-15-r1-nature-science/production-review.json",
-      "blobSha": "f53431dc022bbc3911fc48a44ea9aa38d87ed75d"
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/editorial-review.json",
+      "blobSha": "b449cc8f993876fd657560ac239e0d54a6a6987a"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/manual-visual-approval.json",
+      "blobSha": "fbec6cda1c9464c870474d8a9daa970610e5a1fd"
     }
   ],
   "assets": [
@@ -298,10 +302,10 @@
     "Organic Letters": 9
   },
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-15-r1-nature-science/nature-text-only.md",
-    "retrospectiveTextOnly": "audit/wechat-working/2026-10-15-r1-nature-science/science-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-15-r1-nature-science/images-only.json",
-    "scienceReview": "audit/wechat-working/2026-10-15-r1-nature-science/production-review.json"
+    "textOnly": "audit/wechat-working/2026-10-15-r2-peer-reviewed/nature-text-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-15-r2-peer-reviewed/science-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-15-r2-peer-reviewed/images-only.json",
+    "scienceReview": "audit/wechat-working/2026-10-15-r2-peer-reviewed/editorial-review.json"
   },
   "exactReadOriginal": [
     "https://gallery.gczhouwld.com/?edition=2026-10-15&doi=10.1038%2Fs41586-026-11242-8&summary=0",
@@ -347,5 +351,6 @@
     },
     "contentIntegrity": "Original supplied body paragraphs and image order preserved; only Markdown emphasis markers removed for the existing escape-safe publisher. No hidden scientific corrections. Daily metadata missing authors was filled from the supplied Nature PDF only.",
     "authorization": "Owner explicitly requested direct WeChat draft write; this seals the pre-write review, not a public publication approval."
-  }
+  },
+  "note": "Source evidence, Chinese expression, exact images and manually inspected production rendering approved. Requires a new media_id and real draft/get. No public send."
 }
