@@ -273,7 +273,9 @@ export function reconcileQ3({
       &&!publisherNonOriginal.has(id)&&!reviewedScope.has(id),
       'q3_chem_publisher_date_provenance_conflict:'+id);
     const inQ3=publishedQ3(r.publisherFirstOnlineDate);
-    ensure(r.verifiedPublicationQuarter===(inQ3?'2026-Q3':'2026-Q1'),
+    const actualMonth=Number(r.publisherFirstOnlineDate.slice(5,7));
+    const actualQuarter='2026-Q'+Math.ceil(actualMonth/3);
+    ensure(r.verifiedPublicationQuarter===actualQuarter,
       'q3_chem_publisher_quarter_mismatch:'+id);
     const admission=manifest.accepted.find(a=>normalize(a.doi)===id);
     if(inQ3){
@@ -512,7 +514,8 @@ export async function runQuarterAudit({
     &&moreDates.length===6
     &&new Set(moreDates.map(x=>x.doi)).size===6
     &&moreDates.every(x=>!oldDateIds.has(x.doi))
-    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q1').length===3
+    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q1').length===2
+    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q2').length===1
     &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q3').length===3
     &&additionalChemDates.guards?.noSourceShardMutation===true
     &&additionalChemDates.guards?.noOffSlotPublisherWrite===true,
