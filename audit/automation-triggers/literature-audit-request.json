@@ -1,11 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-15T00:57:00.000Z",
-  "requestedBy": "formal-slot-20261015-missing-0655-audit-recovery",
-  "publicationSlot": "2026-10-15T08:00:00+08:00",
-  "expectedProductionCards": 1087,
-  "reason": "The 06:55 Asia/Shanghai scheduled audit for 2026-10-15 had no same-day run or paired snapshot by 08:55; primary prepublish review is absent. Request one recovery DOI-union audit for Beijing endDate=2026-10-15 using current main and all 16 journals, three-day main window, seven-day late-deposit tail, verifiedThrough gap closure checks. This request does not approve new literature, bypass the fixed-slot writer, or authorize publication after 09:00.",
-  "expectedAuditEndDate": "2026-10-15",
-  "safetyTailDays": 7,
-  "officialReleaseSlotOnly": "08:00"
+  "requestedAt": "2026-10-15T23:10:00Z",
+  "requestedBy": "prepublish-primary-20261016-0800",
+  "publicationSlot": "2026-10-16T08:00:00+08:00",
+  "expectedProductionCards": 1151,
+  "reason": "No same-day 06:55 audit is present in current Actions and persisted pair ends yesterday. Request one existing runner for endDate=2026-10-16 using latest stable main discovery, all 16 active journals, three-calendar-day window, seven-day source safety tail, created/deposit rescue and verifiedThrough catch-up. Reuse any active healthy same-slot run; no production, media, Pages or schedule mutation."
 }
