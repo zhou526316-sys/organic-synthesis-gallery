@@ -42,6 +42,26 @@ const JOC_PUBLISHER_VERIFIED = new Map([
   ['10.1021/acs.joc.6c01796', 'Water-Mediated Electrochemical Sulfonylation of Alkynes: Switchable Access to Alkynyl versus Alkenyl Sulfones'],
 ]);
 
+// RSC's official publisher article index now supplies exact "First published"
+// dates for the ten DOI whose original published-online metadata was absent.
+// Unlike Crossref created/deposited timestamps, these are article-specific
+// publisher claims; evidence and exact article URLs are frozen separately in
+// audit/publisher-date-evidence/2026-10-15-rsc-ten-first-online.json.
+// Presentation-only: each correction is independently DOI, original English
+// title, journal, admission day, and still-unverified flag gated.
+const RSC_PUBLISHER_VERIFIED = new Map([
+  ["10.1039/d6gc03748h", Object.freeze({ title: "Green Synthesis of Dihydropyranone Intermediates via Combined Flow Chemistry and Photocatalysis", journal: "Green Chemistry", addedDate: "2026-10-09", publisherDate: "2026-10-08" })],
+  ["10.1039/d6gc04458a", Object.freeze({ title: "Continuous-Flow Hydrogenative Conversion of Biomass-Derived Lactone to Cyclic Ether by Pt Catalysts on Zr-Doped Silicoaluminophosphate", journal: "Green Chemistry", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6gc05783g", Object.freeze({ title: "Knoevenagel Polycondensation of Vanillin Enables High-Performance Bio-Based Polyamides", journal: "Green Chemistry", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6sc03717h", Object.freeze({ title: "Base-Catalyzed Intramolecular C−H Annulation Reactions of o-Carboranes Containing Nitriles, Alkynes, and Alkenes", journal: "Chemical Science", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6sc05041g", Object.freeze({ title: "DNA-scaffolded catalysis for aliphatic alcohol oxidation in DEL synthesis", journal: "Chemical Science", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6sc05761f", Object.freeze({ title: "Metal-Free CO 2 Fixation: Conversion of Epoxides to Cyclic Carbonates by a Highly Efficient Bifunctional Boron-Tethered N-Heterocyclic Nitrenium Catalyst", journal: "Chemical Science", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6sc06374h", Object.freeze({ title: "Enantioselective Synthesis of β-Aryl-β-acyl Esters as Unsymmetrical 1,4-Dicarbonyl Compounds via Oxidative Aryl Rearrangement Using λ 3 -Perchrolate Iodane", journal: "Chemical Science", addedDate: "2026-10-08", publisherDate: "2026-10-07" })],
+  ["10.1039/d6sc06407h", Object.freeze({ title: "Harnessing Carbyne Reactivity from Stabilized Phosphorus Ylides: Skeletal Editing of Indenes via Single-Carbon Insertion", journal: "Chemical Science", addedDate: "2026-10-09", publisherDate: "2026-10-08" })],
+  ["10.1039/d6sc06571f", Object.freeze({ title: "Facile Synthesis of Closed-loop Recyclable and Crystalline Stereoregular Poly(ether- alt -ester)s from Bio-based Commodity Chemicals", journal: "Chemical Science", addedDate: "2026-10-14", publisherDate: "2026-10-13" })],
+  ["10.1039/d6sc06879k", Object.freeze({ title: "A Lewis-Acidic Anion Enhances Energy Transfer from Excited Cationic Photocatalysts to Basic Substrates", journal: "Chemical Science", addedDate: "2026-10-11", publisherDate: "2026-10-08" })]
+]);
+
 function realCalendarDay(date) {
   if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
   const [year, month, day] = date.split('-').map(Number);
@@ -89,6 +109,17 @@ export function correctedPublisherDateForDisplay(paper) {
     // Explicitly materialize the publisher-verification result even when the
     // frozen card omitted dateUnverified entirely (undefined is not false).
     return paper.dateUnverified === false ? paper : { ...paper, dateUnverified: false };
+  }
+  const verifiedRsc = RSC_PUBLISHER_VERIFIED.get(doi);
+  if (verifiedRsc
+    && String(paper.title || '').trim() === verifiedRsc.title
+    && String(paper.journal || '').trim() === verifiedRsc.journal
+    && paper.addedDate === verifiedRsc.addedDate
+    && (paper.date === '' || paper.date == null || paper.date === verifiedRsc.publisherDate)
+    && paper.dateUnverified === true) {
+    // The original protected paper and its original addedDate stay unchanged.
+    // Do not infer publication from the Crossref created/deposited field.
+    return { ...paper, date: verifiedRsc.publisherDate, dateUnverified: false };
   }
   if (doi !== CORRECTION.doi
     || String(paper.journal || '').trim() !== CORRECTION.journal
