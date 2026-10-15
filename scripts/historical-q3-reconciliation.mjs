@@ -324,8 +324,8 @@ export function reconcileQ3({
     if(inQ3&&(admission||mandatoryChemScience.has(id))){
       // A formally reviewed/admitted DOI MUST continue to match its exact
       // existing two-pass academic decision and original source receipt.
-      ensure(admission.journal==='Chem'
-        &&admission.reviewPasses===2&&admission.decision==='include'
+      ensure(admission?.journal==='Chem'
+        &&admission?.reviewPasses===2&&admission?.decision==='include'
         &&admission.firstPassDecision==='include'
         &&admission.challengeDecision==='include'
         &&admission.date===r.publisherFirstOnlineDate
