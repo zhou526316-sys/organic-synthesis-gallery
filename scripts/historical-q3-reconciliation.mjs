@@ -590,7 +590,8 @@ export async function runQuarterAudit({
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
     priorChemDates,additionalChemDates,thirdChemDates,
-    initialChemScience,newChemScience]=await Promise.all([
+    initialChemScience,newChemScience,fourthChemDates,nipuScience,
+    fifthChemDates,pidaScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -617,7 +618,11 @@ export async function runQuarterAudit({
     readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'),
     readJson('audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json'),
     readJson('audit/historical-scope-assessments/2026-10-15-chem-three-q3-methods-two-pass.json'),
-    readJson('audit/historical-scope-assessments/2026-10-15-chem-three-original-science-review.json')
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-three-original-science-review.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-one-nipu-first-online-reconciled.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-nipu-boundary-two-pass.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-pida-electroprocess-science-hold.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -656,8 +661,54 @@ export async function runQuarterAudit({
     &&thirdChemDates.guards?.noSourceShardMutation===true
     &&thirdChemDates.guards?.noOffSlotPublisherWrite===true,
     'q3_chem_third_online_dates_schema_or_overlap_invalid');
+  const earlierChemDates=[...priorChemDates.rows,...moreDates,...thirdDateRows];
+  const foamDateRows=fourthChemDates.rows;
+  ensure(fourthChemDates.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&fourthChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&fourthChemDates.recordCount===1&&foamDateRows.length===1
+    &&fourthChemDates.verifiedOutsideQ3===0
+    &&fourthChemDates.verifiedInsideQ3===1
+    &&fourthChemDates.verifiedSourceDateConflicts===1
+    &&foamDateRows[0].doi==='10.1016/j.chempr.2026.103145'
+    &&foamDateRows[0].publisherFirstOnlineDate==='2026-07-08'
+    &&foamDateRows[0].verifiedPublicationQuarter==='2026-Q3'
+    &&!earlierChemDates.some(r=>r.doi===foamDateRows[0].doi)
+    &&fourthChemDates.guards?.noSourceShardMutation===true
+    &&fourthChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_foam_first_online_receipt_invalid');
+  // Publisher-date truth is independent of both academic include/exclude
+  // decisions and the immutable Q3 Crossref/OpenAlex source dates.
+  // Preserve Chem's Q1/Q2 out-of-quarter originals in their actual quarter.
+  const newestDateRows=fifthChemDates.rows;
+  const expectedNewestDates=[
+    ['10.1016/j.chempr.2026.102966','2026-03-30','2026-Q1'],
+    ['10.1016/j.chempr.2026.103034','2026-04-20','2026-Q2'],
+    ['10.1016/j.chempr.2026.103026','2026-04-17','2026-Q2'],
+    ['10.1016/j.chempr.2026.103242','2026-09-09','2026-Q3']
+  ];
+  const allEarlierChemDateIds=new Set([...earlierChemDates,...foamDateRows].map(r=>r.doi));
+  ensure(fifthChemDates?.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&fifthChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&fifthChemDates.recordCount===4
+    &&fifthChemDates.verifiedOutsideQ3===3
+    &&fifthChemDates.verifiedInsideQ3===1
+    &&fifthChemDates.verifiedSourceDateConflicts===4
+    &&fifthChemDates.verifiedQ1OutsideQ3===1
+    &&fifthChemDates.verifiedQ2OutsideQ3===2
+    &&Array.isArray(newestDateRows)&&newestDateRows.length===4
+    &&new Set(newestDateRows.map(r=>r.doi)).size===4
+    &&expectedNewestDates.every(([doi,date,quarter])=>
+      newestDateRows.some(r=>r.doi===doi&&r.publisherFirstOnlineDate===date
+        &&r.verifiedPublicationQuarter===quarter))
+    &&newestDateRows.every(r=>!allEarlierChemDateIds.has(r.doi)
+      &&r.originalDateFrozenAndUnmodified===true
+      &&r.publisherEvidenceDateOverrulesSourceForQuarter===true)
+    &&fifthChemDates.guards?.noSourceShardMutation===true
+    &&fifthChemDates.guards?.noAutomaticAcademicAdmission===true
+    &&fifthChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_four_more_publisher_first_online_evidence_invalid');
   const chemPublisherDates={...priorChemDates,
-    rows:[...priorChemDates.rows,...moreDates,...thirdDateRows]};
+    rows:[...earlierChemDates,...foamDateRows,...newestDateRows]};
   const initialChemReviews=initialChemScience.assessments||[];
   const initialChemAdmissionIds=initialChemReviews
     .filter(x=>x.decision==='include').map(x=>x.doi);
@@ -744,7 +795,73 @@ export async function runQuarterAudit({
   const chemScienceApprovedDoiEvidence=[
     ...initialChemAdmissionIds,...additionalChemAdmissionIds,
     ...thirdScienceIncludes.map(x=>x.doi)];
-  const chemSciencePendingEvidence=thirdSciencePendings;
+  const foamDatePath=
+    'audit/historical-publisher-dates/2026/chem-one-nipu-first-online-reconciled.json';
+  const foamSciencePath=
+    'audit/historical-scope-assessments/2026-10-15-chem-nipu-boundary-two-pass.json';
+  const foamDateBytes=await readFile(foamDatePath);
+  const foamEvidence=nipuScience.assessments||[];
+  const foamDate=foamDateRows[0],foamPending=foamEvidence[0];
+  ensure(nipuScience.schemaVersion==='gallery-historical-q3-chem-nipu-original-scope-pending-v1'
+    &&nipuScience.mode==='academic_two_pass_scope_only_not_publication'
+    &&nipuScience.dateEvidenceFile===foamDatePath
+    &&nipuScience.dateEvidenceGitBlobSha===gitBlobOf(foamDateBytes)
+    &&nipuScience.counts?.assessed===1
+    &&nipuScience.counts.include===0
+    &&nipuScience.counts.exclude===0
+    &&nipuScience.counts.pending===1
+    &&foamEvidence.length===1
+    &&foamPending.doi===foamDate.doi
+    &&foamPending.title===foamDate.title
+    &&foamPending.date===foamDate.publisherFirstOnlineDate
+    &&foamPending.publisherArticleType==='Research article'
+    &&foamPending.decision==='pending'
+    &&foamPending.firstPassDecision==='pending'
+    &&foamPending.challengeDecision==='pending'
+    &&foamPending.reviewPasses===2
+    &&foamPending.reviewEvidence?.stageBatchSha===foamDate.originalSourceBatchGitBlobSha
+    &&foamPending.reviewEvidence?.stageSourceSha256===foamDate.sourceRootSha256
+    &&foamPending.reviewEvidence?.sourceReviewQueueGitBlobSha===foamDate.reviewQueueGitBlobSha
+    &&foamPending.reviewEvidence?.publisherArticlePage===foamDate.officialPublisherArticlePage
+    &&foamPending.missingEvidenceMustNotMeanNoEvidenceExists===true
+    &&nipuScience.guards?.noAutomaticInclude===true
+    &&nipuScience.guards?.noFormalPublication===true,
+    'q3_chem_foam_original_science_hold_invalid');
+  const pidaDatePath='audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json';
+  const pidaSciencePath='audit/historical-scope-assessments/2026-10-15-chem-pida-electroprocess-science-hold.json';
+  const pidaDateBytes=await readFile(pidaDatePath);
+  const pidaEvidence=pidaScience.assessments||[];
+  const pidaPending=pidaEvidence[0];
+  const pidaDate=newestDateRows.find(r=>r.doi==='10.1016/j.chempr.2026.103242');
+  ensure(pidaScience?.schemaVersion==='gallery-historical-q3-chem-pida-preparative-scope-hold-v1'
+    &&pidaScience.mode==='academic_two_pass_scope_only_not_publication'
+    &&pidaScience.dateEvidenceFile===pidaDatePath
+    &&pidaScience.dateEvidenceGitBlobSha===gitBlobOf(pidaDateBytes)
+    &&pidaScience.accounting?.assessed===1
+    &&pidaScience.accounting.include===0
+    &&pidaScience.accounting.exclude===0
+    &&pidaScience.accounting.pending===1
+    &&pidaEvidence.length===1&&pidaDate
+    &&pidaPending?.doi===pidaDate.doi
+    &&pidaPending.title===pidaDate.title
+    &&pidaPending.date===pidaDate.publisherFirstOnlineDate
+    &&pidaPending.publisherArticleType==='Research article'
+    &&pidaPending.decision==='pending'
+    &&pidaPending.firstPassDecision==='pending'
+    &&pidaPending.challengeDecision==='pending'
+    &&pidaPending.reviewPasses===2
+    &&pidaPending.firstPassReason!==pidaPending.independentChallengeReason
+    &&pidaPending.reviewEvidence?.stageBatchSha===pidaDate.originalSourceBatchGitBlobSha
+    &&pidaPending.reviewEvidence?.stageSourceSha256===pidaDate.sourceRootSha256
+    &&pidaPending.reviewEvidence?.sourceReviewQueueGitBlobSha===pidaDate.reviewQueueGitBlobSha
+    &&pidaPending.reviewEvidence?.publisherArticlePage===pidaDate.officialPublisherArticlePage
+    &&pidaPending.reviewEvidence?.publisherOnlineDate===pidaDate.publisherFirstOnlineDate
+    &&pidaPending.reviewEvidence?.firstOnlineDateEvidence?.stageApiDate===pidaDate.sourceDate
+    &&pidaPending.missingEvidenceMustNotMeanNoEvidenceExists===true
+    &&pidaScience.guards?.sourceCensusUnchanged===true
+    &&pidaScience.guards?.noScopeAutoInclude===true,
+    'q3_chem_pida_scope_hold_or_date_binding_invalid');
+  const chemSciencePendingEvidence=[...thirdSciencePendings,...foamEvidence,...pidaEvidence];
   ensure(initialChemScience.counts?.include===3
     &&initialChemAdmissionIds.length===3
     &&initialChemAdmissionIds.every(id=>priorChemDates.rows.some(x=>

@@ -15,6 +15,9 @@ on:
       - 'audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json'
       - 'scripts/test-historical-q3-chem-six-dates.mjs'
       - 'scripts/test-historical-q3-chem-third-dates.mjs'
+      - 'scripts/test-historical-q3-chem-nipu-boundary.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-one-nipu-first-online-reconciled.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-nipu-boundary-two-pass.json'
       - 'scripts/test-historical-q3-chem-new-science.mjs'
       - 'scripts/test-historical-q3-chem-four-more-20261015.mjs'
       - 'audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json'
@@ -77,6 +80,7 @@ jobs:
         run: |
           node --test scripts/test-historical-q3-chem-six-dates.mjs
           node --test scripts/test-historical-q3-chem-third-dates.mjs
+          node --test scripts/test-historical-q3-chem-nipu-boundary.mjs
           node --test scripts/test-historical-q3-chem-new-science.mjs
           node --test scripts/test-historical-q3-chem-four-more-20261015.mjs
       - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions
