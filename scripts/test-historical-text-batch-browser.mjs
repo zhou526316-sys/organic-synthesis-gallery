@@ -4,9 +4,9 @@ import {chromium} from 'playwright';
 
 const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const source=rawSource.replace(
-  "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender",
+  "  function batchBoot(){",
   "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
-  "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender");
+  "  function batchBoot(){");
 const browser=await chromium.launch({headless:true});
 const doiOld=['10.1021/jacs.6c08636','10.1038/s44160-026-01100-1'];
 const rows=[
@@ -17,13 +17,40 @@ const rows=[
 const catalog={pairedCaptureRegistry:true,webpageDoiCount:rows.length,articles:rows,generatedAt:'2026-10-12T00:00:00Z'};
 try{
   const page=await browser.newPage();
-  await page.route('https://gallery.gczhouwld.com/**',route=>route.fulfill({
-    status:200,contentType:'text/html',body:'<!doctype html><html><body><main><h1>Gallery</h1></main></body></html>'
-  }));
+  await page.route('https://gallery.gczhouwld.com/**',route=>{
+    const url=new URL(route.request().url());
+    if(url.pathname==='/release-delivery.json')
+      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        architectureCatalogId:'a'.repeat(64),productionCards:catalog.articles.length,
+        dois:catalog.articles.map(x=>x.doi)
+      })});
+    if(url.pathname==='/toc-demand-live.json')
+      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(catalog)});
+    return route.fulfill({status:200,contentType:'text/html',
+      body:'<!doctype html><html><body><main><h1>Gallery</h1></main></body></html>'});
+  });
   await page.goto('https://gallery.gczhouwld.com/');
   await page.evaluate(registry=>{
     window.__gm={};window.__opened=[];window.__closeCount=0;window.__requests=[];window.__alerts=[];
     window.__registry=registry;
+    const nativeFetch=window.fetch.bind(window);
+    window.fetch=(url,opts)=>{
+      window.__requests.push({method:opts?.method||'GET',url:String(url),transport:'native'});
+      const path=new URL(String(url),location.href).pathname;
+      // This registry is deliberately mutated by the reachability test; the
+      // route handler's Node-side snapshot would incorrectly omit new DOI.
+      if(path==='/release-delivery.json')
+        return Promise.resolve(new Response(JSON.stringify({
+          architectureCatalogId:'a'.repeat(64),
+          productionCards:window.__registry.articles.length,
+          dois:window.__registry.articles.map(x=>x.doi)
+        }),{status:200,headers:{'content-type':'application/json'}}));
+      if(path==='/toc-demand-live.json')
+        return Promise.resolve(new Response(JSON.stringify({
+          ...window.__registry,webpageDoiCount:window.__registry.articles.length
+        }),{status:200,headers:{'content-type':'application/json'}}));
+      return nativeFetch(url,opts);
+    };
     window.GM_getValue=(key,def)=>Object.prototype.hasOwnProperty.call(window.__gm,key)?window.__gm[key]:def;
     window.GM_setValue=(key,value)=>{window.__gm[key]=value;};
     window.GM_deleteValue=key=>{delete window.__gm[key];};
@@ -95,16 +122,9 @@ try{
       if(url.pathname.endsWith('/release-delivery.json'))
         payload={architectureCatalogId:id,productionCards:registry.articles.length,
           dois:registry.articles.map(x=>x.doi)};
-      else if(url.pathname==='/api/literature/catalog-view'){
-        const all=!url.searchParams.has('dateTo');
-        const old=all?registry.articles:registry.articles.filter(x=>x.date<'2026-10-01');
-        const slice=all?old:(url.searchParams.get('cursor')==='page2'?old.slice(1):old.slice(0,1));
-        payload={readPathActive:true,enabled:true,catalogId:id,matched:old.length,
-          hasMore:!all&&url.searchParams.get('cursor')!=='page2',
-          nextCursor:!all&&url.searchParams.get('cursor')!=='page2'?'page2':null,
-          items:slice.map(x=>({doi:x.doi,revision:'b'.repeat(64),title:x.title,
-            firstOnlineDate:x.date,journal:x.journal}))};
-      }else throw Error('unexpected historical network request '+options.url);
+      else if(url.pathname==='/toc-demand-live.json')
+        payload=registry;
+else throw Error('unexpected historical network request '+options.url);
       queueMicrotask(()=>options.onload({status:200,responseText:JSON.stringify(payload)}));
     };
     window.GM_openInTab=(url,opts)=>{
@@ -149,14 +169,14 @@ try{
   assert.equal(status.state.attempted,2);
   assert.equal(status.state.rightsPending,0);
   assert.equal(status.remainingJob,null);
-  assert.ok(status.opened.every(x=>x.active===false&&x.url.startsWith('https://doi.org/')));
-  assert.equal(status.requests.length,3);
+  assert.ok(status.opened.every(x=>x.active===false));
+  assert.ok(status.opened[0].url.startsWith('https://pubs.acs.org/doi/'));
+  assert.ok(status.opened[1].url.startsWith('https://www.nature.com/articles/'));
+  assert.equal(status.requests.length,2,'one full registry + one release, no paging');
   assert.ok(status.requests.every(x=>x.method==='GET'));
-  assert.equal(new URL(status.requests[0].url).pathname,'/release-delivery.json');
-  assert.ok(status.requests.slice(1).every(x=>
-    new URL(x.url).pathname==='/api/literature/catalog-view'
-    &&new URL(x.url).searchParams.get('dateTo')==='2026-09-30'));
-  assert.equal(status.requests.some(x=>x.url.includes('toc-demand-live')),false);
+  assert.ok(status.requests.some(x=>new URL(x.url).pathname==='/release-delivery.json'));
+  assert.ok(status.requests.some(x=>new URL(x.url).pathname==='/toc-demand-live.json'));
+  assert.equal(status.requests.some(x=>x.url.includes('/api/literature/catalog-view')),false);
   const search=page.getByPlaceholder('检索本机正文（LMCT/CO₂等）');
   await search.fill('LMCT');
   await search.press('Enter');
@@ -215,7 +235,7 @@ try{
   assert.ok(oaReport.newPacket.sections.length>=2);
   await page.getByRole('button',{name:'全库正文覆盖'}).click();
   await page.getByText(/全库本机已存科学正文 3 篇/).waitFor({timeout:5000});
-  assert.ok(oaReport.requests.some(x=>new URL(x.url).pathname==='/api/literature/catalog-view'
+  assert.ok(oaReport.requests.some(x=>new URL(x.url).pathname==='/toc-demand-live.json'
     &&!new URL(x.url).searchParams.has('dateTo')));
   assert.ok(oaReport.requests.some(x=>new URL(x.url).hostname==='www.ebi.ac.uk'));
   assert.ok(!oaReport.requests.some(x=>x.method!=='GET'

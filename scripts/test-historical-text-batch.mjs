@@ -5,11 +5,11 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.9/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.9'/);
-assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v029'/);
+assert.match(original,/\/\/ @version\s+0\.2\.10/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.10'/);
+assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v030'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
-const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
+const anchor="  function batchBoot(){";
 assert.ok(original.includes(anchor));
 const source=original.replace('const BATCH_PUBLISHER_PROBE_MS=9500;',
   'const BATCH_PUBLISHER_PROBE_MS=45;').replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket,batchFinishPublisherTab,batchCloseReviewTabs,batchArticlePageReady,batchReviewTabs};\n"+anchor);
@@ -131,79 +131,99 @@ test('batch only selects unique formal historical DOI',()=>{
   assert.ok(rows.every(x=>x.publication<'2026-10-01'));
   assert.throws(()=>context.__batchTest.batchHistoricalPapers({...registry,webpageDoiCount:100}),/目录不一致/);
 });
-test('official catalog API paginates formal DOI and includes metadata-only history',async()=>{
-  const {context}=fixture();
-  const f='a'.repeat(64),rev='b'.repeat(64);
+test('TOC complete manifest loads entire publisher registry in two requests, without pagination',async()=>{
+  const {context}=fixture(),f='a'.repeat(64);
   const official=[
-    {doi:DOI,title:'historical JACS',firstOnlineDate:'2026-09-14',journal:'JACS',revision:rev},
-    {doi:'10.1234/unknown-date',title:'undated article',firstOnlineDate:null,journal:'JOC',revision:rev},
-    {doi:'10.1038/s44160-026-01100-1',title:'historic archive',firstOnlineDate:'2021-02-02',journal:'Nature Synthesis',revision:rev},
+    {doi:DOI,title:'historical JACS',date:'2026-09-14',journal:'JACS',mediaPolicy:'toc_only'},
+    {doi:'10.1234/unknown-date',title:'undated article',date:'',journal:'JOC',mediaPolicy:'standard'},
+    {doi:'10.1038/s44160-026-01100-1',title:'historic archive',date:'2021-02-02',journal:'Nature Synthesis',mediaPolicy:'metadata_only'},
+    {doi:'10.1002/anie.2026new',title:'October',date:'2026-10-02',journal:'Angew',mediaPolicy:'standard'}
   ];
-  const releaseDois=official.map(x=>x.doi).concat('10.1002/anie.2026new');
   const calls=[];
   context.GM_xmlhttpRequest=opts=>{
     calls.push(opts.url);
     const u=new URL(opts.url);
-    const data=u.pathname==='/release-delivery.json'
-      ?{architectureCatalogId:f,dois:releaseDois,productionCards:releaseDois.length}
-      :{catalogId:f,readPathActive:true,enabled:true,matched:3,
-        items:u.searchParams.get('cursor')==='next'?official.slice(2):official.slice(0,2),
-        hasMore:u.searchParams.get('cursor')!=='next',
-        nextCursor:u.searchParams.get('cursor')==='next'?null:'next'};
-    queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(data)}));
+    const payload=u.pathname==='/release-delivery.json'
+      ?{architectureCatalogId:f,dois:official.map(x=>x.doi),productionCards:official.length}
+      :{pairedCaptureRegistry:true,webpageDoiCount:official.length,articles:official};
+    queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(payload)}));
   };
   const catalog=await context.__batchTest.batchLoadCanonicalCatalog();
   assert.equal(catalog.formalCount,4);
-  assert.equal(catalog.articles.length,3);
+  assert.equal(catalog.articles.length,2);
   assert.equal(context.__batchTest.batchHistoricalPapers(catalog).length,2);
-  assert.equal(calls.length,3);
-  assert.ok(calls.every(x=>!x.includes('toc-demand-live')));
-  assert.equal(new URL(calls[1]).searchParams.get('dateTo'),'2026-09-30');
+  assert.equal(calls.length,2);
+  assert.equal(new URL(calls[1]).pathname,'/toc-demand-live.json');
+  assert.ok(calls.every(x=>!x.includes('catalog-view')));
 });
 
-test('full DOI OA mode includes October papers and undated formal members',async()=>{
-  const {context}=fixture();
-  const catalogId='a'.repeat(64),revision='b'.repeat(64);
+test('entire formal OA registry includes October and undated without per-DOI API paging',async()=>{
+  const {context}=fixture(),catalogId='a'.repeat(64);
   const all=[
-    {doi:DOI,firstOnlineDate:'2026-09-14',journal:'JACS',revision},
-    {doi:'10.1234/unknown-date',firstOnlineDate:null,journal:'JOC',revision},
-    {doi:'10.1002/anie.2026new',firstOnlineDate:'2026-10-13',journal:'Angew',revision}
+    {doi:DOI,date:'2026-09-14',journal:'JACS',title:'Old',mediaPolicy:'toc_only'},
+    {doi:'10.1234/unknown-date',date:'',journal:'JOC',title:'Undated',mediaPolicy:'metadata_only'},
+    {doi:'10.1002/anie.2026new',date:'2026-10-13',journal:'Angew',title:'October',mediaPolicy:'standard'}
   ];
   const queries=[];
-  context.GM_xmlhttpRequest=options=>{
-    queries.push(options.url);
-    const url=new URL(options.url);
-    const payload=url.pathname.endsWith('/release-delivery.json')
-      ?{architectureCatalogId:catalogId,dois:all.map(x=>x.doi),productionCards:3}
-      :{readPathActive:true,enabled:true,catalogId,matched:all.length,
-        items:all,hasMore:false,nextCursor:null};
-    queueMicrotask(()=>options.onload({status:200,responseText:JSON.stringify(payload)}));
+  context.GM_xmlhttpRequest=opts=>{
+    queries.push(opts.url);
+    const u=new URL(opts.url);
+    const payload=u.pathname.endsWith('/release-delivery.json')
+      ?{architectureCatalogId:catalogId,dois:all.map(x=>x.doi),productionCards:all.length}
+      :{pairedCaptureRegistry:true,webpageDoiCount:all.length,articles:all};
+    queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(payload)}));
   };
   const result=await context.__batchTest.batchLoadCanonicalCatalog(true);
   assert.equal(result.articles.length,3);
   assert.equal(result.formalCount,3);
   assert.equal(result.articles.find(x=>x.doi==='10.1234/unknown-date').date,'');
-  assert.ok(queries.every(x=>!x.includes('toc-demand-live')));
-  assert.ok(queries.every(x=>!x.includes('dateTo=')));
+  assert.ok(queries.every(x=>!x.includes('/api/literature/catalog-view')));
+  assert.equal(queries.length,2);
   assert.equal(context.__batchTest.batchHistoricalPapers(result).length,1);
 });
 
-test('canonical DOI loader rejects stale index version and unpublished entries',async()=>{
-  const {context}=fixture(),catalogId='a'.repeat(64);
-  const releaseDois=[DOI],rev='b'.repeat(64);
-  const source=()=>({architectureCatalogId:catalogId,dois:releaseDois,productionCards:1});
+test('one-shot registry fails closed on missing, duplicated or unpublished DOI',async()=>{
+  const {context}=fixture(),catalogId='a'.repeat(64),dois=[DOI,'10.1038/known'];
+  const good=()=>[
+    {doi:DOI,date:'2026-09-14',journal:'JACS'},
+    {doi:'10.1038/known',date:'2026-02-02',journal:'Nature'}
+  ];
   for(const bad of [
-    {catalogId:'c'.repeat(64),readPathActive:true,enabled:true,matched:1,
-      items:[{doi:DOI,journal:'JACS',revision:rev,firstOnlineDate:'2026-09-14'}],hasMore:false,nextCursor:null},
-    {catalogId,readPathActive:true,enabled:true,matched:1,
-      items:[{doi:'10.1234/unpublished',journal:'JACS',revision:rev,firstOnlineDate:'2026-09-14'}],hasMore:false,nextCursor:null},
+    [{doi:DOI,date:'2026-09-14',journal:'JACS'}],
+    [{...good()[0]},{...good()[0]}],
+    [good()[0],{doi:'10.1234/unpublished',date:'2026-02-02',journal:'Nature'}]
   ]){
     context.GM_xmlhttpRequest=opts=>{
-      const json=new URL(opts.url).pathname==='/release-delivery.json'?source():bad;
-      queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(json)}));
+      const payload=new URL(opts.url).pathname==='/release-delivery.json'
+        ?{architectureCatalogId:catalogId,dois,productionCards:dois.length}
+        :{pairedCaptureRegistry:true,webpageDoiCount:bad.length,articles:bad};
+      queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(payload)}));
     };
-    await assert.rejects(()=>context.__batchTest.batchLoadCanonicalCatalog(),/版本不一致|未知或重复/);
+    await assert.rejects(()=>context.__batchTest.batchLoadCanonicalCatalog(true),
+      /不一致|未发布|重复/);
   }
+});
+
+test('a 1151 DOI manifest needs no pagination and preserves metadata_only members',async()=>{
+  const {context}=fixture(),catalogId='a'.repeat(64);
+  const rows=Array.from({length:1151},(_,i)=>({
+    doi:'10.1021/jacs.manifest'+i,date:i%90===0?'':'2026-09-01',
+    journal:'JACS',title:'Organic synthesis '+i,
+    mediaPolicy:i%110===0?'metadata_only':'toc_only'
+  }));
+  let reads=0;
+  context.GM_xmlhttpRequest=opts=>{
+    reads++;
+    const payload=new URL(opts.url).pathname==='/release-delivery.json'
+      ?{architectureCatalogId:catalogId,dois:rows.map(x=>x.doi),productionCards:rows.length}
+      :{pairedCaptureRegistry:true,webpageDoiCount:rows.length,articles:rows};
+    queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(payload)}));
+  };
+  const catalog=await context.__batchTest.batchLoadCanonicalCatalog(true);
+  assert.equal(reads,2);
+  assert.equal(catalog.formalCount,1151);
+  assert.equal(catalog.articles.length,1151);
+  assert.ok(catalog.articles.some(x=>x.date===''));
 });
 test('explicit article license gate allows BY/CC0 and excludes NC-ND or unlicensed',()=>{
   assert.equal(fixture().context.__batchTest.batchLicenseEvidence(fixture().root)?.kind,'cc-by');
@@ -231,7 +251,8 @@ test('publisher worker emits only DOI verified local packet without PDF, media o
 test('worker cannot claim another tab, expired job, or unlicensed article',async()=>{
   const other=fixture({pageDoi:'10.1021/jacs.other'});
   await other.context.__batchTest.batchWorker();
-  assert.equal(other.values.has('gallery-historical-text-batch-v2:result'),false);
+  assert.equal(other.values.get('gallery-historical-text-batch-v2:result')?.status,'doi_unverified');
+  assert.equal(other.values.get('gallery-historical-text-batch-v2:result')?.packet,undefined);
   const unlicensed=fixture({license:'https://creativecommons.org/licenses/by-nc-nd/4.0/'});
   await unlicensed.context.__batchTest.batchWorker();
   assert.equal(unlicensed.values.get('gallery-historical-text-batch-v2:result')?.status,'license_not_verified');
@@ -322,7 +343,7 @@ test('historical batch does not write into media, PDF or Evidence interfaces',()
     'osg-toc-v6:','/api/article-summary/fulltext/import','/api/private-pdf/import',
     'api/local-captures/import','importBodyFigure','capturePrivatePdf','GM_download('
   ])assert.ok(!body.includes(forbidden),'isolation breach: '+forbidden);
-  assert.ok(original.includes('GM_openInTab(prefix+paper.doi'));
+  assert.ok(original.includes('GM_openInTab(navigate(job)'));
   assert.ok(original.includes('一键补抓全部缺项'));
   assert.ok(original.includes('BATCH_MIN_GAP_MS=2000'));
 });
@@ -330,8 +351,10 @@ test('historical batch does not write into media, PDF or Evidence interfaces',()
 test('retry policy separates temporary errors from license and access blocks',()=>{
   const api=fixture().context.__batchTest;
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:true},false),true);
-  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),false);
-  assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),true);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false,
+    captureRevision:'historic-body-evidence-v030'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},true),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
   assert.equal(api.batchRetryAllowed({status:'storage_failure'},false),true);
@@ -362,7 +385,7 @@ test('old DOI-verified ambiguous licensing/body is rechecked exactly once after 
   const prior={doi:DOI,status:'license_not_verified',pageDoiVerified:true,captureRevision:'old'};
   assert.equal(api.batchRetryAllowed(prior,false),true);
   assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v026'},false),true);
-  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v029'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-evidence-v030'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,status:'body_missing',captureRevision:'old'},false),true);
   assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
@@ -515,7 +538,7 @@ test('v026 checked DOI licence false negatives are rechecked only once after upg
   const old={doi:DOI,status:'license_not_verified',pageDoiVerified:true,
     captureRevision:'historic-body-evidence-v026'};
   assert.equal(api.batchRetryAllowed(old,false),true);
-  assert.equal(api.batchRetryAllowed({...old,captureRevision:'historic-body-evidence-v029'},false),false);
+  assert.equal(api.batchRetryAllowed({...old,captureRevision:'historic-body-evidence-v030'},false),false);
   assert.equal(api.batchRetryAllowed({...old,httpStatus:403},false),false);
   assert.equal(api.batchRetryAllowed({...old,httpStatus:429},false),false);
   assert.equal(api.batchRetryAllowed({...old,status:'license_pending_load'},false),true);
