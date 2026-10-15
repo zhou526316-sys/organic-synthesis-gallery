@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.9
+// @version      0.2.10
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -19,7 +19,7 @@
 // @match        https://chinesechemsoc.org/*
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
-// @run-at       document-idle
+// @run-at       document-start
 // @noframes
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
@@ -31,18 +31,23 @@
 // @connect      gallery.gczhouwld.com
 // @connect      api.gczhouwld.com
 // @connect      www.ebi.ac.uk
+// @connect      doi.org
 // @updateURL    https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // @downloadURL  https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // ==/UserScript==
 
 (() => {
   'use strict';
+  const BATCH_TAB_BIND_KEY='gallery-historical-text-batch-v2:tab-binding-v030';
+  // TOC-inspired early binding survives publisher SPA hash cleanup.
+  try{
+    const early=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
+    if(early&&publisher(location.hostname)&&typeof sessionStorage!=='undefined')
+      sessionStorage.setItem(BATCH_TAB_BIND_KEY,early[1]);
+  }catch(_){}
   const CUTOFF='2026-10-01';
   const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Legacy manual-only fallback
   const CANONICAL_RELEASE_URL='https://gallery.gczhouwld.com/release-delivery.json';
-  const CANONICAL_INDEX_URL='https://api.gczhouwld.com/api/literature/catalog-view';
-  const SOURCE_PAGE_LIMIT=100;
-  const SOURCE_MAX_PAGES=2500;
   const SOURCE_RESULT_MAX_BYTES=5000000;
   const SCHEMA='gallery-historical-local-text-pilot-v1';
   const DOI=/^10\.\d{4,9}\/\S+$/;
@@ -290,16 +295,16 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.9';
+  const BATCH_SCRIPT_VERSION='0.2.10';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
-  const BATCH_CAPTURE_REVISION='historic-body-evidence-v029';
+  const BATCH_CAPTURE_REVISION='historic-body-evidence-v030';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
   const BATCH_RESULT=BATCH_PREFIX+'result';
   const BATCH_LEASE=BATCH_PREFIX+'lease';
   const BATCH_DB='gallery-historical-text-local-v2';
-  const BATCH_OA_SOURCE_REVISION='europepmc-oa-science-v028';
+  const BATCH_OA_SOURCE_REVISION='europepmc-oa-science-v030';
   const BATCH_OA_ENDPOINT='https://www.ebi.ac.uk/europepmc/webservices/rest/';
   const BATCH_OA_MAX_XML_CHARS=2600000;
   const BATCH_OA_MIN_GAP_MS=650;
@@ -315,7 +320,7 @@
   // Fast successes exit on real DOM evidence; only unresolved pages use this budget.
   const BATCH_PUBLISHER_PROBE_MS=9500;
   const BATCH_MAX_REVIEW_TABS=2;
-  const BATCH_NO_HANDLER_PILOT_MS=10000; // pilot only; do not extend normal publisher waits.
+  const BATCH_NO_HANDLER_PILOT_MS=10000; // Also detect uninitialized normal publisher tabs.
   const BATCH_LEASE_MS=40000;
   const BATCH_RETRY_MS=0; // No blanket 24h lockout; reason-dependent rechecking below.
   const BATCH_MAX_RESPONSE_CHARS=350000;
@@ -1408,6 +1413,53 @@
     shown=Math.min(matches.length,20);
     render();
   }
+  // Canonical publisher routes adapted from the TOC mainline, without
+  // using a publisher URL as evidence of DOI identity or text permission.
+  function batchPublisherArticleUrl(paper,navigationMode=''){
+    const doi=normalizeDoi(paper?.doi),kind=batchPublisher(doi);
+    if(!doi)return '';
+    if(navigationMode==='doi_resolver')return 'https://doi.org/'+doi;
+    if(kind==='acs')return 'https://pubs.acs.org/doi/'+doi;
+    if(kind==='wiley')return 'https://onlinelibrary.wiley.com/doi/'+doi;
+    if(kind==='nature')return 'https://www.nature.com/articles/'+doi.split('/').slice(1).join('/');
+    if(kind==='science')return 'https://www.science.org/doi/'+doi;
+    if(kind==='rsc'){
+      const m=/^([a-z])(\d)([a-z]{2})/i.exec(doi.split('/')[1]||'');
+      if(m)return 'https://pubs.rsc.org/en/content/articlehtml/'+(2020+Number(m[2]))
+        +'/'+m[3].toLowerCase()+'/'+doi.split('/')[1];
+    }
+    return 'https://doi.org/'+doi;
+  }
+  function batchPublisherRedirectUrl(raw){
+    try{
+      const u=new URL(String(raw||''));
+      if(u.protocol!=='https:'||u.username||u.password)return '';
+      const host=u.hostname.toLowerCase();
+      if(host==='linkinghub.elsevier.com'){
+        const m=/\/pii\/([a-z0-9]+)/i.exec(u.pathname);
+        return m?'https://www.sciencedirect.com/science/article/pii/'+m[1]:'';
+      }
+      if((host==='www.sciencedirect.com'||host==='www.cell.com')
+        &&/^\/(?:science\/article\/(?:abs\/)?pii|content\/article\/pii)\//.test(u.pathname))
+        return u.origin+u.pathname;
+    }catch(_){}
+    return '';
+  }
+  async function batchResolvePublisherTaskUrl(paper,navigationMode=''){
+    const url=batchPublisherArticleUrl(paper,navigationMode);
+    if(batchPublisher(paper?.doi)!=='elsevier'||navigationMode==='doi_resolver')return url;
+    // Resolve a publisher PII route once, as the TOC acquisition controller does.
+    // The actual article still needs its own exact DOI metadata.
+    try{
+      const response=await new Promise((resolve,reject)=>{
+        GM_xmlhttpRequest({method:'GET',url:'https://doi.org/'+normalizeDoi(paper.doi),
+          timeout:9500,onload:resolve,
+          onerror:()=>reject(Error('doi_resolution_failed')),
+          ontimeout:()=>reject(Error('doi_resolution_timeout'))});
+      });
+      return batchPublisherRedirectUrl(response.finalUrl||response.responseURL||'')||url;
+    }catch(_){return url;}
+  }
   function batchUnconfirmedPublisherResult(sawProgress){
     return sawProgress
       ?{status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'}
@@ -1442,8 +1494,7 @@
         &&value.runId===job.runId)return value;
       // Small, opt-in reachability test: if no matching script heartbeat
       // arrives, do not spend the normal 24 s pretending this is body failure.
-      if(job.pilotMode==='reachability'&&!sawHandlerProgress
-        &&Date.now()-start>=BATCH_NO_HANDLER_PILOT_MS)
+      if(!sawHandlerProgress&&Date.now()-start>=BATCH_NO_HANDLER_PILOT_MS)
         return batchUnconfirmedPublisherResult(false);
       await batchWait(350);
     }
@@ -1839,15 +1890,21 @@
     storeResult({status:'ok',stage:'local_store',packet,sourceSha256});
   }
 
-  if(location.hostname==='gallery.gczhouwld.com'){
-    // Historical upload sender and UI must not run on PDF or account pages.
-    if(location.pathname==='/'||location.pathname==='/index.html'){
-      batchUi=batchPanel();batchUi?.refresh();
-      if(typeof window.addEventListener==='function')window.addEventListener('pagehide',batchCloseReviewTabs,{once:true});
-      batchStartDiagnostics();
+  function batchBoot(){
+    if(location.hostname==='gallery.gczhouwld.com'){
+      if(location.pathname==='/'||location.pathname==='/index.html'){
+        batchUi=batchPanel();batchUi?.refresh();
+        if(typeof window.addEventListener==='function')
+          window.addEventListener('pagehide',batchCloseReviewTabs,{once:true});
+        batchStartDiagnostics();
+      }
+    }else if(publisher(location.hostname)){
+      GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
+      void batchWorker().catch(()=>{});
     }
-  }else{
-    GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
-    void batchWorker().catch(()=>{});
   }
+  // Capture fragment binding at document-start, but defer DOM work until ready.
+  if(document.readyState==='loading'&&typeof document.addEventListener==='function')
+    document.addEventListener('DOMContentLoaded',batchBoot,{once:true});
+  else batchBoot();
 })();
