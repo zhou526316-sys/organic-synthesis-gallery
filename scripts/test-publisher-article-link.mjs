@@ -32,11 +32,15 @@ test('malformed and nonmatching DOI never masquerade as an official article link
     ['10.1038/s41586-026-11242-8','JOC'],
     ['10.1038/unknown.2026','Nature'],
     ['10.1038/s41586-026-11242-8%0A','Nature'],
-    ['10.1038/s41586-026-11242-8\n','Nature'],
     ['https://malicious.example.org/a','Nature'],
   ]) {
     const url=publisherArticleHref(doi,journal);
     assert(!url?.startsWith('https://www.nature.com/articles/s41586-026-11242-8') || doi==='10.1038/s41586-026-11242-8');
   }
   assert.equal(publisherArticleHref(null,'Nature'),null);
+});
+
+test('benign whitespace around a DOI is normalized to one canonical identifier', () => {
+  assert.equal(publisherArticleHref(' 10.1038/s41586-026-11242-8\\n'.replace('\\n','\n'), 'Nature'),
+    'https://www.nature.com/articles/s41586-026-11242-8');
 });
