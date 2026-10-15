@@ -47,10 +47,10 @@ for(const doi of ['10.1021/acs.joc.6c01792','10.1021/acs.joc.6c01506','10.1021/a
 }
 const summary={
   ok:true,allPublishedDoisChecked:papers.size,markerCards:marker.productionCards,
-  beijingDay:stamp,validIdentifierSet:true,verifiedDisplayDates:verified.length,
+  beijingDay:stamp,validIdentifierSet:true,nonProvisionalDateLabels:verified.length,
   unverifiedDateClaimsSuppressed:unverified.length,missingSourceDates:unknown.length,
   invalidRawDateStrings:invalid,countsByJournal:Object.fromEntries([...groups].sort((a,b)=>a[0].localeCompare(b[0]))),
-  note:'This test verifies DOI shape, marker membership, no fake published day for explicit pending dates, and exact publisher-evidenced Nature metadata. It does not claim independent publisher review of all historical first-online dates.'
+  note:'This test validates DOI shape, marker membership, and publication-day display safety. A date without an unresolved flag is NOT independently publisher-verified by this test. Only explicit publisher evidence verifies Nature. It does not claim independent publisher review of all historical first-online dates.'
 };
 console.log(JSON.stringify(summary,null,2));
 if(invalid.length)process.exitCode=1;
