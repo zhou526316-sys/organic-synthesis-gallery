@@ -1,0 +1,12 @@
+{
+  "revision": "2026-10-15-r2-peer-reviewed",
+  "context": "PR692 full integration gate refresh after an independent main-baseline correction",
+  "previousMergeTestRun": 38708042671,
+  "previousMergeTestCommit": "93aa99ff8dd885a0250aefecafdbc3b4073f4412",
+  "confirmedFailure": "The frontend production-literature validator rejected public/rolling-supplement.json: expected f0e4b18a3be71e52fb07e84e291f51f652cd03ae, actual28f3238f45b380855f68fc7ab79da03ba4c9f181. PR692 does not change this file or any protected literature file.",
+  "independentMainCorrection": "4c4a78f42078806b87997fb7ff6a3d020dd3da09",
+  "independentCorrectionDescription": "Existing owner-approved exact Nature-author metadata reconciliation was merged on main at2026-10-15T08:49:51Z. This editorial task did not alter, bypass or disable that validator.",
+  "action": "Trigger a fresh pull-request merge test using the corrected current main. Keep all R2 reviewed source and asset fingerprints unchanged.",
+  "draftCreated": false,
+  "publicSendAuthorized": false
+}
