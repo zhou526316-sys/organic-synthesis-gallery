@@ -1,0 +1,90 @@
+{
+  "dateBeijing": "2026-10-16",
+  "twoPassSameReviewer": true,
+  "records": [
+    {
+      "doi": "10.1021/acs.orglett.6c02149",
+      "journal": "Organic Letters",
+      "publisherArticleType": "Letter",
+      "firstOnlineDate": "2026-07-18",
+      "scopeAssessment": {
+        "primaryContribution": "JBIR-141天然产物与类似物完整全合成",
+        "preparativeTransformation": "多片段有机合成和会聚组装制得天然产物JBIR-141及衍生物",
+        "generalityEvidence": "报告天然产物总合成终点及类似物设计，FOX03生物活性仅辅助",
+        "sourceEvidence": "ACS DOI正式文献页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02149 Published Online 2026-07-18; Git source raw 191472933f6e4097799a5642b86061b865421825 queue 9e2a8438eeed19db5adcfe1d4846e175d0347a98 sha256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "boundaryChallenge": "是否仅生物活性化合物筛选？原文完成JBIR-141全合成及类似物合成，满足全合成标准，不编造整体收率。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "多片段有机合成和会聚组装制得天然产物JBIR-141及衍生物; 报告天然产物总合成终点及类似物设计，FOX03生物活性仅辅助",
+      "challengeReason": "是否仅生物活性化合物筛选？原文完成JBIR-141全合成及类似物合成，满足全合成标准，不编造整体收率。",
+      "sourceProof": {
+        "root": "2026-07-15_2026-07-21_organic-letters",
+        "rawGitBlob": "191472933f6e4097799a5642b86061b865421825",
+        "queueGitBlob": "9e2a8438eeed19db5adcfe1d4846e175d0347a98",
+        "sourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "notPublished": true,
+      "noPDFSI": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02280",
+      "journal": "Organic Letters",
+      "publisherArticleType": "Letter",
+      "firstOnlineDate": "2026-07-17",
+      "scopeAssessment": {
+        "primaryContribution": "光催化脱胺自由基不对称烷基化合成非天然氨基酸",
+        "preparativeTransformation": "氨基酸衍生物与可脱胺烷基胺形成新的C(sp3)–C(sp3)键，保留手性中心",
+        "generalityEvidence": "多种脱胺伙伴、非天然氨基酸和肽衍生物且对映选择性，显示制备用途",
+        "sourceEvidence": "ACS DOI正式文献页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02280 Published Online 2026-07-17; Git source raw 191472933f6e4097799a5642b86061b865421825 queue 9e2a8438eeed19db5adcfe1d4846e175d0347a98 sha256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "boundaryChallenge": "是否依赖易制备Katritzky盐只做少数例子？原文氨基酸/肽的实物底物范围表明制备价值，不能混淆起始物ee与生成ee。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "氨基酸衍生物与可脱胺烷基胺形成新的C(sp3)–C(sp3)键，保留手性中心; 多种脱胺伙伴、非天然氨基酸和肽衍生物且对映选择性，显示制备用途",
+      "challengeReason": "是否依赖易制备Katritzky盐只做少数例子？原文氨基酸/肽的实物底物范围表明制备价值，不能混淆起始物ee与生成ee。",
+      "sourceProof": {
+        "root": "2026-07-15_2026-07-21_organic-letters",
+        "rawGitBlob": "191472933f6e4097799a5642b86061b865421825",
+        "queueGitBlob": "9e2a8438eeed19db5adcfe1d4846e175d0347a98",
+        "sourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "notPublished": true,
+      "noPDFSI": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02387",
+      "journal": "Organic Letters",
+      "publisherArticleType": "Letter",
+      "firstOnlineDate": "2026-07-28",
+      "scopeAssessment": {
+        "primaryContribution": "三齿手性配体Ni(II)催化硫醇对酮亚胺的不对称加成",
+        "preparativeTransformation": "硫醇/硫酚与吡唑啉酮衍生酮亚胺发生C–S成键，得到手性硫醚型产物",
+        "generalityEvidence": "ACS公开摘要称最高99%收率和99%ee，广泛硫试剂及酮亚胺范围，克级实验与X-ray绝对构型",
+        "sourceEvidence": "ACS DOI正式文献页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02387 Published Online 2026-07-28; Git source raw 67f6960bccfa31a1d2477390309426061dc65563 queue 45c411bb7519f5d80e4fd04071712c17d7a24af9 sha256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "boundaryChallenge": "可能只是催化剂立体构型解释？底物拓展和克级分离产物确证方法学，晶体学支持构型但不单独证明所有机理。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "硫醇/硫酚与吡唑啉酮衍生酮亚胺发生C–S成键，得到手性硫醚型产物; ACS公开摘要称最高99%收率和99%ee，广泛硫试剂及酮亚胺范围，克级实验与X-ray绝对构型",
+      "challengeReason": "可能只是催化剂立体构型解释？底物拓展和克级分离产物确证方法学，晶体学支持构型但不单独证明所有机理。",
+      "sourceProof": {
+        "root": "2026-07-22_2026-07-31_organic-letters",
+        "rawGitBlob": "67f6960bccfa31a1d2477390309426061dc65563",
+        "queueGitBlob": "45c411bb7519f5d80e4fd04071712c17d7a24af9",
+        "sourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "notPublished": true,
+      "noPDFSI": true
+    }
+  ]
+}
