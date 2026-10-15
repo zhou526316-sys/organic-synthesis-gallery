@@ -9,6 +9,9 @@ on:
       - 'shared/publisher-date-display-fix.mjs'
       - 'scripts/test-publisher-date-display-fix.mjs'
       - 'scripts/test-gallery-published-doi-date-integrity.mjs'
+      - 'scripts/build-publisher-date-review-queue.mjs'
+      - 'scripts/test-publisher-date-review-queue.mjs'
+      - '.github/workflows/gallery-publisher-date-review.yml'
       - 'scripts/sync-literature-catalog-index-shadow.mjs'
       - 'audit/publisher-date-evidence/**'
       - '.github/workflows/gallery-doi-date-full-corpus-regression.yml'
@@ -34,6 +37,6 @@ jobs:
       - name: Verify all source DOI identities and date labels
         run: node scripts/test-gallery-published-doi-date-integrity.mjs
       - name: Verify publication date and complete publisher evidence regressions
-        run: node --test scripts/test-publisher-date-display-fix.mjs architecture/tests/catalog.test.mjs
+        run: node --test scripts/test-publisher-date-display-fix.mjs scripts/test-publisher-date-review-queue.mjs architecture/tests/catalog.test.mjs
       - name: Verify release marker and unchanged protected data
         run: node scripts/validate-pages-literature-authorization.mjs
