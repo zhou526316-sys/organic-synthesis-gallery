@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import { test } from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.66"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.66';"));
+assert.ok(source.includes("// @version      6.2.67"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.67';"));
 assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261012-scoped-registry-plan-v3'"));
 assert.ok(source.includes("INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000"));
 assert.ok(source.includes("INVENTORY_SCOPED_BATCH_SIZE = 80"));
