@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "purpose": "historical_160_doi_academic_preflight_stage_only_after_owner_approved_throughput_repair_699",
+  "version": 6,
+  "purpose": "recover_history_academic_160_doi_preflight_after_verified_reviewer_sha_integrity_PR700",
   "approvedAt": "2026-10-15",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-15T15:34:49.440Z",
-  "reason": "Owner explicitly approved historical throughput repair. PR #699 merge c377823a06c333a1d244f50a8b99be0d454bfaae passed 8/8 CI; existing reviewer triage now emits two DOI-sha-bound, 160-row each academic preflight packets only to staging. Reconcile latest Q3 192 source roots without automatic academic include or changes to official history. Verify generated academic-preflight-q3 and academic-preflight-global as unreviewed and source-bound; scholarly science reviewer uses them for subsequent genuine DOI-specific evidence two-pass, not fictitious approvals. No D1, media/PDF, formal writer, Today/Hot or WeChat.",
+  "requestedAt": "2026-10-15T15:42:49.752Z",
+  "reason": "User-approved throughput repair #699 followed by #700 provenance-preserving production fix. The first staging replay run 38761596986 correctly failed closed when title-priority modification changed frozen reviewer Git SHA; #700 restored original exact reviewer shard ranking without compromising independent scientific worklist prioritization, passing 5/5 CI. Re-run existing staging-only historical triage: 375 roots, 12286 Q3 DOI, Q3 formal851 and manifest130 unchanged, source provenance enforced, generate academic-preflight-q3 and academic-preflight-global each 160 UNREVIEWED DOI for true two-pass evaluation later; no D1, media, academic auto include, or formal publication.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261015_PR699_generate_provenance_bound_Q3_and_global_160_candidate_science_packets",
+  "triggerScope": "20261015_source_fingerprint_safe_160_doi_Q3_global_packets_699_700",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "c377823a06c333a1d244f50a8b99be0d454bfaae",
+  "lastRelatedMergeCommit": "59970b13a1143ea2c4ef8f9be6729d8f6e2156c0",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -91,8 +91,8 @@
     "10.1016/j.chempr.2026.103204",
     "10.1016/j.chempr.2026.103257"
   ],
-  "recoveryOfRunId": 38673073848,
-  "recoveryReason": "historical_queue_status_refresh_not_deterministic_2026-08-22_2026-08-31_nature-chemistry",
+  "recoveryOfRunId": 38761596986,
+  "recoveryReason": "immutable_reviewer_shard_fingerprint_guard_intact_code_reverted_source_rank_and_retained_only_derived_preflight_ranking",
   "expectedMainFormalCatalogCountAtPreflight": 1151,
   "expectedQ3FormalAtPreflight": 851,
   "retryOfRunIds": [
