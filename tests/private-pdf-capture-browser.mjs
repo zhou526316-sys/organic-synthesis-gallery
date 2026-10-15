@@ -98,8 +98,9 @@ try{
     assert.ok(!runtime.includes("event.source!==window"));
     assert.ok(runtime.includes("function privatePdfLeaseDiagnostics()"));
     assert.ok(ownerSetup.includes("attempts>=12"));
-    assert.ok(ownerSetup.includes("window.addEventListener('message',ack);"));
-    assert.ok(ownerSetup.indexOf("window.addEventListener('message',ack);")<ownerSetup.indexOf("send();"));
+    assert.ok(ownerSetup.includes("window.addEventListener('message',onMessage);"));
+    assert.ok(ownerSetup.includes("osg-private-pdf-capture-probe-v1"));
+    assert.ok(ownerSetup.indexOf("window.addEventListener('message',onMessage);")<ownerSetup.indexOf("send();"));
     const x=await page.evaluate(()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'D'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000,receivedAt:123,revision:T.PRIVATE_PDF_CAPTURE_REVISION});return T.privatePdfLeaseDiagnostics()});
     assert.equal(x.state,'active');assert.equal(x.present,true);assert.equal(x.receivedAt,123);
   });
