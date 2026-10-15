@@ -13,7 +13,7 @@ const source={mode:'slot-release',publicationSlot:'2026-10-15T08:00:00+08:00',pr
 test('verified Nature is closed, while same-day JOC and created-only RSC remain queued',()=>{
   const res=publisherDateReviewQueue([fixed,joc,rsc],source,'2026-10-15');
   assert.equal(res.catalogCount,3);
-  assert.equal(res.verifiedDisplayDates,1);
+  assert.equal(res.dateLabelsNotMarkedProvisional,1);
   assert.equal(res.unresolvedPublisherFirstOnlineDates,2);
   assert.deepEqual(res.issues.map(z=>z.doi),['10.1021/acs.joc.6c01769','10.1039/d6sc06571f']);
   assert.equal(res.issues[0].proposedFirstOnlineDate,'2026-10-15');
@@ -33,7 +33,7 @@ test('rejects DOI truncation and catalog incompleteness instead of masking gaps'
 test('actual protected Gallery corpus yields stable total and excludes fully verified Nature DOI',()=>{
   const result=generatePublisherDateReviewQueue(process.cwd(),'2026-10-15');
   assert(result.catalogCount>500);
-  assert.equal(result.verifiedDisplayDates+result.unresolvedPublisherFirstOnlineDates,result.catalogCount);
+  assert.equal(result.dateLabelsNotMarkedProvisional+result.unresolvedPublisherFirstOnlineDates,result.catalogCount);
   assert(!result.issues.some(z=>z.doi==='10.1038/s41586-026-11242-8'));
   // Existing pending DOI remain tracked until their individual publisher proof
   // is explicitly promoted by a future authorized metadata correction.
