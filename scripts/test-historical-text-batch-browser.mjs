@@ -36,6 +36,19 @@ try{
     const nativeFetch=window.fetch.bind(window);
     window.fetch=(url,opts)=>{
       window.__requests.push({method:opts?.method||'GET',url:String(url),transport:'native'});
+      const path=new URL(String(url),location.href).pathname;
+      // This registry is deliberately mutated by the reachability test; the
+      // route handler's Node-side snapshot would incorrectly omit new DOI.
+      if(path==='/release-delivery.json')
+        return Promise.resolve(new Response(JSON.stringify({
+          architectureCatalogId:'a'.repeat(64),
+          productionCards:window.__registry.articles.length,
+          dois:window.__registry.articles.map(x=>x.doi)
+        }),{status:200,headers:{'content-type':'application/json'}}));
+      if(path==='/toc-demand-live.json')
+        return Promise.resolve(new Response(JSON.stringify({
+          ...window.__registry,webpageDoiCount:window.__registry.articles.length
+        }),{status:200,headers:{'content-type':'application/json'}}));
       return nativeFetch(url,opts);
     };
     window.GM_getValue=(key,def)=>Object.prototype.hasOwnProperty.call(window.__gm,key)?window.__gm[key]:def;
