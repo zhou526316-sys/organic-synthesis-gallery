@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "kind": "owner-approved-postslot-author-only-reconciliation",
+  "scope": "one-existing-doi-authors-only",
+  "doi": "10.1038/s41586-026-11242-8",
+  "publicationSlot": "2026-10-15T08:00:00+08:00",
+  "originalMarkerBlobSha": "cd56d8ecbda84df374603d1e8b455160ab8921a5",
+  "originalRollingBlobSha": "f0e4b18a3be71e52fb07e84e291f51f652cd03ae",
+  "correctedRollingBlobSha": "28f3238f45b380855f68fc7ab79da03ba4c9f181",
+  "firstAppliedCommit": "17ca9862a1d397c98d6e8890e9defd1899c66833",
+  "publisherEvidencePath": "audit/wechat-working/2026-10-15-r1-nature-science/author-metadata-source-correction.json",
+  "publisherEvidenceBlobSha": "4c2ec9d9243f2fad4fe60a65463fa5943c7e81fe",
+  "authors": [
+    "Hayato Fujimoto",
+    "Masayuki Mizutani",
+    "Kazuya Imachi",
+    "Teruki Nishioka",
+    "Reona Ikeda",
+    "Mamoru Tobisu"
+  ],
+  "newDoisAdded": 0,
+  "publicationDatesChanged": false,
+  "ownerApproval": {
+    "instruction": "批准",
+    "date": "2026-10-15",
+    "scope": "author-only-metadata-correction-and-tm-pr684-release"
+  },
+  "provenance": "User-supplied Nature Accelerated Article Preview, PDF page 2; correction exactly reproduces six evidenced authors.",
+  "explanation": "After the 08:00 source release, another editorial line corrected authors for the already-admitted DOI in an earlier separate commit. The owner has since approved an author-only reconciliation. This record attests exactly those bytes, does not falsely claim the original author edit occurred in the atomic 08:00 release, does not admit new DOI, and retains the frozen release marker."
+}
