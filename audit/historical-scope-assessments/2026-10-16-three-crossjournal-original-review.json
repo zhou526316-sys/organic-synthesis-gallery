@@ -1,0 +1,77 @@
+{
+  "reviewDateBeijing": "2026-10-16",
+  "stageSource": "staging/historical-archive-nightly",
+  "noD1": true,
+  "noMedia": true,
+  "noPublication": true,
+  "independentHumans": false,
+  "reviewMethod": "two sequential paper-specific adversarial reasoned passes",
+  "rows": [
+    {
+      "doi": "10.1021/jacs.6c09884",
+      "journal": "JACS",
+      "date": "2026-07-01",
+      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
+      "type": "Article",
+      "source": {
+        "root": "2026-07-01_2026-07-07_jacs",
+        "rawGitBlob": "35a03263c6d870f0d068d84670816b9a963d9530",
+        "queueGitBlob": "33b8d6bcce10d3cca61f7415dd0b3d348725b468",
+        "rawSourceSha256": "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "能量转移光催化双自由基羰基化环化方法",
+        "preparativeTransformation": "双环[1.1.0]丁烷、CO和烯烃/炔烃三组分形成4-氧代双环[3.1.1]庚烷/庚烯",
+        "generalityEvidence": "两类π组分、不同底物及产物羰基多样化；ACS原文公开摘要",
+        "sourceEvidence": "ACS Article History Published Online 2026-07-01, https://pubs.acs.org/doi/10.1021/jacs.6c09884；冻结批次+双SHA",
+        "boundaryChallenge": "是否仅研究能量转移机理？论文直接形成系列可分离有机羰基化环化产物，DFT仅支持路径，不代替实证。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include"
+    },
+    {
+      "doi": "10.1002/anie.7084396",
+      "journal": "Angew",
+      "date": "2026-09-08",
+      "title": "Enantioselective Copper-Catalyzed Vinyl Boron-Wittig Reaction to Form Allenes",
+      "type": "Research Article",
+      "source": {
+        "root": "2026-09-08_2026-09-14_angew",
+        "rawGitBlob": "162e2cc6724fd2e87dd5ca5300bcbdbea06edc37",
+        "queueGitBlob": "e061a1de33dee534418ae7ec6edba86110170204",
+        "rawSourceSha256": "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "铜催化不对称乙烯基硼-Wittig反应",
+        "preparativeTransformation": "1,1-二硼烯烃与芳/脂肪醛生成轴手性二、三取代联烯",
+        "generalityEvidence": "多类二硼烯烃、醛、复杂分子衍生物及产物转化",
+        "sourceEvidence": "Wiley Research Article First published 2026-09-08, https://onlinelibrary.wiley.com/doi/10.1002/anie.7084396；冻结批次+双SHA",
+        "boundaryChallenge": "是否只是常规Wittig？铜催化新B-O消除及立体选择性联烯制备与广谱底物提供独立方法学贡献，作者路径属机理支持。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include"
+    },
+    {
+      "doi": "10.1002/anie.2349367",
+      "journal": "Angew",
+      "date": "2026-09-08",
+      "title": "Direct Access to Chiral Piperidines by Enantioselective HAT-Initiated C(sp3)-H Oxidation",
+      "type": "Research Article",
+      "source": {
+        "root": "2026-09-08_2026-09-14_angew",
+        "rawGitBlob": "162e2cc6724fd2e87dd5ca5300bcbdbea06edc37",
+        "queueGitBlob": "e061a1de33dee534418ae7ec6edba86110170204",
+        "rawSourceSha256": "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "手性Mn/H2O2促进哌啶去对称化氧化",
+        "preparativeTransformation": "非手性哌啶α-C(sp3)-H选择性氧化为手性N,O-缩醛",
+        "generalityEvidence": "不同哌啶范围、高ee/dr、缩醛后续多样化且保留光学纯度",
+        "sourceEvidence": "Wiley Research Article First published 2026-09-08, https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367；冻结批次+双SHA",
+        "boundaryChallenge": "是否HAT机理研究？可分离手性砌块和合成后转化构成主要贡献；不把计算/模型机制推演当唯一手性来源直接证实。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include"
+    }
+  ]
+}
