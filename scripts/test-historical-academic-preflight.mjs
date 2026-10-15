@@ -127,3 +127,20 @@ test('staging packet runner has zero network/production writes and independently
   await rm(dir,{recursive:true,force:true});
  }
 });
+
+test('automatic bootstrap drains newly source-complete reviewer shards before packet build',async()=>{
+ const workflow=await readFile(new URL('../.github/workflows/historical-triage-bootstrap.yml',
+   import.meta.url),'utf8');
+ assert.match(workflow,
+   /MAX_HISTORICAL_TRIAGE_ROOTS:.*workflow_run.*'320'/);
+ assert.match(workflow,/node scripts\/historical-review-triage\.mjs/);
+ assert.match(workflow,/node scripts\/historical-review-worklist\.mjs/);
+ assert.match(workflow,/node scripts\/historical-q3-reconciliation\.mjs/);
+ assert.match(workflow,/node scripts\/historical-academic-preflight\.mjs/);
+ // Source-by-root reviewer shards must finish before the global worklist
+ // reads them. Both are only GitHub staging files, not production admissions.
+ const triage=workflow.indexOf('node scripts/historical-review-triage.mjs');
+ const worklist=workflow.indexOf('node scripts/historical-review-worklist.mjs');
+ const preflight=workflow.indexOf('node scripts/historical-academic-preflight.mjs');
+ assert.ok(triage>=0&&triage<worklist&&worklist<preflight);
+});
