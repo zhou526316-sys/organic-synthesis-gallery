@@ -6,7 +6,7 @@ const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','u
 const source=rawSource.replace(
   "  function batchBoot(){",
   "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
-  "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender");
+  "  function batchBoot(){");
 const browser=await chromium.launch({headless:true});
 const doiOld=['10.1021/jacs.6c08636','10.1038/s44160-026-01100-1'];
 const rows=[
