@@ -1,0 +1,36 @@
+{
+  "revision": "2026-10-15-r2-peer-reviewed",
+  "approved": true,
+  "reviewer": "assistant editorial review based on owner-supplied main/SI/peer-review sources",
+  "scope": "Text and layout approval for a new DRAFT only; not public publication authorization.",
+  "successfulPreparationRun": 38707348104,
+  "sourceArtifact": 11958931545,
+  "sourceArtifactSHA256": "443d8aee359a65ff95fb07175d9217bad9cb17a5ee4683611e9ac53122e03226",
+  "checked": {
+    "NatureReviewer1QuestionsAndAuthorExperiments": "Peer Review File pp2,8-10 matched against original figures;18/66 solvent difference and14/93 stage difference retained",
+    "NaturePracticalityAndResidualDisagreement": "Peer Review File pp3,5-7,14-15; reduced Rh dimer loading, nitrogen scale-up, second-substrate yield basis and two distinct final reviewer positions",
+    "ScienceNoFabricatedPeerReview": true,
+    "HeadingsMatchAdjacentEvidence": true,
+    "NoMechanicalCostCoda": true,
+    "ChineseTerminologyAndClaimStrengthReviewed": true,
+    "OriginalBodyImageCount": 33,
+    "UnchangedCoverCount": 2,
+    "SourceImagesChanged": false,
+    "MobileWidth": 390,
+    "DesktopWidth": 980,
+    "HorizontalOverflow": false,
+    "MissingReviewedParagraphs": 0
+  },
+  "manualScreensViewed": [
+    "preview/nature-390-opening.png",
+    "preview/science-390-opening.png",
+    "preview/nature-section-5.png",
+    "preview/nature-section-7.png",
+    "preview/nature-section-8.png",
+    "preview/science-section-8.png"
+  ],
+  "artifactComparison": "All20 PNGs in successful run38707348104 are byte-identical to run38706760735; only terminal blank lines in the pure-text files and their dependent source hashes changed. Both text-only files compare identical after rstrip.",
+  "nativeWechatClientInspected": false,
+  "cloudWriteCompleted": false,
+  "publicSendAuthorized": false
+}
