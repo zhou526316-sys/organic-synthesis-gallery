@@ -292,7 +292,7 @@ test('Crossref HTTP 429 blocks the historical root without splitting or touching
 async function isolatedHistoricalRun(fn,{queue=null,release=null,priorState=null}={}){
   const root=await mkdtemp(join(tmpdir(),'gallery-history-adversarial-'));
   const cwd=process.cwd(),originalFetch=global.fetch,originalExit=process.exitCode;
-  const keys=['HISTORICAL_STAGING_ONLY','HISTORICAL_STAGING_BRANCH','GITHUB_REF_NAME','MAX_UNITS','API_REQUEST_LIMIT'];
+  const keys=['HISTORICAL_STAGING_ONLY','HISTORICAL_STAGING_BRANCH','GITHUB_REF_NAME','MAX_UNITS','API_REQUEST_LIMIT','HISTORICAL_DEFER_BLOCKED','HISTORICAL_FAST_CROSSREF','OPENALEX_API_KEY'];
   const old=Object.fromEntries(keys.map(k=>[k,process.env[k]]));
   const baseQueue=queue||{webpageDoiCount:1,articles:[{doi:'10.1021/jacs.6c00001'}]};
   const baseMarker=release||{productionCards:baseQueue.webpageDoiCount};
@@ -1029,4 +1029,112 @@ test('special OpenAlex pagination is limited to RSC year-only January first',asy
   assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-01',to:'2026-01-31'}),10);
   assert.equal(historicalOpenAlexPageCap(normal,{from:'2026-01-01',to:'2026-01-01'}),10);
   assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-02',to:'2026-01-02'}),10);
+});
+
+test('opt-in source deferral preserves failed first journal and advances next ISSN without false completion',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch,root,queue,release})=>{
+    process.env.HISTORICAL_DEFER_BLOCKED='1';
+    process.env.MAX_UNITS='2';
+    let first=true;
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org'&&first){first=false;return {ok:false,status:401}}
+      return u.hostname==='api.crossref.org'?emptyCrossref():emptyOpenAlex();
+    };
+    const report=await runNightly(),saved=await readState();
+    assert.equal(report.blocked,false);
+    assert.equal(report.deferredFailures,1);
+    assert.equal(report.incompleteDeferredRoots,1);
+    assert.equal(report.sourceCoverageComplete,false);
+    assert.equal(report.processed,2);
+    assert.equal(report.completeWindows,1);
+    assert.equal(saved.cursor.journalIndex,2);
+    assert.equal(saved.completed.length,1);
+    assert.equal(saved.deferredSchemaVersion,
+      'gallery-history-deferred-incomplete-roots-v1');
+    assert.equal(saved.deferredRoots[0].rootId,'2026-09-22_2026-09-30_jacs');
+    assert.equal(saved.deferredRoots[0].kind,'chronological');
+    assert.equal(saved.deferredRoots[0].publicationAuthority,false);
+    assert.equal(saved.deferredRoots[0].sourceCompleted,false);
+    assert.match(saved.deferredRoots[0].issues.join('|'),/openalex:http_401/);
+    assert.equal((await readBatch('2026-09-22_2026-09-30_jacs')).status,'incomplete_sources');
+    assert.equal((await readBatch('2026-09-22_2026-09-30_angew')).status,'source_enumeration_complete');
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),queue);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
+  });
+});
+
+test('deferred source root is retried in an independent lane and counts only when fully complete',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch,write})=>{
+    process.env.HISTORICAL_DEFER_BLOCKED='1';
+    process.env.MAX_UNITS='2';
+    let authError=true;
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org'&&authError){
+        authError=false;return {ok:false,status:401}
+      }
+      return u.hostname==='api.crossref.org'?emptyCrossref():emptyOpenAlex();
+    };
+    const first=await runNightly();
+    assert.equal(first.completeWindows,1);
+    const saved=await readState();
+    assert.equal(saved.deferredRoots.length,1);
+    saved.deferredRoots[0].nextRetryAt='2000-01-01T00:00:00.000Z';
+    await write('audit/historical-staging/state.json',saved);
+    process.env.MAX_UNITS='3';
+    const second=await runNightly(),after=await readState();
+    assert.equal(second.blocked,false);
+    assert.equal(second.retryCompletions,1);
+    assert.equal(second.processed,3);
+    assert.equal(second.completeWindows,4);
+    assert.equal(second.incompleteDeferredRoots,0);
+    assert.equal(after.deferredRoots.length,0);
+    assert.equal(after.completed.length,4);
+    assert.ok(after.completed.includes('2026-09-22_2026-09-30_jacs'));
+    assert.equal((await readBatch('2026-09-22_2026-09-30_jacs')).consistency.complete,true);
+    assert.equal(after.cursor.journalIndex,4);
+  });
+});
+
+test('failure during resumed split retains its completed leaves without advancing incomplete root',async()=>{
+  const prior=stage0(),rootId='2026-09-22_2026-09-30_jacs';
+  prior.activeSplit={rootId,rootRange:prior.cursor.range,journalName:'JACS',
+    pending:[{from:'2026-09-22',to:'2026-09-25'},{from:'2026-09-26',to:'2026-09-30'}],
+    completed:[]};
+  await isolatedHistoricalRun(async({readState,readBatch,write})=>{
+    process.env.HISTORICAL_DEFER_BLOCKED='1';
+    process.env.MAX_UNITS='2';
+    let failOne=true;
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org'&&failOne){failOne=false;return {ok:false,status:503}}
+      return u.hostname==='api.crossref.org'?emptyCrossref():emptyOpenAlex();
+    };
+    const first=await runNightly(),x=await readState();
+    assert.equal(first.completeWindows,1);
+    assert.equal(x.cursor.journalIndex,2);
+    assert.equal(x.activeSplit,undefined);
+    assert.equal(x.deferredRoots.length,1);
+    assert.deepEqual(x.deferredRoots[0].activeSplit.pending,prior.activeSplit.pending);
+    x.deferredRoots[0].nextRetryAt='2000-01-01T00:00:00.000Z';
+    await write('audit/historical-staging/state.json',x);
+    process.env.MAX_UNITS='3';
+    const next=await runNightly(),y=await readState();
+    assert.equal(next.retryCompletions,0);
+    assert.equal(y.deferredRoots.length,1);
+    assert.equal(y.deferredRoots[0].activeSplit.completed.length,1);
+    assert.equal(y.deferredRoots[0].activeSplit.pending.length,1);
+    assert.equal((await readBatch(rootId)).status,'incomplete_sources');
+    const leaf=rootId+'__2026-09-22_2026-09-25';
+    assert.equal((await readBatch(leaf)).status,'source_enumeration_complete');
+    y.deferredRoots[0].nextRetryAt='2000-01-01T00:00:00.000Z';
+    await write('audit/historical-staging/state.json',y);
+    const last=await runNightly(),z=await readState();
+    assert.equal(last.retryCompletions,1);
+    assert.equal(z.deferredRoots.length,0);
+    assert.equal(z.completed.filter(id=>id===rootId).length,1);
+    assert.equal((await readBatch(rootId)).status,'source_enumeration_complete');
+    assert.equal((await readBatch(rootId)).sourceStatus.splitSegments.length,2);
+  },{priorState:prior});
 });
