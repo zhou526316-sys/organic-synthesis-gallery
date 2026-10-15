@@ -5715,7 +5715,17 @@ function embeddedJobDois(value) {
       if(tab&&tab.closed===true)return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'publisher_task_tab_closed',finishedAt:nowIso()};
       var elapsed=Date.now()-Date.parse(job.startedAt);
       var hb=currentPublisherHeartbeat();
-      if(elapsed>60000&&(!hb||hb.jobId!==job.jobId))return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      if(elapsed>45000&&(!hb||hb.jobId!==job.jobId)){
+        // Authentication/challenge pages need human intervention, not a
+        // fabricated script-injection failure. Do not bypass these pages.
+        var progress=GM_getValue(progressKey(job.doi),null);
+        if(!progress||!/auth_wait|challenge_wait/.test(String(progress.status||''))){
+          // Finish races take precedence over a timer waking after tab sleep.
+          result=completedPublisherResult(job);
+          if(result)return result;
+          return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+        }
+      }
       if(Date.now()>=deadline)return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
       await sleep(500);
     }
@@ -5875,8 +5885,19 @@ function embeddedJobDois(value) {
       renewManualLease(run);await sleep(Math.min(1000,Math.max(1,until-Date.now())));
     }
   }
+  function manualHeartbeatCircuitBreaker(run,result) {
+    // A sequence of uninitialized publisher tabs is an extension/session
+    // failure, not evidence that each DOI is missing media. Preserve the
+    // remaining queue instead of spending minutes on 100 more empty tabs.
+    if(!run)return false;
+    if(String(result&&result.reason||'')==='bound_publisher_heartbeat_missing')
+      run.consecutiveHeartbeatFailures=Number(run.consecutiveHeartbeatFailures||0)+1;
+    else run.consecutiveHeartbeatFailures=0;
+    return run.consecutiveHeartbeatFailures>=3;
+  }
+
   async function runManualFromHead(run) {
-    var s=run.summary;run.coverage=new Map();s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
+    var s=run.summary;run.coverage=new Map();run.consecutiveHeartbeatFailures=0;s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
     run.renewTimer=setInterval(function(){renewManualLease(run);},15000);
     try{
       var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
@@ -6016,6 +6037,13 @@ function embeddedJobDois(value) {
         if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
+        if(manualHeartbeatCircuitBreaker(run,result)){
+          s.stopReason='publisher_script_missing_3_consecutive';
+          s.phase='capture_environment_blocked';
+          coverageStats(run);manualSummary(run);
+          badge('连续3篇出版社页面未启动抓取脚本，已停止开新页面并保留剩余队列；请检查 Tampermonkey 扩展和出版社验证后再继续','#991b1b');
+          break;
+        }
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
@@ -6025,11 +6053,14 @@ function embeddedJobDois(value) {
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();
-        s.phase=controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
+        s.phase=s.stopReason==='publisher_script_missing_3_consecutive'?'capture_environment_blocked'
+          :controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
           :s.inventoryUnknown||Number(s.ownerPdfInventory&&s.ownerPdfInventory.unknown||0)?'inventory_partial':'all_resolved';
         manualSummary(run);
         var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
-        var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
+        var finishedMessage=s.stopReason==='publisher_script_missing_3_consecutive'
+          ?'出版社脚本连续3次未启动；已保留未访问队列，请先检查浏览器扩展和页面验证'
+          :controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
           :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
           :'实际尝试 '+s.attemptCount+' 次；本轮确认补齐 '+s.fullyResolved+' 篇；库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇；未补齐 '+s.unresolvedCount+' 篇';
         badge(finishedMessage,'#374151');
