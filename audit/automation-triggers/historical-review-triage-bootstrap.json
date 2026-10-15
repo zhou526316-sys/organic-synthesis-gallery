@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Q3_history_staging_only_recount_after_Chem_six_additional_official_online_dates_three_research_admissions_20261015",
+  "purpose": "Q3_staging_only_postrelease_source_recount_after_verified_status_lag_repair_20261015",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-15T02:49:38.136Z",
-  "reason": "After all six protected PR #668 CI families passed and merge commit 497de2e3c1a591730f29bed9a2cdb871b87cf63d, run the single existing 16-journal Q3 staging-only source reconciliation. Chem publisher first-online supplementary six DOI verified: 102952 2026-03-19 Q1, 103002 2026-03-30 Q1, 103022 2026-04-14 Q2; 103186 2026-07-29, 103204 2026-08-18, 103257 2026-09-17 valid Q3 original synthesis admissions to existing historical manifest for sole next Beijing 2026-10-16 08:00 slot. Raw Crossref/OpenAlex source shards unmodified, first existing Chem five date proofs remain separately frozen. Source Git SHA/provenance and two-pass science challenged. Q3 stage previous unfinished 11284; 11278 forecast ONLY, never claim real until successful same-generation coverage and worklist readback. Production catalog and 08:00 formal release unchanged, zero D1 and media capture, no alternate release slot; global publisher completeness false. Oct15 daily release failure stays independently blocked by semantic audit, no off-slot retry.",
+  "requestedAt": "2026-10-15T03:33:57.892Z",
+  "reason": "One recovery retry for 38673073848 following merged CI-green PR #670 (27ed8184be53818bf71a62bd68eec8ac2279d242). Previous Q3 stage failed closed at historical_queue_status_refresh_not_deterministic for 2026-08-22_2026-08-31_nature-chemistry because original DOI source/reviewer status snapshot was approval-awaiting-08 while main formal now has those reviewed DOIs published. New helper verifies immutable original source SHA256/Git blob and reconstructs exactly permitted prior status via current 125 two-pass accepted manifest and formal DOI evidence, including Chem later approvals. Main formal 1151 records/Q3 851 as of preflight; verify against latest main, no forced counts. Original source DOI census 12286 and Q3 windows 192/192. No production D1, media/PDF/HTML, daily new or new publication slot, no source shard mutation. Rerun original staging-only job and read back both same-generation JSON. Never mark failed 38673073848 successful.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261015_chem_six_true_publisher_online_dates_three_Q1Q2_removed_from_Q3_unfinished_three_Q3_two_pass_includes_125_manifest_no_production_release",
+  "triggerScope": "20261015_fix670_post_08_release_NatureChemistry_Chem_authorized_status_shard_lag_CI_green_only_stage_recount",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "497de2e3c1a591730f29bed9a2cdb871b87cf63d",
+  "lastRelatedMergeCommit": "27ed8184be53818bf71a62bd68eec8ac2279d242",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -53,7 +53,6 @@
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
   "expectedScopeScienceExcluded": 49,
   "expectedAdditionalEvidencePending": 5,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11278,
   "retryOfRunId": 38539425019,
   "retryCause": "q3_nchem_source_root_count_invalid_due_66_vs_51_doi_subset_windows",
   "retainOwnerPermanentCorrections": true,
@@ -91,5 +90,9 @@
     "10.1016/j.chempr.2026.103186",
     "10.1016/j.chempr.2026.103204",
     "10.1016/j.chempr.2026.103257"
-  ]
+  ],
+  "recoveryOfRunId": 38673073848,
+  "recoveryReason": "historical_queue_status_refresh_not_deterministic_2026-08-22_2026-08-31_nature-chemistry",
+  "expectedMainFormalCatalogCountAtPreflight": 1151,
+  "expectedQ3FormalAtPreflight": 851
 }
