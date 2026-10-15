@@ -1,11 +1,11 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-15T10:31:58.924Z",
+  "generatedAt": "2026-10-15T11:41:09.082Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11254,
+  "totalUnreviewedCandidates": 11247,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
@@ -29,9 +29,9 @@
     "2026-09": 106
   },
   "byPriority": {
-    "P1": 121,
-    "P0": 156,
-    "P2": 28,
+    "P1": 119,
+    "P0": 155,
+    "P2": 31,
     "P3": 15
   },
   "requiringDateVerification": 50,
@@ -480,15 +480,15 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103199",
+      "doi": "10.1016/j.chempr.2026.102943",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Single-catalyst operando photoluminescence spectroscopy of perovskite quantum-dot-driven photoredox reactions",
-      "firstAuthor": "Leon G. Feld",
-      "priority": "P0",
+      "title": "In situ insights from non-equilibrium solution combustion synthesis: From semiconducting thin films to metallic nanostructures",
+      "firstAuthor": "Thomas W. Colburn",
+      "priority": "P1",
       "flags": [],
       "sourceRootIds": [
         "2026-08-01_2026-08-07_chem"
@@ -500,21 +500,21 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103254",
+      "doi": "10.1016/j.chempr.2026.103044",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-25",
+      "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Opportunities for merging biosynthesis and biocatalysis",
-      "firstAuthor": "Dongshan Wu",
+      "title": "Emerging trends in light harnessing for CO2 reduction using photocatalytic MOFs",
+      "firstAuthor": "Arthur Reymond",
       "priority": "P1",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-22_2026-09-30_chem"
+        "2026-09-01_2026-09-07_chem"
       ],
       "sourceHashes": [
-        "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d"
+        "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -1278,14 +1278,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.102943",
+      "doi": "10.1016/j.chempr.2026.103189",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "In situ insights from non-equilibrium solution combustion synthesis: From semiconducting thin films to metallic nanostructures",
-      "firstAuthor": "Thomas W. Colburn",
+      "title": "Replicating the Bohr/Haldane effect in a synthetic system",
+      "firstAuthor": "Chen Zhao",
       "priority": "P1",
       "flags": [],
       "sourceRootIds": [
@@ -1298,21 +1298,21 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103244",
+      "doi": "10.1016/j.chempr.2026.103247",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-24",
+      "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
-      "firstAuthor": "Bowen Wu",
+      "title": "Ultrafast in vivo spectroscopy reveals photosynthetic energy and charge transfer under physiological conditions",
+      "firstAuthor": "Rhea Kumar",
       "priority": "P1",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-22_2026-09-30_chem"
+        "2026-09-01_2026-09-07_chem"
       ],
       "sourceHashes": [
-        "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d"
+        "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -2078,34 +2078,34 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103189",
+      "doi": "10.1016/j.chempr.2026.103192",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-01",
+      "apiDateCandidate": "2026-08-17",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Replicating the Bohr/Haldane effect in a synthetic system",
-      "firstAuthor": "Chen Zhao",
-      "priority": "P1",
+      "title": "Tuning the reactive species in oxidant activation by single-atom catalysts: Mechanisms, manipulations, and perspectives",
+      "firstAuthor": "FU Qi",
+      "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-01_2026-08-07_chem"
+        "2026-08-15_2026-08-21_chem"
       ],
       "sourceHashes": [
-        "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+        "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103044",
+      "doi": "10.1016/j.chempr.2026.103253",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Emerging trends in light harnessing for CO2 reduction using photocatalytic MOFs",
-      "firstAuthor": "Arthur Reymond",
+      "title": "Advanced bottom-up synthetic chemistry expanding the MXene family",
+      "firstAuthor": "Wenyu Xu",
       "priority": "P1",
       "flags": [],
       "sourceRootIds": [
@@ -2876,35 +2876,35 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103192",
+      "doi": "10.1016/j.chempr.2026.102955",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
-      "apiDateCandidate": "2026-08-17",
+      "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Tuning the reactive species in oxidant activation by single-atom catalysts: Mechanisms, manipulations, and perspectives",
-      "firstAuthor": "FU Qi",
+      "title": "Superlattice electrocatalysis matching microbial metabolism for sustainable CO2-to-bioproduct conversion",
+      "firstAuthor": "Miao Liu",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-08-15_2026-08-21_chem"
+        "2026-08-01_2026-08-07_chem"
       ],
       "sourceHashes": [
-        "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d"
+        "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103247",
+      "doi": "10.1016/j.chempr.2026.103035",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Ultrafast in vivo spectroscopy reveals photosynthetic energy and charge transfer under physiological conditions",
-      "firstAuthor": "Rhea Kumar",
-      "priority": "P1",
+      "title": "Swarm intelligence for chemical reaction optimization",
+      "firstAuthor": "Rémi Schlama",
+      "priority": "P2",
       "flags": [],
       "sourceRootIds": [
         "2026-09-01_2026-09-07_chem"
@@ -3674,14 +3674,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.102955",
+      "doi": "10.1016/j.chempr.2026.102967",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Superlattice electrocatalysis matching microbial metabolism for sustainable CO2-to-bioproduct conversion",
-      "firstAuthor": "Miao Liu",
+      "title": "Fabrication of corrugated halogen 2D metal-organic frameworks by means of F···Au coordination",
+      "firstAuthor": "Jorge Labella",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -3694,15 +3694,15 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103253",
+      "doi": "10.1016/j.chempr.2026.103037",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Advanced bottom-up synthetic chemistry expanding the MXene family",
-      "firstAuthor": "Wenyu Xu",
-      "priority": "P1",
+      "title": "Array of bimetallic metallophthalocyanine-based metal-organic frameworks for chemiresistive detection and differentiation of toxic gases",
+      "firstAuthor": "Evan L. Cline",
+      "priority": "P2",
       "flags": [],
       "sourceRootIds": [
         "2026-09-01_2026-09-07_chem"
@@ -4472,14 +4472,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.102967",
+      "doi": "10.1016/j.chempr.2026.102987",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Fabrication of corrugated halogen 2D metal-organic frameworks by means of F···Au coordination",
-      "firstAuthor": "Jorge Labella",
+      "title": "Hyperspace mapping and iterative dimensionality reduction reveal radical cascade networks controlled by perovskite-type catalysts",
+      "firstAuthor": "Yanqiu Jiang",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -4492,21 +4492,21 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103264",
+      "doi": "10.1016/j.chempr.2026.103208",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
-      "apiDateCandidate": "2026-09-24",
+      "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
-      "firstAuthor": "Lukas Spiekermann",
+      "title": "Designing molecular interfaces for stable hybrid organic-inorganic perovskites",
+      "firstAuthor": "So Min Park",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
-        "2026-09-22_2026-09-30_chem"
+        "2026-09-01_2026-09-07_chem"
       ],
       "sourceHashes": [
-        "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d"
+        "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae"
       ],
       "scopeReview": "not_started_requires_independent_two_pass",
       "publicationAuthority": false
@@ -5274,14 +5274,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.102987",
+      "doi": "10.1016/j.chempr.2026.103032",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Hyperspace mapping and iterative dimensionality reduction reveal radical cascade networks controlled by perovskite-type catalysts",
-      "firstAuthor": "Yanqiu Jiang",
+      "title": "Operando X-ray spectroscopies for tracking electrocatalytic dynamic interfaces across multiple scales",
+      "firstAuthor": "Kanglei Pang",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -5294,14 +5294,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103035",
+      "doi": "10.1016/j.chempr.2026.103212",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Swarm intelligence for chemical reaction optimization",
-      "firstAuthor": "Rémi Schlama",
+      "title": "A K+ preloaded crown ether-containing metal-organic framework for efficient gold recovery from e-wastewater",
+      "firstAuthor": "Zhenguo Zhang",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -6076,14 +6076,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103032",
+      "doi": "10.1016/j.chempr.2026.103164",
       "journal": "Chem",
       "sourceWindowMonth": "2026-08",
       "apiDateCandidate": "2026-08-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Operando X-ray spectroscopies for tracking electrocatalytic dynamic interfaces across multiple scales",
-      "firstAuthor": "Kanglei Pang",
+      "title": "Defining stability in metal-organic frameworks through rigorous characterization",
+      "firstAuthor": "Courtney S. Smoljan",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -6096,14 +6096,14 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103037",
+      "doi": "10.1016/j.chempr.2026.103221",
       "journal": "Chem",
       "sourceWindowMonth": "2026-09",
       "apiDateCandidate": "2026-09-01",
       "publisherFirstOnlineDateVerified": false,
       "publisherFirstOnlineDate": null,
-      "title": "Array of bimetallic metallophthalocyanine-based metal-organic frameworks for chemiresistive detection and differentiation of toxic gases",
-      "firstAuthor": "Evan L. Cline",
+      "title": "Structure-activity relationships at catalyst-pollutant interfaces in redox water purification",
+      "firstAuthor": "Jia-Fang Xie",
       "priority": "P2",
       "flags": [],
       "sourceRootIds": [
@@ -6596,9 +6596,9 @@
   ],
   "noAutomaticAcademicDecision": true,
   "noCloudflareD1Access": true,
-  "verifiedPublisherNonResearchExcluded": 94,
-  "verifiedPublisherScopeExcluded": 49,
-  "verifiedPublisherScopeEvidencePending": 8,
+  "verifiedPublisherNonResearchExcluded": 97,
+  "verifiedPublisherScopeExcluded": 50,
+  "verifiedPublisherScopeEvidencePending": 10,
   "publisherOnlineDateCorrections": [
     {
       "doi": "10.1016/j.chempr.2026.102968",
@@ -6759,6 +6759,38 @@
       "verifiedPublicationQuarter": "2026-Q3",
       "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426003086",
       "sourceRootId": "2026-09-01_2026-09-07_chem"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103199",
+      "stageSourceDate": "2026-08-01",
+      "publisherFirstOnlineDate": "2026-08-13",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002652",
+      "sourceRootId": "2026-08-01_2026-08-07_chem"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103074",
+      "stageSourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-06-02",
+      "verifiedPublicationQuarter": "2026-Q2",
+      "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426001403",
+      "sourceRootId": "2026-09-01_2026-09-07_chem"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103136",
+      "stageSourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-10",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002020",
+      "sourceRootId": "2026-07-01_2026-07-07_chem"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103194",
+      "stageSourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-30",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002603",
+      "sourceRootId": "2026-07-01_2026-07-07_chem"
     }
   ],
   "publisherScopeEvidencePending": [
@@ -6832,6 +6864,24 @@
       "evidenceNeeded": "核查主文与SI是否报告不同芳基碘化合物、其他高价碘类型或可推广的有机底物—产品反应范围；确认1.4 kg PIDA的实际纯度、isolated yield与重复批次情况，区分FE及理论产能；确认装置是否仅用于一种已知PIDA反应而无独立的通用制备适用性证据。",
       "nextAction": "读取可合法访问的原文全文和支持信息中具体底物扩展/其他高价碘试剂合成、连续流结晶及重复运行数据；若有充分可推广反应或制备路线证据则转入单独双遍include，否则按工业过程优化而非新有机合成方法审查exclude，不把实验未见或访问受阻解释为作者未做。",
       "sourceRootId": "2026-09-01_2026-09-07_chem",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103136",
+      "journal": "Chem",
+      "publisherFirstOnlineDate": "2026-07-10",
+      "evidenceNeeded": "核验主文/SI是否给出甲胺和乙胺的独立定量、同位素N₂归属、碳氮物料衡算、捕集/纯化与实际制备规模，以及能否拓展至其他小分子烷烃、有机气体和更复杂胺；明确是可推广的有机胺合成方法还是固定N₂/CH₄体系的过程催化突破。",
+      "nextAction": "在授权可获取范围内阅读原论文结果图和支持信息的催化产物分析方法、标定曲线、质量平衡、重复实验及合成实用性，核对是否给出分别可靠的胺产物收率和化学身份；据具体证据对照Gallery范围进行两遍实质性复核，再决定是否作为新C–N键构建方法收入。",
+      "sourceRootId": "2026-07-01_2026-07-07_chem",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103194",
+      "journal": "Chem",
+      "publisherFirstOnlineDate": "2026-07-30",
+      "evidenceNeeded": "核对SI全部产物分析、乙二醇的真实分离或捕集收率、催化剂稳定性和可重复性，以及是否验证丙烯、苯乙烯等其他烯烃转化或其他C–O成键有机产品；如只展示同一种乙烯氧化的电极工程，则不应把性能优化当作新通用有机合成方法。",
+      "nextAction": "在合法权限内取得原文完整结果表、支撑催化反应及产物定量的SI图表，核对专门的产物结构鉴定、NMR/GC测定和跨底物实验，仔细区分FE、生成速率和独立分离收率，最终依据主要有机制备贡献而不是电流密度单指标作出范围判断。",
+      "sourceRootId": "2026-07-01_2026-07-07_chem",
       "notOriginalManifestPending": true
     }
   ]
