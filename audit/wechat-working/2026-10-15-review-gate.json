@@ -6,8 +6,8 @@
     "10.1038/s41586-026-11242-8",
     "10.1126/science.aec6298"
   ],
-  "textReview": "pending_final_visual",
-  "imageReview": "pending_final_visual",
+  "textReview": "pass",
+  "imageReview": "pass",
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "sources": [
@@ -37,7 +37,11 @@
     },
     {
       "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/editorial-review.json",
-      "blobSha": "e380568c03cbce693ae93bc44855e94de816905c"
+      "blobSha": "b449cc8f993876fd657560ac239e0d54a6a6987a"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-15-r2-peer-reviewed/manual-visual-approval.json",
+      "blobSha": "fbec6cda1c9464c870474d8a9daa970610e5a1fd"
     }
   ],
   "assets": [
@@ -307,7 +311,7 @@
     "https://gallery.gczhouwld.com/?edition=2026-10-15&doi=10.1038%2Fs41586-026-11242-8&summary=0",
     "https://gallery.gczhouwld.com/?doi=10.1126%2Fscience.aec6298&summary=0"
   ],
-  "draftWriteAuthorized": false,
+  "draftWriteAuthorized": true,
   "publicSendAuthorized": false,
   "reviewNotes": "Reviewed source text preserved verbatim apart from Markdown emphasis markers; all 33 exact original body figures decoded and 390/980px layouts visually inspected. Two source screenshot covers add no text/bars. Official draft/get remains required.",
   "reviewedAtBeijing": "2026-10-15T15:49:32.614789+08:00",
@@ -348,5 +352,5 @@
     "contentIntegrity": "Original supplied body paragraphs and image order preserved; only Markdown emphasis markers removed for the existing escape-safe publisher. No hidden scientific corrections. Daily metadata missing authors was filled from the supplied Nature PDF only.",
     "authorization": "Owner explicitly requested direct WeChat draft write; this seals the pre-write review, not a public publication approval."
   },
-  "note": "New draft explicitly requested after owner-reported publication/deletion. Old assets and covers immutable. Gate withheld until actual new-layout manual review."
+  "note": "Source evidence, Chinese expression, exact images and manually inspected production rendering approved. Requires a new media_id and real draft/get. No public send."
 }
