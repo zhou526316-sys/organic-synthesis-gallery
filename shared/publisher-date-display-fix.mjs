@@ -86,7 +86,9 @@ export function correctedPublisherDateForDisplay(paper) {
   if (verifiedJocTitle && String(paper.journal || '').trim() === 'JOC'
     && String(paper.title || '').trim() === verifiedJocTitle
     && paper.date === '2026-10-15' && paper.addedDate === '2026-10-14') {
-    return paper.dateUnverified === true ? { ...paper, dateUnverified: false } : paper;
+    // Explicitly materialize the publisher-verification result even when the
+    // frozen card omitted dateUnverified entirely (undefined is not false).
+    return paper.dateUnverified === false ? paper : { ...paper, dateUnverified: false };
   }
   if (doi !== CORRECTION.doi
     || String(paper.journal || '').trim() !== CORRECTION.journal
