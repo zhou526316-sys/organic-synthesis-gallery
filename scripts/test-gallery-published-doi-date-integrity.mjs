@@ -62,6 +62,22 @@ for(const doi of ['10.1021/acs.joc.6c01792','10.1021/acs.joc.6c01506','10.1021/a
   assert.equal(display.date,'2026-10-15');
   assert.equal(publicationDateForDisplay(display.date,stamp,display.dateUnverified).date,'2026-10-15');
 }
+const rscEvidence=JSON.parse(readFileSync(
+  'audit/publisher-date-evidence/2026-10-15-rsc-ten-first-online.json','utf8'));
+assert.equal(rscEvidence.records.length,10,'RSC publisher-evidence count changed');
+for(const proof of rscEvidence.records){
+  const row=papers.get(proof.doi);
+  assert(row,'RSC publisher-verified DOI missing from full corpus:'+proof.doi);
+  assert.equal(row.title,proof.title,'RSC DOI/title evidence mismatch:'+proof.doi);
+  assert.equal(row.journal,proof.journal,'RSC DOI/journal evidence mismatch:'+proof.doi);
+  assert.equal(row.addedDate,proof.addedDate,'RSC admission-date evidence mismatch:'+proof.doi);
+  const display=correctedPublisherDateForDisplay(row);
+  assert.equal(display.date,proof.verifiedFirstOnlineDate,'RSC first-online still missing:'+proof.doi);
+  assert.equal(display.dateUnverified,false,'RSC publisher date still provisional:'+proof.doi);
+  assert.equal(publicationDateForDisplay(display.date,stamp,display.dateUnverified).date,
+    proof.verifiedFirstOnlineDate);
+}
+
 const summary={
   ok:true,allPublishedDoisChecked:papers.size,markerCards:marker.productionCards,
   beijingDay:stamp,validIdentifierSet:true,protectedInputBlobsVerified:Object.keys(expectedProtected).length,externalDoiLinksValidated:papers.size,nonProvisionalDateLabels:verified.length,
