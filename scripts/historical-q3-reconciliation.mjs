@@ -62,6 +62,7 @@ export function reconcileQ3({
   publisherReviewedScope=EMPTY_REVIEWED_SCOPE,
   chemPublisherDates=EMPTY_CHEM_ONLINE_DATES,
   chemScienceApprovedDoiEvidence=[],
+  chemSciencePendingEvidence=[],
   reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
@@ -352,6 +353,46 @@ export function reconcileQ3({
     return r&&publishedQ3(r.publisherFirstOnlineDate);
   }), 'q3_chem_mandatory_science_without_verified_date');
 
+  // A science-specific hold is different from an unreviewed source candidate,
+  // and is not one of the older formal-manifest date-conflict pendings.
+  const chemReviewedPending=new Map();
+  ensure(Array.isArray(chemSciencePendingEvidence),
+    'q3_chem_scientific_pending_schema_invalid');
+  for(const a of chemSciencePendingEvidence){
+    const id=normalize(a?.doi),source=all.get(id),d=correctedChemDates.get(id),
+      ev=a?.reviewEvidence,sc=a?.scopeAssessment;
+    ensure(validDoi(id)&&id===a.doi&&source&&d
+      &&!chemReviewedPending.has(id)&&a.journal==='Chem'
+      &&a.title===source.title&&a.date===d.publisherFirstOnlineDate
+      &&publishedQ3(a.date)&&a.decision==='pending'
+      &&a.firstPassDecision==='pending'&&a.challengeDecision==='pending'
+      &&a.reviewPasses===2&&a.publisherArticleType==='Research article'
+      &&a.missingEvidenceMustNotMeanNoEvidenceExists===true
+      &&typeof a.evidenceNeeded==='string'&&a.evidenceNeeded.length>=70
+      &&typeof a.nextAction==='string'&&a.nextAction.length>=70
+      &&typeof a.firstPassReason==='string'&&a.firstPassReason.length>=80
+      &&typeof a.independentChallengeReason==='string'
+      &&a.independentChallengeReason.length>=80
+      &&a.firstPassReason!==a.independentChallengeReason
+      &&['primaryContribution','preparativeTransformation','generalityEvidence',
+        'sourceEvidence','boundaryChallenge'].every(k=>typeof sc?.[k]==='string'
+        &&sc[k].length>=35)
+      &&ev?.stageBatchId===d.originalQ3QueueOrigin
+      &&ev?.stageBatchSha===d.originalSourceBatchGitBlobSha
+      &&ev?.stageSourceSha256===d.sourceRootSha256
+      &&ev?.sourceReviewQueueGitBlobSha===d.reviewQueueGitBlobSha
+      &&ev?.publisherArticlePage===d.officialPublisherArticlePage
+      &&ev?.publisherOnlineDate===d.publisherFirstOnlineDate
+      &&ev?.firstOnlineDateEvidence?.stageApiDate===d.sourceDate
+      &&source.sourceRoots.includes(d.originalQ3QueueOrigin)
+      &&source.sourceHashes.includes(d.sourceRootSha256)
+      &&!accepted.has(id)&&!pub.has(id)&&!pending.has(id)
+      &&!excluded.has(id)&&!publisherNonOriginal.has(id)
+      &&!reviewedScope.has(id),
+      'q3_chem_scientific_pending_provenance_invalid:'+id);
+    chemReviewedPending.set(id,a);
+  }
+
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
     const c=cells.get(cellId(paper.journal,paper.date.slice(0,7)));
@@ -406,6 +447,7 @@ export function reconcileQ3({
       publisherNonOriginal.has(row.doi)?'publisher_nonresearch_excluded':
       reviewedScope.get(row.doi)?.scientificDecision==='exclude'?'publisher_science_excluded':
       reviewedScope.get(row.doi)?.scientificDecision==='pending'?'publisher_science_pending':
+      chemReviewedPending.has(row.doi)?'publisher_science_pending':
       officialChem&&!publishedQ3(officialChem.publisherFirstOnlineDate)?'publisher_verified_outside_Q3':'unfinished';
     if(status==='published'){c.alreadyPublished++;counters.sourceAlreadyPublished++;}
     if(status==='approved_waiting08'){c.approvedWaiting08++;counters.sourceApprovedWaiting08++;}
@@ -503,13 +545,21 @@ export function reconcileQ3({
       stageSourceDate:r.sourceDate,publisherFirstOnlineDate:r.publisherFirstOnlineDate,
       verifiedPublicationQuarter:r.verifiedPublicationQuarter,
       evidenceUrl:r.officialPublisherArticlePage,sourceRootId:r.originalQ3QueueOrigin})),
-    publisherScopeEvidencePending:publisherReviewedScope.reviewed
-      .filter(x=>x.scientificDecision==='pending').map(x=>({
-        doi:x.doi,journal:x.journal,publisherFirstOnlineDate:x.date,
-        evidenceNeeded:x.assessment.generalityEvidence,
-        nextAction:x.assessment.nextAction,
-        sourceRootId:x.sourceRootId,notOriginalManifestPending:true
-      }))};
+    publisherScopeEvidencePending:[
+      ...publisherReviewedScope.reviewed
+        .filter(x=>x.scientificDecision==='pending').map(x=>({
+          doi:x.doi,journal:x.journal,publisherFirstOnlineDate:x.date,
+          evidenceNeeded:x.assessment.generalityEvidence,
+          nextAction:x.assessment.nextAction,
+          sourceRootId:x.sourceRootId,notOriginalManifestPending:true
+        })),
+      ...chemReviewedPending.values().map(a=>({
+        doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
+        evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
+        sourceRootId:a.reviewEvidence.stageBatchId,
+        notOriginalManifestPending:true
+      }))
+    ]};
   return {coverage,worklist};
 }
 async function readJson(file){return JSON.parse(await readFile(file,'utf8'));}
