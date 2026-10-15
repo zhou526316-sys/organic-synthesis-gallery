@@ -674,6 +674,106 @@
         "noMediaOrPDF": true,
         "noFormalPublication": true
       }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103146",
+      "journal": "Chem",
+      "title": "Low-pressure CO₂ insertion chemistry enables predictive kinetics for epoxide/CO2 copolymerization catalysis",
+      "date": "2026-07-01",
+      "publisherArticleType": "Preview",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Chem 2026年第12卷第7期的出版社Article类型为Preview。Liu/Wu解读Thorogood、Eisenhardt、Smith和Williams等在Nature Chemistry的CO₂/环氧化物共聚原始研究，重点在低压CO₂插入平衡常数和阈值压力预测。此Chem DOI没有独立报告一组原创新合成方法及底物拓展。",
+      "independentChallengeReason": "反向质疑：评论涉及CO₂插入催化、聚合动力学和新催化剂设计，很容易按有机合成或聚合关键词误收，但原始研究10.1038/s41557-026-02098-6早于本篇，于2026-04-30在线发表，讨论对象为既有催化体系动力学。Chem Preview不应替代原DOI，原研究应按自身首发日期及主要贡献独立审核。",
+      "reason": "Chem publisher Preview is original-research commentary under this DOI, not a separate experimental method paper.",
+      "evidenceBasis": "Chem ScienceDirect https://www.sciencedirect.com/science/article/abs/pii/S2451929426002123 classifies this DOI as Preview; volume 12 issue 7 published 2026-07-09; source 2026-07-01_2026-07-07_chem sha256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f raw-batch Git 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7. Its underlying original 10.1038/s41557-026-02098-6 appeared in Nature Chemistry on 2026-04-30 (https://www.nature.com/articles/s41557-026-02098-6). Frozen source date 2026-07-01 is issue-month placeholder, NOT independently confirmed secondary first-online date.",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02098-6",
+      "underlyingOriginalJournal": "Nature Chemistry",
+      "underlyingOriginalFirstOnlineDate": "2026-04-30",
+      "underlyingOriginalAlreadyFormal": false,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/abs/pii/S2451929426002123",
+        "publisherDoi": "10.1016/j.chempr.2026.103146",
+        "publisherArticleType": "Preview",
+        "publisherArticleDate": null,
+        "frozenSourceDate": "2026-07-01",
+        "sourceDateNotPublisherFirstOnline": true,
+        "publisherFirstOnlineDateVerified": false,
+        "publisherIssueDate": "2026-07-09",
+        "underlyingOriginalResearchDoi": "10.1038/s41557-026-02098-6",
+        "originalResearchPage": "https://www.nature.com/articles/s41557-026-02098-6",
+        "sourceRootId": "2026-07-01_2026-07-07_chem",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "stageBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "guards": {
+        "doiSpecific": true,
+        "sourceCensusRetained": true,
+        "publisherFirstOnlineSecondaryUnknown": true,
+        "originalResearchDoiCheckedSeparately": true,
+        "noD1": true,
+        "noMediaPdf": true,
+        "noFormalPublication": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103219",
+      "journal": "Chem",
+      "title": "Molecular recognition guides ionic liquid design for mild PET depolymerization",
+      "date": "2026-09-01",
+      "publisherArticleType": "Preview",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Breloy和Ximenis的Chem DOI在2026年12卷第9期由出版社归类Preview，专门点评Ou、Zhang、Pan、Yan等发表于Nature Sustainability的苯酚盐离子液体促进PET低温解聚研究，论文独立原创DOI为10.1038/s41893-026-01832-9。Chem评论自身并无另一个可独立审核的PET解聚反应/底物组。",
+      "independentChallengeReason": "反向质疑：其原始研究实现70°C PET解聚、百克级实际PET及高收率DMT，是具有明确制备实证的有意义化学研究，但这不意味着点评它的Chem Preview构成第二篇原创合成方法。原研究首次在线2026-05-11且期刊Nature Sustainability不属于Gallery已授权16刊，禁止借Chem评论更改期刊归属。",
+      "reason": "Chem publisher Preview is original-research commentary under this DOI, not a separate experimental method paper.",
+      "evidenceBasis": "Chem ScienceDirect https://www.sciencedirect.com/science/article/abs/pii/S2451929426002858 classifies this DOI as Preview; volume 12 issue 9 published 2026-09-10; source 2026-09-01_2026-09-07_chem sha256 e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae raw-batch Git edaaef14cca66d44d1cc46f57cee778ff8234c36. Its underlying original 10.1038/s41893-026-01832-9 appeared in Nature Sustainability on 2026-05-11 (https://www.nature.com/articles/s41893-026-01832-9). Frozen source date 2026-09-01 is issue-month placeholder, NOT independently confirmed secondary first-online date.",
+      "underlyingOriginalResearchDoi": "10.1038/s41893-026-01832-9",
+      "underlyingOriginalJournal": "Nature Sustainability",
+      "underlyingOriginalFirstOnlineDate": "2026-05-11",
+      "underlyingOriginalAlreadyFormal": false,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/abs/pii/S2451929426002858",
+        "publisherDoi": "10.1016/j.chempr.2026.103219",
+        "publisherArticleType": "Preview",
+        "publisherArticleDate": null,
+        "frozenSourceDate": "2026-09-01",
+        "sourceDateNotPublisherFirstOnline": true,
+        "publisherFirstOnlineDateVerified": false,
+        "publisherIssueDate": "2026-09-10",
+        "underlyingOriginalResearchDoi": "10.1038/s41893-026-01832-9",
+        "originalResearchPage": "https://www.nature.com/articles/s41893-026-01832-9",
+        "sourceRootId": "2026-09-01_2026-09-07_chem",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "stageBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+        "sourceReviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance"
+      },
+      "guards": {
+        "doiSpecific": true,
+        "sourceCensusRetained": true,
+        "publisherFirstOnlineSecondaryUnknown": true,
+        "originalResearchDoiCheckedSeparately": true,
+        "noD1": true,
+        "noMediaPdf": true,
+        "noFormalPublication": true
+      }
     }
   ],
   "purpose": "Publisher article types establish these five exact DOI are commentary/highlights/briefings and not the original synthetic research they discuss; no keyword-only decisions",
@@ -707,5 +807,10 @@
     },
     "distinctOriginalArticlesAreSeparate": true,
     "firstOnlineDatesOfSecondaryItemsNotClaimed": true
-  }
+  },
+  "chemPreviewTwoMoreAt": "2026-10-15",
+  "chemPreviewTwoMoreDois": [
+    "10.1016/j.chempr.2026.103146",
+    "10.1016/j.chempr.2026.103219"
+  ]
 }
