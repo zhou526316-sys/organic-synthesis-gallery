@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-15T02:30:23.251Z",
+  "generatedAt": "2026-10-15T03:43:28.114Z",
   "nextEligiblePublicationSlot": "2026-10-16T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 127,
-    "include": 125,
+    "checked": 130,
+    "include": 128,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -9109,6 +9109,187 @@
         }
       ],
       "reviewRationaleSecondPass": "反向检查：研究重视肽分子构象而非传统单中心不对称小分子合成，且依赖专门叠氮/芳炔底物布局；不能将其称作任意肽普适的无保护大环化，也不能把构象变化单独当作新制备方法。关键在RhAAC跨不同肽宏环产生可分离轴手性合成产物与高立体控制，因此具有独立制备价值。"
+    },
+    {
+      "doi": "10.1038/s41467-026-76347-0",
+      "journal": "Nature Communications",
+      "title": "Engineered polymerase-mediated efficient synthesis of site-specifically functionalized RNA and 2’-modified RNA oligonucleotides via genetic alphabet expansion",
+      "titleZh": "工程聚合酶与扩展遗传字母介导的定点修饰RNA高效合成",
+      "date": "2026-08-13",
+      "authors": [
+        "Jing Wu",
+        "Junyan Mei",
+        "Zhipeng Chen",
+        "Xinyu Shao",
+        "Yaxin Wang",
+        "Ziqian Xiao",
+        "Yuhui Du",
+        "Tingjian Chen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "9705",
+        "doi": "10.1038/s41467-026-76347-0"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "new": false,
+      "addedDate": "",
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "扩展遗传字母配对和工程聚合酶SFM4-6实现位点特异的RNA及2′修饰RNA寡核苷酸合成。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-76347-0（Article，Published 2026-08-13）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-08-08_2026-08-14_nature-communications、批次Git blob b3922c3e7dcf4fa518b34df77c45c0bf837eab87。未获取或复制SI/PDF/图片。 公开Results包括普通RNA、2′-F-CU、2′-F/OMe及2′-OMe RNA与多个非天然碱基标签、单/双标记策略，并制备荧光siRNA、凝血酶及金属β-内酰胺酶适配体。",
+      "challengeReason": "第二遍独立挑战：虽然依赖特定SFM4-6酶和模板、且修饰核苷酸竞争导致不同全长产率，但作者实测跨多种2′修饰核酸与标记位点的产物，核心是可推广的核酸合成方法而非单纯蛋白工程。",
+      "scopeAssessment": {
+        "primaryContribution": "扩展遗传字母配对和工程聚合酶SFM4-6实现位点特异的RNA及2′修饰RNA寡核苷酸合成。",
+        "preparativeTransformation": "模板指导延伸插入dNaM–dTPT3功能化非天然核苷酸，控制聚合酶暂停/重启，得到5′、3′或内部单/双标签RNA。",
+        "generalityEvidence": "公开Results包括普通RNA、2′-F-CU、2′-F/OMe及2′-OMe RNA与多个非天然碱基标签、单/双标记策略，并制备荧光siRNA、凝血酶及金属β-内酰胺酶适配体。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-76347-0（Article，Published 2026-08-13）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-08-08_2026-08-14_nature-communications、批次Git blob b3922c3e7dcf4fa518b34df77c45c0bf837eab87。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：虽然依赖特定SFM4-6酶和模板、且修饰核苷酸竞争导致不同全长产率，但作者实测跨多种2′修饰核酸与标记位点的产物，核心是可推广的核酸合成方法而非单纯蛋白工程。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76347-0",
+        "publisherOnlineDate": "2026-08-13",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-communications",
+        "stageBatchSha": "b3922c3e7dcf4fa518b34df77c45c0bf837eab87",
+        "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+        "sourceReviewQueueGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "NatureCommunications_official_article_first_online_and_open_body_results"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewRationaleSecondPass": "第二遍独立挑战：虽然依赖特定SFM4-6酶和模板、且修饰核苷酸竞争导致不同全长产率，但作者实测跨多种2′修饰核酸与标记位点的产物，核心是可推广的核酸合成方法而非单纯蛋白工程。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77718-3",
+      "journal": "Nature Communications",
+      "title": "Site-specific protein functionalization by late-stage reversible cysteine masking",
+      "titleZh": "可逆半胱氨酸遮蔽实现蛋白质位点选择性后期官能团化",
+      "date": "2026-09-10",
+      "authors": [
+        "Manjeet Singh",
+        "Raj V. Nithun",
+        "Omer Harel",
+        "Muhammad Jbara"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "10669",
+        "doi": "10.1038/s41467-026-77718-3"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "new": false,
+      "addedDate": "",
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "可逆半胱氨酸遮蔽ReCag实现多半胱氨酸肽及蛋白中指定Cys位点的后期共价官能团化。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-77718-3（Article，Published 2026-09-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-08_2026-09-14_nature-communications、批次Git blob 4191bc97e0f458365262c7bac4cd0a615cc6320f。未获取或复制SI/PDF/图片。 开放Results与Fig.2–6支持3–8个Cys、30个修饰例子、芳基化/烷基化/消除、锌指及双位点不同修饰；区分LC-MS转化率与部分分离产率。",
+      "challengeReason": "第二遍独立挑战：虽然需先分段连接且并非无预处理直接修饰任意完整蛋白，但多种共价转化、不同蛋白序列和多个产物证明可迁移的生物偶联合成，而不是只改善蛋白表达或生物表型。",
+      "scopeAssessment": {
+        "primaryContribution": "可逆半胱氨酸遮蔽ReCag实现多半胱氨酸肽及蛋白中指定Cys位点的后期共价官能团化。",
+        "preparativeTransformation": "通过分段连接、暂时掩蔽其他Cys、对唯一暴露Cys芳基化或烷基化或消除、最终脱遮蔽恢复原生序列。",
+        "generalityEvidence": "开放Results与Fig.2–6支持3–8个Cys、30个修饰例子、芳基化/烷基化/消除、锌指及双位点不同修饰；区分LC-MS转化率与部分分离产率。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-77718-3（Article，Published 2026-09-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-08_2026-09-14_nature-communications、批次Git blob 4191bc97e0f458365262c7bac4cd0a615cc6320f。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：虽然需先分段连接且并非无预处理直接修饰任意完整蛋白，但多种共价转化、不同蛋白序列和多个产物证明可迁移的生物偶联合成，而不是只改善蛋白表达或生物表型。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77718-3",
+        "publisherOnlineDate": "2026-09-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_nature-communications",
+        "stageBatchSha": "4191bc97e0f458365262c7bac4cd0a615cc6320f",
+        "stageSourceSha256": "08b2cb29c7c6fae493c194173587311530339d26cbfe8e1220964deb9c22eac0",
+        "sourceReviewQueueGitBlobSha": "4ecabb756c702279c42506da4786a358ecb5152e",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "NatureCommunications_official_article_first_online_and_open_body_results"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewRationaleSecondPass": "第二遍独立挑战：虽然需先分段连接且并非无预处理直接修饰任意完整蛋白，但多种共价转化、不同蛋白序列和多个产物证明可迁移的生物偶联合成，而不是只改善蛋白表达或生物表型。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77616-8",
+      "journal": "Nature Communications",
+      "title": "Harnessing endogenous carbon monoxide for cancer-selective drug synthesis",
+      "titleZh": "利用内源性一氧化碳在癌细胞中选择性合成菲啶酮类药效分子",
+      "date": "2026-09-17",
+      "authors": [
+        "Masayuki Kawai",
+        "Tsung-Che Chang",
+        "Ambara R. Pradipta",
+        "Katsunori Tanaka"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "9603",
+        "doi": "10.1038/s41467-026-77616-8"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "new": false,
+      "addedDate": "",
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "白蛋白疏水口袋保护有机钯环免受谷胱甘肽毒化，实现内源CO参与菲啶酮类药效团的细胞内合成。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-77616-8（Article，Published 2026-09-17）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-15_2026-09-21_nature-communications、批次Git blob 7cd4194542b3a9b6f329b40188183d420eb59ea9。未获取或复制SI/PDF/图片。 原文Fig.4给出N-烷基3c、CF3 3d、二甲氧基3g、酯基3i和稠合苯并噻吩3e等不同电子/环系的产物，Fig.3和5提供胞内产物定量与生长抑制；不得误称所有百分数为分离收率。",
+      "challengeReason": "第二遍独立挑战：药效整体温和且胞内产物按pmol/百万细胞计量，蛋白载体也复杂，但真正有多取代羰基化成环反应及胞内生成证据；不能只因细胞生物应用就排除，也不声称规模化或高疗效。",
+      "scopeAssessment": {
+        "primaryContribution": "白蛋白疏水口袋保护有机钯环免受谷胱甘肽毒化，实现内源CO参与菲啶酮类药效团的细胞内合成。",
+        "preparativeTransformation": "香豆素锚定白蛋白-钯环配合物摄取CO后经羰基化与还原消除释放多种取代的菲啶-6(5H)-酮。",
+        "generalityEvidence": "原文Fig.4给出N-烷基3c、CF3 3d、二甲氧基3g、酯基3i和稠合苯并噻吩3e等不同电子/环系的产物，Fig.3和5提供胞内产物定量与生长抑制；不得误称所有百分数为分离收率。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-77616-8（Article，Published 2026-09-17）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-15_2026-09-21_nature-communications、批次Git blob 7cd4194542b3a9b6f329b40188183d420eb59ea9。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：药效整体温和且胞内产物按pmol/百万细胞计量，蛋白载体也复杂，但真正有多取代羰基化成环反应及胞内生成证据；不能只因细胞生物应用就排除，也不声称规模化或高疗效。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77616-8",
+        "publisherOnlineDate": "2026-09-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_nature-communications",
+        "stageBatchSha": "7cd4194542b3a9b6f329b40188183d420eb59ea9",
+        "stageSourceSha256": "3ea90f7fd9daa825676eb279863a27c8a997b5f1a4147941d82868c9211021e6",
+        "sourceReviewQueueGitBlobSha": "4f44c4d0a6ce0ce581ef5de92ca21748f2e62485",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "NatureCommunications_official_article_first_online_and_open_body_results"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewRationaleSecondPass": "第二遍独立挑战：药效整体温和且胞内产物按pmol/百万细胞计量，蛋白载体也复杂，但真正有多取代羰基化成环反应及胞内生成证据；不能只因细胞生物应用就排除，也不声称规模化或高疗效。"
     }
   ],
   "pending": [
@@ -9151,11 +9332,11 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "Additional three DOI-exact Chem original Q3 methods with publisher-confirmed first-online dates, independent contribution/challenge passes, stage raw and review blob SHA and accurate article-number citations admitted for sole next Beijing 08:00 release. Two 2026 Q1 and one 2026 Q2 original articles are date-corrected but not miscounted as 2026-Q3 methods. This authorization publishes no production card, media, body/SI or PDF. Prior note: 2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
+  "note": "2026-10-15 new source-proven Nature Communications three original synthetic methods (reversible cysteine caging/site-specific protein reactions; albumin-palladacycle endogenous CO phenanthridinone carbonylation; SFM4-6 site-specific modified RNA synthesis) approved after two article-specific scientific passes for sole Beijing Oct16 08:00 publication only. Separate one acrylic acid enzyme-cascade evidence hold and one HMS paired-electrolysis scope exclude are not inserted as permanent owner exclusions or academic approvals. No production release, no media, no daily new; existing 125 approvals and original two date disputes intact. Previous narrative: Additional three DOI-exact Chem original Q3 methods with publisher-confirmed first-online dates, independent contribution/challenge passes, stage raw and review blob SHA and accurate article-number citations admitted for sole next Beijing 08:00 release. Two 2026 Q1 and one 2026 Q2 original articles are date-corrected but not miscounted as 2026-Q3 methods. This authorization publishes no production card, media, body/SI or PDF. Prior note: 2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
   "currentCatalogReadback": {
-    "sha": "eda0d3691b8da50d3071b64379e84e3dcb52add2",
-    "recordCount": 1087,
-    "readAt": "2026-10-15T02:30:23.252Z",
+    "sha": "eb74a75508e4cb48ac13d84ba707466f02a2c331",
+    "recordCount": 1151,
+    "readAt": "2026-10-15T03:43:28.114Z",
     "source": "GitHub_main_only_not_production_D1"
   },
   "reviewedNatureChemistryNew": {

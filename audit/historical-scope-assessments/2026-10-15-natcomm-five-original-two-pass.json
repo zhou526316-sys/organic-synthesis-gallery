@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "period": "2026-07-01..2026-09-30",
+  "journal": "Nature Communications",
+  "reviewedAt": "2026-10-15",
+  "reviewMethod": "One assistant performed a DOI-specific evidence pass and separate adversarial pass; not two independent human reviewers.",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json",
+  "accounting": {
+    "assessmentCount": 5,
+    "include": 3,
+    "exclude": 1,
+    "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41467-026-75547-y",
+      "journal": "Nature Communications",
+      "title": "A paired electrolysis for hydroxymethanesulfonate synthesis using sulfide waste as the sulfur source",
+      "date": "2026-07-10",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75547-y",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。 实际转化：阴极原位H2O2将HS−转成亚硫酸根，阳极氧化甲醇为甲醛，随后的C–S键形成产生羟基甲烷磺酸盐。 具体一般性证据：H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+      "independentChallengeReason": "第二遍独立挑战：确实发生C–S成键而非仅处理废水，不过论文主要优化固定H2S/甲醇原料的单一产物、运行时长与传质，废水组成范围不是有机底物适用范围，超100%FE不能写成分离收率。",
+      "reason": "配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-75547-y（Article，Published 2026-07-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-08_2026-07-14_nature-communications、批次Git blob 9bca03d607c47df2030b92261de4353a0c86fba2。未获取或复制SI/PDF/图片。 H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+      "scopeAssessment": {
+        "primaryContribution": "配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。",
+        "preparativeTransformation": "阴极原位H2O2将HS−转成亚硫酸根，阳极氧化甲醇为甲醛，随后的C–S键形成产生羟基甲烷磺酸盐。",
+        "generalityEvidence": "H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-75547-y（Article，Published 2026-07-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-08_2026-07-14_nature-communications、批次Git blob 9bca03d607c47df2030b92261de4353a0c86fba2。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：确实发生C–S成键而非仅处理废水，不过论文主要优化固定H2S/甲醇原料的单一产物、运行时长与传质，废水组成范围不是有机底物适用范围，超100%FE不能写成分离收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-75547-y",
+        "publisherOnlineDate": "2026-07-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_nature-communications",
+        "stageBatchSha": "9bca03d607c47df2030b92261de4353a0c86fba2",
+        "stageSourceSha256": "a09942d601673db18c8051dcd09ec77b235916eaac5fca3e7bb4b632b9711881",
+        "sourceReviewQueueGitBlobSha": "0659a20185f44ecbbd26eb13e114f7bb862dee9b",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-75484-w",
+      "journal": "Nature Communications",
+      "title": "Towards an enzyme cascade synthesis of the bulk chemical acrylic acid",
+      "date": "2026-07-21",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75484-w",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。 实际转化：DHAP经ThDP中间体异构化、H2PO4−消除和水解形成丙烯酸，连接C1甲醇同化通路实现生产。 具体一般性证据：实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+      "independentChallengeReason": "第二遍独立挑战：真实新催化化学及较大规模的工业单体路线不能仅因酶工程就排除；然而单一商品化产物和多个蛋白变体本身不证明足够一般的有机砌块制备方法，保留针对路线推广性的证据待核。",
+      "reason": "ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-75484-w（Article，Published 2026-07-21）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-15_2026-07-21_nature-communications、批次Git blob 333be7bd8558e481f79351b4c92605714565b7bf。未获取或复制SI/PDF/图片。 实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+      "scopeAssessment": {
+        "primaryContribution": "ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。",
+        "preparativeTransformation": "DHAP经ThDP中间体异构化、H2PO4−消除和水解形成丙烯酸，连接C1甲醇同化通路实现生产。",
+        "generalityEvidence": "实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-75484-w（Article，Published 2026-07-21）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-15_2026-07-21_nature-communications、批次Git blob 333be7bd8558e481f79351b4c92605714565b7bf。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：真实新催化化学及较大规模的工业单体路线不能仅因酶工程就排除；然而单一商品化产物和多个蛋白变体本身不证明足够一般的有机砌块制备方法，保留针对路线推广性的证据待核。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-75484-w",
+        "publisherOnlineDate": "2026-07-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_nature-communications",
+        "stageBatchSha": "333be7bd8558e481f79351b4c92605714565b7bf",
+        "stageSourceSha256": "0f40eb7e25903d9394ed8732e305c5a9e04b892e539ab346983f87f51494add8",
+        "sourceReviewQueueGitBlobSha": "a3d12de752db48bffe4f97911eb0570ffa94e2d4",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "evidenceNeeded": "核对工程AAS对不同DHAP类似底物是否有可分离产物范围，评价单一甲醇—丙烯酸路线是否满足可推广砌块合成标准，不能把酶变体数当成底物数。",
+      "nextAction": "核对公开实验及可访问SI的AAS底物耐受、产物分离与路线通用性后再进行独立挑战。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-76347-0",
+      "journal": "Nature Communications",
+      "title": "Engineered polymerase-mediated efficient synthesis of site-specifically functionalized RNA and 2’-modified RNA oligonucleotides via genetic alphabet expansion",
+      "date": "2026-08-13",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-76347-0",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：扩展遗传字母配对和工程聚合酶SFM4-6实现位点特异的RNA及2′修饰RNA寡核苷酸合成。 实际转化：模板指导延伸插入dNaM–dTPT3功能化非天然核苷酸，控制聚合酶暂停/重启，得到5′、3′或内部单/双标签RNA。 具体一般性证据：公开Results包括普通RNA、2′-F-CU、2′-F/OMe及2′-OMe RNA与多个非天然碱基标签、单/双标记策略，并制备荧光siRNA、凝血酶及金属β-内酰胺酶适配体。",
+      "independentChallengeReason": "第二遍独立挑战：虽然依赖特定SFM4-6酶和模板、且修饰核苷酸竞争导致不同全长产率，但作者实测跨多种2′修饰核酸与标记位点的产物，核心是可推广的核酸合成方法而非单纯蛋白工程。",
+      "reason": "扩展遗传字母配对和工程聚合酶SFM4-6实现位点特异的RNA及2′修饰RNA寡核苷酸合成。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-76347-0（Article，Published 2026-08-13）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-08-08_2026-08-14_nature-communications、批次Git blob b3922c3e7dcf4fa518b34df77c45c0bf837eab87。未获取或复制SI/PDF/图片。 公开Results包括普通RNA、2′-F-CU、2′-F/OMe及2′-OMe RNA与多个非天然碱基标签、单/双标记策略，并制备荧光siRNA、凝血酶及金属β-内酰胺酶适配体。",
+      "scopeAssessment": {
+        "primaryContribution": "扩展遗传字母配对和工程聚合酶SFM4-6实现位点特异的RNA及2′修饰RNA寡核苷酸合成。",
+        "preparativeTransformation": "模板指导延伸插入dNaM–dTPT3功能化非天然核苷酸，控制聚合酶暂停/重启，得到5′、3′或内部单/双标签RNA。",
+        "generalityEvidence": "公开Results包括普通RNA、2′-F-CU、2′-F/OMe及2′-OMe RNA与多个非天然碱基标签、单/双标记策略，并制备荧光siRNA、凝血酶及金属β-内酰胺酶适配体。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-76347-0（Article，Published 2026-08-13）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-08-08_2026-08-14_nature-communications、批次Git blob b3922c3e7dcf4fa518b34df77c45c0bf837eab87。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：虽然依赖特定SFM4-6酶和模板、且修饰核苷酸竞争导致不同全长产率，但作者实测跨多种2′修饰核酸与标记位点的产物，核心是可推广的核酸合成方法而非单纯蛋白工程。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-76347-0",
+        "publisherOnlineDate": "2026-08-13",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_nature-communications",
+        "stageBatchSha": "b3922c3e7dcf4fa518b34df77c45c0bf837eab87",
+        "stageSourceSha256": "7f21bd9ec577c7e4753c35b3b36d2f2d60f08cd449ec01eccc879f7f6b4f0958",
+        "sourceReviewQueueGitBlobSha": "34cc4d97a8a95071476e8acf9250aca66d6f7c34",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-77718-3",
+      "journal": "Nature Communications",
+      "title": "Site-specific protein functionalization by late-stage reversible cysteine masking",
+      "date": "2026-09-10",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77718-3",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：可逆半胱氨酸遮蔽ReCag实现多半胱氨酸肽及蛋白中指定Cys位点的后期共价官能团化。 实际转化：通过分段连接、暂时掩蔽其他Cys、对唯一暴露Cys芳基化或烷基化或消除、最终脱遮蔽恢复原生序列。 具体一般性证据：开放Results与Fig.2–6支持3–8个Cys、30个修饰例子、芳基化/烷基化/消除、锌指及双位点不同修饰；区分LC-MS转化率与部分分离产率。",
+      "independentChallengeReason": "第二遍独立挑战：虽然需先分段连接且并非无预处理直接修饰任意完整蛋白，但多种共价转化、不同蛋白序列和多个产物证明可迁移的生物偶联合成，而不是只改善蛋白表达或生物表型。",
+      "reason": "可逆半胱氨酸遮蔽ReCag实现多半胱氨酸肽及蛋白中指定Cys位点的后期共价官能团化。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-77718-3（Article，Published 2026-09-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-08_2026-09-14_nature-communications、批次Git blob 4191bc97e0f458365262c7bac4cd0a615cc6320f。未获取或复制SI/PDF/图片。 开放Results与Fig.2–6支持3–8个Cys、30个修饰例子、芳基化/烷基化/消除、锌指及双位点不同修饰；区分LC-MS转化率与部分分离产率。",
+      "scopeAssessment": {
+        "primaryContribution": "可逆半胱氨酸遮蔽ReCag实现多半胱氨酸肽及蛋白中指定Cys位点的后期共价官能团化。",
+        "preparativeTransformation": "通过分段连接、暂时掩蔽其他Cys、对唯一暴露Cys芳基化或烷基化或消除、最终脱遮蔽恢复原生序列。",
+        "generalityEvidence": "开放Results与Fig.2–6支持3–8个Cys、30个修饰例子、芳基化/烷基化/消除、锌指及双位点不同修饰；区分LC-MS转化率与部分分离产率。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-77718-3（Article，Published 2026-09-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-08_2026-09-14_nature-communications、批次Git blob 4191bc97e0f458365262c7bac4cd0a615cc6320f。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：虽然需先分段连接且并非无预处理直接修饰任意完整蛋白，但多种共价转化、不同蛋白序列和多个产物证明可迁移的生物偶联合成，而不是只改善蛋白表达或生物表型。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77718-3",
+        "publisherOnlineDate": "2026-09-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_nature-communications",
+        "stageBatchSha": "4191bc97e0f458365262c7bac4cd0a615cc6320f",
+        "stageSourceSha256": "08b2cb29c7c6fae493c194173587311530339d26cbfe8e1220964deb9c22eac0",
+        "sourceReviewQueueGitBlobSha": "4ecabb756c702279c42506da4786a358ecb5152e",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-77616-8",
+      "journal": "Nature Communications",
+      "title": "Harnessing endogenous carbon monoxide for cancer-selective drug synthesis",
+      "date": "2026-09-17",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-77616-8",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：白蛋白疏水口袋保护有机钯环免受谷胱甘肽毒化，实现内源CO参与菲啶酮类药效团的细胞内合成。 实际转化：香豆素锚定白蛋白-钯环配合物摄取CO后经羰基化与还原消除释放多种取代的菲啶-6(5H)-酮。 具体一般性证据：原文Fig.4给出N-烷基3c、CF3 3d、二甲氧基3g、酯基3i和稠合苯并噻吩3e等不同电子/环系的产物，Fig.3和5提供胞内产物定量与生长抑制；不得误称所有百分数为分离收率。",
+      "independentChallengeReason": "第二遍独立挑战：药效整体温和且胞内产物按pmol/百万细胞计量，蛋白载体也复杂，但真正有多取代羰基化成环反应及胞内生成证据；不能只因细胞生物应用就排除，也不声称规模化或高疗效。",
+      "reason": "白蛋白疏水口袋保护有机钯环免受谷胱甘肽毒化，实现内源CO参与菲啶酮类药效团的细胞内合成。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-77616-8（Article，Published 2026-09-17）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-15_2026-09-21_nature-communications、批次Git blob 7cd4194542b3a9b6f329b40188183d420eb59ea9。未获取或复制SI/PDF/图片。 原文Fig.4给出N-烷基3c、CF3 3d、二甲氧基3g、酯基3i和稠合苯并噻吩3e等不同电子/环系的产物，Fig.3和5提供胞内产物定量与生长抑制；不得误称所有百分数为分离收率。",
+      "scopeAssessment": {
+        "primaryContribution": "白蛋白疏水口袋保护有机钯环免受谷胱甘肽毒化，实现内源CO参与菲啶酮类药效团的细胞内合成。",
+        "preparativeTransformation": "香豆素锚定白蛋白-钯环配合物摄取CO后经羰基化与还原消除释放多种取代的菲啶-6(5H)-酮。",
+        "generalityEvidence": "原文Fig.4给出N-烷基3c、CF3 3d、二甲氧基3g、酯基3i和稠合苯并噻吩3e等不同电子/环系的产物，Fig.3和5提供胞内产物定量与生长抑制；不得误称所有百分数为分离收率。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-77616-8（Article，Published 2026-09-17）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-09-15_2026-09-21_nature-communications、批次Git blob 7cd4194542b3a9b6f329b40188183d420eb59ea9。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：药效整体温和且胞内产物按pmol/百万细胞计量，蛋白载体也复杂，但真正有多取代羰基化成环反应及胞内生成证据；不能只因细胞生物应用就排除，也不声称规模化或高疗效。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-77616-8",
+        "publisherOnlineDate": "2026-09-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_nature-communications",
+        "stageBatchSha": "7cd4194542b3a9b6f329b40188183d420eb59ea9",
+        "stageSourceSha256": "3ea90f7fd9daa825676eb279863a27c8a997b5f1a4147941d82868c9211021e6",
+        "sourceReviewQueueGitBlobSha": "4f44c4d0a6ce0ce581ef5de92ca21748f2e62485",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    }
+  ],
+  "guards": {
+    "notOwnerPermanentExclusion": true,
+    "noAutomaticAdmission": true,
+    "noProductionData": true,
+    "noD1": true,
+    "noMediaPdfSiBody": true,
+    "noTodayHotWechat": true
+  }
+}

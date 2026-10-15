@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "context": "2026-10-15 Gallery sitewide DOI/date presentation integrity remediation",
+  "doi": "10.1038/s41586-026-11242-8",
+  "journal": "Nature",
+  "canonicalTitle": "Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds",
+  "firstOnlineDate": "2026-10-14",
+  "datePrecision": "day",
+  "publisherUrl": "https://www.nature.com/articles/s41586-026-11242-8",
+  "publisherCitation": "Fujimoto, H., Mizutani, M., Imachi, K. et al. Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds. Nature (2026). https://doi.org/10.1038/s41586-026-11242-8",
+  "publisherEvidence": "Official Nature article 'About this article' explicitly says 'Published: 14 October 2026' and the DOI is 10.1038/s41586-026-11242-8. The published page lists six named authors.",
+  "authors": [
+    "Hayato Fujimoto",
+    "Masayuki Mizutani",
+    "Kazuya Imachi",
+    "Teruki Nishioka",
+    "Reona Ikeda",
+    "Mamoru Tobisu"
+  ],
+  "sourceCard": {
+    "originalDate": "2026-10-14",
+    "addedDate": "2026-10-15",
+    "dateUnverified": true,
+    "authors": 0
+  },
+  "mechanism": "A DOI+exact English title+journal+source-date bounded public presentation overlay. It does not change fixed-slot protected input bytes; official date and authors are reflected in both card and published read-model.",
+  "validity": "publisher_official_online_day_verified",
+  "noFallbackDateFromDoiCreated": true,
+  "noNewLiteratureAdmissions": true,
+  "adjacentFindings": "Five 2026-10-14-admitted JOC DOI have a prospective Crossref 2026-10-15 date but the 2026-10-14 formal review explicitly marks them dateUnverified=true; Chemical Science and Green Chemistry created-only records still require publisher-first-online evidence. Never promote those to verified solely because time passed.",
+  "sourceReview": "audit/review-2026-10-15-0800.json",
+  "verificationInstructions": "Do not broaden this overlay to other Nature papers or infer other release dates from DOI registration. Remove overlay only after an authorized underlying metadata correction supersedes it."
+}

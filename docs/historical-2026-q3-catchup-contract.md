@@ -415,3 +415,59 @@ Never conflate date verified, science qualified, historical admitted,
 TOC/online-first fully closed. No direct production or D1 mutation,
 no off-slot release, no body/SI/PDF/media scraping, no original source
 shard overwrite, and no stale review approval replacement.
+
+
+## 2026-10-15 Nature Communications five publisher-verified original Q3 methods
+
+Independently from the unmerged nine-DOI Nat Comm PR #662, five additional
+DOI-exact Nature Communications Article records first-online in Q3 were
+verified against publisher dated Article pages, original titles/author lists,
+volume 17 article numbers, Crossref and OpenAlex source roots, raw Git
+blobs and source SHA-256. The cohort was checked for collisions against
+the then-current 1151 formal DOI, 125 academic accepts, two original
+date pending and all owner-level explicit corrections. None collided.
+
+- `audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json`:
+  immutable source evidence, first-online day and complete bibliography.
+- `audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json`:
+  each paper's actual contribution and specific adverse boundary challenge
+  by the same assistant in two passes (not two independent humans).
+  Three independently qualifying synthetic methods:
+  - `10.1038/s41467-026-77718-3` — reversible native-Cys masking,
+    protein ligation/decaging and site-directed arylation, alkylation,
+    elimination across 30 examples, including rich-Cys zinc fingers;
+    conversion percentages must not all be called isolated yields.
+  - `10.1038/s41467-026-77616-8` — albumin-protected palladacycle
+    platform for endogenous-CO-triggered phenanthridinone synthesis
+    with actual substituent/heterocycle chemical scope; limited cellular
+    cytotoxicity and pmol-cell-scale detection do not prove scale-up.
+  - `10.1038/s41467-026-76347-0` — modified/labelled RNA synthesis
+    with engineered polymerase plus unnatural nucleotide pairing,
+    multiple 2'-modification families and controlled single/dual
+    site-specific label attachment.
+  One scoped exclusion:
+  `10.1038/s41467-026-75547-y`, paired HS-/methanol electrolysis to
+  hydroxymethanesulfonate. Genuine C–S product, but its main conclusion
+  is single-product waste conversion, electrode mass transfer and
+  sustained industrial production rather than a generally adaptable
+  organic-chemical reaction method; FE >100% in a paired process is not
+  isolated chemical yield. One separate **evidence pending**:
+  `10.1038/s41467-026-75484-w`, a credible
+  ThDP-assisted methanol-to-acrylic acid synthetic biomanufacturing
+  route. High process titre/conversion are genuine; assess transferability
+  and building-block-route status without conflating enzyme mutant
+  counts with product-scope examples.
+- The three science-accepted DOI have author-correct, DOI-accurate,
+  Chinese-title-reviewed **toc_only** historical rows in
+  `approved-admissions.json`, awaiting exclusively the original
+  Beijing 08:00 writer. No direct release or Today/Hot/WeChat leakage.
+
+This supplemental five-DOI science evidence is NOT automatically the
+source-reconciliation authority for the standalone pending/excluded
+entries until its status adapter is explicitly integrated with
+immutable source provenance. Never reduce unfinished Q3 candidate totals
+by those two science decisions unless that stage integration actually
+runs and returns verified same-generation coverage+worklist.
+No new body media/SI/PDF/paid-text collection, no D1, no owner permanent
+corrections, no second publication slot. Original 16-journal
+publisher Research/online-first full closure remains false.
