@@ -46,7 +46,7 @@
       sessionStorage.setItem(BATCH_TAB_BIND_KEY,early[1]);
   }catch(_){}
   const CUTOFF='2026-10-01';
-  const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Legacy manual-only fallback
+  const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Complete 1-shot TOC-aligned DOI registry
   const CANONICAL_RELEASE_URL='https://gallery.gczhouwld.com/release-delivery.json';
   const SOURCE_RESULT_MAX_BYTES=5000000;
   const SCHEMA='gallery-historical-local-text-pilot-v1';
@@ -968,7 +968,11 @@
     // 527 already visited: no publisher-script evidence is not a reason for an
     // unlimited new automatic sweep. The administrator may opt into a small pilot.
     if(['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
-      &&prior.pageDoiVerified!==true)return manualBlocked===true;
+      &&prior.pageDoiVerified!==true){
+      // Exactly one automatic replay after the publisher binding revision.
+      return manualBlocked===true||(prior.captureRevision!==BATCH_CAPTURE_REVISION
+        &&![403,429].includes(Number(prior.httpStatus||0)));
+    }
     if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
       ||prior.status==='unsupported_publisher')return manualBlocked===true;
     // The scientific-body parser/ACS license adapter changed: re-evaluate prior
@@ -1415,6 +1419,9 @@
   }
   // Canonical publisher routes adapted from the TOC mainline, without
   // using a publisher URL as evidence of DOI identity or text permission.
+  function publisherAllowedForForeground(doi){
+    return ['acs','wiley','nature','science','rsc','elsevier','ccs'].includes(batchPublisher(doi));
+  }
   function batchPublisherArticleUrl(paper,navigationMode=''){
     const doi=normalizeDoi(paper?.doi),kind=batchPublisher(doi);
     if(!doi)return '';
@@ -1620,18 +1627,38 @@
         if(batchPaused)break;
         const token=batchId();
         const navigationMode=mode==='reachability'
-          &&batchPublisher(paper.doi)==='acs'&&attempted%2===0?'acs_direct':'doi_resolver';
-        const job={runId,token,doi:paper.doi,publication:paper.publication,
+          &&batchPublisher(paper.doi)==='acs'&&attempted%2===1?'doi_resolver':'publisher_direct';
+        let job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS,
           pilotMode:mode==='reachability'?'reachability':'',navigationMode};
         GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);GM_setValue(BATCH_JOB,job);
         batchStatusWrite({lastDoi:paper.doi,currentStage:'publisher_open'});
         let result={status:'publisher_unreachable',stage:'publisher_open'};
         try{
-          const prefix=navigationMode==='acs_direct'?'https://pubs.acs.org/doi/':'https://doi.org/';
-          batchTab=GM_openInTab(prefix+paper.doi+'#gallery-historical-job='+token,
-            {active:false,insert:false,setParent:true});
+          const resolved=await batchResolvePublisherTaskUrl(paper,navigationMode);
+          if(!resolved)throw Error('publisher_route_missing');
+          const navigate=(record)=>resolved+'#gallery-historical-job='+record.token;
+          batchTab=GM_openInTab(navigate(job),
+            {active:false,insert:true,setParent:true});
+          if(!batchTab||typeof batchTab.close!=='function')
+            throw Error('publisher_tab_handle_unavailable');
           result=await batchAwaitResponse(job);
+          // TOC's ACS/wiley startup recovery: one *foreground* retry if the
+          // first background tab never produced a script heartbeat. No rerun
+          // of observed 403/429, auth challenges, or uncertain licenses.
+          if(result.status==='publisher_script_not_confirmed'&&!batchPaused
+            &&navigationMode!=='doi_resolver'&&publisherAllowedForForeground(paper.doi)){
+            try{batchTab.close();}catch(_){}
+            batchTab=null;GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);
+            job={...job,token:batchId(),expiresAt:Date.now()+BATCH_LIMIT_MS,foregroundRetry:true};
+            GM_setValue(BATCH_JOB,job);
+            batchStatusWrite({currentStage:'publisher_foreground_retry',lastDoi:paper.doi});
+            batchTab=GM_openInTab(navigate(job),
+              {active:true,insert:true,setParent:true});
+            if(!batchTab||typeof batchTab.close!=='function')
+              throw Error('publisher_retry_tab_handle_unavailable');
+            result=await batchAwaitResponse(job);
+          }
         }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
         finally{
           batchFinishPublisherTab(batchTab,result,paper.doi);
