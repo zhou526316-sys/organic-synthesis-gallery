@@ -275,7 +275,13 @@ test('future unverified JOC date is hidden on 14 Oct while admission stays corre
   await page.locator('#search').fill('10.1039/d6sc06571f');
   const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
   await expect(rsc).toBeVisible({ timeout: 30000 });
-  await expect(rsc.locator('.tag.date')).toContainText(/发表日期待核实|Publication date unverified/);
+  // RSC's DOI/title-matched official First published record establishes
+  // 2026-10-13 independent of Crossref created/deposited metadata. Only this
+  // verified DOI may be unflagged; unverified JOC remains hidden in the same
+  // simulated 2026-10-14 Beijing-day browser session.
+  await expect(rsc).toHaveAttribute('data-date', '2026-10-13');
+  await expect(rsc.locator('.tag.date')).toContainText(/10月13|Oct 13|2026-10-13/);
+  await expect(rsc.locator('.tag.date')).not.toContainText(/待核实|unverified/i);
   await expect(rsc.locator('.tag.new')).toBeVisible();
 });
 
