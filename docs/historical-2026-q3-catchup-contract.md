@@ -360,3 +360,58 @@ remains **false**. Neither a few publisher date proofs nor 147 discovered
 Chem DOI proves all Chem original Research/Early View Q3 publications have
 been enumerated. Do not claim any protected publisher PDF, SI, figure,
 body text or full abstracts were downloaded/republished by this audit.
+
+
+## 2026-10-15 further Chem original online-first corrections (6 DOI)
+
+A **second, separate** publication-date receipt
+`audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json`
+adds six DOI-specific original Chem Article first-online dates to the **already
+frozen and still untouched** five previously confirmed DOI corrections. Only
+publisher DOI-specific Available-online dates, NOT issue-month dates from
+Crossref windows, establish the actual archival quarter:
+
+| Chem DOI tail | frozen Q3 source API date | official first-online | academic quarter |
+| --- | --- | --- | --- |
+| `102952` | 2026-07-01 | **2026-03-19** | Q1, not Q3 |
+| `103002` | 2026-09-01 | **2026-03-30** | Q1, not Q3 |
+| `103022` | 2026-09-01 | **2026-04-14** | Q2, not Q3 |
+| `103186` | 2026-07-01 | **2026-07-29** | Q3 |
+| `103204` | 2026-08-01 | **2026-08-18** | Q3 |
+| `103257` | 2026-09-01 | **2026-09-17** | Q3 |
+
+**IMPORTANT:** April 14 is Q2 (not Q1), and both archival proof
+and runtime quarter-validation explicitly preserve the correct 2026-Q2
+identity for DOI `10.1016/j.chempr.2026.103022`. It is excluded
+from the **Q3 cohort by date**, not excluded as a scientific method.
+
+Three real Q3 original methodologies have passed actual independent first
+science/contribution and adversarial scope challenges and are appended
+to `audit/historical-reviewed/approved-admissions.json` for the
+sole Beijing **2026-10-16 08:00** writer to process *only if* that fixed-slot
+prepublish gate succeeds:
+- `10.1016/j.chempr.2026.103186`: potassium-controlled anti-selective
+  alkyne borylfunctionalization, with broad anti-diboration in flasks
+  and regio-/stereo-controlled unsymmetrical installations in microflow.
+- `10.1016/j.chempr.2026.103204`: triangle association and
+  reaction-condition correlation used to **experimentally establish six**
+  unprecedented metal-catalyzed reactions, two further optimized
+  to preparative silicon-containing medium rings and macrocycles.
+  Do not turn the classifier's prediction alone into new synthetic
+  product evidence.
+- `10.1016/j.chempr.2026.103257`: RhAAC atroposelective
+  macrocyclization of azide/arylalkyne-containing peptides,
+  furnishing axially chiral triazole-biaryl dominant-rotor macrocycles
+  with ring-size and structure diversity.
+
+The three earlier-year papers remain candidates for the long-term
+pre-July `metadata_only` archive, subject to independent actual scope
+admission later; correcting their dates does not count them as new Q3
+science excludes or permanent owner exclusions. Likewise commentary
+on another original methodology is not itself a new method card.
+
+Never conflate date verified, science qualified, historical admitted,
+08:00 officially published, media captured and global publisher
+TOC/online-first fully closed. No direct production or D1 mutation,
+no off-slot release, no body/SI/PDF/media scraping, no original source
+shard overwrite, and no stale review approval replacement.

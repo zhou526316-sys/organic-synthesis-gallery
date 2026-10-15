@@ -273,7 +273,9 @@ export function reconcileQ3({
       &&!publisherNonOriginal.has(id)&&!reviewedScope.has(id),
       'q3_chem_publisher_date_provenance_conflict:'+id);
     const inQ3=publishedQ3(r.publisherFirstOnlineDate);
-    ensure(r.verifiedPublicationQuarter===(inQ3?'2026-Q3':'2026-Q1'),
+    const actualMonth=Number(r.publisherFirstOnlineDate.slice(5,7));
+    const actualQuarter='2026-Q'+Math.ceil(actualMonth/3);
+    ensure(r.verifiedPublicationQuarter===actualQuarter,
       'q3_chem_publisher_quarter_mismatch:'+id);
     const admission=manifest.accepted.find(a=>normalize(a.doi)===id);
     if(inQ3){
@@ -472,7 +474,7 @@ export async function runQuarterAudit({
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
-    chemPublisherDates]=await Promise.all([
+    priorChemDates,additionalChemDates]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -495,8 +497,32 @@ export async function runQuarterAudit({
     readJson('audit/historical-reviewed/q3-nchem-21-scope-source-proof.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
-    readJson('audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json')
+    readJson('audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json')
   ]);
+  const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
+  const moreDates=additionalChemDates.rows;
+  ensure(priorChemDates.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&additionalChemDates.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&priorChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&additionalChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&priorChemDates.rows.length===5
+    &&additionalChemDates.recordCount===6
+    &&additionalChemDates.verifiedOutsideQ3===3
+    &&additionalChemDates.verifiedInsideQ3===3
+    &&additionalChemDates.verifiedSourceDateConflicts===6
+    &&moreDates.length===6
+    &&new Set(moreDates.map(x=>x.doi)).size===6
+    &&moreDates.every(x=>!oldDateIds.has(x.doi))
+    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q1').length===2
+    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q2').length===1
+    &&moreDates.filter(x=>x.verifiedPublicationQuarter==='2026-Q3').length===3
+    &&additionalChemDates.guards?.noSourceShardMutation===true
+    &&additionalChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_additional_publisher_date_schema_or_overlap_invalid');
+  const chemPublisherDates={...priorChemDates,
+    rows:[...priorChemDates.rows,...moreDates]};
+
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
   const priorReviewedScope=bindReviewedQ3ScopeProof({
@@ -820,15 +846,15 @@ export async function runQuarterAudit({
   const chemByRoot=new Map();
   for(const r of chemPublisherDates.rows){
     const rootId=r.originalQ3QueueOrigin;
-    const prev=chemByRoot.get(rootId),data={
-      sourceSha:r.sourceRootSha256,rawGitSha:r.originalSourceBatchGitBlobSha,
-      pinnedReviewerGitSha:r.reviewQueueGitBlobSha
-    };
-    ensure(!prev||(prev.sourceSha===data.sourceSha
-      &&prev.rawGitSha===data.rawGitSha
-      &&prev.pinnedReviewerGitSha===data.pinnedReviewerGitSha),
+    const prev=chemByRoot.get(rootId);
+    ensure(!prev||(prev.sourceSha===r.sourceRootSha256
+      &&prev.rawGitSha===r.originalSourceBatchGitBlobSha),
       'q3_chem_immutable_proof_conflict:'+rootId);
-    chemByRoot.set(rootId,data);
+    const pinned=new Set([...(prev?.pinnedReviewerGitShas||[]),r.reviewQueueGitBlobSha]);
+    ensure(pinned.size<=5&&[...pinned].every(x=>/^[0-9a-f]{40}$/.test(x)),
+      'q3_chem_history_git_sha_set_invalid:'+rootId);
+    chemByRoot.set(rootId,{sourceSha:r.sourceRootSha256,
+      rawGitSha:r.originalSourceBatchGitBlobSha,pinnedReviewerGitShas:pinned});
   }
   for(const [rootId,p] of chemByRoot){
     const shard=shardsByRoot.get(rootId);
@@ -840,19 +866,30 @@ export async function runQuarterAudit({
       .update(Buffer.from([0])).update(raw).digest('hex');
     ensure(actualRawSha===p.sourceSha&&actualRawGitSha===p.rawGitSha,
       'q3_chem_raw_source_fingerprint_changed:'+rootId);
-    if(shard.gitBlobSha===p.pinnedReviewerGitSha)continue;
+    // Two DOI proof generations can share an immutable source root while the
+    // reviewer shard status changes after a separate 08:00 academic approval.
+    // Only permit historical review SHAs after deterministic reconstruction
+    // of the current shard from the identical frozen original source batch.
+    const missing=[...p.pinnedReviewerGitShas].filter(x=>
+      x!==shard.gitBlobSha
+      &&!reviewerQueueHistoricalBlobAliasesByRoot.get(rootId)?.has(x));
+    if(!missing.length)continue;
     const {gitBlobSha:currentReviewerGitBlobSha,...persistedReviewerShard}=shard;
-    const oldSha=verifyHistoricalReviewerStatusRefresh({
-      rawBatchText,reviewerShard:persistedReviewerShard,rootId,
-      expectedRawSha256:p.sourceSha,expectedRawGitBlobSha:p.rawGitSha,
-      previousReviewerGitBlobSha:p.pinnedReviewerGitSha,
-      published:publishedIds,approved:approvedIds,pending:pendingIds
-    });
-    ensure(currentReviewerGitBlobSha!==oldSha,
-      'q3_chem_review_shard_alias_identical:'+rootId);
     const prior=reviewerQueueHistoricalBlobAliasesByRoot.get(rootId)||new Set();
-    ensure(prior.size===0||prior.has(oldSha),'q3_chem_alias_conflict:'+rootId);
-    reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,new Set([...prior,oldSha]));
+    const aliases=new Set(prior);
+    for(const previousReviewerGitBlobSha of missing){
+      const verified=verifyHistoricalReviewerStatusRefresh({
+        rawBatchText,reviewerShard:persistedReviewerShard,rootId,
+        expectedRawSha256:p.sourceSha,expectedRawGitBlobSha:p.rawGitSha,
+        previousReviewerGitBlobSha,
+        published:publishedIds,approved:approvedIds,pending:pendingIds
+      });
+      ensure(currentReviewerGitBlobSha!==verified,
+        'q3_chem_review_shard_alias_identical:'+rootId);
+      aliases.add(verified);
+    }
+    ensure(aliases.size<=5,'q3_chem_too_many_source_sha_aliases:'+rootId);
+    reviewerQueueHistoricalBlobAliasesByRoot.set(rootId,aliases);
   }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
