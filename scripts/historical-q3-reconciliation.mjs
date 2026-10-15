@@ -7,6 +7,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {bindChemQ3DateAudit} from './historical-q3-chem-date-proof.mjs';
 import {verifyHistoricalReviewerStatusRefresh} from './historical-q3-reviewer-status-refresh.mjs';
 import {bindReviewedQ3ScopeProof,EMPTY_REVIEWED_SCOPE,REVIEWED_SCOPE_AUTHORITY_SCHEMA} from './historical-q3-reviewed-scope-proof.mjs';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
@@ -48,12 +49,14 @@ const cell=(journal,month)=>({journal,month,expectedSourceRoots:4,
   alreadyPublished:0,approvedWaiting08:0,sourcePending:0,explicitExcluded:0,
   publisherNonResearchExcluded:0,
   publisherReviewedScopeExcluded:0,publisherReviewedScopePending:0,
+  chemDateProvisional:0,chemPublisherOutsideQ3:0,
   unreviewed:0,publisherResearchIssueComplete:false,
   firstOnlineDateFullyPublisherVerified:false});
 export function reconcileQ3({
   state,triage,shards,formal,manifest,corrections,
   publisherNonResearch=EMPTY_PUBLISHER_NONRESEARCH,
   publisherReviewedScope=EMPTY_REVIEWED_SCOPE,
+  chemPublisherDateAudit=null,
   reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
@@ -140,6 +143,10 @@ export function reconcileQ3({
   const pub=new Set(formal.articles.map(x=>normalize(x.doi)));
   const accepted=new Set(manifest.accepted.map(x=>normalize(x.doi)));
   const pending=new Set(manifest.pending.map(x=>normalize(x.doi)));
+  const chemDateEvidence=bindChemQ3DateAudit({
+    audit:chemPublisherDateAudit,sourceByDoi:all,sourceGitBlobByRoot:gitBlobByRoot,
+    acceptedManifest:manifest.accepted
+  });
   const excluded=new Set(corrections.items.filter(x=>x.decision==='exclude')
     .map(x=>normalize(x.doi)));
   ensure(pub.size===formal.articles.length
@@ -242,6 +249,10 @@ export function reconcileQ3({
     sourceAlreadyPublished:0,sourceApprovedWaiting08:0,sourcePending:0,
     sourceExplicitlyExcluded:0,sourcePublisherNonResearchExcluded:0,
     sourcePublisherReviewedScopeExcluded:0,sourcePublisherReviewedScopePending:0,
+    chemFirstOfMonthProvisionalDois:chemDateEvidence.provisional.size,
+    chemPublisherVerifiedOutsideQ3:0,chemPublisherVerifiedQ3:chemDateEvidence.officialWithinQ3.size,
+    chemSourceDateConflictDois:chemDateEvidence.sourceConflict.size,
+    chemStillUnverifiedOnlineDate:0,
     unfinishedQ3OrDateVerification:0,
     formalQ3Count:formalCount,reviewedQ3Waiting08:0,
     missingFormalQ3FromSource:0,sourceCompletedRoots:shardIds.size,
@@ -255,15 +266,27 @@ export function reconcileQ3({
 
   const unreviewed=[];
   for(const row of all.values()){
-    const candidateDateOk=knownDate(row)&&!row.dateConflict;
-    const month=candidateDateOk?row.date.slice(0,7):[...row.sourceMonths].sort()[0];
+    const publisherOnlineDate=chemDateEvidence.officialDate.get(row.doi);
+    const chemProvisional=chemDateEvidence.provisional.has(row.doi);
+    const verifiedOutOfQ3=chemDateEvidence.officialOutsideQ3.has(row.doi);
+    const candidateDateOk=publisherOnlineDate
+      ?publishedQ3(publisherOnlineDate)
+      :(!chemProvisional&&knownDate(row)&&!row.dateConflict);
+    const month=candidateDateOk
+      ?(publisherOnlineDate||row.date).slice(0,7)
+      :[...row.sourceMonths].sort()[0];
     const c=cells.get(cellId(row.journal,month));
     ensure(c,'q3_source_month_or_journal_invalid:'+row.doi);
     c.uniqueSourceCandidates++;
     if(row.journalConflict)counters.sourceJournalConflicts++;
     if(row.dateConflict)counters.sourceDateConflicts++;
-    if(candidateDateOk){
+    if(verifiedOutOfQ3){
+      counters.knownOutsideQ3++;c.chemPublisherOutsideQ3++;
+    }else if(candidateDateOk){
       counters.apiDatedQ3Candidates++;c.apiQ3DatedCandidates++;
+    }else if(chemProvisional){
+      counters.unknownPublisherOnlineDate++;c.undatedOrAmbiguousSourceCandidates++;
+      counters.chemStillUnverifiedOnlineDate++;c.chemDateProvisional++;
     }else if(row.date&&/^\d{4}-\d\d-\d\d$/.test(row.date)
       &&!(row.flags||[]).some(x=>x.includes('unverified')||x.includes('mismatch'))
       &&!row.dateConflict){
@@ -275,6 +298,7 @@ export function reconcileQ3({
       accepted.has(row.doi)?'approved_waiting08':
       pending.has(row.doi)?'pending_date_or_scope':
       excluded.has(row.doi)?'explicit_excluded':
+      verifiedOutOfQ3?'publisher_verified_outside_q3':
       publisherNonOriginal.has(row.doi)?'publisher_nonresearch_excluded':
       reviewedScope.get(row.doi)?.scientificDecision==='exclude'?'publisher_science_excluded':
       reviewedScope.get(row.doi)?.scientificDecision==='pending'?'publisher_science_pending':'unfinished';
@@ -295,7 +319,7 @@ export function reconcileQ3({
     // An unquestionably out-of-Q3 first-online date remains in the global
     // historical backlog; a source-created date is NEVER guessed as online.
     if(!candidateDateOk&&row.date&&/^\d{4}-\d\d-\d\d$/.test(row.date)
-      &&!(row.flags||[]).length&&!row.dateConflict)continue;
+      &&!(row.flags||[]).length&&!row.dateConflict&&!chemProvisional)continue;
     c.unreviewed++;counters.unfinishedQ3OrDateVerification++;
     unreviewed.push({doi:row.doi,journal:row.journal,
       sourceWindowMonth:month,apiDateCandidate:candidateDateOk?row.date:'',
@@ -392,7 +416,8 @@ export async function runQuarterAudit({
     scopedSourceProof,scopedScience,newNonOriginal,lateFiveProof,lateFiveScience,
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
-    nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience]=await Promise.all([
+    nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
+    chemDateAudit]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -414,7 +439,8 @@ export async function runQuarterAudit({
     readJson('audit/historical-reviewed/q3-nchem-27-nonoriginal-two-pass.json'),
     readJson('audit/historical-reviewed/q3-nchem-21-scope-source-proof.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
-    readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json')
+    readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
+    readJson('audit/historical-publisher-issues/2026/chem-q3-source-date-conflicts-and-firstday-provisional.json')
   ]);
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
@@ -735,12 +761,15 @@ export async function runQuarterAudit({
   }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
-    publisherReviewedScope,reviewerQueueHistoricalBlobAliasesByRoot,page
+    publisherReviewedScope,chemPublisherDateAudit:chemDateAudit,
+    reviewerQueueHistoricalBlobAliasesByRoot,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);
   await writeAtomic(root+'/quarter-2026-q3-review-worklist.json',worklist);
   console.log('HISTORICAL_Q3_AUDIT '+JSON.stringify({
     sourceRoots:coverage.counters.sourceCompletedRoots,
+    chemFirstOfMonthProvisional:coverage.counters.chemFirstOfMonthProvisionalDois,
+    chemVerifiedPreQ3:coverage.counters.chemPublisherVerifiedOutsideQ3,
     sourceExpected:coverage.counters.expectedSourceRoots,
     formalQ3:coverage.counters.formalQ3Count,
     sourceDois:coverage.counters.uniqueSourceDois,
