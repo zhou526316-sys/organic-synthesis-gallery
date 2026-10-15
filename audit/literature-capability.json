@@ -2,15 +2,15 @@
   "schemaVersion": 2,
   "selectionPolicy": "latest-compatible-stable",
   "purpose": "Capability registry for literature discovery, completeness auditing, TOC retrieval, and website synchronization. The primary literature task must select the newest stable compatible capability on main before each fetch run.",
-  "currentKnownStableFingerprint": "9a0975386a8e957fca38af6e373d08f6f830431b6abecf634ce54dcf868e19d6",
+  "currentKnownStableFingerprint": "66368e1bfc14d01fa3523874efa4d82c66fbd83dc68257ca7bf12c22b61174f7",
   "fingerprintMethod": "sha256 UTF-8 of six newline-joined \"<label>=<blobSha>\" lines in this exact order: literatureAudit, literatureWorkflow, journalRegistry, completenessGuard, tocCollector, publisherFallback; no trailing newline",
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
-      "blobSha": "c04a13cd6422b2c0b7522b5d5a329ed230e2b2a6",
-      "validation": "GitHub Actions run 37203791005 succeeded on main with the repaired discovery implementation and updated canonical activation dates. The audit retained Chem from 2026-09-19 while querying Chemical Science and Green Chemistry from 2026-10-01, producing sourceRecords Chem=9, Chemical Science=12, Green Chemistry=8 with criticalSourceFailures=0 and sourceFamilyGaps=0.",
-      "comparisonToPriorStable": "Supersedes the older stable discovery implementation that could report verifiedThrough catch-up without widening actual source queries and could coerce partial Crossref dates such as [2026] to 2026-01-01. The repaired implementation makes catch-up real at the query layer, preserves created/deposit provenance, retains date precision, and makes raw-to-union collapse observable.",
-      "semanticImpact": "Higher discovery recall and safer date semantics. New DOI candidates are exposed to semantic review only; this promotion does not admit literature, change scope decisions, or advance verifiedThrough."
+      "blobSha": "b28069fb30ee1497167a58d7ea6b61df69c71335",
+      "validation": "PR #669 merged to main (32a809e144248e07669b9ce96a4b61cfccb89733); publisher DOI recall run 38673570022 passed two validation jobs; full main DOI-union audit run 38673793730 succeeded with same-generation latest/compact and 0 critical source failures/source-family gaps/historical coverage losses. Four exact RSC date holds were independently retried with source-specific evidence.",
+      "comparisonToPriorStable": "Adds bounded, DOI-exact automatic Crossref published-online, RSC First published, and Europe PMC verification to the existing 16-journal audit; prioritizes durable holds even if absent from the ordinary DOI union; never converts DOI created/deposited or feed packaging dates into first-online dates.",
+      "semanticImpact": "Automatic metadata-date rescue with sources and precision; no changes to inclusion approvals, production admission timing, or existing scheduling."
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
@@ -26,9 +26,9 @@
     },
     "completenessGuard": {
       "path": "scripts/test-literature-completeness-capability.mjs",
-      "blobSha": "731acecbb77cfcf9b4ee31f1256a5115a4fa4440",
-      "validation": "Passed in main audit run 37203791005 after the explicit 2026-10-01 activation change. It guards real catch-up query widening, independent created-date provenance, raw-to-union collapse detection, rejection of fabricated partial dates, and the current per-journal activation dates.",
-      "semanticImpact": "CI fails if catch-up becomes report-only again, if partial dates are coerced to fake calendar dates, or if nonzero raw source candidates silently collapse to zero."
+      "blobSha": "ce480a6521efd594d5437331807e2b06e1ef61c9",
+      "validation": "PR #669 publisher DOI recall regression 38673570022 and main audit 38673793730 succeeded; partial dates stay unknown, future dates hold, source access failures remain explicit, and durable held DOIs cannot silently disappear from targeted rechecks.",
+      "semanticImpact": "CI protects DOI-bound publication-day verification and sustained retrial of publication-date holds, without weakening three-day/seven-day discovery or publisher source coverage guards."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
