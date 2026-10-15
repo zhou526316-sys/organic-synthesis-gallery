@@ -1379,7 +1379,7 @@ test('all published DOI links survive user-shell decoration without wrapping or 
 });
 
 
-test('verified Nature and JOC dates render without inventing an RSC first-online date', async ({ page }) => {
+test('verified Nature JOC and RSC dates render from DOI-bound official first-published evidence', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-10-15T03:32:00.000Z') });
   await stubOptionalApi(page);
   await page.goto((process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174') + '/', { waitUntil: 'domcontentloaded' });
@@ -1406,6 +1406,9 @@ test('verified Nature and JOC dates render without inventing an RSC first-online
   await page.locator('#search').fill('10.1039/d6sc06571f');
   const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
   await expect(rsc).toBeVisible({ timeout: 30000 });
-  await expect(rsc.locator('.tag.date')).toContainText(/发表日期待核实|Publication date unverified/);
-  await expect(rsc).toHaveAttribute('data-date', '');
+  // RSC official indexed DOI/title source independently confirms 13 Oct;
+  // do not reuse an obsolete 'date unverified' test from before that proof.
+  await expect(rsc).toHaveAttribute('data-date', '2026-10-13');
+  await expect(rsc.locator('.tag.date')).toContainText(/10月13|Oct 13|2026-10-13/);
+  await expect(rsc.locator('.tag.date')).not.toContainText(/待核实|unverified/i);
 });
