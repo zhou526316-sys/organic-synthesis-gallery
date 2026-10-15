@@ -100,7 +100,7 @@ test('three separately approved original synthetic methods are truly authorized 
   assert.equal(authorizations.summary.checked,authorizations.accepted.length+authorizations.pending.length);
   assert.equal(authorizations.auditGuards.requiresFixed08Release,true);
   const validated=validateHistoricalApproval(authorizations);
-  assert.equal(validated.length,119);
+  assert.equal(validated.length,authorizations.accepted.length);
   for(const r of records){
     const p=fids.get(r.doi),science=fullScience.assessments.find(x=>x.doi===r.doi);
     assert.ok(p&&science);
