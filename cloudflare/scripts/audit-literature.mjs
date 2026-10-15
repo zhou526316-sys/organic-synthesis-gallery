@@ -15,6 +15,8 @@ import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../
 import { CROSSREF_DATE_MODES, crossrefModeQuery, wasRecentlyDeposited } from '../../scripts/lib/crossref-discovery-date-modes.mjs';
 import { needsHistoricalDepositReview, buildHistoricalCrossrefDepositBacklog } from '../../scripts/lib/crossref-deposit-backlog.mjs';
 
+import { fetchOpenAlexDateWindows } from '../../scripts/lib/openalex-date-window-fetch.mjs';
+
 const TIME_ZONE = 'Asia/Shanghai';
 
 function dateInTimeZone(date = new Date(), timeZone = TIME_ZONE) {
@@ -369,18 +371,23 @@ async function fetchOpenAlex(journal) {
     }
   }
   for (const sourceId of sourceIds) {
-    let cursor = '*';
     let count = 0;
     let ok = true;
     let note = '';
+    let requests = 0;
     try {
-      for (let page = 0; page < 40; page += 1) {
-        const filter = `primary_location.source.id:${sourceId},from_publication_date:${sourceQueryStartForJournal(journal)},to_publication_date:${END}`;
-        const q = new URLSearchParams({ filter, 'per-page': '200', cursor });
-        const data = await jsonFetch(`https://api.openalex.org/works?${q}`);
-        const items = data?.results || [];
-        count += items.length;
-        for (const item of items) {
+      // OpenAlex may allow cursor='*' but reject page-two cursors with HTTP 401.
+      // Date-window sharding verifies all records; unverified leaves fail closed.
+      const receipt = await fetchOpenAlexDateWindows({
+        startDate: sourceQueryStartForJournal(journal),
+        endDate: END,
+        fetchPage: async ({ startDate, endDate, perPage }) => {
+          const filter = `primary_location.source.id:${sourceId},from_publication_date:${startDate},to_publication_date:${endDate}`;
+          const q = new URLSearchParams({ filter, 'per-page': String(perPage), cursor: '*' });
+          return jsonFetch(`https://api.openalex.org/works?${q}`);
+        },
+        onRecord: item => {
+          count += 1;
           const topics = [
             item?.primary_topic?.display_name,
             item?.primary_topic?.subfield?.display_name,
@@ -399,16 +406,14 @@ async function fetchOpenAlex(journal) {
             topics,
             sources: [`openalex:${sourceId}`],
           });
-        }
-        const next = data?.meta?.next_cursor;
-        if (items.length < 200 || !next || next === cursor) break;
-        cursor = next;
-      }
+        },
+      });
+      requests = receipt.requests;
     } catch (error) {
       ok = false;
       note = error.message;
     }
-    stats.push({ source: 'openalex', journal: journal.name, sourceId, ok, count, note });
+    stats.push({ source: 'openalex', journal: journal.name, sourceId, ok, count, requests, note });
   }
   return { candidates: [...map.values()], stats };
 }

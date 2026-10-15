@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import './test-openalex-date-window-fetch.mjs';
 import { readFile } from 'node:fs/promises';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-journals.js';
 import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
@@ -46,7 +47,7 @@ assert.ok(auditSource.includes('catchupStart'), 'Audit must automatically catch 
 assert.ok(auditSource.includes('sourceQueryStartForJournal'), 'Source queries must use the earlier of catch-up and safety-tail starts');
 assert.ok(auditSource.includes('queryStart:journalQueryStart'), 'Crossref online/published/created must use verifiedThrough catch-up query window');
 assert.ok(auditSource.includes('rescueStart:journalRescueStart'), 'Crossref deposit rescue must use bounded seven-day machine safety tail');
-assert.ok(auditSource.includes('from_publication_date:${sourceQueryStartForJournal(journal)}'), 'OpenAlex must widen to verifiedThrough catch-up when it predates the seven-day tail');
+assert.ok(auditSource.includes('startDate: sourceQueryStartForJournal(journal)'), 'OpenAlex must widen to verifiedThrough catch-up when it predates the seven-day tail');
 assert.ok(auditSource.includes('safetyTail'), 'Safety-tail records must remain observable without becoming routine re-review work');
 assert.deepEqual(CROSSREF_DATE_MODES,['online','published','created','deposited']);
 assert.ok(auditSource.includes('for (const mode of CROSSREF_DATE_MODES)'), 'Crossref must union online, published, created and redeposited');

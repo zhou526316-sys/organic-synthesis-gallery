@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-13T23:08:00.000Z",
-  "requestedBy": "prepublish-primary-recovery-20261014-0800",
-  "publicationSlot": "2026-10-14T08:00:00+08:00",
-  "expectedProductionCards": 984,
-  "reviewFile": "audit/review-2026-10-13-owner-catchup.json",
-  "reviewBlobSha": "86d737b212dd7b6cdf7e4fa5f2965d4931503820",
-  "reason": "The scheduled 06:55 Asia/Shanghai machine audit for the 2026-10-14 08:00 slot had not appeared by 07:08 and the persisted paired snapshot still ended on 2026-10-13. Request exactly one serialized recovery audit for endDate 2026-10-14; preserve all 16-journal coverage, seven-day safety tail, created/deposit rescue, current 984-card production baseline, and do not mutate production."
+  "requestedAt": "2026-10-15T00:57:00.000Z",
+  "requestedBy": "formal-slot-20261015-missing-0655-audit-recovery",
+  "publicationSlot": "2026-10-15T08:00:00+08:00",
+  "expectedProductionCards": 1087,
+  "reason": "The 06:55 Asia/Shanghai scheduled audit for 2026-10-15 had no same-day run or paired snapshot by 08:55; primary prepublish review is absent. Request one recovery DOI-union audit for Beijing endDate=2026-10-15 using current main and all 16 journals, three-day main window, seven-day late-deposit tail, verifiedThrough gap closure checks. This request does not approve new literature, bypass the fixed-slot writer, or authorize publication after 09:00.",
+  "expectedAuditEndDate": "2026-10-15",
+  "safetyTailDays": 7,
+  "officialReleaseSlotOnly": "08:00"
 }

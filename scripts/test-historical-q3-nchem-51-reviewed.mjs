@@ -94,12 +94,13 @@ test('twenty original Article scope exclusions and a single distinct evidence-pe
 test('three separately approved original synthetic methods are truly authorized for 08-only historical release',()=>{
   assert.equal(records.length,3);
   assert.equal(fullScience.accounting.include,3);
-  assert.equal(authorizations.summary.include,119);
+  assert.equal(authorizations.summary.include,authorizations.accepted.length);
+  assert.ok(authorizations.summary.include>=119,'historically authorized Nature Chemistry 3 retained');
   assert.equal(authorizations.summary.pending,2);
   assert.equal(authorizations.summary.checked,authorizations.accepted.length+authorizations.pending.length);
   assert.equal(authorizations.auditGuards.requiresFixed08Release,true);
   const validated=validateHistoricalApproval(authorizations);
-  assert.equal(validated.length,119);
+  assert.equal(validated.length,authorizations.accepted.length);
   for(const r of records){
     const p=fids.get(r.doi),science=fullScience.assessments.find(x=>x.doi===r.doi);
     assert.ok(p&&science);

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "NatureChemistry_Q3_51_reviews_immutable_raw_batch_and_deterministic_reviewer_status_refresh_recovery",
+  "purpose": "Q3_Chem_verified_5_official_first_online_proof_and_3_new_admissions_recount",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-14T09:43:02.751Z",
-  "reason": "PR #657 and #659 merged (1a047bae08aeccd4b9318ced58c601370060c029, abf38fd6a3bbadd3fef8e8201d2c26c5237194f4), protected CI all success. Run the existing staging-only Q3 reconciliation ONCE after authenticating each frozen Nature Chemistry original Crossref/OpenAlex source SHA256 and raw Git SHA1, deterministic replay of current reviewer queue after 3 legitimate approvals, and root-specific historical SHA aliases. Do not retry failed #38538114410 or #38539425019 as if successful. True 66 publisher DOI, 51 reviewed: 27 nonoriginal, 20 science excluded, 1 science evidence-pending, 3 academically accepted only for sole Beijing 08:00. Original manifests 119 accepted, 2 date conflict pending, 28 waiting 2026-10-15 08:00; formal 1087 and Q3 formal 820 unchanged. Expected unfinished 11340->11289 only on successful same-generation audited stage JSON readback. D1 0, no new publication/Today/Hot/WeChat/media/PDF/SI. 16 journal publisher Research closure FALSE.",
+  "requestedAt": "2026-10-15T02:03:03.325Z",
+  "reason": "After CI-green merged PR #667 (750e21872d04f5468d6d06e655f7ef1db06a15c3), staging-only 2026-Q3 recount of 16-journal frozen 192 Crossref/OpenAlex DOI roots. Chem exact official first-online 5: 102968 and 102990 are Q1 March original, wrongly staged Aug1; 103211,103215,103249 real Q3 Aug21/Aug31/Sep16, wrongly staged Aug1/Aug1/Sep1. Three Q3 original synthetic methods have two-pass scientific evidence and are approved in main 122 incl, 2 original date pending unchanged, sole next legal Beijing 2026-10-16 08:00. No production changes or off-slot release, no Cloudflare D1, no PDFs/SI/body/media. All Q3 source unique DOI 12286 unchanged, original stage dates and raw SHA preserved; two Q1 source records count as publisher-verified outside Q3 (not academic exclusions). Publisher Research issue completeness remains false. Predicted unfinished 11289->11284 only if no other inputs changed and real same-generation stage readback succeeds.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261014_final_recovery_after_status_sha_refresh_PR659_66_nchem_source_51_reviewed_3_staged_includes",
+  "triggerScope": "20261015_Q3_Chem_5_official_online_date_conflicts_2_Q1_3_Q3_admitted_next08_verified",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 375,
   "expectedStageCompletedRoots": 375,
-  "expectedAcademicInclude": 119,
+  "expectedAcademicInclude": 122,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "abf38fd6a3bbadd3fef8e8201d2c26c5237194f4",
+  "lastRelatedMergeCommit": "750e21872d04f5468d6d06e655f7ef1db06a15c3",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -53,7 +53,7 @@
   "reviewedPublisherScopeScientificLedgerSha": "a188d3a1a59b863817acdf40b16f1d22ba2bcb77",
   "expectedScopeScienceExcluded": 49,
   "expectedAdditionalEvidencePending": 5,
-  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11289,
+  "expectedQuarterlyUnfinishedIfFrozenInputsUnchanged": 11284,
   "retryOfRunId": 38539425019,
   "retryCause": "q3_nchem_source_root_count_invalid_due_66_vs_51_doi_subset_windows",
   "retainOwnerPermanentCorrections": true,
@@ -64,16 +64,23 @@
     "10.1038/s44160-026-01146-w",
     "10.1038/s41557-026-02226-2"
   ],
-  "expectedReviewedWaitingAt08": 28,
+  "expectedReviewedWaitingAt08": 31,
   "expectedQ3Formal": 820,
   "expectedQ3UniqueSources": 12286,
   "newHistoricalApprovalDoiExact": [
-    "10.1038/s41557-026-02228-0",
-    "10.1038/s41557-026-02227-1",
-    "10.1038/s41557-026-02232-4"
+    "10.1016/j.chempr.2026.103211",
+    "10.1016/j.chempr.2026.103215",
+    "10.1016/j.chempr.2026.103249"
   ],
   "priorFailedRunIds": [
     38538114410,
     38539425019
+  ],
+  "expectedChemVerifiedOutsideQ3": 2,
+  "expectedChemPublisherDateDiscrepancies": 5,
+  "nextLegalSoleReleaseSlot": "2026-10-16T08:00:00+08:00",
+  "publisherQ1NotQ3DoiExact": [
+    "10.1016/j.chempr.2026.102968",
+    "10.1016/j.chempr.2026.102990"
   ]
 }

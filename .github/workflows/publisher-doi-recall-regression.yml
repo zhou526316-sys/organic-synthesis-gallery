@@ -126,8 +126,10 @@ jobs:
             report.publisherDateVerificationBacklog.items.length);
           assert.ok(report.sourceStats?.length>=16);
           const doi='10.1038/s44160-026-01189-z';
-          assert.ok(report.missingCandidates.some(row=>row.doi===doi),
-            'Known Nature Synthesis pending DOI must remain in actual candidate handoff');
+          const rolling=JSON.parse(readFileSync('public/rolling-supplement.json','utf8'));
+          const inProduction=rolling.papers.some(row=>row.doi===doi);
+          assert.ok(inProduction || report.missingCandidates.some(row=>row.doi===doi),
+            'Known Nature Synthesis DOI must be in production or remain in actual candidate handoff');
           console.log('PUBLISHER_READONLY_SMOKE '+JSON.stringify({
             sourceRecords:report.summary.sourceRecords,
             unresolved:report.summary.unresolved,

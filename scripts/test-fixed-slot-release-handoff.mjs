@@ -46,6 +46,17 @@ test('Oct11 one-time noon deadline does not extend later days', () => {
   const next = '2026-10-12T08:00:00+08:00';
   assert.equal(slotState(next, Date.parse(next) + 60 * 60_000 + 1), 'expired_slot');
 });
+test('Oct15 owner manual recovery opens only the same date and never replays or moves the slot', () => {
+  const recovery = '2026-10-15T08:00:00+08:00', t = Date.parse(recovery);
+  assert.equal(slotState(recovery, t - 1), 'waiting_for_slot');
+  assert.equal(slotState(recovery, t + 61 * 60_000), 'slot_open');
+  assert.equal(slotState(recovery, t + 959 * 60_000), 'slot_open');
+  assert.equal(slotState(recovery, t + 959 * 60_000 + 1), 'expired_slot');
+  assert.equal(slotState(recovery, t + 120 * 60_000, recovery), 'already_published_or_superseded');
+  const tomorrow = '2026-10-16T08:00:00+08:00', next = Date.parse(tomorrow);
+  assert.equal(slotState(tomorrow, next + 60 * 60_000), 'slot_open');
+  assert.equal(slotState(tomorrow, next + 60 * 60_000 + 1), 'expired_slot');
+});
 test('next-day invocation cannot backfill yesterday', () => assert.equal(slotState(slot, at + 24 * 3600_000), 'expired_slot'));
 test('same slot is idempotent', () => assert.equal(slotState(slot, at, slot), 'already_published_or_superseded'));
 test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-03T08:00:00+08:00'), 'already_published_or_superseded'));
