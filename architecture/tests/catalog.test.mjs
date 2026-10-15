@@ -97,6 +97,27 @@ test('publisher-verified DOI-specific date remains a real calendar day in indexe
   assert.equal(b.records[0].paper.date,'2026-10-09');
   assert.equal(verifyCatalog(b.files,[raw]).ok,true);
 });
+test('Nature publisher date and authors are verified in derived records, while protected paper remains byte-stable', () => {
+  const raw={doi:'10.1038/s41586-026-11242-8',journal:'Nature',
+    title:'Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds',
+    date:'2026-10-14',dateUnverified:true,addedDate:'2026-10-15',authors:[]};
+  const original=JSON.stringify(raw);
+  const b=buildCatalog([raw],{source,asOfDate:'2026-10-15'});
+  const row=b.records[0];
+  assert.equal(row.firstOnlineDate,'2026-10-14');
+  assert.equal(row.datePrecision,'day');
+  assert.equal(row.paper.dateUnverified,true); // protected data not silently edited
+  assert.deepEqual(row.paper.authors,[]);
+  assert.deepEqual(row.verifiedPresentationAuthors,[
+    'Hayato Fujimoto','Masayuki Mizutani','Kazuya Imachi',
+    'Teruki Nishioka','Reona Ikeda','Mamoru Tobisu'
+  ]);
+  const searchSegment=b.catalog.search[0];
+  const entries=JSON.parse(b.files[searchSegment.path]).entries;
+  assert.deepEqual(entries[0].authors,row.verifiedPresentationAuthors);
+  assert.equal(JSON.stringify(raw),original);
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
 test('capacity shards retain all records', () => {
   const rows = Array.from({ length: 10 }, (_, i) => paper(i));
   const b = build(rows, { maxShardBytes: 1100 });
