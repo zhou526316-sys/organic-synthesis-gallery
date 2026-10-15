@@ -7,6 +7,7 @@ export const CHEM_DATE_SCHEMA='gallery-q3-chem-online-first-date-disagreement-v1
 const fail=(ok,msg)=>{if(!ok)throw Error(msg)};
 const sha40=v=>/^[a-f0-9]{40}$/.test(v||'');
 const sha64=v=>/^[a-f0-9]{64}$/.test(v||'');
+const matchingBlob=(m,id,sha)=>{ const x=m.get(id); return x instanceof Set?x.has(sha):x===sha; };
 const date=v=>/^2026-\d\d-\d\d$/.test(v||'')&&Number.isFinite(Date.parse(v+'T00:00:00Z'));
 export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,acceptedManifest}={}){
   if(!audit)return {provisional:new Set(),officialDate:new Map(),officialOutsideQ3:new Set(),
@@ -27,7 +28,7 @@ export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,accep
   const roots=new Map(audit.sourceRootSnapshots.map(x=>[x.rootId,x]));
   fail(roots.size===12&&[...roots.values()].every(x=>
     sha40(x.reviewQueueGitBlobSha)&&sha64(x.stageSourceSha256)
-    &&sourceGitBlobByRoot.get(x.rootId)===x.reviewQueueGitBlobSha),
+    &&matchingBlob(sourceGitBlobByRoot,x.rootId,x.reviewQueueGitBlobSha)),
     'q3_chem_date_audit_source_root_sha_mismatch');
   const sourceChem=[...sourceByDoi.values()].filter(x=>x.journal==='Chem');
   fail(sourceChem.length===audit.summary?.sourceUniqueDois
@@ -91,7 +92,7 @@ export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,accep
       'q3_chem_date_official_evidence_invalid:'+row.doi);
     for(const x of row.sourceOccurrences)
       fail(src.sourceRoots.includes(x.sourceRootId)
-        &&sourceGitBlobByRoot.get(x.sourceRootId)===x.reviewQueueGitBlobSha
+        &&matchingBlob(sourceGitBlobByRoot,x.sourceRootId,x.reviewQueueGitBlobSha)
         &&src.sourceHashes.includes(x.stageSourceSha256),
         'q3_chem_date_official_source_conflict:'+row.doi);
     if(row.publisherFirstOnlineDate===null){
