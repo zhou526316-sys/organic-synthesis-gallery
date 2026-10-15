@@ -98,6 +98,28 @@ test('partial_publisher_date_stays_unknown_with_crossref_created_provenance', ()
   assert.equal(out.formalReview.accepted[0].dateUnverified, true);
   assert.equal(out.formalReview.accepted[0].createdDate, '2026-09-22');
 });
+test('feed_only_exclusion_retains_unknown_publication_day_and_discovery_provenance', () => {
+  const f = fixture();
+  f.handoff.unresolved[1].date = '';
+  f.handoff.unresolved[1].dateUnverified = true;
+  f.handoff.unresolved[1].createdDate = '';
+  f.handoff.unresolved[1].feedDate = '2026-09-22';
+  f.handoff.unresolved[1].sources = ['publisher-feed:Angew'];
+  f.staging.decisions[1].date = null;
+  const out = convertPrepublishReview(f.staging, f.handoff, options);
+  assert.equal(out.formalReview.rejected[0].date, '');
+  assert.equal(out.formalReview.rejected[0].dateUnverified, true);
+  assert.equal(out.formalReview.rejected[0].dateEvidenceSource, 'publisher_feed_listing_not_first_online');
+  assert.deepEqual(validateFormalPartition(f.staging, out.formalReview, out.markerFields, out.pendingQueue), []);
+});
+rejected('feed_only_unknown_day_cannot_admit_or_create_date', f => {
+  f.handoff.unresolved[0].date = '';
+  f.handoff.unresolved[0].dateUnverified = true;
+  f.handoff.unresolved[0].createdDate = '';
+  f.handoff.unresolved[0].feedDate = '2026-09-22';
+  f.handoff.unresolved[0].sources = ['publisher-feed:JACS'];
+  f.staging.decisions[0].date = null;
+}, /bibliographic_fields_missing/);
 rejected('unverified_date_without_created_provenance_must_fail', f => {
   f.handoff.unresolved[0].date = '';
   f.staging.decisions[0].date = '';

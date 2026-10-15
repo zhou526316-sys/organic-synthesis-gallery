@@ -85,14 +85,24 @@ export function convertPrepublishReview(staging, handoff, { generatedAt, sourceS
     const datedDepositEvidence = row.date === '' && candidate.dateUnverified === true
       && /^\d{4}-\d{2}-\d{2}$/.test(candidate.createdDate || '')
       && (candidate.sources || []).some(source => /^crossref:.*:created$/.test(source));
-    requireValue(row.title && row.journal && (exactPublicationDate || datedDepositEvidence),
+    // RSS listing provenance may let an already-reviewed *exclusion* be recorded
+    // without fabricating the article's first-online date. An undated include or
+    // pending candidate cannot use this path for publication authorization.
+    const publisherFeedOnlyExcluded = row.decision === 'exclude' && row.date === ''
+      && candidate.dateUnverified === true && !candidate.createdDate
+      && /^\d{4}-\d{2}-\d{2}$/.test(candidate.feedDate || '')
+      && (candidate.sources || []).some(source => /^publisher-feed:/.test(source));
+    requireValue(row.title && row.journal && (exactPublicationDate || datedDepositEvidence || publisherFeedOnlyExcluded),
       `bibliographic_fields_missing:${doi}`);
+    if (publisherFeedOnlyExcluded) row.dateEvidenceSource = 'publisher_feed_listing_not_first_online';
     requireValue(!text(candidate.journal) || row.journal === candidate.journal, `journal_changed_without_reconciliation:${doi}`);
     requireValue(!text(candidate.date) || row.date === candidate.date, `date_changed_without_reconciliation:${doi}`);
     const journal = registry.get(row.journal);
     // createdDate is used only for prospective discovery provenance when the publisher date is unknown,
     // never copied into row.date; verifiedThrough must remain held for the date-unknown records.
-    const activationEvidenceDate = exactPublicationDate ? row.date : candidate.createdDate;
+    const activationEvidenceDate = exactPublicationDate ? row.date
+      : datedDepositEvidence ? candidate.createdDate
+      : publisherFeedOnlyExcluded ? candidate.feedDate : '';
     requireValue(journal && (!journal.activeFrom || activationEvidenceDate >= journal.activeFrom),
       `journal_or_activation_invalid:${doi}`);
     if (candidate.reviewPriority === 'high') row.reviewPriority = 'high';
