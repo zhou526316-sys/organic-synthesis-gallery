@@ -343,7 +343,7 @@
     "pagesRun": 38241491371,
     "deploymentVerifiedAt": "2026-10-12T11:29:58.124Z"
   },
-  "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+  "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
   "prepublish": {
     "publicationSlot": "2026-10-12T08:00:00+08:00",
     "status": "published",
@@ -560,214 +560,7 @@
     "automationDisabled": false,
     "schedulesChanged": false
   },
-  "pendingReviewBacklog": [
-    {
-      "doi": "10.1021/acscatal.6c06572",
-      "title": "Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution",
-      "journal": "ACS Catalysis",
-      "originalDate": "2026-10-14",
-      "originalDatePrecision": "day",
-      "date": "2026-10-14",
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution 涉及潜在有机合成转化；反向挑战：光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围",
-      "evidenceNeeded": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1021/acscatal.6c06572",
-        "https://pubs.acs.org/doi/10.1021/acscatal.6c06572"
-      ],
-      "nextAction": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c04101",
-      "title": "Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes",
-      "journal": "Organic Letters",
-      "originalDate": "2026-10-14",
-      "originalDatePrecision": "day",
-      "date": "2026-10-14",
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes 涉及潜在有机合成转化；反向挑战：TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展",
-      "evidenceNeeded": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1021/acs.orglett.6c04101",
-        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c04101"
-      ],
-      "nextAction": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202608538",
-      "originalDate": "2026-10-13",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
-      "journal": "CCS Chemistry",
-      "title": "Regioselective ortho -B-H Functionalization of nido -Carboranes via Intramolecular Iodonium Activation Strategy",
-      "status": "pending",
-      "reviewKind": "new_candidate_evidence_gap",
-      "lastReviewedAt": "2026-10-13T23:18:14.684Z",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "decision": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "evidenceBasis": "固定blob中该候选的摘要为空；本轮检索到CCS Chemistry官方DOI页面和13 Oct 2026目录记录，但文章页返回403，未取得可核查摘要或正文。只有题名不足以断言方法的普适性。",
-      "challengeReason": "正向理由是题名明确指向区域选择性B–H官能团化；反向理由是没有实际底物、产物或范围证据，直接纳入会把题名当成方法审核，直接排除又可能漏掉合格合成方法。",
-      "evidenceNeeded": "取得出版社摘要、正文或SI，确认具体亲电体/偶联伙伴、nido-carborane底物范围、分离产物及是否为可推广制备方法。",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.31635/ccschem.026.202608538",
-        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608538"
-      ],
-      "nextAction": "通过既有浏览器/VPN Bridge或可访问的CCS Chemistry正文/SI补证；仅复核本DOI，不阻挡25篇已完备白名单。",
-      "carryForward": true,
-      "cardAction": "not_in_production",
-      "lastManualCheck": "2026-10-15: prior two-pass pending evidence retained, no new sufficient SI/primary page",
-      "originalDatePrecision": "day",
-      "date": "2026-10-13"
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01296",
-      "originalDate": "2026-10-13",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
-      "journal": "JOC",
-      "title": "Synthesis of Pyrido[2,3- d ]pyrimidin-4(3 H )-ones via SNAr/Tandem Cyclization",
-      "status": "pending",
-      "reviewKind": "new_candidate_evidence_gap",
-      "lastReviewedAt": "2026-10-13T23:18:14.684Z",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "decision": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "evidenceBasis": "固定blob的JOC摘要给出2-溴-N-苯基烟酰胺与氰胺或甲酰胺的SNAr/环化，并报告机理计算、蓝光发射和分子对接；摘要未说明取代底物系列、分离产物范围或放大。",
-      "challengeReason": "正向理由是确有新C–N成键/稠环路线及两种氮源；反向理由是现有摘要可能只支持一个窄骨架实例，直接纳入会把“new method”措辞替代实际普适性审核。",
-      "evidenceNeeded": "取得论文或SI中的起始烟酰胺取代范围、氮源范围、分离收率与代表性放大，判断其是否达到一般杂环制备方法标准。",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1021/acs.joc.6c01296",
-        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01296"
-      ],
-      "nextAction": "通过既有浏览器/VPN Bridge读取ACS正文或SI底物表；仅复核本DOI，不阻挡其余已完备白名单。",
-      "carryForward": true,
-      "cardAction": "not_in_production",
-      "lastManualCheck": "2026-10-15: prior two-pass pending evidence retained, no new sufficient SI/primary page",
-      "originalDatePrecision": "day",
-      "date": "2026-10-13"
-    },
-    {
-      "doi": "10.1039/d6sc06226a",
-      "title": "3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters)",
-      "journal": "Chemical Science",
-      "originalDate": null,
-      "originalDatePrecision": "unverified",
-      "date": null,
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters) 涉及潜在有机合成转化；反向挑战：SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知",
-      "evidenceNeeded": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1039/d6sc06226a",
-        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06226a"
-      ],
-      "nextAction": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    },
-    {
-      "doi": "10.1039/d6sc05550h",
-      "title": "Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes",
-      "journal": "Chemical Science",
-      "originalDate": null,
-      "originalDatePrecision": "unverified",
-      "date": null,
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes 涉及潜在有机合成转化；反向挑战：双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失",
-      "evidenceNeeded": "须查具体环加成反应、底物范围及首次在线日期",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1039/d6sc05550h",
-        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc05550h"
-      ],
-      "nextAction": "须查具体环加成反应、底物范围及首次在线日期",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    },
-    {
-      "doi": "10.1039/d6sc07058b",
-      "title": "Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations",
-      "journal": "Chemical Science",
-      "originalDate": null,
-      "originalDatePrecision": "unverified",
-      "date": null,
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations 涉及潜在有机合成转化；反向挑战：三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期",
-      "evidenceNeeded": "须查底物转化、一般制备证据及首次在线日期",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1039/d6sc07058b",
-        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc07058b"
-      ],
-      "nextAction": "须查底物转化、一般制备证据及首次在线日期",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    },
-    {
-      "doi": "10.1039/d6sc06967c",
-      "title": "Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center",
-      "journal": "Chemical Science",
-      "originalDate": null,
-      "originalDatePrecision": "unverified",
-      "date": null,
-      "decision": "pending",
-      "status": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "challengeReason": "正向挑战：Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center 涉及潜在有机合成转化；反向挑战：氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期。证据未足时既不能纳入也不能把访问失败误作排除。",
-      "evidenceBasis": "氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期",
-      "evidenceNeeded": "须查完整正文/SI及首次在线日期",
-      "attemptedEvidencePages": [
-        "https://doi.org/10.1039/d6sc06967c",
-        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06967c"
-      ],
-      "nextAction": "须查完整正文/SI及首次在线日期",
-      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
-      "carryForward": true,
-      "cardAction": "not_in_production"
-    }
-  ],
+  "pendingReviewBacklog": [],
   "lastPrepublishPrimary": {
     "publicationSlot": "2026-10-14T08:00:00+08:00",
     "reviewFile": "audit/prepublish-review-2026-10-14-0800.json",
@@ -1482,7 +1275,7 @@
         "boundaryChallenge": "虽偏向特定稠密桥环骨架，但提供明确双反应伙伴的可迁移成环策略而非单一物性的研究"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1490,8 +1283,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01282",
@@ -1517,7 +1313,7 @@
         "boundaryChallenge": "产物属于专门的螺环骨架，但两个底物系列、对映选择性和后续转化表明核心是一般不对称制备策略"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1525,8 +1321,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01017",
@@ -1552,7 +1351,7 @@
         "https://doi.org/10.1021/acs.joc.6c01017"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1560,7 +1359,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c02068",
@@ -1586,7 +1388,7 @@
         "https://doi.org/10.1021/acs.joc.6c02068"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1594,7 +1396,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c02150",
@@ -1620,7 +1425,7 @@
         "https://doi.org/10.1021/acs.joc.6c02150"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1628,7 +1433,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01479",
@@ -1654,7 +1462,7 @@
         "boundaryChallenge": "产物含膦硫可能用于配体或材料，但主要新增的是多反应伙伴、分歧控制的可推广有机制备反应"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1662,8 +1470,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c02023",
@@ -1689,7 +1500,7 @@
         "boundaryChallenge": "虽然反应机制较复杂，但胺化呋喃分离产物具有方法学上的广泛可制备性，不是单一机理演示"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1697,8 +1508,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01481",
@@ -1724,7 +1538,7 @@
         "https://doi.org/10.1021/acs.joc.6c01481"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1732,7 +1546,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01561",
@@ -1758,7 +1575,7 @@
         "https://doi.org/10.1021/acs.joc.6c01561"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1766,7 +1583,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01857",
@@ -1792,7 +1612,7 @@
         "boundaryChallenge": "不能把两个形式合成误写成完成全合成；本篇因已完成一种全合成并有可迁移骨架构建策略而纳入"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1800,8 +1620,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01777",
@@ -1827,7 +1650,7 @@
         "boundaryChallenge": "尽管金属配位性质可能是下游用途，主要贡献是可扩展、立体保持的非天然氨基酸砌块制备"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1835,8 +1658,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01552",
@@ -1862,7 +1688,7 @@
         "boundaryChallenge": "尽管操作以芳基末端炔烃为主且为电催化体系，主要贡献仍是明确的有机制备转化而非电极材料性能"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -1870,8 +1696,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01500",
@@ -1897,7 +1726,7 @@
         "https://doi.org/10.1021/acs.joc.6c01500"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1905,7 +1734,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01717",
@@ -1931,7 +1763,7 @@
         "https://doi.org/10.1021/acs.joc.6c01717"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1939,7 +1771,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acscatal.6c06300",
@@ -1965,7 +1800,7 @@
         "https://doi.org/10.1021/acscatal.6c06300"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -1973,7 +1808,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acscatal.6c06668",
@@ -1999,7 +1837,7 @@
         "boundaryChallenge": "反向挑战是机理表征占篇幅，但分歧获取两类分离杂环并有合成应用，核心仍为有机转化"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2007,8 +1845,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/jacs.6c08713",
@@ -2034,7 +1875,7 @@
         "boundaryChallenge": "反向挑战是可能偏向高度设计化的二烯底物；但多亲电启动与终止模式支持一般不对称环化方法而非单一模型"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2042,8 +1883,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1038/s44160-026-01193-3",
@@ -2069,7 +1913,7 @@
         "boundaryChallenge": "反向挑战是主要目标为单一特定巨大螺烯、非宽底物通法；本篇按此前不可得复杂骨架的完整路线和多重环化策略纳入，不冒称广泛底物范围"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2077,8 +1921,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1038/s44160-026-01171-9",
@@ -2104,7 +1951,7 @@
         "boundaryChallenge": "虽部分拓展用于纳米碳材料前体，但方法实证为多环芳烃与苄基卤化物的一般固相偶联，并不只是材料表征"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2112,8 +1959,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c03912",
@@ -2139,7 +1989,7 @@
         "boundaryChallenge": "虽然腈亚胺中间体短寿命且通常有区域选择性挑战，作者通过原位生成并真实扩展反应伙伴来提供通用制备方法"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2147,8 +1997,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c03862",
@@ -2174,7 +2027,7 @@
         "boundaryChallenge": "虽然机理创新突出，但目标是可应用于复杂类药分子的C–C偶联转化，具有制备范围而非单纯Criegee检测"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2182,8 +2035,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c03872",
@@ -2209,7 +2065,7 @@
         "https://doi.org/10.1021/acs.orglett.6c03872"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2217,7 +2073,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c04162",
@@ -2243,7 +2102,7 @@
         "https://doi.org/10.1021/acs.orglett.6c04162"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2251,7 +2110,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c03859",
@@ -2277,7 +2139,7 @@
         "boundaryChallenge": "核心在于可迁移的杂环骨架重构和药物后期修饰，不能因终端应用是医药就判为非方法研究"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2285,8 +2147,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c04116",
@@ -2312,7 +2177,7 @@
         "https://doi.org/10.1021/acs.orglett.6c04116"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2320,7 +2185,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c03795",
@@ -2346,7 +2214,7 @@
         "https://doi.org/10.1021/acs.orglett.6c03795"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2354,7 +2222,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.orglett.6c04271",
@@ -2380,7 +2251,7 @@
         "https://doi.org/10.1021/acs.orglett.6c04271"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2388,7 +2259,10 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1021/acs.joc.6c01813",
@@ -2414,7 +2288,7 @@
         "boundaryChallenge": "虽然需预制张力骨架底物，三类氧亲核伙伴和隔离产物范围支撑通用张力释放酯化方法"
       },
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
@@ -2422,8 +2296,11 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication",
-      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "addedToCarryoverAt": "2026-10-15T01:33:29.539Z",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
     },
     {
       "doi": "10.1038/s41586-026-11242-8",
@@ -2449,7 +2326,7 @@
         "https://www.nature.com/articles/s41586-026-11242-8"
       ],
       "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-      "sourceReviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
       "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
       "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
       "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -2457,7 +2334,161 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
       "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
-      "reviewStatus": "evidenced_scope_include_not_approved_for_offslot_publication"
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist",
+      "manualOwnerOverride": false,
+      "ownerDecisionSourceFile": null,
+      "publicationDateVerified": true
+    },
+    {
+      "doi": "10.1021/acscatal.6c06572",
+      "journal": "ACS Catalysis",
+      "title": "Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution",
+      "titleZh": "全细胞定向进化实现光酶催化炔烃不对称[2+2]环加成",
+      "date": "2026-10-14",
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该 DOI 原为需补证边界论文；用户已明确作出最终纳入决定。以全细胞定向进化得到具有催化[2+2]不对称光环加成能力的人工三重态光酶",
+      "evidenceBasis": "文章特定已知事实：以全细胞定向进化得到具有催化[2+2]不对称光环加成能力的人工三重态光酶；具体反应：人工光酶催化炔烃参与的[2+2]光环加成，构筑手性张力环骨架；一般性证据状态：摘要明确单个示范反应中APC10.0全细胞92%收率、94% ee，纯酶99%收率、97% ee；更多不同底物/分离产物系列尚未通过SI独立核实。；此篇现为用户直接批准的范围纳入，不冒称未访问全文已完成实验核查。",
+      "challengeReason": "反向审查：原审核指出工程酶变体数量不等于有机制备底物范围；用户逐篇明确纳入本DOI。保留具体底物矩阵未核实的证据层级，不将定向进化轮次称作底物通法。",
+      "scopeAssessment": {
+        "primaryContribution": "以全细胞定向进化得到具有催化[2+2]不对称光环加成能力的人工三重态光酶",
+        "preparativeTransformation": "人工光酶催化炔烃参与的[2+2]光环加成，构筑手性张力环骨架",
+        "generalityEvidence": "摘要明确单个示范反应中APC10.0全细胞92%收率、94% ee，纯酶99%收率、97% ee；更多不同底物/分离产物系列尚未通过SI独立核实。",
+        "sourceEvidence": "2026-10-15 SHA 固定 compact 相应 DOI 的题名与摘要；摘要明确单个示范反应中APC10.0全细胞92%收率、94% ee，纯酶99%收率、97% ee；更多不同底物/分离产物系列尚未通过SI独立核实。",
+        "boundaryChallenge": "原审核指出工程酶变体数量不等于有机制备底物范围；用户逐篇明确纳入本DOI。保留具体底物矩阵未核实的证据层级，不将定向进化轮次称作底物通法。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06572",
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c06572"
+      ],
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+      "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
+      "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+      "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
+      "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
+      "manualOwnerOverride": true,
+      "ownerDecisionSourceFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "publicationDateVerified": true,
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c04101",
+      "journal": "Organic Letters",
+      "title": "Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes",
+      "titleZh": "三(4-甲氧基苯基)胺在烯烃电解磺酰化中的多重作用",
+      "date": "2026-10-14",
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该 DOI 原为需补证边界论文；用户已明确作出最终纳入决定。研究TMPA介导的配对电解烯烃磺酰化及其电子转移、自由基氧化和脱质子作用",
+      "evidenceBasis": "文章特定已知事实：研究TMPA介导的配对电解烯烃磺酰化及其电子转移、自由基氧化和脱质子作用；具体反应：磺酰氯还原形成磺酰自由基，参与烯烃磺酰化；TMPA自由基阳离子氧化苄基自由基，继以脱质子过程；一般性证据状态：摘要明确TMPA催化烯烃磺酰化；尚未取得完整的烯烃/磺酰氯底物矩阵或实际分离产物数量，不据此编造一般性。；此篇现为用户直接批准的范围纳入，不冒称未访问全文已完成实验核查。",
+      "challengeReason": "反向审查：文章显著关注介体多重机制，原审核因此待定；但其报道了具体配对电解有机转化，用户已对该篇作出纳入决定。保留底物/SI尚未核实的事实。",
+      "scopeAssessment": {
+        "primaryContribution": "研究TMPA介导的配对电解烯烃磺酰化及其电子转移、自由基氧化和脱质子作用",
+        "preparativeTransformation": "磺酰氯还原形成磺酰自由基，参与烯烃磺酰化；TMPA自由基阳离子氧化苄基自由基，继以脱质子过程",
+        "generalityEvidence": "摘要明确TMPA催化烯烃磺酰化；尚未取得完整的烯烃/磺酰氯底物矩阵或实际分离产物数量，不据此编造一般性。",
+        "sourceEvidence": "2026-10-15 SHA 固定 compact 相应 DOI 的题名与摘要；摘要明确TMPA催化烯烃磺酰化；尚未取得完整的烯烃/磺酰氯底物矩阵或实际分离产物数量，不据此编造一般性。",
+        "boundaryChallenge": "文章显著关注介体多重机制，原审核因此待定；但其报道了具体配对电解有机转化，用户已对该篇作出纳入决定。保留底物/SI尚未核实的事实。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04101",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c04101"
+      ],
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+      "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
+      "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+      "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
+      "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
+      "manualOwnerOverride": true,
+      "ownerDecisionSourceFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "publicationDateVerified": true,
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608538",
+      "journal": "CCS Chemistry",
+      "title": "Regioselective ortho -B-H Functionalization of nido -Carboranes via Intramolecular Iodonium Activation Strategy",
+      "titleZh": "分子内碘鎓活化实现巢式碳硼烷邻位B–H键区域选择性官能化",
+      "date": "2026-10-13",
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该 DOI 原为需补证边界论文；用户已明确作出最终纳入决定。题名报道通过分子内碘鎓活化实现nido-碳硼烷邻位B–H区域选择性官能化",
+      "evidenceBasis": "文章特定已知事实：题名报道通过分子内碘鎓活化实现nido-碳硼烷邻位B–H区域选择性官能化；具体反应：对nido-碳硼烷邻位B–H实施定点官能化；准确反应伙伴、成键元素、产物结构尚未取得正文证实；一般性证据状态：当前compact仅有题名，出版社正文曾返回403；底物范围和分离产物无可核实数据。用户对该具体DOI明确批准范围纳入，学术证据缺口被单独保留。；此篇现为用户直接批准的范围纳入，不冒称未访问全文已完成实验核查。",
+      "challengeReason": "反向审查：正向是题名具有B–H官能化方法信号；反向是实际成键及一般性未核实。该结论是用户最终人工范围裁定，不能冒充已完成出版社全文验证。",
+      "scopeAssessment": {
+        "primaryContribution": "题名报道通过分子内碘鎓活化实现nido-碳硼烷邻位B–H区域选择性官能化",
+        "preparativeTransformation": "对nido-碳硼烷邻位B–H实施定点官能化；准确反应伙伴、成键元素、产物结构尚未取得正文证实",
+        "generalityEvidence": "当前compact仅有题名，出版社正文曾返回403；底物范围和分离产物无可核实数据。用户对该具体DOI明确批准范围纳入，学术证据缺口被单独保留。",
+        "sourceEvidence": "2026-10-15 SHA 固定 compact 相应 DOI 的题名与摘要；当前compact仅有题名，出版社正文曾返回403；底物范围和分离产物无可核实数据。用户对该具体DOI明确批准范围纳入，学术证据缺口被单独保留。",
+        "boundaryChallenge": "正向是题名具有B–H官能化方法信号；反向是实际成键及一般性未核实。该结论是用户最终人工范围裁定，不能冒充已完成出版社全文验证。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608538",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608538"
+      ],
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+      "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
+      "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+      "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
+      "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
+      "manualOwnerOverride": true,
+      "ownerDecisionSourceFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "publicationDateVerified": true,
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01296",
+      "journal": "JOC",
+      "title": "Synthesis of Pyrido[2,3- d ]pyrimidin-4(3 H )-ones via SNAr/Tandem Cyclization",
+      "titleZh": "经芳香亲核取代／串联环化合成吡啶并[2,3-d]嘧啶-4(3H)-酮",
+      "date": "2026-10-13",
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该 DOI 原为需补证边界论文；用户已明确作出最终纳入决定。无金属和无配体条件下的SNAr/串联环化构建吡啶并嘧啶酮杂环骨架",
+      "evidenceBasis": "文章特定已知事实：无金属和无配体条件下的SNAr/串联环化构建吡啶并嘧啶酮杂环骨架；具体反应：2-溴-N-苯基烟酰胺与氰胺或甲酰胺先发生亲核芳香取代，再串联环化形成吡啶并[2,3-d]嘧啶-4(3H)-酮；一般性证据状态：ACS/JOC摘要明确两类含氮反应伙伴；未展示更多烟酰胺底物系列及分离收率，用户针对该论文已明确决定纳入。；此篇现为用户直接批准的范围纳入，不冒称未访问全文已完成实验核查。",
+      "challengeReason": "反向审查：蓝光发光和分子对接只是附加表征，不是合成方法凭证；虽底物通用性待SI确认，题名/摘要给出明确杂环构建路线且用户批准具体DOI。",
+      "scopeAssessment": {
+        "primaryContribution": "无金属和无配体条件下的SNAr/串联环化构建吡啶并嘧啶酮杂环骨架",
+        "preparativeTransformation": "2-溴-N-苯基烟酰胺与氰胺或甲酰胺先发生亲核芳香取代，再串联环化形成吡啶并[2,3-d]嘧啶-4(3H)-酮",
+        "generalityEvidence": "ACS/JOC摘要明确两类含氮反应伙伴；未展示更多烟酰胺底物系列及分离收率，用户针对该论文已明确决定纳入。",
+        "sourceEvidence": "2026-10-15 SHA 固定 compact 相应 DOI 的题名与摘要；ACS/JOC摘要明确两类含氮反应伙伴；未展示更多烟酰胺底物系列及分离收率，用户针对该论文已明确决定纳入。",
+        "boundaryChallenge": "蓝光发光和分子对接只是附加表征，不是合成方法凭证；虽底物通用性待SI确认，题名/摘要给出明确杂环构建路线且用户批准具体DOI。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01296"
+      ],
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "scopeCorrectionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+      "sourceHandoffCommit": "61d4ca9a9631009dedd45d0181e8174d6e4b4ab2",
+      "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+      "discoveryGeneratedAt": "2026-10-15T01:18:13.403Z",
+      "nextPublicationSlot": "2026-10-16T08:00:00+08:00",
+      "manualOwnerOverride": true,
+      "ownerDecisionSourceFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "publicationDateVerified": true,
+      "reviewStatus": "scope_include_recorded_not_a_formal_publication_allowlist"
     }
   ],
   "postReleaseLateReview": {
@@ -2493,7 +2524,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-10-13T23:21:51.140Z",
+  "updatedAt": "2026-10-15T02:19:54.441Z",
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": false,
@@ -2701,16 +2732,7 @@
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 6
   },
-  "pendingReviewBacklogDois": [
-    "10.1021/acscatal.6c06572",
-    "10.1021/acs.orglett.6c04101",
-    "10.31635/ccschem.026.202608538",
-    "10.1021/acs.joc.6c01296",
-    "10.1039/d6sc06226a",
-    "10.1039/d6sc05550h",
-    "10.1039/d6sc07058b",
-    "10.1039/d6sc06967c"
-  ],
+  "pendingReviewBacklogDois": [],
   "note": "2026-10-14 08:00 prepublish primary review ready_with_pending: 24 include, 98 exclude, 2 evidence-backed pending. Dedicated GitHub prepublish gate succeeded; production unchanged; fixed-slot writer must reconcile formal review/marker/backlog.",
   "prepublishPrimaryGate": {
     "runId": 38483634565,
@@ -2750,15 +2772,15 @@
     "slot": "2026-10-15T08:00:00+08:00",
     "performedAfterSlot": true,
     "reviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-    "reviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+    "reviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
     "pairedSnapshotGeneratedAt": "2026-10-15T01:18:13.403Z",
     "latestBlobSha": "34da183f65eb5ee5f68312832a05214f3faeebf1",
     "compactBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
     "manualReviewed": 209,
-    "reviewedIncludeCarryover": 29,
-    "retainedPending": 8,
+    "reviewedIncludeCarryover": 33,
+    "retainedPending": 0,
     "unreviewedCandidates": 0,
-    "phase": "reviewed_all_with_eight_evidence_pending_but_slot_expired",
+    "phase": "owner_scope_decisions_complete_publication_held_next_0800",
     "releaseEligible": false,
     "publicationReady": false,
     "validationReady": false,
@@ -2768,16 +2790,20 @@
     "reviewEvidenceCompleteForAllCandidates": true,
     "pendingCount": 8,
     "recordValidationPassed": true,
-    "strictReadinessPassed": false
+    "strictReadinessPassed": false,
+    "reviewed": 209,
+    "scopeIncludeCount": 37,
+    "ownerApprovedPreviouslyPending": 8,
+    "firstOnlineDateHolds": 4
   },
   "lastManualPrepublishFullAudit": {
     "reviewFile": "audit/prepublish-review-2026-10-15-0800.json",
-    "reviewBlobSha": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+    "reviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
     "sourceGeneratedAt": "2026-10-15T01:18:13.403Z",
     "reviewed": 209,
-    "include": 29,
+    "include": 37,
     "exclude": 172,
-    "pending": 8,
+    "pending": 0,
     "unreviewed": 0,
     "sourceChecks": 16,
     "firstPassAndChallengeRecorded": true,
@@ -2785,6 +2811,382 @@
     "expiredSlot": "2026-10-15T08:00:00+08:00",
     "handoffOnly": true,
     "recordValidationPassed": true,
-    "strictReadinessPassed": false
+    "strictReadinessPassed": false,
+    "ownerApprovedPreviouslyPending": 8,
+    "publisherDateHolds": 4
+  },
+  "resolvedByUserScopeDecisionBacklog": [
+    {
+      "doi": "10.1021/acscatal.6c06572",
+      "title": "Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution",
+      "journal": "ACS Catalysis",
+      "originalDate": "2026-10-14",
+      "originalDatePrecision": "day",
+      "date": "2026-10-14",
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution 涉及潜在有机合成转化；反向挑战：光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围",
+      "evidenceNeeded": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06572",
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c06572"
+      ],
+      "nextAction": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c04101",
+      "title": "Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes",
+      "journal": "Organic Letters",
+      "originalDate": "2026-10-14",
+      "originalDatePrecision": "day",
+      "date": "2026-10-14",
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes 涉及潜在有机合成转化；反向挑战：TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展",
+      "evidenceNeeded": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04101",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c04101"
+      ],
+      "nextAction": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608538",
+      "originalDate": "2026-10-13",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
+      "journal": "CCS Chemistry",
+      "title": "Regioselective ortho -B-H Functionalization of nido -Carboranes via Intramolecular Iodonium Activation Strategy",
+      "status": "pending",
+      "reviewKind": "new_candidate_evidence_gap",
+      "lastReviewedAt": "2026-10-13T23:18:14.684Z",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "evidenceBasis": "固定blob中该候选的摘要为空；本轮检索到CCS Chemistry官方DOI页面和13 Oct 2026目录记录，但文章页返回403，未取得可核查摘要或正文。只有题名不足以断言方法的普适性。",
+      "challengeReason": "正向理由是题名明确指向区域选择性B–H官能团化；反向理由是没有实际底物、产物或范围证据，直接纳入会把题名当成方法审核，直接排除又可能漏掉合格合成方法。",
+      "evidenceNeeded": "取得出版社摘要、正文或SI，确认具体亲电体/偶联伙伴、nido-carborane底物范围、分离产物及是否为可推广制备方法。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608538",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608538"
+      ],
+      "nextAction": "通过既有浏览器/VPN Bridge或可访问的CCS Chemistry正文/SI补证；仅复核本DOI，不阻挡25篇已完备白名单。",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "lastManualCheck": "2026-10-15: prior two-pass pending evidence retained, no new sufficient SI/primary page",
+      "originalDatePrecision": "day",
+      "date": "2026-10-13",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01296",
+      "originalDate": "2026-10-13",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
+      "journal": "JOC",
+      "title": "Synthesis of Pyrido[2,3- d ]pyrimidin-4(3 H )-ones via SNAr/Tandem Cyclization",
+      "status": "pending",
+      "reviewKind": "new_candidate_evidence_gap",
+      "lastReviewedAt": "2026-10-13T23:18:14.684Z",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "evidenceBasis": "固定blob的JOC摘要给出2-溴-N-苯基烟酰胺与氰胺或甲酰胺的SNAr/环化，并报告机理计算、蓝光发射和分子对接；摘要未说明取代底物系列、分离产物范围或放大。",
+      "challengeReason": "正向理由是确有新C–N成键/稠环路线及两种氮源；反向理由是现有摘要可能只支持一个窄骨架实例，直接纳入会把“new method”措辞替代实际普适性审核。",
+      "evidenceNeeded": "取得论文或SI中的起始烟酰胺取代范围、氮源范围、分离收率与代表性放大，判断其是否达到一般杂环制备方法标准。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01296",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01296"
+      ],
+      "nextAction": "通过既有浏览器/VPN Bridge读取ACS正文或SI底物表；仅复核本DOI，不阻挡其余已完备白名单。",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "lastManualCheck": "2026-10-15: prior two-pass pending evidence retained, no new sufficient SI/primary page",
+      "originalDatePrecision": "day",
+      "date": "2026-10-13",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1039/d6sc06226a",
+      "title": "3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters)",
+      "journal": "Chemical Science",
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "date": null,
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters) 涉及潜在有机合成转化；反向挑战：SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知",
+      "evidenceNeeded": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc06226a",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06226a"
+      ],
+      "nextAction": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1039/d6sc05550h",
+      "title": "Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes",
+      "journal": "Chemical Science",
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "date": null,
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes 涉及潜在有机合成转化；反向挑战：双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失",
+      "evidenceNeeded": "须查具体环加成反应、底物范围及首次在线日期",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc05550h",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc05550h"
+      ],
+      "nextAction": "须查具体环加成反应、底物范围及首次在线日期",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1039/d6sc07058b",
+      "title": "Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations",
+      "journal": "Chemical Science",
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "date": null,
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations 涉及潜在有机合成转化；反向挑战：三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期",
+      "evidenceNeeded": "须查底物转化、一般制备证据及首次在线日期",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc07058b",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc07058b"
+      ],
+      "nextAction": "须查底物转化、一般制备证据及首次在线日期",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    },
+    {
+      "doi": "10.1039/d6sc06967c",
+      "title": "Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center",
+      "journal": "Chemical Science",
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "date": null,
+      "decision": "pending",
+      "status": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "正向挑战：Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center 涉及潜在有机合成转化；反向挑战：氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "evidenceBasis": "氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期",
+      "evidenceNeeded": "须查完整正文/SI及首次在线日期",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc06967c",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06967c"
+      ],
+      "nextAction": "须查完整正文/SI及首次在线日期",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "lastReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "carryForward": true,
+      "cardAction": "not_in_production",
+      "scopeResolvedAt": "2026-10-15T02:19:54.441Z",
+      "scopeResolution": "include",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "priorStatus": "pending"
+    }
+  ],
+  "publicationDateVerificationBacklog": [
+    {
+      "doi": "10.1039/d6sc06226a",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06226a",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc06226a",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "firstPublishedRequiredBeforeAdmission": true,
+      "excludeFromNextSlotAdmissionAllowlistUntilVerified": true
+    },
+    {
+      "doi": "10.1039/d6sc05550h",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc05550h",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc05550h",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "firstPublishedRequiredBeforeAdmission": true,
+      "excludeFromNextSlotAdmissionAllowlistUntilVerified": true
+    },
+    {
+      "doi": "10.1039/d6sc07058b",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc07058b",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc07058b",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "firstPublishedRequiredBeforeAdmission": true,
+      "excludeFromNextSlotAdmissionAllowlistUntilVerified": true
+    },
+    {
+      "doi": "10.1039/d6sc06967c",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06967c",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc06967c",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceOwnerDecisionFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+      "sourceOwnerDecisionBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+      "firstPublishedRequiredBeforeAdmission": true,
+      "excludeFromNextSlotAdmissionAllowlistUntilVerified": true
+    }
+  ],
+  "ownerScopeDecisions": {
+    "recordFile": "audit/scope-rechecks/2026-10-15-user-approved-eight-pending-includes.json",
+    "recordBlobSha": "6e6e98c1919a8fc09168518ca7acdebfe12dc61b",
+    "approvedAt": "2026-10-15T02:19:54.441Z",
+    "sourceReviewBlobSha": "4a1e31e8512f6a1b3ac9e06894889a1d3df13954",
+    "sourceHandoffBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+    "approvedDois": [
+      "10.1021/acscatal.6c06572",
+      "10.1021/acs.orglett.6c04101",
+      "10.31635/ccschem.026.202608538",
+      "10.1021/acs.joc.6c01296",
+      "10.1039/d6sc06226a",
+      "10.1039/d6sc05550h",
+      "10.1039/d6sc07058b",
+      "10.1039/d6sc06967c"
+    ],
+    "decision": "include",
+    "scopePendingRemaining": 0,
+    "datedReviewedCarryovers": 33,
+    "publisherDateHoldDois": [
+      "10.1039/d6sc06226a",
+      "10.1039/d6sc05550h",
+      "10.1039/d6sc07058b",
+      "10.1039/d6sc06967c"
+    ],
+    "nextLegalPublicationSlot": "2026-10-16T08:00:00+08:00",
+    "manualOffSlotAdmissionAuthorized": false
   }
 }

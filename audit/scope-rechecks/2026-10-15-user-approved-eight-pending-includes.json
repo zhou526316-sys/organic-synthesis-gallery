@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "recordType": "explicit_user_doi_scope_inclusion",
+  "createdAt": "2026-10-15T02:19:54.441Z",
+  "publicationPolicy": "08:00 Asia/Shanghai only; no 2026-10-15 off-slot addition; target next legal 2026-10-16 08:00 subject to gate success",
+  "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+  "sourceReviewBlobShaBefore": "a723ec3a5feb8eab0e0365ebd844060760461ac7",
+  "sourceStateBlobShaBefore": "75ddf1a70e931cf87a5583f8e29423eec9401ad5",
+  "sourceCompactBlobSha": "ae0c49d6213156abc2cbd0e38a2cb1ff6e2a43a6",
+  "sourceAuditGeneratedAt": "2026-10-15T01:18:13.403Z",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "correctionsBlobSha": "109be3cc5abedc62f744431e34faa0552564782d",
+  "ownerAuthorizationText": "这是我对8篇待定论文的人工范围审核决定：第1篇：纳入；第2篇：纳入；第3篇：纳入；第4篇：纳入；第5篇：纳入；第6篇：纳入；第7篇：纳入；第8篇：纳入。请同步到GitHub的审核记录，未决定的保留pending；新纳入仅在下一合法08:00正式发布槽发布，并继续核验首次在线日期。",
+  "decisionCount": 8,
+  "approvedDecisions": [
+    {
+      "index": 1,
+      "doi": "10.1021/acscatal.6c06572",
+      "decision": "include",
+      "titleZh": "全细胞定向进化实现光酶催化炔烃不对称[2+2]环加成",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": "2026-10-14",
+      "publicationDateStatus": "crossref_exact_online_day",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围"
+    },
+    {
+      "index": 2,
+      "doi": "10.1021/acs.orglett.6c04101",
+      "decision": "include",
+      "titleZh": "三(4-甲氧基苯基)胺在烯烃电解磺酰化中的多重作用",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": "2026-10-14",
+      "publicationDateStatus": "crossref_exact_online_day",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性"
+    },
+    {
+      "index": 3,
+      "doi": "10.31635/ccschem.026.202608538",
+      "decision": "include",
+      "titleZh": "分子内碘鎓活化实现巢式碳硼烷邻位B–H键区域选择性官能化",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": "2026-10-13",
+      "publicationDateStatus": "crossref_exact_online_day",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "取得出版社摘要、正文或SI，确认具体亲电体/偶联伙伴、nido-carborane底物范围、分离产物及是否为可推广制备方法。"
+    },
+    {
+      "index": 4,
+      "doi": "10.1021/acs.joc.6c01296",
+      "decision": "include",
+      "titleZh": "经芳香亲核取代／串联环化合成吡啶并[2,3-d]嘧啶-4(3H)-酮",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": "2026-10-13",
+      "publicationDateStatus": "crossref_exact_online_day",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "取得论文或SI中的起始烟酰胺取代范围、氮源范围、分离收率与代表性放大，判断其是否达到一般杂环制备方法标准。"
+    },
+    {
+      "index": 5,
+      "doi": "10.1039/d6sc06226a",
+      "decision": "include",
+      "titleZh": "3-五氟硫基双环[1.1.1]戊基醇的实用合成及其作为相应醚、酯合成前体的应用",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": null,
+      "publicationDateStatus": "verification_required",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期"
+    },
+    {
+      "index": 6,
+      "doi": "10.1039/d6sc05550h",
+      "decision": "include",
+      "titleZh": "双环丁烷与2-氮杂二烯形式环加成汇聚合成氮杂双环[4.1.1]辛烷",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": null,
+      "publicationDateStatus": "verification_required",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须查具体环加成反应、底物范围及首次在线日期"
+    },
+    {
+      "index": 7,
+      "doi": "10.1039/d6sc07058b",
+      "decision": "include",
+      "titleZh": "亲电性氮自由基阳离子介导的类路易斯酸催化",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": null,
+      "publicationDateStatus": "verification_required",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须查底物转化、一般制备证据及首次在线日期"
+    },
+    {
+      "index": 8,
+      "doi": "10.1039/d6sc06967c",
+      "decision": "include",
+      "titleZh": "氮中心立体化学的调控：难以控制的氮手性中心的对映选择性控制",
+      "manualPriority": "highest_scope_specificity",
+      "earlierReviewDecision": "pending",
+      "earlierEvidenceGapPreserved": true,
+      "firstOnlineDate": null,
+      "publicationDateStatus": "verification_required",
+      "nextEligibleSlot": "2026-10-16T08:00:00+08:00",
+      "publisherEvidenceStillNeeded": "须查完整正文/SI及首次在线日期"
+    }
+  ],
+  "originalPendingEvidence": [
+    {
+      "doi": "10.1021/acscatal.6c06572",
+      "journal": "ACS Catalysis",
+      "title": "Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution",
+      "date": "2026-10-14",
+      "originalDate": "2026-10-14",
+      "originalDatePrecision": "day",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
+      "evidenceBasis": "光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围",
+      "evidenceNeeded": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
+      "challengeReason": "正向挑战：Photoenzymatic Enantioselective [2+2] Cycloaddition of Alkynes Enabled by Whole-Cell Directed Evolution 涉及潜在有机合成转化；反向挑战：光酶[2+2]环加成摘要着重10轮蛋白进化和单一反应产率/ee，没有明确多烯炔底物与分离制备范围。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06572",
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c06572"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06572",
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c06572"
+      ],
+      "nextAction": "须审正文/SI中不同底物对、可分离手性环丁烯及实际适用范围",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c04101",
+      "journal": "Organic Letters",
+      "title": "Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes",
+      "date": "2026-10-14",
+      "originalDate": "2026-10-14",
+      "originalDatePrecision": "day",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
+      "evidenceBasis": "TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展",
+      "evidenceNeeded": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
+      "challengeReason": "正向挑战：Multidimensional Involvement of Tris(4-methoxyphenyl)amine in Electrolytic Sulfonylation of Alkenes 涉及潜在有机合成转化；反向挑战：TMPA介导烯烃电磺酰化的摘要着重电供体/氧化剂/碱多重作用，未交代产物或底物拓展。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04101",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c04101"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04101",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c04101"
+      ],
+      "nextAction": "须审正文/SI磺酰氯与烯烃反应伙伴、产物分离和普适性",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608538",
+      "journal": "CCS Chemistry",
+      "title": "Regioselective ortho -B-H Functionalization of nido -Carboranes via Intramolecular Iodonium Activation Strategy",
+      "date": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Ping Zhang",
+        "Ziheng Fan",
+        "Bin Wang",
+        "Changsheng Lu",
+        "Deshuang Tu",
+        "Hong Yan"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608538",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608538"
+      ],
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608538",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608538"
+      ],
+      "evidenceSource": "fixed-blob title plus official publisher DOI page attempt; abstract unavailable/403",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "题名显示nido-carborane的区域选择性邻位B–H官能团化，可能属于范围，但缺少摘要/正文以核实实际成键类型、底物范围和分离制备证据。",
+      "evidenceBasis": "固定blob中该候选的摘要为空；本轮检索到CCS Chemistry官方DOI页面和13 Oct 2026目录记录，但文章页返回403，未取得可核查摘要或正文。只有题名不足以断言方法的普适性。",
+      "challengeReason": "正向理由是题名明确指向区域选择性B–H官能团化；反向理由是没有实际底物、产物或范围证据，直接纳入会把题名当成方法审核，直接排除又可能漏掉合格合成方法。",
+      "evidenceNeeded": "取得出版社摘要、正文或SI，确认具体亲电体/偶联伙伴、nido-carborane底物范围、分离产物及是否为可推广制备方法。",
+      "nextAction": "通过既有浏览器/VPN Bridge或可访问的CCS Chemistry正文/SI补证；仅复核本DOI，不阻挡25篇已完备白名单。",
+      "originalDate": "2026-10-13",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "reviewKind": "existing_evidence_pending",
+      "lastManualCheck": "2026-10-15 unchanged evidence gap after recheck; not falsely finalized"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01296",
+      "journal": "JOC",
+      "title": "Synthesis of Pyrido[2,3- d ]pyrimidin-4(3 H )-ones via SNAr/Tandem Cyclization",
+      "date": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Yu He",
+        "Wenquan Wang",
+        "Pengbo Zhu",
+        "Yaxing Guo",
+        "Hui Luo",
+        "Li Li",
+        "Lei Hua",
+        "Shanliang Ge",
+        "Longyu Li",
+        "Jinhui Yang"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01296"
+      ],
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01296",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01296"
+      ],
+      "evidenceSource": "fresh fixed-blob compact title and abstract; full substrate table/SI unavailable",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "摘要确认无金属/无配体SNAr-串联环化路线，但只明确一个2-溴-N-苯基烟酰胺前体和氰胺/甲酰胺，尚不足以验证可推广底物范围。",
+      "evidenceBasis": "固定blob的JOC摘要给出2-溴-N-苯基烟酰胺与氰胺或甲酰胺的SNAr/环化，并报告机理计算、蓝光发射和分子对接；摘要未说明取代底物系列、分离产物范围或放大。",
+      "challengeReason": "正向理由是确有新C–N成键/稠环路线及两种氮源；反向理由是现有摘要可能只支持一个窄骨架实例，直接纳入会把“new method”措辞替代实际普适性审核。",
+      "evidenceNeeded": "取得论文或SI中的起始烟酰胺取代范围、氮源范围、分离收率与代表性放大，判断其是否达到一般杂环制备方法标准。",
+      "nextAction": "通过既有浏览器/VPN Bridge读取ACS正文或SI底物表；仅复核本DOI，不阻挡其余已完备白名单。",
+      "originalDate": "2026-10-13",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-14-0800.json",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "reviewKind": "existing_evidence_pending",
+      "lastManualCheck": "2026-10-15 unchanged evidence gap after recheck; not falsely finalized"
+    },
+    {
+      "doi": "10.1039/d6sc06226a",
+      "journal": "Chemical Science",
+      "title": "3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters)",
+      "date": null,
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
+      "evidenceBasis": "SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知",
+      "evidenceNeeded": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
+      "challengeReason": "正向挑战：3-SF 5 -Bicyclo[1.1.1]pentyl Alcohol: Practical Synthesis and Precursor for 3-SF 5 -Bicyclo[1.1.1]pentyl Ethers (Esters) 涉及潜在有机合成转化；反向挑战：SF₅-双环[1.1.1]戊基醇和醚/酯制备高度相关，但RSC紧凑摘要截断、官方正文不可达且首次在线日期未知。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc06226a",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06226a"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1039/d6sc06226a",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06226a"
+      ],
+      "nextAction": "须读RSC正文/SI核实制备路线及醚/酯衍生系列，并查准确online日期",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    },
+    {
+      "doi": "10.1039/d6sc05550h",
+      "journal": "Chemical Science",
+      "title": "Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes",
+      "date": null,
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须查具体环加成反应、底物范围及首次在线日期",
+      "evidenceBasis": "双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失",
+      "evidenceNeeded": "须查具体环加成反应、底物范围及首次在线日期",
+      "challengeReason": "正向挑战：Convergent Synthesis of Azabicyclo[4.1.1]octanes through the Formal Cycloaddition of Bicyclobutanes with 2-Azadienes 涉及潜在有机合成转化；反向挑战：双环丁烷与2-氮杂二烯构筑氮杂双环[4.1.1]辛烷标题相关，但摘要截断、RSC官方文章不可达且首发日期缺失。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc05550h",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc05550h"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1039/d6sc05550h",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc05550h"
+      ],
+      "nextAction": "须查具体环加成反应、底物范围及首次在线日期",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    },
+    {
+      "doi": "10.1039/d6sc07058b",
+      "journal": "Chemical Science",
+      "title": "Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations",
+      "date": null,
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须查底物转化、一般制备证据及首次在线日期",
+      "evidenceBasis": "三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期",
+      "evidenceNeeded": "须查底物转化、一般制备证据及首次在线日期",
+      "challengeReason": "正向挑战：Lewis acid-like catalysis enabled by electrophilic nitrogen radical cations 涉及潜在有机合成转化；反向挑战：三芳胺自由基阳离子的Lewis酸样催化摘要只谈溶剂/离子机理，没有实际有机产物谱与日期。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc07058b",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc07058b"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1039/d6sc07058b",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc07058b"
+      ],
+      "nextAction": "须查底物转化、一般制备证据及首次在线日期",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    },
+    {
+      "doi": "10.1039/d6sc06967c",
+      "journal": "Chemical Science",
+      "title": "Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center",
+      "date": null,
+      "originalDate": null,
+      "originalDatePrecision": "unverified",
+      "type": "journal-article",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reason": "真实缺口：须查完整正文/SI及首次在线日期",
+      "evidenceBasis": "氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期",
+      "evidenceNeeded": "须查完整正文/SI及首次在线日期",
+      "challengeReason": "正向挑战：Taming Nitrogen Stereogenicity: Enantioselectivity Control at a Reluctant Center 涉及潜在有机合成转化；反向挑战：氮手性对映控制标题重要，但RSC简短摘要未包含具体新反应、分离产物、方法范围及日期。证据未足时既不能纳入也不能把访问失败误作排除。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1039/d6sc06967c",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06967c"
+      ],
+      "evidencePages": [
+        "https://doi.org/10.1039/d6sc06967c",
+        "https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06967c"
+      ],
+      "nextAction": "须查完整正文/SI及首次在线日期",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-10-15-0800.json",
+      "reviewKind": "article_specific_evidence_or_first_online_date_gap"
+    }
+  ],
+  "dateVerification": [
+    {
+      "doi": "10.1039/d6sc06226a",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06226a",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc06226a",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00"
+    },
+    {
+      "doi": "10.1039/d6sc05550h",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc05550h",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc05550h",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00"
+    },
+    {
+      "doi": "10.1039/d6sc07058b",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc07058b",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc07058b",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00"
+    },
+    {
+      "doi": "10.1039/d6sc06967c",
+      "journal": "Chemical Science",
+      "scopeDecision": "include",
+      "status": "first_online_date_unverified",
+      "firstPublishedDate": null,
+      "crossrefPublishedOnlineDateParts": [
+        2026
+      ],
+      "crossrefCreatedDate": "2026-10-14",
+      "crossrefDepositedDate": "2026-10-14",
+      "notPermissibleToUseAsPublicationDate": "Crossref created/deposited is metadata registration only",
+      "publisherPageAttempt": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06967c",
+      "publisherPageResult": "bot_blocked",
+      "doiMetadataUrl": "https://api.crossref.org/works/10.1039%2Fd6sc06967c",
+      "verificationRequired": "Official publisher First published date or independent exact journal online date; do not guess.",
+      "nextReviewSlot": "2026-10-16T08:00:00+08:00"
+    }
+  ],
+  "productionDataModified": false,
+  "websiteDeployRequested": false,
+  "tasksOrSchedulesModified": false,
+  "reason": "All eight prior pending DOIs explicitly approved for scope inclusion; no pending undecided by owner. Preserve scientific/date uncertainty distinctly from scope decision."
+}
