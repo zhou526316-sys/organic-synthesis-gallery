@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "gallery-historical-chem-first-online-date-proof-v1",
+  "mode": "publisher_first_online_provenance_only_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "periodOfSourceRoots": "2026-07-01..2026-09-30",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceAuthority": "ScienceDirect original Article Available online date outranks frozen Q3 issue-month API date. Does not overwrite original source blobs.",
+  "evidenceScope": "Four original Chem publisher Research Article pages verified individually using public original ScienceDirect-indexed First Online + Article classification; no restricted full body, SI or PDF acquired.",
+  "recordCount": 4,
+  "verifiedOutsideQ3": 3,
+  "verifiedInsideQ3": 1,
+  "verifiedSourceDateConflicts": 4,
+  "verifiedQ1OutsideQ3": 1,
+  "verifiedQ2OutsideQ3": 2,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.102966",
+      "title": "Alcoholysis of nylon 6 waste to ε-caprolactam promoted by phosphoric acid",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "authors": [
+        "Xianyuan Wu",
+        "Rahul Prasad Bangalore Ashok",
+        "Xiao Wang",
+        "Matthew S. Webber",
+        "Anna E. Brenner",
+        "Griffin Drake",
+        "Joel Miscall",
+        "Clarissa Lincoln",
+        "Elisabeth Van Roijen",
+        "Stefan J. Haugen",
+        "Jason S. DesVeaux",
+        "Taylor Uekert",
+        "Yang Shao-Horn",
+        "Shannon S. Stahl",
+        "Gregg T. Beckham",
+        "Yuriy Román-Leshkov"
+      ],
+      "sourceDate": "2026-08-01",
+      "publisherFirstOnlineDate": "2026-03-30",
+      "originalQ3QueueOrigin": "2026-08-01_2026-08-07_chem",
+      "verifiedPublicationQuarter": "2026-Q1",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+      "reviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+      "originalSourceBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-08-01_2026-08-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S245192942600032X",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.102966",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "102966",
+        "articleNumber": "102966",
+        "doi": "10.1016/j.chempr.2026.102966",
+        "correctedInterpretation": "Original publisher first-online overrides frozen Crossref issue-month sentinel, which remains unchanged"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Phosphoric-acid promoted nylon-6 alcoholysis in n-propanol at 220 °C; ε-caprolactam 74% model maximum and 67–76% for varied commercial polymer waste. Genuine monomer preparation but Q1, not August Q3.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103034",
+      "title": "Site-specific integration of reversibly taggable furylalanine into nonribosomal peptides",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "authors": [
+        "Friedrich J. Ehinger",
+        "Alexander Hoff",
+        "Maximilian Müll",
+        "Ingrid Richter",
+        "Benjamin Bartels",
+        "Annika Blum",
+        "Maria Hoernke",
+        "Hajo Kries",
+        "Christian Hertweck"
+      ],
+      "sourceDate": "2026-08-01",
+      "publisherFirstOnlineDate": "2026-04-20",
+      "originalQ3QueueOrigin": "2026-08-01_2026-08-07_chem",
+      "verifiedPublicationQuarter": "2026-Q2",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+      "reviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+      "originalSourceBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-08-01_2026-08-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426001002",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103034",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103034",
+        "articleNumber": "103034",
+        "doi": "10.1016/j.chempr.2026.103034",
+        "correctedInterpretation": "Original publisher first-online overrides frozen Crossref issue-month sentinel, which remains unchanged"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "NRPS engineering introduces biosynthesized 3-furylalanine into gramicidin-S scaffold, followed by reversible Diels–Alder tagging. Original bioorganic production study is Q2, not issue-based Q3; synthetic scope independent review.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103026",
+      "title": "Out-of-equilibrium confinement catalysis mediated by compressive force",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "authors": [
+        "Fang-Zi Liu",
+        "Shi Li",
+        "Yufei Zhu",
+        "Yan Liu",
+        "Jian Wang",
+        "Heather J. Kulik",
+        "KaKing Yan"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-04-17",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q2",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426000926",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103026",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "9",
+        "pages": "103026",
+        "articleNumber": "103026",
+        "doi": "10.1016/j.chempr.2026.103026",
+        "correctedInterpretation": "Original publisher first-online overrides frozen Crossref issue-month sentinel, which remains unchanged"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Ball-milling compressive force drives coordination-cage dynamic non-equilibrium cycling and mechanochemical guest release, up to 85 catalytic turnovers; publisher date Q2, not September Q3.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103242",
+      "title": "Upscaling electrosynthesis of hypervalent iodine through steady-state engineering",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "authors": [
+        "Zhaogang Guo",
+        "Yan Li",
+        "Mengyun Wang",
+        "Jingcheng Hu",
+        "Aiwen Lei"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-09-09",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_first_day_not_true_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003086",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103242",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103242",
+        "articleNumber": "103242",
+        "doi": "10.1016/j.chempr.2026.103242",
+        "correctedInterpretation": "Original publisher first-online overrides frozen Crossref issue-month sentinel, which remains unchanged"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Actual Q3 Article: quasi-steady-state electrosynthesis of PIDA, 44.4 mA/cm², FE approaching 99%, 1.4 kg product within 7 h, technoeconomic evaluation at 36 t/year facility; whether a general preparative methodology extends beyond one model needs independent science review.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "noFalseQ3ReviewOfQ1Q2Articles": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOffSlotPublisherWrite": true,
+    "noSilentReplacementOfOriginalDate": true,
+    "noAutomaticAcademicAdmission": true
+  }
+}
