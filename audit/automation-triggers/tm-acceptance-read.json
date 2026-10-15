@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261014-2334-current-bridge285-owner-followup",
-  "requestedAt": "2026-10-14T15:34:00.000Z",
+  "requestId": "tm-20261015-1135-post-285-live-owner-read",
+  "requestedAt": "2026-10-15T03:37:23.432Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User requested continue on prior approved Tampermonkey DOI-scoped inventory, Nature official TOC and RSC source repair. PR #552 and follow-up RSC single-listing PR #660 are already merged; public installer now Bridge 2.2.85 / engine 6.2.66. Read the latest owner-uploaded R2 local diagnostic, stage/capture/report indexes strictly read-only and determine uploadedAt and actual runtime installRevision. Compare 2026-10-14 18:53 Beijing owner evidence: 207 targets, 101 DOI visited, 111 attempts, 43 fully resolved and 162 unresolved, 43 TOC stored, 255 ready PDF, inventory verified, 0 inventory errors. Investigate RSC issue/listing per-DOI no-TOC failures and execution latency; separate historical toc_only vs Oct1+ acquisition. No publisher visits, no re-scraping, no credentials, no PDF/media writes, and no formal publication changes.",
+  "context": "User requested continuing previously-approved Tampermonkey fixes after interrupted Oct12 PR #552. Verify latest existing R2 owner-uploaded diagnostics and receipt indexes strictly read-only, including real installRevision, upload/finish time, current 1151 formal DOI corpus, exact current 2.2.85/6.2.66 progress vs prior Oct14 18:53 run (207 plan,101 visited,111 attempts,43 completed,162 unresolved,43 TOC stored). Inspect Nature historical and RSC official TOC candidate acceptance, latency, source route, partial inventory errors and PDFs; do not infer version from protocol 6.2.20. Never invoke publisher or change capture/media/PDF/catalog.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
