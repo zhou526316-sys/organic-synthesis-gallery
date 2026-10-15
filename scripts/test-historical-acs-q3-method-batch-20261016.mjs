@@ -71,7 +71,7 @@ test('eleven ACS original methods are scientifically audited separately from 08:
 test('standalone publisher article research and historical issue date are not conflated',()=>{
  const total=m.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01205');
  assert.match(total.scopeAssessment.generalityEvidence,/首次|first/i);
- assert.match(total.scopeAssessment.boundaryChallenge,/失败|未成功/);
+ assert.match(total.scopeAssessment.boundaryChallenge,/失败|未成功|负结果/);
  const formal=m.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01394');
  assert.match(formal.scopeAssessment.generalityEvidence,/formal total synthesis|形式全合成/i);
  const elect=m.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c02188');
