@@ -115,6 +115,31 @@
 
   // For DOI-verified pages without reuse permission, report structural counts
   // only. No text is persisted or sent to the server.
+  // Reuse the TOC mainline's publisher body container selection strategy
+  // rather than treating the first <main> (which can be a page shell) as text.
+  function batchArticleRoot(){
+    const selectors=['.article__body','.article-body','.article_content',
+      '.article__content','.article-content','.bodymatter','.c-article-body',
+      '#articleBody','#pnlArticleContent','.Body','#body','main article',
+      'article','[role="main"]','main'];
+    let best=null,score=-1;
+    const seen=new Set();
+    for(const selector of selectors){
+      let nodes=[];
+      try{nodes=Array.from(document.querySelectorAll(selector));}catch(_){}
+      for(const node of nodes){
+        if(!node||seen.has(node)||!node.querySelectorAll)continue;
+        seen.add(node);
+        let evidence;
+        try{evidence=batchBodyStructure(node);}catch(_){continue;}
+        const textSize=Math.min(200000,String(node.textContent||'').length);
+        const rank=evidence.scienceChars*3+evidence.sectionCount*250
+          +Math.min(3000,evidence.abstractChars)+textSize/20;
+        if(rank>score){best=node;score=rank;}
+      }
+    }
+    return best||document.querySelector('main article, article, main, [role="main"]');
+  }
   function batchBodyStructure(root){
     if(!root)return {presence:'page_shell',scienceChars:0,
       abstractChars:0,sectionCount:0,headingCount:0,captionCount:0,tableCount:0};
@@ -167,9 +192,9 @@
   }
   function batchBodyCompleteness(capture){
     const sections=(capture?.sections||[]).filter(s=>s.type!=='abstract');
-    const scientific=sections.filter(s=>['results','mechanism','experimental'].includes(s.type));
+    const scientific=sections.filter(s=>['results','scope','optimization','mechanism','experimental'].includes(s.type));
     const scienceChars=scientific.reduce((n,s)=>n+String(s.text||'').length,0);
-    const hasResults=sections.some(s=>s.type==='results');
+    const hasResults=sections.some(s=>['results','scope','optimization'].includes(s.type));
     const hasConclusion=sections.some(s=>s.type==='conclusion');
     const completeness=scienceChars<250
       ?((capture?.sections||[]).some(s=>s.type==='abstract')?'abstract_only':'unavailable')
@@ -181,7 +206,7 @@
       completeness};
   }
   function gather(){
-    const root=document.querySelector('main article, article, main, [role="main"]');
+    const root=batchArticleRoot();
     if(!root)throw Error('找不到可验证的文章正文容器');
     const sections=[], group=new Map();
     let heading='Article body', isReferences=false, consumed=0, paragraphCount=0;
@@ -206,6 +231,30 @@
       const row=group.get(key);
       if(row.text.length+value.length<=30000)row.text+=(row.text?'\n\n':'')+value;
     }
+    // The TOC evidence engine uses heading ranges to include scientific
+    // lists and nested blocks omitted by a p-only extractor. Prefer a longer
+    // DOM-bound section without altering its scientific heading or rights gate.
+    try{
+      if(typeof document.createRange==='function'){
+        const headings=Array.from(root.querySelectorAll('h2,h3,h4'));
+        for(let i=0;i<headings.length;i++){
+          const node=headings[i],name=cleanText(node.textContent,300);
+          const row=group.get(name.toLowerCase());
+          if(!row||row.type==='abstract'||EXCLUDE_HEADING.test(name)||excluded(node))continue;
+          const range=document.createRange();
+          range.setStartAfter(node);
+          if(headings[i+1])range.setEndBefore(headings[i+1]);
+          else if(root.lastChild)range.setEndAfter(root.lastChild);
+          else continue;
+          const holder=document.createElement('div');
+          holder.appendChild(range.cloneContents());
+          holder.querySelectorAll('script,style,noscript,nav,aside,footer,[aria-hidden="true"]')
+            .forEach(el=>el.remove());
+          const expanded=cleanText(holder.textContent,30000);
+          if(expanded.length>row.text.length+80)row.text=expanded;
+        }
+      }
+    }catch(_){ /* P/h2 section extraction remains valid. */ }
     const captions=[];
     for(const node of root.querySelectorAll('figure figcaption, figure .caption')){
       if(excluded(node,true))continue;
@@ -1825,11 +1874,26 @@
     // active tab is DOI-bound and only the explicitly started, live job may run.
     const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
     if(fragment&&fragment[1]!==job.token)return;
+    let remembered='';
+    try{remembered=sessionStorage.getItem(BATCH_TAB_BIND_KEY)||'';}catch(_){}
+    const bound=fragment?.[1]===job.token||remembered===job.token;
+    const routeBound=batchPathBindsCurrentJob(job);
+    if(!bound&&!routeBound)return; // An unrelated publisher tab is not a worker.
     let doi=pageDoi(),capture=null;
-    // Unrelated tabs must not report into an active historical attempt.
-    if(doi&&doi!==job.doi)return;
-    if(!doi&&!fragment&&!batchPathBindsCurrentJob(job))return;
-    reportStage('publisher_page');
+    reportStage('publisher_page'); // Heartbeat before scientific/license hydration.
+    if(!bound){
+      // Unbound exact DOI routes can explain access errors, but may not
+      // persist private scientific text to a job they did not claim.
+      if([403,429].includes(observedPageHttpStatus()))
+        storeResult({status:'page_http_error',stage:'publisher_page'});
+      else if(batchPublisherPageBlocked())
+        storeResult({status:'page_access_blocked',stage:'publisher_page'});
+      else storeResult({status:'doi_unverified',stage:'publisher_doi'});
+      return;
+    }
+    if(doi&&doi!==job.doi){
+      storeResult({status:'doi_unverified',stage:'publisher_doi'});return;
+    }
     // A DOI-bound canonical publisher route may lack a DOI meta tag when
     // presenting an authentication challenge. Do not wait for nonexistent
     // fulltext, and never claim DOI verification from the URL alone.
@@ -1846,7 +1910,7 @@
     // Relevant head/body DOM mutations drive checks; unchanged node counts do not.
     while(Date.now()<probeUntil){
       doi=pageDoi();
-      if(doi&&doi!==job.doi)return;
+      if(doi&&doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
       if(doi===job.doi){
         verified=true;reportStage('publisher_doi');
         if(batchPublisherPageBlocked()){
@@ -1855,7 +1919,7 @@
         if([403,429].includes(observedPageHttpStatus())){
           storeResult({status:'page_http_error',stage:'publisher_page'});return;
         }
-        const root=document.querySelector('main article, article, main, [role="main"]');
+        const root=batchArticleRoot();
         bodyEvidence=batchBodyStructure(root);
         const ready=batchArticlePageReady(root,bodyEvidence);
         if(ready)sawArticle=true;
@@ -1867,7 +1931,7 @@
           try{
             capture=gather();
             const verifiedScience=capture.sections.filter(row=>
-              ['results','mechanism','experimental'].includes(row.type))
+              ['results','scope','optimization','mechanism','experimental'].includes(row.type))
               .reduce((total,row)=>total+String(row.text||'').length,0);
             if(verifiedScience>=250)break;
           }catch(_){capture=null;}
@@ -1876,7 +1940,7 @@
       }else await batchAwaitPublisherDomChange(null,330);
     }
     if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
-    const root=document.querySelector('main article, article, main, [role="main"]');
+    const root=batchArticleRoot();
     bodyEvidence=batchBodyStructure(root);
     const ready=batchArticlePageReady(root,bodyEvidence);
     if(!ready&&!sawArticle){storeResult({status:'page_unavailable',stage:'publisher_page'});return;}
@@ -1893,7 +1957,7 @@
     if(!capture&&ready){try{capture=gather();}catch(_){capture=null;}}
     if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const verifiedScientificChars=capture.sections.filter(row=>
-      ['results','mechanism','experimental'].includes(row.type))
+      ['results','scope','optimization','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
     if(verifiedScientificChars<250){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
@@ -1909,7 +1973,8 @@
       indexEligibility:'local_pilot_only',publicUploadAllowed:false,
       pdfDownloaded:false,mediaDownloaded:false,paragraphs:capture.paragraphCount,
       characters:capture.characterCount,coverage:capture.coverage,
-      bodyCompleteness:capture.coverage.completeness,sections:capture.sections,
+      bodyCompleteness:capture.coverage.completeness,captureRevision:BATCH_CAPTURE_REVISION,
+      sections:capture.sections,
       captions:capture.captions,tables:capture.tables};
     if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS){
       storeResult({status:'too_large',stage:'body_extract'});return;
