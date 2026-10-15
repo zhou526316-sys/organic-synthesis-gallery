@@ -121,3 +121,16 @@ test('fabricated publisher DOI/date, overlap, source fingerprints and cloned ent
    ...proof,rows:[...proof.rows,proof.rows[0]]
  }}),/q3_chem_publisher_date_provenance_conflict/);
 });
+
+
+test('an unreviewed Q3 date may not forge formal release or accepted science',()=>{
+  const args=fixture(),paper=proof.rows[1];
+  assert.throws(()=>reconcileQ3({...args,
+    manifest:{accepted:[{doi:paper.doi,date:paper.publisherFirstOnlineDate,
+      journal:'Chem',decision:'include',reviewPasses:2}],pending:[]}}),
+    /q3_chem_date_conflict_missing_approved_science/);
+  assert.throws(()=>reconcileQ3({...args,
+    formal:{articles:[{doi:paper.doi,journal:'Chem',date:paper.publisherFirstOnlineDate}],
+      webpageDoiCount:1}}),
+    /q3_chem_date_proof_unreviewed_must_not_claim_admission/);
+});
