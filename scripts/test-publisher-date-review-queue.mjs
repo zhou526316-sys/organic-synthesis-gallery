@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {publisherDateReviewQueue,generatePublisherDateReviewQueue} from './build-publisher-date-review-queue.mjs';
 
 const fixed={doi:'10.1038/s41586-026-11242-8',
@@ -37,7 +38,7 @@ test('actual protected Gallery corpus yields stable total and excludes fully ver
   assert(!result.issues.some(z=>z.doi==='10.1038/s41586-026-11242-8'));
   const confirmedACS=['10.1021/acs.joc.6c01792','10.1021/acs.joc.6c01506','10.1021/acs.joc.6c01769','10.1021/acs.joc.6c01159','10.1021/acs.joc.6c01796'];
   for(const doi of confirmedACS)assert(!result.issues.some(z=>z.doi===doi),'ACS verified DOI remains queued:'+doi);
-  const rscEvidence=JSON.parse((await import('node:fs')).readFileSync(
+  const rscEvidence=JSON.parse(readFileSync(
     'audit/publisher-date-evidence/2026-10-15-rsc-ten-first-online.json','utf8'));
   assert.equal(rscEvidence.records.length,10);
   for(const row of rscEvidence.records)
