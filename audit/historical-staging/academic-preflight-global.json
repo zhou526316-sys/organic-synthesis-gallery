@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-15T16:21:38.082Z",
-  "sourceWorklistSha256": "af6dc65770ea20af547f25e70fce467fe521a93842b02900bd03cdf3eb66eb11",
+  "sourceWorklistProducedAt": "2026-10-15T17:42:12.004Z",
+  "sourceWorklistSha256": "95729fc28a2d234cde754d25d8af620b0fb6886c59e4c68233cdb8aa9202f5ae",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 56342,
+  "sourceTotalUnreviewed": 56338,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -840,12 +840,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01263",
+      "doi": "10.1021/acs.joc.6c01034",
       "journal": "JOC",
-      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
-      "firstAuthor": "Xing-Pin Wei",
+      "title": "Asymmetric Synthesis of Chiral δ-Caprolactams: Access to a Key Intermediate of Ubrogepant",
+      "firstAuthor": "Qingyuan Shi",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "originDateCandidate": "2026-08-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -862,13 +862,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_joc"
+          "2026-08-01_2026-08-07_joc"
         ],
         "sourceSha256Hashes": [
-          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01263",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01034",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1516,12 +1516,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01376",
+      "doi": "10.1021/acs.joc.6c01263",
       "journal": "JOC",
-      "title": "Enantioselective Synthesis of Hexahydroimidazo[1,2- a ]quinolines through Dynamic Kinetic Resolution of Racemic Aziridines",
-      "firstAuthor": "Amit K. Sharma",
+      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
+      "firstAuthor": "Xing-Pin Wei",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-16",
+      "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1538,13 +1538,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-15_2026-09-21_joc"
+          "2026-09-01_2026-09-07_joc"
         ],
         "sourceSha256Hashes": [
-          "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648"
+          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01376",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01263",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2853,18 +2853,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01788",
+      "doi": "10.1021/acs.joc.6c01290",
       "journal": "JOC",
-      "title": "Highly Enantioselective Synthesis of Chiral Thiourea Derivatives via a Three-Component Mannich Reaction",
-      "firstAuthor": "Zhe Li",
+      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
+      "firstAuthor": "Mrinmoy Manash Bharali",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-08",
+      "originDateCandidate": "2026-08-11",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
+          "target_or_late_stage_synthesis",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -2875,13 +2875,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_joc"
+          "2026-08-08_2026-08-14_joc"
         ],
         "sourceSha256Hashes": [
-          "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
+          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01788",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01290",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3519,19 +3519,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01290",
+      "doi": "10.1021/acs.joc.6c01432",
       "journal": "JOC",
-      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
-      "firstAuthor": "Mrinmoy Manash Bharali",
+      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
+      "firstAuthor": "Simon J. Cooper",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-11",
+      "originDateCandidate": "2026-09-13",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3541,13 +3540,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_joc"
+          "2026-09-08_2026-09-14_joc"
         ],
         "sourceSha256Hashes": [
-          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+          "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01290",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01432",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4809,18 +4808,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01432",
+      "doi": "10.1021/acs.joc.6c01433",
       "journal": "JOC",
-      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
-      "firstAuthor": "Simon J. Cooper",
+      "title": "Total Synthesis of Hemiketal D2 via a Convergent Coupling Strategy",
+      "firstAuthor": "Tadachika Miyasaka",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-13",
+      "originDateCandidate": "2026-08-08",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4830,13 +4830,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_joc"
+          "2026-08-08_2026-08-14_joc"
         ],
         "sourceSha256Hashes": [
-          "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
+          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01432",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01433",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5472,18 +5472,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01433",
+      "doi": "10.1021/acs.joc.6c01562",
       "journal": "JOC",
-      "title": "Total Synthesis of Hemiketal D2 via a Convergent Coupling Strategy",
-      "firstAuthor": "Tadachika Miyasaka",
+      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "firstAuthor": "Yu Chen",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-08",
+      "originDateCandidate": "2026-09-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -5494,13 +5494,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_joc"
+          "2026-09-01_2026-09-07_joc"
         ],
         "sourceSha256Hashes": [
-          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01433",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01562",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6132,10 +6132,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01562",
+      "doi": "10.1021/acs.joc.6c01602",
       "journal": "JOC",
-      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
-      "firstAuthor": "Yu Chen",
+      "title": "Concise Total Synthesis of Streptospherin A",
+      "firstAuthor": "Rakuto Ohta",
       "originalQueuePriority": "P0",
       "originDateCandidate": "2026-09-04",
       "truePublisherOnlineDate": null,
@@ -6143,7 +6143,7 @@
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
+          "target_or_late_stage_synthesis",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -6160,7 +6160,7 @@
           "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01562",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01602",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
