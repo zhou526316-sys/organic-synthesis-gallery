@@ -636,6 +636,8 @@
   }
   async function batchStartOfficialOa(){
     if(batchActive)return;
+    batchStatusWrite({state:'loading',source:'europe_pmc_oa',total:0,attempted:0,
+      currentStage:'一次读取正式全库 DOI 清单',lastError:''});
     const locked=GM_getValue(BATCH_LEASE,null);
     if(locked&&locked.until>Date.now())
       throw Error('独立正文补抓已有任务在本浏览器运行');
@@ -1011,7 +1013,7 @@
   }
   function batchRetryAllowed(prior,manualBlocked=false){
     if(!prior)return true;
-    if(prior.status==='saved_local')return false;
+    if(prior.status==='saved_local')return false; // Stored packet is separately upgrade-eligible only once.
     // Never treat a documented 403/429 or login challenge as a reason to force a visit.
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
     // 527 already visited: no publisher-script evidence is not a reason for an
@@ -1242,7 +1244,7 @@
     });
     const refresh=()=>{
       const s=GM_getValue(BATCH_STATE,{})||{};
-      const progress=[s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
+      const progress=[s.state==='loading'?'读取全库注册表中':s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
@@ -1262,8 +1264,8 @@
         diag.state==='outbox_full'?'待发队列已满':'本机待发送')
         +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
-      start.disabled=batchActive;
-      openOa.disabled=batchActive;
+      start.disabled=batchActive||s.state==='loading';
+      openOa.disabled=batchActive||s.state==='loading';
       coverageButton.disabled=false;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
@@ -1604,7 +1606,9 @@
       if(mode==='pilot'&&(!prior||prior.pageDoiVerified!==true
         ||!['license_not_verified','license_pending_load','body_missing'].includes(prior.status)
         ||[403,429].includes(Number(prior.httpStatus||0))))continue;
-      if(!batchRetryAllowed(prior,manualBlocked))continue;
+      if(!batchRetryAllowed(prior,manualBlocked)
+        &&!(prior?.status==='saved_local'&&prior?.captureRevision!==BATCH_CAPTURE_REVISION
+          &&prior?.bodyCompleteness==='partial'&&!existing.has(paper.doi)))continue;
       selected.push(paper);
       if(mode==='acs_license'&&selected.length>=10)break;
     }
@@ -1627,6 +1631,8 @@
   }
   async function batchStart(manualBlocked=false,mode='all'){
     if(batchActive)return;
+    batchStatusWrite({state:'loading',source:'publisher',total:0,attempted:0,
+      currentStage:'一次读取完整 DOI 注册表并核对正式发布集合',lastError:''});
     const current=GM_getValue(BATCH_LEASE,null);
     if(current&&current.until>Date.now()){
       window.alert('已有一个历史正文批次在当前浏览器运行；请在原页面暂停后操作。');
@@ -1636,16 +1642,25 @@
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
     const db=await batchOpenDb();
-    let existing,attempts,selected;
+    let existing,attempts,selected,alreadySavedCount=0;
     try{
-      existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
+      const savedKeys=await batchDbOp(db,'packets','getAllKeys');
       attempts=await batchDbOp(db,'attempts','getAll');
+      alreadySavedCount=savedKeys.length;
+      const previous=new Map(attempts.map(row=>[row.doi,row]));
+      // Existing partial science from an earlier parser may be upgraded once,
+      // but only after a better verified replacement has actually been captured.
+      existing=new Set(savedKeys.filter(doi=>{
+        const row=previous.get(doi);
+        return !(row?.status==='saved_local'&&row?.bodyCompleteness==='partial'
+          &&row?.captureRevision!==BATCH_CAPTURE_REVISION);
+      }));
       selected=batchSelectCandidates(papers,existing,attempts,manualBlocked,mode);
     }catch(error){db.close();throw error;}
     if(!selected.length){
       db.close();
       batchStatusWrite({state:'finished',total:0,attempted:0,saved:0,
-        existing:existing.size,rightsPending:0,failed:0,skipped:papers.length,
+        existing:alreadySavedCount,rightsPending:0,failed:0,skipped:papers.length,
         currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
       return;
     }
@@ -1669,7 +1684,7 @@
     },4000);
     GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
     batchStatusWrite({state:'running',runId,total:selected.length,attempted:0,
-      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,
+      saved:0,existing:alreadySavedCount,rightsPending:0,failed:0,skipped:0,
       currentStage:'queued',lastError:'',startedAt:Date.now(),lastDoi:''});
     try{
       for(const paper of selected){
@@ -1747,8 +1762,21 @@
               if(await sha256(canonical)!==packet.sourceSha256){
                 status='response_hash_mismatch';stage='hash_verify';
               }else{
-                await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
-                saved++;existing.add(paper.doi);status='saved_local';stage='local_store';
+                const old=await batchDbOp(db,'packets','get',paper.doi);
+                const quality=source=>{
+                  const p=source?.packet||source||{},c=p.coverage||{};
+                  const tier=p.bodyCompleteness==='complete_candidate'?3:
+                    p.bodyCompleteness==='partial'?2:1;
+                  return tier*1000000+Number(c.scienceChars||p.characters||0);
+                };
+                if(old&&quality(packet)<=quality(old)){
+                  // Never replace a proven longer/more complete existing source
+                  // with a partial capture from a different publisher template.
+                  status='body_missing';stage='body_extract';
+                }else{
+                  await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
+                  saved++;existing.add(paper.doi);status='saved_local';stage='local_store';
+                }
                 evidenceMeta.pageDoiVerified=true;
                 evidenceMeta.sectionCount=packet.sections.length;
                 evidenceMeta.evidenceChars=Number(packet.characters||canonical.length);
