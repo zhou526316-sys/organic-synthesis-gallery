@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
+      - 'audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json'
+      - 'audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json'
+      - 'scripts/test-historical-q3-chem-sept-secondary-operando.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-chem-third-dates.mjs'
       - 'scripts/test-historical-q3-chem-nipu-boundary.mjs'
@@ -30,6 +34,10 @@ on:
     branches: [main]
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
+      - 'audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json'
+      - 'audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json'
+      - 'scripts/test-historical-q3-chem-sept-secondary-operando.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-chem-third-dates.mjs'
       - 'scripts/test-historical-q3-chem-nipu-boundary.mjs'
@@ -70,6 +78,7 @@ jobs:
           node --test scripts/test-historical-q3-chem-nipu-boundary.mjs
           node --test scripts/test-historical-q3-chem-new-science.mjs
           node --test scripts/test-historical-q3-chem-four-more-20261015.mjs
+          node --test scripts/test-historical-q3-chem-sept-secondary-operando.mjs
       - name: Validate exact publisher Research DOI and issue-versus-first-online dates
         run: |
           set -euo pipefail
