@@ -66,6 +66,12 @@ if (!runtimeBody.includes("const VERSION = '1.2.0';") || !runtimeBody.includes(`
 }
 if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly contains eval().');
 
+const ownerLeaseTemplate = await readFile(path.resolve('cloudflare/scripts/pdf-owner-lease-bootstrap.inc.js'), 'utf8');
+const installRevision = (tocMainline.match(/var INSTALL_REVISION = '([^']+)';/) || [])[1];
+if (!/^6\\.2\\.\\d+$/.test(installRevision)) throw new Error('Invalid bundled capture engine revision');
+if (!ownerLeaseTemplate.includes('__OSG_CAPTURE_ENGINE__')) throw new Error('Owner handoff marker missing');
+const ownerLeaseBootstrap = ownerLeaseTemplate.replace('__OSG_CAPTURE_ENGINE__', installRevision);
+const ownerSetupExpression = "(location.pathname === '/private-pdf-owner-setup.html' && (location.hostname === 'gallery.gczhouwld.com' || location.hostname === 'organic-synthesis-gallery-public.pages.dev'))";
 const tocMatchLines = tocMainline.match(/^\/\/ @match\s+.+$/gm) || [];
 let tocBody = tocMainline.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
 if (!tocBody.includes("var VERSION = '6.2.20';")) throw new Error('TOC mainline version/content changed unexpectedly.');
@@ -84,7 +90,7 @@ const matchLines = [...new Set([
 ])].join('\n');
 const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
 const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
-const loaderVersion = '2.2.87';
+const loaderVersion = '2.2.88';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
@@ -112,6 +118,10 @@ ${matchLines}
 globalThis.__OSG_TOC_BROWSER_MAINLINE__ = true;
 globalThis.__OSG_BRIDGE_VERSION__ = '${loaderVersion}';
 
+// Lease handoff runs first. The owner page never initializes the legacy
+// scraping runtime or article controller, even if either would throw.
+${ownerLeaseBootstrap}
+if (!(${ownerSetupExpression})) {
 (() => {
   'use strict';
   if (!(${galleryHostExpression})) return;
@@ -153,6 +163,7 @@ ${runtimeBody}
 }
 
 ${tocBody}
+}
 `;
 
 await writeFile(BRIDGE_OUTPUT, loader, 'utf8');
