@@ -26,6 +26,31 @@ const trusted=r=>r.doi===doi&&r.id===entry.id&&r.pageDoi===doi&&r.captureVersion
 async function run(b){let pauses=[];const result=await storeVerifiedStage(new Request('https://worker.test/api/article-figures/stage'),{MEDIA:b},entry,svg,hash,trusted,{sleep:async ms=>pauses.push(ms),now:()=>1790140000000});return {result,pauses};}
 const seeded=()=>{const b=new Bucket();b.seed(STAGE_INDEX_KEY,JSON.stringify({version:1,items:{old:{doi:'10.1021/jacs.known',r2Key:'old.png'}}}));return b;};
 await test('normal write needs confirmed image and conditional index',async()=>{const b=seeded();const {result}=await run(b);assert.equal(result.body.stored,true);assert.equal(result.body.published,false);assert.ok(JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes).items.old);assert.equal(b.events.filter(x=>x[0]==='put').length,2);});
+await test('existing >6 MB valid index is retained and new figures append without wiping it',async()=>{
+ const b=new Bucket(),items={};
+ for(let i=0;i<3300;i++) items['legacy:'+i]={doi:'10.1021/jacs.legacy'+i,caption:'preserved '.repeat(200),r2Key:'legacy/'+i+'.svg'};
+ const raw=JSON.stringify({version:1,items,updatedAt:1790100000000});
+ assert.ok(Buffer.byteLength(raw)>6000000,'fixture must exceed obsolete 6MB ceiling');
+ assert.ok(Buffer.byteLength(raw)<32*1024*1024);
+ b.seed(STAGE_INDEX_KEY,raw);
+ const {result}=await run(b);
+ assert.equal(result.status,200);
+ assert.equal(result.body.stored,true);
+ const after=JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes);
+ assert.equal(Object.keys(after.items).length,3301);
+ assert.deepEqual(after.items['legacy:0'],items['legacy:0']);
+ assert.deepEqual(after.items['legacy:3299'],items['legacy:3299']);
+});
+await test('truly oversized metadata fails closed before rewriting any stage object',async()=>{
+ const b=seeded(),original=b.map.get(STAGE_INDEX_KEY).bytes.toString();
+ const get=b.get.bind(b);
+ b.get=async k=>{const object=await get(k);return k===STAGE_INDEX_KEY?{...object,size:33*1024*1024}:object;};
+ const {result}=await run(b);
+ assert.equal(result.status,500);
+ assert.equal(result.body.code,'stage_storage_index_read_index_size_limit');
+ assert.equal(b.map.get(STAGE_INDEX_KEY).bytes.toString(),original);
+ assert.equal(b.events.filter(([op])=>op==='put').length,0);
+});
 await test('transient object 503 retried using exact same bytes',async()=>{const b=seeded();let once=true;b.hook=async(op,k)=>{if(op==='put'&&k===key&&once){once=false;throw Object.assign(Error('R2 temporarily unavailable (10043)'),{status:503});}};const {result,pauses}=await run(b);assert.equal(result.status,200);assert.deepEqual(pauses,[1100]);assert.equal(result.body.storageRetryCount,1);});
 await test('index 503 retains bytes and retries only index write',async()=>{const b=seeded();let once=true;b.hook=async(op,k)=>{if(op==='put'&&k===STAGE_INDEX_KEY&&once){once=false;throw Object.assign(Error('503'),{status:503});}};const {result}=await run(b);assert.equal(result.body.stored,true);assert.equal(b.events.filter(x=>x[0]==='put'&&x[1]===key).length,1);});
 await test('permanent index failure cannot claim staged success or delete old reference',async()=>{const b=seeded();b.hook=async(op,k)=>{if(op==='put'&&k===STAGE_INDEX_KEY)throw Object.assign(Error('503'),{status:503});};const {result,pauses}=await run(b);assert.equal(result.status,503);assert.equal(result.body.stored,false);assert.equal(result.body.objectStored,true);assert.equal(result.body.operation,'index_write');assert.equal(result.body.indexCommitted,false);assert.equal(pauses.length,3);assert.ok(b.map.has(key));assert.ok(JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes).items.old);});
