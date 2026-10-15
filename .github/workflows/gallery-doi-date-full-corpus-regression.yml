@@ -1,0 +1,39 @@
+name: Gallery full-corpus DOI and publisher date regression
+on:
+  pull_request:
+    paths:
+      - 'src/main.ts'
+      - 'src/styles.css'
+      - 'architecture/catalog.mjs'
+      - 'architecture/tests/catalog.test.mjs'
+      - 'shared/publisher-date-display-fix.mjs'
+      - 'scripts/test-publisher-date-display-fix.mjs'
+      - 'scripts/test-gallery-published-doi-date-integrity.mjs'
+      - 'scripts/sync-literature-catalog-index-shadow.mjs'
+      - 'audit/publisher-date-evidence/**'
+      - '.github/workflows/gallery-doi-date-full-corpus-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'shared/publisher-date-display-fix.mjs'
+      - 'scripts/test-gallery-published-doi-date-integrity.mjs'
+      - 'architecture/catalog.mjs'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify all source DOI identities and date labels
+        run: node scripts/test-gallery-published-doi-date-integrity.mjs
+      - name: Verify publication date and complete publisher evidence regressions
+        run: node --test scripts/test-publisher-date-display-fix.mjs architecture/tests/catalog.test.mjs
+      - name: Verify release marker and unchanged protected data
+        run: node scripts/validate-pages-literature-authorization.mjs
