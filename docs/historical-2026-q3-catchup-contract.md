@@ -380,12 +380,10 @@ Crossref windows, establish the actual archival quarter:
 | `103204` | 2026-08-01 | **2026-08-18** | Q3 |
 | `103257` | 2026-09-01 | **2026-09-17** | Q3 |
 
-**IMPORTANT:** April 14 is Q2, even though some implementation
-legacy proof enum uses `2026-Q1` as a technical code for
-`officially verified outside Q3`; the archival calendar must
-always report April 14 as Q2. Do not silently describe
-`10.1016/j.chempr.2026.103022` as a Q1 original in the publication
-catalog, issue closure, or science review.
+**IMPORTANT:** April 14 is Q2 (not Q1), and both archival proof
+and runtime quarter-validation explicitly preserve the correct 2026-Q2
+identity for DOI `10.1016/j.chempr.2026.103022`. It is excluded
+from the **Q3 cohort by date**, not excluded as a scientific method.
 
 Three real Q3 original methodologies have passed actual independent first
 science/contribution and adversarial scope challenges and are appended
