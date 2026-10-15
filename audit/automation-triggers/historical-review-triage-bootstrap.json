@@ -1,17 +1,17 @@
 {
-  "version": 1,
-  "purpose": "Q3_staging_only_recount_after_three_NatComm_original_synthesis_admissions_20261015",
-  "approvedAt": "2026-10-13",
+  "version": 2,
+  "purpose": "Q3_staging_only_recount_after_Chem_provenance_CI_merges_686_687_691",
+  "approvedAt": "2026-10-15",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
   "scope": "all_historical_source_candidates_only",
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-15T03:58:28.563Z",
-  "reason": "CI-green merged PR #674 8596cacab92e3d3ad0a3be7e8f810c62ede3debe authorized exactly three independent DOI-exact original Nature Communications organic synthetic methods in historical manifest (125→128), without formal publication, for sole Oct16 Beijing08. Approved DOI: 10.1038/s41467-026-76347-0, 10.1038/s41467-026-77718-3, 10.1038/s41467-026-77616-8. Separate supplemental Article evidence pending acrylic acid DOI 10.1038/s41467-026-75484-w and scoped exclusion single hydroxymethanesulfonate electrosynthesis 10.1038/s41467-026-75547-y are NOT integrated in source science authority yet and must NOT be subtracted. Recount Q3 16 journals in immutable Crossref/OpenAlex staging and confirm proper source 12286, windows 192, formal Q3 851 preflight, old two original date pending; project 11278 unfinished to 11275 only AFTER real same-generation output readback. No production D1, no TOC/figures/PDF/SI/body capture, no new writer or early off-slot release, no permanent owner changes, global publisher issue Research closure false.",
+  "requestedAt": "2026-10-15T10:31:31.909Z",
+  "reason": "After real main merges of #688 (a44c01e; restored authenticated 1151-DOI literature blob), #691 (d233fee; four Chem original publisher dates and independent PIDA evidence-pending), #686 (39d7edb; two non-original Chem Preview DOI) and #687 (fe6316a; NIPU scope evidence-pending, integrated all new Chem receipts into runQuarterAudit) request authorized GitHub-only historical staging replay. Recalculate quarter coverage and worklist against immutable 192 original Q3 source roots and current main, explicitly verify same generatedAt. DO NOT admit or delete formal papers, do not infer counts or quarter closure, do not access D1 or publisher media, no new schedule, sole formal slot Beijing 08:00 remains unchanged.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261015_NatComm_three_new_approved_128_cumulative_Q3_staging_only_real_recount",
+  "triggerScope": "20261015_Q3_Chem_two_Preview_NIPU_PIDA_four_publisher_online_date_receipts_staging_only",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 375,
   "expectedStageCompletedRoots": 375,
-  "expectedAcademicInclude": 128,
+  "expectedAcademicInclude": 130,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "8596cacab92e3d3ad0a3be7e8f810c62ede3debe",
+  "lastRelatedMergeCommit": "fe6316a7204a3f5510ba7d0b466663bb68af9835",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -104,7 +104,7 @@
   "expectedSourceRoots": 192,
   "expectedCurrentMainQ3FormalAtPreflight": 851,
   "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 6,
-  "provisionalUnfinishedIfInputsUnchanged": 11275,
+  "provisionalUnfinishedIfInputsUnchanged": null,
   "newAcademicDoiExact": [
     "10.1038/s41467-026-76347-0",
     "10.1038/s41467-026-77718-3",
@@ -115,5 +115,21 @@
   ],
   "scientificSupplementExcludedButNotSourceIntegrated": [
     "10.1038/s41467-026-75547-y"
-  ]
+  ],
+  "lastRecountInputs": {
+    "publisherPreviewPR": 686,
+    "publisherDatePR": 691,
+    "scientificHoldIntegrationPR": 687,
+    "authorizedProductionRestorePR": 688,
+    "expectedFrozenProtectedRollingSha": "f0e4b18a3be71e52fb07e84e291f51f652cd03ae",
+    "baselineStagingGeneratedAt": "2026-10-15T03:59:10.506Z",
+    "baselineCoverageBlob": "9e27b052b72c685b44466bbfce838445b583aeec",
+    "baselineWorklistBlob": "e0385af2793be11c4ecdc4cc224d5aeeab510a23",
+    "baselineSourceUniqueDOI": 12286,
+    "baselineQ3Formal": 851,
+    "baselineUnfinished": 11275,
+    "publisherResearchIssueClosureStillUnproven": true,
+    "sourceRootCount": 192,
+    "onlyHistoricalStagingWrites": true
+  }
 }

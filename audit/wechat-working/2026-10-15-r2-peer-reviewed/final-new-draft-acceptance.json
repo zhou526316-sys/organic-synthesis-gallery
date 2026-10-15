@@ -1,0 +1,59 @@
+{
+  "completedAtBeijing": "2026-10-15T17:21:12+08:00",
+  "date": "2026-10-15",
+  "revision": "2026-10-15-r2-peer-reviewed",
+  "status": "verified_new_official_draft_with_peer_review_narrative",
+  "userRequest": "Owner reports publishing and then deleting the previous posts, and explicitly requests optimized new drafts. Do not publish or mass-send.",
+  "sourcePR": 692,
+  "sourceMergeCommit": "a2abf502e8e31ba6b56c373c02ac40c4506c3fca",
+  "previousMediaId": "KhELYUzvwADwB_l1xH1SWE19Pj0vRCRwKboBqBMzBwhc8kqBBleCJP2ALtXFeTK-",
+  "newMediaId": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/8138bf5e5b144189d8d80ff3.html",
+  "requestId": "wechat-oct15-r2-peer-reviewed-recreate-after-owner-deletion-v1",
+  "creation": {
+    "newDraftCount": 1,
+    "oldMediaUpdatedOrDeletedByAssistant": false,
+    "publisherRun": 38709794966,
+    "finalSuccessfulJob": 116344109387,
+    "receiptStage": "draft_recreate_resumed",
+    "explanation": "The first attempt created and journalled the new media ID. Later attempts only read that ID and completed verification; they did not repeat draft/add. The final created_new_draft=false flag describes the retry, not the whole authorized recreation transaction.",
+    "draftGet": "ok",
+    "publishId": null,
+    "publicSendAuthorized": false
+  },
+  "scienceEditorialChanges": {
+    "Nature": "Integrated actual Referee1 PPh3/diazo questions, stage-specific14/93 experiments,18/66 complementary-entry results with solvent caveat, scale-up/one-pot responses, and distinct second-round reviewer opinions. Reviewer statements, author explanations and editorial extensions remain separate.",
+    "Science": "Retained main/SI-derived scientific analysis and added a visible source-range note: no supplied referee report or author response, and Editor's summary is not peer review.",
+    "sourceBasis": "Owner-supplied Nature main/SI/Peer Review File, and Science main/SI.",
+    "unchangedBodyImageCount": 33,
+    "unchangedCoverCount": 2,
+    "daily08ReleaseCount": 33
+  },
+  "readbackIssueAndResolution": {
+    "observed": "WeChat draft ingestion rewrote PNG CDN rendition suffixes from /0 to /640 while preserving exact opaque asset IDs and order.",
+    "normalizationScope": "Only this observed rewrite on mmbiz_png/sz_mmbiz_png paths. Different IDs, order, missing entries, external URLs or other rendition changes still fail. No HTML or remote images were rewritten.",
+    "regressionRun": 38711540862,
+    "orderedImageIdentityCases": 15,
+    "creationSafetyCases": 11,
+    "pixelEquivalenceClaimed": false
+  },
+  "actualCloudQA": {
+    "run": 38711774171,
+    "artifactId": 11961595669,
+    "artifactSHA256": "488a286400c45f3c94113babecb2850e92cae254a0493430caf5ea0b8d70b214",
+    "reportPath": "audit/wechat-working/2026-10-15-r2-peer-cloud-readback/cloud-qa.json",
+    "reportBlob": "a8abf29bb67102f80d34ec9bc73aa636b5b3575b",
+    "receiptBlob": "b95837863ae478ee365567f649f6a7fb7b0b5312",
+    "reviewedTextBlocksByArticle": [29, 28],
+    "orderedScienceFiguresByArticle": [15, 18],
+    "totalImageTags": 36,
+    "loadedImages": 36,
+    "brokenImages": 0,
+    "mobile390Overflow": false,
+    "desktop980Overflow": false,
+    "titlesAndExactDoiLinks": "pass",
+    "manualScreensInspected": ["nature-peer-final.png", "nature-diazo.png", "nature-peer-practical.png", "desktop-opening.png", "mobile-cover-bundle.png (this capture actually shows the Science ending/source note after image scrolling)"],
+    "nativeWechatClientInspected": false
+  },
+  "verificationBoundary": "Old publication/deletion is the owner's report, not independently established by this task. The assistant created only a new draft, preserved older media, verified official draft/get and real browser rendering, and did not publish. Native WeChat mobile-client crop/sync remains untested."
+}

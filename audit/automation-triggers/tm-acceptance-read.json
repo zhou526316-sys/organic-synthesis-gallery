@@ -1,15 +1,8 @@
 {
-  "requestId": "tm-20261015-1135-post-285-live-owner-read",
-  "requestedAt": "2026-10-15T03:37:23.432Z",
+  "requestId": "tm-20261015-1530-new-upload-read",
+  "requestedAt": "2026-10-15T07:30:00Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User requested continuing previously-approved Tampermonkey fixes after interrupted Oct12 PR #552. Verify latest existing R2 owner-uploaded diagnostics and receipt indexes strictly read-only, including real installRevision, upload/finish time, current 1151 formal DOI corpus, exact current 2.2.85/6.2.66 progress vs prior Oct14 18:53 run (207 plan,101 visited,111 attempts,43 completed,162 unresolved,43 TOC stored). Inspect Nature historical and RSC official TOC candidate acceptance, latency, source route, partial inventory errors and PDFs; do not infer version from protocol 6.2.20. Never invoke publisher or change capture/media/PDF/catalog.",
-  "targetDois": [
-    "10.1039/d6sc06407h",
-    "10.1039/d6gc03748h",
-    "10.1016/j.chempr.2026.103008",
-    "10.1016/j.chempr.2026.103043",
-    "10.1002/anie.4335022"
-  ],
+  "context": "The owner reported new Tampermonkey diagnostic logs uploaded at Beijing time Oct 15 around 15:28. Read latest existing R2 diagnostic latest.json + private report index + staged and captured media indexes via established sanitized read-only job. Compare uploadedAt, installRevision, controllerRevision, queueGeneratedAt, startedAt/finishedAt, 207 tasks, 101 DOI visited, 111 attempts, 43 resolved, 162 remaining from previous Oct 14 batch. Distinguish owner browser real engine 6.2.66 from 6.2.20 capture protocol, assess RSC/Nature/ACS missing official TOC, HTTP409 conflicts and private PDF gaps. Never contact publishers or mutate media/PDF/data.",
   "expectedBridgeVersion": "2.2.85",
   "expectedInstallRevision": "6.2.66",
   "readOnly": true,

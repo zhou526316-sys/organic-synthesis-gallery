@@ -1,0 +1,14 @@
+{
+  "requestId": "oct15-peer-reviewed-new-draft-cloud-readback-r2",
+  "date": "2026-10-15",
+  "revision": "2026-10-15-r2-peer-reviewed",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/8138bf5e5b144189d8d80ff3.html",
+  "expectedMediaId": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+  "previousMediaId": "KhELYUzvwADwB_l1xH1SWE19Pj0vRCRwKboBqBMzBwhc8kqBBleCJP2ALtXFeTK-",
+  "expectedArticleCount": 2,
+  "expectedBodyFigures": [15, 18],
+  "expectedDailyCount": 33,
+  "draftWriteAuthorized": false,
+  "publicSendAuthorized": false,
+  "purpose": "Read the actual new draft/get preview after successful idempotent recreation. Verify both native titles, every reviewed paragraph including real referee questions and unresolved second-round opinions, Science source-limit note, all33 ordered scientific figures, unchanged covers, exact DOI links, every displayed image decode and390/980px layout. Platform image URLs changed only from original /0 to display /640; same source identities were verified, but this separate browser check must inspect the real rendered content. Do not call draft/add, draft/update or publish."
+}

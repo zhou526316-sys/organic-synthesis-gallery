@@ -1,6 +1,7 @@
 import { readFile, mkdir, mkdtemp, writeFile, rm } from 'node:fs/promises';
 import {HISTORICAL_APPROVED_PATH, validateHistoricalApproval, historicCard} from './lib/historical-admission.mjs';
 import { authorizeScopeCorrection } from './lib/immediate-scope-correction.mjs';
+import {authorizeExistingAuthorCorrection,AUTHOR_CORRECTION_ROLLING} from './lib/author-metadata-correction.mjs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
@@ -137,7 +138,13 @@ export async function authorize(root = process.cwd()) {
   for (const file of PROTECTED_FILES) {
     try { actual[file] = git(['hash-object', '--', file]); } catch { actual[file] = null; }
   }
-  const protectedInputFailures = validateProtectedInputs(marker, actual);
+  const originalProtectedFailures = validateProtectedInputs(marker, actual);
+  // This exception is exact byte- and DOI-pinned, not a general permission to
+  // edit protected literature between 08:00 formal release slots.
+  const authorCorrection = originalProtectedFailures.length===1
+    && originalProtectedFailures[0]==='unauthorized_literature_change:'+AUTHOR_CORRECTION_ROLLING
+    ? authorizeExistingAuthorCorrection(root,marker,actual[AUTHOR_CORRECTION_ROLLING]) : null;
+  const protectedInputFailures = authorCorrection?.ok===true ? [] : originalProtectedFailures;
   failures.push(...protectedInputFailures);
   if (git(['rev-parse', '--is-shallow-repository']) !== 'false') failures.push('full_release_history_required');
   const base = spawnSync(process.execPath, [fileURLToPath(new URL('./validate-production-literature-release-slot.mjs', import.meta.url))], {
@@ -226,11 +233,14 @@ export async function authorize(root = process.cwd()) {
     schemaVersion: 1, ok: failures.length === 0, gate: 'pages-literature-authorization',
     deploymentCommit: git(['rev-parse', 'HEAD']), markerCommit, mode: marker.mode,
     publicationSlot: marker.publicationSlot || null, productionCards: marker.productionCards,
-    protectedFiles: PROTECTED_FILES.length, protectedInputsMatch: validateProtectedInputs(marker, actual).length === 0,
+    protectedFiles: PROTECTED_FILES.length, protectedInputsMatch: protectedInputFailures.length === 0,
+    authorOnlyCorrection: authorCorrection?.ok===true ? authorCorrection : null,
     baselineAuthorization: baseline, frozenValidation, legacyBaselineReused,
     reviewComplete: formal ? formal.pending.length === 0 : null,
     failures, productionDataModified: false,
-    note: 'An unchanged authorized literature snapshot permits UI/media deployment. A new snapshot requires a fixed-slot atomic marker, formal decision partition, and immutable prepublish evidence. Publication authorization is not post-deploy verification.',
+    note: authorCorrection?.ok===true
+      ? 'Only the exact source-proven, owner-approved authors for one already-released DOI were reconciled; original 08:00 marker and other protected bytes are unchanged. No new publication.'
+      : 'An unchanged authorized literature snapshot permits UI/media deployment. A new snapshot requires a fixed-slot atomic marker, formal decision partition, and immutable prepublish evidence. Publication authorization is not post-deploy verification.',
   };
 }
 

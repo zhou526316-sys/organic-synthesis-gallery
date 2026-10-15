@@ -1,0 +1,31 @@
+name: WeChat Oct15 CDN identity regression
+on:
+  push:
+    branches: [main]
+    paths: [audit/automation-triggers/wechat-oct15-cdn-check.json]
+permissions:
+  contents: read
+jobs:
+  identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact image identity, order, and observed rendition rewrite only
+        run: |
+          python3 - <<'PY'
+          import runpy,json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct15-cdn-check.json').read_text())
+          assert r['cloudWriteAuthorized'] is False
+          m=runpy.run_path('ops/wechat-publisher/recreate_reviewed_draft.py')
+          same=m['same_ordered_images']
+          a='/mmbiz_png/EXACTassetA/0';b='/sz_mmbiz_png/EXACTassetB/0';c=a[:-1]+'640';d=b[:-1]+'640'
+          cases=[([a,b],[a,b],True),([a,b],[c,d],True),([a,b],[a,d],True),([a,b],[d,c],False),([a,b],[c],False),([a],[c.replace('assetA','otherAsset')],False),([a],[c.replace('mmbiz_png','sz_mmbiz_png')],False),([a],[a[:-1]+'1080'],False),(['https://unrelated.example'+a],['https://unrelated.example'+c],False),(['/other/EXACTassetA/0'],['/other/EXACTassetA/640'],False),([c],[a],False),([a],[c+'?different=1'],False),([],[],True),([None],[None],False),('not-list',[],False)]
+          for index,(expected,actual,wanted) in enumerate(cases):assert same(expected,actual) is wanted,index
+          print('PASS: actual production comparer, 15 identity and negative cases, zero network calls')
+          PY
+      - name: Run all creation and retry safety cases without network access
+        run: |
+          python3 -m py_compile ops/wechat-publisher/recreate_reviewed_draft.py
+          python3 scripts/test-wechat-reviewed-recreation.py

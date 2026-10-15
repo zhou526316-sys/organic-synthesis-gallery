@@ -149,6 +149,25 @@ jobs:
               emit('REPORT_INDEX',pick(reports,['version','updatedAt']))
               latest = sorted(rows(reports),key=lambda x:float(x.get('updatedAt') or 0),reverse=True)
               for r in latest[:12]: emit('REPORT',pick(r,result_keys+['updatedAt','uploadedAt','startedAt','queueGeneratedAt','attemptCount','successCount','failureCount']))
+          # Read-only stage-index health metrics: prove whether the legacy
+          # 6-million-character guard rejects this existing valid JSON index.
+          # Never print article contents, source URLs, image bytes or tokens.
+          staged_path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'tm-staged.json'
+          if staged_path.exists():
+              stage_bytes = staged_path.stat().st_size
+              stage_text = staged_path.read_text(encoding='utf-8-sig')
+              stage_index = load('staged')
+              stage_items = stage_index.get('items') if isinstance(stage_index,dict) else None
+              emit('STAGE_INDEX_HEALTH',{
+                'byteLength':stage_bytes,
+                'decodedCharacters':len(stage_text),
+                'legacySixMillionCharacterLimitExceeded':len(stage_text)>6000000,
+                'newThirtyTwoMiBByteLimitExceeded':stage_bytes>33554432,
+                'validJsonObject':isinstance(stage_index,dict),
+                'validItemsObject':isinstance(stage_items,dict),
+                'indexItemCount':len(stage_items) if isinstance(stage_items,dict) else -1,
+                'readOnly':True,
+              })
           for name in ['captures','staged']:
               body = load(name)
               if body is None: continue

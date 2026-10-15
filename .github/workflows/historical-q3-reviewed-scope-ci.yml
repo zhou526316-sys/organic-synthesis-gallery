@@ -14,6 +14,16 @@ on:
       - 'audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json'
       - 'audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json'
       - 'scripts/test-historical-q3-chem-six-dates.mjs'
+      - 'scripts/test-historical-q3-chem-third-dates.mjs'
+      - 'scripts/test-historical-q3-chem-nipu-boundary.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-one-nipu-first-online-reconciled.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-nipu-boundary-two-pass.json'
+      - 'scripts/test-historical-q3-chem-new-science.mjs'
+      - 'scripts/test-historical-q3-chem-four-more-20261015.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-pida-electroprocess-science-hold.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-three-original-science-review.json'
+      - 'audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json'
       - 'audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'
       - 'scripts/test-historical-q3-chem-publisher-dates.mjs'
       - 'audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'
@@ -67,7 +77,12 @@ jobs:
       - name: Verify five exact Nature Communications Q3 science reviews and three fixed-slot admissions
         run: node --test scripts/test-historical-q3-natcomm-five-method-scope.mjs
       - name: Verify new Chem official first-online dates with two-pass and 08-only admission
-        run: node --test scripts/test-historical-q3-chem-six-dates.mjs
+        run: |
+          node --test scripts/test-historical-q3-chem-six-dates.mjs
+          node --test scripts/test-historical-q3-chem-third-dates.mjs
+          node --test scripts/test-historical-q3-chem-nipu-boundary.mjs
+          node --test scripts/test-historical-q3-chem-new-science.mjs
+          node --test scripts/test-historical-q3-chem-four-more-20261015.mjs
       - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions
         run: node --test scripts/test-historical-q3-chem-publisher-dates.mjs
       - name: Cryptographically verify reviewed-queue status refresh against unchanged raw source

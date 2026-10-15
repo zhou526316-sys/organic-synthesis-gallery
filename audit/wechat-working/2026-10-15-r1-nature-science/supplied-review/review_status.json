@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-15",
+  "pair": [
+    "10.1038/s41586-026-11242-8",
+    "10.1126/science.aec6298"
+  ],
+  "status": "body_review_delivered_overall_release_not_authorized",
+  "science_review": "source_grounded_with_explicit_source_inconsistency_ledger",
+  "images_review": "33_original_source_crops_manually_checked_and_recropped",
+  "paragraph_evidence_maps": [
+    "nature_evidence_map.json",
+    "science_evidence_map.json"
+  ],
+  "text_artifacts": [
+    "nature_text_only.md",
+    "science_text_only.md"
+  ],
+  "independent_image_artifact": "images_only.html",
+  "article_figures": {
+    "nature": 15,
+    "science": 18
+  },
+  "local_chromium": {
+    "viewports": [
+      390,
+      980
+    ],
+    "decoded": [
+      15,
+      18
+    ],
+    "max_paragraph_lines": 6,
+    "horizontal_overflow": false,
+    "zoom_test": true,
+    "manual_section_views": 15,
+    "manual_openings": 2
+  },
+  "source_watermarks_preserved": true,
+  "generated_molecular_structures": false,
+  "unverified": [
+    "same-day daily publication count",
+    "final covers",
+    "official WeChat write and draft/get",
+    "native WeChat layout"
+  ],
+  "wechat_write_performed": false,
+  "public_send_performed": false,
+  "response_sync": "pending_no_write_action_returned_by_current_GitHub_discovery",
+  "note": "The same-day edition fetch returned404; do not overwrite old Oct14 JACS draft or reuse its count/media id. Existing API credentials are not declared missing."
+}

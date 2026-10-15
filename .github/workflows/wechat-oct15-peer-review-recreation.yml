@@ -1,0 +1,102 @@
+name: WeChat Oct15 reviewer narrative and safe recreation
+on:
+  push:
+    branches: [wechat-oct15-r2-peer-review-recreate]
+    paths: [audit/automation-triggers/wechat-oct15-peer-review-build.json]
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct15-peer-review-source
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate strictly source-only staging request
+        id: mode
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct15-peer-review-build.json').read_text())
+          assert r['mode'] in ['prepare','approve']
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('mode='+r['mode']+'\n')
+          PY
+      - name: Build or seal reviewed source revision
+        run: |
+          python3 - '${{ steps.mode.outputs.mode }}' <<'PY'
+          import importlib.util,sys
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('revision',Path('scripts/wechat-oct15-peer-review-revision.py'))
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          original=m.prose
+          m.prose=lambda article:original(article).rstrip()+'\n'
+          m.prepare() if sys.argv[1]=='prepare' else m.approve()
+          p=Path('ops/wechat-publisher/create-draft.py');s=p.read_text()
+          a='    if source_link_request.get("action") == "recreate_reviewed_draft":'
+          b='    if source_link_request_path.exists() and source_link_request.get("action") == "recreate_reviewed_draft":'
+          if a in s:
+            assert s.count(a)==1
+            p.write_text(s.replace(a,b))
+          PY
+          python3 -m py_compile ops/wechat-publisher/create-draft.py ops/wechat-publisher/recreate_reviewed_draft.py scripts/wechat-oct15-peer-review-revision.py
+      - name: Test idempotency and no-publish/no-old-update boundaries
+        run: python3 scripts/test-wechat-reviewed-recreation.py
+      - uses: actions/setup-node@v5
+        if: steps.mode.outputs.mode == 'prepare'
+        with:
+          node-version: '22'
+      - name: Install bounded read-only browser
+        if: steps.mode.outputs.mode == 'prepare'
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/reviewer-browser.log 2>&1 || { tail -40 /tmp/reviewer-browser.log; exit 1; }
+      - name: Read every revised paragraph and original image through production renderer
+        if: steps.mode.outputs.mode == 'prepare'
+        run: |
+          python3 -m http.server 8127 --bind 127.0.0.1 >/tmp/reviewer-http.log 2>&1 &
+          node --input-type=module <<'JS'
+          import {chromium} from '@playwright/test';
+          import {readFile,writeFile} from 'node:fs/promises';
+          const d='audit/wechat-working/2026-10-15-r2-peer-reviewed/preview';
+          const browser=await chromium.launch({headless:true});const results=[];
+          try {
+            for(const [key,expected,manifest] of [['nature',15,'public/wechat-featured/2026-10-15.json'],['science',18,'public/wechat-retrospective/kf-catalytic-appel-fluorination-20261015.json']]) {
+              const m=JSON.parse(await readFile(manifest,'utf8'));
+              const all=m.sections.flatMap(s=>[...s.paragraphs,...['review','warning','callout'].filter(k=>s[k]).map(k=>s[k])]);
+              for(const w of [390,980]) {
+                const p=await browser.newPage({viewport:{width:w,height:844},deviceScaleFactor:1});
+                await p.goto('http://127.0.0.1:8127/'+d+'/'+key+'.html',{waitUntil:'networkidle'});
+                const r=await p.evaluate(async()=>{await Promise.all([...document.images].map(x=>x.decode()));return {images:document.images.length,loaded:[...document.images].filter(x=>x.naturalWidth>0).length,overflow:document.documentElement.scrollWidth>innerWidth+2,text:document.body.innerText}});
+                if(r.images!==expected||r.loaded!==expected||r.overflow)throw Error('image or layout failure '+JSON.stringify(r));
+                const missing=all.filter(x=>!r.text.includes(x));if(missing.length)throw Error('missing reviewed paragraphs: '+JSON.stringify(missing));
+                if(key==='nature'&&(!r.text.includes('审稿人1')||!r.text.includes('审稿人2')||!r.text.includes('第二轮')||!r.text.includes('66%')||!r.text.includes('97%')))throw Error('peer review evidence missing');
+                await p.screenshot({path:d+'/'+key+'-'+w+'-opening.png'});
+                if(w===390){const h=p.locator('h2');for(let i=1;i<await h.count();i++){await h.nth(i).scrollIntoViewIfNeeded();await p.screenshot({path:d+'/'+key+'-section-'+i+'.png'})}}
+                results.push({article:key,width:w,images:r.images,loaded:r.loaded,overflow:r.overflow,reviewedParagraphs:all.length,missing:0});await p.close();
+              }
+            }
+          } finally {await browser.close()}
+          await writeFile(d+'/browser-qa.json',JSON.stringify({status:'pass',revision:'2026-10-15-r2-peer-reviewed',manualVisual:'pending',results},null,2));
+          console.log(JSON.stringify(results));
+          JS
+      - name: Persist revision and review artifacts on the staging branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-featured/2026-10-15.json public/wechat-retrospective/kf-catalytic-appel-fluorination-20261015.json public/wechat-editions/2026-10-15.json audit/wechat-working/2026-10-15-review-gate.json audit/wechat-working/2026-10-15-r2-peer-reviewed ops/wechat-publisher/create-draft.py
+          git diff --cached --check
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'editorial: Oct15 actual peer-review narrative, unchanged images and reviewed recreation safeguards'
+          git push origin HEAD:wechat-oct15-r2-peer-review-recreate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oct15-r2-peer-review-source-qa
+          path: |
+            audit/wechat-working/2026-10-15-r2-peer-reviewed
+            audit/wechat-working/2026-10-15-review-gate.json
+          retention-days: 14

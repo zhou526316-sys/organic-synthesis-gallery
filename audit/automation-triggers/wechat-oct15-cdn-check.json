@@ -1,0 +1,10 @@
+{
+  "requestId": "oct15-cdn-identity-readback-regression-v1",
+  "cloudWriteAuthorized": false,
+  "observedFailureRun": 38709794966,
+  "observedFailureJob": 116340919605,
+  "newMediaIdAlreadyCreated": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+  "finding": "All16 Nature image paths, including daily QR, retained identical CDN type, opaque asset ID and order. WeChat changed only /0 to /640. Scientific prose and article metadata passed before this image comparison.",
+  "fixScope": "Only the recreation comparer may equate this observed PNG rendition rewrite; different asset IDs, order, missing images, external URLs and other sizes still fail. No HTML, image files, editorial content or remote draft is altered.",
+  "resumePolicy": "After tests, rerun the original failed publisher run with the exact stable recreation request. It must reuse the journalled new media ID, not call draft/add again. Actual displayed renditions still require browser/visual review."
+}

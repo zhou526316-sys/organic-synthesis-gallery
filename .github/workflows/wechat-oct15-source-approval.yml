@@ -1,0 +1,15 @@
+name: WeChat Oct15 source approval seal
+on:
+  push:
+    branches: [wechat-oct15-nature-science-reviewed-draft]
+    paths: [audit/automation-triggers/wechat-oct15-source-approval.json]
+permissions:
+  contents: write
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify explicit visual approval and all original fingerprints
+        run: python3 scripts/wechat-oct15-finalize-source-review.py

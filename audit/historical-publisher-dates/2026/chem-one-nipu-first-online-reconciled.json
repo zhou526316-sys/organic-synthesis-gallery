@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "gallery-historical-chem-first-online-date-proof-v1",
+  "mode": "publisher_first_online_provenance_only_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "periodOfSourceRoots": "2026-07-01..2026-09-30",
+  "checkedAgainst": "main_catalog_and_immutable_staging_source",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "officialPublisher": "ScienceDirect / Chem (Elsevier)",
+  "sourceAuthority": "Original publisher Available online day precedes and overrules month-start source issue sentinel without mutating it",
+  "evidenceScope": "One DOI-specific publisher Research Article page with Available online 8 July 2026, Chem original paper Highlights, Summary and Results/Discussion text; not a publisher full HTML or SI/PDF claim",
+  "recordCount": 1,
+  "verifiedOutsideQ3": 0,
+  "verifiedInsideQ3": 1,
+  "verifiedSourceDateConflicts": 1,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.103145",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Foam-to-foam recycling of non-isocyanate polyurethane foams via complete revalorization of depolymerization products",
+      "authors": [
+        "Víctor D. Lechuga-Islas",
+        "Maxime Bourguignon",
+        "Mahammad Anas",
+        "Alejandro J. Müller",
+        "Bruno Grignard",
+        "Christophe Detrembleur"
+      ],
+      "sourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-08",
+      "originalQ3QueueOrigin": "2026-07-01_2026-07-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_first_day_not_true_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+      "reviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+      "originalSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002111",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103145",
+      "officialEvidenceKind": "ScienceDirect_original_Article_Available_online_date_official_publisher_index",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103145",
+        "articleNumber": "103145",
+        "doi": "10.1016/j.chempr.2026.103145",
+        "correctedInterpretation": "First online 2026-07-08; 2026-07-01 historical source sentinel must not be treated as publisher first published"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Solvent-free two-step NIPU foam glycerolysis and dimethyl-carbonate-mediated cyclocarbonation yields mixed re-5CC building-block feedstock, reportedly up to 75%, enabling re-foaming with 100% recycled cyclic-carbonate fraction across semi-rigid/flexible/filler-modified NIPUs",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "noDateEvidenceAsAutomaticAdmission": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOffSlotPublisherWrite": true,
+    "noSilentReplacementOfOriginalDate": true
+  }
+}
