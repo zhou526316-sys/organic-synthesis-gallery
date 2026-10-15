@@ -3,6 +3,7 @@ import { open as openStatusFixture } from './status-image-fixtures';
 import fs from 'node:fs';
 import path from 'node:path';
 import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE } from '../shared/result-window.js';
+import { publisherArticleHref } from '../shared/publisher-article-link.mjs';
 
 test.use({
   browserName: 'webkit',
@@ -274,7 +275,13 @@ test('future unverified JOC date is hidden on 14 Oct while admission stays corre
   await page.locator('#search').fill('10.1039/d6sc06571f');
   const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
   await expect(rsc).toBeVisible({ timeout: 30000 });
-  await expect(rsc.locator('.tag.date')).toContainText(/发表日期待核实|Publication date unverified/);
+  // RSC's DOI/title-matched official First published record establishes
+  // 2026-10-13 independent of Crossref created/deposited metadata. Only this
+  // verified DOI may be unflagged; unverified JOC remains hidden in the same
+  // simulated 2026-10-14 Beijing-day browser session.
+  await expect(rsc).toHaveAttribute('data-date', '2026-10-13');
+  await expect(rsc.locator('.tag.date')).toContainText(/10月13|Oct 13|2026-10-13/);
+  await expect(rsc.locator('.tag.date')).not.toContainText(/待核实|unverified/i);
   await expect(rsc.locator('.tag.new')).toBeVisible();
 });
 
@@ -1325,6 +1332,8 @@ test('all published DOI links survive user-shell decoration without wrapping or 
     await stubOptionalApi(page);
     await page.context().route('https://doi.org/**', route =>
       route.fulfill({ status: 200, contentType: 'text/html', body: '<title>DOI external navigation test</title>' }));
+    await page.context().route('https://www.nature.com/articles/**', route =>
+      route.fulfill({ status: 200, contentType: 'text/html', body: '<title>Official Nature paper DOI navigation test</title>' }));
     await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
     for (const width of [1280, 390]) {
       await page.setViewportSize({ width, height: 844 });
@@ -1332,12 +1341,14 @@ test('all published DOI links survive user-shell decoration without wrapping or 
       await expect(card).toBeVisible({ timeout: 30000 });
       const rawDoi = await card.getAttribute('data-doi');
       expect(rawDoi).toMatch(/^10\.\d{4,9}\/\S+$/);
-      const exactCard = page.locator('#gallery > .card:not([hidden])').filter({ has: page.locator(`a[href="https://doi.org/${rawDoi}"]`) }).first();
+      const expectedHref = publisherArticleHref(rawDoi, await card.getAttribute('data-journal'));
+      expect(expectedHref).toBeTruthy();
+      const exactCard = card;
       await expect(exactCard).toBeVisible({ timeout: 30000 });
       const link = exactCard.locator('.doi .doi-link');
       await expect(link).toBeVisible({ timeout: 30000 });
       await expect(link).toHaveText(rawDoi!);
-      await expect(link).toHaveAttribute('href', `https://doi.org/${rawDoi}`);
+      await expect(link).toHaveAttribute('href', expectedHref!);
       await expect(link).toHaveAttribute('target', '_blank');
       await expect(link).toHaveAttribute('rel', /noopener/);
       await expect(exactCard.locator('.doi .user-doi-link')).toHaveCount(0);
@@ -1360,9 +1371,44 @@ test('all published DOI links survive user-shell decoration without wrapping or 
           link.click(),
         ]);
         await expect.poll(() => popup.url(), { timeout: 12000 })
-          .toBe(`https://doi.org/${rawDoi}`);
+          .toBe(expectedHref);
         await popup.close();
       }
     }
   });
+});
+
+
+test('verified Nature JOC and RSC dates render from DOI-bound official first-published evidence', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-15T03:32:00.000Z') });
+  await stubOptionalApi(page);
+  await page.goto((process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174') + '/', { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+  for (const [doi, expectedDate] of [
+    ['10.1038/s41586-026-11242-8', '2026-10-14'],
+    ['10.1021/acs.joc.6c01769', '2026-10-15'],
+  ]) {
+    await page.locator('#search').fill(doi);
+    const card = page.locator('#gallery > .card[data-doi="' + doi + '"]');
+    await expect(card).toBeVisible({ timeout: 30000 });
+    await expect(card).toHaveAttribute('data-date', expectedDate);
+    await expect(card.locator('.tag.date')).not.toContainText(/待核实|unverified/i);
+    const canonical = await card.locator('.doi .doi-link').textContent();
+    expect(canonical).toBe(doi);
+    const href = publisherArticleHref(doi, await card.getAttribute('data-journal'));
+    await expect(card.locator('.doi .doi-link')).toHaveAttribute('href', href!);
+    if (doi.startsWith('10.1038/')) {
+      await expect(card.locator('.authors')).toContainText('Hayato Fujimoto');
+      await expect(card.locator('.authors')).toContainText('Mamoru Tobisu');
+    }
+  }
+  await page.locator('#search').fill('10.1039/d6sc06571f');
+  const rsc = page.locator('#gallery > .card[data-doi="10.1039/d6sc06571f"]');
+  await expect(rsc).toBeVisible({ timeout: 30000 });
+  // RSC official indexed DOI/title source independently confirms 13 Oct;
+  // do not reuse an obsolete 'date unverified' test from before that proof.
+  await expect(rsc).toHaveAttribute('data-date', '2026-10-13');
+  await expect(rsc.locator('.tag.date')).toContainText(/10月13|Oct 13|2026-10-13/);
+  await expect(rsc.locator('.tag.date')).not.toContainText(/待核实|unverified/i);
 });

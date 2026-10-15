@@ -1,4 +1,5 @@
 import { normalizeDoi, normalizeSearch, queryTerm, queryTokens, store, suggestionMatch, type Language, type PaperMeta, type SuggestionType } from './shared';
+import { publisherArticleHref } from '../../shared/publisher-article-link.mjs';
 import { PAPER_ACTION_ELEMENT } from './paper-actions';
 import { USER_SHELL_ELEMENT } from './library-shell';
 
@@ -286,9 +287,10 @@ export class UserSearchController {
     const meta: PaperMeta = { id, doi, title, journal, href, authors, topics }; store.registerMeta(meta); card.dataset.userPaperId = id;
     this.paintStatus(card);
     if (href && !titleElement.querySelector('.user-title-link')) titleElement.innerHTML = `<a class='user-title-link' href='${href}' target='_blank' rel='noopener noreferrer'>${titleElement.innerHTML}</a>`;
-    // Never replace the authoritative DOI link with a user-shell link. Doing
-    // so dropped .doi-link styling and redirected DOI taps to the mobile
-    // summary drawer. A DOI link must always open its exact doi.org URL.
+    // Keep the DOI link distinct from the mobile title/summary action. Reapply
+    // the SAME publisher URL policy as src/main.ts after user-shell decoration:
+    // previously this layer silently rewrote official Nature article URLs to
+    // doi.org and undid the DOI error workaround. The DOI label stays canonical.
     let doiAnchor: HTMLAnchorElement | null = null;
     if (doi && doiElement) {
       doiAnchor = doiElement.querySelector<HTMLAnchorElement>('a.doi-link, a.user-doi-link, a[href]');
@@ -298,7 +300,7 @@ export class UserSearchController {
       }
       doiAnchor.classList.add('doi-link');
       doiAnchor.classList.remove('user-doi-link');
-      doiAnchor.href = `https://doi.org/${doi}`;
+      doiAnchor.href = publisherArticleHref(doi, card.dataset.journal || journal) || `https://doi.org/${doi}`;
       doiAnchor.target = '_blank';
       doiAnchor.rel = 'noopener noreferrer';
       doiAnchor.title = doi;

@@ -9,6 +9,7 @@ import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
 import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../shared/historical-literature-policy.js';
 import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
 import { correctedPublisherDateForDisplay, publicationDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
+import { publisherArticleHref } from '../shared/publisher-article-link.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
@@ -920,11 +921,13 @@ function renderCards(): void {
       : isEditionPaper
         ? `<span class='tag edition'>${language === 'zh' ? '本期文献' : 'This edition'}</span>`
         : '';
-    const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    // The DOI is one canonical identifier, never two separate visual fragments.
+    const href = doi ? (publisherArticleHref(doi, paper.journal) || `https://doi.org/${doi}`) : (paper.url || '');
+    // Preserve the canonical DOI label as a single unbroken accessible link.
+    // Nature research DOI may open the DOI-matched official article directly,
+    // avoiding an intermediary resolver error; other journals use doi.org.
     // Keep the DOI link independent of the "Open original" publisher button.
     const doiMarkup = doi
-      ? `<a class='doi-link' href='${escapeHtml(`https://doi.org/${doi}`)}' title='${escapeHtml(doi)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`DOI: ${doi}`)}'>${escapeHtml(doi)}</a>`
+      ? `<a class='doi-link' href='${escapeHtml(href)}' title='${escapeHtml(doi)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`DOI: ${doi}`)}'>${escapeHtml(doi)}</a>`
       : `<span>${escapeHtml(t('doiPending'))}</span>`;
     const pdfHref = doi && !retrospectiveCard ? `/pdf/?${new URLSearchParams({ doi, fallback: href })}` : '';
     const pdfButton = pdfHref
