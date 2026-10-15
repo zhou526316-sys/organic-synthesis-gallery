@@ -4,7 +4,7 @@
   "executionMode": "manual_complete_two_pass_post_slot_no_publication",
   "publicationSlot": "2026-10-15T08:00:00+08:00",
   "createdAt": "2026-10-15T01:32:15.841Z",
-  "updatedAt": "2026-10-15T01:49:00.755Z",
+  "updatedAt": "2026-10-15T01:50:18.135Z",
   "evidenceAsOf": "2026-10-15T01:47:22.920Z",
   "handoffGeneratedAt": "2026-10-15T01:18:13.403Z",
   "freshAuditGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -39,12 +39,12 @@
     "timeZone": "Asia/Shanghai"
   },
   "status": "incomplete_review",
-  "phase": "reviewed_all_but_publication_window_expired",
+  "phase": "preparing",
   "reviewComplete": false,
   "readyToPublish": false,
   "publishableSubsetReady": false,
   "snapshotFreshForSlot": false,
-  "recordValidationPassed": false,
+  "recordValidationPassed": true,
   "semanticReady": false,
   "publicationReady": false,
   "releasePolicy": {
@@ -6831,7 +6831,20 @@
     "realGateConclusion": "not_ready_strict_actions_must_fail_closed",
     "newIncludesArticleSpecificAssessmentsComplete": true,
     "fullCandidateReviewCompleted": true,
-    "unreviewedCandidateCount": 0
+    "unreviewedCandidateCount": 0,
+    "prepublishGate": {
+      "runId": 38667686625,
+      "conclusion": "failure_expected_for_post_slot_audit_only",
+      "recordValidationPassed": true,
+      "directValidator": "validate-prepublish-review.mjs --allow-deferred: success; validation failures=[]",
+      "strictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: skipped after conversion preflight refusal",
+      "strictReadiness": "check-prepublish-readiness.mjs --allow-deferred --require-ready: failure; semanticReady=false",
+      "validatorSnapshotFreshForSlot": true,
+      "effectiveSlotEligibility": false,
+      "note": "Mechanical snapshot freshness flag does not override the expired 2026-10-15 08:00-09:00 fixed release time; 09:18 audit is audit-only."
+    },
+    "actualRecordValidationPassed": true,
+    "semanticReady": false
   },
   "closure": {
     "eligible": false,
