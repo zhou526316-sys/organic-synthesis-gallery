@@ -1,6 +1,6 @@
 {
-  "version": 4,
-  "purpose": "Q3_staging_only_recount_after_Chem_103127_source_collision_verified",
+  "version": 5,
+  "purpose": "historical_160_doi_academic_preflight_stage_only_after_owner_approved_throughput_repair_699",
   "approvedAt": "2026-10-15",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-15T12:25:42.599Z",
-  "reason": "After exact-head CI 5/5 SUCCESS and actual main merge PR #696 commit 4a50e702b4ad953ed724ee3ad415a955ada0f37a, rerun existing read-only source-preserving Q3 historical quarter reconciliation. Verify doi 10.1016/j.chempr.2026.103127 official original Chem Article first online 2026-07-06, July OpenAlex raw first-online Jul6 vs August Crossref issue-month Aug1. Both immutable source rows must remain, sourceDateConflicts census unchanged; separate publisher resolution + SCIENCE pending, NOT academic include nor permanent exclusion. Require paired staging generatedAt, actual 192 root, 12286 source unique doi, 851 Q3 formal, and 130 accepted historic if unchanged. No Cloudflare D1 queries, no PDF/SI/media, no formal publication, no Today/Hot/WeChat or extra slot.",
+  "requestedAt": "2026-10-15T15:34:49.440Z",
+  "reason": "Owner explicitly approved historical throughput repair. PR #699 merge c377823a06c333a1d244f50a8b99be0d454bfaae passed 8/8 CI; existing reviewer triage now emits two DOI-sha-bound, 160-row each academic preflight packets only to staging. Reconcile latest Q3 192 source roots without automatic academic include or changes to official history. Verify generated academic-preflight-q3 and academic-preflight-global as unreviewed and source-bound; scholarly science reviewer uses them for subsequent genuine DOI-specific evidence two-pass, not fictitious approvals. No D1, media/PDF, formal writer, Today/Hot or WeChat.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261015_Chem_103127_cross_source_first_online_July06_science_pending",
+  "triggerScope": "20261015_PR699_generate_provenance_bound_Q3_and_global_160_candidate_science_packets",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "4a50e702b4ad953ed724ee3ad415a955ada0f37a",
+  "lastRelatedMergeCommit": "c377823a06c333a1d244f50a8b99be0d454bfaae",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -118,21 +118,18 @@
   ],
   "lastRecountInputs": {
     "sourceBaselineRef": "staging/historical-archive-nightly",
-    "baselineCoverageGeneratedAt": "2026-10-15T11:41:09.082Z",
-    "baselineCoverageBlob": "27004b45ff285ec4351bc4b394019e1069aa5c3f",
-    "baselineWorklistBlob": "d5f29ea30a19f2aca3df69900f3c8bff7b67c737",
-    "baselineSourceDois": 12286,
-    "baselineSourceRoots": 192,
-    "baselineFormalQ3": 851,
-    "baselineUnfinished": 11247,
-    "sourceDateConflictExpectedFromFrozenRoots": 82,
-    "primaryChemConflictDoi": "10.1016/j.chempr.2026.103127",
-    "verifiedPublisherDay": "2026-07-06",
-    "publisherPii": "S2451929426001932",
-    "latestMergedEvidence": "4a50e702b4ad953ed724ee3ad415a955ada0f37a",
-    "noAutomaticAcademicDecision": true,
-    "noFormalPublication": true,
+    "baselineCoverageGeneratedAt": "2026-10-15T12:26:10.685Z",
+    "baselineCoverageBlob": "bdba4a87d14e04a341aeea2a5e223178c06ec2ed",
+    "baselineWorklistBlob": "c2025f6d7717094f02237feb2ec6adfc563824ba",
+    "preflightRequiredFiles": [
+      "audit/historical-staging/academic-preflight-q3.json",
+      "audit/historical-staging/academic-preflight-global.json"
+    ],
+    "preflightMaxPerPacket": 160,
+    "academicPassesCompletedByPreflight": 0,
+    "acceptedCountNotModified": 130,
+    "allResearchIssueClosureUnknown": true,
     "noD1": true,
-    "officialPublisherResearchQuarterClosed": false
+    "noFormalPublication": true
   }
 }
