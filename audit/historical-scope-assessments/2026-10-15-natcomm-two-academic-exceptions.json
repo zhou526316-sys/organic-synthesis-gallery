@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "gallery-historical-supplemental-scope-assessment-v1",
+  "mode": "academic_assessment_only_not_admission_authority",
+  "period": "2026-07-01..2026-09-30",
+  "journal": "Nature Communications",
+  "reviewedAt": "2026-10-15",
+  "reviewMethod": "One assistant performed a DOI-specific evidence pass and separate adversarial pass; not two independent human reviewers.",
+  "sourceProofFile": "audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json",
+  "parentFullScienceFile": "audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json",
+  "parentFullScienceGitBlobSha": "f2e1fa098d7df8077cc45caec37845b60765e161",
+  "evidenceLevel": "Official Nature Communications original Article and public Results, no PDF or SI copied",
+  "accounting": {
+    "assessmentCount": 2,
+    "include": 0,
+    "exclude": 1,
+    "evidencePending": 1,
+    "integratedIntoQuarterReconciliation": false
+  },
+  "assessments": [
+    {
+      "doi": "10.1038/s41467-026-75547-y",
+      "journal": "Nature Communications",
+      "title": "A paired electrolysis for hydroxymethanesulfonate synthesis using sulfide waste as the sulfur source",
+      "date": "2026-07-10",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75547-y",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。 实际转化：阴极原位H2O2将HS−转成亚硫酸根，阳极氧化甲醇为甲醛，随后的C–S键形成产生羟基甲烷磺酸盐。 具体一般性证据：H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+      "independentChallengeReason": "第二遍独立挑战：确实发生C–S成键而非仅处理废水，不过论文主要优化固定H2S/甲醇原料的单一产物、运行时长与传质，废水组成范围不是有机底物适用范围，超100%FE不能写成分离收率。",
+      "reason": "配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-75547-y（Article，Published 2026-07-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-08_2026-07-14_nature-communications、批次Git blob 9bca03d607c47df2030b92261de4353a0c86fba2。未获取或复制SI/PDF/图片。 H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+      "scopeAssessment": {
+        "primaryContribution": "配对电解由硫化物废水和甲醇共同生产羟基甲烷磺酸盐，实现废硫资源化和电极传质协同。",
+        "preparativeTransformation": "阴极原位H2O2将HS−转成亚硫酸根，阳极氧化甲醇为甲醛，随后的C–S键形成产生羟基甲烷磺酸盐。",
+        "generalityEvidence": "H池FE102.8%、282微摩尔每小时及含H2S废气102小时运行、真实废水适用性证明工业制备工艺，但没有多样有机反应伙伴和分离产物范围。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-75547-y（Article，Published 2026-07-10）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-08_2026-07-14_nature-communications、批次Git blob 9bca03d607c47df2030b92261de4353a0c86fba2。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：确实发生C–S成键而非仅处理废水，不过论文主要优化固定H2S/甲醇原料的单一产物、运行时长与传质，废水组成范围不是有机底物适用范围，超100%FE不能写成分离收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-75547-y",
+        "publisherOnlineDate": "2026-07-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_nature-communications",
+        "stageBatchSha": "9bca03d607c47df2030b92261de4353a0c86fba2",
+        "stageSourceSha256": "a09942d601673db18c8051dcd09ec77b235916eaac5fca3e7bb4b632b9711881",
+        "sourceReviewQueueGitBlobSha": "0659a20185f44ecbbd26eb13e114f7bb862dee9b",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-75484-w",
+      "journal": "Nature Communications",
+      "title": "Towards an enzyme cascade synthesis of the bulk chemical acrylic acid",
+      "date": "2026-07-21",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75484-w",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍：ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。 实际转化：DHAP经ThDP中间体异构化、H2PO4−消除和水解形成丙烯酸，连接C1甲醇同化通路实现生产。 具体一般性证据：实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+      "independentChallengeReason": "第二遍独立挑战：真实新催化化学及较大规模的工业单体路线不能仅因酶工程就排除；然而单一商品化产物和多个蛋白变体本身不证明足够一般的有机砌块制备方法，保留针对路线推广性的证据待核。",
+      "reason": "ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。",
+      "evidenceBasis": "官方Nature Communications https://www.nature.com/articles/s41467-026-75484-w（Article，Published 2026-07-21）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-15_2026-07-21_nature-communications、批次Git blob 333be7bd8558e481f79351b4c92605714565b7bf。未获取或复制SI/PDF/图片。 实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+      "scopeAssessment": {
+        "primaryContribution": "ThDP依赖酶定向进化促使DHAP发生非天然磷酸消除生成丙烯酸，并构建甲醇到丙烯酸的酶级联路线。",
+        "preparativeTransformation": "DHAP经ThDP中间体异构化、H2PO4−消除和水解形成丙烯酸，连接C1甲醇同化通路实现生产。",
+        "generalityEvidence": "实际13.6倍改良AAS、4.3g/L滴度、268.9mg/L/h生产率和99.5%转化率证明特定单体制造路线，但未确认其他有机产物或多类底物适用性。",
+        "sourceEvidence": "官方Nature Communications https://www.nature.com/articles/s41467-026-75484-w（Article，Published 2026-07-21）；摘要与可读Results、Fig.1–6图注及文章具体数据；原冻结来源2026-07-15_2026-07-21_nature-communications、批次Git blob 333be7bd8558e481f79351b4c92605714565b7bf。未获取或复制SI/PDF/图片。",
+        "boundaryChallenge": "第二遍独立挑战：真实新催化化学及较大规模的工业单体路线不能仅因酶工程就排除；然而单一商品化产物和多个蛋白变体本身不证明足够一般的有机砌块制备方法，保留针对路线推广性的证据待核。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41467-026-75484-w",
+        "publisherOnlineDate": "2026-07-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_nature-communications",
+        "stageBatchSha": "333be7bd8558e481f79351b4c92605714565b7bf",
+        "stageSourceSha256": "0f40eb7e25903d9394ed8732e305c5a9e04b892e539ab346983f87f51494add8",
+        "sourceReviewQueueGitBlobSha": "a3d12de752db48bffe4f97911eb0570ffa94e2d4",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "evidenceNeeded": "核对工程AAS对不同DHAP类似底物是否有可分离产物范围，评价单一甲醇—丙烯酸路线是否满足可推广砌块合成标准，不能把酶变体数当成底物数。",
+      "nextAction": "核对公开实验及可访问SI的AAS底物耐受、产物分离与路线通用性后再进行独立挑战。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "rights": {
+        "noProtectedTextExport": true,
+        "noPDFOrBodyMediaGrab": true
+      }
+    }
+  ],
+  "guards": {
+    "noOwnerPermanentExclusion": true,
+    "noAutomaticAdmission": true,
+    "noD1": true,
+    "noPublication": true,
+    "noMediaPDFSI": true
+  }
+}
