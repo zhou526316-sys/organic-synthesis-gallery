@@ -14,6 +14,28 @@ export const STAGE_ROOT='audit/historical-staging';
 export const START={from:'2026-09-22',to:'2026-09-30'};
 const FLOOR='1850-01-01';
 const MAX_ROWS=100, MAX_PAGES=10, MAX_RSC_JAN1_PAGES=100;
+// Crossref supports up to 1000 rows per call; enable 500 on the staging
+// collector only to reduce API paging without disabling DOI/source checks.
+const crossrefPageSize=()=>process.env.HISTORICAL_FAST_CROSSREF==='1'?500:MAX_ROWS;
+export const DEFERRED_SOURCE_SCHEMA='gallery-history-deferred-incomplete-roots-v1';
+const retryAfter=(at,failures)=>new Date(Date.parse(at)+
+  Math.min(24,2**Math.min(Math.max(0,failures),4))*3600000).toISOString();
+export function sourceRetryRecord({cursor,rootId,activeSplit=null,
+  kind='chronological',issues=[],at=new Date().toISOString(),
+  previousFailures=0}={}){
+  if(!cursor||!validDate(cursor?.range?.from)||!validDate(cursor?.range?.to)
+    ||!Number.isInteger(cursor.journalIndex)
+    ||!['chronological','rsc_created_recheck'].includes(kind)
+    ||typeof rootId!=='string'||!rootId
+    ||!Array.isArray(issues)||!issues.length||!issues.every(x=>typeof x==='string')
+    ||!Number.isInteger(previousFailures)||previousFailures<0)
+    throw Error('historical_invalid_deferred_source_receipt');
+  return {rootId,kind,cursor:structuredClone(cursor),
+    activeSplit:activeSplit?structuredClone(activeSplit):null,
+    failures:previousFailures+1,lastFailureAt:at,
+    nextRetryAt:retryAfter(at,previousFailures+1),issues:[...issues],
+    sourceCompleted:false,academicDecision:null,publicationAuthority:false};
+}
 export const RSC_CREATION_RESCUE_VERSION='rsc-created-date-rescue-20261012-v1';
 const RSC_JOURNALS=new Set(['Chemical Science','Green Chemistry']);
 export const requiresRscCreationRescue=journal=>RSC_JOURNALS.has(journal?.name);
@@ -217,7 +239,14 @@ async function request(url,budget,source){
   try{response=await fetch(url,{signal:AbortSignal.timeout(20000),
     headers:{accept:'application/json','user-agent':'OrganicSynthesisGallery-HistoryIndex/1.0 (gallery.gczhouwld.com)'}})}
   catch(e){throw Error(source+':transport_'+String(e?.name||'unknown'))}
-  if(!response.ok)throw Error(source+':http_'+response.status);
+  if(!response.ok){
+    // Log no credential bytes. Fail incomplete rather than silently pretending
+    // OpenAlex cursor coverage is possible without a valid API key.
+    if(source==='openalex'&&(response.status===401||response.status===403))
+      throw Error('openalex:http_'+response.status+
+        (process.env.OPENALEX_API_KEY?':api_key_present_rejected':':api_key_missing'));
+    throw Error(source+':http_'+response.status);
+  }
   try{return await response.json()}catch{throw Error(source+':invalid_json')}
 }
 async function crossrefWindow(journal,range,budget){
@@ -235,7 +264,7 @@ async function crossrefWindow(journal,range,budget){
           const u=new URL('https://api.crossref.org/journals/'+encodeURIComponent(issn)+'/works');
           const axis=lane==='created'?'created-date':'pub-date';
           u.searchParams.set('filter','from-'+axis+':'+range.from+',until-'+axis+':'+range.to+',type:journal-article');
-          u.searchParams.set('rows',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
+          u.searchParams.set('rows',String(crossrefPageSize()));u.searchParams.set('cursor',cursor);
           const res=await request(u,budget,'crossref');
           if(!res?.message||!Array.isArray(res.message.items))throw Error('crossref:invalid_items');
           const items=res.message.items,reported=Number(res.message['total-results']);
@@ -243,7 +272,7 @@ async function crossrefWindow(journal,range,budget){
           if(total!==null&&total!==reported)throw Error('crossref:total_changed');
           total=reported;count+=items.length;page++;
           for(const raw of items){const row=fromCrossref(raw);if(row)map.set(row.doi,row)}
-          if(items.length<MAX_ROWS||count>=reported)break;
+          if(items.length<crossrefPageSize()||count>=reported)break;
           const next=res.message['next-cursor'];
           if(typeof next!=='string'||!next||next===cursor)throw Error('crossref:missing_next_cursor');
           cursor=next;
