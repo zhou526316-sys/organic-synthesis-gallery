@@ -15,7 +15,7 @@ const norm=v=>String(v||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?d
 const fileDigest=content=>createHash('sha256').update(content).digest('hex');
 const filenameId=id=>/^\d{4}-\d\d-\d\d_\d{4}-\d\d-\d\d_[a-z][a-z-]+$/.test(id);
 const priorityWords=[
-  /total synthesis|formal synthesis|enantioselective|atroposelective|asymmetric[ -]+(?:synthe|cataly|coupl|cycl|annulat|functional|amination|arylation|alkylation|hydrogenation|carbonylation|hydroboration)|cross.coupling|decarboxylative|carbonylative|electrochemical.*(reaction|synthesis|coupling)|photoredox.*(reaction|coupling|synthesis)/i,
+  /total synthesis|formal synthesis|enantioselective|asymmetric|cross.coupling|decarboxylative|carbonylative|electrochemical.*(reaction|synthesis|coupling)|photoredox.*(reaction|coupling|synthesis)/i,
   /synthe|annulation|cyclization|cyclisation|functionalization|functionalisation|olefination|amination|alkylation|arylation|hydroboration|phosphonylation|rearrangement|carboxylation|electrosynthesis|photocataly/i,
   /reaction|cataly|transformation|organic|carbon|radical|enantio|chirality|enantioselect/i,
 ];
