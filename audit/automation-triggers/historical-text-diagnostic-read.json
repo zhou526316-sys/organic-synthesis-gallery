@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261014-2335-historical-text-v029-postrelease-readback",
-  "requestedAt": "2026-10-14T15:36:54.344Z",
+  "requestId": "20261015-0859-historical-text-v029-owner-diagnostic-confirm",
+  "requestedAt": "2026-10-15T00:59:00Z",
   "mode": "read_only",
   "scope": "recent_200_metadata_events_only",
-  "purpose": "Post-release v0.2.9 license hydration and bounded-tab diagnosis: count v0.2.9 final metadata events and reasons separately from v0.2.8, without accessing article texts. Do not treat absence of v0.2.9 data as a successful publisher replay.",
+  "purpose": "Read latest 200 private metadata-only historical-text publisher capture diagnostics after canonical v0.2.9 deployment; separate actual v0.2.9 terminal attempts, licence hydration pending/verified, HTTP 403/429 and publisher-script no-confirmation. Never infer the fix was browser-validated if no v0.2.9 attempts. No text or publisher access.",
   "noSourceContent": true,
   "noPublisherAccess": true,
   "noWrites": true
