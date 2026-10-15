@@ -41,10 +41,10 @@ export function publisherDateReviewQueue(papers,marker,asOfBeijingDay) {
     asOfBeijingDay,
     sourcePublicationSlot:marker.publicationSlot||marker.lastFixedPublicationSlot||null,
     catalogCount:papers.length,
-    verifiedDisplayDates:verified.length,
+    dateLabelsNotMarkedProvisional:verified.length,
     unresolvedPublisherFirstOnlineDates:missing.length,
     issues:missing,
-    note:'Automated DOI-identity-wide date-verification queue. Only actual publisher first-online evidence can close a row; this is not an authority to admit papers or mutate the 08:00 frozen literature inputs.'
+    note:'Automated DOI-identity-wide date-verification queue. Existing dates without an unresolved flag are counted only as non-provisional labels, not individually publisher-verified dates. Actual publisher-first-online evidence is required to close a provisional row. This file does not authorize new admissions or mutate protected 08:00 inputs.'
   };
 }
 export function generatePublisherDateReviewQueue(root=process.cwd(),date=beijingDate()){
@@ -63,6 +63,6 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  mkdirSync(path.dirname(target),{recursive:true});
  writeFileSync(target,JSON.stringify(result,null,2)+'\n');
  console.log(JSON.stringify({ok:true,output:target,cards:result.catalogCount,
-   verified:result.verifiedDisplayDates,unverified:result.unresolvedPublisherFirstOnlineDates,
+   dateLabelsNotMarkedProvisional:result.dateLabelsNotMarkedProvisional,unverified:result.unresolvedPublisherFirstOnlineDates,
    byJournal:Object.fromEntries([...new Set(result.issues.map(x=>x.journal))].sort().map(j=>[j,result.issues.filter(x=>x.journal===j).length]))}));
 }
