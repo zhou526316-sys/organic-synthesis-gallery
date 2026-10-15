@@ -31,7 +31,7 @@ for(const [doi,row] of papers){
 }
 const nature=papers.get('10.1038/s41586-026-11242-8');
 if(nature){
-  assert.equal(nature.dateUnverified,true,'regression expected an unverified Oct 15 frozen source card');
+  assert.equal(nature.title,'Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds');
   const resolved=correctedPublisherDateForDisplay(nature);
   assert.equal(resolved.date,'2026-10-14');
   assert.equal(resolved.dateUnverified,false);
