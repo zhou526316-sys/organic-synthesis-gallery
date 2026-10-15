@@ -35,7 +35,7 @@ jobs:
       - name: Validate DOI identity and publisher date protection
         run: |
           node scripts/test-gallery-published-doi-date-integrity.mjs
-          node --test scripts/test-publisher-date-display-fix.mjs
+          node --test scripts/test-publisher-date-display-fix.mjs scripts/test-publisher-date-review-queue.mjs
       - name: Build and persist DOI-scoped follow-up queue without changing release data
         shell: bash
         run: |
