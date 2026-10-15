@@ -19,7 +19,7 @@ jobs:
           REVIEWED_PACKAGE_URL: https://at.adobe.com/tldMAYNvqDCZxpfd
         run: |
           python3 -m pip install --quiet pillow
-          python3 scripts/wechat-oct15-import-reviewed-pair.py
+          python3 scripts/wechat-oct15-prepare-reviewed-pair.py
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
@@ -32,7 +32,7 @@ jobs:
           python3 -m http.server 8125 --bind 127.0.0.1 >/tmp/oct15-server.log 2>&1 &
           node --input-type=module <<'JS'
           import {chromium} from '@playwright/test';
-          import {mkdir,writeFile} from 'node:fs/promises';
+          import {writeFile} from 'node:fs/promises';
           const out='audit/wechat-working/2026-10-15-r1-nature-science/production-preview';
           const browser=await chromium.launch({headless:true});const qa=[];
           try {
@@ -64,9 +64,17 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          info=json.loads(Path('audit/wechat-working/2026-10-15-r1-nature-science/author-metadata-source-correction.json').read_text())
+          for p in info['changedPaths']:
+            assert p.startswith('public/') and p.endswith('-supplement.json')
+            subprocess.run(['git','add','--',p],check=True)
+          PY
           git add public/wechat-assets/reviewed/2026-10-15-r1 public/wechat-featured/2026-10-15.json public/wechat-retrospective/kf-catalytic-appel-fluorination-20261015.json public/wechat-editions/2026-10-15.json audit/wechat-working/2026-10-15-r1-nature-science audit/wechat-working/2026-10-15-review-gate.json
           git diff --cached --check
-          git commit -m 'editorial: Oct15 reviewed Nature Science source pair and 33 unchanged paper images'
+          git commit -m 'editorial: Oct15 reviewed Nature Science pair with 33 original figures and source-backed authors'
           git push origin HEAD:wechat-oct15-nature-science-reviewed-draft
       - uses: actions/upload-artifact@v4
         if: always()
