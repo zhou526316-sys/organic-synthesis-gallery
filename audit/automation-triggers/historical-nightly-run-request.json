@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-13T02:53:42.049Z",
-  "reason": "Continue user-approved 16-journal founding backfill one bounded stage-only batch after confirmed 346 source-complete roots. Protect today's Cloudflare D1 quota: Crossref/OpenAlex requests only, no D1/Workers/production search, no release or media. Fail closed on 429 or incomplete source.",
+  "requestedAt": "2026-10-15T15:44:25.948Z",
+  "reason": "Explicit user-approved throughput repair: run already scheduled historical source discovery now with deployed PR #699/#700 source deferral, independent retry queue and 500-row Crossref pages. Prior blocked 2025-07 Nature Communications root must remain incomplete, with exact API error; other journals should advance if their official Crossref/OpenAlex source windows complete. Keep no D1/media/TOC/PDF/production writes, no academic auto-include, same Beijing 08:00 formal writer.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -9,9 +9,9 @@
     "requestLimit": 220
   },
   "safety": "No D1 access, only GitHub staging metadata; formal 08:00 writer, TOC-only/metadata-only media and current production unchanged.",
-  "triggerScope": "20261013_d1_zero_history_source_resume_346_roots",
-  "previousTriggerAt": "2026-10-13T02:17:57.871Z",
-  "expectedPriorCompletedRoots": 346,
+  "triggerScope": "20261015_nonblocking_NatureCommunications_2025_July_source_recovery_after_699_700",
+  "previousTriggerAt": "2026-10-13T02:53:42.049Z",
+  "expectedPriorCompletedRoots": 375,
   "d1Allowance": {
     "rowReads": 0,
     "rowWrites": 0
