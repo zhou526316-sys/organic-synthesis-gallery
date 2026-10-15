@@ -9,7 +9,7 @@ assert.match(original,/\/\/ @version\s+0\.2\.10/);
 assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.10'/);
 assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v030'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
-const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
+const anchor="  function batchBoot(){";
 assert.ok(original.includes(anchor));
 const source=original.replace('const BATCH_PUBLISHER_PROBE_MS=9500;',
   'const BATCH_PUBLISHER_PROBE_MS=45;').replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket,batchFinishPublisherTab,batchCloseReviewTabs,batchArticlePageReady,batchReviewTabs};\n"+anchor);
