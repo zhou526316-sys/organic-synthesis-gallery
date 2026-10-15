@@ -198,8 +198,9 @@ export function reconcileQ3({
       && (['Preview','Erratum'].includes(ev.publisherArticleType)
         ? validDoi(item.underlyingOriginalResearchDoi)
         : item.underlyingOriginalResearchDoi===null
-          && ['multi_study_perspective','editorial_insight_not_original_article']
-            .includes(ev.originalResearchRelation))
+          && ev.originalResearchRelation===(ev.publisherArticleType==='Perspective'
+            ? 'multi_study_perspective'
+            : 'editorial_insight_not_original_article'))
       && item.title===src.title;
     const isOfficial=officialNatureAcs||officialChemSecondary;
     ensure(isOfficial&&allowedArticleTypes.has(ev?.publisherArticleType)
