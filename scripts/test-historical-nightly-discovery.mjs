@@ -1125,7 +1125,9 @@ test('failure during resumed split retains its completed leaves without advancin
     assert.equal(y.deferredRoots.length,1);
     assert.equal(y.deferredRoots[0].activeSplit.completed.length,1);
     assert.equal(y.deferredRoots[0].activeSplit.pending.length,1);
-    assert.equal((await readBatch(rootId)).status,'incomplete_sources');
+    // Split roots are intentionally absent until all leaves are complete.
+    // The failed original leaf and its retry checkpoint are durable evidence.
+    await assert.rejects(readBatch(rootId),/ENOENT/);
     const leaf=rootId+'__2026-09-22_2026-09-25';
     assert.equal((await readBatch(leaf)).status,'source_enumeration_complete');
     y.deferredRoots[0].nextRetryAt='2000-01-01T00:00:00.000Z';
