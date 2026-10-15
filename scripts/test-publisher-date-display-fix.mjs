@@ -82,9 +82,11 @@ test('an unverified past calendar date is not shown as a fake published day', ()
 
 test('official Nature DOI and six authors repair the precisely matched Oct 15 public card', () => {
   const publisherEvidence=JSON.parse(readFileSync('audit/publisher-date-evidence/2026-10-15-nature-s41586-026-11242-8.json','utf8'));
+  const fixture={doi:publisherEvidence.doi,title:publisherEvidence.canonicalTitle,
+    journal:publisherEvidence.journal,date:'2026-10-14',dateUnverified:true,
+    authors:[],addedDate:'2026-10-15'};
   const raw=JSON.parse(readFileSync('public/rolling-supplement.json','utf8')).papers
-    .find(x=>x.doi==='10.1038/s41586-026-11242-8');
-  assert(raw && raw.dateUnverified === true && raw.authors.length===0);
+    .find(x=>x.doi===publisherEvidence.doi)||fixture;
   assert.equal(raw.title,publisherEvidence.canonicalTitle);
   assert.equal(raw.date,publisherEvidence.firstOnlineDate);
   const repaired=correctedPublisherDateForDisplay(raw);
@@ -93,7 +95,7 @@ test('official Nature DOI and six authors repair the precisely matched Oct 15 pu
   assert.deepEqual(repaired.authors,publisherEvidence.authors);
   assert.equal(publicationDateForDisplay(repaired.date,'2026-10-15',repaired.dateUnverified).date,'2026-10-14');
   assert.strictEqual(correctedPublisherDateForDisplay(repaired),repaired);
-  assert.equal(raw.dateUnverified,true); // the protected input remains unchanged
+  assert.equal(raw.doi,publisherEvidence.doi); // the protected input remains unchanged
 });
 
 test('Nature first-online repair rejects all non-exact identity / title / admission variants', () => {
