@@ -70,7 +70,7 @@ export function verifyHistoricalReviewerStatusRefresh({
       old.status==='requires_two_pass_review'&&
       published.has(old.doi)&&approved.has(old.doi);
     verify(publishedAfterApproval||approvedAfterReview||publishedAfterBoth,
-      'historical_queue_status_refresh_unauthorized_transition:'+rootId+':'+old.doi);
+      'historical_queue_status_refresh_not_deterministic_unauthorized_transition:'+rootId+':'+old.doi);
     if(publishedAfterApproval||publishedAfterBoth)replayPublished.delete(old.doi);
     if(approvedAfterReview||publishedAfterBoth)replayApproved.delete(old.doi);
   }
