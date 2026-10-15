@@ -11,7 +11,7 @@ const formal=read('public/toc-demand-live.json');
 const corrections=read('audit/literature-scope-corrections.json');
 const ids=new Set(six.rows.map(x=>x.doi));
 const approved=six.rows.filter(x=>x.verifiedPublicationQuarter==='2026-Q3');
-const preQuarter=six.rows.filter(x=>x.verifiedPublicationQuarter==='2026-Q1');
+const preQuarter=six.rows.filter(x=>x.verifiedPublicationQuarter!=='2026-Q3');
 const approvedMap=new Map(manifest.accepted.map(x=>[x.doi,x]));
 test('new six official Chem dates are distinct from five immutable earlier corrections',()=>{
   assert.equal(six.schemaVersion,CHEM_ONLINE_DATE_SCHEMA);
@@ -19,6 +19,9 @@ test('new six official Chem dates are distinct from five immutable earlier corre
   assert.equal(six.recordCount,6);
   assert.equal(six.verifiedInsideQ3,3);
   assert.equal(six.verifiedOutsideQ3,3);
+  assert.equal(six.verifiedQ1OutsideQ3,2);
+  assert.equal(six.verifiedQ2OutsideQ3,1);
+  assert.equal(six.rows.find(x=>x.doi==='10.1016/j.chempr.2026.103022').verifiedPublicationQuarter,'2026-Q2');
   assert.equal(six.verifiedSourceDateConflicts,6);
   assert.equal(ids.size,6);
   assert.equal(old.rows.length,5);
