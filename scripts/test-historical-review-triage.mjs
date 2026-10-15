@@ -67,3 +67,26 @@ test('suspicious identity metadata remains visible for DOI-specific review',()=>
   assert.ok(v.flags.includes('suspected_nonresearch_record_verify_at_publisher'));
   assert.equal(v.priority,'P3');
 });
+
+test('P0 requires a chemistry-specific asymmetric method, not a bare biology adjective',()=>{
+  const biology=rankHistoricalCandidate({
+    title:'Asymmetric prefrontal representations for leader follower dynamics',
+    date:'2026-08-10'});
+  const flagella=rankHistoricalCandidate({
+    title:'Asymmetric Hydration and Protonation Switching of Dual Aspartates Drive Flagellar Rotation',
+    date:'2026-08-10'});
+  const synthetic=rankHistoricalCandidate({
+    title:'Asymmetric catalysis enables electrochemical C–N coupling in complex molecules',
+    date:'2026-08-10'});
+  const strict=rankHistoricalCandidate({
+    title:'Enantioselective nickel-mediated decarboxylative radical cross-coupling',
+    date:'2026-08-10'});
+  assert.notEqual(biology.priority,'P0');
+  assert.notEqual(flagella.priority,'P0');
+  assert.equal(synthetic.priority,'P0');
+  assert.equal(strict.priority,'P0');
+  // Neither original review shard nor source discovery ever excludes a
+  // candidate based on a low-scoring or high-scoring English title.
+  assert.ok(['P1','P2','P3'].includes(biology.priority));
+  assert.equal(biology.flags.some(x=>x.includes('scope_excluded')),false);
+});
