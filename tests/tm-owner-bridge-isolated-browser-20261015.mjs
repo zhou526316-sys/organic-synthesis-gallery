@@ -9,7 +9,7 @@ const html=await readFile('public/private-pdf-owner-setup.html','utf8');
 const bundle=await readFile('public/gallery-vpn-bridge.user.js','utf8');
 assert.match(bundle,/\/\/ @version\s+2\.2\.88/);
 assert.ok(bundle.indexOf('owner_isolated_bridge_v2')<bundle.indexOf("const DIAGNOSTIC_ID = 'vpn-lit-bridge-loader-status'"));
-assert.match(bundle,/if \(!\(location.pathname === '\/private-pdf-owner-setup\.html'/);
+assert.ok(bundle.includes("if (!((location.pathname === '/private-pdf-owner-setup.html'"),'Owner page must skip legacy collector');
 const browser=await chromium.launch({headless:true});
 
 async function scenario(opts={}){
