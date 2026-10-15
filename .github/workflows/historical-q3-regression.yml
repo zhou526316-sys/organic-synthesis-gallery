@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/historical-chem-cross-source-proof.mjs'
+      - 'scripts/test-historical-chem-cross-source-proof.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-ge-cross-source-pending.json'
       - 'scripts/test-historical-q3-chem-three-more-dates-process-scope.mjs'
       - 'audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json'
       - 'audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json'
@@ -37,6 +41,10 @@ on:
     branches: [main]
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/historical-chem-cross-source-proof.mjs'
+      - 'scripts/test-historical-chem-cross-source-proof.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-ge-cross-source-pending.json'
       - 'scripts/test-historical-q3-chem-three-more-dates-process-scope.mjs'
       - 'audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json'
       - 'audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json'
@@ -86,6 +94,7 @@ jobs:
           node --test scripts/test-historical-q3-chem-four-more-20261015.mjs
           node --test scripts/test-historical-q3-chem-sept-secondary-operando.mjs
           node --test scripts/test-historical-q3-chem-three-more-dates-process-scope.mjs
+          node --test scripts/test-historical-chem-cross-source-proof.mjs
       - name: Validate exact publisher Research DOI and issue-versus-first-online dates
         run: |
           set -euo pipefail

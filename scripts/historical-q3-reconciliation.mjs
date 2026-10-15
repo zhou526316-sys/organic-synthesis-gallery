@@ -7,6 +7,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {bindChemCrossSourceProof,EMPTY as EMPTY_CHEM_CROSS_SOURCE} from './historical-chem-cross-source-proof.mjs';
 import {verifyHistoricalReviewerStatusRefresh} from './historical-q3-reviewer-status-refresh.mjs';
 import {bindReviewedQ3ScopeProof,EMPTY_REVIEWED_SCOPE,REVIEWED_SCOPE_AUTHORITY_SCHEMA} from './historical-q3-reviewed-scope-proof.mjs';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
@@ -63,6 +64,7 @@ export function reconcileQ3({
   chemPublisherDates=EMPTY_CHEM_ONLINE_DATES,
   chemScienceApprovedDoiEvidence=[],
   chemSciencePendingEvidence=[],chemScienceExcludedEvidence=[],
+  chemCrossSourceDates=EMPTY_CHEM_CROSS_SOURCE,chemCrossSourcePendingEvidence=[],
   reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
@@ -451,6 +453,11 @@ export function reconcileQ3({
     chemReviewedExcluded.set(id,a);
   }
 
+  const {resolved:crossSourceResolved,sciencePending:crossSourceSciencePending}=
+    bindChemCrossSourceProof({dateEvidence:chemCrossSourceDates,
+      scienceAssessments:chemCrossSourcePendingEvidence,all,shards,gitBlobByRoot,
+      pub,accepted,pending,excluded,publisherNonOriginal,reviewedScope,
+      correctedChemDates,chemReviewedPending,chemReviewedExcluded});
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
     const c=cells.get(cellId(paper.journal,paper.date.slice(0,7)));
@@ -465,6 +472,7 @@ export function reconcileQ3({
     sourceExplicitlyExcluded:0,sourcePublisherNonResearchExcluded:0,
     sourcePublisherReviewedScopeExcluded:0,sourcePublisherReviewedScopePending:0,
     sourcePublisherDateDiscrepancies:0,sourcePublisherVerifiedOutsideQ3:0,
+    sourcePublisherDateConflictsResolved:0,
     unfinishedQ3OrDateVerification:0,
     formalQ3Count:formalCount,reviewedQ3Waiting08:0,
     missingFormalQ3FromSource:0,sourceCompletedRoots:shardIds.size,
@@ -485,8 +493,16 @@ export function reconcileQ3({
     c.uniqueSourceCandidates++;
     if(row.journalConflict)counters.sourceJournalConflicts++;
     if(row.dateConflict)counters.sourceDateConflicts++;
+    const officialCollision=crossSourceResolved.get(row.doi);
+    if(officialCollision){
+      counters.sourcePublisherDateConflictsResolved++;
+      counters.sourcePublisherDateDiscrepancies++;
+      c.publisherDateDiscrepancies++;
+    }
     if(candidateDateOk){
       counters.apiDatedQ3Candidates++;c.apiQ3DatedCandidates++;
+    }else if(officialCollision){
+      // Publisher proof is known; immutable contradictory source days still count.
     }else if(row.date&&/^\d{4}-\d\d-\d\d$/.test(row.date)
       &&!(row.flags||[]).some(x=>x.includes('unverified')||x.includes('mismatch'))
       &&!row.dateConflict){
@@ -507,6 +523,7 @@ export function reconcileQ3({
       reviewedScope.get(row.doi)?.scientificDecision==='pending'?'publisher_science_pending':
       chemReviewedExcluded.has(row.doi)?'publisher_science_excluded':
       chemReviewedPending.has(row.doi)?'publisher_science_pending':
+      crossSourceSciencePending.has(row.doi)?'publisher_science_pending':
       officialChem&&!publishedQ3(officialChem.publisherFirstOnlineDate)?'publisher_verified_outside_Q3':'unfinished';
     if(status==='published'){c.alreadyPublished++;counters.sourceAlreadyPublished++;}
     if(status==='approved_waiting08'){c.approvedWaiting08++;counters.sourceApprovedWaiting08++;}
@@ -532,13 +549,13 @@ export function reconcileQ3({
     c.unreviewed++;counters.unfinishedQ3OrDateVerification++;
     // A DOI can be academically unreviewed *and* have a separately verified
     // publisher-first-online day; do not relabel an official date as unknown.
-    const officialQ3Online=officialChem
-      && publishedQ3(officialChem.publisherFirstOnlineDate);
+    const officialQ3Online=(officialChem||officialCollision)
+      && publishedQ3((officialChem||officialCollision).publisherFirstOnlineDate);
     unreviewed.push({doi:row.doi,journal:row.journal,
       sourceWindowMonth:month,apiDateCandidate:candidateDateOk?row.date:'',
       publisherFirstOnlineDateVerified:Boolean(officialQ3Online),
       publisherFirstOnlineDate:officialQ3Online
-        ? officialChem.publisherFirstOnlineDate : null,
+        ? (officialChem||officialCollision).publisherFirstOnlineDate : null,
       title:row.title,
       firstAuthor:(row.authors||[])[0]||'',priority:row.priority||'P3',
       flags:[...new Set([...(row.flags||[]),
@@ -611,6 +628,15 @@ export function reconcileQ3({
       stageSourceDate:r.sourceDate,publisherFirstOnlineDate:r.publisherFirstOnlineDate,
       verifiedPublicationQuarter:r.verifiedPublicationQuarter,
       evidenceUrl:r.officialPublisherArticlePage,sourceRootId:r.originalQ3QueueOrigin})),
+    publisherSourceDateConflictsResolved:[...crossSourceResolved.values()].map(r=>({
+      doi:r.doi,journal:r.journal,publisherFirstOnlineDate:r.publisherFirstOnlineDate,
+      sourceDateDisagreement:r.originalSourceRows.map(x=>({
+        sourceRootId:x.rootId,sourceDate:x.sourceDate,
+        sourceRootSha256:x.sourceRootSha256
+      })),
+      evidenceUrl:r.officialPublisherArticlePage,
+      academicDecision:'evidence_pending_not_admitted'
+    })),
     publisherScopeEvidencePending:[
       ...publisherReviewedScope.reviewed
         .filter(x=>x.scientificDecision==='pending').map(x=>({
@@ -619,6 +645,12 @@ export function reconcileQ3({
           nextAction:x.assessment.nextAction,
           sourceRootId:x.sourceRootId,notOriginalManifestPending:true
         })),
+      ...[...crossSourceSciencePending.values()].map(a=>({
+        doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
+        evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
+        sourceRootIds:a.reviewEvidence.sourceRootIds,
+        notOriginalManifestPending:true
+      })),
       ...[...chemReviewedPending.values()].map(a=>({
         doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
         evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
@@ -649,7 +681,7 @@ export async function runQuarterAudit({
     priorChemDates,additionalChemDates,thirdChemDates,
     initialChemScience,newChemScience,fourthChemDates,nipuScience,
     fifthChemDates,pidaScience,operandoChemDates,operandoScience,
-    threeMoreChemDates,smallMoleculeScience]=await Promise.all([
+    threeMoreChemDates,smallMoleculeScience,crossSourceChemDates,crossSourceChemScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -684,7 +716,9 @@ export async function runQuarterAudit({
     readJson('audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json'),
     readJson('audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json'),
     readJson('audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json'),
-    readJson('audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json')
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-ge-cross-source-pending.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -1352,6 +1386,32 @@ export async function runQuarterAudit({
   // Chem reviewer queue status may change after three legitimate admissions.
   // Preserve original reviewer Git SHA only after deterministic re-generation
   // from the exact immutable publisher-source batch and current statuses.
+  const crossDatesFile='audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json';
+  const crossScienceFile='audit/historical-scope-assessments/2026-10-15-chem-ge-cross-source-pending.json';
+  const crossDatesBytes=await readFile(crossDatesFile);
+  const crossProofs=crossSourceChemDates.rows||[];
+  const crossScienceAssessments=crossSourceChemScience.assessments||[];
+  ensure(crossSourceChemDates.schemaVersion==='gallery-historical-chem-cross-source-online-v1'
+    &&crossSourceChemDates.mode==='publisher_verified_cross_source_date_conflict_not_admission'
+    &&crossSourceChemDates.recordCount===1&&crossProofs.length===1
+    &&crossProofs[0].doi==='10.1016/j.chempr.2026.103127'
+    &&crossProofs[0].publisherFirstOnlineDate==='2026-07-06'
+    &&crossProofs[0].originalSourceRows?.length===2
+    &&crossSourceChemDates.guards?.noSourceShardMutation===true
+    &&crossSourceChemDates.guards?.noAcademicAutoIncludeOrExclude===true
+    &&crossSourceChemDates.guards?.noOffSlotPublication===true
+    &&crossSourceChemScience.schemaVersion==='gallery-historical-q3-chem-ge-cross-source-science-pending-v1'
+    &&crossSourceChemScience.mode==='academic_two_pass_scope_only_not_publication'
+    &&crossSourceChemScience.dateEvidenceFile===crossDatesFile
+    &&crossSourceChemScience.dateEvidenceGitBlobSha===gitBlobOf(crossDatesBytes)
+    &&crossSourceChemScience.counts?.assessed===1
+    &&crossSourceChemScience.counts.include===0
+    &&crossSourceChemScience.counts.exclude===0
+    &&crossSourceChemScience.counts.pending===1
+    &&crossScienceAssessments.length===1
+    &&crossSourceChemScience.guards?.crossSourceConflictRetained===true
+    &&crossSourceChemScience.guards?.noFormalPublication===true,
+    'q3_chem_cross_source_date_science_blob_invalid');
   const chemByRoot=new Map();
   for(const r of chemPublisherDates.rows){
     const rootId=r.originalQ3QueueOrigin;
@@ -1387,6 +1447,17 @@ export async function runQuarterAudit({
     ensure(pinned.size<=5,'q3_chem_secondary_review_shard_count_invalid');
     chemByRoot.set(rootId,{sourceSha:ev.stageSourceSha256,
       rawGitSha:ev.stageBatchGitBlobSha,pinnedReviewerGitShas:pinned});
+  }
+  for(const d of crossProofs)for(const p of d.originalSourceRows){
+    const prev=chemByRoot.get(p.rootId);
+    ensure(!prev||(prev.sourceSha===p.sourceRootSha256
+      &&prev.rawGitSha===p.rawSourceBatchGitBlobSha),
+      'q3_chem_cross_source_raw_history_conflict:'+p.rootId);
+    const pinned=new Set([...(prev?.pinnedReviewerGitShas||[]),p.reviewQueueGitBlobSha]);
+    ensure(pinned.size<=5&&[...pinned].every(x=>/^[a-f0-9]{40}$/.test(x)),
+      'q3_chem_cross_source_reviewer_history_invalid:'+p.rootId);
+    chemByRoot.set(p.rootId,{sourceSha:p.sourceRootSha256,
+      rawGitSha:p.rawSourceBatchGitBlobSha,pinnedReviewerGitShas:pinned});
   }
   for(const [rootId,p] of chemByRoot){
     const shard=shardsByRoot.get(rootId);
@@ -1427,6 +1498,8 @@ export async function runQuarterAudit({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
     publisherReviewedScope,chemPublisherDates,chemScienceApprovedDoiEvidence,
     chemSciencePendingEvidence,chemScienceExcludedEvidence,
+    chemCrossSourceDates:crossSourceChemDates,
+    chemCrossSourcePendingEvidence:crossScienceAssessments,
     reviewerQueueHistoricalBlobAliasesByRoot,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);
