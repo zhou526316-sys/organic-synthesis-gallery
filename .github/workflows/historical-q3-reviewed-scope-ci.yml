@@ -11,6 +11,9 @@ on:
       - 'scripts/test-historical-q3-natsynth-reviewed-44.mjs'
       - 'scripts/test-historical-q3-nchem-51-reviewed.mjs'
       - 'scripts/test-historical-q3-natcomm-five-method-scope.mjs'
+      - 'scripts/test-historical-q3-natcomm-two-exceptions.mjs'
+      - 'audit/historical-scope-assessments/2026-10-15-natcomm-two-academic-exceptions.json'
+      - 'audit/historical-reviewed/q3-natcomm-two-academic-exceptions-source-proof.json'
       - 'audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json'
       - 'audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json'
       - 'scripts/test-historical-q3-chem-six-dates.mjs'
@@ -66,6 +69,8 @@ jobs:
         run: node --test scripts/test-historical-q3-nchem-51-reviewed.mjs
       - name: Verify five exact Nature Communications Q3 science reviews and three fixed-slot admissions
         run: node --test scripts/test-historical-q3-natcomm-five-method-scope.mjs
+      - name: Verify Nat Comm original-science exclusion and evidence hold against untouched DOI source roots
+        run: node --test scripts/test-historical-q3-natcomm-two-exceptions.mjs
       - name: Verify new Chem official first-online dates with two-pass and 08-only admission
         run: node --test scripts/test-historical-q3-chem-six-dates.mjs
       - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions

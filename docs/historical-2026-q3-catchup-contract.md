@@ -471,3 +471,44 @@ runs and returns verified same-generation coverage+worklist.
 No new body media/SI/PDF/paid-text collection, no D1, no owner permanent
 corrections, no second publication slot. Original 16-journal
 publisher Research/online-first full closure remains false.
+
+
+## 2026-10-15: Separate Nature Communications two-exception scope authority
+
+After fixed-slot science admission of three of the five independently
+reviewed Nature Communications Q3 DOI, only two scientific judgments
+still need a separate staging **status** (not a formal release):
+- `10.1038/s41467-026-75547-y`: academic scope exclusion of a
+  single-HMS-product HS-/MeOH paired electrolysis for waste conversion.
+  The C–S bond formation is real and retained as evidence; paired
+  electrolysis >100% Faradaic efficiency does not mean isolated yield.
+  This decision is NOT an owner permanent DOI exclusion.
+- `10.1038/s41467-026-75484-w`: real engineered ThDP enzyme
+  DHAP/MeOH-to-acrylic-acid pathway, 4.3 g/L titre; scope of the
+  transferable building-block route and alternative organic
+  substrates remains evidence-pending. High enzyme-mutant performance
+  is not an organic product substrate range. Not the original two
+  publisher-date-conflict manifest pending.
+
+Evidence files:
+- `audit/historical-scope-assessments/2026-10-15-natcomm-two-academic-exceptions.json`
+  deliberately reproduces ONLY the original separate challenges for
+  these two DOI and cryptographically cites the full five-Article
+  science ledger.
+- `audit/historical-reviewed/q3-natcomm-two-academic-exceptions-source-proof.json`
+  binds DOI, Nature Communications original Article, official
+  first-online date and matching Git reviewer SHA to the independent
+  five DOI publisher/source receipt. The quarterly adapter checks
+  underlying immutable raw source-batch Git SHA and that the three
+  companion methods are already authorized under the normal 08:00
+  academic manifest.
+- The existing `scripts/historical-q3-reconciliation.mjs` consumes
+  the two verified **only in staging**, as one additional
+  `sourcePublisherReviewedScopeExcluded` and one additional
+  `sourcePublisherReviewedScopePending`. The original source census
+  must remain 12,286 and source roots 192/192.
+
+Never subtract either candidate without a completed original staging
+workflow and same-generation coverage/worklist Git readback. No
+production D1, daily release, owner permanent list change, user-media
+capture or 16-journal publisher completeness claim is authorized.

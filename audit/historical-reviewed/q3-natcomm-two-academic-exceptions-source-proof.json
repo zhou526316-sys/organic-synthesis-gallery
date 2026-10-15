@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "gallery-historical-q3-reviewed-scope-source-proof-v1",
+  "mode": "frozen_source_proof_for_scientific_scope_reviews_not_publication",
+  "period": "2026-07-01..2026-09-30",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "scientificEvidenceFile": "audit/historical-scope-assessments/2026-10-15-natcomm-two-academic-exceptions.json",
+  "scientificEvidenceBlobSha": "bbb953b2151123680ce2a48fb24c9525c3a0c112",
+  "originalSourceProofFile": "audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json",
+  "originalSourceProofGitBlobSha": "d53105533c93d0296f80cb1b759be821a3e32a44",
+  "reviewed": [
+    {
+      "doi": "10.1038/s41467-026-75547-y",
+      "journal": "Nature Communications",
+      "date": "2026-07-10",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75547-y",
+      "scientificDecision": "exclude",
+      "sourceRootId": "2026-07-08_2026-07-14_nature-communications",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-08_2026-07-14_nature-communications.json",
+      "stageSourceSha256": "a09942d601673db18c8051dcd09ec77b235916eaac5fca3e7bb4b632b9711881",
+      "stageBatchGitBlobSha": "0659a20185f44ecbbd26eb13e114f7bb862dee9b",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75484-w",
+      "journal": "Nature Communications",
+      "date": "2026-07-21",
+      "publisherArticleType": "Article",
+      "publisherPage": "https://www.nature.com/articles/s41467-026-75484-w",
+      "scientificDecision": "pending",
+      "sourceRootId": "2026-07-15_2026-07-21_nature-communications",
+      "sourceShardPath": "audit/historical-staging/review-queue/2026-07-15_2026-07-21_nature-communications.json",
+      "stageSourceSha256": "0f40eb7e25903d9394ed8732e305c5a9e04b892e539ab346983f87f51494add8",
+      "stageBatchGitBlobSha": "a3d12de752db48bffe4f97911eb0570ffa94e2d4",
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "scopeExclude": 1,
+    "scopeEvidencePending": 1
+  },
+  "limits": {
+    "notPermanentOwnerExclusions": true,
+    "notAcademicAdmissions": true,
+    "sourceShardsRemainImmutable": true,
+    "noPdfOrMedia": true,
+    "noD1": true,
+    "noFormalPublication": true
+  }
+}
