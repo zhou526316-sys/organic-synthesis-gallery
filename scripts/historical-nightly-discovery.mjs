@@ -409,6 +409,34 @@ export async function runNightly() {
     ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))
     throw Error('invalid_existing_staging_state');
   const journals=orderedJournals();
+  const deferralEnabled=process.env.HISTORICAL_DEFER_BLOCKED==='1';
+  if(deferralEnabled){
+    if(state.deferredSchemaVersion&&state.deferredSchemaVersion!==DEFERRED_SOURCE_SCHEMA)
+      throw Error('historical_incompatible_deferred_root_schema');
+    if(state.deferredRoots&&!Array.isArray(state.deferredRoots))
+      throw Error('historical_invalid_deferred_root_queue');
+    state.deferredSchemaVersion=DEFERRED_SOURCE_SCHEMA;
+    state.deferredRoots=state.deferredRoots||[];
+    const completed=new Set(state.completed),seen=new Set();
+    for(const r of state.deferredRoots){
+      const journal=journals[r?.cursor?.journalIndex];
+      if(!journal||!validDate(r?.cursor?.range?.from)
+        ||!validDate(r?.cursor?.range?.to)
+        ||r.cursor.range.from>r.cursor.range.to
+        ||r.rootId!==journalBatchId(r.cursor.range,journal)
+        ||!['chronological','rsc_created_recheck'].includes(r.kind)
+        ||(r.kind==='chronological'&&completed.has(r.rootId))
+        ||!Number.isSafeInteger(r.failures)||r.failures<1
+        ||!Number.isFinite(Date.parse(r.nextRetryAt))
+        ||seen.has(r.rootId)
+        ||(r.activeSplit&&(r.activeSplit.rootId!==r.rootId
+          ||r.activeSplit.journalName!==journal.name
+          ||!Array.isArray(r.activeSplit.pending)
+          ||!Array.isArray(r.activeSplit.completed))))
+        throw Error('historical_corrupt_deferred_root_checkpoint');
+      seen.add(r.rootId);
+    }
+  }
   // Once: reopen previously closed RSC publication-date-only windows.
   // Their source "0 results" was not a reliable source-coverage receipt.
   if(!state.rscCreatedRescue){
@@ -428,9 +456,11 @@ export async function runNightly() {
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
   let processed=0,blocked=false,deferredBudget=false,skippedFoundingWindows=0,visited=0;
+  let deferredFailures=0,retryCompletions=0,retriedThisRun=false;
   state.publishedMembershipSnapshot=articles.size;
   state.lastRunStarted=now;
-  while(processed<maxUnits&&state.cursor){
+  while(processed<maxUnits&&(state.cursor||(deferralEnabled&&state.deferredRoots?.some(
+    r=>Date.parse(r.nextRetryAt)<=Date.now())))){
     // Skipped pre-founding years are NOT source-complete windows.
     if(++visited>maxUnits*32)break;
     // Reserve the minimum three calls before beginning an unsplittable source pair.
@@ -439,10 +469,17 @@ export async function runNightly() {
     const recheckJournal=nextRecheck&&journals[nextRecheck.journalIndex];
     const recheckRoot=nextRecheck&&recheckJournal
       ?journalBatchId(nextRecheck.range,recheckJournal):null;
-    // Complete any previous chronological split before beginning RSC repairs.
-    const recovering=Boolean(nextRecheck
+    const canRetry=deferralEnabled&&!retriedThisRun&&state.deferredRoots.length
+      &&!nextRecheck&&!state.activeSplit
+      &&processed>=Math.min(2,maxUnits-1)
+      &&Date.parse(state.deferredRoots[0].nextRetryAt)<=Date.now();
+    const retry=canRetry?state.deferredRoots[0]:null;
+    if(retry)retriedThisRun=true;
+    // A suspended root has its own split checkpoint and cannot overwrite
+    // the chronological cursor or another publisher's source receipts.
+    const recovering=Boolean(!retry&&nextRecheck
       &&(!state.activeSplit||state.activeSplit.rootId===recheckRoot));
-    const activeCursor=recovering?nextRecheck:state.cursor;
+    const activeCursor=retry?retry.cursor:(recovering?nextRecheck:state.cursor);
     const rootRange=activeCursor.range,journal=journals[activeCursor.journalIndex];
     if(!journal)throw Error('invalid_history_cursor_journal');
     if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
@@ -458,7 +495,7 @@ export async function runNightly() {
       continue;
     }
     const rootId=journalBatchId(rootRange,journal);
-    const split=state.activeSplit;
+    const split=retry?retry.activeSplit:state.activeSplit;
     if(split&&(
       split.rootId!==rootId||split.journalName!==journal.name
       ||split.rootRange?.from!==rootRange.from||split.rootRange?.to!==rootRange.to
@@ -506,7 +543,7 @@ export async function runNightly() {
     };
     // A failed recheck must not overwrite an older root until a complete
     // source enumeration is available. Leaf evidence goes to batch files.
-    const recordTarget=recovering&&!split
+    const recordTarget=(recovering||retry?.kind==='rsc_created_recheck')&&!split
       ?STAGE_ROOT+'/rechecks/'+id+'.json'
       :STAGE_ROOT+'/batches/'+id+'.json';
     await saveJson(recordTarget,record);
