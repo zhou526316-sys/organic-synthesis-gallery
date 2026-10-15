@@ -54,6 +54,13 @@ async function retrieve(url,fetcher,timeoutMs){
     return {status:'ok',body};
   }catch(e){return {status:e?.name==='TimeoutError'||e?.name==='AbortError'?'timeout':'unavailable'};}
 }
+// Durable first-online holds are checked even when they disappear from the
+// current Crossref/OpenAlex source union; re-discovery is not a precondition.
+export function selectRscDateTargets(heldDois,ordinaryUndated,merged,limit=12){
+  return [...new Set([...(heldDois||[]),...(ordinaryUndated||[])].map(norm))]
+    .filter(doi=>rscDoi(doi)&&(!merged.has(doi)||!merged.get(doi)?.date))
+    .slice(0,limit);
+}
 export async function resolveRscFirstOnline(doi,{fetcher=fetch,timeoutMs=5500,endDate='9999-12-31'}={}){
   if(!rscDoi(doi))throw Error('invalid_rsc_chemical_science_doi');
   const key=norm(doi),code=key.split('/')[1],year=String(endDate).slice(0,4),attemptedSources=[];

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { exactDay,crossrefFirstOnline,rscFirstPublishedHtml,europePmcFirstOnline,resolveRscFirstOnline } from './lib/rsc-first-online-rescue.mjs';
+import { exactDay,crossrefFirstOnline,rscFirstPublishedHtml,europePmcFirstOnline,resolveRscFirstOnline,selectRscDateTargets } from './lib/rsc-first-online-rescue.mjs';
 const doi='10.1039/d6sc06226a',pub=p=>({message:{DOI:doi,'published-online':{'date-parts':[p]},
   created:{'date-parts':[[2026,10,14]]},deposited:{'date-parts':[[2026,10,14]]}}});
 assert.equal(exactDay('2026-02-30'),'');
@@ -42,4 +42,7 @@ const europe=async url=>url.includes('crossref')?respond(pub([2026]))
 result=await resolveRscFirstOnline(doi,{fetcher:europe,endDate:'2026-10-16'});
 assert.equal(result.firstOnlineDate,'2026-10-16');
 assert.equal(result.evidenceSource,'europe_pmc_first_publication');
-console.log(JSON.stringify({ok:true,checks:19,noFabricatedCreatedDate:true,productionDataModified:false}));
+const absentHeld='10.1039/d6sc05550h';
+assert.deepEqual(selectRscDateTargets([absentHeld],[doi],new Map([[doi,{date:''}]]),12),[absentHeld,doi]);
+assert.deepEqual(selectRscDateTargets([absentHeld],[doi],new Map([[doi,{date:'2026-10-16'}]]),12),[absentHeld]);
+console.log(JSON.stringify({ok:true,checks:21,noFabricatedCreatedDate:true,productionDataModified:false}));

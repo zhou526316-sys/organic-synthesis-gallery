@@ -16,7 +16,7 @@ import { CROSSREF_DATE_MODES, crossrefModeQuery, wasRecentlyDeposited } from '..
 import { needsHistoricalDepositReview, buildHistoricalCrossrefDepositBacklog } from '../../scripts/lib/crossref-deposit-backlog.mjs';
 
 import { fetchOpenAlexDateWindows } from '../../scripts/lib/openalex-date-window-fetch.mjs';
-import { resolveRscFirstOnline } from '../../scripts/lib/rsc-first-online-rescue.mjs';
+import { resolveRscFirstOnline,selectRscDateTargets } from '../../scripts/lib/rsc-first-online-rescue.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -544,19 +544,21 @@ console.log('AUDIT_PUBLIC_ABSTRACT_RESCUE '+JSON.stringify({
 // 06:55 machine audit retries these automatically on every existing run.
 const RSC_FIRST_ONLINE_RESCUE_LIMIT=12;
 let heldFirstOnlineDois=[];
+const durableDateHoldRows=new Map();
 try{
   const state=JSON.parse(await readFile(path.resolve('audit/literature-update-state.json'),'utf8'));
   heldFirstOnlineDois=(state.publicationDateVerificationBacklog||[]).map(x=>normalizeDoi(x.doi));
+  for(const row of state.pendingReviewBacklog||[]){
+    const doi=normalizeDoi(row.doi);
+    if(row.journal==='Chemical Science'&&heldFirstOnlineDois.includes(doi))durableDateHoldRows.set(doi,row);
+  }
 }catch{/* Missing coordination state cannot fabricate date evidence. */}
 const undatedRscDois=[...merged.values()]
   .filter(x=>x.journal==='Chemical Science'&&!x.date&&x.createdDate
     && (x.sources||[]).some(y=>y.startsWith('crossref:')&&y.endsWith(':created')))
   .map(x=>x.doi);
-const rscFirstOnlineTargets=[...new Set([...heldFirstOnlineDois,...undatedRscDois])]
-  .filter(doi=>{
-    const x=merged.get(doi);
-    return x?.journal==='Chemical Science'&&!x.date;
-  }).slice(0,RSC_FIRST_ONLINE_RESCUE_LIMIT);
+const rscFirstOnlineTargets=selectRscDateTargets(
+  heldFirstOnlineDois,undatedRscDois,merged,RSC_FIRST_ONLINE_RESCUE_LIMIT);
 const rscFirstOnlineResults=[];
 for(let i=0;i<rscFirstOnlineTargets.length;i+=3){
   const batch=await Promise.all(rscFirstOnlineTargets.slice(i,i+3).map(async doi=>{
@@ -572,6 +574,21 @@ for(let i=0;i<rscFirstOnlineTargets.length;i+=3){
       x.firstOnlineDateEvidence={date:result.firstOnlineDate,source:result.evidenceSource,
         url:result.attemptedSources.find(y=>y.source===result.evidenceSource)?.url||''};
       x.sources=[...new Set([...(x.sources||[]),'first-online-verified:'+result.evidenceSource])];
+    }else if(result.status==='verified'&&result.firstOnlineDate&&!x){
+      // DOI-bound first-publication evidence may restore a durable candidate
+      // missing from the bounded source union. Reuse its recorded title and
+      // journal, not a guessed date or an invented abstract/substrate claim.
+      const held=durableDateHoldRows.get(result.doi);
+      const sourceUrl=result.attemptedSources.find(y=>y.source===result.evidenceSource)?.url||'';
+      if(held?.journal==='Chemical Science'&&String(held.title||'').trim()){
+        mergeCandidate(merged,{doi:result.doi,journal:'Chemical Science',
+          title:held.title,abstract:'',date:result.firstOnlineDate,
+          onlineDate:result.firstOnlineDate,type:held.type||'journal-article',
+          authors:held.authors||[],sources:['first-online-verified:'+result.evidenceSource],
+          firstOnlineDateEvidence:{date:result.firstOnlineDate,source:result.evidenceSource,url:sourceUrl},
+          historicalDateHoldRescued:true});
+        result.restoredFromDurableDateHold=true;
+      }else result.status='verified_without_reviewable_durable_identity';
     }else if(x){
       x.firstOnlineDateProbe={status:result.status,attemptedSources:result.attemptedSources,
         ...(result.observedFutureDate?{observedFutureDate:result.observedFutureDate}:{})};
@@ -907,6 +924,7 @@ const report = {
     publisherFirstOnlineBacklog: publisherDateVerificationBacklog.length,
     rscFirstOnlineDateAttempts:rscFirstOnlineResults.length,
     rscFirstOnlineDateResolved:rscFirstOnlineResults.filter(x=>x.status==='verified').length,
+    rscFirstOnlineDurableRestored:rscFirstOnlineResults.filter(x=>x.restoredFromDurableDateHold).length,
     rscFirstOnlineDateUnverified:rscFirstOnlineResults.filter(x=>x.status!=='verified').length,
     publisherDateUnverified: publisherDateUnverifiedDois.length,
     publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
