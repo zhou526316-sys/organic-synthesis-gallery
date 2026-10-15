@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "purpose": "catch_up_396_completed_roots_with_existing_push_default_320_while_fix_701_CI_runs",
+  "version": 8,
+  "purpose": "Q3_staging_recount_after_11_ACS_historical_originals_scientifically_approved_PR703",
   "approvedAt": "2026-10-15",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-15T15:51:22.104Z",
-  "reason": "Historical source discovery GitHub run 38762990999 SUCCESS increased verified source roots 375 to 396, with 27 separate incomplete OpenAlex API key missing roots. The automatic workflow_run triage limited to 64 roots failed on an existing reviewer checkpoint index 320, generating shards only through index 384; a separate permanent PR #701 is in CI. This owner-approved staging-only explicit push requests the already-supported bounded 320-root manual catch-up on current main now, without bypassing the worklist strict every-source-root shard checks. Verify sourceCompletedRoots=396, reviewerQueueRoots=396, latest global DOI count, and 160 Q3/global work packets. This is not academic approval, official publication, or source discovery.",
+  "requestedAt": "2026-10-15T16:21:01.509Z",
+  "reason": "Owner-approved substantive batch reviewer PR #703 merged main ba26f71e84fd348e969f84524217523682e97080; 11 DOI-specific ACS original syntheses all verified official first-online, scientific two-pass and frozen source fingerprint. Only recompute read-only staging quarterly counts and balanced preflight after manifest accepted 130->141, pending 2; formally published 1151 unchanged; no historical off-slot admissions, no Cloudflare D1, no publisher body/PDF/SI. Paired generatedAt and original DOI census must be read back.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261015_stage_396_complete_27_deferred_root_reviewer_catchup_no_formal",
+  "triggerScope": "20261016_Q3_history_11_ACS_original_methods_141_approved_19_waiting_08",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 396,
   "expectedStageCompletedRoots": 396,
-  "expectedAcademicInclude": 130,
+  "expectedAcademicInclude": 141,
   "academicDecisionSource": "main_116_approved_91_hist_formal_25_await_next_08",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "59970b13a1143ea2c4ef8f9be6729d8f6e2156c0",
+  "lastRelatedMergeCommit": "ba26f71e84fd348e969f84524217523682e97080",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -63,13 +63,21 @@
     "10.1038/s44160-026-01146-w",
     "10.1038/s41557-026-02226-2"
   ],
-  "expectedReviewedWaitingAt08": 34,
-  "expectedQ3Formal": 820,
+  "expectedReviewedWaitingAt08": 19,
+  "expectedQ3Formal": 851,
   "expectedQ3UniqueSources": 12286,
   "newHistoricalApprovalDoiExact": [
-    "10.1016/j.chempr.2026.103211",
-    "10.1016/j.chempr.2026.103215",
-    "10.1016/j.chempr.2026.103249"
+    "10.1021/acs.orglett.6c02791",
+    "10.1021/acs.orglett.6c02161",
+    "10.1021/acs.orglett.6c02188",
+    "10.1021/acs.orglett.6c03176",
+    "10.1021/acs.joc.6c01205",
+    "10.1021/acs.joc.6c01394",
+    "10.1021/acs.joc.6c00901",
+    "10.1021/acs.joc.6c01053",
+    "10.1021/acs.orglett.6c02716",
+    "10.1021/acs.orglett.6c02686",
+    "10.1021/acs.orglett.6c02640"
   ],
   "priorFailedRunIds": [
     38538114410,
@@ -103,12 +111,20 @@
   "expectedQ3SourceUniqueDoi": 12286,
   "expectedSourceRoots": 192,
   "expectedCurrentMainQ3FormalAtPreflight": 851,
-  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 6,
+  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 19,
   "provisionalUnfinishedIfInputsUnchanged": null,
   "newAcademicDoiExact": [
-    "10.1038/s41467-026-76347-0",
-    "10.1038/s41467-026-77718-3",
-    "10.1038/s41467-026-77616-8"
+    "10.1021/acs.orglett.6c02791",
+    "10.1021/acs.orglett.6c02161",
+    "10.1021/acs.orglett.6c02188",
+    "10.1021/acs.orglett.6c03176",
+    "10.1021/acs.joc.6c01205",
+    "10.1021/acs.joc.6c01394",
+    "10.1021/acs.joc.6c00901",
+    "10.1021/acs.joc.6c01053",
+    "10.1021/acs.orglett.6c02716",
+    "10.1021/acs.orglett.6c02686",
+    "10.1021/acs.orglett.6c02640"
   ],
   "scientificSupplementPendingButNotSourceIntegrated": [
     "10.1038/s41467-026-75484-w"
@@ -118,16 +134,18 @@
   ],
   "lastRecountInputs": {
     "sourceBaselineRef": "staging/historical-archive-nightly",
-    "sourceCompletedRoots": 396,
-    "sourceIncompleteDeferredRoots": 27,
-    "sourceRunId": 38762990999,
-    "sourceLastRunProcessed": 48,
-    "sourceLastRunNewComplete": 21,
-    "oldGlobalCoverageBlob": "651538f17936bbef979ad4e71521a19651185519",
-    "oldQ3CoverageBlob": "1fdc103e7453cd6cd53c8a03640d50f4beb2f1f7",
-    "newGlobalReviewerRootsMustEqualSourceRoots": true,
+    "oldCoverageGeneratedAt": "2026-10-15T15:51:54.944Z",
+    "oldCoverageBlob": "98b2f0829e4f5d994746fa0cb91f352f3e231d72",
+    "oldWorklistBlob": "84e1e61c658f118e4ff1b15b2cc9d1e81a100986",
+    "frozenSourceDois": 12286,
+    "sourceRoots": 192,
+    "formalQ3": 851,
+    "existingHistoricalLive": 122,
+    "manifestAcceptedAfterMerge": 141,
+    "newReviewedOriginals": 11,
+    "expectedScientificApprovalReviewPasses": 2,
+    "noPublishedOffSlot": true,
     "noD1": true,
-    "noAutoAcademicInclude": true,
-    "noFormalPublication": true
+    "rightsConstrained": true
   }
 }
