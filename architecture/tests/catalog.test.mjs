@@ -64,20 +64,30 @@ test('invalid, unknown and future dates remain explicitly accounted', () => {
   assert.equal(b.partitions.date_invalid.length, 1); assert.equal(b.partitions.date_unknown.length, 1); assert.equal(b.partitions.future.length, 1);
   assert.equal(verifyCatalog(b.files).records, 3);
 });
-test('DOI-scoped JOC prospective Crossref date stays unknown in indexed first-online record without altering protected card bytes', () => {
+test('ACS-verified Oct 15 JOC first-online date becomes visible only on/after its publisher day and keeps frozen source intact', () => {
   const raw = {doi:'10.1021/acs.joc.6c01769',journal:'JOC',
     title:'Practical C(sp3)–F Bond Construction via Metal-Free Heterogeneous Photodecarboxylative Fluorination in Continuous Flow',
     date:'2026-10-15',addedDate:'2026-10-14',authors:['Example'],new:true};
   const snapshot=JSON.stringify(raw);
   const b=buildCatalog([raw],{source,asOfDate:'2026-10-14'});
   assert.equal(b.records.length,1);
-  assert.equal(b.records[0].firstOnlineDate,null);
-  assert.equal(b.records[0].datePrecision,'unknown');
+  assert.equal(b.records[0].firstOnlineDate,'2026-10-15');
+  assert.equal(b.records[0].datePrecision,'day');
   assert.equal(b.records[0].paper.date,'2026-10-15');
   assert.equal(JSON.stringify(raw),snapshot);
+  assert.equal(b.partitions.date_unknown.length,0);
+  assert.equal(b.partitions.future.length,1);
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
+test('nonverified JOC DOI with prospective Crossref day stays unknown even after calendar day', () => {
+  const raw={doi:'10.1021/acs.joc.6c09999',journal:'JOC',title:'Not independently verified',
+    date:'2026-10-15',addedDate:'2026-10-14',dateUnverified:true,authors:[]};
+  const b=buildCatalog([raw],{source,asOfDate:'2026-10-16'});
+  assert.equal(b.records[0].firstOnlineDate,null);
+  assert.equal(b.records[0].datePrecision,'unknown');
+  assert.equal(b.records[0].paper.dateUnverified,true);
   assert.equal(b.partitions.date_unknown.length,1);
   assert.equal(b.partitions.future.length,0);
-  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
 });
 test('explicit unverified nonempty dates stay unknown without losing original evidence', () => {
   const raw=paper(19,'2026-10-03',{dateUnverified:true,createdDate:'2026-10-02'});
@@ -95,6 +105,27 @@ test('publisher-verified DOI-specific date remains a real calendar day in indexe
   assert.equal(b.records[0].firstOnlineDate,'2026-10-07');
   assert.equal(b.records[0].datePrecision,'day');
   assert.equal(b.records[0].paper.date,'2026-10-09');
+  assert.equal(verifyCatalog(b.files,[raw]).ok,true);
+});
+test('Nature publisher date and authors are verified in derived records, while protected paper remains byte-stable', () => {
+  const raw={doi:'10.1038/s41586-026-11242-8',journal:'Nature',
+    title:'Catalytic transfer of carbon atoms enables spirofusion of C–C σ-bonds',
+    date:'2026-10-14',dateUnverified:true,addedDate:'2026-10-15',authors:[]};
+  const original=JSON.stringify(raw);
+  const b=buildCatalog([raw],{source,asOfDate:'2026-10-15'});
+  const row=b.records[0];
+  assert.equal(row.firstOnlineDate,'2026-10-14');
+  assert.equal(row.datePrecision,'day');
+  assert.equal(row.paper.dateUnverified,true); // protected data not silently edited
+  assert.deepEqual(row.paper.authors,[]);
+  assert.deepEqual(row.verifiedPresentationAuthors,[
+    'Hayato Fujimoto','Masayuki Mizutani','Kazuya Imachi',
+    'Teruki Nishioka','Reona Ikeda','Mamoru Tobisu'
+  ]);
+  const searchSegment=b.catalog.search[0];
+  const entries=JSON.parse(b.files[searchSegment.path]).entries;
+  assert.deepEqual(entries[0].authors,row.verifiedPresentationAuthors);
+  assert.equal(JSON.stringify(raw),original);
   assert.equal(verifyCatalog(b.files,[raw]).ok,true);
 });
 test('capacity shards retain all records', () => {

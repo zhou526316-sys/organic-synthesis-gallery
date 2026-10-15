@@ -1115,19 +1115,43 @@ gallery-paper-actions {
 .cardfoot {
   margin-top: 0;
   display: flex;
-  gap: 12px;
-  justify-content: space-between;
-  align-items: end;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
 }
 .doi {
-  color: #7a8494;
+  min-width: 0;
+  max-width: 100%;
+  color: #667085;
   font:
     12px/1.45 ui-monospace,
     SFMono-Regular,
     Menlo,
     Consolas,
     monospace;
-  word-break: break-all;
+  /* A DOI must never be broken inside its digits (e.g. 026 -> 0 / 26).
+     Give this metadata its own row, and allow horizontal scrolling only
+     when an unusually long DOI exceeds the card width. */
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.doi-link {
+  display: inline-block;
+  color: inherit;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.doi-link:hover,
+.doi-link:focus-visible {
+  color: #3159bd;
+  text-decoration: underline;
+}
+.cardfoot .card-actions {
+  align-self: flex-end;
+  max-width: 100%;
 }
 .open,
 .private-pdf-button {
@@ -1208,8 +1232,9 @@ html[data-private-pdf-read='true'] .cardfoot {
   flex-wrap: wrap;
 }
 html[data-private-pdf-read='true'] .cardfoot .doi {
-  flex: 1 1 90px;
+  flex: 0 0 auto;
   min-width: 0;
+  width: 100%;
 }
 html[data-private-pdf-read='true'] .card-actions {
   flex-wrap: wrap;
@@ -1390,8 +1415,8 @@ html[data-private-pdf-read='true'] .card-actions {
     align-items: flex-end;
   }
   .doi {
-    font-size: 9px;
-    line-height: 1.3;
+    font-size: 11px;
+    line-height: 1.4;
   }
   .open,
   .private-pdf-button {
