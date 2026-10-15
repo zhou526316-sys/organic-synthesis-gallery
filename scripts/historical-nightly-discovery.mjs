@@ -456,7 +456,8 @@ export async function runNightly() {
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
   let processed=0,blocked=false,deferredBudget=false,skippedFoundingWindows=0,visited=0;
-  let deferredFailures=0,retryCompletions=0,retriedThisRun=false;
+  const maxDeferredRetries=Math.max(1,Math.min(24,Math.floor(maxUnits/2)));
+  let deferredFailures=0,retryCompletions=0,retryAttempts=0;
   state.publishedMembershipSnapshot=articles.size;
   state.lastRunStarted=now;
   while(processed<maxUnits&&(state.cursor||(deferralEnabled&&state.deferredRoots?.some(
@@ -469,12 +470,15 @@ export async function runNightly() {
     const recheckJournal=nextRecheck&&journals[nextRecheck.journalIndex];
     const recheckRoot=nextRecheck&&recheckJournal
       ?journalBatchId(nextRecheck.range,recheckJournal):null;
-    const canRetry=deferralEnabled&&!retriedThisRun&&state.deferredRoots.length
-      &&!nextRecheck&&!state.activeSplit
-      &&(processed>=Math.min(2,maxUnits-1)||!state.cursor)
-      &&Date.parse(state.deferredRoots[0].nextRetryAt)<=Date.now();
-    const retry=canRetry?state.deferredRoots[0]:null;
-    if(retry)retriedThisRun=true;
+    // Drain a bounded share of eligible failed roots each run, while reserving
+    // new chronological capacity. An ineligible head must not hide ready peers.
+    const retryIndex=deferralEnabled&&state.deferredRoots?.length
+      ?state.deferredRoots.findIndex(r=>Date.parse(r.nextRetryAt)<=Date.now()):-1;
+    const canRetry=deferralEnabled&&retryAttempts<maxDeferredRetries
+      &&retryIndex>=0&&!nextRecheck&&!state.activeSplit
+      &&(processed>=Math.min(2,maxUnits-1)||!state.cursor);
+    const retry=canRetry?state.deferredRoots[retryIndex]:null;
+    if(retry)retryAttempts++;
     // A suspended root has its own split checkpoint and cannot overwrite
     // the chronological cursor or another publisher's source receipts.
     const recovering=Boolean(!retry&&nextRecheck
@@ -563,7 +567,7 @@ export async function runNightly() {
           else if(retry){
             if(retry.kind==='rsc_created_recheck')rescue.done.push(rootId);
             else state.completed.push(rootId);
-            state.deferredRoots.shift();retryCompletions++;
+            state.deferredRoots.splice(retryIndex,1);retryCompletions++;
           }else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
           if(!retry)delete state.activeSplit;
         }
@@ -575,7 +579,7 @@ export async function runNightly() {
           await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
           rescue.done.push(rootId);
         }else state.completed.push(rootId);
-        state.deferredRoots.shift();retryCompletions++;
+        state.deferredRoots.splice(retryIndex,1);retryCompletions++;
       }else{
         state.completed.push(rootId);
         state.cursor=nextCursor(state.cursor,journals);
@@ -593,7 +597,7 @@ export async function runNightly() {
         const renewed=sourceRetryRecord({cursor:activeCursor,rootId,
           activeSplit:split,kind:retry.kind,issues:status.issues,
           previousFailures:retry.failures});
-        state.deferredRoots.shift();state.deferredRoots.push(renewed);
+        state.deferredRoots.splice(retryIndex,1);state.deferredRoots.push(renewed);
       }else{
         const receipt=sourceRetryRecord({cursor:activeCursor,rootId,
           activeSplit:split,kind:recovering?'rsc_created_recheck':'chronological',
@@ -624,7 +628,7 @@ export async function runNightly() {
   }
   state.lastRunFinished=new Date().toISOString();
   state.lastRun={processed,blocked,deferredBudget,requests:budget.count,
-    deferredFailures,retryCompletions,
+    deferredFailures,retryCompletions,retryAttempts,maxDeferredRetries,
     incompleteDeferredRoots:deferralEnabled?state.deferredRoots.length:0,
     // Complete means ALL historical founder-year roots exhausted with no
     // deferred/auth-failed/split/rescue work, not just this bounded attempt.
