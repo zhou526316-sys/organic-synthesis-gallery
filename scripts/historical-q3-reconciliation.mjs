@@ -290,7 +290,7 @@ export function reconcileQ3({
     }catch{publisherUrl=null;doiUrl=null;}
     const validPage=publisherUrl?.protocol==='https:'
       &&publisherUrl.hostname==='www.sciencedirect.com'
-      &&/^\/science\/article\/pii\/S2451929426\d{6}$/.test(publisherUrl.pathname)
+      &&/^\/science\/article\/pii\/S2451929426(?:\d{6}|\d{5}X)$/.test(publisherUrl.pathname)
       &&doiUrl?.href==='https://doi.org/'+id;
     const dateOk=/^2026-\d{2}-\d{2}$/.test(r?.publisherFirstOnlineDate||'')
       &&r.publisherFirstOnlineDate!==r.sourceDate
@@ -473,9 +473,16 @@ export function reconcileQ3({
     if(!candidateDateOk&&row.date&&/^\d{4}-\d\d-\d\d$/.test(row.date)
       &&!(row.flags||[]).length&&!row.dateConflict)continue;
     c.unreviewed++;counters.unfinishedQ3OrDateVerification++;
+    // A DOI can be academically unreviewed *and* have a separately verified
+    // publisher-first-online day; do not relabel an official date as unknown.
+    const officialQ3Online=officialChem
+      && publishedQ3(officialChem.publisherFirstOnlineDate);
     unreviewed.push({doi:row.doi,journal:row.journal,
       sourceWindowMonth:month,apiDateCandidate:candidateDateOk?row.date:'',
-      publisherFirstOnlineDateVerified:false,title:row.title,
+      publisherFirstOnlineDateVerified:Boolean(officialQ3Online),
+      publisherFirstOnlineDate:officialQ3Online
+        ? officialChem.publisherFirstOnlineDate : null,
+      title:row.title,
       firstAuthor:(row.authors||[])[0]||'',priority:row.priority||'P3',
       flags:[...new Set([...(row.flags||[]),
         ...(row.dateConflict?['date_conflict']:[]),
