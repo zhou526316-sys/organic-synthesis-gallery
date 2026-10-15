@@ -4,7 +4,7 @@ import {chromium} from 'playwright';
 
 const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const source=rawSource.replace(
-  "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender",
+  "  function batchBoot(){",
   "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
   "  if(location.hostname==='gallery.gczhouwld.com'){\n    // Historical upload sender");
 const browser=await chromium.launch({headless:true});
