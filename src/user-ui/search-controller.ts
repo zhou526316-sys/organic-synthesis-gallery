@@ -276,13 +276,35 @@ export class UserSearchController {
   private decorate(card: HTMLElement): PaperMeta | null {
     const titleElement = card.querySelector<HTMLElement>('.title'); const doiElement = card.querySelector<HTMLElement>('.doi'); const open = card.querySelector<HTMLAnchorElement>('a.open');
     if (!titleElement) return null;
-    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || ''; const doi = normalizeDoi(doiElement?.textContent || ''); const href = doi ? `https://doi.org/${doi}` : open?.href;
+    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || '';
+    // The canonical card dataset identifies a DOI independently of visual line
+    // wrapping, translated titles, or user-interaction overlays.
+    const doi = normalizeDoi(card.dataset.doi || doiElement?.querySelector('a')?.getAttribute('href') || doiElement?.textContent || '');
+    const href = doi ? `https://doi.org/${doi}` : open?.href;
     const id = doi || `title:${normalizeSearch(title).slice(0, 120)}`; if (!id) return null;
     const authors = (card.dataset.authors || '').split('|').map(value => value.trim()).filter(Boolean); const topics = (card.dataset.topics || '').split('|').map(value => value.trim()).filter(Boolean);
     const meta: PaperMeta = { id, doi, title, journal, href, authors, topics }; store.registerMeta(meta); card.dataset.userPaperId = id;
     this.paintStatus(card);
     if (href && !titleElement.querySelector('.user-title-link')) titleElement.innerHTML = `<a class='user-title-link' href='${href}' target='_blank' rel='noopener noreferrer'>${titleElement.innerHTML}</a>`;
-    if (href && doiElement && !doiElement.querySelector('.user-doi-link')) doiElement.innerHTML = `<a class='user-doi-link' href='${href}' target='_blank' rel='noopener noreferrer'>${doiElement.textContent || ''}</a>`;
+    // Never replace the authoritative DOI link with a user-shell link. Doing
+    // so dropped .doi-link styling and redirected DOI taps to the mobile
+    // summary drawer. A DOI link must always open its exact doi.org URL.
+    let doiAnchor: HTMLAnchorElement | null = null;
+    if (doi && doiElement) {
+      doiAnchor = doiElement.querySelector<HTMLAnchorElement>('a.doi-link, a.user-doi-link, a[href]');
+      if (!doiAnchor) {
+        doiAnchor = document.createElement('a');
+        doiElement.replaceChildren(doiAnchor);
+      }
+      doiAnchor.classList.add('doi-link');
+      doiAnchor.classList.remove('user-doi-link');
+      doiAnchor.href = `https://doi.org/${doi}`;
+      doiAnchor.target = '_blank';
+      doiAnchor.rel = 'noopener noreferrer';
+      doiAnchor.title = doi;
+      doiAnchor.setAttribute('aria-label', `DOI: ${doi}`);
+      if (doiAnchor.textContent?.trim() !== doi) doiAnchor.textContent = doi;
+    }
     let actions = card.querySelector<HTMLElement>(PAPER_ACTION_ELEMENT);
     if (!actions) {
       actions = document.createElement(PAPER_ACTION_ELEMENT);
@@ -315,7 +337,9 @@ export class UserSearchController {
     };
     bindExternalOpen(open);
     bindGalleryEntry(titleElement.querySelector<HTMLAnchorElement>('a.user-title-link'));
-    bindGalleryEntry(doiElement?.querySelector<HTMLAnchorElement>('a.user-doi-link'));
+    // Only title clicks may open the mobile summary drawer. DOI and original
+    // article clicks always navigate externally and retain read-count tracking.
+    bindExternalOpen(doiAnchor);
     return meta;
   }
 
