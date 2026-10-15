@@ -35,15 +35,43 @@
   function installPrivatePdfLeaseReceiver() {
     if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
     window.addEventListener('message',function(event){
+      if(event.origin!==location.origin)return;
+      var data=event.data||{},type=String(data.type||''),requestId=String(data.requestId||'');
+      if(!/^[0-9a-f-]{36}$/.test(requestId))return;
+      var reply=function(name,fields){
+        window.postMessage(Object.assign({type:name,requestId:requestId},fields||{}),location.origin);
+      };
+      // A ready check precedes issuing a seven-day bearer lease. Only the
+      // installed Bridge (not a separate standalone collector) may receive it.
+      var embedded=Boolean(globalThis.__OSG_TOC_BROWSER_MAINLINE__&&globalThis.__OSG_BRIDGE_VERSION__);
+      if(type==='osg-private-pdf-capture-probe-v1'){
+        reply('osg-private-pdf-capture-ready-v1',{ok:embedded,engine:INSTALL_REVISION,
+          reason:embedded?'ready':'embedded_bridge_required'});
+        return;
+      }
+      if(type!=='osg-private-pdf-capture-lease-v1')return;
+      if(!embedded||data.scope!=='private_pdf_capture'){
+        reply('osg-private-pdf-capture-lease-nack-v1',{reason:!embedded?'embedded_bridge_required':'invalid_lease_payload'});
+        return;
+      }
       try{
-        if(event.origin!==location.origin)return;
-        var data=event.data||{};
-        if(data.type!=='osg-private-pdf-capture-lease-v1'||data.scope!=='private_pdf_capture')return;
         var token=String(data.token||''),expiresAt=Number(data.expiresAt||0),receivedAt=Date.now();
-        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=receivedAt+60000)return;
-        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
-        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt,receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION},location.origin);
-      }catch(_){}
+        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||!Number.isSafeInteger(expiresAt)||expiresAt<=receivedAt+60000){
+          reply('osg-private-pdf-capture-lease-nack-v1',{reason:'invalid_lease_payload'});
+          return;
+        }
+        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,
+          scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        var saved=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
+        if(!saved||saved.token!==token||Number(saved.expiresAt)!==expiresAt||saved.scope!=='private_pdf_capture')
+          throw new Error('lease_readback_mismatch');
+        reply('osg-private-pdf-capture-lease-ack-v1',{expiresAt:expiresAt,
+          receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+      }catch(_){
+        // Do not report success unless the encrypted extension-owned GM store
+        // confirms the lease. Never echo the token or log a credential.
+        reply('osg-private-pdf-capture-lease-nack-v1',{reason:'lease_storage_unavailable'});
+      }
     });
   }
 
