@@ -1,0 +1,79 @@
+name: WeChat Oct15 reviewed Nature Science import
+on:
+  push:
+    branches: [wechat-oct15-nature-science-reviewed-draft]
+    paths: [audit/automation-triggers/wechat-oct15-import-reviewed-pair.json]
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct15-reviewed-source-import
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import verified review package, current release and exact source figures
+        env:
+          REVIEWED_PACKAGE_URL: https://at.adobe.com/tldMAYNvqDCZxpfd
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 scripts/wechat-oct15-import-reviewed-pair.py
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install browser for production-renderer check
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/oct15-browser.log 2>&1 || { tail -40 /tmp/oct15-browser.log; exit 1; }
+      - name: Check 390px and 980px production paragraphs and source images
+        run: |
+          python3 -m http.server 8125 --bind 127.0.0.1 >/tmp/oct15-server.log 2>&1 &
+          node --input-type=module <<'JS'
+          import {chromium} from '@playwright/test';
+          import {mkdir,writeFile} from 'node:fs/promises';
+          const out='audit/wechat-working/2026-10-15-r1-nature-science/production-preview';
+          const browser=await chromium.launch({headless:true});const qa=[];
+          try {
+            for(const [key,expected] of [['nature',15],['science',18]]) {
+              for(const w of [390,980]) {
+                const page=await browser.newPage({viewport:{width:w,height:844},deviceScaleFactor:1});
+                await page.goto('http://127.0.0.1:8125/'+out+'/'+key+'.html',{waitUntil:'networkidle'});
+                const result=await page.evaluate(async()=>{
+                  const imgs=[...document.images];await Promise.all(imgs.map(i=>i.decode()));
+                  return {width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth+2,images:imgs.length,loaded:imgs.filter(i=>i.naturalWidth>0).length,headings:[...document.querySelectorAll('h2')].map(x=>x.innerText)};
+                });
+                if(result.overflow||result.images!==expected||result.loaded!==expected)throw Error(JSON.stringify(result));
+                await page.screenshot({path:out+'/'+key+'-'+w+'-opening.png'});
+                if(w===390){
+                  const hs=page.locator('h2');
+                  for(let i=1;i<await hs.count();i++){
+                    await hs.nth(i).scrollIntoViewIfNeeded();
+                    await page.screenshot({path:out+'/'+key+'-section-'+i+'.png'});
+                  }
+                }
+                qa.push({article:key,...result});await page.close();
+              }
+            }
+          } finally {await browser.close();}
+          await writeFile(out+'/browser-qa.json',JSON.stringify({status:'production_renderer_decode_and_overflow_pass_manual_visual_pending',results:qa},null,2));
+          console.log(JSON.stringify(qa));
+          JS
+      - name: Persist staged source artifacts on preparation branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-assets/reviewed/2026-10-15-r1 public/wechat-featured/2026-10-15.json public/wechat-retrospective/kf-catalytic-appel-fluorination-20261015.json public/wechat-editions/2026-10-15.json audit/wechat-working/2026-10-15-r1-nature-science audit/wechat-working/2026-10-15-review-gate.json
+          git diff --cached --check
+          git commit -m 'editorial: Oct15 reviewed Nature Science source pair and 33 unchanged paper images'
+          git push origin HEAD:wechat-oct15-nature-science-reviewed-draft
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct15-production-source-review
+          path: |
+            audit/wechat-working/2026-10-15-r1-nature-science
+            public/wechat-assets/reviewed/2026-10-15-r1/cover_*.png
+            audit/wechat-working/2026-10-15-review-gate.json
+          retention-days: 14
