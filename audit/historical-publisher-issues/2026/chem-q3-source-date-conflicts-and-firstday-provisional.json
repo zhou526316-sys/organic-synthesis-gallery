@@ -82,7 +82,8 @@
       "2026-07-01": 48,
       "2026-08-01": 48,
       "2026-09-01": 47
-    }
+    },
+    "otherNonProvisionalUnique": 4
   },
   "provisionalFirstOfMonthDoi": [
     {
@@ -2737,5 +2738,67 @@
     "noMediaSIorPDF": true,
     "noDailyNewHotWechat": true,
     "noNewReleaseSlot": true
-  }
+  },
+  "nonProvisionalSourceDois": [
+    {
+      "doi": "10.1016/j.chempr.2026.103192",
+      "title": "Tuning the reactive species in oxidant activation by single-atom catalysts: Mechanisms, manipulations, and perspectives",
+      "occurrences": [
+        {
+          "date": "2026-08-17",
+          "sourceRootId": "2026-08-15_2026-08-21_chem",
+          "stageSourceSha256": "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d",
+          "reviewQueueGitBlobSha": "d0bf789ef7e50e2bbbc38351cb40825cc84c4b7d",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103244",
+      "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
+      "occurrences": [
+        {
+          "date": "2026-09-24",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103254",
+      "title": "Opportunities for merging biosynthesis and biocatalysis",
+      "occurrences": [
+        {
+          "date": "2026-09-25",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103264",
+      "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
+      "occurrences": [
+        {
+          "date": "2026-09-24",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    }
+  ]
 }
