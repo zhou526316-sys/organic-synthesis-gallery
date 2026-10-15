@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-pida-preparative-scope-hold-v1",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json",
+  "dateEvidenceGitBlobSha": "f13295889f78f5ab0970aac8d732796803db93f1",
+  "reviewMethod": "One first-pass article-specific substantive synthetic methodology review and a second article-specific adversarial review by the same assistant; not two separate human reviewers",
+  "rights": "Only public ScienceDirect indexed Article introduction/summary/results facts are paraphrased. No article body, supplementary PDF, Figures or full abstract are reproduced.",
+  "accounting": {
+    "assessed": 1,
+    "include": 0,
+    "exclude": 0,
+    "pending": 1
+  },
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103242",
+      "journal": "Chem",
+      "title": "Upscaling electrosynthesis of hypervalent iodine through steady-state engineering",
+      "date": "2026-09-09",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "primaryContribution": "以碘苯电氧化制备二乙酸碘苯（PIDA）为工业化模型，揭示电极表面底物耗尽诱发石墨自氧化及电流密度受限的原因；通过持续进料和在线冷却结晶维持准稳态，提高规模化有机电合成效率。",
+      "preparativeTransformation": "以碘苯为起始有机原料，在乙酸相关电化学介质中发生氧化、乙酰氧基化，生成结构明确且可实际分离的高价碘试剂PhI(OAc)₂；通过连续流电解和在线降温结晶实现大量PIDA产品的制备。",
+      "generalityEvidence": "官方Chem Article直接报告PIDA模型的电流密度44.4 mA cm−2、法拉第效率接近99%、连续流7小时获得1.4公斤PIDA产品，并给出设计处理能力36吨/年的工业示范装置技术经济分析。但所检索官方摘要只直接证实这一种高价碘产品，没有看到多种芳基碘底物、不同高价碘结构或其他有机电合成反应的跨底物适用性。",
+      "sourceEvidence": "Chem DOI https://doi.org/10.1016/j.chempr.2026.103242 和原始ScienceDirect https://www.sciencedirect.com/science/article/pii/S2451929426003086 显示2026-09-09首次在线、Research Article、PIDA模型、44.4 mA/cm²、FE≈99%、连续流1.4 kg/7 h及36 t/y工业示范装置TEA。原始Q3冻结来源日期为2026-09-01，源分片2026-09-01_2026-09-07_chem，raw SHA edaaef14cca66d44d1cc46f57cee778ff8234c36，source SHA256 e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae；FE不能误称PIDA分离收率，36 t/y不能冒充当年已实际累计生产。",
+      "boundaryChallenge": "反向检验：这不是纯电极活性材料论文，确实报告结构明确PIDA的公斤级合成和工业级流程，且PIDA是有机合成通用试剂，单一产品的可重复大规模制备本身可能符合有价值的制备工艺方法学。反面是作者核心新意是准稳态工程与工艺参数映射，原电氧化制备PIDA反应在过去已有先例；目前缺少多芳基碘试剂或者独立不同有机转化的反应普适性。因此不能仅由1.4 kg、FE或36 t/y产能数字直接视为一般有机合成反应方法，亦不能因工程属性否定真正制备价值，暂保留证据待核。",
+      "firstPassReason": "第一遍认可其从碘苯电氧化到可分离PhI(OAc)₂的大量实物制备，采用准稳态控制避免石墨自氧化和高产能连续流分离，具可复制的电合成工艺实证。但官方Results公开内容集中在一种代表性高价碘试剂，核心评价量为电流密度、FE、产量及流程经济性；单项大规模产品不自动证明跨底物一般制备方法，故不直接include，登记待核。",
+      "independentChallengeReason": "第二遍质疑第一遍是否过度强调底物数：有机合成允许以单一重要试剂为目标的通用高效制备路线，尤其公斤级、结晶纯化和工业可转化性非简单材料表征；这项PIDA制备可能满足特殊通用砌块路线的收录边界。然而作者的稳态控制究竟能否用于若干ArI(OAc)₂及其他有机电合成，还是只解决一项已知氧化过程的工程瓶颈，需要检查主文表格/SI中独立制备例；没有证据时pending而非自动exclude。",
+      "evidenceNeeded": "核查主文与SI是否报告不同芳基碘化合物、其他高价碘类型或可推广的有机底物—产品反应范围；确认1.4 kg PIDA的实际纯度、isolated yield与重复批次情况，区分FE及理论产能；确认装置是否仅用于一种已知PIDA反应而无独立的通用制备适用性证据。",
+      "nextAction": "读取可合法访问的原文全文和支持信息中具体底物扩展/其他高价碘试剂合成、连续流结晶及重复运行数据；若有充分可推广反应或制备路线证据则转入单独双遍include，否则按工业过程优化而非新有机合成方法审查exclude，不把实验未见或访问受阻解释为作者未做。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "evidenceTier": "official_Chem_article_direct_results_process_metrics_and_source_sha",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103242",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003086",
+        "publisherOnlineDate": "2026-09-09",
+        "sourceDate": "2026-09-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_chem",
+        "stageBatchSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+        "sourceReviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-09-09",
+          "frozenSourceUnmodified": true,
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003086"
+        }
+      },
+      "guards": {
+        "notOwnerPermanentExclusion": true,
+        "notFormallyAdmitted": true,
+        "notLegacyManifestPending": true,
+        "noAutomaticReviewFromDate": true,
+        "noD1": true,
+        "noMediaOrPdf": true,
+        "noFormalPublication": true
+      },
+      "scopeAssessment": {
+        "primaryContribution": "以碘苯电氧化制备二乙酸碘苯（PIDA）为工业化模型，揭示电极表面底物耗尽诱发石墨自氧化及电流密度受限的原因；通过持续进料和在线冷却结晶维持准稳态，提高规模化有机电合成效率。",
+        "preparativeTransformation": "以碘苯为起始有机原料，在乙酸相关电化学介质中发生氧化、乙酰氧基化，生成结构明确且可实际分离的高价碘试剂PhI(OAc)₂；通过连续流电解和在线降温结晶实现大量PIDA产品的制备。",
+        "generalityEvidence": "官方Chem Article直接报告PIDA模型的电流密度44.4 mA cm−2、法拉第效率接近99%、连续流7小时获得1.4公斤PIDA产品，并给出设计处理能力36吨/年的工业示范装置技术经济分析。但所检索官方摘要只直接证实这一种高价碘产品，没有看到多种芳基碘底物、不同高价碘结构或其他有机电合成反应的跨底物适用性。",
+        "sourceEvidence": "Chem DOI https://doi.org/10.1016/j.chempr.2026.103242 和原始ScienceDirect https://www.sciencedirect.com/science/article/pii/S2451929426003086 显示2026-09-09首次在线、Research Article、PIDA模型、44.4 mA/cm²、FE≈99%、连续流1.4 kg/7 h及36 t/y工业示范装置TEA。原始Q3冻结来源日期为2026-09-01，源分片2026-09-01_2026-09-07_chem，raw SHA edaaef14cca66d44d1cc46f57cee778ff8234c36，source SHA256 e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae；FE不能误称PIDA分离收率，36 t/y不能冒充当年已实际累计生产。",
+        "boundaryChallenge": "反向检验：这不是纯电极活性材料论文，确实报告结构明确PIDA的公斤级合成和工业级流程，且PIDA是有机合成通用试剂，单一产品的可重复大规模制备本身可能符合有价值的制备工艺方法学。反面是作者核心新意是准稳态工程与工艺参数映射，原电氧化制备PIDA反应在过去已有先例；目前缺少多芳基碘试剂或者独立不同有机转化的反应普适性。因此不能仅由1.4 kg、FE或36 t/y产能数字直接视为一般有机合成反应方法，亦不能因工程属性否定真正制备价值，暂保留证据待核。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "pending",
+          "assessment": "第一遍认可其从碘苯电氧化到可分离PhI(OAc)₂的大量实物制备，采用准稳态控制避免石墨自氧化和高产能连续流分离，具可复制的电合成工艺实证。但官方Results公开内容集中在一种代表性高价碘试剂，核心评价量为电流密度、FE、产量及流程经济性；单项大规模产品不自动证明跨底物一般制备方法，故不直接include，登记待核。"
+        },
+        {
+          "pass": 2,
+          "decision": "pending",
+          "reason": "第二遍质疑第一遍是否过度强调底物数：有机合成允许以单一重要试剂为目标的通用高效制备路线，尤其公斤级、结晶纯化和工业可转化性非简单材料表征；这项PIDA制备可能满足特殊通用砌块路线的收录边界。然而作者的稳态控制究竟能否用于若干ArI(OAc)₂及其他有机电合成，还是只解决一项已知氧化过程的工程瓶颈，需要检查主文表格/SI中独立制备例；没有证据时pending而非自动exclude。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "sourceCensusUnchanged": true,
+    "officialQuarterResearchCompletenessUnknown": true,
+    "historical08ReleaseUnchanged": true,
+    "noD1": true,
+    "noPDFOrSI": true,
+    "noScopeAutoInclude": true
+  }
+}
