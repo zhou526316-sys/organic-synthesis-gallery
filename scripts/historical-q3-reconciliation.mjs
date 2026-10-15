@@ -482,7 +482,8 @@ export async function runQuarterAudit({
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
-    priorChemDates,additionalChemDates]=await Promise.all([
+    priorChemDates,additionalChemDates,natcommSourceFive,
+    natcommFullScienceFive,natcommExceptionsTwo,natcommExceptionsProof]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -506,7 +507,11 @@ export async function runQuarterAudit({
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
     readJson('audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'),
-    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json')
+    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'),
+    readJson('audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-natcomm-two-academic-exceptions.json'),
+    readJson('audit/historical-reviewed/q3-natcomm-two-academic-exceptions-source-proof.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -795,12 +800,89 @@ export async function runQuarterAudit({
   ensure(nchemExcludedIds.size===27&&exceptionSet.size===21
     &&admissionSet.size===3&&nchemExcludedIds.size+exceptionSet.size+admissionSet.size===pNew.size,
     'q3_nchem_51_partition_incomplete');
+  // Nature Communications: the original five-Article two-pass report already
+  // contains three separately fixed-slot-authorized includes. This supplemental
+  // DOI-scoped authority may ONLY classify its one evidenced non-method and its
+  // one unresolved real synthetic-route claim, not issue new admissions.
+  const ncFullPath='audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json';
+  const ncFiveSourcePath='audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json';
+  const [ncFullBytes,ncSourceBytes,ncExceptionBytes]=await Promise.all([
+    readFile(ncFullPath),readFile(ncFiveSourcePath),
+    readFile(natcommExceptionsProof.scientificEvidenceFile)
+  ]);
+  const ncGitBlob=bytes=>createHash('sha1').update('blob '+bytes.length)
+    .update(Buffer.from([0])).update(bytes).digest('hex');
+  ensure(natcommSourceFive.schemaVersion==='gallery-natcomm-q3-five-original-source-provenance-v1'
+    &&natcommSourceFive.journal==='Nature Communications'
+    &&natcommSourceFive.rows.length===5
+    &&natcommFullScienceFive.accounting?.assessmentCount===5
+    &&natcommFullScienceFive.accounting.include===3
+    &&natcommFullScienceFive.accounting.exclude===1
+    &&natcommFullScienceFive.accounting.evidencePending===1
+    &&natcommExceptionsTwo.journal==='Nature Communications'
+    &&natcommExceptionsTwo.accounting?.assessmentCount===2
+    &&natcommExceptionsTwo.accounting.include===0
+    &&natcommExceptionsTwo.accounting.exclude===1
+    &&natcommExceptionsTwo.accounting.evidencePending===1
+    &&natcommExceptionsTwo.parentFullScienceFile===ncFullPath
+    &&natcommExceptionsTwo.parentFullScienceGitBlobSha===ncGitBlob(ncFullBytes)
+    &&natcommExceptionsProof.originalSourceProofFile===ncFiveSourcePath
+    &&natcommExceptionsProof.originalSourceProofGitBlobSha===ncGitBlob(ncSourceBytes)
+    &&natcommExceptionsTwo.sourceProofFile===ncFiveSourcePath,
+    'q3_natcomm_supplemental_source_science_authority_mismatch');
+  const ncFive=new Map(natcommSourceFive.rows.map(x=>[x.doi,x]));
+  const ncFull=new Map(natcommFullScienceFive.assessments.map(x=>[x.doi,x]));
+  const ncExceptionIds=new Set(natcommExceptionsTwo.assessments.map(x=>x.doi));
+  ensure(ncFive.size===5&&ncFull.size===5&&ncExceptionIds.size===2
+    &&ncExceptionIds.size===natcommExceptionsProof.reviewed.length,
+    'q3_natcomm_supplemental_partition_invalid');
+  for(const a of natcommFullScienceFive.assessments){
+    const p=ncFive.get(a.doi);
+    ensure(p&&a.title===p.title&&a.date===p.firstOnline
+      &&a.publisherPage===p.officialPage,
+      'q3_natcomm_full_science_identity_mismatch:'+a.doi);
+    if(a.decision==='include'){
+      const approved=manifest.accepted.find(r=>r.doi===a.doi);
+      ensure(!ncExceptionIds.has(a.doi)&&approved?.reviewPasses===2
+        &&approved.decision==='include'
+        &&approved.date===p.firstOnline
+        &&approved.reviewEvidence?.stageBatchSha===p.rawSourceGitBlobSha,
+        'q3_natcomm_supplemental_cannot_reclassify_approved:'+a.doi);
+    }else{
+      ensure(ncExceptionIds.has(a.doi),'q3_natcomm_exceptions_missing:'+a.doi);
+    }
+  }
+  const ncSourceVerified=new Set();
+  for(const x of natcommExceptionsProof.reviewed){
+    const original=ncFive.get(x.doi),science=ncFull.get(x.doi);
+    ensure(original&&science&&!ncSourceVerified.has(x.doi)
+      &&original.publisherType==='Article'
+      &&science.decision===x.scientificDecision
+      &&original.firstOnline===x.date
+      &&original.officialPage===x.publisherPage
+      &&original.sourceRootId===x.sourceRootId
+      &&original.sourceBatchSha256===x.stageSourceSha256
+      &&original.reviewQueueGitBlobSha===x.stageBatchGitBlobSha
+      &&x.sourceFamilies.includes('crossref')
+      &&x.sourceFamilies.includes('openalex'),
+      'q3_natcomm_supplemental_frozen_origin_invalid:'+x.doi);
+    const bytes=await readFile(root+'/batches/'+x.sourceRootId+'.json');
+    ensure(ncGitBlob(bytes)===original.rawSourceGitBlobSha,
+      'q3_natcomm_supplemental_original_raw_batch_changed:'+x.doi);
+    ncSourceVerified.add(x.doi);
+  }
+  const ncScoped=bindReviewedQ3ScopeProof({
+    proof:natcommExceptionsProof,science:natcommExceptionsTwo,
+    scienceGitBlobSha:ncGitBlob(ncExceptionBytes)
+  });
+  ensure(ncScoped.reviewed.length===2,
+    'q3_natcomm_supplemental_scope_binding_incomplete');
   const publisherNonResearch={...oldNonOriginal,
     reviewed:[...oldNonOriginal.reviewed,...newNonOriginal.reviewed,
       ...natsynthNonOriginal.reviewed,...nchemNonOriginal.reviewed]};
   const publisherReviewedScope={...priorReviewedScope,
     reviewed:[...priorReviewedScope.reviewed,...lateReviewedScope.reviewed,
-      ...nsScoped.reviewed,...nchemScoped.reviewed]};
+      ...nsScoped.reviewed,...nchemScoped.reviewed,...ncScoped.reviewed]};
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id)){
     const bytes=await readFile(root+'/review-queue/'+id+'.json');
