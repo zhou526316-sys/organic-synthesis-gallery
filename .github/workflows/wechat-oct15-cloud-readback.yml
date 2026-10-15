@@ -1,0 +1,51 @@
+name: WeChat Oct15 actual cloud readback QA
+on:
+  push:
+    branches: [main]
+    paths: [audit/automation-triggers/wechat-oct15-cloud-readback.json]
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct15-cloud-readback
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install read-only browser
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/oct15-cloud-browser.log 2>&1 || { tail -40 /tmp/oct15-cloud-browser.log; exit 1; }
+      - name: Verify real cloud titles, every reviewed paragraph, ordered figures and precise DOI links
+        run: node scripts/wechat-oct15-cloud-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct15-actual-cloud-readback
+          path: audit/wechat-working/2026-10-15-r1-cloud-readback
+          retention-days: 30
+      - name: Preserve read-only verification without further WeChat writes
+        if: success()
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/oct15-cloud-result
+          cp -a audit/wechat-working/2026-10-15-r1-cloud-readback/. /tmp/oct15-cloud-result/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p audit/wechat-working/2026-10-15-r1-cloud-readback
+            cp -a /tmp/oct15-cloud-result/. audit/wechat-working/2026-10-15-r1-cloud-readback/
+            git add audit/wechat-working/2026-10-15-r1-cloud-readback
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: real Oct15 Nature Science cloud draft/get complete prose and original-image mobile QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
