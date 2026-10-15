@@ -68,7 +68,7 @@ if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly conta
 
 const ownerLeaseTemplate = await readFile(path.resolve('cloudflare/scripts/pdf-owner-lease-bootstrap.inc.js'), 'utf8');
 const installRevision = (tocMainline.match(/var INSTALL_REVISION = '([^']+)';/) || [])[1];
-if (!/^6\\.2\\.\\d+$/.test(installRevision)) throw new Error('Invalid bundled capture engine revision');
+if (!/^6[.]2[.][0-9]+$/.test(installRevision)) throw new Error('Invalid bundled capture engine revision');
 if (!ownerLeaseTemplate.includes('__OSG_CAPTURE_ENGINE__')) throw new Error('Owner handoff marker missing');
 const ownerLeaseBootstrap = ownerLeaseTemplate.replace('__OSG_CAPTURE_ENGINE__', installRevision);
 const ownerSetupExpression = "(location.pathname === '/private-pdf-owner-setup.html' && (location.hostname === 'gallery.gczhouwld.com' || location.hostname === 'organic-synthesis-gallery-public.pages.dev'))";
