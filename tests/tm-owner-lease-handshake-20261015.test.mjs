@@ -23,8 +23,8 @@ function makeHarness({embedded=true,throwOnWrite=false,corruptReadback=false}={}
   };
   const values={
     window,location:{origin},Date,Object,Number,isGalleryPage:()=>true,
-    globalThis:{__OSG_TOC_BROWSER_MAINLINE__:embedded,__OSG_BRIDGE_VERSION__:embedded?'2.2.87':''},
-    INSTALL_REVISION:'6.2.68',PRIVATE_PDF_CAPTURE_REVISION:'20261006-private-pdf-bundle-v6',
+    globalThis:{__OSG_TOC_BROWSER_MAINLINE__:embedded,__OSG_BRIDGE_VERSION__:embedded?'2.2.88':''},
+    INSTALL_REVISION:'6.2.69',PRIVATE_PDF_CAPTURE_REVISION:'20261006-private-pdf-bundle-v6',
     PRIVATE_PDF_LEASE_KEY:'osg-toc-v6:private-pdf-capture-lease-v1',
     GM_setValue:(key,value)=>{if(throwOnWrite)throw new Error('storage failed');storage.set(key,value);},
     GM_getValue:(key,fallback)=>corruptReadback?null:storage.get(key)??fallback,
