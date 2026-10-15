@@ -93,7 +93,16 @@ def run(pub, args, request, *, token, publication_date, slot, papers, edition, a
             expected = pub.summarize_wechat_article_html(str(wanted.get("content") or ""))
             actual = pub.summarize_wechat_article_html(str(saved.get("content") or ""))
             for key in ("prose_sha256", "images", "links", "headings", "tables"):
-                _require(expected[key] == actual[key], "cloud article %d content differs: %s" % (index + 1, key))
+                if expected[key] != actual[key]:
+                    # Bounded diagnostics only. Keep rejection and the saved new ID;
+                    # never retry draft/add or modify cloud content on this path.
+                    detail = {"newMediaId": media_id, "article": index + 1, "field": key,
+                              "expected": expected[key], "actual": actual[key]}
+                    record["readbackMismatch"] = detail
+                    pub.save_state(journal_path, book)
+                    safe = json.dumps(detail, ensure_ascii=False)
+                    raise RuntimeError("cloud article %d content differs: %s; %s" %
+                                       (index + 1, key, safe[:12000]))
         preview_path, preview_url = pub.write_draft_preview(
             cloud, media_id=media_id, preview_dir=Path(args.preview_dir), base_url=args.preview_base_url)
         record.update({"status": "verified", "previewUrl": preview_url, "draftReadback": "ok",
