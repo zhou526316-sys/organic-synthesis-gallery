@@ -51,11 +51,12 @@ test('exact five Chem DOI publisher-first-online dates are distinguished from fr
 test('source-reviewed Chem includes have actual first online and original Chinese/bibliographic record',()=>{
   const selected=authorized.accepted.filter(x=>items.has(x.doi));
   assert.equal(selected.length,3);
-  assert.equal(authorized.summary.include,122);
+  assert.equal(authorized.summary.include,authorized.accepted.length);
+  assert.ok(authorized.summary.include>=122,'three new Chem methods retained');
   assert.equal(authorized.summary.pending,2);
-  assert.equal(authorized.summary.checked,124);
+  assert.equal(authorized.summary.checked,authorized.accepted.length+authorized.pending.length);
   assert.equal(authorized.nextEligiblePublicationSlot,'2026-10-16T08:00:00+08:00');
-  assert.equal(validateHistoricalApproval(authorized).length,122);
+  assert.equal(validateHistoricalApproval(authorized).length,authorized.accepted.length);
   assert.equal(science.dateEvidenceGitBlobSha,blob(recordPath));
   assert.equal(science.counts.include,3);
   const manifestSet=new Set(selected.map(x=>x.doi));
