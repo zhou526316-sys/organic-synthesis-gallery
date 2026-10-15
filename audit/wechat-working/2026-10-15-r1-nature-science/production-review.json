@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-15",
+  "revision": "2026-10-15-r1",
+  "sourcePackageSHA256": "464fb906fdace7fee02dc54e12bdae3df33a0bf4187421f8df9449b804bda033",
+  "status": "reviewed_science_text_original_images_and_production_layout_pass",
+  "reviewedTextPreserved": true,
+  "bodyFigures": [
+    15,
+    18
+  ],
+  "coverImages": 2,
+  "molecularRedraw": false,
+  "currentDaily": {
+    "count": 33,
+    "journals": {
+      "Nature": 1,
+      "Nature Synthesis": 2,
+      "JACS": 1,
+      "ACS Catalysis": 3,
+      "CCS Chemistry": 1,
+      "JOC": 16,
+      "Organic Letters": 9
+    },
+    "slot": "2026-10-15T08:00:00+08:00"
+  },
+  "sameDateOldDraftExists": false,
+  "previousDateDraftMustRemainUnchanged": true,
+  "cloudWritePerformed": false,
+  "publicSendAuthorized": false,
+  "manualVisualReview": {
+    "date": "2026-10-15",
+    "revision": "2026-10-15-r1",
+    "expectedPendingGateBlobSha": "343540a16dc4e023f671a17ea9211bd53e318ae3",
+    "workflowRun": 38700689385,
+    "artifactId": 11956626094,
+    "scientificTextReview": "pass",
+    "manualVisualReview": "pass",
+    "dailyCount": 33,
+    "draftOnly": true,
+    "publicSendAuthorized": false,
+    "visualEvidence": {
+      "actualRenderer": "ops/wechat-publisher/create-draft.py",
+      "inspectedArticleOpenings": 2,
+      "inspectedMobileSectionViews": {
+        "Nature": 7,
+        "Science": 8
+      },
+      "viewportWidths": [
+        390,
+        980
+      ],
+      "decodedBodyFigures": [
+        15,
+        18
+      ],
+      "sourceOnlyCovers": "Both CI cover PNGs compared pixel-for-pixel to manually inspected source screenshot layouts: identical.",
+      "coverNatureSHA256": "7bc750dcdcf5d3c6e04385b170c6a3c9cf84cdf4ec05475f5d120ff63c1ab82e",
+      "coverScienceSHA256": "ccc8d375e824b0d2d94e46ce8e7d45b9e18e0e72c5664756964d4327c32ea3a1",
+      "chemistryRedrawn": false,
+      "cropLossObserved": false,
+      "horizontalOverflow": false,
+      "limits": "Dense original scope tables require tap-to-enlarge for small labels. Native WeChat client and real cloud readback are not yet inspected."
+    },
+    "contentIntegrity": "Original supplied body paragraphs and image order preserved; only Markdown emphasis markers removed for the existing escape-safe publisher. No hidden scientific corrections. Daily metadata missing authors was filled from the supplied Nature PDF only.",
+    "authorization": "Owner explicitly requested direct WeChat draft write; this seals the pre-write review, not a public publication approval."
+  }
+}

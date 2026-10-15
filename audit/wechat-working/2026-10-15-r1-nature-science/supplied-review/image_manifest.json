@@ -1,0 +1,1200 @@
+[
+  {
+    "id": "N_lead",
+    "filename": "N_lead.png",
+    "caption": "原文图 1B｜PINC 提供同一个螺碳；分别与两条 C–C σ 键，或与 σ 键和烯烃 π 键组合。",
+    "display_width_pct": 90,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 20,
+        "normalized_rectangle": [
+          0,
+          0.405,
+          1,
+          1
+        ],
+        "pdf_rectangle": [
+          0.0,
+          117.045,
+          316.0,
+          289.0
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1500,
+      817
+    ],
+    "sha256": "462e2cc4652a170a07ee1ab298d84d9c71c48d38ad0dc869e98adec946cd4401"
+  },
+  {
+    "id": "N_concept",
+    "filename": "N_concept.png",
+    "caption": "原文图 1A｜概念性的 σ–σ 螺环拼接。实际验证的 σ 组分是联苯撑，不代表任意 C–C 单键。",
+    "display_width_pct": 88,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 20,
+        "normalized_rectangle": [
+          0,
+          0,
+          1,
+          0.39
+        ],
+        "pdf_rectangle": [
+          0.0,
+          0.0,
+          316.0,
+          112.71000000000001
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1500,
+      536
+    ],
+    "sha256": "3d54eff3b90d9af6d7bc81a9ddb680b61a9a150b24a5e9ff1ad9153d28d367b3"
+  },
+  {
+    "id": "N_optimization",
+    "filename": "N_optimization.png",
+    "caption": "原文图 2A｜滴加与一次加入的对照，以及金属、配体筛选；下方配体结构来自同一原图。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0,
+          0,
+          0.738,
+          0.563
+        ],
+        "pdf_rectangle": [
+          0.0,
+          0.0,
+          427.302,
+          222.385
+        ]
+      },
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0,
+          0.571,
+          0.394,
+          0.793
+        ],
+        "pdf_rectangle": [
+          0.0,
+          225.545,
+          228.126,
+          313.235
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1500,
+      1114
+    ],
+    "sha256": "e0711250e98c7fc1f3180d36a52640bba5a78dec4fe82a834068a18a1eab0489"
+  },
+  {
+    "id": "N_inactive",
+    "filename": "N_inactive.png",
+    "caption": "原文图 2B｜分离、表征的 Rh(PINC)₄Cl；过量 PINC 可占据铑的配位位点。",
+    "display_width_pct": 64,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0.742,
+          0,
+          1,
+          0.558
+        ],
+        "pdf_rectangle": [
+          429.618,
+          0.0,
+          579.0,
+          220.41000000000003
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      2214
+    ],
+    "sha256": "7d713660df25cc8c8d62c01805538e2c0dcfc772131c8001dc3285c86271d6cd"
+  },
+  {
+    "id": "N_isotope",
+    "filename": "N_isotope.png",
+    "caption": "原文图 2C｜¹³C 标签最终出现在螺中心，确定碳源，不等于直接观察游离原子碳。",
+    "display_width_pct": 96,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0.398,
+          0.57,
+          1,
+          0.797
+        ],
+        "pdf_rectangle": [
+          230.442,
+          225.14999999999998,
+          579.0,
+          314.815
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      387
+    ],
+    "sha256": "75b5eae4c95efa074b491007713ac3cf21519db206d5033d80a12bd2af482c63"
+  },
+  {
+    "id": "N_intermediate",
+    "filename": "N_intermediate.png",
+    "caption": "原文图 2D 与 SI S32｜90 °C 得到中间体 4a；分离的 4a 在更高温度下可进入第二次碳转移。两幅保持各自原始条件。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0,
+          0.817,
+          1,
+          1
+        ],
+        "pdf_rectangle": [
+          0.0,
+          322.715,
+          579.0,
+          395.0
+        ]
+      },
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 32,
+        "normalized_rectangle": [
+          0.14,
+          0.483,
+          0.88,
+          0.586
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          406.6473517456055,
+          523.8816064453125,
+          493.3651099853515
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1506,
+      509
+    ],
+    "sha256": "cdc710550f4ea76ba5c59b15066f88ce0304d3c876a9ce24d2f9104b0e02c29b"
+  },
+  {
+    "id": "N_scope",
+    "filename": "N_scope.png",
+    "caption": "原文图 3｜同类联苯撑的螺环拼接及不对称取代底物的远端 C–C 键选择性。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 22,
+        "normalized_rectangle": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "pdf_rectangle": [
+          0.0,
+          0.0,
+          564.0,
+          431.0
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1467,
+      1121
+    ],
+    "sha256": "80c941422aadeb3272bb0ac91217ef088b0deb7b28bff56a6d5ffff69e1f8500"
+  },
+  {
+    "id": "N_cross",
+    "filename": "N_cross.png",
+    "caption": "原文图 4A｜先制备 4，再选择第二个 σ 组分；双螺产物、π 扩展例子及分阶段收率均保留。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 23,
+        "normalized_rectangle": [
+          0,
+          0,
+          1,
+          0.664
+        ],
+        "pdf_rectangle": [
+          0.0,
+          0.0,
+          566.0,
+          371.84000000000003
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1472,
+      967
+    ],
+    "sha256": "8d8de27c3d68c5f814157616f8a876ffdf4f482b025aef877fe76a6ae2658644"
+  },
+  {
+    "id": "N_sigma_pi",
+    "filename": "N_sigma_pi.png",
+    "caption": "原文图 4B｜第二阶段改用 Rh₂(esp)₂ 和烯烃，实现 σ–π 螺环拼接；不是全程同一催化体系。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 23,
+        "normalized_rectangle": [
+          0,
+          0.68,
+          1,
+          1
+        ],
+        "pdf_rectangle": [
+          0.0,
+          380.8,
+          566.0,
+          560.0
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1472,
+      466
+    ],
+    "sha256": "7f6a3fac90c6e62d13917b2ae234dbcd3a2f922cbdc739f031ae3bd28b76e36b"
+  },
+  {
+    "id": "N_diazo",
+    "filename": "N_diazo.png",
+    "caption": "SI S32、S34–S35｜预制重氮化合物：无 PPh₃ 时未得目标物；含 PPh₃ 的两种操作分别给出 18% 与 66%。后两组还存在溶剂和预混操作差别。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 32,
+        "normalized_rectangle": [
+          0.14,
+          0.124,
+          0.89,
+          0.343
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          104.39807788085938,
+          529.8348065185547,
+          288.7785541381836
+        ]
+      },
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 34,
+        "normalized_rectangle": [
+          0.14,
+          0.666,
+          0.89,
+          0.785
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          560.7187086181641,
+          529.8348065185547,
+          660.9071865844727
+        ]
+      },
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 35,
+        "normalized_rectangle": [
+          0.14,
+          0.171,
+          0.86,
+          0.287
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          143.96831707763673,
+          511.97520629882814,
+          241.63103509521483
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      1350
+    ],
+    "sha256": "af48dae88647c121376d928f87e47d88c65e7e4eb51252332c11666df0ee914d"
+  },
+  {
+    "id": "N_phosphine",
+    "filename": "N_phosphine.png",
+    "caption": "SI S33–S34｜PPh₃ 从起始阶段加入与只用于独立第二阶段，结果分别为 14% 和 93%；不能写成始终抑制或始终无害。",
+    "display_width_pct": 94,
+    "source_rectangles": [
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 33,
+        "normalized_rectangle": [
+          0.14,
+          0.548,
+          0.86,
+          0.666
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          461.37215063476566,
+          511.97520629882814,
+          560.7187086181641
+        ]
+      },
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 34,
+        "normalized_rectangle": [
+          0.14,
+          0.23,
+          0.89,
+          0.352
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          193.64159606933595,
+          529.8348065185547,
+          296.355833984375
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      719
+    ],
+    "sha256": "6459fbcf9722e8a42f050440c0f6720a5f5958b85d111dfc43b9aedd6aa92d18"
+  },
+  {
+    "id": "N_DFT",
+    "filename": "N_DFT.png",
+    "caption": "原文图 5A｜计算比较“先 C–C 氧化加成”与“先形成铑卡宾”；纵轴为相对 Gibbs 自由能。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 24,
+        "normalized_rectangle": [
+          0,
+          0,
+          1,
+          0.595
+        ],
+        "pdf_rectangle": [
+          0.0,
+          0.0,
+          512.0,
+          317.135
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1500,
+      930
+    ],
+    "sha256": "41b3f34f1dcd3469488bc14ec604668ef8d318f532941c569d45c2be1e5e1512"
+  },
+  {
+    "id": "N_cycle",
+    "filename": "N_cycle.png",
+    "caption": "原文图 5B｜作者提出的两个催化循环；中间体的分离证据与未直接观察的瞬态步骤须区别。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "s41586-026-11242-8_reference.pdf",
+        "pdf_page": 24,
+        "normalized_rectangle": [
+          0,
+          0.607,
+          1,
+          1
+        ],
+        "pdf_rectangle": [
+          0.0,
+          323.531,
+          512.0,
+          533.0
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1500,
+      615
+    ],
+    "sha256": "6bb2fe72101791d87ea1adcd24e951fec8dd0e2dd4215e9c3407ecc3e5b96b8b"
+  },
+  {
+    "id": "N_onepot",
+    "filename": "N_onepot.png",
+    "caption": "SI S13｜一锅交叉拼接实例：97% 以第二个联苯撑为计量基准，不能当作对全部投入组分的原子经济性。",
+    "display_width_pct": 94,
+    "source_rectangles": [
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 13,
+        "normalized_rectangle": [
+          0.13,
+          0.11,
+          0.89,
+          0.287
+        ],
+        "pdf_rectangle": [
+          77.39160095214844,
+          92.6111981201172,
+          529.8348065185547,
+          241.63103509521483
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      495
+    ],
+    "sha256": "b234082237fcc2f420b19df2fa2fc39d9d1152182887466f2cb4189b4616515b"
+  },
+  {
+    "id": "N_limits",
+    "filename": "N_limits.png",
+    "caption": "SI S31｜不成功的底物：醛、游离酚羟基、硝基等所示结构，以及 TMS 取代例子。仅限实际测试范围。",
+    "display_width_pct": 84,
+    "source_rectangles": [
+      {
+        "file": "41586_2026_11242_MOESM1_ESM.pdf",
+        "pdf_page": 31,
+        "normalized_rectangle": [
+          0.14,
+          0.12,
+          0.84,
+          0.347
+        ],
+        "pdf_rectangle": [
+          83.34480102539064,
+          101.03039794921875,
+          500.0688061523437,
+          292.1462340698242
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1500,
+      689
+    ],
+    "sha256": "97ae14788d012fefb442debc9f5e8755f0d077ce0623c281c36cd06aca48fd23"
+  },
+  {
+    "id": "S_lead",
+    "filename": "S_lead.png",
+    "caption": "原文图 1B｜新戊氧基膦鎓盐与 KF，在氢键相转移催化下实现醇脱氧氟化。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 2,
+        "normalized_rectangle": [
+          0.065,
+          0.184,
+          0.934,
+          0.436
+        ],
+        "pdf_rectangle": [
+          38.61,
+          139.10399999999998,
+          554.796,
+          329.616
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      554
+    ],
+    "sha256": "d781f34fbc77bab922dd05bfd7a0680759189d66c205a88779baae4b1f06f9b8"
+  },
+  {
+    "id": "S_background",
+    "filename": "S_background.png",
+    "caption": "原文图 1A｜经典 Appel 路线易被稳定的二氟膦烷截断，含氟物种不一定能高效向碳转移氟。",
+    "display_width_pct": 95,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 2,
+        "normalized_rectangle": [
+          0.065,
+          0.053,
+          0.934,
+          0.182
+        ],
+        "pdf_rectangle": [
+          38.61,
+          40.068,
+          554.796,
+          137.59199999999998
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      284
+    ],
+    "sha256": "30da7fc28634f869feae85a5228709474caa960aedd268a76a1c5dbde263f571"
+  },
+  {
+    "id": "S_screen",
+    "filename": "S_screen.png",
+    "caption": "SI 表 S2｜氢键催化剂、温度、磷试剂及 KF 对照；表格注明的是定量 NMR 收率。",
+    "display_width_pct": 97,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298_sm.pdf",
+        "pdf_page": 21,
+        "normalized_rectangle": [
+          0.113,
+          0.115,
+          0.9,
+          0.913
+        ],
+        "pdf_rectangle": [
+          67.27116082763672,
+          96.82079803466797,
+          535.788006591797,
+          768.6729443969726
+        ]
+      },
+      {
+        "file": "science.aec6298_sm.pdf",
+        "pdf_page": 22,
+        "normalized_rectangle": [
+          0.12,
+          0.083,
+          0.89,
+          0.144
+        ],
+        "pdf_rectangle": [
+          71.43840087890625,
+          69.87935858154297,
+          529.8348065185547,
+          121.23647753906249
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      2345
+    ],
+    "sha256": "dcd90297bbdb53a4330738d0ba9a6b91437fbb2e4f580301c71d036a52b480ce"
+  },
+  {
+    "id": "S_scope_primary",
+    "filename": "S_scope_primary.png",
+    "caption": "原文图 2（上部）｜伯醇、杂环及部分仲醇例子；结构和所有产率均来自原图。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 3,
+        "normalized_rectangle": [
+          0.106,
+          0.054,
+          0.894,
+          0.589
+        ],
+        "pdf_rectangle": [
+          62.964,
+          40.824,
+          531.0360000000001,
+          445.284
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      1297
+    ],
+    "sha256": "6a36c5872653c85b36e3a42db3cc4a466f39b5bf6ee109b2cd36e2185d02fc39"
+  },
+  {
+    "id": "S_scope_secondary",
+    "filename": "S_scope_secondary.png",
+    "caption": "原文图 2（下部与脚注）｜仲醇、邻基参与和失败底物。星号、不同反应条件及分离／NMR 收率的区分保留。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 3,
+        "normalized_rectangle": [
+          0.106,
+          0.59,
+          0.894,
+          0.875
+        ],
+        "pdf_rectangle": [
+          62.964,
+          446.03999999999996,
+          531.0360000000001,
+          661.5
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 3,
+        "normalized_rectangle": [
+          0.061,
+          0.896,
+          0.94,
+          0.954
+        ],
+        "pdf_rectangle": [
+          36.234,
+          677.376,
+          558.36,
+          721.2239999999999
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      841
+    ],
+    "sha256": "af3816bc08e7a96b4441a64630c5e57ab9cca446119f3553534b780e27424532"
+  },
+  {
+    "id": "S_biorelevant",
+    "filename": "S_biorelevant.png",
+    "caption": "原文图 3A｜复杂及生物相关醇的转化；这些是合成示例，不是本研究完成的新药效评价。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 4,
+        "normalized_rectangle": [
+          0.063,
+          0.054,
+          0.936,
+          0.487
+        ],
+        "pdf_rectangle": [
+          37.422,
+          40.824,
+          555.984,
+          368.17199999999997
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 4,
+        "normalized_rectangle": [
+          0.061,
+          0.824,
+          0.94,
+          0.908
+        ],
+        "pdf_rectangle": [
+          36.234,
+          622.944,
+          558.36,
+          686.448
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      1155
+    ],
+    "sha256": "fe329ada41f876996ef67a03bc07120a72282c47c00588cf3f79638e5aa6aee6"
+  },
+  {
+    "id": "S_asym_screen",
+    "filename": "S_asym_screen.png",
+    "caption": "原文图 3B｜不对称体系需要共同调整磷试剂、溶剂、温度与手性双脲，而非简单替换一个催化剂。",
+    "display_width_pct": 98,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 4,
+        "normalized_rectangle": [
+          0.07,
+          0.492,
+          0.602,
+          0.801
+        ],
+        "pdf_rectangle": [
+          41.580000000000005,
+          371.952,
+          357.58799999999997,
+          605.556
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      1110
+    ],
+    "sha256": "74fa6d77e6d5c225b6e60f66ff396c5651126c12894a2eab1b68af3c28bbb046"
+  },
+  {
+    "id": "S_asym_scope",
+    "filename": "S_asym_scope.png",
+    "caption": "原文图 3C｜外消旋 β-氨基醇及 β-羟基硫化物的不对称转化；不代表一般外消旋醇均可适用。",
+    "display_width_pct": 70,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 4,
+        "normalized_rectangle": [
+          0.607,
+          0.492,
+          0.934,
+          0.801
+        ],
+        "pdf_rectangle": [
+          360.558,
+          371.952,
+          554.796,
+          605.556
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      1805
+    ],
+    "sha256": "75e5e8d2e9b6a1fd1de11565fbedb9c4862c86ad83404d0b57fcb1471912f615"
+  },
+  {
+    "id": "S_PF",
+    "filename": "S_PF.png",
+    "caption": "原文图 4A｜单氟膦烷 P1–F 的形成、单晶结构及 P–F/P–O 键长比较。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.211,
+          0.055,
+          0.561,
+          0.153
+        ],
+        "pdf_rectangle": [
+          125.33399999999999,
+          41.58,
+          333.23400000000004,
+          115.66799999999999
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.564,
+          0.067,
+          0.929,
+          0.153
+        ],
+        "pdf_rectangle": [
+          335.01599999999996,
+          50.652,
+          551.826,
+          115.66799999999999
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      1010
+    ],
+    "sha256": "22093558ecf8f85962e89cbbebedea784389f5e0ece1ba97c5f0cba2a679f232"
+  },
+  {
+    "id": "S_exchange",
+    "filename": "S_exchange.png",
+    "caption": "原文图 4B｜醇交换需要含氟的 P1–F；实验对照与计算模型并列。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.211,
+          0.155,
+          0.593,
+          0.276
+        ],
+        "pdf_rectangle": [
+          125.33399999999999,
+          117.17999999999999,
+          352.24199999999996,
+          208.656
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.598,
+          0.155,
+          0.929,
+          0.276
+        ],
+        "pdf_rectangle": [
+          355.212,
+          117.17999999999999,
+          551.826,
+          208.656
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      1329
+    ],
+    "sha256": "87ccc5874f02f6f8df62fa3cce488d71c0be86bba63e473242f0e45cd8727eb8"
+  },
+  {
+    "id": "S_bind",
+    "filename": "S_bind.png",
+    "caption": "原文图 4C（上部）｜三点氢键结合的 NMR 与晶体证据，以及 U2 对 F⁻／OPPh₃ 的结合比较。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.211,
+          0.28,
+          0.929,
+          0.473
+        ],
+        "pdf_rectangle": [
+          125.33399999999999,
+          211.68,
+          551.826,
+          357.58799999999997
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      514
+    ],
+    "sha256": "a4385b0aea20f8759aec2a0860e2859cb15d96497458f1dc519b1768e9a1dbf5"
+  },
+  {
+    "id": "S_adducts",
+    "filename": "S_adducts.png",
+    "caption": "SI 图 S24｜U1、U6 与 OPPh₃ 的加合物，和 U2 的两类结合几何。晶体结构不能单独代表溶液中所有物种。",
+    "display_width_pct": 85,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298_sm.pdf",
+        "pdf_page": 125,
+        "normalized_rectangle": [
+          0.12,
+          0.11,
+          0.895,
+          0.86
+        ],
+        "pdf_rectangle": [
+          71.43840087890625,
+          92.6111981201172,
+          532.8114065551758,
+          724.0511853027343
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      2054
+    ],
+    "sha256": "aad4b1bebf458e16ad214ee1b5fbf613f9c2a520e8477ff0d3a9f17d50443792"
+  },
+  {
+    "id": "S_cycle",
+    "filename": "S_cycle.png",
+    "caption": "原文图 4C（下部）｜U2 促进 P–F 解离的谱学证据及拟议催化循环。膦鎓试剂仍是当量试剂。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.211,
+          0.476,
+          0.929,
+          0.705
+        ],
+        "pdf_rectangle": [
+          125.33399999999999,
+          359.856,
+          551.826,
+          532.98
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      610
+    ],
+    "sha256": "476dca8e04af0094db294962b5ddb4486f66dab52065b70661de5a85f48af719"
+  },
+  {
+    "id": "S_DFT",
+    "filename": "S_DFT.png",
+    "caption": "原文图 4D｜未催化／脲催化路径的计算比较。69.9 kJ mol⁻¹ 从 IM1b 起算，不是纵轴的 49.7。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 5,
+        "normalized_rectangle": [
+          0.211,
+          0.71,
+          0.929,
+          0.91
+        ],
+        "pdf_rectangle": [
+          125.33399999999999,
+          536.76,
+          551.826,
+          687.96
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      533
+    ],
+    "sha256": "6cf87a88310b1985747c93c8bf92b5d16c6a4999614b9d740aeda07956203b08"
+  },
+  {
+    "id": "S_background_control",
+    "filename": "S_background_control.png",
+    "caption": "SI 表 S17（跨页完整合并）｜相同 DME/4 °C/48 h 条件下无手性脲仍有 34% 外消旋产物；U5 为 86%、96:4 e.r.。催化剂结构见原文图 3B。",
+    "display_width_pct": 91,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298_sm.pdf",
+        "pdf_page": 33,
+        "normalized_rectangle": [
+          0.12,
+          0.428,
+          0.89,
+          0.866
+        ],
+        "pdf_rectangle": [
+          71.43840087890625,
+          360.34175268554685,
+          529.8348065185547,
+          729.1027052001953
+        ]
+      },
+      {
+        "file": "science.aec6298_sm.pdf",
+        "pdf_page": 34,
+        "normalized_rectangle": [
+          0.12,
+          0.08,
+          0.89,
+          0.447
+        ],
+        "pdf_rectangle": [
+          71.43840087890625,
+          67.3535986328125,
+          529.8348065185547,
+          376.33823236083987
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      2243
+    ],
+    "sha256": "9c9b12c0e0e829de75ed03b60fbd569552024f7ac3e01ac5746fc42b3f994698"
+  },
+  {
+    "id": "S_scale_reagent",
+    "filename": "S_scale_reagent.png",
+    "caption": "原文图 5A｜由 OPPh₃ 制备 148 g 膦鎓试剂；稳定性测试与试剂制备并非催化周转本身。",
+    "display_width_pct": 98,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 7,
+        "normalized_rectangle": [
+          0.063,
+          0.054,
+          0.815,
+          0.173
+        ],
+        "pdf_rectangle": [
+          37.422,
+          40.824,
+          484.10999999999996,
+          130.78799999999998
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 7,
+        "normalized_rectangle": [
+          0.815,
+          0.054,
+          0.936,
+          0.182
+        ],
+        "pdf_rectangle": [
+          484.10999999999996,
+          40.824,
+          555.984,
+          137.59199999999998
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_aligned_in_original_horizontal_geometry",
+    "size": [
+      1700,
+      318
+    ],
+    "sha256": "0582e10b54a3ea9c12b379f2c967744c407fe4f7d3138c53d287ccaf0e370989"
+  },
+  {
+    "id": "S_scale_reaction",
+    "filename": "S_scale_reaction.png",
+    "caption": "原文图 5B｜四类克级转化及脲／氧化膦回收，包括一个无需脲催化剂的邻基参与例子。",
+    "display_width_pct": 100,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 7,
+        "normalized_rectangle": [
+          0.07,
+          0.174,
+          0.58,
+          0.191
+        ],
+        "pdf_rectangle": [
+          41.580000000000005,
+          131.54399999999998,
+          344.52,
+          144.39600000000002
+        ]
+      },
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 7,
+        "normalized_rectangle": [
+          0.063,
+          0.191,
+          0.936,
+          0.443
+        ],
+        "pdf_rectangle": [
+          37.422,
+          144.39600000000002,
+          555.984,
+          334.908
+        ]
+      }
+    ],
+    "pixel_operation": "source_crops_stacked_with_white_gutters_only",
+    "size": [
+      1501,
+      614
+    ],
+    "sha256": "32b872d5654457616bdc1948e36f671575c1ef99c7286321f62da47255759e23"
+  },
+  {
+    "id": "S_fluorspar",
+    "filename": "S_fluorspar.png",
+    "caption": "原文图 5C｜使用由萤石路线制得的含氟组分；不是直接将矿石与醇混合进行氟化。",
+    "display_width_pct": 96,
+    "source_rectangles": [
+      {
+        "file": "science.aec6298.pdf",
+        "pdf_page": 7,
+        "normalized_rectangle": [
+          0.063,
+          0.448,
+          0.936,
+          0.557
+        ],
+        "pdf_rectangle": [
+          37.422,
+          338.688,
+          555.984,
+          421.09200000000004
+        ]
+      }
+    ],
+    "pixel_operation": "source_render_crop_only",
+    "size": [
+      1501,
+      240
+    ],
+    "sha256": "25c3374255ae4653f451539702aa4de6c0c4ab67ec935bed2b779796b824c415"
+  }
+]
