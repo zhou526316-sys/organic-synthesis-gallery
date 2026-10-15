@@ -257,6 +257,11 @@ export function reconcileQ3({
     const dateOk=/^2026-\d{2}-\d{2}$/.test(r?.publisherFirstOnlineDate||'')
       &&r.publisherFirstOnlineDate!==r.sourceDate
       &&new Date(r.publisherFirstOnlineDate+'T00:00:00Z').toISOString().slice(0,10)===r.publisherFirstOnlineDate;
+    // The previously date-corrected Article can have been released at the
+    // sole 08:00 slot. It remains valid evidence ONLY when the formal DOI,
+    // journal and stored date agree exactly with the independent publisher
+    // first-online receipt, not with the frozen (incorrect) source date.
+    const formalRow=formal.articles.find(a=>normalize(a.doi)===id);
     ensure(x&&!correctedChemDates.has(id)
       &&id===r.doi&&x.journal==='Chem'&&x.title===r.title
       &&x.date===r.sourceDate&&knownDate(x)&&!x.dateConflict
@@ -269,7 +274,10 @@ export function reconcileQ3({
       &&r.reviewQueuePath==='audit/historical-staging/review-queue/'+r.originalQ3QueueOrigin+'.json'
       &&/^[0-9a-f]{40}$/.test(r.originalSourceBatchGitBlobSha||'')
       &&validPage&&dateOk
-      &&!pub.has(id)&&!pending.has(id)&&!excluded.has(id)
+      &&(!formalRow||(
+        formalRow.journal==='Chem'
+        &&formalRow.date===r.publisherFirstOnlineDate))
+      &&!pending.has(id)&&!excluded.has(id)
       &&!publisherNonOriginal.has(id)&&!reviewedScope.has(id),
       'q3_chem_publisher_date_provenance_conflict:'+id);
     const inQ3=publishedQ3(r.publisherFirstOnlineDate);

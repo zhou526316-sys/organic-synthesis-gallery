@@ -144,3 +144,36 @@ test('incorrect DOI, publisher cohort, source date, publisher PII or missing sci
   assert.throws(()=>reconcileQ3({...base,manifest:{accepted:[...base.manifest.accepted,{...q1,doi:correctQ1[0][0]}],pending:[]}}),
     /q3_chem_pre_q3_original_cannot_be_admitted_as_q3/);
 });
+
+test('post-08 already-published Chem papers retain verified publisher dates without re-admission',()=>{
+  const previous=mock();
+  const formallyPublished=expectedNew.map(([doi,date])=>{
+    const approved=authorized.accepted.find(x=>x.doi===doi);
+    assert.ok(approved,'missing original two-pass approval '+doi);
+    return {doi,journal:'Chem',date,ingestionChannel:'historical_backfill'};
+  });
+  const formal={articles:formallyPublished,webpageDoiCount:formallyPublished.length};
+  const {coverage,worklist}=reconcileQ3({...previous,formal});
+  assert.equal(coverage.counters.uniqueSourceDois,5);
+  assert.equal(coverage.counters.formalQ3Count,3);
+  assert.equal(coverage.counters.sourceAlreadyPublished,3);
+  assert.equal(coverage.counters.sourceApprovedWaiting08,0);
+  assert.equal(coverage.counters.sourcePublisherDateDiscrepancies,5);
+  assert.equal(coverage.counters.sourcePublisherVerifiedOutsideQ3,2);
+  assert.equal(coverage.counters.unfinishedQ3OrDateVerification,0);
+  assert.equal(worklist.totalUnreviewedCandidates,0);
+  assert.equal(coverage.counters.publisherIssueResearchReconciliationComplete,false);
+});
+test('formally-published Chem DOI with wrong issue date, journal or pre-Q3 identity remains blocked',()=>{
+  const r=expectedNew[0],correct={doi:r[0],journal:'Chem',date:r[1]};
+  const make=x=>({...mock(),formal:{articles:[x],webpageDoiCount:1}});
+  assert.throws(()=>reconcileQ3(make({...correct,date:r[2]})),
+    /q3_chem_publisher_date_provenance_conflict/);
+  assert.throws(()=>reconcileQ3(make({...correct,date:'2026-08-22'})),
+    /q3_chem_publisher_date_provenance_conflict/);
+  assert.throws(()=>reconcileQ3(make({...correct,journal:'Nature Chemistry'})),
+    /q3_chem_publisher_date_provenance_conflict/);
+  assert.throws(()=>reconcileQ3(make({doi:correctQ1[0][0],
+    date:correctQ1[0][2],journal:'Chem'})),
+    /q3_chem_publisher_date_provenance_conflict/);
+});
