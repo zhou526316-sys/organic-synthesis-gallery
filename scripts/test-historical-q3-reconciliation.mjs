@@ -174,3 +174,96 @@ test('five publisher-verified non-original research DOI remain source-counted bu
   assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{reviewed:[]}}),
     /q3_nonresearch_ledger_untrusted_schema/);
 });
+
+
+test('Chem publisher secondary records retain frozen source counts but leave the academic queue',()=>{
+  const jul='2026-07-01_2026-07-07_chem',aug='2026-08-01_2026-08-07_chem';
+  const journal={name:'Chem'};
+  const sh1=shard(jul,'Chem',[
+    {doi:'10.1016/j.chempr.2026.103152',title:'Relay energy transfer Preview',
+      date:'2026-07-01'}
+  ]);
+  const sh2=shard(aug,'Chem',[
+    {doi:'10.1016/j.chempr.2026.103106',title:'Original title retained by Erratum',
+      date:'2026-08-01'},
+    {doi:'10.1016/j.chempr.2026.103197',title:'Ni radical coupling Preview',
+      date:'2026-08-01'}
+  ]);
+  const extended={...input,journals:[...journals,journal],
+    state:{...state,completed:[...state.completed,jul,aug]},
+    triage:{...triage,rootSummaries:{...triage.rootSummaries,
+      [jul]:{sourceSha256:sha(jul)},[aug]:{sourceSha256:sha(aug)}}},
+    shards:[...input.shards,sh1,sh2]};
+  const sources=[
+    {doi:sh1.records[0].doi,title:sh1.records[0].title,
+      date:'2026-07-01',root:jul,issue:'2026-07-09',
+      kind:'Preview',pii:'S2451929426002184',
+      original:'10.1126/science.aeb8506'},
+    {doi:sh2.records[0].doi,title:sh2.records[0].title,
+      date:'2026-08-01',root:aug,issue:'2026-08-13',
+      kind:'Erratum',pii:'S2451929426001725',
+      original:'10.1016/j.chempr.2026.102990'},
+    {doi:sh2.records[1].doi,title:sh2.records[1].title,
+      date:'2026-08-01',root:aug,issue:'2026-08-13',
+      kind:'Preview',pii:'S2451929426002639',
+      original:'10.1126/science.aef6981'}
+  ];
+  const rows=sources.map(x=>({
+    doi:x.doi,title:x.title,date:x.date,journal:'Chem',
+    underlyingOriginalResearchDoi:x.original,
+    publisherArticleType:x.kind,
+    decision:'exclude',firstPassDecision:'exclude',challengeDecision:'exclude',
+    reviewPasses:2,
+    firstPassReason:'Publisher confirms this is a secondary Preview or Erratum rather than the original experimental synthetic-method Article.',
+    independentChallengeReason:'Although the title describes an important organic synthesis, a distinct original article owns the evidence; counting the secondary DOI would duplicate published research.',
+    reviewEvidence:{
+      publisherPage:'https://www.sciencedirect.com/science/article/pii/'+x.pii,
+      publisherDoi:x.doi,publisherArticleType:x.kind,
+      publisherArticleDate:null,frozenSourceDate:x.date,
+      sourceDateNotPublisherFirstOnline:true,
+      publisherFirstOnlineDateVerified:false,
+      publisherIssueDate:x.issue,
+      underlyingOriginalResearchDoi:x.original,
+      sourceRootId:x.root,stageSourceSha256:sha(x.root),
+      stageBatchGitBlobSha:'f'.repeat(40),
+      verificationKind:'publisher_direct_article_type_and_original_work_provenance'
+    }
+  }));
+  const publisherNonResearch={
+    schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+    mode:'publisher_verified_non_original_doi_only_not_publication',
+    reviewed:rows
+  };
+  const baseline=reconcileQ3(extended);
+  const checked=reconcileQ3({...extended,publisherNonResearch});
+  assert.equal(checked.coverage.counters.uniqueSourceDois,
+    baseline.coverage.counters.uniqueSourceDois);
+  assert.equal(checked.coverage.counters.sourcePublisherNonResearchExcluded,3);
+  assert.equal(checked.coverage.counters.unfinishedQ3OrDateVerification,
+    baseline.coverage.counters.unfinishedQ3OrDateVerification-3);
+  for(const x of sources)
+    assert.ok(!checked.worklist.rows.some(r=>r.doi===x.doi),
+      'secondary DOI must not reappear in academic worklist');
+  assert.equal(checked.coverage.guards.officialPublisherIssueCompletenessNotEstablished,true);
+  const broken=(i,mutation)=>({...publisherNonResearch,
+    reviewed:rows.map((r,n)=>n===i?{...r,reviewEvidence:{
+      ...r.reviewEvidence,...mutation}}:r)});
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(0,{publisherPage:'https://www.example.com/science/article/pii/S2451929426002184'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(0,{publisherDoi:'10.1016/j.chempr.2026.999999'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(1,{publisherArticleDate:'2026-08-01'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(2,{publisherFirstOnlineDateVerified:true})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(2,{underlyingOriginalResearchDoi:'10.1126/science.not-original'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(0,{stageSourceSha256:'0'.repeat(64)})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+});
