@@ -121,7 +121,7 @@ test('Chemical Science created-only metadata remains first-online date unknown',
   assert.deepEqual(publicationDateForDisplay('', '2026-10-14', true),
     {date:'',unverified:true,reason:'missing_or_invalid'});
   // The Crossref 2026-10-13 createdDate must never fill publication date.
-  const row={doi:'10.1039/d6sc06571f',journal:'Chemical Science',date:'',
+  const row={doi:'10.1039/d6sc00000x',journal:'Chemical Science',date:'',
     createdDate:'2026-10-13',dateUnverified:true,addedDate:'2026-10-14'};
   assert.strictEqual(correctedPublisherDateForDisplay(row),row);
 });
@@ -178,4 +178,54 @@ test('next fixed-slot writer propagates unverified status even when review has a
   const source=readFileSync('scripts/apply-fixed-slot-literature-release.mjs','utf8');
   assert(source.includes("row.dateUnverified === true ? {"));
   assert(!source.includes("row.dateUnverified === true && !row.date"));
+});
+
+test('all ten RSC publisher-first-online dates resolve on the exact protected DOI title and journal only', () => {
+  const evidence=JSON.parse(readFileSync('audit/publisher-date-evidence/2026-10-15-rsc-ten-first-online.json','utf8'));
+  const pending=JSON.parse(readFileSync('audit/publisher-date-evidence/pending-latest.json','utf8'));
+  const protectedPapers=JSON.parse(readFileSync('public/rolling-supplement.json','utf8')).papers;
+  assert.equal(evidence.publisher,'Royal Society of Chemistry');
+  assert.equal(evidence.records.length,10);
+  assert.equal(evidence.sourceQueueBlobSha,'05de691ba05b0f76d3376b9ca44727a5afb21817');
+  assert.equal(pending.unresolvedPublisherFirstOnlineDates,10);
+  assert.equal(evidence.sourceCatalogCount,1151);
+  assert.deepEqual(
+    evidence.records.map(x=>x.doi).sort(),
+    pending.issues.map(x=>x.doi).sort(),
+    'officially checked DOIs must cover precisely the previously unverified ten'
+  );
+  for(const source of evidence.records){
+    const original=protectedPapers.find(x=>x.doi===source.doi);
+    assert(original,'missing released RSC paper '+source.doi);
+    assert.equal(source.title,original.title);
+    assert.equal(source.journal,original.journal);
+    assert.equal(source.addedDate,original.addedDate);
+    assert(source.publisherArticleUrl.includes(source.doi.toUpperCase())
+      || source.publisherArticleUrl.toLowerCase().includes(source.doi));
+    assert.match(source.publisherArticleUrl,/^https:\/\/pubs\.rsc\.org\//);
+    assert.equal(source.originalDateEvidenceStatus,'missing_or_invalid');
+    assert.equal(original.date,'');
+    assert.equal(original.dateUnverified,true);
+    const display=correctedPublisherDateForDisplay(original);
+    assert.equal(display.date,source.verifiedFirstOnlineDate,'date mismatch '+source.doi);
+    assert.equal(display.dateUnverified,false,'still provisional '+source.doi);
+    assert.equal(display.addedDate,original.addedDate);
+    assert.equal(display.title,original.title);
+    assert.equal(display.journal,original.journal);
+    assert.equal(publicationDateForDisplay(display.date,'2026-10-15',display.dateUnverified).date,
+      source.verifiedFirstOnlineDate);
+    assert.strictEqual(correctedPublisherDateForDisplay(display),display,'must be idempotent');
+    const changes=[
+      {...original,doi:'10.1039/d6scinvalid'},
+      {...original,title:original.title+' 2'},
+      {...original,journal:original.journal==='Chemical Science'?'Green Chemistry':'Chemical Science'},
+      {...original,addedDate:'2026-10-10'},
+      {...original,dateUnverified:false},
+      {...original,date:'2026-10-06'},
+    ];
+    for(const row of changes)assert.strictEqual(correctedPublisherDateForDisplay(row),row,
+      'unexpected provisional date upgrade for altered article identity '+source.doi);
+    assert.equal(original.date,'');
+    assert.equal(original.dateUnverified,true,'frozen source was mutated');
+  }
 });
