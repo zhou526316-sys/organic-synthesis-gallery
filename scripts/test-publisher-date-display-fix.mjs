@@ -126,23 +126,35 @@ test('Chemical Science created-only metadata remains first-online date unknown',
   assert.strictEqual(correctedPublisherDateForDisplay(row),row);
 });
 
-test('all five exact JOC unverified dates survive the derived presentation layer', () => {
-  for(const doi of pendingJocDois) {
-    const source={doi,journal:'JOC',date:'2026-10-15',addedDate:'2026-10-14',
-      dateUnverified:false,title:'DOI-verified test article'};
-    const corrected=correctedPublisherDateForDisplay(source);
-    assert.equal(corrected.date,'2026-10-15'); // preserve Crossref source bytes
-    assert.equal(corrected.dateUnverified,true);
-    assert.strictEqual(source.dateUnverified,false);
+test('all five publisher-evidenced JOC dates are verified only after exact DOI and title match', () => {
+  const sourceEvidence=JSON.parse(readFileSync('audit/publisher-date-evidence/2026-10-15-acs-five-joc-first-online.json','utf8'));
+  assert.equal(sourceEvidence.records.length,5);
+  const publicRows=JSON.parse(readFileSync('public/rolling-supplement.json','utf8')).papers;
+  for(const evidence of sourceEvidence.records) {
+    assert(pendingJocDois.includes(evidence.doi));
+    assert.equal(evidence.verifiedFirstOnlineDate,'2026-10-15');
+    assert(evidence.publisherArticleUrl.startsWith('https://pubs.acs.org/'));
+    const raw=publicRows.find(x=>x.doi===evidence.doi)||{
+      doi:evidence.doi,journal:'JOC',title:evidence.title,date:'2026-10-15',
+      addedDate:'2026-10-14',dateUnverified:true,authors:['Author']
+    };
+    assert.equal(raw.title,evidence.title);
+    const corrected=correctedPublisherDateForDisplay({...raw,dateUnverified:true});
+    assert.equal(corrected.date,'2026-10-15');
+    assert.equal(corrected.dateUnverified,false);
     assert.strictEqual(correctedPublisherDateForDisplay(corrected),corrected);
+    assert.equal(publicationDateForDisplay(corrected.date,'2026-10-15',corrected.dateUnverified).date,'2026-10-15');
+    assert.equal(publicationDateForDisplay(corrected.date,'2026-10-14',corrected.dateUnverified).date,'');
   }
 });
 
-test('DOI-scoped override never changes a different journal, admission day, or published date', () => {
-  const base={doi:pendingJocDois[0],journal:'JOC',
-    date:'2026-10-15',addedDate:'2026-10-14',dateUnverified:false};
+test('DOI-scoped ACS evidence never changes a different title, journal, admission day, or published date', () => {
+  const title=JSON.parse(readFileSync('audit/publisher-date-evidence/2026-10-15-acs-five-joc-first-online.json','utf8')).records[0].title;
+  const base={doi:pendingJocDois[0],journal:'JOC',title,
+    date:'2026-10-15',addedDate:'2026-10-14',dateUnverified:true};
   const alternatives=[
     {...base,doi:'10.1021/acs.joc.other'},
+    {...base,title:'a different JOC article'},
     {...base,journal:'Organic Letters'},
     {...base,date:'2026-10-13'},
     {...base,addedDate:'2026-10-13'},
