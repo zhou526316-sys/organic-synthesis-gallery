@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "gallery-historical-chem-first-online-date-proof-v1",
+  "mode": "publisher_first_online_provenance_only_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "periodOfSourceRoots": "2026-07-01..2026-09-30",
+  "sourceAuthority": "ScienceDirect first Available online day overrides issue-month source sentinel without editing source shards",
+  "recordCount": 3,
+  "verifiedOutsideQ3": 1,
+  "verifiedInsideQ3": 2,
+  "verifiedSourceDateConflicts": 3,
+  "verifiedQ2OutsideQ3": 1,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.103074",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Cluster-enabled control of single-electron photoredox catalysis in reticular frameworks",
+      "authors": [
+        "Clara Chinchilla-Garzón",
+        "Eva Rivera-Chao",
+        "Miguel Gomez-Mendoza",
+        "Bruno J.C. Vieira",
+        "Neyvis Almora-Barrios",
+        "Pol Gimeno-Fonquernie",
+        "Javier Castells-Gil",
+        "Rebecca Vismara",
+        "Jan Navrátil",
+        "Piotr Błoński",
+        "Víctor A. de la Peña O’Shea",
+        "João C. Waerenborgh",
+        "Carlos Martí-Gastaldo",
+        "Natalia M. Padial"
+      ],
+      "sourceDate": "2026-09-01",
+      "publisherFirstOnlineDate": "2026-06-02",
+      "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
+      "verifiedPublicationQuarter": "2026-Q2",
+      "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
+      "originalQ3SourceFamilies": [
+        "crossref"
+      ],
+      "sourceRootSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+      "reviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+      "originalSourceBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-09-01_2026-09-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426001403",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103074",
+      "officialEvidenceKind": "ScienceDirect_original_Research_Article_Available_online_exact_date",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103074",
+        "articleNumber": "103074",
+        "doi": "10.1016/j.chempr.2026.103074"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Pristine heterometallic TiFe2 MOF drives photoredox decarboxylative Giese C-C bond formation, but original first-online date is Q2; no Q3 admission.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103136",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Direct conversion of N2 and CH4 to valuable N-containing compounds via a plasma-activated catalytic process",
+      "authors": [
+        "Di Li",
+        "Ziming Liu",
+        "Chenxin Wu",
+        "Tao Sha",
+        "Li Yi",
+        "Chengyuan Liu",
+        "Yanting Liu",
+        "Lei Hua",
+        "Haiyang Li",
+        "Xuhui Geng",
+        "Chunlei Xiao",
+        "Yang Pan",
+        "Liang Yu",
+        "Dehui Deng"
+      ],
+      "sourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-10",
+      "originalQ3QueueOrigin": "2026-07-01_2026-07-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_first_day_not_true_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+      "reviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+      "originalSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002020",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103136",
+      "officialEvidenceKind": "ScienceDirect_original_Research_Article_Available_online_exact_date",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103136",
+        "articleNumber": "103136",
+        "doi": "10.1016/j.chempr.2026.103136"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Ni/SiAlO-plasma catalytic conversion of N2 and CH4 to methylamine, ethylamine and NH3, with productivity not yet treated as isolated preparative yields.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103194",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Phosphate group-assisted interfacial proton diffusion facilitates direct ethylene electro-oxidation to ethylene glycol",
+      "authors": [
+        "Mingming Yan",
+        "Boqiang Miao",
+        "Kuo Pan",
+        "Cuibo Liu",
+        "Ying Gao",
+        "Peng He",
+        "Bin Zhang"
+      ],
+      "sourceDate": "2026-07-01",
+      "publisherFirstOnlineDate": "2026-07-30",
+      "originalQ3QueueOrigin": "2026-07-01_2026-07-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_first_day_not_true_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+      "reviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+      "originalSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002603",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103194",
+      "officialEvidenceKind": "ScienceDirect_original_Research_Article_Available_online_exact_date",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103194",
+        "articleNumber": "103194",
+        "doi": "10.1016/j.chempr.2026.103194"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "AgPd-phytic acid interfacial proton diffusion enables C2H4 to ethylene glycol with 40.8% FE at 100 mA cm−2; isolated yield/generality not inferred.",
+      "evidenceConstraints": {
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "noDateEvidenceAsAutomaticAdmission": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOffSlotPublisherWrite": true,
+    "noSilentReplacementOfOriginalDate": true
+  }
+}
