@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {authorizeExistingAuthorCorrection} from './lib/author-metadata-correction.mjs';
 import { collectPapers, sameSet, normalizeDoi, assertPartition, trustedReleaseEvent, isDirectReleaseHandoff, compareProtected, mergeDeliveryState } from './pages-release-delivery.mjs';
 const a = '10.1021/jacs.test1', b = '10.1021/jacs.test2', c = '10.1021/jacs.test3';
 const marker = { mode: 'slot-release', publicationSlot: '2026-09-29T08:00:00+08:00', productionCards: 1, publishableDois: [a], rejectedDois: [b], deferredDois: [c] };
@@ -20,6 +22,29 @@ test('pending never enters live collection', () => assert.throws(() => assertPar
 test('missing accepted DOI fails even at the same count', () => assert.throws(() => assertPartition(marker, [b]), /accepted_missing/));
 test('protected input SHA changes block stale deployment', () => assert.throws(() => compareProtected({ a: 'one' }, { a: 'two' }), /superseded/));
 test('protected file set cannot shrink', () => assert.throws(() => compareProtected({ a: 'one' }, {}), /file_set/));
+test('Pages snapshot resolver accepts only the immutable owner-approved Nature author correction',()=>{
+ const src=readFileSync('scripts/pages-release-delivery.mjs','utf8');
+ assert.ok(src.includes('authorizeExistingAuthorCorrection(process.cwd(),marker,current)'));
+ assert.ok(src.includes("assert(authorOnly?.ok===true,"));
+ assert.ok(src.includes("file===AUTHOR_CORRECTION_ROLLING"));
+ const frozen=JSON.parse(readFileSync('audit/publication-release-state.json','utf8'));
+ const current=execFileSync('git',['hash-object','public/rolling-supplement.json'],{encoding:'utf8'}).trim();
+ if(frozen.publicationSlot==='2026-10-15T08:00:00+08:00'
+    && current==='28f3238f45b380855f68fc7ab79da03ba4c9f181'){
+   assert.equal(authorizeExistingAuthorCorrection(process.cwd(),frozen,current).ok,true);
+ }
+ assert.equal(authorizeExistingAuthorCorrection(process.cwd(),frozen,'a'.repeat(40)).ok,false);
+});
+test('unrelated protected DOI corpus and policy hashes still fail-closed',()=>{
+ assert.throws(()=>compareProtected({
+   'public/rolling-supplement.json':'f0e4b18a3be71e52fb07e84e291f51f652cd03ae',
+   'shared/literature-policy.js':'c'.repeat(40),
+ },{
+   'public/rolling-supplement.json':'28f3238f45b380855f68fc7ab79da03ba4c9f181',
+   'shared/literature-policy.js':'b'.repeat(40),
+ }),/superseded/);
+});
+
 const event = { workflow_run: { name: 'Fixed-slot literature release writer', path: '.github/workflows/literature-fixed-slot-release.yml',
   conclusion: 'success', event: 'push', head_branch: 'automation/release-20260929-0800', head_sha: 'a'.repeat(40), head_repository: { full_name: 'owner/repo' } } };
 test('completed trusted writer may hand off to main deployment', () => assert.equal(trustedReleaseEvent(event, 'owner/repo').conclusion, 'success'));
