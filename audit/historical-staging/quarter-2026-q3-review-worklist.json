@@ -1,11 +1,11 @@
 {
   "schemaVersion": "gallery-historical-q3-source-and-scope-v1",
-  "generatedAt": "2026-10-15T11:41:09.082Z",
+  "generatedAt": "2026-10-15T12:26:10.685Z",
   "mode": "bounded_review_queue_not_admission",
   "page": 0,
   "pageSize": 320,
   "totalPages": 36,
-  "totalUnreviewedCandidates": 11247,
+  "totalUnreviewedCandidates": 11246,
   "selected": 320,
   "nextPage": 1,
   "byJournal": {
@@ -6598,7 +6598,7 @@
   "noCloudflareD1Access": true,
   "verifiedPublisherNonResearchExcluded": 97,
   "verifiedPublisherScopeExcluded": 50,
-  "verifiedPublisherScopeEvidencePending": 10,
+  "verifiedPublisherScopeEvidencePending": 11,
   "publisherOnlineDateCorrections": [
     {
       "doi": "10.1016/j.chempr.2026.102968",
@@ -6793,6 +6793,27 @@
       "sourceRootId": "2026-07-01_2026-07-07_chem"
     }
   ],
+  "publisherSourceDateConflictsResolved": [
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "journal": "Chem",
+      "publisherFirstOnlineDate": "2026-07-06",
+      "sourceDateDisagreement": [
+        {
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "sourceDate": "2026-07-06",
+          "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f"
+        },
+        {
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "sourceDate": "2026-08-01",
+          "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+        }
+      ],
+      "evidenceUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426001932",
+      "academicDecision": "evidence_pending_not_admitted"
+    }
+  ],
   "publisherScopeEvidencePending": [
     {
       "doi": "10.1038/s41929-026-01608-6",
@@ -6837,6 +6858,18 @@
       "evidenceNeeded": "公开正文报告不同碘取代模式、Pd/NaBH₄去保护与LC检测，还展示肽组装、活细胞膜蛋白相互作用及肿瘤免疫界面操控；一般制备产品分离和对多种非生物有机骨架的扩展仍需进一步确定。",
       "nextAction": "补核该研究中实际制备与分离的多种骨架、保护基和功能团范围，将一般有机合成方法与活细胞化学操控明确区分后重新两遍审核；不得凭生物指标推断化学收率。",
       "sourceRootId": "2026-09-01_2026-09-07_nature-chemistry",
+      "notOriginalManifestPending": true
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "journal": "Chem",
+      "publisherFirstOnlineDate": "2026-07-06",
+      "evidenceNeeded": "从原始正文和合法可访问SI核实邻二卤化合物参与反应的完整底物列表、离去基团组合、烯烃/炔烃产物是否经独立分离及具体收率、Ge试剂的当量或催化周转、后续配体再生机制及与现有脱卤合成方法相比是否建立普适的新制备能力。",
+      "nextAction": "逐条查原始论文Results和授权可读的SI中化学计量Ge体系、底物拓展/产率表及催化循环，记录各邻二卤化合物—烯烃/炔烃的独立制备数据，再把有机合成方法学普适性与元素活化机理贡献分开复审。若能证实独立可推广的制备方法则include，若仅是单Ge体系少量脱卤演示则exclude，缺SI不得当成原文没有实验。",
+      "sourceRootIds": [
+        "2026-07-01_2026-07-07_chem",
+        "2026-08-01_2026-08-07_chem"
+      ],
       "notOriginalManifestPending": true
     },
     {
