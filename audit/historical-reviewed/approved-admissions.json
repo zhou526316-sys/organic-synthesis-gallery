@@ -9178,14 +9178,16 @@
   },
   "chemSixCorrectedPublisherDateProof": {
     "file": "audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json",
-    "sha": "50e73e164993c12de78557d1630dd970be18c357",
-    "verifiedQ1OutsideQ3": 3,
+    "sha": "355889f6f9bc9653e0bb1f1bba1e1444c1dbeb10",
+    "verifiedQ1OutsideQ3": 2,
     "verifiedQ3OriginalMethods": [
       "10.1016/j.chempr.2026.103186",
       "10.1016/j.chempr.2026.103204",
       "10.1016/j.chempr.2026.103257"
     ],
     "sourceQueueImmutable": true,
-    "noOffSlotRelease": true
+    "noOffSlotRelease": true,
+    "verifiedQ2OutsideQ3": 1,
+    "verifiedQ1OutsideQ3Total": 3
   }
 }
