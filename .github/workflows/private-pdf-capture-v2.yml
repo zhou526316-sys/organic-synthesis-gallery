@@ -14,6 +14,7 @@ on:
       - 'scripts/tm-private-pdf-capture.inc.js'
       - 'scripts/apply-private-pdf-capture.py'
       - 'tests/private-pdf-capture-browser.mjs'
+      - 'tests/tm-owner-lease-handshake-20261015.test.mjs'
       - 'tests/tm-owner-pdf-replay-20261008.test.mjs'
       - 'docs/private-pdf-editorial-pipeline.md'
       - '.github/workflows/deploy-worker-frontend.yml'
@@ -42,6 +43,8 @@ jobs:
           grep -F "const lease = await captureLeaseRow(request, env);" cloudflare/worker/src/private-pdf.js
           grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6'" public/toc-mainline.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/toc-mainline.user.js
+      - name: Check PDF owner lease request, GM persistence and failure reporting
+        run: node --test tests/tm-owner-lease-handshake-20261015.test.mjs
       - name: Check isolated PDF backend and migrations
         run: |
           set -euo pipefail
