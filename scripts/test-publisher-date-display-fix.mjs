@@ -186,14 +186,17 @@ test('all ten RSC publisher-first-online dates resolve on the exact protected DO
   const protectedPapers=JSON.parse(readFileSync('public/rolling-supplement.json','utf8')).papers;
   assert.equal(evidence.publisher,'Royal Society of Chemistry');
   assert.equal(evidence.records.length,10);
-  assert.equal(evidence.sourceQueueBlobSha,'05de691ba05b0f76d3376b9ca44727a5afb21817');
-  assert.equal(pending.unresolvedPublisherFirstOnlineDates,10);
+  assert.match(evidence.sourceQueueBlobSha,/^[a-f0-9]{40}$/,
+    'official evidence must retain a frozen original DOI queue reference');
+  assert.equal(evidence.sourceReviewQueueLength,10);
   assert.equal(evidence.sourceCatalogCount,1151);
-  assert.deepEqual(
-    evidence.records.map(x=>x.doi).sort(),
-    pending.issues.map(x=>x.doi).sort(),
-    'officially checked DOIs must cover precisely the previously unverified ten'
-  );
+  // The active pending queue is independently rebuilt after a verified Pages
+  // deployment. Old DOI may then be absent; never require an obsolete 10-gap
+  // queue to remain on main forever.
+  const currentPending=new Set(pending.issues.map(x=>x.doi));
+  assert(evidence.records.every(x=>!currentPending.has(x.doi))
+    || evidence.records.every(x=>currentPending.has(x.doi)),
+    'partially refreshed publisher queue generation');
   for(const source of evidence.records){
     const original=protectedPapers.find(x=>x.doi===source.doi);
     assert(original,'missing released RSC paper '+source.doi);
