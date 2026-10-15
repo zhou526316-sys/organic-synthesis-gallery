@@ -1,0 +1,1103 @@
+{
+  "schemaVersion": "gpt-historical-scientific-double-pass-v1",
+  "reviewAt": "2026-10-15",
+  "journalScope": "Q3_2026_16journals",
+  "stagingPreflightGitSha": "6bec95b13116b3982f497089aebe976fcaba4617",
+  "sourceSnapshot": "2026-10-15T15:43:38.747Z",
+  "kind": "original_academic_review_not_publisher_issue_reconciliation",
+  "counts": {
+    "total": 20,
+    "include": 18,
+    "exclude": 1,
+    "pending": 1,
+    "sourceRecordVerified": 20
+  },
+  "missing": [],
+  "items": [
+    {
+      "doi": "10.1021/acs.orglett.6c02791",
+      "journal": "Organic Letters",
+      "title": "Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals",
+      "authors": [
+        "Piaopiao Zhang",
+        "Gang Yu",
+        "Guangcan Xu",
+        "Xueling Meng",
+        "Ningning Zan",
+        "Bixue Xu",
+        "Xiaolin Peng"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10045-10050",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02791"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "NHC催化远程LUMO活化不对称形式[5+1]环合",
+        "preparativeTransformation": "多烯醛和2-磺酰氨基吲哚啉1,6-环合并经质子迁移形成螺环己二烯酮",
+        "generalityEvidence": "ACS官方原论文列多例中至高收率/ee；另有9月23日Correction补齐遗漏底物图",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_organic-letters.json@67f6960bccfa31a1d2477390309426061dc65563 中存在对应 DOI/Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02791 首次上线日 2026-07-25；暂存API日期 2026-07-25。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "原线上Scheme数据校样遗漏，必须链接Correction；不能把Correction当第二篇新研究。"
+      },
+      "firstPassAssessment": "NHC催化远程LUMO活化不对称形式[5+1]环合；多烯醛和2-磺酰氨基吲哚啉1,6-环合并经质子迁移形成螺环己二烯酮",
+      "challengeReason": "原线上Scheme数据校样遗漏，必须链接Correction；不能把Correction当第二篇新研究。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02791",
+        "publisherOnlineDate": "2026-07-25",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageApiDate": "2026-07-25",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02188",
+      "journal": "Organic Letters",
+      "title": "Electrocatalytic Enantioselective Reductive Cross-Coupling for Accessing Chiral α-Aryl Phosphonates",
+      "authors": [
+        "Yin-Hui Huang",
+        "Bi-Yu Yang",
+        "Lin Dong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "9718-9723",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02188"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "电镍共催化不对称C(sp3)–C(sp2)交叉偶联",
+        "preparativeTransformation": "α-溴膦酸酯与芳基碘化物电还原偶联得α-芳基手性膦酸酯",
+        "generalityEvidence": "ACS报告广泛底物、高ee及生物活性分子后期修饰；有CV和对照实验",
+        "sourceEvidence": "原始Git batch 2026-07-15_2026-07-21_organic-letters.json@191472933f6e4097799a5642b86061b865421825 中存在对应 DOI/Electrocatalytic Enantioselective Reductive Cross-Coupling for Accessing Chiral α-Aryl Phosphonates；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02188 首次上线日 2026-07-21；暂存API日期 2026-07-21。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "Ni(I)介导SET属机制支持不能当直接捕获；合成多例和手性控制证据充足。"
+      },
+      "firstPassAssessment": "电镍共催化不对称C(sp3)–C(sp2)交叉偶联；α-溴膦酸酯与芳基碘化物电还原偶联得α-芳基手性膦酸酯",
+      "challengeReason": "Ni(I)介导SET属机制支持不能当直接捕获；合成多例和手性控制证据充足。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02188",
+        "publisherOnlineDate": "2026-07-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_organic-letters",
+        "stageBatchSha": "191472933f6e4097799a5642b86061b865421825",
+        "stageSourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "stageApiDate": "2026-07-21",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01053",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Asymmetric Total Synthesis of Naturally Occurring (−)-EBC-329 through an ( E )-Selective Cross-Metathesis Reaction",
+      "authors": [
+        "Saubhik Ghosh",
+        "Debarghya Sau",
+        "Samik Nanda"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "28",
+        "pages": "9900-9906",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01053"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "(−)-EBC-329的完成性不对称天然产物总合成",
+        "preparativeTransformation": "脂肪酶去对称化构造环丙基手性、Pd/Cu级联成丁烯内酯、E交叉复分解/Wittig构骨架",
+        "generalityEvidence": "ACS明确天然产物终产物及旋光、CD构型鉴定",
+        "sourceEvidence": "原始Git batch 2026-07-01_2026-07-07_joc.json@158a2415687e4a0ecf0c588356f417cc1679d70a 中存在对应 DOI/Asymmetric Total Synthesis of Naturally Occurring (−)-EBC-329 through an ( E )-Selective Cross-Metathesis Reaction；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c01053 首次上线日 2026-07-06；暂存API日期 2026-07-06。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "是完成的总合成而不是仅中间体；单条特定路线的规模不等于通用反应底物范围。"
+      },
+      "firstPassAssessment": "(−)-EBC-329的完成性不对称天然产物总合成；脂肪酶去对称化构造环丙基手性、Pd/Cu级联成丁烯内酯、E交叉复分解/Wittig构骨架",
+      "challengeReason": "是完成的总合成而不是仅中间体；单条特定路线的规模不等于通用反应底物范围。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01053",
+        "publisherOnlineDate": "2026-07-06",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_joc",
+        "stageBatchSha": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+        "stageSourceSha256": "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7",
+        "stageApiDate": "2026-07-06",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05124",
+      "journal": "ACS Catalysis",
+      "title": "Reprogramming ω -Transaminase for Enantioselective Assembly of Axially Chiral Spiro[3.3]heptane Building Blocks",
+      "authors": [
+        "Ziyi Lin",
+        "Meijiao Gao",
+        "Qikai Sun",
+        "Ziyang Yu",
+        "Chuang Du",
+        "Fengxi Li",
+        "Lei Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15593-15602",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05124"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "工程ω-转氨酶构建轴手性螺环胺",
+        "preparativeTransformation": "ArTA-M2(G136M/S223P)催化2,6-二取代螺[3.3]庚酮不对称胺化形成C–N键",
+        "generalityEvidence": "多例底物最高91%转化率、99% ee",
+        "sourceEvidence": "原始Git batch 2026-08-01_2026-08-07_acs-catalysis.json@8170ee7aca54bb199f18c0d0e91bfff4527e0874 中存在对应 DOI/Reprogramming ω -Transaminase for Enantioselective Assembly of Axially Chiral Spiro[3.3]heptane Building Blocks；官方 https://pubs.acs.org/doi/10.1021/acscatal.6c05124 首次上线日 2026-08-05；暂存API日期 2026-08-05。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "91%是转化率不是分离收率；酶底物限于拥挤螺酮但产物制备明确。"
+      },
+      "firstPassAssessment": "工程ω-转氨酶构建轴手性螺环胺；ArTA-M2(G136M/S223P)催化2,6-二取代螺[3.3]庚酮不对称胺化形成C–N键",
+      "challengeReason": "91%是转化率不是分离收率；酶底物限于拥挤螺酮但产物制备明确。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05124",
+        "publisherOnlineDate": "2026-08-05",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_acs-catalysis",
+        "stageBatchSha": "8170ee7aca54bb199f18c0d0e91bfff4527e0874",
+        "stageSourceSha256": "037efd0e9bfd958b1a7dc9cd9bd07598bea808f7187d844bce038a1d97362919",
+        "stageApiDate": "2026-08-05",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01394",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Organocatalyzed Asymmetric Formal [3+2] Cycloaddition between Cyclic Nitrones and Meldrum’s Acid for the Formal Total Synthesis of (−)-Crispine A",
+      "authors": [
+        "Yasunori Toda",
+        "Saho Mizuki",
+        "Kenshiro Abe",
+        "Koshi Yamana",
+        "Shunsuke Naito",
+        "Fumiya Iwakuma",
+        "Hiroyuki Suga"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "33",
+        "pages": "11486-11493",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01394"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "手性有机催化形式[3+2]和Crispine A形式总合成",
+        "preparativeTransformation": "环状硝酮+Meldrum酸经奎宁胺脲催化得手性异噁唑烷酮，转化成Crispine A公知前体",
+        "generalityEvidence": "ACS确证手性成环和已知路线共同前体",
+        "sourceEvidence": "原始Git batch 2026-08-08_2026-08-14_joc.json@1e304fff3b34a0833ab461bd5381b34f722c798b 中存在对应 DOI/Organocatalyzed Asymmetric Formal [3+2] Cycloaddition between Cyclic Nitrones and Meldrum’s Acid for the Formal Total Synthesis of (−)-Crispine A；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c01394 首次上线日 2026-08-10；暂存API日期 2026-08-10。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "形式总合成不等于作者独立完成最终天然产物，全合成程度必须如实标formal。"
+      },
+      "firstPassAssessment": "手性有机催化形式[3+2]和Crispine A形式总合成；环状硝酮+Meldrum酸经奎宁胺脲催化得手性异噁唑烷酮，转化成Crispine A公知前体",
+      "challengeReason": "形式总合成不等于作者独立完成最终天然产物，全合成程度必须如实标formal。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01394",
+        "publisherOnlineDate": "2026-08-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_joc",
+        "stageBatchSha": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+        "stageSourceSha256": "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd",
+        "stageApiDate": "2026-08-10",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1039/d6sc02950g",
+      "journal": "Chemical Science",
+      "title": "Photoinduced remote C–N/C bond formation via ring-opening 1,4-difunctionalization of methylenecyclobutanes",
+      "authors": [
+        "Yan Zhang",
+        "Yahong Chen",
+        "Yecai Liu",
+        "Na Wu",
+        "Wei Wei",
+        "Chen Zhu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "37",
+        "pages": "17926-17931",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc02950g"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "光敏自由基环丁烷开环远程1,4-C–N/C–C双官能团化",
+        "preparativeTransformation": "亚甲基环丁烷+TsCl+吡唑/MeCN给双高烯丙胺或酰胺；吲哚/吡咯构C–C键",
+        "generalityEvidence": "RSC原文吡唑多例55–82%和吲哚50–80%，4mmol放大；脱Ts得E型烯烃",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_chemical-science.json@5c16ab17e0054ae3f93690c089e3b8e87355c9b3 中存在对应 DOI/Photoinduced remote C–N/C bond formation via ring-opening 1,4-difunctionalization of methylenecyclobutanes；官方 https://doi.org/10.1039/d6sc02950g 首次上线日 2026-07-31；暂存API日期 year-only/unknown。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "初生物3a是Z/E混合，不能写成初步完全E选择；此文RSC元数据仅年时必须用官方First published 7月31日。"
+      },
+      "firstPassAssessment": "光敏自由基环丁烷开环远程1,4-C–N/C–C双官能团化；亚甲基环丁烷+TsCl+吡唑/MeCN给双高烯丙胺或酰胺；吲哚/吡咯构C–C键",
+      "challengeReason": "初生物3a是Z/E混合，不能写成初步完全E选择；此文RSC元数据仅年时必须用官方First published 7月31日。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1039/d6sc02950g",
+        "publisherOnlineDate": "2026-07-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_chemical-science",
+        "stageBatchSha": "5c16ab17e0054ae3f93690c089e3b8e87355c9b3",
+        "stageSourceSha256": "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508",
+        "stageApiDate": "",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00901",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Multivariate Screening-Guided Development of a Sustainable Copper- and Amine-Free Heck–Cassar–Sonogashira Cross-Coupling Reaction in Ethanol",
+      "authors": [
+        "Sokaina Hammoud",
+        "Lydia Ouadfel",
+        "Laurence Grimaud",
+        "Alice Balfourier",
+        "Maxime R. Vitale",
+        "Martine Schmitt",
+        "Frédéric Bihel"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "29",
+        "pages": "10125-10133",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00901"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "改良无Cu/胺Heck–Cassar–Sonogashira方法",
+        "preparativeTransformation": "芳基卤化物与末端炔烃在低负载Pd和K3PO4、乙醇中C(sp2)–C(sp)偶联",
+        "generalityEvidence": "ACS 34例、0.25mol%Pd、40℃、克级",
+        "sourceEvidence": "原始Git batch 2026-07-08_2026-07-14_joc.json@ca8733105479188e6a163c0d161bb49add041ef0 中存在对应 DOI/Multivariate Screening-Guided Development of a Sustainable Copper- and Amine-Free Heck–Cassar–Sonogashira Cross-Coupling Reaction in Ethanol；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c00901 首次上线日 2026-07-09；暂存API日期 2026-07-09。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "不是新发明Sonogashira成键基本类型，但在毒性/条件/可制备性存在实质方法学优化。"
+      },
+      "firstPassAssessment": "改良无Cu/胺Heck–Cassar–Sonogashira方法；芳基卤化物与末端炔烃在低负载Pd和K3PO4、乙醇中C(sp2)–C(sp)偶联",
+      "challengeReason": "不是新发明Sonogashira成键基本类型，但在毒性/条件/可制备性存在实质方法学优化。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00901",
+        "publisherOnlineDate": "2026-07-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_joc",
+        "stageBatchSha": "ca8733105479188e6a163c0d161bb49add041ef0",
+        "stageSourceSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
+        "stageApiDate": "2026-07-09",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c09884",
+      "journal": "Journal of the American Chemical Society",
+      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
+      "authors": [
+        "Guo-Feng Li",
+        "Zi-Qing Li",
+        "Zhihan Zhang",
+        "Jie Zhao",
+        "Jia-Rong Chen",
+        "Wen-Jing Xiao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29451-29463",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09884"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "EnT双自由基三组分羰基化构桥环酮",
+        "preparativeTransformation": "双环[1.1.0]丁烷+CO+烯烃/炔烃经光能量转移形成4-氧代双环[3.1.1]庚烷/庚烯",
+        "generalityEvidence": "JACS报道多个桥环酮和羰基后续转化并有DFT竞争通道分析",
+        "sourceEvidence": "原始Git batch 2026-07-01_2026-07-07_jacs.json@35a03263c6d870f0d068d84670816b9a963d9530 中存在对应 DOI/Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes；官方 https://pubs.acs.org/doi/10.1021/jacs.6c09884 首次上线日 2026-07-01；暂存API日期 2026-07-01。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "DFT分支机理不能等同双自由基直接检测，实际隔离的新碳架产物支持纳入。"
+      },
+      "firstPassAssessment": "EnT双自由基三组分羰基化构桥环酮；双环[1.1.0]丁烷+CO+烯烃/炔烃经光能量转移形成4-氧代双环[3.1.1]庚烷/庚烯",
+      "challengeReason": "DFT分支机理不能等同双自由基直接检测，实际隔离的新碳架产物支持纳入。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c09884",
+        "publisherOnlineDate": "2026-07-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_jacs",
+        "stageBatchSha": "35a03263c6d870f0d068d84670816b9a963d9530",
+        "stageSourceSha256": "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32",
+        "stageApiDate": "2026-07-01",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00718",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Engineering a Carboxylesterase for Enantioselective Acyl Transfer Reaction",
+      "authors": [
+        "Wencai Fan",
+        "Sanyang Li",
+        "Xinxin Liu",
+        "Lin Chen",
+        "Yaxuan Fang",
+        "Wenhui Wang",
+        "Yong Guo",
+        "Dan Wu",
+        "Jin Zhu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "28",
+        "pages": "9752-9760",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00718"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "工程羧酸酯酶对映选择性酰基转移",
+        "preparativeTransformation": "EstFF1突变体以乙酸乙烯酯为酰基供体对多种一级/二级醇O-乙酰化成酯",
+        "generalityEvidence": "ACS给出芳/烷及烷/烷二级醇多底物，接近定量S选择性并减少水解竞争",
+        "sourceEvidence": "原始Git batch 2026-07-08_2026-07-14_joc.json@ca8733105479188e6a163c0d161bb49add041ef0 中存在对应 DOI/Engineering a Carboxylesterase for Enantioselective Acyl Transfer Reaction；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c00718 首次上线日 2026-07-08；暂存API日期 2026-07-08。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "高酶选择性不等于全部底物定量收率；此研究确有真实有机底物到酯转化，非仅酶结构分析。"
+      },
+      "firstPassAssessment": "工程羧酸酯酶对映选择性酰基转移；EstFF1突变体以乙酸乙烯酯为酰基供体对多种一级/二级醇O-乙酰化成酯",
+      "challengeReason": "高酶选择性不等于全部底物定量收率；此研究确有真实有机底物到酯转化，非仅酶结构分析。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00718",
+        "publisherOnlineDate": "2026-07-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_joc",
+        "stageBatchSha": "ca8733105479188e6a163c0d161bb49add041ef0",
+        "stageSourceSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
+        "stageApiDate": "2026-07-08",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02686",
+      "journal": "Organic Letters",
+      "title": "Titanium-catalyzed Cross-coupling of Aryl Boronate Derivatives and Aryl Halides en Route to Biaryl Backbones",
+      "authors": [
+        "Biao Ma",
+        "Yingning Mao",
+        "Guohao Zhou",
+        "Xiaoping Xue",
+        "Jinsong Peng",
+        "Zhanyu Li",
+        "Chunxia Chen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "34",
+        "pages": "10697-10702",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02686"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "Ti催化有机硼试剂与芳基卤化物交叉偶联",
+        "preparativeTransformation": "芳/杂芳基硼酸衍生物与芳基卤化物形成新联芳C–C键",
+        "generalityEvidence": "ACS 60例最高98%、克级、Orelabrutinib中间体改造",
+        "sourceEvidence": "原始Git batch 2026-08-15_2026-08-21_organic-letters.json@9b28580b6638049b3007fea208c8d489c769ed79 中存在对应 DOI/Titanium-catalyzed Cross-coupling of Aryl Boronate Derivatives and Aryl Halides en Route to Biaryl Backbones；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02686 首次上线日 2026-08-15；暂存API日期 2026-08-15。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "新金属催化剂本身非足够条件，但已有跨底物制备证据；机制实验只约束而未定论。"
+      },
+      "firstPassAssessment": "Ti催化有机硼试剂与芳基卤化物交叉偶联；芳/杂芳基硼酸衍生物与芳基卤化物形成新联芳C–C键",
+      "challengeReason": "新金属催化剂本身非足够条件，但已有跨底物制备证据；机制实验只约束而未定论。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02686",
+        "publisherOnlineDate": "2026-08-15",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_organic-letters",
+        "stageBatchSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "stageSourceSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "stageApiDate": "2026-08-15",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02163",
+      "journal": "Organic Letters",
+      "title": "Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay",
+      "authors": [
+        "Shu-Jie Chen",
+        "You-Hong Li",
+        "Zhi-Qing He",
+        "Bo Xu",
+        "Guo-Shu Chen",
+        "Yun-Lin Liu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9847-9852",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02163"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "pending",
+      "decision": "pending",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "光热中继脱羧碳胺化构筑α-CF3亚胺",
+        "preparativeTransformation": "2-CF3丙烯酸与烷/芳/烯基肟酯脱羧碳胺化形成亚胺并可衍生胺",
+        "generalityEvidence": "ACS确有跨肟酯范围和亚胺到胺的真实制备",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_organic-letters.json@67f6960bccfa31a1d2477390309426061dc65563 中存在对应 DOI/Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02163 首次上线日 同一出版社两页冲突；暂存API日期 2026-07-22。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "同出版社不同文章路径分别列Published Online Jul22和Jul23，不能取卷期日或API created date"
+      },
+      "firstPassAssessment": "光热中继脱羧碳胺化构筑α-CF3亚胺；2-CF3丙烯酸与烷/芳/烯基肟酯脱羧碳胺化形成亚胺并可衍生胺",
+      "challengeReason": "同出版社不同文章路径分别列Published Online Jul22和Jul23，不能取卷期日或API created date",
+      "evidenceNeeded": "要求ACS官方同DOI两个发布历史日期消歧，保留生科学纳入意向暂不正式入库。",
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02163",
+        "publisherOnlineDate": null,
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageApiDate": "2026-07-22",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": false,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02640",
+      "journal": "Organic Letters",
+      "title": "Ir(III)-Catalyzed Carbonylative Cyclization of 2-Alkenyl Anilines via ex situ Generation of CO: Access to 2-Quinolone Derivatives",
+      "authors": [
+        "Yusin Kim",
+        "Youyoung Kim"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "34",
+        "pages": "10685-10690",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02640"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "Ir(III)催化环化羰基化构2-喹诺酮",
+        "preparativeTransformation": "2-烯基苯胺+双腔Mo(CO)6原位CO羰基化形成含内酰胺杂环",
+        "generalityEvidence": "ACS报道系列喹诺酮、生物活性分子后续合成及机理验证",
+        "sourceEvidence": "原始Git batch 2026-08-08_2026-08-14_organic-letters.json@7bd5ce16a4ea71b93c86b143b95ef2c50b59e753 中存在对应 DOI/Ir(III)-Catalyzed Carbonylative Cyclization of 2-Alkenyl Anilines via ex situ Generation of CO: Access to 2-Quinolone Derivatives；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02640 首次上线日 2026-08-14；暂存API日期 2026-08-14。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "部分N-保护的苯胺不反应且会产生吲哚等副产物，不能称无保护基限制。"
+      },
+      "firstPassAssessment": "Ir(III)催化环化羰基化构2-喹诺酮；2-烯基苯胺+双腔Mo(CO)6原位CO羰基化形成含内酰胺杂环",
+      "challengeReason": "部分N-保护的苯胺不反应且会产生吲哚等副产物，不能称无保护基限制。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02640",
+        "publisherOnlineDate": "2026-08-14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_organic-letters",
+        "stageBatchSha": "7bd5ce16a4ea71b93c86b143b95ef2c50b59e753",
+        "stageSourceSha256": "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c",
+        "stageApiDate": "2026-08-14",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01290",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
+      "authors": [
+        "Mrinmoy Manash Bharali",
+        "Abhishek Santra"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "33",
+        "pages": "11453-11463",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01290"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "鲍曼不动杆菌RCH51特定荚膜五糖重复单元的合成路线",
+        "preparativeTransformation": "D-葡萄糖制备稀有D-Fucp3N3供体，4+1立体控制糖基化形成含三连1,2-cis糖苷键的五糖",
+        "generalityEvidence": "ACS确认克级单糖供体、受保护五糖和带偶联手柄重复单元",
+        "sourceEvidence": "原始Git batch 2026-08-08_2026-08-14_joc.json@1e304fff3b34a0833ab461bd5381b34f722c798b 中存在对应 DOI/Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c01290 首次上线日 2026-08-11；暂存API日期 2026-08-11。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "仅完成五糖单元并非细菌整条多糖，也未做全疫苗合成，按重复单元完整合成纳入。"
+      },
+      "firstPassAssessment": "鲍曼不动杆菌RCH51特定荚膜五糖重复单元的合成路线；D-葡萄糖制备稀有D-Fucp3N3供体，4+1立体控制糖基化形成含三连1,2-cis糖苷键的五糖",
+      "challengeReason": "仅完成五糖单元并非细菌整条多糖，也未做全疫苗合成，按重复单元完整合成纳入。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01290",
+        "publisherOnlineDate": "2026-08-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_joc",
+        "stageBatchSha": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+        "stageSourceSha256": "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd",
+        "stageApiDate": "2026-08-11",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01588",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Asymmetric Mannich Reactions Promoted by a Bifunctional Charge-Activated Thiourea Catalyst",
+      "authors": [
+        "Josiah K. Nisly",
+        "Steven R. Kass"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "35",
+        "pages": "12074-12083",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01588"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "带电双功能硫脲催化不对称Mannich",
+        "preparativeTransformation": "受保护芳基醛亚胺与β-酮酯等碳亲核体形成手性β-氨基C–C键",
+        "generalityEvidence": "ACS报告多种碳亲核体、比中性催化剂20倍活性、高ee与部分高dr",
+        "sourceEvidence": "原始Git batch 2026-08-22_2026-08-31_joc.json@30ad0c3b51b48a210e90d8fe19b56412b1c94f7a 中存在对应 DOI/Asymmetric Mannich Reactions Promoted by a Bifunctional Charge-Activated Thiourea Catalyst；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c01588 首次上线日 2026-08-24；暂存API日期 2026-08-24。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "不能仅因活性提升纳入；确有可推广产物且不等于所有前手性亲核体均高dr。"
+      },
+      "firstPassAssessment": "带电双功能硫脲催化不对称Mannich；受保护芳基醛亚胺与β-酮酯等碳亲核体形成手性β-氨基C–C键",
+      "challengeReason": "不能仅因活性提升纳入；确有可推广产物且不等于所有前手性亲核体均高dr。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01588",
+        "publisherOnlineDate": "2026-08-24",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "stageApiDate": "2026-08-24",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02716",
+      "journal": "Organic Letters",
+      "title": "Divergent Access to Chiral Pyrrolidinone-Fused 4 H -Pyrans and Pyridines Via Organocatalytic Asymmetric Decarboxylative Addition–Annulation of β-Keto Acids with 2,3-Dioxopyrrolidines",
+      "authors": [
+        "Tianxing Li",
+        "Tianyu He",
+        "Weiyue Meng",
+        "Hui Jin",
+        "Lixin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10028-10033",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02716"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "不对称脱羧Michael串联构建稠合吡喃及吡啶",
+        "preparativeTransformation": "β-酮酸+2,3-二氧代吡咯烷酮形成手性1,5-二羰基，再酸环化或羟胺缩合",
+        "generalityEvidence": "ACS有多例高收率/高ee、分歧两类产物和一锅/克级",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_organic-letters.json@67f6960bccfa31a1d2477390309426061dc65563 中存在对应 DOI/Divergent Access to Chiral Pyrrolidinone-Fused 4 H -Pyrans and Pyridines Via Organocatalytic Asymmetric Decarboxylative Addition–Annulation of β-Keto Acids with 2,3-Dioxopyrrolidines；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02716 首次上线日 2026-07-27；暂存API日期 2026-07-27。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "后期酸缩合不是同一决定立体步骤，不可假称所有后续衍生化仍新立体控制。"
+      },
+      "firstPassAssessment": "不对称脱羧Michael串联构建稠合吡喃及吡啶；β-酮酸+2,3-二氧代吡咯烷酮形成手性1,5-二羰基，再酸环化或羟胺缩合",
+      "challengeReason": "后期酸缩合不是同一决定立体步骤，不可假称所有后续衍生化仍新立体控制。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02716",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageApiDate": "2026-07-27",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03423",
+      "journal": "Organic Letters",
+      "title": "Correction to “Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals”",
+      "authors": [
+        "Piaopiao Zhang",
+        "Gang Yu",
+        "Guangcan Xu",
+        "Xueling Meng",
+        "Ningning Zan",
+        "Bixue Xu",
+        "Xiaolin Peng"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "39",
+        "pages": "12537-12538",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03423"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "decision": "exclude",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "原NHC环合论文校样遗漏底物图的更正公告",
+        "preparativeTransformation": "仅补回Scheme1、2，未报道新原创反应或独立制备方法",
+        "generalityEvidence": "ACS明确标题Correction to 10.1021/acs.orglett.6c02791且说明原校样丢失数据",
+        "sourceEvidence": "原始Git batch 2026-09-22_2026-09-30_organic-letters.json@ada2fd35a7176b65f23c362850e02d788795610d 中存在对应 DOI/Correction to “Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals”；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03423 首次上线日 2026-09-23；暂存API日期 2026-09-23。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "有独立DOI和发布日期但类型Correction，不作为原创论文新增；需关联原论文。"
+      },
+      "firstPassAssessment": "原NHC环合论文校样遗漏底物图的更正公告；仅补回Scheme1、2，未报道新原创反应或独立制备方法",
+      "challengeReason": "有独立DOI和发布日期但类型Correction，不作为原创论文新增；需关联原论文。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03423",
+        "publisherOnlineDate": "2026-09-23",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-22_2026-09-30_organic-letters",
+        "stageBatchSha": "ada2fd35a7176b65f23c362850e02d788795610d",
+        "stageSourceSha256": "2f1d3d58471ff53dfda8f29d31a175f99d8e00118912067e9c368d11489b20ca",
+        "stageApiDate": "2026-09-23",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": false,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02387",
+      "journal": "Organic Letters",
+      "title": "Ni(II)-Catalyzed Enantioselective Addition of Thiols and Thiophenols to Pyrazolinone-Derived Ketimines",
+      "authors": [
+        "Mengxin Kan",
+        "Guiyun Gao",
+        "Xinyu Hou",
+        "Lei He",
+        "Jiaxin Guo",
+        "Xiaoge Wang",
+        "Chao Yao",
+        "Yue-Ming Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9872-9876",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02387"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "Ni(II)手性三齿配体催化硫醇对酮亚胺不对称加成",
+        "preparativeTransformation": "硫醇/硫酚与吡唑啉酮衍生酮亚胺构手性C–S连接",
+        "generalityEvidence": "ACS最高99%收率、99%ee，广范围、克级及X射线定构型",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_organic-letters.json@67f6960bccfa31a1d2477390309426061dc65563 中存在对应 DOI/Ni(II)-Catalyzed Enantioselective Addition of Thiols and Thiophenols to Pyrazolinone-Derived Ketimines；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02387 首次上线日 2026-07-28；暂存API日期 2026-07-28。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "X射线确证构型不代表完整立体选择过程直接可视；合成可推广性充分。"
+      },
+      "firstPassAssessment": "Ni(II)手性三齿配体催化硫醇对酮亚胺不对称加成；硫醇/硫酚与吡唑啉酮衍生酮亚胺构手性C–S连接",
+      "challengeReason": "X射线确证构型不代表完整立体选择过程直接可视；合成可推广性充分。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02387",
+        "publisherOnlineDate": "2026-07-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageApiDate": "2026-07-28",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02161",
+      "journal": "Organic Letters",
+      "title": "Chiral Rh(III)-Catalyzed Enantioselective Intramolecular Hydroarylation of Enaminone",
+      "authors": [
+        "Dontukurti Raj Kishore",
+        "Pazhamalai Anbarasan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9860-9865",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02161"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "手性CpRh(III)催化吲哚连接烯胺酮分子内氢芳基化",
+        "preparativeTransformation": "烯胺酮系留吲哚C–H环化至四氢β-咔啉形成新C–C手性骨架",
+        "generalityEvidence": "ACS高收率高ee、低用量、多官能团且与原烯胺酮E/Z几何无关",
+        "sourceEvidence": "原始Git batch 2026-07-22_2026-07-31_organic-letters.json@67f6960bccfa31a1d2477390309426061dc65563 中存在对应 DOI/Chiral Rh(III)-Catalyzed Enantioselective Intramolecular Hydroarylation of Enaminone；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02161 首次上线日 2026-07-28；暂存API日期 2026-07-28。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "独立于E/Z不说明所有底物无区别；仍具原创环合证据。"
+      },
+      "firstPassAssessment": "手性CpRh(III)催化吲哚连接烯胺酮分子内氢芳基化；烯胺酮系留吲哚C–H环化至四氢β-咔啉形成新C–C手性骨架",
+      "challengeReason": "独立于E/Z不说明所有底物无区别；仍具原创环合证据。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02161",
+        "publisherOnlineDate": "2026-07-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageApiDate": "2026-07-28",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01376",
+      "journal": "The Journal of Organic Chemistry",
+      "title": "Enantioselective Synthesis of Hexahydroimidazo[1,2- a ]quinolines through Dynamic Kinetic Resolution of Racemic Aziridines",
+      "authors": [
+        "Amit K. Sharma",
+        "Poulami Mandal",
+        "Diksha Sharma",
+        "Manas K. Ghorai"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12934-12946",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01376"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "Cu(I)催化外消旋氮杂环丙烷DKR级联开环环化",
+        "preparativeTransformation": "动态动力学拆分氮杂环丙烷生成六氢咪唑并喹啉",
+        "generalityEvidence": "ACS最多88%收率、>99:1 dr及94:6 er，具多个环化产物",
+        "sourceEvidence": "原始Git batch 2026-09-15_2026-09-21_joc.json@0a6b4fb5580453d2b101f2f94030ee7f9c473541 中存在对应 DOI/Enantioselective Synthesis of Hexahydroimidazo[1,2- a ]quinolines through Dynamic Kinetic Resolution of Racemic Aziridines；官方 https://pubs.acs.org/doi/10.1021/acs.joc.6c01376 首次上线日 2026-09-16；暂存API日期 2026-09-16。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "94:6 er仅等价88% ee，不得宣传为94% ee；机制DKR要谨慎不推及所有底物。"
+      },
+      "firstPassAssessment": "Cu(I)催化外消旋氮杂环丙烷DKR级联开环环化；动态动力学拆分氮杂环丙烷生成六氢咪唑并喹啉",
+      "challengeReason": "94:6 er仅等价88% ee，不得宣传为94% ee；机制DKR要谨慎不推及所有底物。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01376",
+        "publisherOnlineDate": "2026-09-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "stageApiDate": "2026-09-16",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02735",
+      "journal": "Organic Letters",
+      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
+      "authors": [
+        "Yukun Zhao",
+        "Wenshuang Li",
+        "Yanan Chen",
+        "Dongmei Li",
+        "Lin Gan",
+        "Lin Hu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "10912-10917",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02735"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "scopeAssessment": {
+        "primaryContribution": "卤键-离子对相转移催化手性(n+1)螺环化",
+        "preparativeTransformation": "双亲电羟胺底物在有机相转移催化中形成五、六元含氮螺氧吲哚",
+        "generalityEvidence": "ACS n=4/5，优良收率最高98%ee，光谱/机理对催化协同有所支持",
+        "sourceEvidence": "原始Git batch 2026-08-15_2026-08-21_organic-letters.json@9b28580b6638049b3007fea208c8d489c769ed79 中存在对应 DOI/Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles；官方 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02735 首次上线日 2026-08-20；暂存API日期 2026-08-19。无需PDF/SI/正文图，未复制摘要全文。",
+        "boundaryChallenge": "阶段源记录Aug19、出版社官方Aug20，必须以Aug20官方First Online为准；不能将卤键机理视唯一证据。"
+      },
+      "firstPassAssessment": "卤键-离子对相转移催化手性(n+1)螺环化；双亲电羟胺底物在有机相转移催化中形成五、六元含氮螺氧吲哚",
+      "challengeReason": "阶段源记录Aug19、出版社官方Aug20，必须以Aug20官方First Online为准；不能将卤键机理视唯一证据。",
+      "evidenceNeeded": null,
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02735",
+        "publisherOnlineDate": "2026-08-20",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_organic-letters",
+        "stageBatchSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "stageSourceSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "stageApiDate": "2026-08-19",
+        "sourceRecordVerified": true,
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "formalAdmissionEligible": true,
+      "mediaPolicy": "toc_only",
+      "publicationChannel": "historical_backfill_writer_08_only"
+    }
+  ]
+}
