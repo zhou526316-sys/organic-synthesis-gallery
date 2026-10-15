@@ -19,6 +19,7 @@ export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,accep
     &&audit.guards?.sourceShardsImmutable===true
     &&audit.guards?.doNotAutoTreatMonthFirstAsQ3===true
     &&Array.isArray(audit.provisionalFirstOfMonthDoi)
+    &&Array.isArray(audit.nonProvisionalSourceDois)
     &&Array.isArray(audit.conflictingSourceDateDois)
     &&Array.isArray(audit.publisherEvidence)
     &&Array.isArray(audit.sourceRootSnapshots),
@@ -50,6 +51,26 @@ export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,accep
   }
   fail(provisional.size===143&&audit.summary.firstOfMonthProvisionalUnique===143,
     'q3_chem_date_provisional_count_mismatch');
+  const rest=new Set();
+  for(const row of audit.nonProvisionalSourceDois){
+    const source=sourceByDoi.get(row.doi);
+    fail(source?.journal==='Chem'&&!provisional.has(row.doi)&&!rest.has(row.doi)
+      &&Array.isArray(row.occurrences)&&row.occurrences.length>0
+      &&row.occurrences.every(x=>!/^2026-(07|08|09)-01$/.test(x.date)),
+      'q3_chem_date_nonprovisional_missing:'+row.doi);
+    for(const x of row.occurrences){
+      const root=roots.get(x.sourceRootId);
+      fail(root&&root.stageSourceSha256===x.stageSourceSha256
+        &&root.reviewQueueGitBlobSha===x.reviewQueueGitBlobSha
+        &&source.sourceRoots.includes(x.sourceRootId)
+        &&source.sourceHashes.includes(x.stageSourceSha256),
+        'q3_chem_date_nonprovisional_source_conflict:'+row.doi);
+    }
+    rest.add(row.doi);
+  }
+  fail(rest.size===4&&audit.summary.otherNonProvisionalUnique===4
+    &&provisional.size+rest.size===sourceChem.length,
+    'q3_chem_date_full_source_partition_invalid');
   const sourceConflict=new Set();
   for(const x of audit.conflictingSourceDateDois){
     const original=sourceByDoi.get(x.doi);
