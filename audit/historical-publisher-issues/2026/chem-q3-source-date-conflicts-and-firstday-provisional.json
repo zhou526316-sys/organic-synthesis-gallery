@@ -1,0 +1,2804 @@
+{
+  "schemaVersion": "gallery-q3-chem-online-first-date-disagreement-v1",
+  "mode": "source-date-provenance-and-official-online-evidence_only_not_academic_admission",
+  "journal": "Chem",
+  "period": "2026-07-01..2026-09-30",
+  "checkedAt": "2026-10-15T01:05:53.828Z",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceRootCount": 12,
+  "expectedSourceRoots": 12,
+  "sourceRootSnapshots": [
+    {
+      "rootId": "2026-07-01_2026-07-07_chem",
+      "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+      "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f"
+    },
+    {
+      "rootId": "2026-07-08_2026-07-14_chem",
+      "reviewQueueGitBlobSha": "d485666d56d993f6b52ff3e43944390bdcfa5e1a",
+      "stageSourceSha256": "3d8163ee460bdae1890adfcf08f599f04c48e8b046df517e44e4036c496255df"
+    },
+    {
+      "rootId": "2026-07-15_2026-07-21_chem",
+      "reviewQueueGitBlobSha": "94576125d9314f1966b61aff562af8ca511aacbb",
+      "stageSourceSha256": "2b740d1cf50a5e683bb15254ea365ae35f65af0be80f83bff82b7899847e6db0"
+    },
+    {
+      "rootId": "2026-07-22_2026-07-31_chem",
+      "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+      "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2"
+    },
+    {
+      "rootId": "2026-08-01_2026-08-07_chem",
+      "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+      "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+    },
+    {
+      "rootId": "2026-08-08_2026-08-14_chem",
+      "reviewQueueGitBlobSha": "881a2aadf224bbf16a93e91ff9fbe198d018076a",
+      "stageSourceSha256": "99b494d8a37cb2944108c889814b9e2afc77e7f7c92ca32d8a11f1f018208fbd"
+    },
+    {
+      "rootId": "2026-08-15_2026-08-21_chem",
+      "reviewQueueGitBlobSha": "d0bf789ef7e50e2bbbc38351cb40825cc84c4b7d",
+      "stageSourceSha256": "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d"
+    },
+    {
+      "rootId": "2026-08-22_2026-08-31_chem",
+      "reviewQueueGitBlobSha": "3be63f5629ec3bce0565155634c9768f1a5c5e10",
+      "stageSourceSha256": "ba6a48fe57ecb66cb7c01e41531ad27aa36d5220d8c187b185bd5c72a3b4f550"
+    },
+    {
+      "rootId": "2026-09-01_2026-09-07_chem",
+      "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+      "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae"
+    },
+    {
+      "rootId": "2026-09-08_2026-09-14_chem",
+      "reviewQueueGitBlobSha": "b868c82ef934ae190aa7528b88cac3014bd21eac",
+      "stageSourceSha256": "1f4b3e7da1333cb9669e6bbb335e4053a9534541b7cbaeb741dbfcc90030aee8"
+    },
+    {
+      "rootId": "2026-09-15_2026-09-21_chem",
+      "reviewQueueGitBlobSha": "378e8dab1e544a8269ce21959049164f1c8e7ed7",
+      "stageSourceSha256": "9b2d4f06868358526c03e3c1811a0da32d4241f8b208aa06fece916795e832a7"
+    },
+    {
+      "rootId": "2026-09-22_2026-09-30_chem",
+      "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+      "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d"
+    }
+  ],
+  "summary": {
+    "sourceOccurrences": 160,
+    "sourceUniqueDois": 147,
+    "firstOfMonthProvisionalUnique": 143,
+    "sourceDateConflictUnique": 13,
+    "verifiedOfficialFirstOnline": 6,
+    "officialFirstOnlineBeforeQ3": 3,
+    "officialFirstOnlineInQ3": 3,
+    "publisherIssueDateWithoutOnlineEvidence": 2,
+    "candidateSourceFirstDates": {
+      "2026-07-01": 48,
+      "2026-08-01": 48,
+      "2026-09-01": 47
+    },
+    "otherNonProvisionalUnique": 4
+  },
+  "provisionalFirstOfMonthDoi": [
+    {
+      "doi": "10.1016/j.chempr.2026.102952",
+      "title": "Electrochemical self-optimization for the synthesis of densely functionalized molecules",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103152",
+      "title": "Relay energy transfer paradigm enabled the photocatalytic enantioselective dearomative [4+2] cycloadditions of quinolines with alkenes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103027",
+      "title": "Transitioning aliphatic C–H functionalization from bench to plant: Is decatungstate photocatalysis ready for the leap yet?",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103130",
+      "title": "Catalyst: Confronting the β–O–4 obsession in lignin photocatalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103131",
+      "title": "Reaction: Shifting the paradigm—Embracing lignin complexity as a photocatalyst",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103132",
+      "title": "Reaction: From decorative dimers to structurally honest photocatalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103133",
+      "title": "The influence of heterometals on dinitrogen binding at synthetic iron-sulfur clusters",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103139",
+      "title": "Redefining synthetic efficiency: Chemical and technological shortcuts",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103186",
+      "title": "Organopotassium for selective synthesis: Potassium-mediated anti-borylfunctionalization of alkynes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102904",
+      "title": "A radical–polar crossover approach to complex nitrogen heterocycles via the triplet state",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102905",
+      "title": "A donor-acceptor porous organic polymer anchoring a high density of cobalt single sites realizes full-spectrum photothermal CO2 hydrogenation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102914",
+      "title": "Catalysis, replication, and non-equilibrium behavior: Key determinants for life-like complexity realized using short peptides",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103042",
+      "title": "Steering energy flow in catalytic water treatment to address the water-energy nexus",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103077",
+      "title": "Functionally integrated heterometallic clusters in MOFs for next-generation advanced thermal catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103105",
+      "title": "Beyond carbon: A boron-based carbon-free analog of ferrocene",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103124",
+      "title": "Beyond the electrocatalyst",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103125",
+      "title": "A catalyst that never rests: Cu/ZnO/Al2O3 under CO2 hydrogenation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103129",
+      "title": "Sequential Zn2+-H+ storage in a 2D conductive metal-organic framework for advanced aqueous zinc-ion battery",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103135",
+      "title": "Reaction: Rethinking lignin valorization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103136",
+      "title": "Direct conversion of N2 and CH4 to valuable N-containing compounds via a plasma-activated catalytic process",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103146",
+      "title": "Low-pressure CO₂ insertion chemistry enables predictive kinetics for epoxide/CO2 copolymerization catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103162",
+      "title": "An isolable nitrene radical anion as a nucleophilic open-shell nitrogen synthon",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102885",
+      "title": "A dynamic charge-dependent nanofungicide platform for sustainable agrochemical deposition and delivery",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102906",
+      "title": "TriCAN: A phase-transition molecular robot realizing closed-loop sense-compute-actuate control for inflammation-triggered bone regeneration",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102936",
+      "title": "Multiply entangled receptors for high-affinity anion recognition in water",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102945",
+      "title": "Splint RNA-mediated single-stranded DNA-encoded library construction and label-free live-cell selection",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102946",
+      "title": "Proton-coupled electrochemical reduction of a phosphine oxide",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102953",
+      "title": "Confinement-induced chiroptical photoswitching —An encapsulation approach for advanced photochemical functions",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102956",
+      "title": "A motif-based deep learning tool for the identification of unusual NADH-dependent imine reductases",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102957",
+      "title": "Three-dimensional imaging via quantum chain amplification in a crystalline two-photon adiabatic photocage",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102988",
+      "title": "Conventional versus three-state helicity in chiral copolymers: Reversal dynamics and programmable chiroptical switches",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102998",
+      "title": "Exploration of protein degradability enables fully endogenous MrTAC degraders",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103024",
+      "title": "Machine learning in electrolyte design: Accelerating discovery and multidimensional optimization for next-generation batteries",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103101",
+      "title": "High-entropy materials toward next-generation energy conversion and storage systems",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "title": "Germanium ligand redox cooperativity: A key to ambiphilicity and switchable two- and four-electron transfer",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-06",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103128",
+      "title": "From making molecules to redesigning discovery",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103134",
+      "title": "Molybdenum doping enhances backbonding at neighboring iron centers in iron-sulfur clusters",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103141",
+      "title": "Chem at 10: Jennifer M. Schomaker",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103142",
+      "title": "Chem at 10: Grace G.D. Han",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103143",
+      "title": "Chem at 10: Ben Zhong Tang",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103145",
+      "title": "Foam-to-foam recycling of non-isocyanate polyurethane foams via complete revalorization of depolymerization products",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103148",
+      "title": "Chemistry beyond the outer shell",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103149",
+      "title": "Chem at 10: Jonathan L. Sessler",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103150",
+      "title": "From the land of fire and ice to variable-temperature electrochemistry research",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103151",
+      "title": "The Stockholm Declaration on Chemistry for the Future",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103154",
+      "title": "Chem at 10: Chemistry as a force for change",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103155",
+      "title": "High-performance superphane membranes for sustainable flow batteries",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103185",
+      "title": "Protein olympiadanes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103194",
+      "title": "Phosphate group-assisted interfacial proton diffusion facilitates direct ethylene electro-oxidation to ethylene glycol",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103140",
+      "title": "Advances in polymer chemistry enabled by transition metal catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-08",
+          "sourceRootId": "2026-07-08_2026-07-14_chem",
+          "stageSourceSha256": "3d8163ee460bdae1890adfcf08f599f04c48e8b046df517e44e4036c496255df",
+          "reviewQueueGitBlobSha": "d485666d56d993f6b52ff3e43944390bdcfa5e1a",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103108",
+      "title": "Catalyst: When self-driving labs begin to reason",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103137",
+      "title": "Reaction: Electrochemistry needs agentic AI that explains as well as optimizes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103138",
+      "title": "Reaction: The art of autonomous chemistry",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103147",
+      "title": "Reaction: Navigating the path to reasoning laboratories",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103163",
+      "title": "Reaction: Building trust infrastructure for agentic experimental science beyond fragile eloquence",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103196",
+      "title": "Reaction: Self-driving labs need models of the chemical world",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-30",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103153",
+      "title": "High-entropy-inspired multi-principal single-atom materials",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-23",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103159",
+      "title": "Single-chain-water ultrafast transport in COF membrane for dual desalination and devolatilization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-22",
+          "sourceRootId": "2026-07-22_2026-07-31_chem",
+          "stageSourceSha256": "264ae98adc86bc7797cde11eb8b4c81e19ea7b0591b60dd6b396cb7b4fbbd6d2",
+          "reviewQueueGitBlobSha": "792615c96ccfa76e1d7def1167930c15b790d566",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102990",
+      "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103106",
+      "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103187",
+      "title": "Recent applications of axially chiral skeletons in asymmetric catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103197",
+      "title": "Stereoretentive radical-radical alkyl-alkyl cross-coupling by Ni-catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103199",
+      "title": "Single-catalyst operando photoluminescence spectroscopy of perovskite quantum-dot-driven photoredox reactions",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103211",
+      "title": "Constructing chiral rotaxanes with both mechanical and macrocyclic planar chirality by enantioselective C–H activation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102943",
+      "title": "In situ insights from non-equilibrium solution combustion synthesis: From semiconducting thin films to metallic nanostructures",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103189",
+      "title": "Replicating the Bohr/Haldane effect in a synthetic system",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103195",
+      "title": "Trading an atom for another: A new playbook for heterocycle synthesis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102955",
+      "title": "Superlattice electrocatalysis matching microbial metabolism for sustainable CO2-to-bioproduct conversion",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102967",
+      "title": "Fabrication of corrugated halogen 2D metal-organic frameworks by means of F···Au coordination",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102968",
+      "title": "Skeletal editing by iron-catalyzed carbene insertion of trichloromethanes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102987",
+      "title": "Hyperspace mapping and iterative dimensionality reduction reveal radical cascade networks controlled by perovskite-type catalysts",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103032",
+      "title": "Operando X-ray spectroscopies for tracking electrocatalytic dynamic interfaces across multiple scales",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103070",
+      "title": "Visible light steers carbonylation utilizing carbon monoxide toward diversification and practicalization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103164",
+      "title": "Defining stability in metal-organic frameworks through rigorous characterization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103204",
+      "title": "A triangle association strategy for de novo reaction discovery",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103205",
+      "title": "A minimal photoreactive metallocofactor for carbon–sulfur bond formation in small molecules and proteins",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103215",
+      "title": "Well-defined chiral binuclear copper catalysis in accessing trifluoromethyl amino acid derivatives",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102941",
+      "title": "SAM molecular stacking with heterogeneous orientation for high-performance perovskite photovoltaics",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102942",
+      "title": "Disentangling the activity-selectivity trade-off in CO2 hydrogenation to methanol",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102949",
+      "title": "Solid-state NMR provides location-specific information on the chemical environment inside MOF pores",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102960",
+      "title": "Out-of-equilibrium sensing with a chemically fueled molecular machine",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102966",
+      "title": "Alcoholysis of nylon 6 waste to ε-caprolactam promoted by phosphoric acid",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102999",
+      "title": "Iridium-mediated methane dehydrogenation and methylidene (=CH2) transfer",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103034",
+      "title": "Site-specific integration of reversibly taggable furylalanine into nonribosomal peptides",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103144",
+      "title": "Chem at 10: Jihye Park",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103156",
+      "title": "Chem at 10: Guangbin Dong",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103157",
+      "title": "Chem at 10: Gabriela S. Schlau-Cohen",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103158",
+      "title": "Chem at 10: Junichiro Yamaguchi",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103190",
+      "title": "Nanotechnology to program biomolecular function",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103191",
+      "title": "Can polymer mechanochemistry stop a bullet?",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103193",
+      "title": "Multidentate anchoring molecule-assisted blade-coated self-assembled monolayer for scalable and stable perovskite photovoltaics",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103200",
+      "title": "Coordination-modulated 6FDA-polyimide membranes for enhanced helium molecular sieving",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103201",
+      "title": "PETase learns from LCC: Redesigning enzymatic reactivity with probability-based simulations",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103202",
+      "title": "Reimagining amine chemistry",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103203",
+      "title": "Atomic-scale interface enables ultra-low-potential HMF oxidation to FDCA",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103207",
+      "title": "Living polymers turn 70",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103188",
+      "title": "A CLEAN framework of photothermal evaporation-coupled catalysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-17",
+          "sourceRootId": "2026-08-15_2026-08-21_chem",
+          "stageSourceSha256": "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d",
+          "reviewQueueGitBlobSha": "d0bf789ef7e50e2bbbc38351cb40825cc84c4b7d",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103198",
+      "title": "Regulating transport processes in oxygen evolution catalyst layers for proton exchange membrane water electrolysis",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-17",
+          "sourceRootId": "2026-08-15_2026-08-21_chem",
+          "stageSourceSha256": "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d",
+          "reviewQueueGitBlobSha": "d0bf789ef7e50e2bbbc38351cb40825cc84c4b7d",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103206",
+      "title": "Molecular-scale engineering of sulfide solid electrolytes for all-solid-state batteries: Prospects and challenges",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-24",
+          "sourceRootId": "2026-08-22_2026-08-31_chem",
+          "stageSourceSha256": "ba6a48fe57ecb66cb7c01e41531ad27aa36d5220d8c187b185bd5c72a3b4f550",
+          "reviewQueueGitBlobSha": "3be63f5629ec3bce0565155634c9768f1a5c5e10",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        },
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103002",
+      "title": "Electrochemical reductive carboxylation with carbon dioxide using water as the reductant",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103022",
+      "title": "Single-shot solid-phase synthesis of insulins and their A/B-chain heterodimeric analogs",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103044",
+      "title": "Emerging trends in light harnessing for CO2 reduction using photocatalytic MOFs",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103218",
+      "title": "One catalyst, two geometries: Iridium catalysis enables stereodivergent synthesis of chiral Z- and E-allylated isochromanones",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103220",
+      "title": "Practical and green oxidative amination of olefins",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103242",
+      "title": "Upscaling electrosynthesis of hypervalent iodine through steady-state engineering",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103247",
+      "title": "Ultrafast in vivo spectroscopy reveals photosynthetic energy and charge transfer under physiological conditions",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103249",
+      "title": "Carbometallation with alcohols: A facile strategy for olefin synthesis via deoxygenative hydroalkylation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103250",
+      "title": "Exploration of new sites: Remote functionalization by entangled boracycle migration",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103253",
+      "title": "Advanced bottom-up synthetic chemistry expanding the MXene family",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103257",
+      "title": "Catalytic atroposelective macrocyclization for constructing dominant rotors in peptides",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103026",
+      "title": "Out-of-equilibrium confinement catalysis mediated by compressive force",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103035",
+      "title": "Swarm intelligence for chemical reaction optimization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103037",
+      "title": "Array of bimetallic metallophthalocyanine-based metal-organic frameworks for chemiresistive detection and differentiation of toxic gases",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103074",
+      "title": "Cluster-enabled control of single-electron photoredox catalysis in reticular frameworks",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103208",
+      "title": "Designing molecular interfaces for stable hybrid organic-inorganic perovskites",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103209",
+      "title": "Origins of universality of copper-catalyzed azide-alkyne cycloaddition",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103212",
+      "title": "A K+ preloaded crown ether-containing metal-organic framework for efficient gold recovery from e-wastewater",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103221",
+      "title": "Structure-activity relationships at catalyst-pollutant interfaces in redox water purification",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103245",
+      "title": "Catalysis engineering at the forefront of the chemical and energy transition",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102920",
+      "title": "DNA-mediated force transmission for precise and efficient mechanochemical activation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102963",
+      "title": "Edge engineering of ultrasmall MoSx nanosheets with rich Co sites and S vacancies for polyaromatic hydrogenation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102964",
+      "title": "Trace-water-mediated formamidinium cation anchoring to regulate crystallization of tin-lead perovskite for efficient and stable photovoltaics",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.102965",
+      "title": "A metal-ion-linked self-assembled molecular layer as a robust hole-selective contact for perovskite solar cells",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103000",
+      "title": "Oxygen-atom replacement in non-strained cyclic ethers",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103023",
+      "title": "Wetting transparency of graphene across length scales: Macroscopic transparency but nanoscopic mirror-like behavior",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103030",
+      "title": "Single-molecule FRET enables the detection of site-specific α-synuclein serine phosphorylation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103038",
+      "title": "Polymerase-mediated expansion of DNA nanostructures",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103160",
+      "title": "Chem at 10: Jie Wu",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103161",
+      "title": "Chem at 10: Sarbajit Banerjee",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103210",
+      "title": "New reactivity enables stereochemical inheritance",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103214",
+      "title": "Knots by design: Turning a polymer entanglement into a topological synthon",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103217",
+      "title": "High-resolution AFM imaging: Real bond or artifact?",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103219",
+      "title": "Molecular recognition guides ionic liquid design for mild PET depolymerization",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103241",
+      "title": "Site-selective Au(III)-mediated metalloenzyme conjugations",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103248",
+      "title": "Concerted modulation of single-atom electronic structure and interfacial microenvironment for oxygen electroreduction",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103251",
+      "title": "Chem at 10: Hai-Bo Yang",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103252",
+      "title": "Chem at 10: Tanja Junkers",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103256",
+      "title": "Optically induced microwave emission from antiferromagnetically coupled heterometallic complexes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103259",
+      "title": "El Agente Quntur: A research collaborator agent for quantum chemistry",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103261",
+      "title": "Sustainable air purification via light-charged filters",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103262",
+      "title": "Molecular engineering of conjugated polyelectrolyte-enzyme biohybrid sheets for solar CO2 conversion",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103265",
+      "title": "Evolution from out-of-plane to in-plane metallo-annulenes: Theoretical investigations of putative planar transition metallo-annulenes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103281",
+      "title": "Direct O–O coupling on cation-vacancy-activated oxygen-vacancy sites of NiOOH for industrially efficient and durable OER",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ]
+    }
+  ],
+  "conflictingSourceDateDois": [
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "sourceDates": [
+        "2026-07-06",
+        "2026-08-01"
+      ],
+      "title": "Germanium ligand redox cooperativity: A key to ambiphilicity and switchable two- and four-electron transfer"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103140",
+      "sourceDates": [
+        "2026-07-08",
+        "2026-08-01"
+      ],
+      "title": "Advances in polymer chemistry enabled by transition metal catalysis"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103108",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Catalyst: When self-driving labs begin to reason"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103137",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Reaction: Electrochemistry needs agentic AI that explains as well as optimizes"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103138",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Reaction: The art of autonomous chemistry"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103147",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Reaction: Navigating the path to reasoning laboratories"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103163",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Reaction: Building trust infrastructure for agentic experimental science beyond fragile eloquence"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103196",
+      "sourceDates": [
+        "2026-07-30",
+        "2026-08-01"
+      ],
+      "title": "Reaction: Self-driving labs need models of the chemical world"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103153",
+      "sourceDates": [
+        "2026-07-23",
+        "2026-08-01"
+      ],
+      "title": "High-entropy-inspired multi-principal single-atom materials"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103159",
+      "sourceDates": [
+        "2026-07-22",
+        "2026-08-01"
+      ],
+      "title": "Single-chain-water ultrafast transport in COF membrane for dual desalination and devolatilization"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103188",
+      "sourceDates": [
+        "2026-08-17",
+        "2026-09-01"
+      ],
+      "title": "A CLEAN framework of photothermal evaporation-coupled catalysis"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103198",
+      "sourceDates": [
+        "2026-08-17",
+        "2026-09-01"
+      ],
+      "title": "Regulating transport processes in oxygen evolution catalyst layers for proton exchange membrane water electrolysis"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103206",
+      "sourceDates": [
+        "2026-08-24",
+        "2026-09-01"
+      ],
+      "title": "Molecular-scale engineering of sulfide solid electrolytes for all-solid-state batteries: Prospects and challenges"
+    }
+  ],
+  "publisherEvidence": [
+    {
+      "doi": "10.1016/j.chempr.2026.102990",
+      "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426000562",
+      "publisherFirstOnlineDate": "2026-03-27",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "pre_Q3_original",
+      "comment": "chiral boron asymmetric synth; actual online March 27",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103002",
+      "title": "Electrochemical reductive carboxylation with carbon dioxide using water as the reductant",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426000689",
+      "publisherFirstOnlineDate": "2026-03-30",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "pre_Q3_original",
+      "comment": "Ni/H2O reductive CO2 carboxylation actual online March 30",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103022",
+      "title": "Single-shot solid-phase synthesis of insulins and their A/B-chain heterodimeric analogs",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426000884",
+      "publisherFirstOnlineDate": "2026-04-14",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "pre_Q3_original",
+      "comment": "single-shot A/B heterodimer insulin SPPS actual online April 14",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103211",
+      "title": "Constructing chiral rotaxanes with both mechanical and macrocyclic planar chirality by enantioselective C–H activation",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002779",
+      "publisherFirstOnlineDate": "2026-08-21",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "Q3_original_science_qualified",
+      "comment": "Co/Salox enantioselective C-H/N-H annulation gives chiral rotaxanes up to 85% yield, 93–99% ee",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103215",
+      "title": "Well-defined chiral binuclear copper catalysis in accessing trifluoromethyl amino acid derivatives",
+      "sourceOccurrences": [
+        {
+          "date": "2026-08-01",
+          "sourceRootId": "2026-08-01_2026-08-07_chem",
+          "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "reviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002810",
+      "publisherFirstOnlineDate": "2026-08-31",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "Q3_original_science_qualified",
+      "comment": "defined dinuclear Cu catalytic asymmetric trifluoromethylazidation of acrylates produces chiral alpha-azido ester amino-acid precursors",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103241",
+      "title": "Site-selective Au(III)-mediated metalloenzyme conjugations",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426003074",
+      "publisherFirstOnlineDate": "2026-09-11",
+      "publisherArticleType": "Article",
+      "dateEvidenceTier": "official_available_online",
+      "classification": "Q3_original_science_qualified",
+      "comment": "Au(III)-mediated Cys S-arylation of metalloproteins including rubredoxins, zinc fingers and Fe–S proteins",
+      "issueDate": null
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103152",
+      "title": "Relay energy transfer paradigm enabled the photocatalytic enantioselective dearomative [4+2] cycloadditions of quinolines with alkenes",
+      "sourceOccurrences": [
+        {
+          "date": "2026-07-01",
+          "sourceRootId": "2026-07-01_2026-07-07_chem",
+          "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "reviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002184",
+      "publisherFirstOnlineDate": null,
+      "publisherArticleType": "Preview",
+      "dateEvidenceTier": "official_issue_only_2026-07-09",
+      "classification": "secondary_commentary_not_Article",
+      "comment": "Uchikura/Akiyama commentary on Tan original Science [4+2]; issue 9 July, first online not verified",
+      "issueDate": "2026-07-09"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103218",
+      "title": "One catalyst, two geometries: Iridium catalysis enables stereodivergent synthesis of chiral Z- and E-allylated isochromanones",
+      "sourceOccurrences": [
+        {
+          "date": "2026-09-01",
+          "sourceRootId": "2026-09-01_2026-09-07_chem",
+          "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+          "reviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+          "sourceFamilies": [
+            "crossref",
+            "openalex"
+          ]
+        }
+      ],
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002846",
+      "publisherFirstOnlineDate": null,
+      "publisherArticleType": "Preview",
+      "dateEvidenceTier": "official_issue_only_2026-09-10",
+      "classification": "secondary_commentary_not_Article",
+      "comment": "Tyler/Aggarwal commentary on Chem Catalysis iridium Z/E allylation, first online not verified",
+      "issueDate": "2026-09-10"
+    }
+  ],
+  "pendingIdentityChecks": [
+    {
+      "doi": "10.1016/j.chempr.2026.103106",
+      "reason": "Exact same title and author set as 102990 but separate source DOI; official DOI identity/online date unverified. Do not silently deduplicate or include."
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103197",
+      "reason": "Stereoretentive Ni alkyl radical commentary/research type and first online not verified. No inclusion by headline."
+    }
+  ],
+  "interpretation": "Source month-first timestamps are potentially issue-date markers; count as uncertain first-online until DOI-exact official publisher evidence. No broad exclusion or automatic Q3 admission.",
+  "guards": {
+    "sourceShardsImmutable": true,
+    "doNotAutoTreatMonthFirstAsQ3": true,
+    "noOwnerPermanentExclusion": true,
+    "noD1": true,
+    "noMediaSIorPDF": true,
+    "noDailyNewHotWechat": true,
+    "noNewReleaseSlot": true
+  },
+  "nonProvisionalSourceDois": [
+    {
+      "doi": "10.1016/j.chempr.2026.103192",
+      "title": "Tuning the reactive species in oxidant activation by single-atom catalysts: Mechanisms, manipulations, and perspectives",
+      "occurrences": [
+        {
+          "date": "2026-08-17",
+          "sourceRootId": "2026-08-15_2026-08-21_chem",
+          "stageSourceSha256": "6725990d3b735e9ce42f526bbe8524c4ab1b753973d4526bad0a8cb16661048d",
+          "reviewQueueGitBlobSha": "d0bf789ef7e50e2bbbc38351cb40825cc84c4b7d",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103244",
+      "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
+      "occurrences": [
+        {
+          "date": "2026-09-24",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103254",
+      "title": "Opportunities for merging biosynthesis and biocatalysis",
+      "occurrences": [
+        {
+          "date": "2026-09-25",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103264",
+      "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
+      "occurrences": [
+        {
+          "date": "2026-09-24",
+          "sourceRootId": "2026-09-22_2026-09-30_chem",
+          "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+          "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+          "sourceFamilies": [
+            "openalex"
+          ]
+        }
+      ]
+    }
+  ]
+}

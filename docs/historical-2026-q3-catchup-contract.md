@@ -300,3 +300,62 @@ identity. The Q3 census can only change its unfinished figures after a
 *successful* existing staging-only recount whose two outputs have the same
 `generatedAt`. This guard must be tested before each new class of
 historical approval rather than repeatedly rerunning the 192 metadata roots.
+
+
+## 2026-10-15: Chem first-online Q3 date-integrity and real syntheses
+
+The Q3 staging Chem source union is **147 unique DOI, 160 occurrences**.
+**143 unique DOI** have an apparent 1st-of-month issue-index date
+(48 on Jul 1, 48 Aug 1, 47 Sep 1); **13** source DOI disagree across
+repeated month windows. These are not 143 scientifically excluded papers,
+nor 143 publisher-confirmed mistakes. They are **provisional first-online
+dates**, until each DOI is checked against its publisher Available online.
+
+DOI-specific publisher evidence is frozen at
+`audit/historical-publisher-issues/2026/chem-q3-source-date-conflicts-and-firstday-provisional.json`;
+all 147 DOI retain original source root ID, SHA-256 and frozen reviewer
+Git blob. Zero source shards are edited. Six DOI currently have exact
+official online dates:
+- `10.1016/j.chempr.2026.102990` = 2026-03-27,
+  `10.1016/j.chempr.2026.103002` = 2026-03-30,
+  `10.1016/j.chempr.2026.103022` = 2026-04-14.
+  These are real methods, but **not 2026-Q3 first-online papers**;
+  retain historical archive eligibility in their own earlier period.
+- `10.1016/j.chempr.2026.103211` = 2026-08-21,
+  `10.1016/j.chempr.2026.103215` = 2026-08-31,
+  `10.1016/j.chempr.2026.103241` = 2026-09-11.
+  These are genuinely new and academically reviewed Q3 methods:
+  Co/Salox asymmetric enantioselective C–H annulation of chiral
+  mechanically interlocked rotaxanes; defined chiral binuclear Cu
+  radical CF3/azide difunctionalization of acrylates for amino acid
+  building blocks; and Au(III) selective Cys arylation of metalloproteins.
+  Scientific first/challenge passes, article evidence, honest method
+  boundaries and cross-source dates are in
+  `audit/historical-scope-assessments/2026-10-15-chem-three-q3-original-methods.json`.
+  Only the existing standalone **Beijing 08:00** history writer may
+  publish their 3 reviewed metadata/citation cards, now held for next
+  eligible **2026-10-16 08:00**. No out-of-slot publication occurred.
+- `10.1016/j.chempr.2026.103152` and
+  `10.1016/j.chempr.2026.103218` are secondary
+  original-work *previews/commentaries*. Official issue dates exist,
+  but direct **first-online dates were not verified**; do not promote
+  issue dates to online dates or duplicate their cited original work.
+- `10.1016/j.chempr.2026.103106` has the same title/authors as
+  102990 but its exact publisher identity and online date are
+  unverified. Never silently deduplicate or exclude. `103197`
+  also remains research-type/date unverified.
+
+The Q3 stage read-only reconciliation recognizes the 3 publisher-
+verified Q1/Q2 originals as **outside Q3**, not academic exclusions;
+their DOI remain in the 12,286 source union. All other month-start
+source dates without official evidence remain *online-date
+unverified* and visible for review, not dropped. Reconcile only after
+the original 12-root source SHA and complete 147 DOI evidence set
+validate. Publisher issue/online-first closure for the entire journal
+and the other 15 journals remains false.
+
+Do not apply DOI date correction to frozen Crossref/OpenAlex review
+shards or fabricate final volume/pages, experimental yield or scope.
+Original two manifest publication-date pending remain separate.
+No change to daily new/Hot/WeChat, live D1, media/SI/PDF, 18:00
+release, or user permanent owner exclusions.
