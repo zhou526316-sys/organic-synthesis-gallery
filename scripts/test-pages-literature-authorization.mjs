@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {verifyAuthorOnlyDelta,authorizeExistingAuthorCorrection,AUTHOR_CORRECTION_DOI,AUTHOR_CORRECTION_NAMES} from './lib/author-metadata-correction.mjs';
 import { PROTECTED_FILES, validateProtectedInputs, validateFormalPartition, canReuseReceiptBackedLegacyBaseline } from './validate-pages-literature-authorization.mjs';
 
 // Isolated data fixtures only. No production writes, Git commits, or network calls.
@@ -160,6 +163,52 @@ run('historic DOI must be a member of the combined atomic release allowlist',()=
   const x={...markerWithHistory,publishableDois:[included.doi]};
   assert.ok(validateFormalPartition(staging,formal,x,queue,historical)
     .includes('release_allowlist_mismatch:publishableDois'));
+});
+
+// A second, explicit user approval ratifies an already-landed six-author
+// completion only. No new DOI, non-author field or publisher date is allowed.
+const authorBase=JSON.parse(execFileSync('git',['show',
+  'aed08cccbe4b0135e7677e2c9d862afe70a2dd05:public/rolling-supplement.json'],
+  {encoding:'utf8',maxBuffer:16*1024*1024}));
+const authorLive=JSON.parse(readFileSync('public/rolling-supplement.json','utf8'));
+const authorMarker=JSON.parse(readFileSync('audit/publication-release-state.json','utf8'));
+run('exact_Nature_author_completion_has_immutable_review_and_no_doi_change',()=>{
+  const result=verifyAuthorOnlyDelta(authorBase,authorLive);
+  assert.equal(result.ok,true,JSON.stringify(result));
+  assert.equal(result.addedDois,0);
+  assert.equal(result.changedDates,0);
+  const attestation=authorizeExistingAuthorCorrection(process.cwd(),authorMarker,
+    '28f3238f45b380855f68fc7ab79da03ba4c9f181');
+  assert.equal(attestation.ok,true,JSON.stringify(attestation));
+  assert.equal(attestation.originalMarkerUnchanged,true);
+});
+run('author_amendment_wrong_blob_or_marker_is_fail_closed',()=>{
+  assert.equal(authorizeExistingAuthorCorrection(process.cwd(),authorMarker,'9'.repeat(40)).ok,false);
+  assert.equal(authorizeExistingAuthorCorrection(process.cwd(),
+    {...authorMarker,publicationSlot:'2026-10-15T18:00:00+08:00'},
+    '28f3238f45b380855f68fc7ab79da03ba4c9f181').ok,false);
+});
+run('author_amendment_cannot_change_title_date_doi_or_unrelated_authors',()=>{
+  const changes=[
+    x=>{x.papers.find(p=>p.doi===AUTHOR_CORRECTION_DOI).title='Unauthorized title';},
+    x=>{x.papers.find(p=>p.doi===AUTHOR_CORRECTION_DOI).date='2026-10-13';},
+    x=>{x.papers.find(p=>p.doi===AUTHOR_CORRECTION_DOI).authors.reverse();},
+    x=>{x.papers[0].authors=['Unauthorized author'];},
+    x=>{x.papers.push({...x.papers[0],doi:'10.5555/unauthorized-new-doi'});},
+  ];
+  for(const mutate of changes){
+    const altered=structuredClone(authorLive);
+    mutate(altered);
+    assert.equal(verifyAuthorOnlyDelta(authorBase,altered).ok,false);
+  }
+});
+run('author_amendment_not_a_generic_metadata_change_whitelist',()=>{
+  const modified=structuredClone(authorBase);
+  const target=modified.papers.find(p=>p.doi===AUTHOR_CORRECTION_DOI);
+  assert.deepEqual(target.authors,[]);
+  target.authors=[...AUTHOR_CORRECTION_NAMES];
+  assert.equal(verifyAuthorOnlyDelta(authorBase,modified,AUTHOR_CORRECTION_DOI,AUTHOR_CORRECTION_NAMES).ok,true);
+  assert.equal(verifyAuthorOnlyDelta(authorBase,modified,'10.1021/jacs.6c08713').ok,false);
 });
 
 const workflow = await readFile(new URL('../.github/workflows/github-pages.yml', import.meta.url), 'utf8');
