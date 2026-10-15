@@ -553,7 +553,7 @@ export function reconcileQ3({
           nextAction:x.assessment.nextAction,
           sourceRootId:x.sourceRootId,notOriginalManifestPending:true
         })),
-      ...chemReviewedPending.values().map(a=>({
+      ...[...chemReviewedPending.values()].map(a=>({
         doi:a.doi,journal:'Chem',publisherFirstOnlineDate:a.date,
         evidenceNeeded:a.evidenceNeeded,nextAction:a.nextAction,
         sourceRootId:a.reviewEvidence.stageBatchId,
