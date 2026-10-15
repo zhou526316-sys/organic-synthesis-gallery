@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-15T00:58:54.170Z",
+  "generatedAt": "2026-10-15T01:02:43.732Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -188,7 +188,7 @@
     "publisherFirstOnlineBacklog": 29,
     "publisherDateUnverified": 29,
     "publisherAbstractRescued": 0,
-    "publisherAbstractProbeBlocked": 29,
+    "publisherAbstractProbeBlocked": 30,
     "publisherListingsComplete": 0,
     "publisherListingsPartial": 14,
     "publisherListingsUnavailable": 2,
@@ -15768,7 +15768,8 @@
       {
         "doi": "10.1038/s44160-026-01206-1",
         "journal": "Nature Synthesis",
-        "status": "not_retrieved"
+        "status": "blocked_or_unavailable",
+        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
       },
       {
         "doi": "10.1038/s41467-026-78421-z",
