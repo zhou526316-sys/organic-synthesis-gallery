@@ -312,8 +312,10 @@ export function reconcileQ3({
     ensure(r.verifiedPublicationQuarter===actualQuarter,
       'q3_chem_publisher_quarter_mismatch:'+id);
     const admission=manifest.accepted.find(a=>normalize(a.doi)===id);
-    if(inQ3){
-      ensure(admission?.journal==='Chem'
+    if(inQ3&&admission){
+      // A formally reviewed/admitted DOI MUST continue to match its exact
+      // existing two-pass academic decision and original source receipt.
+      ensure(admission.journal==='Chem'
         &&admission.reviewPasses===2&&admission.decision==='include'
         &&admission.firstPassDecision==='include'
         &&admission.challengeDecision==='include'
@@ -323,6 +325,13 @@ export function reconcileQ3({
         &&admission.reviewEvidence?.stageBatchSha===r.originalSourceBatchGitBlobSha
         &&admission.reviewEvidence?.sourceReviewQueueGitBlobSha===r.reviewQueueGitBlobSha,
         'q3_chem_date_conflict_missing_approved_science:'+id);
+    }else if(inQ3){
+      // Publisher date provenance alone never grants academic approval.
+      // Genuine Q3 Research Articles with verified dates, but no separate
+      // two-pass synthesis scope review, must remain UNFINISHED/UNADMITTED.
+      ensure(r.academicScopeDecision==='not_made_by_publication_date_evidence'
+        &&!formalRow&&!accepted.has(id),
+        'q3_chem_date_proof_unreviewed_must_not_claim_admission:'+id);
     }else{
       ensure(!accepted.has(id),
         'q3_chem_pre_q3_original_cannot_be_admitted_as_q3:'+id);
