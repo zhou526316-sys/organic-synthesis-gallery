@@ -6015,7 +6015,12 @@ function embeddedJobDois(value) {
           // ACS background tabs can remain uninitialized through document-idle.
           // Only a repeat visit after an actual failed attempt is foregrounded;
           // healthy first-pass captures stay in the background.
-          var foregroundRetry=job.publisher==='wiley'||(job.publisher==='acs'&&Number(job.retryCount||0)>1);
+          // After an uninitialized background tab, give the next DOI one
+          // foreground chance to initialize Tampermonkey. Healthy sessions
+          // revert to background; three consecutive misses still stop safely.
+          var foregroundRetry=job.publisher==='wiley'
+            ||(job.publisher==='acs'&&Number(job.retryCount||0)>1)
+            ||Number(run.consecutiveHeartbeatFailures||0)>0;
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:foregroundRetry,insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
