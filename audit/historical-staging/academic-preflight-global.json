@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-15T15:43:38.346Z",
-  "sourceWorklistSha256": "c02f8f1807843889d487e73b2f29782ab9f196d74fc2a9451c08aaaf8ff57a33",
+  "sourceWorklistProducedAt": "2026-10-15T15:51:54.584Z",
+  "sourceWorklistSha256": "48df12fb3e84571e73a931782171383d7855141f5a4f00c3e422020c1a4f3d35",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 55056,
+  "sourceTotalUnreviewed": 56353,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -199,12 +199,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2025.102694",
+      "doi": "10.1016/j.chempr.2024.102390",
       "journal": "Chem",
-      "title": "Catalytic enantioselective synthesis of mechanically planar chiral rotaxanes by organocatalyzed desymmetrization",
-      "firstAuthor": "Mengyao Tang",
+      "title": "Enantioselective synthesis of amino acids by photocatalytic reduction of CO2 on chiral mesostructured ZnS",
+      "firstAuthor": "Yongping Cui",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-08-07",
+      "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -221,15 +221,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-01-01_2026-01-31_chem",
-          "2025-08-01_2025-08-31_chem"
+          "2025-05-01_2025-05-31_chem"
         ],
         "sourceSha256Hashes": [
-          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
-          "454cbbe3d47c68b076ebe267ab779d0ff99a3578f68f1038c054f8a9f2f72601"
+          "07911ac266a01ee3e3ea1c5500c5597efca26c091d4f2a299da3711fcdae9430"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102694",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2024.102390",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -501,19 +499,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.025.202505994",
+      "doi": "10.31635/ccschem.026.202607340",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Total Synthesis of Polycyclic Aryltetralin Lignans Enabled by Symmetrizing the Unsymmetrical",
-      "firstAuthor": "Yi Chen",
+      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
+      "firstAuthor": "Jin-Pu Zhao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-05-01",
+      "originDateCandidate": "2026-04-02",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 16,
         "signals": [
           "stereoselective_synthetic_method",
-          "target_or_late_stage_synthesis",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -524,13 +522,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-05-01_2026-05-31_ccs-chemistry"
+          "2026-09-01_2026-09-07_ccs-chemistry",
+          "2026-04-01_2026-04-30_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "f8f53fdd7da4cf6639e477cad51241c43820fdfaf7f7852581123d4123f71f5b"
+          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.025.202505994",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607340",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -883,12 +883,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103187",
+      "doi": "10.1016/j.chempr.2025.102694",
       "journal": "Chem",
-      "title": "Recent applications of axially chiral skeletons in asymmetric catalysis",
-      "firstAuthor": "Peng-Ying Jiang",
+      "title": "Catalytic enantioselective synthesis of mechanically planar chiral rotaxanes by organocatalyzed desymmetrization",
+      "firstAuthor": "Mengyao Tang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-01",
+      "originDateCandidate": "2025-08-07",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -905,13 +905,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_chem"
+          "2026-01-01_2026-01-31_chem",
+          "2025-08-01_2025-08-31_chem"
         ],
         "sourceSha256Hashes": [
-          "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
+          "454cbbe3d47c68b076ebe267ab779d0ff99a3578f68f1038c054f8a9f2f72601"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103187",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102694",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1138,10 +1140,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc03641k",
+      "doi": "10.1039/d4gc06596d",
       "journal": "Green Chemistry",
-      "title": "Graphitic carbon nitride/nickel dual catalysis for decarboxylative synthesis of unsymmetrical ketones from keto acids",
-      "firstAuthor": "Michael T. Findlay",
+      "title": "Design of a polymer supported chiral cobalt catalyst for heterogeneous enantioselective C–H activations",
+      "firstAuthor": "Jie Lin",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -1149,8 +1151,7 @@
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -1160,13 +1161,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-10-01_2025-10-31_green-chemistry"
+          "2025-06-01_2025-06-30_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "95422374850ced5437fb5b01eb0f735f016b8c9803e4b9252b3187ed66648bce"
+          "34626eae085dc8293a54ea82551cb8313ca2cb9bc49a45c97e06118e485661c4"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc03641k",
+      "doiResolver": "https://doi.org/10.1039/d4gc06596d",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1180,19 +1181,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607340",
+      "doi": "10.31635/ccschem.026.202506818",
       "journal": "CCS Chemistry",
-      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
-      "firstAuthor": "Jin-Pu Zhao",
+      "title": "Three-Dimensional-Printed Chiral Heterometallic Cluster Monoliths for Integrated Circularly Polarized Luminescent Sensing and Visualized Enantioselective Catalysis",
+      "firstAuthor": "X.-Q. Cai",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-04-02",
+      "originDateCandidate": "2026-02-16",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 16,
+        "score": 9,
         "signals": [
           "stereoselective_synthetic_method",
-          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -1203,15 +1203,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry",
-          "2026-04-01_2026-04-30_ccs-chemistry"
+          "2026-04-01_2026-04-30_ccs-chemistry",
+          "2026-02-01_2026-02-28_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
-          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc"
+          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc",
+          "62600cd4d2e8853b81fb584943e60205a146db8db666a3af3b0a31fb479922f0"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607340",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506818",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1559,18 +1559,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2025.102716",
+      "doi": "10.1016/j.chempr.2026.103187",
       "journal": "Chem",
-      "title": "Radical sorting as a general framework for deaminative C(sp3)–C(sp2) cross-coupling",
-      "firstAuthor": "Deepta Chattapadhyay",
+      "title": "Recent applications of axially chiral skeletons in asymmetric catalysis",
+      "firstAuthor": "Peng-Ying Jiang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-08-28",
+      "originDateCandidate": "2026-08-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 9,
         "signals": [
-          "bond_construction",
+          "stereoselective_synthetic_method",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -1581,15 +1581,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-01-01_2026-01-31_chem",
-          "2025-08-01_2025-08-31_chem"
+          "2026-08-01_2026-08-07_chem"
         ],
         "sourceSha256Hashes": [
-          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
-          "454cbbe3d47c68b076ebe267ab779d0ff99a3578f68f1038c054f8a9f2f72601"
+          "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102716",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103187",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1813,10 +1811,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc03812j",
+      "doi": "10.1039/d5gc01567g",
       "journal": "Green Chemistry",
-      "title": "Photoinduced copper-catalyzed cross-coupling of epoxides and alkynes via radical anions",
-      "firstAuthor": "Chen Yang",
+      "title": "Cascade biocatalysis for enantioselective reconstruction of both enantiomers of phenylalaninol from biobased l -phenylalanine",
+      "firstAuthor": "Xue Han",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -1824,8 +1822,7 @@
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -1835,13 +1832,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-10-01_2025-10-31_green-chemistry"
+          "2025-06-01_2025-06-30_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "95422374850ced5437fb5b01eb0f735f016b8c9803e4b9252b3187ed66648bce"
+          "34626eae085dc8293a54ea82551cb8313ca2cb9bc49a45c97e06118e485661c4"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc03812j",
+      "doiResolver": "https://doi.org/10.1039/d5gc01567g",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1855,12 +1852,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.025.202505937",
+      "doi": "10.31635/ccschem.026.202507128",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Alkenylation of Sulfinylamines via Copper/Sadphos for the Synthesis of Alkenyl Sulfinamides",
-      "firstAuthor": "Yin Yuan",
+      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
+      "firstAuthor": "Yuting Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-04-01",
+      "originDateCandidate": "2026-03-09",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1877,13 +1874,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-04-01_2026-04-30_ccs-chemistry"
+          "2026-09-01_2026-09-07_ccs-chemistry",
+          "2026-03-01_2026-03-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc"
+          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+          "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.025.202505937",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2231,12 +2230,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2025.102730",
+      "doi": "10.1016/j.chempr.2025.102440",
       "journal": "Chem",
-      "title": "Construction of chiral nitrogen stereocenters via enantioselective C–H activation",
-      "firstAuthor": "Zechen Wu",
+      "title": "Enantioselective total syntheses of melotenine-, voacafrine-, and tabersonine-type Aspidosperma indole alkaloids",
+      "firstAuthor": "Dong-Xing Tan",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-09-03",
+      "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2252,15 +2251,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-01-01_2026-01-31_chem",
-          "2025-09-01_2025-09-30_chem"
+          "2025-06-01_2025-06-30_chem"
         ],
         "sourceSha256Hashes": [
-          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
-          "922a8605be4696ea7f594bbb788304280db2041b3866f6ff5d655a0ba4cc1605"
+          "c6d3ce764345598f2aac100c0779ec66f259ef56cd1e904304e74e8780369c27"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102730",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102440",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2441,12 +2438,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc02831k",
+      "doi": "10.1039/d5sc06853c",
       "journal": "Chemical Science",
-      "title": "Enantioselective homocoupling of allenylic alcohols through divergent cooperative catalysis",
-      "firstAuthor": "Aditya Chakrabarty",
+      "title": "Enantioselective synthesis of vicinal amino alcohols promoted by fluorine-containing counteranions",
+      "firstAuthor": "Yuchen Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "",
+      "originDateCandidate": "2025-11-27",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2463,13 +2460,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-09-01_2025-09-30_chemical-science"
+          "2025-11-01_2025-11-30_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "17865d85e6c4d3351ecd5b1b5f83dde2e499b9fb0c9de4e9f9c0d6d7c09ae0d3"
+          "7e698372f7a60dc0f561df9e44b5584f50815ea3c7ee3abef909ed0891a2eeb9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc02831k",
+      "doiResolver": "https://doi.org/10.1039/d5sc06853c",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2483,10 +2480,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc04881h",
+      "doi": "10.1039/d5gc01831e",
       "journal": "Green Chemistry",
-      "title": "Photoinduced carbonylative synthesis of β-trifluoromethylated thioesters through 1,2-trifluoromethylation and carbonylation of alkenes",
-      "firstAuthor": "Ren-Guan Miao",
+      "title": "Electrochemically driven tandem addition–cyclization: synthesis of thiadiazinanes and thiophosphonates",
+      "firstAuthor": "Honghao Zhou",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -2505,13 +2502,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-10-01_2025-10-31_green-chemistry"
+          "2025-05-01_2025-05-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "95422374850ced5437fb5b01eb0f735f016b8c9803e4b9252b3187ed66648bce"
+          "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc04881h",
+      "doiResolver": "https://doi.org/10.1039/d5gc01831e",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2525,12 +2522,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202507128",
+      "doi": "10.31635/ccschem.026.202607308",
       "journal": "CCS Chemistry",
-      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
-      "firstAuthor": "Yuting Yang",
+      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
+      "firstAuthor": "Jiahao Zhang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-03-09",
+      "originDateCandidate": "2026-03-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2555,7 +2552,7 @@
           "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607308",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2901,18 +2898,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.102990",
+      "doi": "10.1016/j.chempr.2025.102716",
       "journal": "Chem",
-      "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
-      "firstAuthor": "Shuai Wang",
+      "title": "Radical sorting as a general framework for deaminative C(sp3)–C(sp2) cross-coupling",
+      "firstAuthor": "Deepta Chattapadhyay",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-03-27",
+      "originDateCandidate": "2025-08-28",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2922,15 +2920,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_chem",
-          "2026-03-01_2026-03-31_chem"
+          "2026-01-01_2026-01-31_chem",
+          "2025-08-01_2025-08-31_chem"
         ],
         "sourceSha256Hashes": [
-          "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
-          "94c8c134addab049f749b532e89a70d3df2dbd39a87db0c4fb7c9efeffdb3560"
+          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
+          "454cbbe3d47c68b076ebe267ab779d0ff99a3578f68f1038c054f8a9f2f72601"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.102990",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102716",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3112,12 +3110,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc06853c",
+      "doi": "10.1039/d5sc06981e",
       "journal": "Chemical Science",
-      "title": "Enantioselective synthesis of vicinal amino alcohols promoted by fluorine-containing counteranions",
-      "firstAuthor": "Yuchen Yang",
+      "title": "Chiral Lewis base/Lewis acid/Brønsted acid cooperative catalysis enabled regio- and enantioselective electrophilic sulfenylation/semipinacol rearrangement of allenols",
+      "firstAuthor": "Zheng-Wei Wei",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-11-27",
+      "originDateCandidate": "2025-12-10",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3134,13 +3132,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-11-01_2025-11-30_chemical-science"
+          "2025-12-01_2025-12-31_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "7e698372f7a60dc0f561df9e44b5584f50815ea3c7ee3abef909ed0891a2eeb9"
+          "cf7c069167910d2be4ef79a04b29cafd9b326348c6868098059dba7973b5b152"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc06853c",
+      "doiResolver": "https://doi.org/10.1039/d5sc06981e",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3154,19 +3152,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc05705a",
+      "doi": "10.1039/d5gc01922b",
       "journal": "Green Chemistry",
-      "title": "Semi-heterogeneous dual iron/photocatalytic decarboxylative C(sp 3 )–C(sp 3 ) cross-coupling via radical sorting",
-      "firstAuthor": "Yajun Sun",
+      "title": "Direct metal-free homo-/cross-coupling of carbonyls with alcohols or imines under ambient light",
+      "firstAuthor": "Tongyu Han",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3176,13 +3173,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-01-01_2026-01-31_green-chemistry"
+          "2025-05-01_2025-05-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "7635ad55aaebc6b071697414627fdcd8ae2338bc697ae801718a51165b52f512"
+          "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc05705a",
+      "doiResolver": "https://doi.org/10.1039/d5gc01922b",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3567,19 +3564,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103100",
+      "doi": "10.1016/j.chempr.2025.102730",
       "journal": "Chem",
-      "title": "Copper-catalyzed doubly enantioconvergent radical C(sp3)–P cross-coupling for the construction of P- and P,C-stereogenic centers",
-      "firstAuthor": "Cheng Luan",
+      "title": "Construction of chiral nitrogen stereocenters via enantioselective C–H activation",
+      "firstAuthor": "Zechen Wu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-01",
+      "originDateCandidate": "2025-09-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3589,13 +3585,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-06-01_2026-06-30_chem"
+          "2026-01-01_2026-01-31_chem",
+          "2025-09-01_2025-09-30_chem"
         ],
         "sourceSha256Hashes": [
-          "8901bb71134e2c30e4377862b3475b2960ae2b0dfa3cfaf2142e6a5821111030"
+          "993f7118c9fe03fe6c7c9676d2bcfba90c8faa509255ab56eefb982d4535e8b8",
+          "922a8605be4696ea7f594bbb788304280db2041b3866f6ff5d655a0ba4cc1605"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103100",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2025.102730",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3775,52 +3773,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc06981e",
+      "doi": "10.1039/d5sc01098e",
       "journal": "Chemical Science",
-      "title": "Chiral Lewis base/Lewis acid/Brønsted acid cooperative catalysis enabled regio- and enantioselective electrophilic sulfenylation/semipinacol rearrangement of allenols",
-      "firstAuthor": "Zheng-Wei Wei",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-12-10",
-      "truePublisherOnlineDate": null,
-      "publisherCategory": null,
-      "evidenceRank": {
-        "score": 9,
-        "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
-        ],
-        "offTopicTitleRisk": false,
-        "chemistryTitleSignalsOnly": true,
-        "nonOriginalPublisherTypeVerified": false,
-        "publisherFirstOnlineVerified": false,
-        "noAutomaticScopeDecision": true
-      },
-      "sourceProof": {
-        "sourceRootIds": [
-          "2025-12-01_2025-12-31_chemical-science"
-        ],
-        "sourceSha256Hashes": [
-          "cf7c069167910d2be4ef79a04b29cafd9b326348c6868098059dba7973b5b152"
-        ]
-      },
-      "doiResolver": "https://doi.org/10.1039/d5sc06981e",
-      "publisherEvidenceRequired": [
-        "DOI-exact official Article versus Review/Comment/Preview classification",
-        "Publisher first available online date versus issue/index-created date",
-        "Specific new substrate-to-product chemistry and product identity",
-        "Generality, yields/structure controls, or completed total synthesis",
-        "Adversarial second-pass: real boundary/contradicting evidence"
-      ],
-      "scienceFirstPass": "not_performed",
-      "scienceAdversarialPass": "not_performed",
-      "decision": "unreviewed",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1039/d5gc05768j",
-      "journal": "Green Chemistry",
-      "title": "Electrochemically enabled cobalt-catalyzed enantioselective C–H activation",
-      "firstAuthor": "Shupei Zhou",
+      "title": "Molecular Machine Learning Approach to Enantioselective C–H Bond Activation Reactions: From Generative AI to Experimental Validation",
+      "firstAuthor": "Ajnabiul Hoque",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -3838,15 +3794,54 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-02-01_2026-02-28_green-chemistry",
-          "2026-01-01_2026-01-31_green-chemistry"
+          "2025-06-01_2025-06-30_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "d9a50ce0dbac6948bcf179b2eca057438789a72dd2a13b0e87cf692b3bcd0c25",
-          "7635ad55aaebc6b071697414627fdcd8ae2338bc697ae801718a51165b52f512"
+          "525e837b6a4cc83f77d3e7a2e85f1ac3826c6b00882040739cbdf4edbd2ec84f"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc05768j",
+      "doiResolver": "https://doi.org/10.1039/d5sc01098e",
+      "publisherEvidenceRequired": [
+        "DOI-exact official Article versus Review/Comment/Preview classification",
+        "Publisher first available online date versus issue/index-created date",
+        "Specific new substrate-to-product chemistry and product identity",
+        "Generality, yields/structure controls, or completed total synthesis",
+        "Adversarial second-pass: real boundary/contradicting evidence"
+      ],
+      "scienceFirstPass": "not_performed",
+      "scienceAdversarialPass": "not_performed",
+      "decision": "unreviewed",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1039/d5gc01992c",
+      "journal": "Green Chemistry",
+      "title": "Alternating current enabled para -selective C(sp 2 )–H/N–H cross-coupling of aniline",
+      "firstAuthor": "Zhaoliang Yang",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "",
+      "truePublisherOnlineDate": null,
+      "publisherCategory": null,
+      "evidenceRank": {
+        "score": 7,
+        "signals": [
+          "bond_construction"
+        ],
+        "offTopicTitleRisk": false,
+        "chemistryTitleSignalsOnly": true,
+        "nonOriginalPublisherTypeVerified": false,
+        "publisherFirstOnlineVerified": false,
+        "noAutomaticScopeDecision": true
+      },
+      "sourceProof": {
+        "sourceRootIds": [
+          "2025-06-01_2025-06-30_green-chemistry"
+        ],
+        "sourceSha256Hashes": [
+          "34626eae085dc8293a54ea82551cb8313ca2cb9bc49a45c97e06118e485661c4"
+        ]
+      },
+      "doiResolver": "https://doi.org/10.1039/d5gc01992c",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4859,12 +4854,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103106",
+      "doi": "10.1016/j.chempr.2026.102990",
       "journal": "Chem",
       "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
       "firstAuthor": "Shuai Wang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-01",
+      "originDateCandidate": "2026-03-27",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -4880,13 +4875,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_chem"
+          "2026-08-01_2026-08-07_chem",
+          "2026-03-01_2026-03-31_chem"
         ],
         "sourceSha256Hashes": [
-          "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
+          "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "94c8c134addab049f749b532e89a70d3df2dbd39a87db0c4fb7c9efeffdb3560"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103106",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.102990",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5106,18 +5103,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc06431g",
+      "doi": "10.1039/d5gc01320h",
       "journal": "Green Chemistry",
-      "title": "Highly enantioselective epoxidation of trisubstituted vinyl sulfones with H 2 O 2 catalyzed by a bioinspired manganese catalyst",
-      "firstAuthor": "Wanting Tong",
+      "title": "Green electrochemical synthesis of CeO 2 nanopowders via an electrolysis–calcination process",
+      "firstAuthor": "Xiaohui Zhang",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 6,
         "signals": [
-          "stereoselective_synthetic_method"
+          "synthetic_method_context",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5127,15 +5125,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-02-01_2026-02-28_green-chemistry",
-          "2026-01-01_2026-01-31_green-chemistry"
+          "2025-05-01_2025-05-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "d9a50ce0dbac6948bcf179b2eca057438789a72dd2a13b0e87cf692b3bcd0c25",
-          "7635ad55aaebc6b071697414627fdcd8ae2338bc697ae801718a51165b52f512"
+          "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc06431g",
+      "doiResolver": "https://doi.org/10.1039/d5gc01320h",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5521,18 +5517,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103152",
+      "doi": "10.1016/j.chempr.2026.103100",
       "journal": "Chem",
-      "title": "Relay energy transfer paradigm enabled the photocatalytic enantioselective dearomative [4+2] cycloadditions of quinolines with alkenes",
-      "firstAuthor": "Tatsuhiro Uchikura",
+      "title": "Copper-catalyzed doubly enantioconvergent radical C(sp3)–P cross-coupling for the construction of P- and P,C-stereogenic centers",
+      "firstAuthor": "Cheng Luan",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-01",
+      "originDateCandidate": "2026-06-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5542,13 +5539,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_chem"
+          "2026-06-01_2026-06-30_chem"
         ],
         "sourceSha256Hashes": [
-          "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f"
+          "8901bb71134e2c30e4377862b3475b2960ae2b0dfa3cfaf2142e6a5821111030"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103152",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103100",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5768,18 +5765,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc04556h",
+      "doi": "10.1039/d5gc03300d",
       "journal": "Green Chemistry",
-      "title": "A visible-light-mediated decarboxylative umpolung strategy to access carbamoyl/acyl fluorides in a buffer medium: expedient access to unsymmetrical ureas/amides and lysine-selective bioconjugation",
-      "firstAuthor": "Subhodeep Das",
+      "title": "Electrochemical synthesis of tetralones utilizing platinum nanoparticles as the anode material",
+      "firstAuthor": "Hui Luo",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 6,
         "signals": [
-          "bond_construction"
+          "synthetic_method_context",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5789,13 +5787,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-09-01_2025-09-30_green-chemistry"
+          "2025-10-01_2025-10-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "469e4366182e1278fb251e656147e1f8dbec5af2173ebfbc09f3ddcff9cbd9e7"
+          "95422374850ced5437fb5b01eb0f735f016b8c9803e4b9252b3187ed66648bce"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc04556h",
+      "doiResolver": "https://doi.org/10.1039/d5gc03300d",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6179,10 +6177,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1016/j.chempr.2026.103197",
+      "doi": "10.1016/j.chempr.2026.103106",
       "journal": "Chem",
-      "title": "Stereoretentive radical-radical alkyl-alkyl cross-coupling by Ni-catalysis",
-      "firstAuthor": "Qiong Yu",
+      "title": "Design and organocatalytic enantioselective assembly of axially chiral boracyclohexylidenes and chiral boraspiranes",
+      "firstAuthor": "Shuai Wang",
       "originalQueuePriority": "P0",
       "originDateCandidate": "2026-08-01",
       "truePublisherOnlineDate": null,
@@ -6190,8 +6188,7 @@
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6207,7 +6204,7 @@
           "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa"
         ]
       },
-      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103197",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103106",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6429,18 +6426,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc05558j",
+      "doi": "10.1039/d5gc03738g",
       "journal": "Green Chemistry",
-      "title": "Palladium-catalyzed asymmetric sequential hydroalkylation and hydroamination of 1,3-enynes with 3-hydroxyindoles",
-      "firstAuthor": "Qiuyu Li",
+      "title": "Photoredox catalysis with pyridinium and structurally related onium salts: sustainable synthesis via reactive oxygen species generation and electron transfer",
+      "firstAuthor": "Xin-Rong Yao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "",
+      "originDateCandidate": "2025-11-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 6,
         "signals": [
-          "bond_construction"
+          "synthetic_method_context",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6450,13 +6448,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-01-01_2026-01-31_green-chemistry"
+          "2025-11-01_2025-11-30_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "7635ad55aaebc6b071697414627fdcd8ae2338bc697ae801718a51165b52f512"
+          "ef6c2ff7d3196b68d79654ddd2dc4d21799b1fc23ba1d63327b3dcbebf607a47"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc05558j",
+      "doiResolver": "https://doi.org/10.1039/d5gc03738g",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
