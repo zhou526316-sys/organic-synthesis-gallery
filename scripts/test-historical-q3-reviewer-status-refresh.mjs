@@ -85,3 +85,48 @@ test('changed original source batch or forged legacy SHA cannot authorize an alt
     ...options,approved:new Set()
   }),/not_deterministic/);
 });
+
+test('real post-08 transition from approved queue to published catalog replays without source edits',()=>{
+  const published=new Set(approved);
+  assert.equal(verifyHistoricalReviewerStatusRefresh({
+    ...options,published,approved,reviewerShard:newQueue
+  }),oldQueueGitBlob);
+  // The archived reviewer record is intentionally still awaiting 08 while
+  // its immutable original DOI is now both admitted and formally published.
+  assert.equal(newQueue.records.filter(r=>published.has(r.doi))
+    .every(r=>r.status==='two_pass_approved_awaiting_08'),true);
+});
+test('two successive and disjoint stages may coexist in one stale reviewer shard',()=>{
+  const laterApproved=new Set([...approved,'10.1038/s41557-026-02234-2']);
+  const published=new Set(approved);
+  const now=buildReviewShard(raw,{published,approved:laterApproved,pending:new Set(),
+    sourceSha256:sha256,sourceId:rootId});
+  assert.equal(now.stats.alreadyPublished,2);
+  assert.equal(now.stats.approvedAwaiting08,1);
+  assert.equal(newQueue.stats.requiresTwoPassReview,1);
+  assert.equal(verifyHistoricalReviewerStatusRefresh({
+    ...options,published,approved:laterApproved,reviewerShard:newQueue
+  }),oldQueueGitBlob);
+});
+test('only manifest-authorized progress can explain stale reviewed or approved states',()=>{
+  // Mere appearance in the public catalog is not evidence that a formerly
+  // unfinished DOI went through two-pass historical admission.
+  const roguePublished=new Set(['10.1038/s41557-026-02234-2']);
+  assert.throws(()=>verifyHistoricalReviewerStatusRefresh({
+    ...options,published:roguePublished,reviewerShard:newQueue
+  }),/not_deterministic/);
+  assert.throws(()=>verifyHistoricalReviewerStatusRefresh({
+    ...options,published:new Set(approved),approved:new Set(),
+    reviewerShard:newQueue
+  }),/not_deterministic/);
+  // Wrong title, journal, source SHA or fabricated counters still cannot pass.
+  assert.throws(()=>verifyHistoricalReviewerStatusRefresh({
+    ...options,published:new Set(approved),
+    reviewerShard:{...newQueue,stats:{...newQueue.stats,alreadyPublished:5}}
+  }),/not_deterministic/);
+  assert.throws(()=>verifyHistoricalReviewerStatusRefresh({
+    ...options,published:new Set(approved),
+    reviewerShard:{...newQueue,records:newQueue.records.map((r,i)=>i===0?
+      {...r,date:'2026-07-01'}:r)}
+  }),/not_deterministic/);
+});
