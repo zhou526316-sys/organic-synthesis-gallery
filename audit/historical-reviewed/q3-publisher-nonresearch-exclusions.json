@@ -526,6 +526,154 @@
         "noFormalRelease": true,
         "noMediaPdf": true
       }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103027",
+      "journal": "Chem",
+      "title": "Transitioning aliphatic C–H functionalization from bench to plant: Is decatungstate photocatalysis ready for the leap yet?",
+      "date": "2026-07-01",
+      "publisherArticleType": "Perspective",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Chem 出版社将 Morlacci、Quadri、Capaldo 与 Ravelli 本 DOI 明确归为 Perspective。论文基于已发表的十钨酸盐光催化脂肪族C–H/HAT反应和流程化学经验，讨论光源、溶剂、催化剂负载、传质及放大的技术困难；并未以本篇 DOI 单独提出带有全新底物范围的原创制备反应。",
+      "independentChallengeReason": "反向检查：作者兼具实际工艺开发经验，文本讨论工业放大可能对有机合成研发产生实质启发，不能据此贬低内容或排除原来被引用的DT反应。可是其篇章中心为已知文献、工艺障碍和实施建议，官方Perspective分类与内容相符；不可将DT/HAT关键词自动作为本篇原创合成方法入库。",
+      "reason": "Original experimental synthetic method required; publisher Perspective is a multi-study discussion, not an independent original method under this DOI.",
+      "evidenceBasis": "Exact ScienceDirect Chem official page https://www.sciencedirect.com/science/article/pii/S2451929426000938 classifies as Perspective; volume12 issue 7, issue date 2026-07-09. Frozen Crossref/OpenAlex root 2026-07-01_2026-07-07_chem, source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f, raw batch Git blob 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7, reviewer Git blob 3116998c73fb18fd49f2abbabac0b026796c1dc3; original stage date 2026-07-01 is issue-month placeholder, not publisher-first-online; this record does not claim an exact online-first date for the Perspective.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "underlyingOriginalJournal": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426000938",
+        "publisherDoi": "10.1016/j.chempr.2026.103027",
+        "publisherArticleType": "Perspective",
+        "publisherArticleDate": null,
+        "frozenSourceDate": "2026-07-01",
+        "sourceDateNotPublisherFirstOnline": true,
+        "publisherFirstOnlineDateVerified": false,
+        "publisherIssueDate": "2026-07-09",
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_perspective",
+        "sourceRootId": "2026-07-01_2026-07-07_chem",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "stageBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref"
+        ]
+      },
+      "guards": {
+        "notGlobalJournalExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "distinctOriginalStudiesRetainOwnAdmissions": true,
+        "publisherDateUnverifiedNotAssumedFromIssue": true,
+        "noD1": true,
+        "noMediaOrPDF": true,
+        "noFormalPublication": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103070",
+      "journal": "Chem",
+      "title": "Visible light steers carbonylation utilizing carbon monoxide toward diversification and practicalization",
+      "date": "2026-08-01",
+      "publisherArticleType": "Review",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Chem 官方原始 DOI 页面明确标示 Review（Review article）。作者 Wang 和 Wu 以光诱导CO羰基化为主题，按金属催化、直接SET、光氧化还原与过渡金属协同以及EDA光活化四类整合已发表的方法学，讨论相关碳酰基化合物制备实例与机理，没有在此 DOI 下报告一套新的原创底物拓展。",
+      "independentChallengeReason": "反向检查：文本包括大量具体的光驱动CO插入反应图示、机制和产率数据，其中不少原始论文确实满足Gallery方法学范围；但它们引用了先前发表的不同原创DOI。本Review不应作为一篇独立的原创合成反应重复计算；这些方法需要回到各自原文按期刊、首发日独立审核。",
+      "reason": "Original experimental synthetic method required; publisher Review is a multi-study discussion, not an independent original method under this DOI.",
+      "evidenceBasis": "Exact ScienceDirect Chem official page https://www.sciencedirect.com/science/article/pii/S2451929426001361 classifies as Review; volume12 issue 8, issue date 2026-08-13. Frozen Crossref/OpenAlex root 2026-08-01_2026-08-07_chem, source SHA256 26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa, raw batch Git blob 6ea589ffc11c757ffd5e72b02d931e88e4778b68, reviewer Git blob 26c5304d84ab4f5b7c470daa427d0249b6f524a5; original stage date 2026-08-01 is issue-month placeholder, not publisher-first-online; this record does not claim an exact online-first date for the Review.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "underlyingOriginalJournal": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426001361",
+        "publisherDoi": "10.1016/j.chempr.2026.103070",
+        "publisherArticleType": "Review",
+        "publisherArticleDate": null,
+        "frozenSourceDate": "2026-08-01",
+        "sourceDateNotPublisherFirstOnline": true,
+        "publisherFirstOnlineDateVerified": false,
+        "publisherIssueDate": "2026-08-13",
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_review",
+        "sourceRootId": "2026-08-01_2026-08-07_chem",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "stageBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+        "sourceReviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref"
+        ]
+      },
+      "guards": {
+        "notGlobalJournalExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "distinctOriginalStudiesRetainOwnAdmissions": true,
+        "publisherDateUnverifiedNotAssumedFromIssue": true,
+        "noD1": true,
+        "noMediaOrPDF": true,
+        "noFormalPublication": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103209",
+      "journal": "Chem",
+      "title": "Origins of universality of copper-catalyzed azide-alkyne cycloaddition",
+      "date": "2026-09-01",
+      "publisherArticleType": "Perspective",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Chem 官方文章类型为 Perspective。Karlinskii 与 Ananikov 汇总CuAAC可由Cu(0)/Cu(I)/Cu(II)盐、配合物、簇、纳米催化剂乃至原位还原生成物启动的观察，提出动态铜催化物种群（cocktail）解释铜叠氮炔环加成的鲁棒性。主要工作是整合已有证据并提出机理视角，不是本 DOI 新发表的可独立引用制备反应。",
+      "independentChallengeReason": "反向质疑：作者提及自己先前的多三唑聚合与催化剂性能，也给出CuAAC催化体系变化的新学术解释，不能以标题属于经典click反应而轻率当成无价值。独立原创聚合研究属于另一 DOI；本篇仍为Perspective的跨研究综合分析，不能把观点提出与底物-产物制备范围混作新有机合成方法。",
+      "reason": "Original experimental synthetic method required; publisher Perspective is a multi-study discussion, not an independent original method under this DOI.",
+      "evidenceBasis": "Exact ScienceDirect Chem official page https://www.sciencedirect.com/science/article/pii/S2451929426002755 classifies as Perspective; volume12 issue 9, issue date 2026-09-10. Frozen Crossref/OpenAlex root 2026-09-01_2026-09-07_chem, source SHA256 e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae, raw batch Git blob edaaef14cca66d44d1cc46f57cee778ff8234c36, reviewer Git blob d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6; original stage date 2026-09-01 is issue-month placeholder, not publisher-first-online; this record does not claim an exact online-first date for the Perspective.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "underlyingOriginalJournal": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002755",
+        "publisherDoi": "10.1016/j.chempr.2026.103209",
+        "publisherArticleType": "Perspective",
+        "publisherArticleDate": null,
+        "frozenSourceDate": "2026-09-01",
+        "sourceDateNotPublisherFirstOnline": true,
+        "publisherFirstOnlineDateVerified": false,
+        "publisherIssueDate": "2026-09-10",
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_perspective",
+        "sourceRootId": "2026-09-01_2026-09-07_chem",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "stageBatchGitBlobSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+        "sourceReviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-01_2026-09-07_chem.json",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notGlobalJournalExclusion": true,
+        "notAutomaticTitleExclusion": true,
+        "distinctOriginalStudiesRetainOwnAdmissions": true,
+        "publisherDateUnverifiedNotAssumedFromIssue": true,
+        "noD1": true,
+        "noMediaOrPDF": true,
+        "noFormalPublication": true
+      }
     }
   ],
   "purpose": "Publisher article types establish these five exact DOI are commentary/highlights/briefings and not the original synthetic research they discuss; no keyword-only decisions",
@@ -538,7 +686,8 @@
     "remainingSourceCandidatesKept": true,
     "noProductionPublication": true,
     "chemPreviewErratumNotOriginalResearch": true,
-    "chemOnlineDatePendingVerification": true
+    "chemOnlineDatePendingVerification": true,
+    "chemReviewClassificationMustBePublisherVerified": true
   },
   "chemSecondaryReviewedAt": "2026-10-15",
   "chemSecondaryReviewedCount": 7,
@@ -548,5 +697,15 @@
     "count": 4,
     "scientificDecisions": "four publisher-originality exclusions only; individual source windows remain in census",
     "publisherIssueMonthNotOnlineFirst": true
+  },
+  "chemThirdNonoriginalCohort": {
+    "reviewedAt": "2026-10-15",
+    "count": 3,
+    "types": {
+      "Perspective": 2,
+      "Review": 1
+    },
+    "distinctOriginalArticlesAreSeparate": true,
+    "firstOnlineDatesOfSecondaryItemsNotClaimed": true
   }
 }
