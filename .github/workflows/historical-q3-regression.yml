@@ -6,6 +6,9 @@ on:
       - 'scripts/historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-chem-third-dates.mjs'
+      - 'scripts/test-historical-q3-chem-new-science.mjs'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-three-original-science-review.json'
+      - 'audit/historical-reviewed/approved-admissions.json'
       - 'audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json'
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
@@ -23,6 +26,9 @@ on:
       - 'scripts/historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-chem-third-dates.mjs'
+      - 'scripts/test-historical-q3-chem-new-science.mjs'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-three-original-science-review.json'
+      - 'audit/historical-reviewed/approved-admissions.json'
       - 'audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json'
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
@@ -49,6 +55,7 @@ jobs:
           node --check scripts/historical-q3-reconciliation.mjs
           node --test scripts/test-historical-q3-reconciliation.mjs
           node --test scripts/test-historical-q3-chem-third-dates.mjs
+          node --test scripts/test-historical-q3-chem-new-science.mjs
       - name: Validate exact publisher Research DOI and issue-versus-first-online dates
         run: |
           set -euo pipefail
