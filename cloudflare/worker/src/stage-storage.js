@@ -6,6 +6,11 @@ export const STAGE_STORAGE_REVISION = '2026-09-23.1';
 export const STAGE_INDEX_KEY = 'local-captures/article-figures/stage-index.json';
 const CUTOVER = 1790082000000;
 const MAX_ATTEMPTS = 4;
+// The verified legacy stage index already contains thousands of immutable
+// receipts. 6 MB was too small for the expanded index and rejected every new
+// upload even though its existing records remained valid. Keep a bounded
+// 32 MiB ceiling, and never reset, truncate, or rewrite an unreadable index.
+const MAX_STAGE_INDEX_BYTES = 32 * 1024 * 1024;
 const digest = async bytes => [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(x => x.toString(16).padStart(2, '0')).join('');
 
 export function storageCause(error) {
@@ -48,13 +53,19 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     const object = await bucket.get(STAGE_INDEX_KEY);
     if (!object) return {index: {version: 1, updatedAt: 0, items: {}}, etag: null};
     if (!object.etag) throw integrityError('index_etag_missing');
+    // Read only the current R2 object, with CAS protection on subsequent
+    // updates. Do not mistake a large but healthy JSON index for corruption.
+    if (Number(object.size || 0) > MAX_STAGE_INDEX_BYTES) throw integrityError('index_size_limit');
+    let raw;
+    try { raw = await object.text(); }
+    catch { throw integrityError('index_read_failed'); }
+    if (raw.length > MAX_STAGE_INDEX_BYTES) throw integrityError('index_size_limit');
     let index;
-    try {
-      const raw = await object.text();
-      if (raw.length > 6000000) throw new Error('size');
-      index = JSON.parse(raw);
-    } catch { throw integrityError('index_invalid'); }
-    if (!index || typeof index !== 'object' || Array.isArray(index) || !index.items || typeof index.items !== 'object' || Array.isArray(index.items)) throw integrityError('index_invalid');
+    try { index = JSON.parse(raw); }
+    catch { throw integrityError('index_invalid_json'); }
+    if (!index || typeof index !== 'object' || Array.isArray(index)
+      || !index.items || typeof index.items !== 'object' || Array.isArray(index.items))
+      throw integrityError('index_invalid_schema');
     return {index, etag: object.etag};
   };
   const verifiedObject = async (key, hashPrefix, expectedSize) => {

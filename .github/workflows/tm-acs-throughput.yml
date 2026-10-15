@@ -20,6 +20,9 @@ on:
       - tests/tm-rsc-acs-inventory-20261008.test.mjs
       - tests/tm-image-outbox-recovery-20261008.test.mjs
       - tests/tm-owner-pdf-replay-20261008.test.mjs
+      - tests/tm-heartbeat-circuit-20261015.test.mjs
+      - scripts/test-stage-storage.mjs
+      - cloudflare/worker/src/stage-storage.js
       - scripts/test-tm223-upload.mjs
       - scripts/test-tm-preflight-handoff-and-chem-pii.mjs
       - .github/workflows/tm-acs-throughput.yml
@@ -61,9 +64,10 @@ jobs:
           node tests/tm-immediate-restart.test.mjs
           node tests/tm-manual-resume.test.mjs
           node scripts/test-stage-storage.mjs
+          node --test tests/tm-heartbeat-circuit-20261015.test.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.85
+      - name: Build Bridge 2.2.86
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -74,8 +78,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.85' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.66';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.86' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.67';" public/gallery-vpn-bridge.user.js
           grep -F "ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()

@@ -75,6 +75,35 @@ test('ACS private PDF fetched over authorized publisher browser is retained only
   assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure({...h.job,addedDate:'2026-09-30'},h.pdf,new Error('gm_request_timeout')),false);
 });
 
+test('a downloaded owner PDF survives an expired upload deadline for later verified local replay',async()=>{
+  const h=fixture();
+  assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,
+    new Error('private_pdf_upload_deadline')),true);
+  const key=h.makeReady();
+  assert.equal(h.store.has(key),true);
+  assert.equal(await h.ctx.O.replayOneOwnerPdf(),true);
+  assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,0);
+  assert.equal(h.network.filter(x=>x.kind==='upload').length,1);
+});
+
+test('retryable private API 5xx retains original bytes; 401 403 and 429 never queue replay',async()=>{
+  for(const code of [500,502,503,504]){
+    const h=fixture();
+    const error=Object.assign(new Error('private_pdf_upload_http_'+code),{httpStatus:code});
+    assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,error),true);
+    assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,1);
+    h.setInventory('ready');h.makeReady();
+    assert.equal(await h.ctx.O.replayOneOwnerPdf(),true);
+    assert.equal(h.network.filter(x=>x.kind==='upload').length,0);
+  }
+  for(const code of [401,403,429]){
+    const h=fixture();
+    const error=Object.assign(new Error('private_pdf_upload_http_'+code),{httpStatus:code});
+    assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,error),false);
+    assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,0);
+  }
+});
+
 test('Gallery owner lease checks true missing inventory, then sends original PDF bytes once with verified hash',async()=>{
   const h=fixture();
   await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('gm_request_timeout'));
