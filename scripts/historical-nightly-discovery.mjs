@@ -471,7 +471,7 @@ export async function runNightly() {
       ?journalBatchId(nextRecheck.range,recheckJournal):null;
     const canRetry=deferralEnabled&&!retriedThisRun&&state.deferredRoots.length
       &&!nextRecheck&&!state.activeSplit
-      &&processed>=Math.min(2,maxUnits-1)
+      &&(processed>=Math.min(2,maxUnits-1)||!state.cursor)
       &&Date.parse(state.deferredRoots[0].nextRetryAt)<=Date.now();
     const retry=canRetry?state.deferredRoots[0]:null;
     if(retry)retriedThisRun=true;
