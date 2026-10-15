@@ -1319,3 +1319,31 @@ test('mobile historical date selection fetches a matching Archive paper, not jus
     await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
   });
 });
+
+test('published DOI remains a single clickable non-wrapping identifier at desktop and mobile widths', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    for (const width of [1280, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      const card=page.locator('#gallery > .card:not([hidden])').first();
+      await expect(card).toBeVisible({timeout:30000});
+      const rawDoi=await card.getAttribute('data-doi');
+      expect(rawDoi).toMatch(/^10\.\d{4,9}\/\S+$/);
+      const link=card.locator('.doi .doi-link');
+      await expect(link).toBeVisible();
+      await expect(link).toHaveText(rawDoi!);
+      await expect(link).toHaveAttribute('href',`https://doi.org/${rawDoi}`);
+      const layout=await card.locator('.doi').evaluate(node=>{
+        const style=getComputedStyle(node);
+        return { whiteSpace:style.whiteSpace, wordBreak:style.wordBreak, overflowX:style.overflowX,
+          width:node.getBoundingClientRect().width, scrollHeight:node.scrollHeight, lineHeight:parseFloat(style.lineHeight) };
+      });
+      expect(layout.whiteSpace).toBe('nowrap');
+      expect(['normal','auto']).toContain(layout.wordBreak);
+      expect(['auto','scroll']).toContain(layout.overflowX);
+      expect(layout.width).toBeGreaterThan(120);
+      expect(layout.scrollHeight).toBeLessThan(layout.lineHeight*1.75);
+    }
+  });
+});
