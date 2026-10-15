@@ -1790,7 +1790,7 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,navigationMode,
+          runId,jobId:job.token,captureRevision:BATCH_CAPTURE_REVISION,navigationMode,
           rightsSignal,bodyEvidence,bodyCompleteness:
             status==='saved_local'?String(result.packet?.bodyCompleteness||'partial'):'not_saved',
           reportEventId:''};
