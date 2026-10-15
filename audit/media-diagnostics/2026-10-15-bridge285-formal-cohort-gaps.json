@@ -1,0 +1,758 @@
+{
+  "type": "tampermonkey_bounded_gap_reconciliation",
+  "asOf": "2026-10-15",
+  "auditReadOnly": true,
+  "confirmedBridgePublic": "2.2.85",
+  "confirmedIntegratedEnginePublic": "6.2.66",
+  "authenticatedBrowserVersionVerified": false,
+  "priorSnapshot": {
+    "generatedAt": "2026-10-14T05:01:25.637Z",
+    "formalDois": 1087,
+    "noVisualDois": 67,
+    "ref": "3192c7045b94696d1c15c290abbb3024072403d7"
+  },
+  "currentSnapshot": {
+    "generatedAt": "2026-10-15T02:35:59.523Z",
+    "formalDois": 1151,
+    "noVisualDois": 102,
+    "missingOfficialTocs": 238,
+    "figure1UpgradeQueue": 136
+  },
+  "cohort": {
+    "newFormalDoiCount": 64,
+    "newFormalDoiPolicyCounts": {
+      "standard": 33,
+      "toc_only": 31
+    },
+    "newDoiWithoutVisual": [
+      {
+        "doi": "10.1021/acs.joc.6c01740",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01282",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01017",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c02068",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c02150",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01479",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c02023",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01481",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01561",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01857",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01777",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01552",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01500",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01717",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-15",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acscatal.6c06300",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acscatal.6c06572",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acscatal.6c06668",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/jacs.6c08713",
+        "journal": "JACS",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1038/s44160-026-01193-3",
+        "journal": "Nature Synthesis",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1038/s44160-026-01171-9",
+        "journal": "Nature Synthesis",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03912",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03862",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c04101",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03872",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c04162",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03859",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c04116",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03795",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c04271",
+        "journal": "Organic Letters",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.31635/ccschem.026.202608538",
+        "journal": "CCS Chemistry",
+        "mediaPolicy": "standard",
+        "date": "2026-10-13",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01296",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-13",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01813",
+        "journal": "JOC",
+        "mediaPolicy": "standard",
+        "date": "2026-10-12",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1038/s41586-026-11242-8",
+        "journal": "Nature",
+        "mediaPolicy": "standard",
+        "date": "2026-10-14",
+        "addedDate": "2026-10-15"
+      },
+      {
+        "doi": "10.1021/jacs.6c09478",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-08",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c04476",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-06",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c09845",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-04",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c09948",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-06",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acscatal.6c03499",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-16",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acscatal.6c03761",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-18",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acscatal.6c04538",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-10",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03345",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-22",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.6c00961",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-10",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01352",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-18",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c02967",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-21",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03282",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-26",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.5c03189",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-29",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acscatal.6c02607",
+        "journal": "ACS Catalysis",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-13",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03221",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-02",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03207",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-02",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01737",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-21",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c11520",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-20",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c10750",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-02",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c12029",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-03",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c09649",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-03",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/jacs.6c11377",
+        "journal": "JACS",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-04",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c02479",
+        "journal": "Organic Letters",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-23",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.6c00672",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-13",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1021/acs.joc.6c01643",
+        "journal": "JOC",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-17",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1038/s41557-026-02228-0",
+        "journal": "Nature Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-26",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1038/s41557-026-02227-1",
+        "journal": "Nature Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-28",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1038/s41557-026-02232-4",
+        "journal": "Nature Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-02",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1016/j.chempr.2026.103211",
+        "journal": "Chem",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-21",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1016/j.chempr.2026.103215",
+        "journal": "Chem",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-31",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1016/j.chempr.2026.103249",
+        "journal": "Chem",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-16",
+        "addedDate": ""
+      }
+    ],
+    "existingVisualGapsReconciled": [
+      "10.1021/acscatal.6c04411",
+      "10.1021/acscatal.6c02698",
+      "10.1021/acscatal.6c03737",
+      "10.1021/acscatal.6c03124",
+      "10.1021/acscatal.6c04393",
+      "10.1021/acscatal.6c03374",
+      "10.1021/jacs.6c08998",
+      "10.1021/jacs.6c10775",
+      "10.1021/jacs.6c08244",
+      "10.1021/jacs.6c11788",
+      "10.1021/jacs.6c05233",
+      "10.1021/jacs.6c08775",
+      "10.1021/jacs.6c06565",
+      "10.1021/acs.joc.6c00860",
+      "10.1021/acs.joc.5c03271",
+      "10.1021/acs.joc.6c01089",
+      "10.1021/acs.joc.6c01163",
+      "10.1021/acs.joc.6c01104",
+      "10.1021/acs.joc.6c00772",
+      "10.1021/acs.joc.6c00587",
+      "10.1021/acs.orglett.6c02892",
+      "10.1021/acs.orglett.6c02567",
+      "10.1021/acs.orglett.6c02441",
+      "10.1039/d6sc04572c",
+      "10.1039/d6sc04876e",
+      "10.1039/d6sc04627d",
+      "10.1039/d6sc02716d",
+      "10.1039/d6sc05170g",
+      "10.1039/d6gc02423h"
+    ],
+    "oldDoiLostFromFormal": []
+  },
+  "focusRscWithoutVisual": {
+    "count": 31,
+    "standard": 15,
+    "toc_only": 16,
+    "dois": [
+      {
+        "doi": "10.1039/d6sc05829a",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "2026-10-06",
+        "addedDate": "2026-10-07"
+      },
+      {
+        "doi": "10.1039/d6sc06573b",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "2026-10-06",
+        "addedDate": "2026-10-07"
+      },
+      {
+        "doi": "10.1039/d6sc06421c",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "2026-10-05",
+        "addedDate": "2026-10-06"
+      },
+      {
+        "doi": "10.1039/d6sc06246f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "2026-10-01",
+        "addedDate": "2026-10-05"
+      },
+      {
+        "doi": "10.1039/d6sc06200h",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-22",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc03931f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-09",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc05410b",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-04",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc05589c",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-31",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc05630j",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-21",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc04861g",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-17",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc04786f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-14",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc05207j",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-05",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc03998g",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-29",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc02777f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-08",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6sc03717h",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-08"
+      },
+      {
+        "doi": "10.1039/d6sc05761f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-08"
+      },
+      {
+        "doi": "10.1039/d6sc06374h",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-08"
+      },
+      {
+        "doi": "10.1039/d6sc06407h",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-09"
+      },
+      {
+        "doi": "10.1039/d6sc06571f",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-14"
+      },
+      {
+        "doi": "10.1039/d6sc06879k",
+        "journal": "Chemical Science",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-11"
+      },
+      {
+        "doi": "10.1039/d6gc04087j",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "standard",
+        "date": "2026-10-06",
+        "addedDate": "2026-10-07"
+      },
+      {
+        "doi": "10.1039/d6gc04772f",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "standard",
+        "date": "2026-10-06",
+        "addedDate": "2026-10-07"
+      },
+      {
+        "doi": "10.1039/d6gc03161g",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "standard",
+        "date": "2026-10-05",
+        "addedDate": "2026-10-06"
+      },
+      {
+        "doi": "10.1039/d6gc03080g",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-17",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc03989h",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-16",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc03534e",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-09-09",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc02989b",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-08-05",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc01864e",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-31",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc02631a",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "toc_only",
+        "date": "2026-07-09",
+        "addedDate": ""
+      },
+      {
+        "doi": "10.1039/d6gc04458a",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-08"
+      },
+      {
+        "doi": "10.1039/d6gc05783g",
+        "journal": "Green Chemistry",
+        "mediaPolicy": "standard",
+        "date": "",
+        "addedDate": "2026-10-08"
+      }
+    ]
+  },
+  "ownerLog": {
+    "uploadedAtEpochMs": 1791970390401,
+    "uploadedAtBeijing": "2026-10-14 18:53:10",
+    "startsBeforeBridge285Deployment": true,
+    "ownerAuthenticatedBridge285RunProven": false,
+    "ownerPriorRun": {
+      "formal": 1087,
+      "candidate": 207,
+      "visited": 101,
+      "attempts": 111,
+      "fullyResolved": 43,
+      "unresolved": 162,
+      "inventoryErrors": 0
+    }
+  },
+  "constraints": {
+    "julyToSeptember": "toc_only",
+    "octoberPlus": "visit_bundles_media_text_and_authorized_private_pdf",
+    "pdfUnknownNotMissing": true,
+    "noInventedToc": true,
+    "noPublisherDenialBypass": true,
+    "oneOfficialPublicationSlotBeijing": "08:00"
+  },
+  "interpretation": "New 64 formal DOIs are missing card visuals in current snapshot, while 29 earlier no-visual DOIs no longer appear in the gap set. This is a DOI cohort comparison, not proof every image was acquired in one owner browser run or that owner PDF is readable."
+}
