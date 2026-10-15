@@ -7200,9 +7200,13 @@ function embeddedJobDois(value) {
   async function retainOwnerPdfAfterUploadFailure(job,pdf,error){
     if(!recentFullCaptureEligible(job)||!job.capturePrivatePdf||controllerPaused()||!currentCaptureJob(job)
       ||!pdf||!pdf.buffer||!privatePdfBytesValid(pdf.buffer))return false;
-    if(Number(error&&error.httpStatus||0)>0)return false;
+    // Preserve downloaded bytes on an expired article deadline or a retryable
+    // private API 5xx. The owner-only Gallery replayer first checks server
+    // inventory; it will never retransmit bytes already confirmed stored.
+    var httpStatus=Number(error&&error.httpStatus||0);
+    if(httpStatus>0&&![500,502,503,504].includes(httpStatus))return false;
     var reason=String(error&&error.message||error||'');
-    if(!/timeout|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted/i.test(reason)
+    if(!/timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50[234]|stage_storage_/i.test(reason)
       ||/cancelled|unbound|stale|permission|user_aborted|mismatch/i.test(reason))return false;
     var doi=normalizeDoi(job.doi),buffer=pdf.buffer,bytes=Number(buffer.byteLength||0);
     if(!doi||bytes<1024||bytes>8*1024*1024)return false;
@@ -7366,7 +7370,7 @@ function embeddedJobDois(value) {
       GM_setValue(key,{status:'not_found',at:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
       return {status:'not_found'};
     }
-    var lastError=null,pdf=null;
+    var lastError=null,pdf=null,pdfBytesRetained=false;
     for(var i=0;i<Math.min(4,candidates.length);i+=1){
       try{
         if(Number(job.captureDeadline)>0&&Date.now()>=job.captureDeadline)throw new Error('private_pdf_upload_deadline');
@@ -7396,6 +7400,7 @@ function embeddedJobDois(value) {
         lastError=error;
         if(Number(error&&error.httpStatus||0)===401)GM_deleteValue(PRIVATE_PDF_LEASE_KEY);
         var kept=await retainOwnerPdfAfterUploadFailure(job,pdf,error);
+        pdfBytesRetained=Boolean(kept);
         pushTrace(trace,{stage:'private_pdf_gallery_retry',event:kept?'retained_locally':'not_retained',status:kept?'deferred':'info',
           byteLength:Number(pdf&&pdf.byteLength||0),message:'owner_only=1;gallery_replay='+Number(kept)+';no_publisher_redownload=1'});
         pushTrace(trace,{stage:'private_pdf_upload',event:'receipt_failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),url:PRIVATE_PDF_CAPTURE_ENDPOINT,byteLength:pdf.byteLength,message:captureLiveError(error&&error.message||error)});
@@ -7403,7 +7408,8 @@ function embeddedJobDois(value) {
     }
     assertBoundCaptureJob(job);
     if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
-    var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),revision:PRIVATE_PDF_CAPTURE_REVISION};
+    var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),
+      localReplayReady:pdfBytesRetained,revision:PRIVATE_PDF_CAPTURE_REVISION};
     GM_setValue(key,failed);
     captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取失败',pdfError:failed.reason});
     return failed;
