@@ -252,7 +252,7 @@ export function reconcileQ3({
     }catch{publisherUrl=null;doiUrl=null;}
     const validPage=publisherUrl?.protocol==='https:'
       &&publisherUrl.hostname==='www.sciencedirect.com'
-      &&/^\/science\/article\/pii\/S2451929426\d{7}$/.test(publisherUrl.pathname)
+      &&/^\/science\/article\/pii\/S2451929426\d{6}$/.test(publisherUrl.pathname)
       &&doiUrl?.href==='https://doi.org/'+id;
     const dateOk=/^2026-\d{2}-\d{2}$/.test(r?.publisherFirstOnlineDate||'')
       &&r.publisherFirstOnlineDate!==r.sourceDate
