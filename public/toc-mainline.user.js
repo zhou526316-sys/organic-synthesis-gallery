@@ -5721,8 +5721,8 @@ function embeddedJobDois(value) {
         var progress=GM_getValue(progressKey(job.doi),null);
         if(!progress||!/auth_wait|challenge_wait/.test(String(progress.status||''))){
           // Finish races take precedence over a timer waking after tab sleep.
-          result=completedPublisherResult(job);
-          if(result)return result;
+          var finalResult=completedPublisherResult(job);
+          if(finalResult)return finalResult;
           return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
         }
       }
