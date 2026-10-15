@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "q3-two-pass-seven-v1",
+  "rows": [
+    {
+      "doi": "10.1039/d6sc02950g",
+      "publisherFirstOnline": "2026-07-31",
+      "articleType": "RSC Edge Article",
+      "publisherUrl": "https://doi.org/10.1039/d6sc02950g",
+      "root": "2026-07-22_2026-07-31_chemical-science",
+      "sourceSha256": "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508",
+      "batchBlob": "5c16ab17e0054ae3f93690c089e3b8e87355c9b3",
+      "queueBlob": "611484e291cf85473584f1f130bc9f694526d3a1",
+      "scopeAssessment": {
+        "primaryContribution": "光诱导亚甲基环丁烷开环的远程1,4-C–N/C–C双官能团化。",
+        "preparativeTransformation": "亚甲基环丁烷与TsCl、吡唑/乙腈或芳碳亲核剂反应，形成双高烯丙基氨基化或芳基化产物。",
+        "generalityEvidence": "RSC原文涵盖N亲核剂和吲哚、吡咯、萘酚等C亲核剂；74%优化实例且有烯烃衍生化。",
+        "sourceEvidence": "原RSC DOI Edge Article First published 31 July 2026；Crossref来源原日期空值，未以createdDate代替；Git冻结来源完全一致。",
+        "boundaryChallenge": "是否只是特定反应级联？真实多类N/C亲核剂与产物衍生已构成方法；详细自由基路径仍为作者模型。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include"
+    },
+    {
+      "doi": "10.1002/anie.2349367",
+      "publisherFirstOnline": "2026-09-08",
+      "articleType": "Wiley Research Article",
+      "publisherUrl": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367",
+      "root": "2026-09-08_2026-09-14_angew",
+      "sourceSha256": "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98",
+      "batchBlob": "162e2cc6724fd2e87dd5ca5300bcbdbea06edc37",
+      "queueBlob": "e061a1de33dee534418ae7ec6edba86110170204",
+      "scopeAssessment": {
+        "primaryContribution": "手性锰催化HAT使非手性哌啶α-C–H氧化去对称化。",
+        "preparativeTransformation": "N-保护哌啶在Mn/H2O2与TFE条件下形成高ee手性N,O-缩醛，后期转化为不同哌啶衍生物。",
+        "generalityEvidence": "Wiley官方正文证实多个底物及保护基、最高>99% ee和立体保持衍生。",
+        "sourceEvidence": "原始Wiley研究Article First published 8 September 2026；冻源DOI、作者、标题和哈希校验一致。",
+        "boundaryChallenge": "尽管含统计HAT模型，论文核心是已获得系列手性N,O-缩醛；不把模型相关性当成机理唯一实证。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include"
+    }
+  ]
+}
