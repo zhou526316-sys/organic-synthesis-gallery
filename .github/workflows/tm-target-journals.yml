@@ -38,10 +38,16 @@ jobs:
           git diff --exit-code "$BASE" HEAD -- \
             scripts/audit-literature.mjs shared/literature-journals.js \
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
-            public/papers.gz.b64 public/rolling-supplement.json \
+            public/papers.gz.b64 \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
             .github/workflows/new-body-continuous.yml \
             cloudflare/worker/src/media.js
+          # This workflow normally rejects ALL protected literature diffs.
+          # The only exception is re-establishing the exact blob frozen by
+          # the 2026-10-15 authorized release, checked DOI-by-DOI and SHA-by-SHA.
+          if ! git diff --quiet "$BASE" HEAD -- public/rolling-supplement.json; then
+            node scripts/verify-oct15-frozen-literature-restore.mjs "$BASE"
+          fi
           node scripts/test-card20-policy-delta.mjs "$BASE"
 
       - name: Verify source syntax and existing queue/controller protections
