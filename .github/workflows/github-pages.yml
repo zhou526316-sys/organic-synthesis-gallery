@@ -22,6 +22,8 @@ on:
       - 'scripts/test-gallery-architecture-public.mjs'
       - 'scripts/test-daily-gallery-order.mjs'
       - 'scripts/test-publisher-date-display-fix.mjs'
+      - 'scripts/test-gallery-published-doi-date-integrity.mjs'
+      - 'audit/publisher-date-evidence/**'
       - 'shared/publisher-date-display-fix.mjs'
       - 'shared/daily-gallery-order.mjs'
       - 'architecture/**'
@@ -131,6 +133,7 @@ jobs:
         if: steps.resolve.outputs.should_deploy == 'true'
         run: |
           node scripts/test-pages-literature-authorization.mjs
+          node scripts/test-gallery-published-doi-date-integrity.mjs
           node scripts/test-verified-title-presentation.mjs
           node scripts/test-one-time-owner-catchup-20261013.mjs
       - name: Enforce fixed literature publication slot
