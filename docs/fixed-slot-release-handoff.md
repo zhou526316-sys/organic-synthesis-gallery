@@ -24,6 +24,12 @@ The delivery finalizer already skips successful Pages workflows without a unique
 
 The daily 08:00 assistant task should inspect the same-slot writer first. If that writer is armed, running, or already delivered, reuse and verify it; do not race it with another trigger/ref write or duplicate authority lock. The existing trigger bridge is only a fallback if no valid same-slot writer exists. Review incompleteness still blocks itself or the global batch according to the existing scope contract.
 
+## Owner-authorized manual recovery — 2026-10-15 only
+
+After the scheduled 2026-10-15 08:00 release was missed because the candidate audit and full semantic review were absent, the owner explicitly requested that the release gate be opened for a manual run of today's existing scheduled task. The existing 08:00 logical publication slot may therefore complete in a **one-time, date-limited execution window ending at 23:59 Beijing on 2026-10-15**, through `scripts/lib/literature-slot-window.mjs`. This does not establish an 18:00 slot or any recurring late release. On 2026-10-16 and every later date the normal 60-minute grace applies. It is not a revival of the 2026-10-13 seven-DOI owner catchup.
+
+This exception relaxes **time only**, not content or delivery authorization. A complete same-day Crossref/OpenAlex publisher-aware candidate set and dated double-pass decisions, both strict prepublish gates, canonical conversion, immutable source hashes, anti-revival scope corrections, one Git atomic publication commit, no duplicate same-day release, Pages `literature_authorization`, DOI union equality and live verification remain mandatory. A manual run of the final release task **alone** cannot publish when today's `prepublish-review-2026-10-15-0800.json` is absent or incomplete; today's review must first be completed and persisted through its original workflow.
+
 ## Acceptance
 
 Run regression tests through the existing prepublish and Pages Actions. An off-slot test may prove that an expired strict bundle is rejected without a production commit, and may redeploy the already-authorized unchanged snapshot. It cannot prove the next slot has published. Record the actual next fixed-slot outcome separately. Never describe configuration changes or a successful no-op as a completed new-literature release.
