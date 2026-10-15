@@ -1,0 +1,766 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-05-01",
+    "to": "2025-05-31"
+  },
+  "checkedAt": "2026-10-15T15:46:14.749Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 16,
+        "count": 16,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 16,
+      "count": 16,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 16,
+      "openalex": 16
+    }
+  },
+  "candidateCount": 16,
+  "alreadyPublished": 0,
+  "unreviewed": 16,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00797-5",
+      "title": "Synthesis of fully π-conjugated non-alternant carbon nanobelts",
+      "authors": [
+        "Yi Han",
+        "Shaofei Wu",
+        "Koon Yong Shawn Khoo",
+        "Chunyan Chi"
+      ],
+      "date": "2025-05-16",
+      "datePrecision": "day",
+      "createdDate": "2025-05-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "947-955",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00797-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00797-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00798-4",
+      "title": "Building bridged bicyclic scaffolds",
+      "authors": [
+        "Stacey Brenner-Moyer"
+      ],
+      "date": "2025-05-12",
+      "datePrecision": "day",
+      "createdDate": "2025-05-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1178-1180",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00798-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00798-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00799-3",
+      "title": "Allosteric regulation in metal–organic cages",
+      "authors": [
+        "Yuchong Yang",
+        "Yuyin Du",
+        "Andrew W. Heard",
+        "Jonathan R. Nitschke"
+      ],
+      "date": "2025-05-02",
+      "datePrecision": "day",
+      "createdDate": "2025-05-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "537-551",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00799-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00799-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00803-w",
+      "title": "Enantioselective type II intramolecular [5 + 2] cycloadditions of oxidopyrylium ylides using chiral-phosphoric-acid catalysis",
+      "authors": [
+        "Liangliang Yang",
+        "Ka Lok Chan",
+        "Ka Key Cheung",
+        "Pauline Chiu",
+        "Zhenyang Lin",
+        "Jianwei Sun"
+      ],
+      "date": "2025-05-12",
+      "datePrecision": "day",
+      "createdDate": "2025-05-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1223-1231",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00803-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00803-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00804-9",
+      "title": "Single molecule chemistry for cyclic carbon synthesis",
+      "authors": [
+        "Pascal Ruffieux"
+      ],
+      "date": "2025-05-08",
+      "datePrecision": "day",
+      "createdDate": "2025-05-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "909-910",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00804-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00804-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00807-6",
+      "title": "Embedding pentagonal rings to access fully π-conjugated carbon nanobelts",
+      "authors": [],
+      "date": "2025-05-16",
+      "datePrecision": "day",
+      "createdDate": "2025-05-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "911-912",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00807-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00807-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00808-5",
+      "title": "A molecular sieve boosts perovskite stability",
+      "authors": [
+        "Giulia Grancini",
+        "Carolin M. Sutter-Fella"
+      ],
+      "date": "2025-05-16",
+      "datePrecision": "day",
+      "createdDate": "2025-05-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1029-1030",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00808-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00808-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00809-4",
+      "title": "Synthesis of chiral difluoromethyl cyclopropanes through desymmetric difluoromethylation of cyclopropenes enabled by enantioselective copper catalysis",
+      "authors": [
+        "Decai Ding",
+        "Su Chen",
+        "Lingfeng Yin",
+        "Wei-Ting Ou",
+        "Jeanette A. Krause",
+        "Mu-Jeng Cheng",
+        "Wei Liu"
+      ],
+      "date": "2025-05-22",
+      "datePrecision": "day",
+      "createdDate": "2025-05-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1118-1127",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00809-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00809-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00810-x",
+      "title": "Ionic liquids for fluoride-ion shuttling",
+      "authors": [
+        "Sara Renfrew"
+      ],
+      "date": "2025-05-01",
+      "datePrecision": "day",
+      "createdDate": "2025-05-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "525-525",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00810-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00810-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00811-w",
+      "title": "Crystallizing ion conduction pathways",
+      "authors": [
+        "Jet-Sing M. Lee"
+      ],
+      "date": "2025-05-06",
+      "datePrecision": "day",
+      "createdDate": "2025-05-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "527-527",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00811-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00811-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00812-9",
+      "title": "Designing current collector interphases",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-05-01",
+      "datePrecision": "day",
+      "createdDate": "2025-05-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "526-526",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00812-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00812-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00813-8",
+      "title": "Engineered dielectrics for high energy",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-05-01",
+      "datePrecision": "day",
+      "createdDate": "2025-05-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "528-528",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00813-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00813-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00814-7",
+      "title": "The synthesis of energy materials",
+      "authors": [],
+      "date": "2025-05-14",
+      "datePrecision": "day",
+      "createdDate": "2025-05-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "523-524",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00814-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00814-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00816-5",
+      "title": "Nickel-catalysed deuteration of benzylic C(sp3)–H bonds using D2O",
+      "authors": [
+        "Feiyu Qiu",
+        "Lingyun Yang",
+        "Yachun Wang",
+        "Yuan Gao",
+        "Yi Chen",
+        "Aiwen Lei",
+        "Wu Li"
+      ],
+      "date": "2025-05-22",
+      "datePrecision": "day",
+      "createdDate": "2025-05-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1141-1150",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00816-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00816-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00820-9",
+      "title": "Publisher Correction: Regulation of Pd single-atom coordination for enhanced photocatalytic oxidation of toluene to benzaldehyde",
+      "authors": [
+        "Ruiyi Sun",
+        "Xing Cao",
+        "Junguo Ma",
+        "Hsiao-Chien Chen",
+        "Chen Chen",
+        "Qing Peng",
+        "Yadong Li"
+      ],
+      "date": "2025-05-12",
+      "datePrecision": "day",
+      "createdDate": "2025-05-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "1017-1017",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00820-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00820-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00827-2",
+      "title": "Publisher Correction: Allosteric regulation in metal–organic cages",
+      "authors": [
+        "Yuchong Yang",
+        "Yuyin Du",
+        "Andrew W. Heard",
+        "Jonathan R. Nitschke"
+      ],
+      "date": "2025-05-27",
+      "datePrecision": "day",
+      "createdDate": "2025-05-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "776-776",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00827-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00827-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

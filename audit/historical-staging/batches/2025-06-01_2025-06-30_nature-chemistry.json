@@ -1,0 +1,1148 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2025-06-01",
+    "to": "2025-06-30"
+  },
+  "checkedAt": "2026-10-15T15:45:55.350Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "lane": "publication",
+        "total": 23,
+        "count": 23,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "lane": "publication",
+        "total": 23,
+        "count": 23,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 23,
+      "count": 23,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 23,
+      "openalex": 23
+    }
+  },
+  "candidateCount": 23,
+  "alreadyPublished": 0,
+  "unreviewed": 23,
+  "records": [
+    {
+      "doi": "10.1038/s41557-025-01824-w",
+      "title": "Linked in with lignin",
+      "authors": [
+        "Moses Dike",
+        "Shudipto Konika Dishari"
+      ],
+      "date": "2025-06-05",
+      "datePrecision": "day",
+      "createdDate": "2025-06-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "6",
+        "pages": "974-974",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01824-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01824-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01827-7",
+      "title": "Interfacial assembly of biomimetic MOF-based porous membranes on coacervates to build complex protocells and prototissues",
+      "authors": [
+        "Yanglimin Ji",
+        "Yiyang Lin",
+        "Yan Qiao"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "986-996",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01827-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01827-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01831-x",
+      "title": "Information propagation through enzyme-free catalytic templating of DNA dimerization with weak product inhibition",
+      "authors": [
+        "Javier Cabello-Garcia",
+        "Rakesh Mukherjee",
+        "Wooli Bae",
+        "Guy-Bart V. Stan",
+        "Thomas E. Ouldridge"
+      ],
+      "date": "2025-06-05",
+      "datePrecision": "day",
+      "createdDate": "2025-06-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1179-1187",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01831-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01831-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01834-8",
+      "title": "Oxygen transposition of formamide to α-aminoketone moiety in a carbene-initiated domino reaction",
+      "authors": [
+        "Yan Luo",
+        "Guanglong Huang",
+        "Kuiling Ding",
+        "Xiao-Song Xue",
+        "Xiaoming Wang"
+      ],
+      "date": "2025-06-13",
+      "datePrecision": "day",
+      "createdDate": "2025-06-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1196-1206",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01834-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01834-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01836-6",
+      "title": "Building ultramicroporous zirconium metal‒organic frameworks with ligands of high coordination density through a reticular approach",
+      "authors": [
+        "Liang Yu",
+        "Shenfang Li",
+        "Xin Zhou",
+        "Bochun Zhang",
+        "Kang Zhou",
+        "Qibin Xia",
+        "Sujing Wang",
+        "Jing Li",
+        "Hao Wang"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1207-1215",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01836-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01836-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01837-5",
+      "title": "A designer minimalistic model parallels the phase-separation-mediated assembly and biophysical cues of extracellular matrix",
+      "authors": [
+        "Xian Xie",
+        "Tianjie Li",
+        "Linjie Ma",
+        "Jiahao Wu",
+        "Yajing Qi",
+        "Boguang Yang",
+        "Zhuo Li",
+        "Zhinan Yang",
+        "Kunyu Zhang",
+        "Zhiqin Chu",
+        "To Ngai",
+        "Jiang Xia",
+        "Yi Wang",
+        "Pengchao Zhao",
+        "Liming Bian"
+      ],
+      "date": "2025-06-09",
+      "datePrecision": "day",
+      "createdDate": "2025-06-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1216-1226",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01837-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01837-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01839-3",
+      "title": "Controlling our online professional persona",
+      "authors": [
+        "Shira Joudan"
+      ],
+      "date": "2025-06-05",
+      "datePrecision": "day",
+      "createdDate": "2025-06-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "6",
+        "pages": "779-780",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01839-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01839-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01842-8",
+      "title": "A selenoxide for single-atom protein modification of tyrosine residues enabled by water-resistant chalcogen and hydrogen bonding",
+      "authors": [
+        "Songyun Lin",
+        "Marina Hirao",
+        "Philipp Hartmann",
+        "Markus Leutzsch",
+        "Marie Sophie Sterling",
+        "Alessandro Vetere",
+        "Sandra Klimmek",
+        "Heike Hinrichs",
+        "Johanna Marie Mengeler",
+        "Johannes Lehmann",
+        "Jan Samsonowicz-Gόrski",
+        "Florian Berger",
+        "Tobias Ritter"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1331-1339",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01842-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01842-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01844-6",
+      "title": "On-DNA C–H functionalization of electron-rich arenes for DNA-encoded libraries",
+      "authors": [
+        "Eduardo de Pedro Beato",
+        "Luca Torkowski",
+        "Philipp Hartmann",
+        "Lara Vogelsang",
+        "Karl-Josef Dietz",
+        "Tobias Ritter"
+      ],
+      "date": "2025-06-16",
+      "datePrecision": "day",
+      "createdDate": "2025-06-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1340-1347",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01844-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01844-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01845-5",
+      "title": "A biocompatible Lossen rearrangement in Escherichia coli",
+      "authors": [
+        "Nick W. Johnson",
+        "Marcos Valenzuela-Ortega",
+        "Thomas W. Thorpe",
+        "Yuta Era",
+        "Annemette Kjeldsen",
+        "Keith Mulholland",
+        "Stephen Wallace"
+      ],
+      "date": "2025-06-23",
+      "datePrecision": "day",
+      "createdDate": "2025-06-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "1020-1026",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01845-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01845-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01848-2",
+      "title": "Accessing sulfonamides via formal SO2 insertion into C–N bonds",
+      "authors": [
+        "Myojeong Kim",
+        "Carys E. Obertone",
+        "Christopher B. Kelly",
+        "Christopher A. Reiher",
+        "Cristina Grosanu",
+        "James C. Robertson",
+        "Mark D. Levin"
+      ],
+      "date": "2025-06-20",
+      "datePrecision": "day",
+      "createdDate": "2025-06-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1247-1255",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01848-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01848-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01849-1",
+      "title": "Modular alkyl growth in amines via the selective insertion of alkynes into C–C bonds",
+      "authors": [
+        "Xin-Yue Zhou",
+        "Lu Liu",
+        "Hairong Lyu",
+        "Xiao-Chen Wang"
+      ],
+      "date": "2025-06-12",
+      "datePrecision": "day",
+      "createdDate": "2025-06-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1323-1330",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01849-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01849-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01850-8",
+      "title": "Adaptive dynamic kinetic resolution enables alteration of chiral induction with ring sizes",
+      "authors": [
+        "Bangkui Yu",
+        "Yao Huang",
+        "Haocheng Zhang",
+        "Hanmin Huang"
+      ],
+      "date": "2025-06-23",
+      "datePrecision": "day",
+      "createdDate": "2025-06-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1256-1264",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01850-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01850-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01851-7",
+      "title": "Reversible formation and control of linear conjugation in polymers",
+      "authors": [
+        "Yanyun Wu",
+        "Jiongjiang Liu",
+        "Mengya Wang",
+        "Xinzhou Wu",
+        "Wanan Cai",
+        "Haijun Niu",
+        "Kai Lang"
+      ],
+      "date": "2025-06-19",
+      "datePrecision": "day",
+      "createdDate": "2025-06-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1265-1274",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01851-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01851-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01852-6",
+      "title": "Synthesis of diverse terpenoid frameworks via enzyme-enabled abiotic scaffold hop",
+      "authors": [
+        "Heping Deng",
+        "Junhong Yang",
+        "Fuzhuo Li",
+        "Jian Li",
+        "Hans Renata"
+      ],
+      "date": "2025-06-16",
+      "datePrecision": "day",
+      "createdDate": "2025-06-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1275-1283",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01852-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01852-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01853-5",
+      "title": "Expedited access to polyunsaturated fatty acids and biofunctional analogues by full solid-phase synthesis",
+      "authors": [
+        "Yutaro Saito",
+        "Mayuko Akita",
+        "Azusa Saika",
+        "Yusuke Sano",
+        "Masashi Hotta",
+        "Jumpei Morimoto",
+        "Akiharu Uwamizu",
+        "Junken Aoki",
+        "Takahiro Nagatake",
+        "Jun Kunisawa",
+        "Shinsuke Sando"
+      ],
+      "date": "2025-06-25",
+      "datePrecision": "day",
+      "createdDate": "2025-06-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1391-1400",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01853-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01853-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01855-3",
+      "title": "Mechanochemical pathway for converting fluoropolymers to fluorochemicals",
+      "authors": [
+        "Masashi Hattori",
+        "Debarshi Saha",
+        "Muhamad Zulfaqar Bacho",
+        "Norio Shibata"
+      ],
+      "date": "2025-06-27",
+      "datePrecision": "day",
+      "createdDate": "2025-06-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1480-1487",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01855-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01855-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01856-2",
+      "title": "A lanthanide–carbon triple bond stabilized within a fullerene cage",
+      "authors": [
+        "Hongjie Jiang",
+        "Jing Zhao",
+        "Qingyu Meng",
+        "Xiao-Kun Zhao",
+        "Min Guo",
+        "Han-Shi Hu",
+        "Jun Li",
+        "Ning Chen"
+      ],
+      "date": "2025-06-19",
+      "datePrecision": "day",
+      "createdDate": "2025-06-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1364-1370",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01856-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01856-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01858-0",
+      "title": "Function without form in synthetic polymers mimicking protein hydration",
+      "authors": [
+        "Michael A. Webb"
+      ],
+      "date": "2025-06-18",
+      "datePrecision": "day",
+      "createdDate": "2025-06-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "979-981",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01858-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01858-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01861-5",
+      "title": "A high-five for praseodymium",
+      "authors": [
+        "Florian R. Neururer",
+        "Stephan Hohloch"
+      ],
+      "date": "2025-06-27",
+      "datePrecision": "day",
+      "createdDate": "2025-06-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "975-976",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01861-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01861-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01862-4",
+      "title": "Biosynthesis of an elusive sulfur-containing functional group",
+      "authors": [
+        "Sabina J. Maurer",
+        "Monica E. McCallum"
+      ],
+      "date": "2025-06-23",
+      "datePrecision": "day",
+      "createdDate": "2025-06-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "977-978",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01862-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01862-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01863-3",
+      "title": "New-to-nature biocompatible chemistry for plastic waste upcycling",
+      "authors": [
+        "Wei Long Soon",
+        "Hui Qing Chong",
+        "Jee Loon Foo",
+        "Matthew Wook Chang"
+      ],
+      "date": "2025-06-23",
+      "datePrecision": "day",
+      "createdDate": "2025-06-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "982-983",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01863-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01863-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01865-1",
+      "title": "Are large language models superhuman chemists?",
+      "authors": [],
+      "date": "2025-06-13",
+      "datePrecision": "day",
+      "createdDate": "2025-06-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "984-985",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01865-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01865-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

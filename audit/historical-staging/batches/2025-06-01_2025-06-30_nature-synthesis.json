@@ -1,0 +1,1011 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-06-01",
+    "to": "2025-06-30"
+  },
+  "checkedAt": "2026-10-15T15:45:54.567Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 21,
+        "count": 21,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 21,
+      "count": 21,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 21,
+      "openalex": 21
+    }
+  },
+  "candidateCount": 21,
+  "alreadyPublished": 0,
+  "unreviewed": 21,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00805-8",
+      "title": "Synthesis of chiral sequence-defined oligomers via sulfur–fluoride and sulfur–phenolate exchange reactions",
+      "authors": [
+        "Yu Han",
+        "Sidharam P. Pujari",
+        "Muthusamy Subramaniam",
+        "Bo Chen",
+        "Fedor M. Miloserdov",
+        "Han Zuilhof"
+      ],
+      "date": "2025-06-02",
+      "datePrecision": "day",
+      "createdDate": "2025-06-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1106-1117",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00805-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00805-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00806-7",
+      "title": "Synthesis of oligomers with control of the monomer sequence and chirality",
+      "authors": [],
+      "date": "2025-06-16",
+      "datePrecision": "day",
+      "createdDate": "2025-06-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1031-1032",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00806-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00806-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00815-6",
+      "title": "In-brain synthesis of receptor-based protease sensors by coupling ligand-directed chemistry and click chemistry",
+      "authors": [
+        "Seiji Sakamoto",
+        "Kazuki Shiraiwa",
+        "Mengchu Wang",
+        "Mamoru Ishikawa",
+        "Hiroshi Nonaka",
+        "Itaru Hamachi"
+      ],
+      "date": "2025-06-02",
+      "datePrecision": "day",
+      "createdDate": "2025-06-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1128-1140",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00815-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00815-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00817-4",
+      "title": "Chirality retention in Friedel–Crafts spiroannulation for iterative synthesis of spiro-bridged conjugated carbocycles",
+      "authors": [
+        "Xingwen Pu",
+        "Yi Lu",
+        "Zhonghao Zhou",
+        "Yudong Yang",
+        "Cheng Zhang",
+        "Peiyuan Yu",
+        "Yong Sheng Zhao",
+        "Jingbo Lan",
+        "Jingsong You"
+      ],
+      "date": "2025-06-02",
+      "datePrecision": "day",
+      "createdDate": "2025-06-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1247-1257",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00817-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00817-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00818-3",
+      "title": "Stereospecific synthesis of spiro-bridged conjugated carbocycles",
+      "authors": [],
+      "date": "2025-06-06",
+      "datePrecision": "day",
+      "createdDate": "2025-06-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1183-1184",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00818-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00818-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00819-2",
+      "title": "Chemoenzymatic platform with coordinated cofactor self-circulation for lignin valorization",
+      "authors": [
+        "Liangxu Liu",
+        "Xiaotong Wang",
+        "Yeyun Wu",
+        "Hengrun Li",
+        "Jiawei Wang",
+        "Chaofeng Li",
+        "Haotian Zheng",
+        "Jun Ni"
+      ],
+      "date": "2025-06-10",
+      "datePrecision": "day",
+      "createdDate": "2025-06-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1151-1160",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00819-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00819-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00821-8",
+      "title": "Thianthrenium-enabled modular synthesis of bicyclo[1.1.1]pentanes",
+      "authors": [
+        "Zibo Bai",
+        "Zikuan Wang",
+        "Thomas Hin-Fung Wong",
+        "Tobias Ritter"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1161-1169",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00821-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00821-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00822-7",
+      "title": "Synthesis of covalently linked knotted cage frameworks",
+      "authors": [
+        "Yuchong Yang",
+        "Tanya K. Ronson",
+        "Paula C. P. Teeuwen",
+        "Simone Zucchelli",
+        "Andrew W. Heard",
+        "Paola Posocco",
+        "David J. Wales",
+        "Jonathan R. Nitschke"
+      ],
+      "date": "2025-06-25",
+      "datePrecision": "day",
+      "createdDate": "2025-06-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1270-1277",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00822-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00822-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00823-6",
+      "title": "Programmable synthesis of atomically precise semiconductor artificial atoms",
+      "authors": [
+        "Fuyan Ma",
+        "Sergei A. Ivanov",
+        "Lukasz M. Dobrzycki",
+        "Chenjie Zeng"
+      ],
+      "date": "2025-06-16",
+      "datePrecision": "day",
+      "createdDate": "2025-06-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1258-1269",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00823-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00823-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00824-5",
+      "title": "Isolated carbon(I) species featuring a carbone cation radical",
+      "authors": [
+        "Yi-Chen Chan",
+        "He-Xin Xiao",
+        "Lei Qin",
+        "Jiun-Shian Shen",
+        "Chen-Rui Yang",
+        "Glenn P. A. Yap",
+        "Wei-Min Ching",
+        "Wen-Ching Chen",
+        "Yun-Wei Chiang",
+        "Gernot Frenking",
+        "Lili Zhao",
+        "Tiow-Gan Ong"
+      ],
+      "date": "2025-06-13",
+      "datePrecision": "day",
+      "createdDate": "2025-06-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1278-1287",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00824-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00824-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00825-4",
+      "title": "Computationally guided defect-suppressing synthesis of luminescent tin halide perovskite nanocrystals",
+      "authors": [
+        "Jia-Kai Chen",
+        "Yifan Zhou",
+        "Bin-Bin Zhang",
+        "Jun Kikkawa",
+        "Jun Yin",
+        "Naoto Shirahata",
+        "Bin Chen",
+        "Edward H. Sargent",
+        "Hong-Tao Sun"
+      ],
+      "date": "2025-06-27",
+      "datePrecision": "day",
+      "createdDate": "2025-06-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1095-1105",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00825-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00825-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00828-1",
+      "title": "Stacks of carpyridine and water",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "665-665",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00828-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00828-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00829-0",
+      "title": "A dendritic structure for organic solar cells",
+      "authors": [
+        "Joel Cejas-Sánchez"
+      ],
+      "date": "2025-06-05",
+      "datePrecision": "day",
+      "createdDate": "2025-06-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "667-667",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00829-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00829-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00830-7",
+      "title": "Magnonic V(tetracyanoethylene)2 thin films",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-06-04",
+      "datePrecision": "day",
+      "createdDate": "2025-06-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "666-666",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00830-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00830-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00831-6",
+      "title": "Combining oxygen reduction with glycerol oxidation in a galvanic device",
+      "authors": [
+        "Hui Luo",
+        "Jesús Barrio"
+      ],
+      "date": "2025-06-11",
+      "datePrecision": "day",
+      "createdDate": "2025-06-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "907-908",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00831-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00831-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00834-3",
+      "title": "Artificial atoms by design",
+      "authors": [],
+      "date": "2025-06-25",
+      "datePrecision": "day",
+      "createdDate": "2025-06-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1185-1186",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00834-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00834-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00836-1",
+      "title": "Enantioconvergent carbenoid insertion into carbon–boron bonds",
+      "authors": [
+        "Qiqiang Xie",
+        "Thomas H. Tugwell",
+        "Mithun C. Madhusudhanan",
+        "Jiahao Li",
+        "Peng Liu",
+        "Guangbin Dong"
+      ],
+      "date": "2025-06-25",
+      "datePrecision": "day",
+      "createdDate": "2025-06-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1297-1307",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00836-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00836-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00840-5",
+      "title": "Nickel-catalysed enantioselective migratory reductive cross-coupling enabled by radical 1,2-amino migration",
+      "authors": [
+        "Xiaolin Ren",
+        "Yiwei Qiao",
+        "Bingqi Zhou",
+        "Song Liu",
+        "Yuan Huang"
+      ],
+      "date": "2025-06-27",
+      "datePrecision": "day",
+      "createdDate": "2025-06-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1232-1246",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00840-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00840-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00841-4",
+      "title": "Nickel-catalysed 1,2-amino migration provides access to chiral β-arylethylamines",
+      "authors": [],
+      "date": "2025-06-30",
+      "datePrecision": "day",
+      "createdDate": "2025-06-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1181-1182",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00841-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00841-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00843-2",
+      "title": "One-pot polycyclic compounds through o-quinodimethanes",
+      "authors": [
+        "Joel Cejas-Sánchez"
+      ],
+      "date": "2025-06-24",
+      "datePrecision": "day",
+      "createdDate": "2025-06-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "779-779",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00843-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00843-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00845-0",
+      "title": "N-benzoyloxyamides for dual-functionalization of alkenes",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-06-26",
+      "datePrecision": "day",
+      "createdDate": "2025-06-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "777-777",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00845-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00845-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-06-01",
+        "to": "2025-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

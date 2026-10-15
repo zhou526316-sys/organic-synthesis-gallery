@@ -1,0 +1,1007 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-04-01",
+    "to": "2025-04-30"
+  },
+  "checkedAt": "2026-10-15T15:46:39.686Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 20,
+        "count": 20,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 20,
+      "count": 20,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 20,
+      "openalex": 20
+    }
+  },
+  "candidateCount": 20,
+  "alreadyPublished": 0,
+  "unreviewed": 20,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00770-2",
+      "title": "Integrating a multitask graph neural network with DFT calculations for site-selectivity prediction of arenes and mechanistic knowledge generation",
+      "authors": [
+        "Xinran Chen",
+        "Zi-Jing Zhang",
+        "Xin Hong",
+        "Lutz Ackermann"
+      ],
+      "date": "2025-04-07",
+      "datePrecision": "day",
+      "createdDate": "2025-04-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "877-887",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00770-2"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00770-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00776-w",
+      "title": "Geometric distortion as an enabling tool for organic synthesis",
+      "authors": [
+        "Luca McDermott",
+        "Zach G. Walters",
+        "Allison M. Clark",
+        "Neil K. Garg"
+      ],
+      "date": "2025-04-09",
+      "datePrecision": "day",
+      "createdDate": "2025-04-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "421-431",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00776-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00776-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00781-z",
+      "title": "A compact catenane with tuneable mechanical chirality",
+      "authors": [
+        "Chun Tang",
+        "Ruihua Zhang",
+        "Sultan Almunif",
+        "Partha Jyoti Das",
+        "Paige J. Brown",
+        "Ryan M. Young",
+        "Guangcheng Wu",
+        "Han Han",
+        "Xueze Zhao",
+        "Arthur H. G. David",
+        "Huang Wu",
+        "Bo Song",
+        "Alexandre Abhervé",
+        "Yong Wu",
+        "Yu-Meng Ye",
+        "Yuanning Feng",
+        "Aspen X.-Y. Chen",
+        "Charlotte L. Stern",
+        "Zhi Li",
+        "Evan A. Scott",
+        "Michael R. Wasielewski",
+        "J. Fraser Stoddart"
+      ],
+      "date": "2025-04-14",
+      "datePrecision": "day",
+      "createdDate": "2025-04-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "956-964",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00781-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00781-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00782-y",
+      "title": "Regulation of Pd single-atom coordination for enhanced photocatalytic oxidation of toluene to benzaldehyde",
+      "authors": [
+        "Ruiyi Sun",
+        "Xing Cao",
+        "Junguo Ma",
+        "Hsiao-Chien Chen",
+        "Chen Chen",
+        "Qing Peng",
+        "Yadong Li"
+      ],
+      "date": "2025-04-03",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "965-975",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00782-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00782-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00783-x",
+      "title": "Twisting the future of two-dimensional halide perovskites",
+      "authors": [
+        "Keqiang Chen",
+        "Guogang Li"
+      ],
+      "date": "2025-04-11",
+      "datePrecision": "day",
+      "createdDate": "2025-04-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1027-1028",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00783-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00783-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00784-w",
+      "title": "On-surface synthesis and characterization of linear and cyclic C6",
+      "authors": [
+        "Luye Sun",
+        "Yuan Guo",
+        "Wenzhi Xiang",
+        "Wei Xu"
+      ],
+      "date": "2025-04-11",
+      "datePrecision": "day",
+      "createdDate": "2025-04-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "940-946",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00784-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00784-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00785-9",
+      "title": "Synthesis of single-unit-cell-thick perovskites by liquid-phase confined assembly for high-performance ultrastable X-ray detectors",
+      "authors": [
+        "Meihui Song",
+        "Bo Zhao",
+        "Bowen Li",
+        "Kun Wang",
+        "Yulong Jiang",
+        "Guodong Jia",
+        "Xin Zhao",
+        "Boyuan Yu",
+        "Yunlong Li",
+        "Feng Yang"
+      ],
+      "date": "2025-04-14",
+      "datePrecision": "day",
+      "createdDate": "2025-04-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1056-1067",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00785-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00785-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00786-8",
+      "title": "Self-regulated facet stability during solution growth of perovskite crystals",
+      "authors": [
+        "Zhifang Shi",
+        "He Liu",
+        "Haoyang Jiao",
+        "Mingze Li",
+        "Zhenyi Ni",
+        "Liang Zhao",
+        "Jinsong Huang"
+      ],
+      "date": "2025-04-07",
+      "datePrecision": "day",
+      "createdDate": "2025-04-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1088-1094",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00786-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00786-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00787-7",
+      "title": "Synthesis of a lattice-resolved laminate-structured perovskite heterointerface",
+      "authors": [
+        "Zhimin Li",
+        "Pengfei Guo",
+        "Yalan Zhang",
+        "Weizhen Wang",
+        "Songhua Cai",
+        "Yuanyuan Zhou"
+      ],
+      "date": "2025-04-29",
+      "datePrecision": "day",
+      "createdDate": "2025-04-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1078-1087",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00787-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00787-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00788-6",
+      "title": "Stereoconvergent reduction of alkenes using a repurposed iron-based dioxygenase",
+      "authors": [
+        "Zicong Wan",
+        "Xuan Zhang",
+        "Helin Zhuang",
+        "Zhekai Xie",
+        "Lu Yu",
+        "Zihang Fu",
+        "Yang Sun",
+        "Wei Wang",
+        "Ruibo Wu",
+        "Pengfei Ji"
+      ],
+      "date": "2025-04-14",
+      "datePrecision": "day",
+      "createdDate": "2025-04-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "976-986",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00788-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00788-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00789-5",
+      "title": "A crystalline dithorium complex with a Th–Th bond",
+      "authors": [
+        "Weiming Sheng",
+        "Fei Xie",
+        "Thayalan Rajeshkumar",
+        "Yue Zhao",
+        "Yufei Jiang",
+        "Wang Chen",
+        "Shengfa Ye",
+        "Laurent Maron",
+        "Congqing Zhu"
+      ],
+      "date": "2025-04-11",
+      "datePrecision": "day",
+      "createdDate": "2025-04-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "987-994",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00789-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00789-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00790-y",
+      "title": "Reactions of a Zn–Zn bond with main group carbene analogues as a prototypical case of reductive addition",
+      "authors": [
+        "Wenbang Yang",
+        "Andrew J. P. White",
+        "Mark R. Crimmin"
+      ],
+      "date": "2025-04-29",
+      "datePrecision": "day",
+      "createdDate": "2025-04-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "995-1000",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00790-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00790-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00791-x",
+      "title": "Synthesis of a crystalline two-dimensional [c2]daisy chain honeycomb network",
+      "authors": [
+        "Zheng-Bin Tang",
+        "Lifang Bian",
+        "Xiaohe Miao",
+        "Helei Gao",
+        "Lin Liu",
+        "Qike Jiang",
+        "Dengke Shen",
+        "Lijun Xu",
+        "Andrew C.-H. Sue",
+        "Xiaorui Zheng",
+        "Zhichang Liu"
+      ],
+      "date": "2025-04-15",
+      "datePrecision": "day",
+      "createdDate": "2025-04-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "922-930",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00791-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00791-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00792-w",
+      "title": "Iron-catalysed radical Markovnikov hydroamidation of complex alkenes",
+      "authors": [
+        "Mengjun Huang",
+        "Constantin Gabriel Daniliuc",
+        "Armido Studer"
+      ],
+      "date": "2025-04-17",
+      "datePrecision": "day",
+      "createdDate": "2025-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "1001-1008",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00792-w"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00792-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00793-9",
+      "title": "Synthesis and reactivity of nitrogen-containing strained cyclic 1,2,3-trienes",
+      "authors": [
+        "Dominick C. Witkowski",
+        "Daniel W. Turner",
+        "Ana S. Bulger",
+        "K. N. Houk",
+        "Neil K. Garg"
+      ],
+      "date": "2025-04-30",
+      "datePrecision": "day",
+      "createdDate": "2025-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "1009-1016",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00793-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00793-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00795-7",
+      "title": "Unusually stacked hexagonal boron nitride",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-04-01",
+      "datePrecision": "day",
+      "createdDate": "2025-04-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "412-412",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00795-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00795-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00796-6",
+      "title": "An organophotoreductant for Z-alkene synthesis",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2025-04-02",
+      "datePrecision": "day",
+      "createdDate": "2025-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "413-413",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00796-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00796-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00800-z",
+      "title": "Elucidation of the final steps in Taxol biosynthesis and its biotechnological production",
+      "authors": [
+        "Feiyan Liang",
+        "Yuman Xie",
+        "Chi Zhang",
+        "Yong Zhao",
+        "Mohammed S. Motawia",
+        "Sotirios C. Kampranis"
+      ],
+      "date": "2025-04-30",
+      "datePrecision": "day",
+      "createdDate": "2025-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1212-1222",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00800-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00800-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00801-y",
+      "title": "Toward a Taxol-producing microbial cell factory",
+      "authors": [
+        "Vincent Courdavault",
+        "Nicolas Papon"
+      ],
+      "date": "2025-04-30",
+      "datePrecision": "day",
+      "createdDate": "2025-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1175-1177",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00801-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00801-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00802-x",
+      "title": "Encapsulated halide perovskites",
+      "authors": [
+        "Jeremy Sloan"
+      ],
+      "date": "2025-04-17",
+      "datePrecision": "day",
+      "createdDate": "2025-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1025-1026",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00802-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00802-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

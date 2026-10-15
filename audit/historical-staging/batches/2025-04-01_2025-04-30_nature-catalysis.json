@@ -1,0 +1,949 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-04-01",
+    "to": "2025-04-30"
+  },
+  "checkedAt": "2026-10-15T15:46:39.060Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 18,
+        "count": 18,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 18,
+      "count": 18,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 18,
+      "openalex": 18
+    }
+  },
+  "candidateCount": 18,
+  "alreadyPublished": 0,
+  "unreviewed": 18,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01308-7",
+      "title": "Wireless potentiometry of thermochemical heterogeneous catalysis",
+      "authors": [
+        "Neil K. Razdan",
+        "Karl S. Westendorff",
+        "Yogesh Surendranath"
+      ],
+      "date": "2025-04-02",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "315-327",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01308-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01308-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01309-6",
+      "title": "Precision installation of silyl synthetic handles within arenes by regiocontrolled ruthenium C(sp2)–H functionalization",
+      "authors": [
+        "Jamie H. Docherty",
+        "Mishra Deepak Hareram",
+        "Luke M. Nichols",
+        "Ignacio Pérez-Ortega",
+        "Iñigo J. Vitorica-Yrezabal",
+        "Igor Larrosa"
+      ],
+      "date": "2025-04-02",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "301-314",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01309-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01309-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01314-9",
+      "title": "Regioselective silyl installation for arene diversification",
+      "authors": [],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "291-292",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01314-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01314-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01315-8",
+      "title": "Electrochemical oxidation of nitric oxide to concentrated nitric acid with carbon-based catalysts at near-ambient conditions",
+      "authors": [
+        "Rong Xia",
+        "Sydnee Dronsfield",
+        "Ahryeon Lee",
+        "Bradie S. Crandall",
+        "Jiashun Liang",
+        "Bjorn Hasa",
+        "Andy Redder",
+        "Gang Wu",
+        "Tiago J. Goncalves",
+        "Samira Siahrostami",
+        "Feng Jiao"
+      ],
+      "date": "2025-04-03",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "328-337",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01315-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01315-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01316-7",
+      "title": "Efficient electroreduction of carbonyl compounds to alcohols over Fe/Fe2O3 interfaces",
+      "authors": [
+        "Jin Lin",
+        "Zhenpeng Liu",
+        "Haofei Wu",
+        "Zhiqi Wang",
+        "Guangqiu Wang",
+        "Ju Bu",
+        "Yanan Wang",
+        "Pan Liu",
+        "Junjie Wang",
+        "Jian Zhang"
+      ],
+      "date": "2025-04-02",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "338-347",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01316-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01316-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01320-x",
+      "title": "Cobaltosilicate zeolite beyond platinum catalysts for propane dehydrogenation",
+      "authors": [
+        "Hang Zhou",
+        "Huan Li",
+        "Liang Wang",
+        "Shengqi Chu",
+        "Lujie Liu",
+        "Lu Liu",
+        "Jizhen Qi",
+        "Zhouhong Ren",
+        "Anyu Cai",
+        "Yu Hui",
+        "Yucai Qin",
+        "Lijuan Song",
+        "Xuedi Qin",
+        "Jiaqi Shi",
+        "Jue Hou",
+        "Yongqi Ding",
+        "Jiabi Ma",
+        "Shaodan Xu",
+        "Xin Tao",
+        "Lina Li",
+        "Qi Yang",
+        "Bingwen Hu",
+        "Xi Liu",
+        "Liwei Chen",
+        "Jianping Xiao",
+        "Feng-Shou Xiao"
+      ],
+      "date": "2025-04-11",
+      "datePrecision": "day",
+      "createdDate": "2025-04-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "357-367",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01320-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01320-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01322-9",
+      "title": "Enantioselective macrocyclization via catalytic metallic dipole relay",
+      "authors": [
+        "Bao-Le Qu",
+        "Meng Xiao",
+        "Lin He",
+        "Jun-Wei Shi",
+        "Zhihan Zhang",
+        "Wen-Jing Xiao",
+        "Liang-Qiu Lu"
+      ],
+      "date": "2025-04-04",
+      "datePrecision": "day",
+      "createdDate": "2025-04-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "368-377",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01322-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01322-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01323-8",
+      "title": "Breaking the linear scaling limit in multi-electron-transfer electrocatalysis through intermediate spillover",
+      "authors": [
+        "Qilun Wang",
+        "Sung-Fu Hung",
+        "Kejie Lao",
+        "Xiang Huang",
+        "Fuhua Li",
+        "Hua Bing Tao",
+        "Hong Bin Yang",
+        "Wei Liu",
+        "Weijue Wang",
+        "Yaqi Cheng",
+        "Nozomu Hiraoka",
+        "Liping Zhang",
+        "Junming Zhang",
+        "Yuhang Liu",
+        "Jiazang Chen",
+        "Yinghua Xu",
+        "Chenliang Su",
+        "Jingguang G. Chen",
+        "Bin Liu"
+      ],
+      "date": "2025-04-02",
+      "datePrecision": "day",
+      "createdDate": "2025-04-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "378-388",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01323-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01323-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01324-7",
+      "title": "Identifying high-spin hydroxyl-coordinated Fe3+N4 as the active centre for acidic oxygen reduction using molecular model catalysts",
+      "authors": [
+        "Kuang-Min Zhao",
+        "Dao-Xiong Wu",
+        "Wen-Kun Wu",
+        "Jia-Bao Nie",
+        "Fu-Shan Geng",
+        "Guang Li",
+        "Hai-Yan Shi",
+        "Sheng-Chao Huang",
+        "Huan Huang",
+        "Jing Zhang",
+        "Zhi-You Zhou",
+        "Yu-Cheng Wang",
+        "Shi-Gang Sun"
+      ],
+      "date": "2025-04-07",
+      "datePrecision": "day",
+      "createdDate": "2025-04-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "422-435",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01324-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01324-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01325-6",
+      "title": "Retrobiosynthesis of unnatural lactams via reprogrammed polyketide synthase",
+      "authors": [
+        "Namil Lee",
+        "Matthias Schmidt",
+        "Chenyi Li",
+        "Connor J. Filbin",
+        "Sarah Klass",
+        "Allison Yaguchi",
+        "Anna Lisa Fear",
+        "Tyler W. H. Backman",
+        "Brooks A. Abel",
+        "Young-Mo Kim",
+        "Woojoo E. Kim",
+        "Christopher W. Johnson",
+        "Yan Chen",
+        "Jennifer W. Gin",
+        "Christopher J. Petzold",
+        "Edward E. K. Baidoo",
+        "Yuqian Gao",
+        "Meagan C. Burnet",
+        "Gyorgy Babnigg",
+        "Philip D. Laible",
+        "Christine A. Singer",
+        "William E. Michener",
+        "Davinia Salvachúa",
+        "Hector Garcia Martin",
+        "Robert W. Haushalter",
+        "Jay D. Keasling"
+      ],
+      "date": "2025-04-18",
+      "datePrecision": "day",
+      "createdDate": "2025-04-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "389-402",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01325-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01325-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01326-5",
+      "title": "Revealing hidden nanoscale electrocatalysis",
+      "authors": [
+        "Steven McIntosh"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "287-288",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01326-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01326-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01327-4",
+      "title": "Illuminating enantioselective alkyl−alkyl coupling",
+      "authors": [
+        "Weisai Zu",
+        "Xinlong Luo",
+        "Haohua Huo"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "289-290",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01327-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01327-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01328-3",
+      "title": "A highly efficient and regenerable Ir1–Cu1 dual-atom catalyst for low-temperature alkane dehydrogenation",
+      "authors": [
+        "Xiaowen Chen",
+        "Maolin Wang",
+        "Yurong He",
+        "Mi Peng",
+        "Jiangyong Diao",
+        "Dequan Xiao",
+        "Ning Wang",
+        "Xiangbin Cai",
+        "Hongyang Liu",
+        "Ding Ma"
+      ],
+      "date": "2025-04-18",
+      "datePrecision": "day",
+      "createdDate": "2025-04-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "436-447",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01328-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01328-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01329-2",
+      "title": "Asymmetric Hofmann–Löffler–Freytag-type reaction via a transient carbenium ion complex merging organocatalysis and photocatalysis",
+      "authors": [
+        "Qihang Guo",
+        "Yihui Mao",
+        "Jiren Liu",
+        "Lujing Zhu",
+        "Xin Hong",
+        "Zhan Lu"
+      ],
+      "date": "2025-04-29",
+      "datePrecision": "day",
+      "createdDate": "2025-04-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "448-456",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01329-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01329-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01331-8",
+      "title": "Rings for interfacial catalysis",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "283-283",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01331-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01331-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01332-7",
+      "title": "Reflecting on interphases",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "284-284",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01332-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01332-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01333-6",
+      "title": "Oxygen matters",
+      "authors": [
+        "Marcal Capdevila-Cortada"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "285-285",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01333-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01333-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01338-1",
+      "title": "Bridging catalysis",
+      "authors": [
+        "Francesco Zamberlan"
+      ],
+      "date": "2025-04-25",
+      "datePrecision": "day",
+      "createdDate": "2025-04-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "286-286",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01338-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01338-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

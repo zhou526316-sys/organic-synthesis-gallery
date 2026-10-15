@@ -1,0 +1,845 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-05-01",
+    "to": "2025-05-31"
+  },
+  "checkedAt": "2026-10-15T15:46:14.231Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 17,
+        "count": 17,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 17,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 17,
+  "alreadyPublished": 0,
+  "unreviewed": 17,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01330-9",
+      "title": "An asymmetric transformation of carbenium ions",
+      "authors": [],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "420-421",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01330-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01330-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01335-4",
+      "title": "SnSe nanosheets with Sn vacancies catalyse H2O2 production from water and oxygen at ambient conditions",
+      "authors": [
+        "Xinyue Zhang",
+        "Yangyang Wan",
+        "Yi Wen",
+        "Yingcai Zhu",
+        "Hong Liu",
+        "Jiaxiang Qiu",
+        "Zhanpeng Zhu",
+        "Zhongti Sun",
+        "Xiang Gao",
+        "Shulin Bai",
+        "Yuqiao Zhang",
+        "Long Zhang",
+        "Xiaohong Yan",
+        "Jianming Zhang",
+        "Yong Liu",
+        "Shun Li",
+        "Li-Dong Zhao"
+      ],
+      "date": "2025-05-23",
+      "datePrecision": "day",
+      "createdDate": "2025-05-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "465-475",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01335-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01335-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01336-3",
+      "title": "Cobalt-catalysed alkene hydronitration enabled by anomeric nitroamide",
+      "authors": [
+        "Yu Wang",
+        "Marcell M. Bogner",
+        "Jake B. Bailey",
+        "Lauren N. Grant",
+        "Milan Gembicky",
+        "Paul F. Richardson",
+        "Phil S. Baran"
+      ],
+      "date": "2025-05-21",
+      "datePrecision": "day",
+      "createdDate": "2025-05-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "457-464",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01336-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01336-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01337-2",
+      "title": "Challenges and prospects in precision medicine with RNA-based biocatalysts",
+      "authors": [
+        "Charles H. Jones",
+        "Mikael Dolsten"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "403-407",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01337-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01337-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01339-0",
+      "title": "Understanding two voltammetric features of water reduction and water oxidation in mild pH solutions",
+      "authors": [
+        "Xin Yuan",
+        "Michael T. Bender",
+        "Myohwa Ko",
+        "Kyoung-Shin Choi"
+      ],
+      "date": "2025-05-14",
+      "datePrecision": "day",
+      "createdDate": "2025-05-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "495-506",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01339-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01339-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01340-7",
+      "title": "Organocatalytic regio- and stereoselective cyclopropanation of olefins",
+      "authors": [
+        "Chendan Zhu",
+        "Sayantani Das",
+        "Avishek Guin",
+        "Chandra Kanta De",
+        "Benjamin List"
+      ],
+      "date": "2025-05-16",
+      "datePrecision": "day",
+      "createdDate": "2025-05-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "487-494",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01340-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01340-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01341-6",
+      "title": "Selective formaldehyde condensation on phosphorus-rich copper catalyst to produce liquid C3+ chemicals in electrocatalytic CO2 reduction",
+      "authors": [
+        "Minjun Choi",
+        "Sooan Bae",
+        "Yeongin Kim",
+        "Youjin Lee",
+        "Mokyeon Cho",
+        "Sinwoo Kang",
+        "Jaeyoung Lee"
+      ],
+      "date": "2025-05-22",
+      "datePrecision": "day",
+      "createdDate": "2025-05-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "476-486",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01341-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01341-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01342-5",
+      "title": "Dissolved Fe species enable a cooperative solid–molecular mechanism for the oxygen evolution reaction on NiFe-based catalysts",
+      "authors": [
+        "Chunguang Kuai",
+        "Liping Liu",
+        "Anyang Hu",
+        "Yan Zhang",
+        "Yuxin Zhang",
+        "Dawei Xia",
+        "Dennis Nordlund",
+        "Dimosthenis Sokaras",
+        "Donato Decarolis",
+        "Diego Gianolio",
+        "Hongliang Xin",
+        "Luxi Li",
+        "Feng Lin"
+      ],
+      "date": "2025-05-20",
+      "datePrecision": "day",
+      "createdDate": "2025-05-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "523-535",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01342-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01342-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01343-4",
+      "title": "Unlocking iron spin states for oxygen reduction",
+      "authors": [
+        "Jaehyuk Shim",
+        "Yung-Eun Sung"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "417-419",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01343-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01343-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01344-3",
+      "title": "A formaldehyde condensation pathway in CO2 electrolysis",
+      "authors": [
+        "Huali Wu",
+        "Damien Voiry"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "415-416",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01344-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01344-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01345-2",
+      "title": "Chiral cyclopropanes with light in confined space",
+      "authors": [
+        "Magdalena Walewska-Królikiewicz",
+        "Dorota Gryko"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "413-414",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01345-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01345-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01346-1",
+      "title": "Ordered single active sites for cascade hydrogenation and hydroformylation reactions",
+      "authors": [
+        "Xiaojun Lu",
+        "Jiazhen Wu",
+        "Xinyi He",
+        "Zichuang Li",
+        "Yangfan Lu",
+        "Wenqian Li",
+        "Jiang Li",
+        "Miao Xu",
+        "Yanpeng Qi",
+        "Qing Zhang",
+        "Yijia Liu",
+        "Meng Du",
+        "Toshio Kamiya",
+        "Hideo Hosono",
+        "Fusheng Pan",
+        "Jie-Sheng Chen",
+        "Tian-Nan Ye"
+      ],
+      "date": "2025-05-26",
+      "datePrecision": "day",
+      "createdDate": "2025-05-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "536-547",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01346-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01346-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01351-4",
+      "title": "A polyheteroatomic Diels–Alderase",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "409-409",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01351-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01351-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01354-1",
+      "title": "Shape matters too",
+      "authors": [
+        "Davide Esposito"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "408-408",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01354-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01354-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01355-0",
+      "title": "Capture to convert",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "410-410",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01355-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01355-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01356-z",
+      "title": "Modulation to probe the interface",
+      "authors": [
+        "Marçal Capdevila-Cortada"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "411-411",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01356-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01356-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01358-x",
+      "title": "Clustering for methane",
+      "authors": [
+        "Francesco Zamberlan"
+      ],
+      "date": "2025-05-28",
+      "datePrecision": "day",
+      "createdDate": "2025-05-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "5",
+        "pages": "412-412",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01358-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01358-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-05-01",
+        "to": "2025-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
