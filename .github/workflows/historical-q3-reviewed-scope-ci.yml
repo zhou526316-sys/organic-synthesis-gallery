@@ -10,6 +10,9 @@ on:
       - 'scripts/test-historical-q3-natcatal-residual-24.mjs'
       - 'scripts/test-historical-q3-natsynth-reviewed-44.mjs'
       - 'scripts/test-historical-q3-nchem-51-reviewed.mjs'
+      - 'scripts/test-historical-q3-chem-publisher-dates.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-three-q3-methods-two-pass.json'
       - 'scripts/historical-q3-reviewer-status-refresh.mjs'
       - 'scripts/test-historical-q3-reviewer-status-refresh.mjs'
       - 'audit/historical-publisher-issues/2026/nature-chemistry-q3-2026-all-types-66.json'
@@ -56,5 +59,7 @@ jobs:
         run: node --test scripts/test-historical-q3-natsynth-reviewed-44.mjs
       - name: Validate Nature Chemistry official 66 DOI date/type census and 51 DOI two-pass scopes
         run: node --test scripts/test-historical-q3-nchem-51-reviewed.mjs
+      - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions
+        run: node --test scripts/test-historical-q3-chem-publisher-dates.mjs
       - name: Cryptographically verify reviewed-queue status refresh against unchanged raw source
         run: node --test scripts/test-historical-q3-reviewer-status-refresh.mjs
