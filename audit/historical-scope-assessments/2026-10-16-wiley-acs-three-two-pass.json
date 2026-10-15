@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "q3-audited-origin-v1",
+  "reviewDateBeijing": "2026-10-16",
+  "sameModelTwoAdversarialPasses": true,
+  "publisherDateEvidence": true,
+  "noCloudflareD1": true,
+  "rows": [
+    {
+      "doi": "10.1002/anie.4869748",
+      "date": "2026-07-30",
+      "type": "Research Article",
+      "source": {
+        "root": "2026-07-22_2026-07-31_angew",
+        "raw": "2dd00891cd0531695a8742fac9d34583cfd7ff8c",
+        "queue": "6be76e0c57d29ccbd3f3ed7846d8d83423e9f161",
+        "sha256": "712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "铜催化吡啶基硼与非活化烷基溴Suzuki–Miyaura交叉偶联",
+        "preparativeTransformation": "吡啶基硼亲核试剂+非活化烷基溴经C(sp2)–C(sp3)成键合成烷基吡啶",
+        "generalityEvidence": "吡啶基及烷基溴适用范围、复杂分子后期修饰、100 mmol放大",
+        "sourceEvidence": "Wiley DOI Research Article First published 2026-07-30 https://onlinelibrary.wiley.com/doi/10.1002/anie.4869748；来源双SHA冻结",
+        "boundaryChallenge": "替代传统钯催化是否只是单一反应？原文解决缺电子杂芳硼和非活化烷基亲电试剂偶联且经放大，构成通用制备方法；不声称所有位点等效。"
+      },
+      "doiResolver": "https://doi.org/10.1002/anie.4869748",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "吡啶基硼亲核试剂+非活化烷基溴经C(sp2)–C(sp3)成键合成烷基吡啶；吡啶基及烷基溴适用范围、复杂分子后期修饰、100 mmol放大",
+      "challengeReason": "替代传统钯催化是否只是单一反应？原文解决缺电子杂芳硼和非活化烷基亲电试剂偶联且经放大，构成通用制备方法；不声称所有位点等效。",
+      "reviewEvidence": {
+        "publisherFirstOnline": "2026-07-30",
+        "sourceBranch": "staging/historical-archive-nightly",
+        "root": "2026-07-22_2026-07-31_angew",
+        "raw": "2dd00891cd0531695a8742fac9d34583cfd7ff8c",
+        "queue": "6be76e0c57d29ccbd3f3ed7846d8d83423e9f161",
+        "sha256": "712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95"
+      },
+      "noRestrictedMediaAcquired": true
+    },
+    {
+      "doi": "10.1002/anie.6230875",
+      "date": "2026-08-24",
+      "type": "Research Article",
+      "source": {
+        "root": "2026-08-22_2026-08-31_angew",
+        "raw": "adefa0bd668d2fd14556c331d21e64e1301d5d5e",
+        "queue": "05c665f94b5e77b36c33506b47d82bea61513d64",
+        "sha256": "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "工程化卤代醇脱卤酶对映选择性生物卤化",
+        "preparativeTransformation": "螺环环氧吲哚经卤离子酶催化开环形成光学富集β-卤代醇",
+        "generalityEvidence": "多个底物、光学纯度最高约98% ee及可放大制备；动力学拆分体系的收率不能与非拆分酶的数值混算",
+        "sourceEvidence": "Wiley DOI Research Article First published 2026-08-24 https://onlinelibrary.wiley.com/doi/10.1002/anie.6230875；来源双SHA冻结",
+        "boundaryChallenge": "是否仅蛋白突变而缺乏有机合成能力？实际制备系列手性卤代产物且演示合成用途，纳入有实质制备贡献的生物催化；50%动力学拆分限制不可隐去。"
+      },
+      "doiResolver": "https://doi.org/10.1002/anie.6230875",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "螺环环氧吲哚经卤离子酶催化开环形成光学富集β-卤代醇；多个底物、光学纯度最高约98% ee及可放大制备；动力学拆分体系的收率不能与非拆分酶的数值混算",
+      "challengeReason": "是否仅蛋白突变而缺乏有机合成能力？实际制备系列手性卤代产物且演示合成用途，纳入有实质制备贡献的生物催化；50%动力学拆分限制不可隐去。",
+      "reviewEvidence": {
+        "publisherFirstOnline": "2026-08-24",
+        "sourceBranch": "staging/historical-archive-nightly",
+        "root": "2026-08-22_2026-08-31_angew",
+        "raw": "adefa0bd668d2fd14556c331d21e64e1301d5d5e",
+        "queue": "05c665f94b5e77b36c33506b47d82bea61513d64",
+        "sha256": "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+      },
+      "noRestrictedMediaAcquired": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02745",
+      "date": "2026-08-07",
+      "type": "Letter",
+      "source": {
+        "root": "2026-08-01_2026-08-07_organic-letters",
+        "raw": "62d741fb735cca8d71d7b4e480108ede9b028c8d",
+        "queue": "0a45e33c031c222b5039d277f1294bf6a73d6c3d",
+        "sha256": "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "六元环碘鎓盐催化不对称开环建立C–O轴手性",
+        "preparativeTransformation": "取代环碘鎓盐与含磷亲核试剂开环合成含膦酸酯的轴手性二芳基醚",
+        "generalityEvidence": "多种取代基与较高产率、对映体过量最高约99% ee以及轴手性构象稳定性研究",
+        "sourceEvidence": "ACS DOI Letter Published Online 2026-08-07 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02745；来源双SHA冻结",
+        "boundaryChallenge": "是否只合成单一专用磷酸酯骨架？文中展示多个取代的二芳基醚产物，具有选择性C–O键和轴手性构建的可迁移方法学贡献，但前体环碘鎓盐可得性是限制。"
+      },
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02745",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "取代环碘鎓盐与含磷亲核试剂开环合成含膦酸酯的轴手性二芳基醚；多种取代基与较高产率、对映体过量最高约99% ee以及轴手性构象稳定性研究",
+      "challengeReason": "是否只合成单一专用磷酸酯骨架？文中展示多个取代的二芳基醚产物，具有选择性C–O键和轴手性构建的可迁移方法学贡献，但前体环碘鎓盐可得性是限制。",
+      "reviewEvidence": {
+        "publisherFirstOnline": "2026-08-07",
+        "sourceBranch": "staging/historical-archive-nightly",
+        "root": "2026-08-01_2026-08-07_organic-letters",
+        "raw": "62d741fb735cca8d71d7b4e480108ede9b028c8d",
+        "queue": "0a45e33c031c222b5039d277f1294bf6a73d6c3d",
+        "sha256": "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
+      },
+      "noRestrictedMediaAcquired": true
+    }
+  ]
+}
