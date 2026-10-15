@@ -71,7 +71,7 @@ jobs:
           emit('READ_AT', {'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True})
           local = load('local')
           if not isinstance(local,dict): raise SystemExit('Uploaded diagnostic unavailable')
-          emit('UPLOAD', pick(local,['uploadedAt','version','source','kind','uploadedReason','total']))
+          emit('UPLOAD', pick(local,['uploadedAt','version','installRevision','controllerRevision','source','kind','uploadedReason','total']))
           summary = local.get('summary') or {}
           emit('SUMMARY', pick(summary,['version','controllerRevision','architectureMembershipRevision','queueGeneratedAt','startedAt','finishedAt','queueTotal','batchSize','total','visible','upgrades','figureGaps','success','failed','skipped','aborted','cooldownSkipped']))
           emit('ARCHITECTURE_SUMMARY', pick(summary.get('architectureMembership'),['ok','revision','serial','publicationSlot','catalogId','membershipSha256','asOfDate','cutoff','memberCount','hotCount','archiveCount','verifiedAt','error']))
