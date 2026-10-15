@@ -19,6 +19,7 @@ function cleanReport(items,hasMore){
     checkpointOnlyAttempts:0,duplicateFinalResults:0,
     byPublisher:{},byReason:{},byHttpStatus:{},byVersion:{},
     byFinalStage:{},byResultStatus:{},byDay:{},byVersionAndReason:{},
+    byPublisherAndReason:{},byPublisherAndHttpStatus:{},byPublisherAndVersion:{},
     versionProvenanceWarning:null,
   };
   for(const event of items){
@@ -45,6 +46,10 @@ function cleanReport(items,hasMore){
     count(report.byFinalStage,row.stage);
     count(report.byResultStatus,row.status);
     count(report.byVersionAndReason,String(row.scriptVersion||'?')+'/'+String(row.reasonCode||'?'));
+    // Aggregate publisher-specific failures without releasing DOI, event IDs or source bodies.
+    count(report.byPublisherAndReason,String(row.publisher||'?')+'/'+String(row.reasonCode||'?'));
+    count(report.byPublisherAndHttpStatus,String(row.publisher||'?')+'/'+(row.httpStatus==null?'unknown':String(row.httpStatus)));
+    count(report.byPublisherAndVersion,String(row.publisher||'?')+'/'+String(row.scriptVersion||'?'));
   }
   if(report.byVersion['0.2.2']&&!report.byVersion['0.2.3'])
     report.versionProvenanceWarning='v0.2.3 currently hardcodes v0.2.2 in diagnostics; source-version inference unavailable';
