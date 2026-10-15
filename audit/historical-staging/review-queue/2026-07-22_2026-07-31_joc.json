@@ -16,8 +16,8 @@
   "completeSourceFamilies": true,
   "stats": {
     "candidateOccurrences": 50,
-    "alreadyPublished": 4,
-    "approvedAwaiting08": 1,
+    "alreadyPublished": 5,
+    "approvedAwaiting08": 0,
     "evidencePending": 0,
     "requiresTwoPassReview": 45,
     "priorityP0": 5,
@@ -63,7 +63,7 @@
       "sourceBatchSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
       "priority": "P0",
       "flags": [],
-      "status": "two_pass_approved_awaiting_08",
+      "status": "already_published",
       "articleEvidenceReview": "not_performed_by_triage",
       "publicationRights": "unverified_no_full_abstract_or_body"
     },
