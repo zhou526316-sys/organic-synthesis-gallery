@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.68
+// @version      6.2.69
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.68';
+  var INSTALL_REVISION = '6.2.69';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -7599,15 +7599,14 @@ function embeddedJobDois(value) {
     return [];
   }
 
+  // The standalone TOC script never handles owner credentials. The installed
+  // VPN Bridge has a tiny, isolated lease receiver ahead of its full runtime.
+  if (isGalleryPage() && /\/private-pdf-owner-setup\.html$/.test(location.pathname)) return;
   installPrivatePdfLeaseReceiver();
   installManualRestartListener();
   installMenu();
 
-  // The owner setup is a lease handoff, not a capture-controller tab.
-  // Keep its event receiver active without starting queue scans or uploads.
-  if (isGalleryPage() && /\/private-pdf-owner-setup\.html$/.test(location.pathname)) {
-    // Receiver was installed above; the owner page owns its own UI.
-  } else if (isGalleryPage()) {
+  if (isGalleryPage()) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
     startImageOutboxSender();

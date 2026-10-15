@@ -82,10 +82,13 @@ async function json(path,init={}){
           };
           const onMessage=event=>{
             if(event.origin!==location.origin||event.data?.requestId!==message.requestId)return;
+            // Multiple extensions/userscripts may run on the same page.
+            // Only the isolated, packaged Bridge receiver can authorize this
+            // request. Legacy/standalone negative replies cannot veto it.
+            if(event.data?.context!=='owner_isolated_bridge_v2')return;
             if(event.data?.type===successType){
-              if(successType==='osg-private-pdf-capture-ready-v1'&&event.data.ok!==true)
-                finish(event.data.reason||'embedded_bridge_required');
-              else if(successType==='osg-private-pdf-capture-lease-ack-v1'
+              if(successType==='osg-private-pdf-capture-ready-v1'&&event.data.ok!==true)return;
+              if(successType==='osg-private-pdf-capture-lease-ack-v1'
                 && Number(event.data.expiresAt||0)!==Number(message.expiresAt||0))
                 finish('lease_ack_mismatch');
               else finish(null,event.data);
@@ -110,9 +113,9 @@ async function json(path,init={}){
         captureStatus.className='muted';
         try{
           const probeId=crypto.randomUUID();
-          await exchange({type:'osg-private-pdf-capture-probe-v1',requestId:probeId},
-            'osg-private-pdf-capture-ready-v1',4200,350,'tampermonkey_not_running_on_page');
-          captureStatus.textContent='VPN Bridge 已响应，正在签发 PDF 捕获授权…';
+          const ready=await exchange({type:'osg-private-pdf-capture-probe-v1',requestId:probeId},
+            'osg-private-pdf-capture-ready-v1',6000,350,'tampermonkey_not_running_on_page');
+          captureStatus.textContent='VPN Bridge '+String(ready.bridgeVersion||'已启动')+' / 引擎 '+String(ready.engine||'已响应')+'，正在签发 PDF 授权…';
           // The lease endpoint authoritatively checks account capability and
           // service availability; no PDF bytes are touched by this request.
           const lease=await json('/api/user-ui/private-pdf/capture-lease',{method:'POST'});
@@ -126,7 +129,7 @@ async function json(path,init={}){
         }catch(error){
           const reason=String(error?.message||error);
           const labels={
-            tampermonkey_not_running_on_page:'Tampermonkey 没有在当前授权页面响应；请检查扩展启用状态和网站访问权限。',
+            tampermonkey_not_running_on_page:'未检测到新版 VPN Bridge 授权接收器。请确认 Tampermonkey 中启用了 2.2.88，并允许访问 gallery.gczhouwld.com。',
             embedded_bridge_required:'检测到的不是正式 VPN Bridge 内嵌抓取器；请只保留一份正式 Bridge 脚本。',
             lease_storage_unavailable:'Tampermonkey 已响应，但授权写入或回读失败；请检查扩展存储权限。',
             invalid_lease_payload:'授权信息格式校验失败，尚未写入 Tampermonkey。',

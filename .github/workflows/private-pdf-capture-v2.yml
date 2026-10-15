@@ -14,6 +14,8 @@ on:
       - 'scripts/tm-private-pdf-capture.inc.js'
       - 'scripts/apply-private-pdf-capture.py'
       - 'tests/private-pdf-capture-browser.mjs'
+      - 'cloudflare/scripts/pdf-owner-lease-bootstrap.inc.js'
+      - 'tests/tm-owner-bridge-isolated-browser-20261015.mjs'
       - 'tests/tm-owner-lease-handshake-20261015.test.mjs'
       - 'tests/tm-owner-pdf-replay-20261008.test.mjs'
       - 'docs/private-pdf-editorial-pipeline.md'
@@ -94,6 +96,8 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs public
           grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6'" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
+      - name: Verify real installed Bridge owner handoff across isolated Chrome worlds
+        run: node tests/tm-owner-bridge-isolated-browser-20261015.mjs
       - name: Dry-run Worker bundle
         working-directory: cloudflare/worker
         run: |
