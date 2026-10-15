@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-15T01:44:17.936Z",
+  "generatedAt": "2026-10-15T02:30:23.251Z",
   "nextEligiblePublicationSlot": "2026-10-16T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 124,
-    "include": 122,
+    "checked": 127,
+    "include": 125,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -8860,6 +8860,249 @@
         }
       ],
       "reviewRationaleSecondPass": "反向质疑：醇先活化脱氧才能参与反应，烯烃 regioselectivity 受炔烃取代和自由基性质影响，第二次氢烷基化不是对全部底物可普遍叠加；也不能把所有醇、炔烃都视为通用。但作者证明宽的醇/炔烃范围、拥挤烯烃及复杂分子示例，反应有可迁移制备价值，保留这些边界后仍符合方法学。"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103186",
+      "journal": "Chem",
+      "title": "Organopotassium for selective synthesis: Potassium-mediated anti-borylfunctionalization of alkynes",
+      "titleZh": "有机钾介导炔烃反式硼官能团化的选择性合成方法",
+      "date": "2026-07-29",
+      "authors": [
+        "Ziwei Zhang",
+        "Takashi Kurogi",
+        "Hideki Yorimitsu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103186",
+        "articleNumber": "103186",
+        "doi": "10.1016/j.chempr.2026.103186",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以廉价元素钾介导炔烃还原性金属化，开发与相关Li/Na体系顺式选择性不同的反式硼官能团化，制备立体定义的烯基硼酸酯。",
+      "evidenceBasis": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426002524（2026年2026-07-29首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-07-01_2026-07-07_chem，raw Git blob 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git blob 7020927b9f5e0c767434c3a4acec1f4f3b6b4037；原来源日期2026-07-01属于卷期日期误标，未更改冻结批次。 Chem官方原始Article明确报道烧瓶条件下反式双硼化具有较广炔烃适用范围，微流条件下反区域与反立体选择性安装B与另一官能团；实验证据结合计算支持钾相比钠的不同区域与立体控制，获得可用于后续转化的多取代烯基硼构件。",
+      "challengeReason": "反向检查：有机钾中间体较不稳定，不宜将烧瓶中的反式双硼化等同于任何亲电试剂均可常规烧瓶反式加成；微流条件是部分不对称官能化的关键。计算关于离子半径的机制解释只作支持证据，不是单独证实。真实跨炔烃和官能团的可制备范围是准入依据，非标题中的 selective。",
+      "scopeAssessment": {
+        "primaryContribution": "以廉价元素钾介导炔烃还原性金属化，开发与相关Li/Na体系顺式选择性不同的反式硼官能团化，制备立体定义的烯基硼酸酯。",
+        "preparativeTransformation": "炔烃还原生成高活性烯基钾中间体；在普通烧瓶中与体积大的三烷氧基硼试剂作用得到反式双硼代烯烃，并在微流反应器条件下与不同亲电官能团实现不对称反式双官能团化。",
+        "generalityEvidence": "Chem官方原始Article明确报道烧瓶条件下反式双硼化具有较广炔烃适用范围，微流条件下反区域与反立体选择性安装B与另一官能团；实验证据结合计算支持钾相比钠的不同区域与立体控制，获得可用于后续转化的多取代烯基硼构件。",
+        "sourceEvidence": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426002524（2026年2026-07-29首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-07-01_2026-07-07_chem，raw Git blob 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git blob 7020927b9f5e0c767434c3a4acec1f4f3b6b4037；原来源日期2026-07-01属于卷期日期误标，未更改冻结批次。",
+        "boundaryChallenge": "反向检查：有机钾中间体较不稳定，不宜将烧瓶中的反式双硼化等同于任何亲电试剂均可常规烧瓶反式加成；微流条件是部分不对称官能化的关键。计算关于离子半径的机制解释只作支持证据，不是单独证实。真实跨炔烃和官能团的可制备范围是准入依据，非标题中的 selective。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002524",
+        "publisherOnlineDate": "2026-07-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_chem",
+        "stageBatchSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "7020927b9f5e0c767434c3a4acec1f4f3b6b4037",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-07-29",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002524",
+          "discrepancy": "issue_window_or_created_date_not_true_online_date",
+          "sourceFrozenAndUnchanged": true
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "从主贡献与一般制备能力复核：以廉价元素钾介导炔烃还原性金属化，开发与相关Li/Na体系顺式选择性不同的反式硼官能团化，制备立体定义的烯基硼酸酯。 炔烃还原生成高活性烯基钾中间体；在普通烧瓶中与体积大的三烷氧基硼试剂作用得到反式双硼代烯烃，并在微流反应器条件下与不同亲电官能团实现不对称反式双官能团化。 Chem官方原始Article明确报道烧瓶条件下反式双硼化具有较广炔烃适用范围，微流条件下反区域与反立体选择性安装B与另一官能团；实验证据结合计算支持钾相比钠的不同区域与立体控制，获得可用于后续转化的多取代烯基硼构件。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检查：有机钾中间体较不稳定，不宜将烧瓶中的反式双硼化等同于任何亲电试剂均可常规烧瓶反式加成；微流条件是部分不对称官能化的关键。计算关于离子半径的机制解释只作支持证据，不是单独证实。真实跨炔烃和官能团的可制备范围是准入依据，非标题中的 selective。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向检查：有机钾中间体较不稳定，不宜将烧瓶中的反式双硼化等同于任何亲电试剂均可常规烧瓶反式加成；微流条件是部分不对称官能化的关键。计算关于离子半径的机制解释只作支持证据，不是单独证实。真实跨炔烃和官能团的可制备范围是准入依据，非标题中的 selective。"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103204",
+      "journal": "Chem",
+      "title": "A triangle association strategy for de novo reaction discovery",
+      "titleZh": "三角关联反应发现策略及新型硅杂环与大环的催化合成",
+      "date": "2026-08-18",
+      "authors": [
+        "Yuchen Bian",
+        "Xiaorui Wang",
+        "Xiaolong Ma",
+        "Haowen Zhong",
+        "Azizbek Pardaev",
+        "Longkang Sun",
+        "Simin Liu",
+        "Xiaoxue Wang",
+        "Tingjun Hou",
+        "Weibo Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103204",
+        "articleNumber": "103204",
+        "doi": "10.1016/j.chempr.2026.103204",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立三角关联策略TAS与反应条件关联度DRCC指标，实际发现六类此前未报道的过渡金属催化成键反应，兼具反应发现机制和有机分子制备贡献。",
+      "evidenceBasis": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426002706（2026年2026-08-18首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-08-01_2026-08-07_chem，raw Git blob 6ea589ffc11c757ffd5e72b02d931e88e4778b68、review Git blob 0c6f0757f3d1962b84684f87d24f7f79de19086d；原来源日期2026-08-01属于卷期日期误标，未更改冻结批次。 Chem官方摘要与中科院上海药物所研究报道均明确六项新过渡金属反应经实际实验发现，其中两项经过化学条件优化，得到不同结构的含硅中环及最高28元大环骨架；该贡献不仅是神经网络预测，而有实际可制备新键构建、不同反应参与物和产物类别。",
+      "challengeReason": "反向检查：六类反应中仅部分具有深入底物拓展，不能把DRCC/反应性模型的统计效果写成六套均已成熟、全部可放大的一般制备方法；但确实有多种原创催化成键及两个优化后可制备的硅杂环/大环产物系列，超过单纯自动化平台或理论方法，故纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "建立三角关联策略TAS与反应条件关联度DRCC指标，实际发现六类此前未报道的过渡金属催化成键反应，兼具反应发现机制和有机分子制备贡献。",
+        "preparativeTransformation": "借助已知底物与反应条件的关联关系，实验开发铜催化环丙烷化、钯催化环化-卡宾偶联及铑催化多组分双C–H活化等二组分和多组分串联反应，其中优化路径可构筑含硅中环与大环骨架。",
+        "generalityEvidence": "Chem官方摘要与中科院上海药物所研究报道均明确六项新过渡金属反应经实际实验发现，其中两项经过化学条件优化，得到不同结构的含硅中环及最高28元大环骨架；该贡献不仅是神经网络预测，而有实际可制备新键构建、不同反应参与物和产物类别。",
+        "sourceEvidence": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426002706（2026年2026-08-18首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-08-01_2026-08-07_chem，raw Git blob 6ea589ffc11c757ffd5e72b02d931e88e4778b68、review Git blob 0c6f0757f3d1962b84684f87d24f7f79de19086d；原来源日期2026-08-01属于卷期日期误标，未更改冻结批次。",
+        "boundaryChallenge": "反向检查：六类反应中仅部分具有深入底物拓展，不能把DRCC/反应性模型的统计效果写成六套均已成熟、全部可放大的一般制备方法；但确实有多种原创催化成键及两个优化后可制备的硅杂环/大环产物系列，超过单纯自动化平台或理论方法，故纳入。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002706",
+        "publisherOnlineDate": "2026-08-18",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_chem",
+        "stageBatchSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+        "sourceReviewQueueGitBlobSha": "0c6f0757f3d1962b84684f87d24f7f79de19086d",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-08-18",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002706",
+          "discrepancy": "issue_window_or_created_date_not_true_online_date",
+          "sourceFrozenAndUnchanged": true
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "从主贡献与一般制备能力复核：建立三角关联策略TAS与反应条件关联度DRCC指标，实际发现六类此前未报道的过渡金属催化成键反应，兼具反应发现机制和有机分子制备贡献。 借助已知底物与反应条件的关联关系，实验开发铜催化环丙烷化、钯催化环化-卡宾偶联及铑催化多组分双C–H活化等二组分和多组分串联反应，其中优化路径可构筑含硅中环与大环骨架。 Chem官方摘要与中科院上海药物所研究报道均明确六项新过渡金属反应经实际实验发现，其中两项经过化学条件优化，得到不同结构的含硅中环及最高28元大环骨架；该贡献不仅是神经网络预测，而有实际可制备新键构建、不同反应参与物和产物类别。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检查：六类反应中仅部分具有深入底物拓展，不能把DRCC/反应性模型的统计效果写成六套均已成熟、全部可放大的一般制备方法；但确实有多种原创催化成键及两个优化后可制备的硅杂环/大环产物系列，超过单纯自动化平台或理论方法，故纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向检查：六类反应中仅部分具有深入底物拓展，不能把DRCC/反应性模型的统计效果写成六套均已成熟、全部可放大的一般制备方法；但确实有多种原创催化成键及两个优化后可制备的硅杂环/大环产物系列，超过单纯自动化平台或理论方法，故纳入。"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103257",
+      "journal": "Chem",
+      "title": "Catalytic atroposelective macrocyclization for constructing dominant rotors in peptides",
+      "titleZh": "铑催化不对称肽大环化构筑轴手性三唑联芳基构象旋转单元",
+      "date": "2026-09-17",
+      "authors": [
+        "Linwei Zeng",
+        "Yang (Daniel) Ou",
+        "Tianyi Yang",
+        "Alexander Rowley",
+        "Peter Rukovanský",
+        "Andrew D. Bond",
+        "Andrei K. Yudin",
+        "David R. Spring"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103257",
+        "articleNumber": "103257",
+        "doi": "10.1016/j.chempr.2026.103257",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发Rh催化环内叠氮-炔烃环加成直接构建三唑联芳基轴手性旋转单元，从而实现肽大环构型与三维构象的合成控制。",
+      "evidenceBasis": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426003232（2026年2026-09-17首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-09-01_2026-09-07_chem，raw Git blob edaaef14cca66d44d1cc46f57cee778ff8234c36、review Git blob 5c8c8f3a6582b8c08b27166b0d532340c8189c12；原来源日期2026-09-01属于卷期日期误标，未更改冻结批次。 Chem官方Article报道不同结构及可调环尺寸的肽大环产物具有高轴向立体选择性，NMR、单晶X射线和计算证据支持可分离的大环结构及稳定旋转单元，并展示控制不同主链内氢键和宏环空间组织的化学设计能力。",
+      "challengeReason": "反向检查：研究重视肽分子构象而非传统单中心不对称小分子合成，且依赖专门叠氮/芳炔底物布局；不能将其称作任意肽普适的无保护大环化，也不能把构象变化单独当作新制备方法。关键在RhAAC跨不同肽宏环产生可分离轴手性合成产物与高立体控制，因此具有独立制备价值。",
+      "scopeAssessment": {
+        "primaryContribution": "开发Rh催化环内叠氮-炔烃环加成直接构建三唑联芳基轴手性旋转单元，从而实现肽大环构型与三维构象的合成控制。",
+        "preparativeTransformation": "在含芳基炔与叠氮官能团的肽前体上实行分子内Rh催化叠氮-炔烃环加成（RhAAC），同时闭环构建三唑连接联芳基轴手性片段，制备多种环大小可调的大环肽。",
+        "generalityEvidence": "Chem官方Article报道不同结构及可调环尺寸的肽大环产物具有高轴向立体选择性，NMR、单晶X射线和计算证据支持可分离的大环结构及稳定旋转单元，并展示控制不同主链内氢键和宏环空间组织的化学设计能力。",
+        "sourceEvidence": "原始Chem发行平台 https://www.sciencedirect.com/science/article/pii/S2451929426003232（2026年2026-09-17首次在线；出版社Article/Highlights/Summary/可访问实验信息）；历史Crossref/OpenAlex原始审核分片2026-09-01_2026-09-07_chem，raw Git blob edaaef14cca66d44d1cc46f57cee778ff8234c36、review Git blob 5c8c8f3a6582b8c08b27166b0d532340c8189c12；原来源日期2026-09-01属于卷期日期误标，未更改冻结批次。",
+        "boundaryChallenge": "反向检查：研究重视肽分子构象而非传统单中心不对称小分子合成，且依赖专门叠氮/芳炔底物布局；不能将其称作任意肽普适的无保护大环化，也不能把构象变化单独当作新制备方法。关键在RhAAC跨不同肽宏环产生可分离轴手性合成产物与高立体控制，因此具有独立制备价值。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426003232",
+        "publisherOnlineDate": "2026-09-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_chem",
+        "stageBatchSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+        "sourceReviewQueueGitBlobSha": "5c8c8f3a6582b8c08b27166b0d532340c8189c12",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-09-17",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003232",
+          "discrepancy": "issue_window_or_created_date_not_true_online_date",
+          "sourceFrozenAndUnchanged": true
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "从主贡献与一般制备能力复核：开发Rh催化环内叠氮-炔烃环加成直接构建三唑联芳基轴手性旋转单元，从而实现肽大环构型与三维构象的合成控制。 在含芳基炔与叠氮官能团的肽前体上实行分子内Rh催化叠氮-炔烃环加成（RhAAC），同时闭环构建三唑连接联芳基轴手性片段，制备多种环大小可调的大环肽。 Chem官方Article报道不同结构及可调环尺寸的肽大环产物具有高轴向立体选择性，NMR、单晶X射线和计算证据支持可分离的大环结构及稳定旋转单元，并展示控制不同主链内氢键和宏环空间组织的化学设计能力。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检查：研究重视肽分子构象而非传统单中心不对称小分子合成，且依赖专门叠氮/芳炔底物布局；不能将其称作任意肽普适的无保护大环化，也不能把构象变化单独当作新制备方法。关键在RhAAC跨不同肽宏环产生可分离轴手性合成产物与高立体控制，因此具有独立制备价值。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向检查：研究重视肽分子构象而非传统单中心不对称小分子合成，且依赖专门叠氮/芳炔底物布局；不能将其称作任意肽普适的无保护大环化，也不能把构象变化单独当作新制备方法。关键在RhAAC跨不同肽宏环产生可分离轴手性合成产物与高立体控制，因此具有独立制备价值。"
     }
   ],
   "pending": [
@@ -8902,11 +9145,11 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
+  "note": "Additional three DOI-exact Chem original Q3 methods with publisher-confirmed first-online dates, independent contribution/challenge passes, stage raw and review blob SHA and accurate article-number citations admitted for sole next Beijing 08:00 release. Three other 2026 Q1 original articles are date-corrected but not miscounted as 2026-Q3 methods. This authorization publishes no production card, media, body/SI or PDF. Prior note: 2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish.",
   "currentCatalogReadback": {
     "sha": "eda0d3691b8da50d3071b64379e84e3dcb52add2",
     "recordCount": 1087,
-    "readAt": "2026-10-15T01:44:17.940Z",
+    "readAt": "2026-10-15T02:30:23.252Z",
     "source": "GitHub_main_only_not_production_D1"
   },
   "reviewedNatureChemistryNew": {
@@ -8932,5 +9175,17 @@
     ],
     "sourceStageDatesPreserved": true,
     "releaseOnlyNext08": true
+  },
+  "chemSixCorrectedPublisherDateProof": {
+    "file": "audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json",
+    "sha": "50e73e164993c12de78557d1630dd970be18c357",
+    "verifiedQ1OutsideQ3": 3,
+    "verifiedQ3OriginalMethods": [
+      "10.1016/j.chempr.2026.103186",
+      "10.1016/j.chempr.2026.103204",
+      "10.1016/j.chempr.2026.103257"
+    ],
+    "sourceQueueImmutable": true,
+    "noOffSlotRelease": true
   }
 }
