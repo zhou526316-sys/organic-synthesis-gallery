@@ -89,6 +89,22 @@ try {
   assert.equal(slotGraceMinutes('2026-10-11T08:00:00+08:00'), 240);
   assert.equal(slotGraceMinutes('2026-10-12T08:00:00+08:00'), 60);
   passed.push('only_oct11_technical_grace_through_noon');
+  assert.equal(slotGraceMinutes('2026-10-15T08:00:00+08:00'), 959);
+  assert.equal(slotGraceMinutes('2026-10-16T08:00:00+08:00'), 60);
+  passed.push('oct15_owner_manual_recovery_is_single_date');
+
+  data = fixture();
+  data.review.publicationSlot = '2026-10-15T08:00:00+08:00';
+  data.review.handoffGeneratedAt = data.handoff.generatedAt = data.latest.generatedAt = '2026-10-15T01:18:13.403Z';
+  data.handoff.endDate = data.latest.endDate = '2026-10-15';
+  const activeOct15 = TARGET_JOURNALS.filter(row => row.activeFrom <= '2026-10-15').map(row => row.name);
+  data.handoff.activeJournals = activeOct15.map(name => ({ name }));
+  data.review.sourceChecks = activeOct15.map(journal => ({ journal, status: 'checked', candidateCount: 1, syntheticTitleCount: 1,
+    sourceType: 'publisher-latest-list', sourcePage: 'https://example.invalid/synthetic-fixture' }));
+  result = await run(data);
+  assert.equal(result.exit, 0);
+  assert.equal(result.body.snapshotFreshForSlot, true);
+  passed.push('oct15_owner_recovery_fresh_post0900_review_preserves_all_source_checks');
 
   data = fixture();
   data.review.publicationSlot = '2026-09-23T08:05:00+08:00';
