@@ -1,0 +1,59 @@
+name: Review unknown publisher first-online dates across Gallery
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/gallery-publisher-date-review.yml'
+      - 'scripts/build-publisher-date-review-queue.mjs'
+      - 'shared/publisher-date-display-fix.mjs'
+permissions:
+  contents: write
+concurrency:
+  group: gallery-publisher-date-review
+  cancel-in-progress: false
+jobs:
+  collect:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate DOI identity and publisher date protection
+        run: |
+          node scripts/test-gallery-published-doi-date-integrity.mjs
+          node --test scripts/test-publisher-date-display-fix.mjs
+      - name: Build and persist DOI-scoped follow-up queue without changing release data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            node scripts/build-publisher-date-review-queue.mjs
+            git add audit/publisher-date-evidence/pending-latest.json
+            if git diff --cached --quiet; then
+              echo 'Publisher date audit queue is current.'
+              exit 0
+            fi
+            git commit -m 'audit(date): refresh DOI-bound publisher-first-online review queue'
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
