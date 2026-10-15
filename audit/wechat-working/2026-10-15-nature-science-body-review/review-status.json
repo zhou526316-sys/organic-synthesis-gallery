@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-15",
+  "revision": "2026-10-15-nature-science-body-review",
+  "status": "scientific_body_original_images_and_local_visual_review_complete_publication_not_released",
+  "selection": {
+    "featured": "10.1038/s41586-026-11242-8",
+    "retrospective": "10.1126/science.aec6298"
+  },
+  "readingScope": "Both main scientific narratives and figures, relevant SI preparations/optimization/scope/negative controls/isotope/speciation/binding/DFT, and all Nature reviewer reports and author responses. Not a claim to have manually validated every NMR trace or every Cartesian coordinate.",
+  "sourceManuscripts": [
+    {"path":"audit/wechat-working/2026-10-15-nature-science-body-review/nature-text-only.md","gitBlob":"ddf32f1a11839ea69c26d00b2c7d5830b726dffa","sha256":"58d7f93a68db47b2b6f9c561190288cd8dec6018e3697767a28a1e17e64df120","sections":8,"paragraphsIncludingLead":20,"charactersIncludingLead":2317,"maxBodyParagraphCharacters":138,"bodyFigures":16},
+    {"path":"audit/wechat-working/2026-10-15-nature-science-body-review/science-text-only.md","gitBlob":"ff656144c45565eaf3f25bef69e77bc44340cb71","sha256":"831b91bfc62eab6ed2e712691368811fc99fa6379c6b7764202fbe637b34cf33","sections":8,"paragraphsIncludingLead":23,"charactersIncludingLead":2728,"maxBodyParagraphCharacters":164,"bodyFigures":17}
+  ],
+  "scientificFocus": {
+    "nature": [
+      "Biphenylene-specific strained C-C sigma activation is not ordinary biphenyl or general arene 3D editing; PINC is an atomic carbon equivalent, not free atomic carbon.",
+      "72/13/12 optimization and independent Rh(PINC)4Cl support overcoordination as one source of failure.",
+      "13C source tracing, isolated phosphazine77%, second reaction98%, thermal staging and one-pot97% with denominator second biphenylene remain distinct experiments.",
+      "Diazo bolus0%, PPh3 simultaneous18%, diazo/PPh3 premix66% support a masked-diazo entry, not measured low steady-state concentration.",
+      "PPh3 early14% versus isolated phosphazine second stage93% motivates stage-matched product inhibition tests.",
+      "Sigma-pi branch changes catalyst to Rh2(esp)2. DFT preference for oxidative addition before carbene is a model, not exhaustive exclusion of alternatives."
+    ],
+    "science": [
+      "Neopentoxyphosphonium reagent suppresses self-Arbuzov and beta elimination while enabling monofluorophosphorane exchange; HBD is catalytic, phosphorus reagent remains stoichiometric.",
+      "Ordinary inversion, anchimeric stereoretention, and selected racemic beta-amino-alcohol desymmetrization are different mechanistic scenarios.",
+      "Optimization93% NMR versus scope77% isolation distinguished. Background at48h34% racemic versus U5 86%,96:4 motivates kinetic competition rather than universal enantioconvergence.",
+      "Independent P1-F, alcohol exchange, low-temperature P-F heterolysis, and three-NH fluoride binding support distinct catalyst functions.",
+      "U2 binding F approximately1e6 M-1 versus OPPh3 approximately14 M-1 is measured under specified conditions, not actual reaction occupancy.",
+      "kJ/mol DFT energy references and scanned steps without located transition states bounded. Ordinary U2 pathway is not a complete U5 enantioselectivity calculation.",
+      "148g reagent preparation, gram-scale examples, catalyst/oxide recovery and fluorspar route do not establish zero waste, universal safety or in-situ phosphorus catalysis."
+    ]
+  },
+  "sourceDiscrepanciesPreserved": [
+    "Nature double-spiro: main prose62%, Fig4A65%(4:1), SI52%+13%; body identifies isolated SI values and keeps original figure.",
+    "Nature optimization72% versus characterization entry53%; not silently relabeled72% isolated.",
+    "Nature5ab main figure34% versus SI24%; no editorial invented correction.",
+    "Nature diazo/phosphazine0.3 kcal gap does not alone quantify a strongly favored solution population.3mol% dimer precursor not silently called3mol% Rh atoms.",
+    "Science ordinary/anchimeric/asymmetric conditions and original footnotes remain distinct;2cd25C48h exception noted.",
+    "Source captions and numerical labels remain original even where provisional files are internally inconsistent."
+  ],
+  "figures": {
+    "originalBodyRasters":33,
+    "completeMainFiguresAvailableForFootnotes":10,
+    "newChemicalDrawings":0,
+    "natureWatermarkRetained":true,
+    "natureOrder":["N_01_lead","N_02_concept","N_03_optimization","N_04_rhtrap","N_05_isotope","N_06_intermediate","N_07_scope","N_08_cross","N_16_onepot","N_09_sigma_pi","N_10_diazo_test","N_11_pph3_timing","N_12_cycle","N_13_dft","N_14_failures","N_15_scale"],
+    "scienceOrder":["S_01_lead","S_02_prior","S_03_screen","S_04_scope","S_05_drugscope","S_06_asym_opt","S_07_asym_scope","S_08_bg_control","S_09_p1f","S_10_exchange","S_11_binding","S_12_pf_cleavage","S_13_cycle","S_15_oxide_trap","S_14_dft","S_16_scale","S_17_catalytic_counter"],
+    "completeCropManifestInPackage":"review/figure_manifest.json",
+    "cropManifestSHA256":"903ba42ce1d2b453826692e418155e172cdc844d3d44768ebac7de7bab17cf41",
+    "corrections":"Re-extracted cut off reaction outcomes/ligands/axes/crystal labels/footnote continuations and full Science Fig5C. Nature failed hydroxy substrate is not called phenol.",
+    "productionAssetUploadCompleted":false
+  },
+  "localVisualReview": {
+    "scope":"Offline rendering of newly authored HTML and embedded original images, no WeChat remote/native claim",
+    "widths":[390,980],
+    "loadedByPaper":[16,17],
+    "horizontalOverflow":false,
+    "all16ScientificSectionsVisuallyInspected":true,
+    "openingViewsInspected":2,
+    "fullOriginalFigureZoomTestPassed":true,
+    "denseTablesMayRequireEnlargement":true,
+    "nativeWechatInspected":false
+  },
+  "deliveryPackage": {
+    "name":"化之岛_10月15日_Nature_Science_双篇图文深审稿.zip",
+    "bytes":14260059,
+    "sha256":"e640f14b5c10607fc842890ae775da44a1e9b1f2212081551976d475048f0787",
+    "contents":"Two relative-path full HTML bodies, independent text and image audits,33 crops,10 complete main figures,source hashes,local QA and source discrepancy report; no raw user PDFs or fonts.",
+    "auditReportSHA256":"1e57ba7a86f923e5fc00d95342f95d334590852406af491511506f6c2775aee3"
+  },
+  "publicationState": {
+    "bodyReviewComplete":true,
+    "coversCreatedThisTurn":false,
+    "dailyCountFromOldEditionReused":false,
+    "oldOct14DraftChanged":false,
+    "newOfficialWeChatDraftWritten":false,
+    "newOfficialDraftGetReadback":false,
+    "draftWriteAuthorizedByThisReview":false,
+    "publicSendAuthorized":false,
+    "nextAcceptance":"Final cover/daily-module/image-source freeze and actual official draft write/readback require separate completion; this body audit must not act as a publisher trigger."
+  }
+}
