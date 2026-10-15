@@ -36,12 +36,49 @@ export function verifyHistoricalReviewerStatusRefresh({
   try{raw=JSON.parse(rawBatchText)}catch{
     throw Error('historical_queue_status_refresh_invalid_source_json:'+rootId);
   }
-  const expected=buildReviewShard(raw,{
+  // The 08:00 writer can legitimately publish an already-approved DOI
+  // after this staging reviewer shard was generated. A separate historical
+  // approval can also arrive before the next reviewer-shard refresh.
+  // Reconstruct the *persisted* old shard from the same immutable raw batch,
+  // allowing only the specifically proven transitions
+  // unreviewed -> approved -> formally published. Do not ignore status, stats,
+  // DOI identity, title, source hash or any other record fields.
+  const authoritative=buildReviewShard(raw,{
     published,approved,pending,sourceSha256:actualSha256,sourceId:rootId
   });
   verify(reviewerShard&&reviewerShard.rootId===rootId
     &&reviewerShard.sourceSha256===actualSha256
-    &&JSON.stringify(reviewerShard)===JSON.stringify(expected),
+    &&Array.isArray(reviewerShard.records)
+    &&reviewerShard.records.length===authoritative.records.length,
+    'historical_queue_status_refresh_not_deterministic:'+rootId);
+  const byDoi=new Map(authoritative.records.map(r=>[r.doi,r]));
+  const replayPublished=new Set(published),replayApproved=new Set(approved);
+  for(const old of reviewerShard.records){
+    const now=byDoi.get(old.doi);
+    verify(now,'historical_queue_status_refresh_doi_identity_changed:'+rootId);
+    if(old.status===now.status)continue;
+    const publishedAfterApproval=
+      now.status==='already_published'&&
+      old.status==='two_pass_approved_awaiting_08'&&
+      published.has(old.doi)&&approved.has(old.doi);
+    const approvedAfterReview=
+      now.status==='two_pass_approved_awaiting_08'&&
+      old.status==='requires_two_pass_review'&&
+      approved.has(old.doi)&&!published.has(old.doi);
+    const publishedAfterBoth=
+      now.status==='already_published'&&
+      old.status==='requires_two_pass_review'&&
+      published.has(old.doi)&&approved.has(old.doi);
+    verify(publishedAfterApproval||approvedAfterReview||publishedAfterBoth,
+      'historical_queue_status_refresh_unauthorized_transition:'+rootId+':'+old.doi);
+    if(publishedAfterApproval||publishedAfterBoth)replayPublished.delete(old.doi);
+    if(approvedAfterReview||publishedAfterBoth)replayApproved.delete(old.doi);
+  }
+  const historical=buildReviewShard(raw,{
+    published:replayPublished,approved:replayApproved,pending,
+    sourceSha256:actualSha256,sourceId:rootId
+  });
+  verify(JSON.stringify(reviewerShard)===JSON.stringify(historical),
     'historical_queue_status_refresh_not_deterministic:'+rootId);
   return previousReviewerGitBlobSha;
 }
