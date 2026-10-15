@@ -21,8 +21,6 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'shared/literature-journals.js'
       - 'scripts/test-literature-completeness-capability.mjs'
-      - 'scripts/lib/openalex-date-window-fetch.mjs'
-      - 'scripts/test-openalex-date-window-fetch.mjs'
       - 'public/curated-supplement.json'
       - 'public/automation-supplement.json'
       - 'public/rolling-supplement.json'
@@ -52,9 +50,6 @@ jobs:
 
       - name: Verify completeness capability guard
         run: node scripts/test-literature-completeness-capability.mjs
-
-      - name: Verify complete OpenAlex date-window pagination
-        run: node --test scripts/test-openalex-date-window-fetch.mjs
 
       - name: Build DOI-union audit report
         env:

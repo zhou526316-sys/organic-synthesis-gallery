@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import './test-openalex-date-window-fetch.mjs';
 import { readFile } from 'node:fs/promises';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-journals.js';
 import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
