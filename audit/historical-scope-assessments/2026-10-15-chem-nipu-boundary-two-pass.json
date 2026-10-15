@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-nipu-original-scope-pending-v1",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-one-nipu-first-online-reconciled.json",
+  "dateEvidenceGitBlobSha": "41b5b2aaf03b241df0952d2b45ee571f4adc1ea6",
+  "scienceType": "per_article_primary_preparative_scope_dispute",
+  "counts": {
+    "assessed": 1,
+    "include": 0,
+    "exclude": 0,
+    "pending": 1
+  },
+  "copyrightPolicy": "No restricted publisher body or SI/PDF/figures copied or redistributed",
+  "evidenceLimitations": "Publisher indexed Summary and Results/Discussion support factual chemistry. Precise independent monomer characterization and generality not yet shown; no inference of experimental absence",
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103145",
+      "journal": "Chem",
+      "title": "Foam-to-foam recycling of non-isocyanate polyurethane foams via complete revalorization of depolymerization products",
+      "date": "2026-07-08",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "reason": "开发面向非异氰酸酯聚氨酯（NIPU）泡沫的无溶剂化学循环路线：先以甘油解聚聚羟基氨基甲酸酯网络，再利用碳酸二甲酯环碳酸酯化，把复杂解聚混合物整体转化为可继续聚合的五元环碳酸酯官能化原料。",
+      "firstPassReason": "第一遍检验主创新确实具化学制备步骤：与简单物理回收或材料配方改变不同，甘油将交联NIPU网络解聚，再用DMC把混合多元醇转回五元环碳酸酯，随后成功再发泡；报告最高75% re-5CC混合原料产率和不同泡沫类型。由于核心产物是未分离混合官能化进料，且公开信息并未证明跨不同有机反应伙伴获得结构明确产物的制备范围，先保留科学证据待核，不从75%工艺收率推断可普适合成。",
+      "independentChallengeReason": "第二遍逆向质疑第一遍的保留决定：有机合成不仅限于可柱层析的小分子，特定聚合物解聚–环碳酸酯化制备可再反应官能化砌块，本身可能是有推广价值的合成路线；作者验证半硬质/柔性/含填料三类泡沫及两类胺，证明并非仅一次产物展示。反过来，如果原始SI表明只有同一母体NIPU化学结构在物性上变化，且再生混合物无法定量归属成环碳酸酯官能团，则其主要突破可能仅是材料闭环流程。需要先取得化学组成与底物普适性证据，不足以直接include或exclude。",
+      "evidenceBasis": "Chem原始Article https://www.sciencedirect.com/science/article/pii/S2451929426002111 于2026-07-08首次在线；Highlights、Summary、Results/Discussion报告甘油解聚、DMC环化、半硬/柔软/填充三类泡沫、一步法与两步法比较、75%再生环碳酸酯混合物产率和全回收进料再制泡沫。冻结来源为2026-07-01_2026-07-07_chem，raw blob 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7，source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f；未获取完整SI、PDF或复制全文图像。",
+      "scopeAssessment": {
+        "primaryContribution": "开发面向非异氰酸酯聚氨酯（NIPU）泡沫的无溶剂化学循环路线：先以甘油解聚聚羟基氨基甲酸酯网络，再利用碳酸二甲酯环碳酸酯化，把复杂解聚混合物整体转化为可继续聚合的五元环碳酸酯官能化原料。",
+        "preparativeTransformation": "NIPU聚羟基氨基甲酸酯交联网络在甘油作用下发生解聚和氨基甲酸酯基团交换，形成多元醇富集片段；随后与碳酸二甲酯发生环碳酸酯化形成再生五元环碳酸酯（re-5CC）混合进料，进一步和胺组分反应制得第二代NIPU泡沫。",
+        "generalityEvidence": "Chem官方报告流程可用于半硬质、柔性和含填料NIPU泡沫，使用EDR-148和mXDA等不同胺制备代表性泡沫；一步序贯操作中的再生环碳酸酯组分产率最高75%，第二代泡沫的碳酸酯原料部分可实现100%来自回收混合物。该75%并非已明确证明每一种纯化单体的独立分离收率。",
+        "sourceEvidence": "Chem原始Article https://www.sciencedirect.com/science/article/pii/S2451929426002111 于2026-07-08首次在线；Highlights、Summary、Results/Discussion报告甘油解聚、DMC环化、半硬/柔软/填充三类泡沫、一步法与两步法比较、75%再生环碳酸酯混合物产率和全回收进料再制泡沫。冻结来源为2026-07-01_2026-07-07_chem，raw blob 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7，source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f；未获取完整SI、PDF或复制全文图像。",
+        "boundaryChallenge": "反向边界问题：本研究不仅是测试材料力学性能，确有真实的醇解→环碳酸酯化成键与可重新聚合产物，不能以polyurethane/foam关键词直接排除。但作者刻意不分离单一re-5CC结构，而把组成不明的多官能团混合物直接用于同类型泡沫重制；三类泡沫可能共享同一基本化学组成。现有公开结果还不足以界定其是否建立跨不同聚氨酯化学骨架的可迁移分子/单体制备方法，还是对特定NIPU废物流的循环材料工艺优化。"
+      },
+      "evidenceNeeded": "核实正文/SI中每类泡沫的真实单体或二胺化学差异、再生re-5CC含量测量方法与结构表征、反应官能团平衡、是否存在可独立分离/定量的具体环碳酸酯，以及甘油解聚和DMC环化能否适用于不同化学骨架而非只改变泡沫硬度或填料；判断它是可迁移有机砌块/聚合物合成反应还是特定材料回收工艺。",
+      "nextAction": "在合法可访问范围内核对原文Results、SI的重复底物/不同聚氨酯网络、再生re-5CC的NMR、GC或LC表征与组分收率，再次逐项对照Gallery有机合成范围合同；若证实具跨原料可迁移的制备方法再include，若主要是特定泡沫体系材料回收与性能优化则exclude，避免编造未见的SI实验证据。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002111",
+      "authors": [
+        "Víctor D. Lechuga-Islas",
+        "Maxime Bourguignon",
+        "Mahammad Anas",
+        "Alejandro J. Müller",
+        "Bruno Grignard",
+        "Christophe Detrembleur"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103145",
+        "articleNumber": "103145",
+        "doi": "10.1016/j.chempr.2026.103145",
+        "correctedInterpretation": "First online 2026-07-08; 2026-07-01 historical source sentinel must not be treated as publisher first published"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103145",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002111",
+        "publisherOnlineDate": "2026-07-08",
+        "sourceDate": "2026-07-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_chem",
+        "stageBatchSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-07-08",
+          "sourceFrozenAndUnchanged": true,
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002111"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "reviewerIdentity": "same_assistant_two_pass_adversarial_challenge_not_two_independent_humans"
+    }
+  ],
+  "guards": {
+    "noAutomaticInclude": true,
+    "notOwnerPermanentExclusion": true,
+    "notOriginalManifestPending": true,
+    "sourceCensusStillIncludesDoi": true,
+    "publisherIssueClosureUnproved": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noFormalPublication": true
+  }
+}
