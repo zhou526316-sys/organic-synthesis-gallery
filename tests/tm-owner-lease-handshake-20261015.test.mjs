@@ -102,6 +102,6 @@ test('foreign origin, missing request identifier and standalone collector cannot
 });
 
 test('owner setup page runs lease listener but never its main capture controller',()=>{
-  assert.match(source,/private-pdf-owner-setup\\.html\$\/\.test\(location\.pathname\)/);
+  assert.ok(source.includes(String.raw`/\/private-pdf-owner-setup\.html$/.test(location.pathname)`));
   assert.match(source,/installPrivatePdfLeaseReceiver\(\);/);
 });
