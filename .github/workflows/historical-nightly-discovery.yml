@@ -78,6 +78,11 @@ jobs:
         env:
           HISTORICAL_STAGING_ONLY: '1'
           HISTORICAL_STAGING_BRANCH: '1'
+          # Incomplete source roots must be durable and retried independently
+          # rather than blocking the remaining 15 journals. No false completion.
+          HISTORICAL_DEFER_BLOCKED: '1'
+          # Official Crossref supports larger pages; cursor/provenance checks remain.
+          HISTORICAL_FAST_CROSSREF: '1'
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           MAX_UNITS: ${{ inputs.max_units || '48' }}
           API_REQUEST_LIMIT: '220'
