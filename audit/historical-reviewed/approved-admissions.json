@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-15T16:09:07.122Z",
+  "generatedAt": "2026-10-15T17:31:24.914Z",
   "nextEligiblePublicationSlot": "2026-10-16T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 143,
-    "include": 141,
+    "checked": 147,
+    "include": 145,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -10335,6 +10335,323 @@
           "reason": "双室Mo(CO)6仅属CO替代来源，是否不足构成新方法学？作者同时实现Ir(III)催化的2-烯基苯胺到2-喹诺酮的有机羰基化关环与生物活性化合物合成，核心是新杂环制备反应；但不能把外置CO说成无风险或不需操作安全评估。"
         }
       ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00656",
+      "journal": "JOC",
+      "title": "Asymmetric Synthesis of 2,3-Dihydrooxazoles via Acylaziridine Rearrangement of 2-(1-Tosylalkyl)naphthols with N , O -Hydroxylamines",
+      "titleZh": "酰基氮杂环丙烷重排不对称合成C2位手性2,3-二氢噁唑",
+      "date": "2026-07-10",
+      "authors": [
+        "Yaoyu Shi",
+        "Yongxing Zhang",
+        "Xiang Xu",
+        "Yanting Li",
+        "Jingze Chen",
+        "Yang Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "29",
+        "pages": "10307-10316",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00656"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "首次通过不对称酰基氮杂环丙烷重排途径，针对C2位易发生缩醛环开裂消旋的挑战，合成具有C2手性中心的2,3-二氢噁唑。",
+      "evidenceBasis": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/29/10307/5206758/Asymmetric-Synthesis-of-2-3-Dihydrooxazoles-via 与 https://doi.org/10.1021/acs.joc.6c00656 的题名、文章类别和 Published Online 2026-07-10 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-07-08_2026-07-14_joc 源SHA256 a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287；原始源Git blob ca8733105479188e6a163c0d161bb49add041ef0、对应review队列Git blob 1957cc142582b5e8753d2320e1590240e9e17a46。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。 美国化学会正式JOC摘要明确称首例不对称酰基氮杂环丙烷重排，提供高对映选择性的手性二氢噁唑，含新化合物谱学及晶体学支撑；公开摘要未给所有底物的收率、ee和放大数据，不臆造。",
+      "challengeReason": "重要反证是C2缩醛手性易因开环消旋、底物集中于特定萘酚体系，是否只给特殊单例？作者确实提供不对称重排的可制备杂环骨架作为主创新，而非单纯环开裂机理；但要保留底物与基团适用性的局限，不将未读SI编成广谱催化。",
+      "scopeAssessment": {
+        "primaryContribution": "首次通过不对称酰基氮杂环丙烷重排途径，针对C2位易发生缩醛环开裂消旋的挑战，合成具有C2手性中心的2,3-二氢噁唑。",
+        "preparativeTransformation": "2-(1-对甲苯磺酰烷基)萘酚与N,O-双磺酰羟胺反应，经酰基氮杂环丙烷重排构建2,3-二氢噁唑杂环与C2手性中心；不臆断未直接证实的中间体分离或环化步序。",
+        "generalityEvidence": "美国化学会正式JOC摘要明确称首例不对称酰基氮杂环丙烷重排，提供高对映选择性的手性二氢噁唑，含新化合物谱学及晶体学支撑；公开摘要未给所有底物的收率、ee和放大数据，不臆造。",
+        "sourceEvidence": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/29/10307/5206758/Asymmetric-Synthesis-of-2-3-Dihydrooxazoles-via 与 https://doi.org/10.1021/acs.joc.6c00656 的题名、文章类别和 Published Online 2026-07-10 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-07-08_2026-07-14_joc 源SHA256 a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287；原始源Git blob ca8733105479188e6a163c0d161bb49add041ef0、对应review队列Git blob 1957cc142582b5e8753d2320e1590240e9e17a46。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。",
+        "boundaryChallenge": "重要反证是C2缩醛手性易因开环消旋、底物集中于特定萘酚体系，是否只给特殊单例？作者确实提供不对称重排的可制备杂环骨架作为主创新，而非单纯环开裂机理；但要保留底物与基团适用性的局限，不将未读SI编成广谱催化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00656",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/29/10307/5206758/Asymmetric-Synthesis-of-2-3-Dihydrooxazoles-via",
+        "publisherOnlineDate": "2026-07-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_joc",
+        "stageBatchSha": "ca8733105479188e6a163c0d161bb49add041ef0",
+        "sourceReviewQueueGitBlobSha": "1957cc142582b5e8753d2320e1590240e9e17a46",
+        "stageSourceSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-10",
+          "officialPublisherFirstOnline": "2026-07-10",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/29/10307/5206758/Asymmetric-Synthesis-of-2-3-Dihydrooxazoles-via",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次通过不对称酰基氮杂环丙烷重排途径，针对C2位易发生缩醛环开裂消旋的挑战，合成具有C2手性中心的2,3-二氢噁唑。 2-(1-对甲苯磺酰烷基)萘酚与N,O-双磺酰羟胺反应，经酰基氮杂环丙烷重排构建2,3-二氢噁唑杂环与C2手性中心；不臆断未直接证实的中间体分离或环化步序。。原文制备证据：美国化学会正式JOC摘要明确称首例不对称酰基氮杂环丙烷重排，提供高对映选择性的手性二氢噁唑，含新化合物谱学及晶体学支撑；公开摘要未给所有底物的收率、ee和放大数据，不臆造。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "重要反证是C2缩醛手性易因开环消旋、底物集中于特定萘酚体系，是否只给特殊单例？作者确实提供不对称重排的可制备杂环骨架作为主创新，而非单纯环开裂机理；但要保留底物与基团适用性的局限，不将未读SI编成广谱催化。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00718",
+      "journal": "JOC",
+      "title": "Engineering a Carboxylesterase for Enantioselective Acyl Transfer Reaction",
+      "titleZh": "位阻工程改造羧酸酯酶实现伯醇与仲醇的不对称酰基转移",
+      "date": "2026-07-08",
+      "authors": [
+        "Wencai Fan",
+        "Sanyang Li",
+        "Xinxin Liu",
+        "Lin Chen",
+        "Yaxuan Fang",
+        "Wenhui Wang",
+        "Yong Guo",
+        "Dan Wu",
+        "Jin Zhu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "28",
+        "pages": "9752-9760",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00718"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过酶活性口袋的超位阻工程改造EstFF1羧酸酯酶，建立用于伯醇和多类仲醇选择性转酰化的生物催化反应体系。",
+      "evidenceBasis": "美国化学会官方JOC Article https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c00718 与 https://doi.org/10.1021/acs.joc.6c00718 的题名、文章类别和 Published Online 2026-07-08 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-07-08_2026-07-14_joc 源SHA256 a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287；原始源Git blob ca8733105479188e6a163c0d161bb49add041ef0、对应review队列Git blob 1957cc142582b5e8753d2320e1590240e9e17a46。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。 ACS文章摘要明确比较R386V/R390V和G359L等活性口袋位阻变化，报告广泛伯醇与两大仲醇类别的酰基转移，仲醇可达到定量或近定量S-对映选择性。所谓定量选择性并非100%底物转化或全部分离收率，未读原表不可扩张这些数据。",
+      "challengeReason": "该研究大篇幅聚焦蛋白质结构和催化腔体工程，可能属于纯酶工程而非有机合成。决定性证据是它实际报告多类伯醇/仲醇与乙酸乙烯酯的制备型酰化、可推广底物适用性和对映选择性；不能把蛋白变体数量误作底物数量，也不捏造产物克级分离。",
+      "scopeAssessment": {
+        "primaryContribution": "通过酶活性口袋的超位阻工程改造EstFF1羧酸酯酶，建立用于伯醇和多类仲醇选择性转酰化的生物催化反应体系。",
+        "preparativeTransformation": "以乙酸乙烯酯提供酰基，使用EstFF1工程突变体催化不同伯醇及芳基/烷基、烷基/烷基型仲醇发生酰基转移得到醇乙酸酯，仲醇反应体现对映选择性。",
+        "generalityEvidence": "ACS文章摘要明确比较R386V/R390V和G359L等活性口袋位阻变化，报告广泛伯醇与两大仲醇类别的酰基转移，仲醇可达到定量或近定量S-对映选择性。所谓定量选择性并非100%底物转化或全部分离收率，未读原表不可扩张这些数据。",
+        "sourceEvidence": "美国化学会官方JOC Article https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c00718 与 https://doi.org/10.1021/acs.joc.6c00718 的题名、文章类别和 Published Online 2026-07-08 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-07-08_2026-07-14_joc 源SHA256 a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287；原始源Git blob ca8733105479188e6a163c0d161bb49add041ef0、对应review队列Git blob 1957cc142582b5e8753d2320e1590240e9e17a46。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。",
+        "boundaryChallenge": "该研究大篇幅聚焦蛋白质结构和催化腔体工程，可能属于纯酶工程而非有机合成。决定性证据是它实际报告多类伯醇/仲醇与乙酸乙烯酯的制备型酰化、可推广底物适用性和对映选择性；不能把蛋白变体数量误作底物数量，也不捏造产物克级分离。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00718",
+        "publisherArticlePage": "https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c00718",
+        "publisherOnlineDate": "2026-07-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_joc",
+        "stageBatchSha": "ca8733105479188e6a163c0d161bb49add041ef0",
+        "sourceReviewQueueGitBlobSha": "1957cc142582b5e8753d2320e1590240e9e17a46",
+        "stageSourceSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-08",
+          "officialPublisherFirstOnline": "2026-07-08",
+          "publisherArticlePage": "https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c00718",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过酶活性口袋的超位阻工程改造EstFF1羧酸酯酶，建立用于伯醇和多类仲醇选择性转酰化的生物催化反应体系。 以乙酸乙烯酯提供酰基，使用EstFF1工程突变体催化不同伯醇及芳基/烷基、烷基/烷基型仲醇发生酰基转移得到醇乙酸酯，仲醇反应体现对映选择性。。原文制备证据：ACS文章摘要明确比较R386V/R390V和G359L等活性口袋位阻变化，报告广泛伯醇与两大仲醇类别的酰基转移，仲醇可达到定量或近定量S-对映选择性。所谓定量选择性并非100%底物转化或全部分离收率，未读原表不可扩张这些数据。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "该研究大篇幅聚焦蛋白质结构和催化腔体工程，可能属于纯酶工程而非有机合成。决定性证据是它实际报告多类伯醇/仲醇与乙酸乙烯酯的制备型酰化、可推广底物适用性和对映选择性；不能把蛋白变体数量误作底物数量，也不捏造产物克级分离。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01376",
+      "journal": "JOC",
+      "title": "Enantioselective Synthesis of Hexahydroimidazo[1,2- a ]quinolines through Dynamic Kinetic Resolution of Racemic Aziridines",
+      "titleZh": "Cu(I)催化氮杂环丙烷动态动力学拆分与串联环化不对称构筑六氢咪唑并喹啉",
+      "date": "2026-09-16",
+      "authors": [
+        "Amit K. Sharma",
+        "Poulami Mandal",
+        "Diksha Sharma",
+        "Manas K. Ghorai"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12934-12946",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01376"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "把消旋氮杂环丙烷的动态动力学拆分与Cu(I)催化串联开环环化结合，建立手性六氢咪唑并[1,2-a]喹啉多环杂环的制备方法。",
+      "evidenceBasis": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/38/12934/5431504/Enantioselective-Synthesis-of-Hexahydroimidazo-1-2 与 https://doi.org/10.1021/acs.joc.6c01376 的题名、文章类别和 Published Online 2026-09-16 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-09-15_2026-09-21_joc 源SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；原始源Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541、对应review队列Git blob 0291856081a86b8aba4e11d667f9e56b7757ac9e。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。 ACS正式Article摘要报告最高88%收率、>99:1 dr和94:6 er，证明有明确结构的手性氮杂稠环产物和对映/非对映控制。这是各指标独立报告的上限，不宣称全部来自同一个样品；底物确切数量另需SI核实。",
+      "challengeReason": "传统Cu(I)催化开环并非首次，是否仅研究氮杂环丙烷消旋动力学？本文将动态动力学拆分与串联关环结合实质性获得药物相关手性稠环杂环，具有一般制备贡献；局限是对特定消旋环状前体与串联关环拓扑的依赖，不泛化为任意消旋氮杂环丙烷。",
+      "scopeAssessment": {
+        "primaryContribution": "把消旋氮杂环丙烷的动态动力学拆分与Cu(I)催化串联开环环化结合，建立手性六氢咪唑并[1,2-a]喹啉多环杂环的制备方法。",
+        "preparativeTransformation": "通过Cu(I)参与的消旋氮杂环丙烷开环、级联分子内环化及动态动力学拆分，构筑六氢咪唑并喹啉骨架和受控的立体中心；具体所有键成形次序不在摘要中推定。",
+        "generalityEvidence": "ACS正式Article摘要报告最高88%收率、>99:1 dr和94:6 er，证明有明确结构的手性氮杂稠环产物和对映/非对映控制。这是各指标独立报告的上限，不宣称全部来自同一个样品；底物确切数量另需SI核实。",
+        "sourceEvidence": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/38/12934/5431504/Enantioselective-Synthesis-of-Hexahydroimidazo-1-2 与 https://doi.org/10.1021/acs.joc.6c01376 的题名、文章类别和 Published Online 2026-09-16 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-09-15_2026-09-21_joc 源SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；原始源Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541、对应review队列Git blob 0291856081a86b8aba4e11d667f9e56b7757ac9e。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。",
+        "boundaryChallenge": "传统Cu(I)催化开环并非首次，是否仅研究氮杂环丙烷消旋动力学？本文将动态动力学拆分与串联关环结合实质性获得药物相关手性稠环杂环，具有一般制备贡献；局限是对特定消旋环状前体与串联关环拓扑的依赖，不泛化为任意消旋氮杂环丙烷。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01376",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/38/12934/5431504/Enantioselective-Synthesis-of-Hexahydroimidazo-1-2",
+        "publisherOnlineDate": "2026-09-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceReviewQueueGitBlobSha": "0291856081a86b8aba4e11d667f9e56b7757ac9e",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-16",
+          "officialPublisherFirstOnline": "2026-09-16",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/38/12934/5431504/Enantioselective-Synthesis-of-Hexahydroimidazo-1-2",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "把消旋氮杂环丙烷的动态动力学拆分与Cu(I)催化串联开环环化结合，建立手性六氢咪唑并[1,2-a]喹啉多环杂环的制备方法。 通过Cu(I)参与的消旋氮杂环丙烷开环、级联分子内环化及动态动力学拆分，构筑六氢咪唑并喹啉骨架和受控的立体中心；具体所有键成形次序不在摘要中推定。。原文制备证据：ACS正式Article摘要报告最高88%收率、>99:1 dr和94:6 er，证明有明确结构的手性氮杂稠环产物和对映/非对映控制。这是各指标独立报告的上限，不宣称全部来自同一个样品；底物确切数量另需SI核实。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "传统Cu(I)催化开环并非首次，是否仅研究氮杂环丙烷消旋动力学？本文将动态动力学拆分与串联关环结合实质性获得药物相关手性稠环杂环，具有一般制备贡献；局限是对特定消旋环状前体与串联关环拓扑的依赖，不泛化为任意消旋氮杂环丙烷。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01788",
+      "journal": "JOC",
+      "title": "Highly Enantioselective Synthesis of Chiral Thiourea Derivatives via a Three-Component Mannich Reaction",
+      "titleZh": "手性H8-IDPA催化三组分Mannich反应不对称合成手性硫脲衍生物",
+      "date": "2026-09-08",
+      "authors": [
+        "Zhe Li",
+        "Lingkai Kong",
+        "Qiuhan Li",
+        "Jisheng Cai",
+        "Guangliang Zhang",
+        "Suoqin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12712-12718",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01788"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "采用手性3,3′-二(2-萘基)取代H8-IDPA体系催化环状1,3-二酮、芳香醛与取代硫脲进行三组分不对称Mannich反应，制备手性硫脲衍生物。",
+      "evidenceBasis": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/37/12712/5425860/Highly-Enantioselective-Synthesis-of-Chiral 与 https://doi.org/10.1021/acs.joc.6c01788 的题名、文章类别和 Published Online 2026-09-08 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-09-08_2026-09-14_joc 源SHA256 f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14；原始源Git blob c5604566a1a9763ce4fbbd2233b424db5c960517、对应review队列Git blob 7f2236cb970dc7526bb2c588065e64b2c57d204c。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。 ACS原始JOC页面确认2026年9月8日Published Online和Article身份；公开索引摘要报道多类手性硫脲衍生物，最高99%收率和99% ee，反应具有三组分组合多样性。上述数字是上限，未经原实验逐项核查不能写为所有底物的结果。",
+      "challengeReason": "硫脲衍生物通常本身被当成催化剂，论文是否只合成少量配体？其真实贡献为三类反应伙伴参与的新型不对称三组分Mannich制备，报告多样化产物和很高ee；但可能限于芳香醛和特定环状1,3-二羰基化合物，不能夸大成为任意亲核体通用反应。",
+      "scopeAssessment": {
+        "primaryContribution": "采用手性3,3′-二(2-萘基)取代H8-IDPA体系催化环状1,3-二酮、芳香醛与取代硫脲进行三组分不对称Mannich反应，制备手性硫脲衍生物。",
+        "preparativeTransformation": "环状1,3-二酮、芳香醛及取代硫脲在手性Brønsted酸催化下发生三组分Mannich型C–C键构建，得到具有受控碳立体中心的硫脲衍生物；具体亚胺生成次序尚需机理数据。",
+        "generalityEvidence": "ACS原始JOC页面确认2026年9月8日Published Online和Article身份；公开索引摘要报道多类手性硫脲衍生物，最高99%收率和99% ee，反应具有三组分组合多样性。上述数字是上限，未经原实验逐项核查不能写为所有底物的结果。",
+        "sourceEvidence": "美国化学会官方JOC Article https://pubs.acs.org/joceah/article/91/37/12712/5425860/Highly-Enantioselective-Synthesis-of-Chiral 与 https://doi.org/10.1021/acs.joc.6c01788 的题名、文章类别和 Published Online 2026-09-08 核对；官方可公开读取的摘要及对应研究摘要支持所述实验事实和制备能力。冻结历史Crossref/OpenAlex双源批次 2026-09-08_2026-09-14_joc 源SHA256 f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14；原始源Git blob c5604566a1a9763ce4fbbd2233b424db5c960517、对应review队列Git blob 7f2236cb970dc7526bb2c588065e64b2c57d204c。本次未复制受限原摘要、出版社PDF、SI、TOC或正文图；未核实的底物数、峰值收率、立体模型细节不推定。",
+        "boundaryChallenge": "硫脲衍生物通常本身被当成催化剂，论文是否只合成少量配体？其真实贡献为三类反应伙伴参与的新型不对称三组分Mannich制备，报告多样化产物和很高ee；但可能限于芳香醛和特定环状1,3-二羰基化合物，不能夸大成为任意亲核体通用反应。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01788",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/37/12712/5425860/Highly-Enantioselective-Synthesis-of-Chiral",
+        "publisherOnlineDate": "2026-09-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "sourceReviewQueueGitBlobSha": "7f2236cb970dc7526bb2c588065e64b2c57d204c",
+        "stageSourceSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-08",
+          "officialPublisherFirstOnline": "2026-09-08",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/91/37/12712/5425860/Highly-Enantioselective-Synthesis-of-Chiral",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "采用手性3,3′-二(2-萘基)取代H8-IDPA体系催化环状1,3-二酮、芳香醛与取代硫脲进行三组分不对称Mannich反应，制备手性硫脲衍生物。 环状1,3-二酮、芳香醛及取代硫脲在手性Brønsted酸催化下发生三组分Mannich型C–C键构建，得到具有受控碳立体中心的硫脲衍生物；具体亚胺生成次序尚需机理数据。。原文制备证据：ACS原始JOC页面确认2026年9月8日Published Online和Article身份；公开索引摘要报道多类手性硫脲衍生物，最高99%收率和99% ee，反应具有三组分组合多样性。上述数字是上限，未经原实验逐项核查不能写为所有底物的结果。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "硫脲衍生物通常本身被当成催化剂，论文是否只合成少量配体？其真实贡献为三类反应伙伴参与的新型不对称三组分Mannich制备，报告多样化产物和很高ee；但可能限于芳香醛和特定环状1,3-二羰基化合物，不能夸大成为任意亲核体通用反应。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -10466,5 +10783,31 @@
     "noD1": true,
     "addedToTodayOrHot": false,
     "publisherDateVerifiedIndividually": true
+  },
+  "newOctober16AdditionalJocScopeBatch": {
+    "reviewedAt": "2026-10-15T17:31:24.914Z",
+    "reviewMethod": "same_assistant_adversarial_two_pass_not_two_independent_humans",
+    "count": 4,
+    "approvedDois": [
+      "10.1021/acs.joc.6c00656",
+      "10.1021/acs.joc.6c00718",
+      "10.1021/acs.joc.6c01376",
+      "10.1021/acs.joc.6c01788"
+    ],
+    "publisherFirstOnlineEvidence": true,
+    "newOriginalDoiAllAbsentFormalAtReview": true,
+    "noD1": true,
+    "noMediaWrites": true,
+    "noOffSlotPublication": true,
+    "knownDateConflictsNotAdmitted": [
+      "10.1021/acs.orglett.6c02163",
+      "10.1021/acs.orglett.6c02735",
+      "10.1021/acs.joc.6c01432",
+      "10.1021/acs.joc.6c01562",
+      "10.1021/acs.joc.6c01686"
+    ],
+    "alreadyFormallyPresentNotReAdmitted": [
+      "10.1021/acs.joc.6c01696"
+    ]
   }
 }

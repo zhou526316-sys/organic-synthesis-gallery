@@ -59,7 +59,15 @@ test('eleven ACS original methods are scientifically audited separately from 08:
    assert.equal(row.reviewEvidence.abstractCopied,false);
    assert.equal(row.publisherAbstractRights,'not_verified_do_not_republish_full_text');
    assert.equal(forbidden.has(doi),false);
-   assert.equal(formalIds.has(doi),false);
+   // A later legitimate 08:00 fixed-slot historical release can now contain
+   // this paper; approval regression must check metadata, not freeze the site.
+   if(formalIds.has(doi)){
+     const formalRow=live.articles.find(x=>x.doi===doi);
+     assert.equal(formalRow.ingestionChannel,'historical_backfill');
+     assert.equal(formalRow.mediaPolicy,'toc_only');
+     assert.equal(formalRow.new,false);
+     assert.equal(formalRow.addedDate,'');
+   }
    assert.equal(['JOC','Organic Letters'].includes(row.journal),true);
    for(const k of ['primaryContribution','preparativeTransformation',
         'generalityEvidence','sourceEvidence','boundaryChallenge'])
