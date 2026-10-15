@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-15",
+  "revision": "2026-10-15-r2-peer-reviewed",
+  "status": "science_language_review_complete_visual_pending",
+  "basis": [
+    "Nature main/ SI /15-page Peer Review File supplied by owner",
+    "Science main/SI supplied by owner; no peer-review record supplied"
+  ],
+  "evidence": [
+    {
+      "point": "Reviewer1 requested diazo/PPh3 and coordination tests",
+      "source": "Peer Review File p2 and pp8-10; SI pp31-35",
+      "boundary": "18/66 conditions differ in solvent and premixing;14/93 test different stages; no direct diazo concentration or full metal-species quantitation"
+    },
+    {
+      "point": "Practicality prompted lower load, scale-up, one-pot and expanded scope",
+      "source": "Peer Review File pp5-8; SI pp10-13 and31",
+      "boundary": "3mol% denotes the stated Rh dimer relative to PINC; glovebox-free is not air;97% referenced to second biphenylene; historical reply figures are not substituted for preview values"
+    },
+    {
+      "point": "Second-round opinions not unanimous on utility",
+      "source": "Peer Review File p3 and pp14-15",
+      "boundary": "Reviewer1 recommends acceptance while retaining caveats;Reviewer2 still questions utility. Author response says wording narrowed; actual demonstrated scope remains biphenylenes"
+    },
+    {
+      "point": "Science has no supplied reviewer report",
+      "source": "Science main p9 editorial summary and supplied SI contents",
+      "boundary": "Do not invent referee motivation or conflate editor and referee"
+    }
+  ],
+  "unchanged": {
+    "scientificImageCount": 33,
+    "coverCount": 2,
+    "allAssetBytes": true,
+    "dois": [
+      "10.1038/s41586-026-11242-8",
+      "10.1126/science.aec6298"
+    ],
+    "dailyCount": 33
+  },
+  "checks": {
+    "noGeneratedChemistry": true,
+    "noNewReviewerClaimsForScience": true,
+    "naturalChinesePass": true,
+    "sourceEvidencePass": true
+  },
+  "cloudWritten": false,
+  "publicSendAuthorized": false
+}

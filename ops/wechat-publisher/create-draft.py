@@ -3601,6 +3601,12 @@ def main() -> int:
                 retro_article["pic_crop_1_1"] = str(retro_cover["crop_1_1"])
             articles.append(retro_article)
 
+    if source_link_request_path.exists() and source_link_request.get("action") == "recreate_reviewed_draft":
+        from recreate_reviewed_draft import run as run_recreation
+        return run_recreation(sys.modules[__name__], args, source_link_request, token=token,
+            publication_date=publication_date, slot=slot, papers=papers, edition=edition,
+            articles=articles, expected_source_links=expected_source_links)
+
     state = load_state(DEFAULT_STATE)
     requested_media_id = str(args.media_id or "").strip()
     same_day_state = (
