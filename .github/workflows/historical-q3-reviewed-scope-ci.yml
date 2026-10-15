@@ -10,6 +10,9 @@ on:
       - 'scripts/test-historical-q3-natcatal-residual-24.mjs'
       - 'scripts/test-historical-q3-natsynth-reviewed-44.mjs'
       - 'scripts/test-historical-q3-nchem-51-reviewed.mjs'
+      - 'scripts/test-historical-q3-natcomm-five-method-scope.mjs'
+      - 'audit/historical-reviewed/q3-natcomm-five-source-proof-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-natcomm-five-original-two-pass.json'
       - 'scripts/test-historical-q3-chem-six-dates.mjs'
       - 'audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'
       - 'scripts/test-historical-q3-chem-publisher-dates.mjs'
@@ -61,6 +64,8 @@ jobs:
         run: node --test scripts/test-historical-q3-natsynth-reviewed-44.mjs
       - name: Validate Nature Chemistry official 66 DOI date/type census and 51 DOI two-pass scopes
         run: node --test scripts/test-historical-q3-nchem-51-reviewed.mjs
+      - name: Verify five exact Nature Communications Q3 science reviews and three fixed-slot admissions
+        run: node --test scripts/test-historical-q3-natcomm-five-method-scope.mjs
       - name: Verify new Chem official first-online dates with two-pass and 08-only admission
         run: node --test scripts/test-historical-q3-chem-six-dates.mjs
       - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions
