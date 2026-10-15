@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-14",
+  "revision": "2026-10-14-r3-body-review",
+  "status": "body_review_complete_overall_release_withheld",
+  "selectedDois": ["10.1021/jacs.6c17662", "10.1021/jacs.6c08353"],
+  "userInstruction": "Deep-read both main papers and SI, then review body structure, Chinese expression, scientific precision, transferable insights and actual mobile typography before release. Today cover screenshot only; retrospective concept cover last; chemical structures must be literal source cutouts.",
+  "scopeActuallyRead": "Main scientific narratives and their SI substrate definitions, condition development, relevant experimental procedures, crossover and isotope controls, kinetic/ee time courses, product resubjection, NMR titrations, KIE discussion, DFT methods/results and original figure panels. Full text extraction is not claimed as a manual inspection of every spectrum or every Cartesian coordinate.",
+  "findings": [
+    {"paper":"today","source":"SI pp118-119, Figs S16/S17","correction":"Migration S1 28%, nonmigratory reduction 13 30%, recovered unsaturated amine 2n 30%. Combined 88% is not migration yield. Secondary/tertiary refers to the carbon attached to N, not amine N substitution."},
+    {"paper":"today","source":"SI pp115-118, Fig S14","correction":"All four isotope controls are now represented, including ethylene glycol-d6. Carbon deuteration from PhSiD3 supports silane as H source but does not observe every Fe-H elementary step."},
+    {"paper":"today","source":"Main Fig2; SI p59 S8/S9","correction":"Internal alkene products 13-18 have reported r.r. >20:1 despite some low yields. SI S9 duplicates main Table1 and was removed; S8 is retained as another-substrate independent control, not merged numerically with Table1."},
+    {"paper":"retro","source":"Main Fig3A; SI p44 S3 and p47 S4 discussion","correction":"Alpha/gamma primarily differ in product double-bond position. Gamma-to-alpha isomerization and changing product ee mean endpoint ratios and e.r. are not direct measures of initial cyclization selectivity."},
+    {"paper":"retro","source":"SI p51","correction":"Experimental KIE3.45 is separated from calculated isotope combinations7.09/1.03/7.33. Catalyst-site deuteration and H/D exchange constrain interpretation; PFTB-OD alone does not prove direct additive proton delivery in the rate-determining step."},
+    {"paper":"retro","source":"Main Fig3F; SI pp194-195 FigS24/TableS14","correction":"IRC is highly asynchronous. The 1.4 kcal/mol enantiomeric Gibbs barrier difference is not conflated with gas-phase electronic distortion+0.143/interactions-1.78/total-1.64 kcal/mol."}
+  ],
+  "sourceDiscrepanciesNotSilentlyResolved": [
+    "Today main model states4eq PhSiH3; SI4.1 p62 describes4eq then another4eq, with volume/mmol labels requiring author confirmation. Body does not invent a unified procedure.",
+    "Today SI4.2 uses different glycol amounts and substrate-specific procedure. Main model conditions are not generalized to the full amino-acid scope.",
+    "Retro SI p193 methods says SMD(toluene), results prose says SMD(CHCl3), and energy-figure prose referencesS22 while the corresponding diagram isS23. No silent choice of a corrected solvent label."
+  ],
+  "body": {
+    "today": {"sections":7,"paragraphs":21,"characters":2279,"figures":12,"maxParagraphCharacters":155,"repositoryManuscript":"audit/wechat-working/2026-10-14-r3-body-review/today-text-only.md"},
+    "retro": {"sections":9,"paragraphs":27,"characters":3097,"figures":17,"maxParagraphCharacters":154,"repositoryManuscript":"audit/wechat-working/2026-10-14-r3-body-review/retro-text-only.md"}
+  },
+  "images": {
+    "scienceFigures":29,
+    "newChemicalDrawings":0,
+    "mainFiguresPreserved":"All useful main figures retained; retro Fig3 split into its six intact original panels rather than replaced.",
+    "addedEvidence":"Original SI p51 calculated isotope-comparison excerpt and TableS14.",
+    "correctedCropFragments":"Re-extracted today Figs4/5/S14 and retro Fig2 from original PDF; removed unrelated page-header or next-paragraph fragments. Corrected Fig3A/B crop to retain axes.",
+    "newImageBytesAndPreviews":"Included in downloadable review package; not yet committed as production image assets or passed through WeChat upload."
+  },
+  "visualReview": {
+    "renderer":"Local Chromium, own HTML and exact images embedded into offline DOM; no bypass of restricted remote navigation.",
+    "viewportWidths":[390,980],
+    "decodedByArticle":[12,17],
+    "horizontalOverflow":false,
+    "adjacentUnexplainedFigures":0,
+    "manualVisualInspection":"Viewed 16 mobile section regions, both article beginnings, original Fig3A-F panels, SI isotope excerpt/TableS14, and corrected today figure crops. Dense scope tables retain full details and original-image enlargement.",
+    "nativeWechatInspected":false,
+    "actualCloudUpdatedThisTurn":false
+  },
+  "package": {
+    "filename":"化之岛_10月14日_双篇JACS正文深审版_封面暂缓.zip",
+    "bytes":5301785,
+    "sha256":"270bcfc94ad4b024320e2c0bccaf30fdff437c7e6f3a6c4fdc5da9acb09589b7",
+    "auditReportSHA256":"e890ebeb4b7ff1a3bfbcb32227c252a81c28654b5c9d01368fe8ce85a4392f12"
+  },
+  "release": {
+    "oldGateWithdrawnCommit":"42eeffd7122967d55895a0882b365a307f38250e",
+    "oldGatePreservedBlob":"f85d4c6becddb429a0f1569f3d86f14d3ecb7fb6",
+    "newCoversCreated":false,
+    "coverReview":"deferred_by_owner_until_body_finalization",
+    "draftWriteAuthorized":false,
+    "publicSendAuthorized":false,
+    "existingCloudMediaPreserved":"KhELYUzvwADwB_l1xH1SWK0GEUwdJcrzZUnUqTu1MZdQpaEILGEgEcWC4qU-DSzy",
+    "dailyTotalUnchanged":20
+  }
+}
