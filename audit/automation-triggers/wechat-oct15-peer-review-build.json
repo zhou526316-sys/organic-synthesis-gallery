@@ -1,9 +1,9 @@
 {
-  "requestId": "oct15-peer-review-revision-source-prepare-v2",
-  "mode": "prepare",
+  "requestId": "oct15-peer-review-revision-source-approve-v1",
+  "mode": "approve",
   "revision": "2026-10-15-r2-peer-reviewed",
   "draftWriteAuthorized": false,
   "publicSendAuthorized": false,
-  "selectedDois": ["10.1038/s41586-026-11242-8", "10.1126/science.aec6298"],
-  "reason": "All scientific source generation, 11 no-network recreation safety tests, 33 image decodes and 390/980 layout tests passed in run38706760735. Only git diff EOF whitespace blocked persistence. Normalize terminal blank lines before hashing, retain identical visual prose and all original assets, and repeat bounded staging validation. No WeChat writes."
+  "manualReview": "audit/wechat-working/2026-10-15-r2-peer-reviewed/manual-visual-approval.json",
+  "reason": "Manually inspected the two openings, Nature peer-mechanism/practicality/final-disagreement sections and Science ending. Successful source run38707348104 has20 screenshots identical to the inspected source package,33 unchanged main/SI figures and no overflow. Seal fingerprints and rerun11 no-network recreation safety cases. This action does not invoke WeChat."
 }
