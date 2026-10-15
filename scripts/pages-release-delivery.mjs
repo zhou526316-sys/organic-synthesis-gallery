@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {authorizeExistingAuthorCorrection,AUTHOR_CORRECTION_ROLLING} from './lib/author-metadata-correction.mjs';
 
 export const MARKER = 'audit/publication-release-state.json';
 export const DATA_FILES = Object.freeze(['papers.gz.b64', 'total-synthesis.json', 'manual-supplement.json',
@@ -127,7 +128,14 @@ function guard() {
   const marker = currentMarker();
   compareProtected(marker.protectedBlobs, currentMarker('origin/main').protectedBlobs);
   for (const [file, blob] of Object.entries(marker.protectedBlobs)) {
-    assert(git('rev-parse', `origin/main:${file}`) === blob, `unauthorized_current_main:${file}`);
+    const current = git('rev-parse', `origin/main:${file}`);
+    if(current===blob)continue;
+    // Reuse precisely the same immutable source, DOI, author, and hash
+    // authorization as the fixed-slot and Pages literature validators.
+    // No second or weaker exception is introduced by the deploy resolver.
+    const authorOnly = file===AUTHOR_CORRECTION_ROLLING
+      ? authorizeExistingAuthorCorrection(process.cwd(),marker,current) : null;
+    assert(authorOnly?.ok===true, `unauthorized_current_main:${file}`);
   }
   return marker;
 }
