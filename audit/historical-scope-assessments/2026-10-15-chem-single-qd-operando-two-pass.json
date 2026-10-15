@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-original-operando-scope-exclude-v1",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json",
+  "dateEvidenceGitBlobSha": "b49434c7e30d7d2b55261c16555a7f4c2ef4b075",
+  "counts": {
+    "assessed": 1,
+    "include": 0,
+    "exclude": 1,
+    "pending": 0
+  },
+  "rights": "Publisher accessible Highlights/Summary only; no restricted PDF/SI or full article copied",
+  "reviewMethod": "same_assistant_adversarial_two_pass_not_two_independent_human_reviewers",
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103199",
+      "journal": "Chem",
+      "title": "Single-catalyst operando photoluminescence spectroscopy of perovskite quantum-dot-driven photoredox reactions",
+      "date": "2026-08-13",
+      "publisherArticleType": "Research article",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "reason": "本文原创贡献是使负载在基底上的单个钙钛矿量子点在真实光氧化还原反应条件下接受原位光致发光测量，从而观察单颗粒充放电、铅还原失活、长时间休眠及颗粒间差异，并提出减轻催化剂失活的策略；并非报道一套新有机制备反应及普适底物范围。",
+      "firstPassReason": "第一遍基于出版社官方Highlights、Bigger picture、Summary判定确有原创研究：通过固定单个CsPbBr₃类量子点，运用光致发光谱解决以往只能在低底物负载下开展单颗粒观测的限制，读取真实催化条件下电荷转移、量子点休眠和失活。C–C偶联与C(sp³)–H溴化均是真实的有机反应，但在本文被明确称作case studies，以验证新测量框架和避免Pb还原失活，而不是展示新键构建模式或多个底物—分离产品普适性。主要贡献落在原位催化表征方法，不属于此Gallery的原创有机合成方法学。",
+      "independentChallengeReason": "第二遍从最强反向证据质疑：相较于纯材料光物性研究，本文研究的催化场景确实包括碳碳偶联和C–H溴化，且单颗粒机制洞见可能优化反应稳定性和合成产率，因此不能简单以“钙钛矿材料”关键词排除。然而论文并未将这两组反应描述为作者首次提出的新化学转化，其主结果是时间分辨发光、电荷转移与单颗粒活性间歇及失活抑制策略；即使包含实测有机产物，也不能以案例应用替代可迁移制备方法学贡献。仅排除此确切 DOI，不排斥量子点光催化形成独立原创合成论文。缺失SI不等于实验不存在。",
+      "evidenceBasis": "Chem出版社官方 Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002652 显示 Available online 2026-08-13（而非冻结源 2026-08-01）、Highlights与Summary强调single-catalyst operando photoluminescence、Pb reduction degradation、long dormant states。冻结Q3根2026-08-01_2026-08-07_chem，source SHA256 26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa，原批次 Git 6ea589ffc11c757ffd5e72b02d931e88e4778b68，review队列 Git 26c5304d84ab4f5b7c470daa427d0249b6f524a5。没有复制受限PDF、SI或完整正文。",
+      "scopeAssessment": {
+        "primaryContribution": "首次实现单个钙钛矿量子点在真实反应负载下的原位光致发光谱跟踪，揭示单颗粒电荷转移、休眠及因Pb还原而失活的动态异质性，为催化剂稳定性工程提供量子点尺度的诊断工具。",
+        "preparativeTransformation": "论文把已知的C–C偶联与C(sp³)–H溴化有机反应作为量子点光催化的案例体系；其中形成有机共价键的反应是真实且合成相关的，但研究并未以新底物—产物制备范式或新催化偶联路线为论文主创新。",
+        "generalityEvidence": "出版社摘要明确列出两类合成相关反应案例，但其通用性陈述是测量平台可以迁移到其他可固定且有发射性质的光催化剂，并非跨不同有机底物的收率、选择性和分离产物清单。不能把不同反应案例等同于新合成方法的一般性。",
+        "sourceEvidence": "Chem出版社官方 Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002652 显示 Available online 2026-08-13（而非冻结源 2026-08-01）、Highlights与Summary强调single-catalyst operando photoluminescence、Pb reduction degradation、long dormant states。冻结Q3根2026-08-01_2026-08-07_chem，source SHA256 26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa，原批次 Git 6ea589ffc11c757ffd5e72b02d931e88e4778b68，review队列 Git 26c5304d84ab4f5b7c470daa427d0249b6f524a5。没有复制受限PDF、SI或完整正文。",
+        "boundaryChallenge": "不能因量子点/表征关键词自动排除：作者确实以C–C偶联与C–H溴化作真实有机光氧化还原催化测试，而新单颗粒表征也可能促进未来合成方法设计。核心区别在于在本 DOI 下解决的是如何观察催化剂、延长寿命，而不是如何通过一般化反应制备新的有机分子；因此作为一篇原创测量/催化机制研究排除，而非误认成Review或缺乏有机化学内容。"
+      },
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002652",
+      "authors": [
+        "Leon G. Feld",
+        "Yesim Sahin",
+        "Sebastian Sabisch",
+        "Gabriele Rainò",
+        "Maksym V. Kovalenko"
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103199",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002652",
+        "publisherOnlineDate": "2026-08-13",
+        "sourceDate": "2026-08-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_chem",
+        "stageBatchSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+        "sourceReviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-08-13",
+          "sourceFrozenAndUnchanged": true,
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002652"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "reviewerIdentity": "same_assistant_two_pass_adversarial_challenge_not_two_independent_humans",
+      "guards": {
+        "doiSpecific": true,
+        "notOwnerPermanentExclusion": true,
+        "notFormallyAdmitted": true,
+        "noAutomaticKeywordExclusion": true,
+        "noD1": true,
+        "noMediaOrPdf": true
+      }
+    }
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "noOwnerPermanentExclusion": true,
+    "sourceCensusUnchanged": true,
+    "researchArticleNotReclassifiedAsReview": true,
+    "originalResearchMayBeOutOfScope": true,
+    "noD1": true,
+    "noPDFOrSI": true
+  }
+}

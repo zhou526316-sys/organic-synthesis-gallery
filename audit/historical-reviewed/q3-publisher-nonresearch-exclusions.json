@@ -774,6 +774,162 @@
         "noMediaPdf": true,
         "noFormalPublication": true
       }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103244",
+      "journal": "Chem",
+      "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
+      "date": "2026-09-24",
+      "publisherArticleType": "Review",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍核对出版社分类为 Review。本文总结离子化脂质头基、连接臂和脂肪链的设计以及已有组合化学、构效关系与RNA递送案例，而不是在该DOI下独立报告新的合成催化体系、分离产品及底物范围。文章题目含Synthesis不能替代原创方法学证据，按出版社类型单篇排除。",
+      "independentChallengeReason": "第二遍挑战：文章确实展示药物相关有机结构和具体合成路线，可能对合成研究者非常有帮助。但作者在Summary、Introduction及Synthetic Chemistry均以回顾既往文献为目的，不应把其引用的原研究的合成贡献归到这篇Review名下。真正的底物扩展与反应新意应沿引用的独立DOI审核，该Review不创建原创研究卡片。",
+      "reason": "Official Chem Review DOI, does not independently present an original general organic preparative method.",
+      "evidenceBasis": "Publisher https://www.sciencedirect.com/science/article/pii/S2451929426003104 explicitly labels Review with Available online 2026-09-24; frozen source 2026-09-22_2026-09-30_chem SHA256 a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d, raw batch Git blob 085438b03d94aa947b0d6caf0de34654698cf22c, reviewer Git blob 2b27bf95e5d71bc7f530d301e211efc79c3aeb24. No restricted PDF/SI copied.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalJournal": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426003104",
+        "publisherDoi": "10.1016/j.chempr.2026.103244",
+        "publisherArticleType": "Review",
+        "publisherArticleDate": "2026-09-24",
+        "publisherFirstOnlineDateVerified": true,
+        "sourceDateNotPublisherFirstOnline": false,
+        "frozenSourceDate": "2026-09-24",
+        "publisherIssueDate": null,
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_review",
+        "sourceRootId": "2026-09-22_2026-09-30_chem",
+        "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+        "stageBatchGitBlobSha": "085438b03d94aa947b0d6caf0de34654698cf22c",
+        "sourceReviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_chem.json",
+        "sourceFamilies": [
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "publisherDateEvidenceKind": "official_sciencedirect_available_online_exact_doi_and_title",
+        "publisherPii": "S2451929426003104"
+      },
+      "guards": {
+        "doiSpecific": true,
+        "sourceCensusRetained": true,
+        "publisherFirstOnlineConfirmed": true,
+        "academicScopeNotInferredFromTitle": true,
+        "noAutomaticExclusionOfReferencedResearch": true,
+        "noD1": true,
+        "noMediaPdf": true,
+        "noFormalPublication": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103254",
+      "journal": "Chem",
+      "title": "Opportunities for merging biosynthesis and biocatalysis",
+      "date": "2026-09-25",
+      "publisherArticleType": "Perspective",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍依据出版社 Perspective 类型及摘要：本文阐述从天然产物生物合成发现酶、定向进化、AI辅助酶工程以及新颖生物催化应用的研究机会。提到Diels–Alderase、非天然反应和酶工程作为前人案例，但未在此 DOI 下展示新底物到新分离产物的原创制备体系，故不属于一篇独立的有机合成方法论文。",
+      "independentChallengeReason": "第二遍挑战：生物催化当然能够构成高价值原创有机合成方法，不能因为本文涉及酶就排除。关键是本文的出版社类别、Summary 使用explores/highlights/discuss等陈述，以及作者对综述撰稿的贡献；并没有本篇开发的新酶催化产品范围。排除此Perspective DOI不应排除它介绍的原研究，相关原创文献保留单独DOI和真实首发日。",
+      "reason": "Official Chem Perspective DOI, does not independently present an original general organic preparative method.",
+      "evidenceBasis": "Publisher https://www.sciencedirect.com/science/article/pii/S2451929426003207 explicitly labels Perspective with Available online 2026-09-25; frozen source 2026-09-22_2026-09-30_chem SHA256 a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d, raw batch Git blob 085438b03d94aa947b0d6caf0de34654698cf22c, reviewer Git blob 2b27bf95e5d71bc7f530d301e211efc79c3aeb24. No restricted PDF/SI copied.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalJournal": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426003207",
+        "publisherDoi": "10.1016/j.chempr.2026.103254",
+        "publisherArticleType": "Perspective",
+        "publisherArticleDate": "2026-09-25",
+        "publisherFirstOnlineDateVerified": true,
+        "sourceDateNotPublisherFirstOnline": false,
+        "frozenSourceDate": "2026-09-25",
+        "publisherIssueDate": null,
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_perspective",
+        "sourceRootId": "2026-09-22_2026-09-30_chem",
+        "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+        "stageBatchGitBlobSha": "085438b03d94aa947b0d6caf0de34654698cf22c",
+        "sourceReviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_chem.json",
+        "sourceFamilies": [
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "publisherDateEvidenceKind": "official_sciencedirect_available_online_exact_doi_and_title",
+        "publisherPii": "S2451929426003207"
+      },
+      "guards": {
+        "doiSpecific": true,
+        "sourceCensusRetained": true,
+        "publisherFirstOnlineConfirmed": true,
+        "academicScopeNotInferredFromTitle": true,
+        "noAutomaticExclusionOfReferencedResearch": true,
+        "noD1": true,
+        "noMediaPdf": true,
+        "noFormalPublication": true
+      }
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103264",
+      "journal": "Chem",
+      "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
+      "date": "2026-09-24",
+      "publisherArticleType": "Perspective",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍确认出版社Perspective类别；文章核心是CO₂制甲醇工业流程中大循环回收气改变进料组分与平衡，以及对Cu/ZnO/Al₂O₃、In₂O₃、InCo和ZnZrOₓ催化剂的技术经济和生命周期评价。甲醇产物真实，但该 DOI 并未独立提出可推广的新有机底物转化和制备方法；方法新意是过程建模和催化性能评估，不是有机合成方法。",
+      "independentChallengeReason": "第二遍挑战：该Perspective可以具有创新的工业流程建模与实验条件建议，不能笼统否认原创科学思考，CO₂还原也是有机合成重要方向。但是对四种已知催化剂的比较、循环气模拟和成本分析，不可替代多种有机分子制备、新反应范式或全合成路线的证据。按该DOI具体主要贡献排除，不据此排除其他多相催化/电合成的独立原创方法论文。",
+      "reason": "Official Chem Perspective DOI, does not independently present an original general organic preparative method.",
+      "evidenceBasis": "Publisher https://www.sciencedirect.com/science/article/pii/S245192942600330X explicitly labels Perspective with Available online 2026-09-24; frozen source 2026-09-22_2026-09-30_chem SHA256 a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d, raw batch Git blob 085438b03d94aa947b0d6caf0de34654698cf22c, reviewer Git blob 2b27bf95e5d71bc7f530d301e211efc79c3aeb24. No restricted PDF/SI copied.",
+      "underlyingOriginalResearchDoi": null,
+      "underlyingOriginalJournal": null,
+      "underlyingOriginalFirstOnlineDate": null,
+      "reviewEvidence": {
+        "publisherPage": "https://www.sciencedirect.com/science/article/pii/S245192942600330X",
+        "publisherDoi": "10.1016/j.chempr.2026.103264",
+        "publisherArticleType": "Perspective",
+        "publisherArticleDate": "2026-09-24",
+        "publisherFirstOnlineDateVerified": true,
+        "sourceDateNotPublisherFirstOnline": false,
+        "frozenSourceDate": "2026-09-24",
+        "publisherIssueDate": null,
+        "underlyingOriginalResearchDoi": null,
+        "originalResearchPage": null,
+        "originalResearchRelation": "multi_study_perspective",
+        "sourceRootId": "2026-09-22_2026-09-30_chem",
+        "stageSourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+        "stageBatchGitBlobSha": "085438b03d94aa947b0d6caf0de34654698cf22c",
+        "sourceReviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+        "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-09-22_2026-09-30_chem.json",
+        "sourceFamilies": [
+          "openalex"
+        ],
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "publisherDateEvidenceKind": "official_sciencedirect_available_online_exact_doi_and_title",
+        "publisherPii": "S245192942600330X"
+      },
+      "guards": {
+        "doiSpecific": true,
+        "sourceCensusRetained": true,
+        "publisherFirstOnlineConfirmed": true,
+        "academicScopeNotInferredFromTitle": true,
+        "noAutomaticExclusionOfReferencedResearch": true,
+        "noD1": true,
+        "noMediaPdf": true,
+        "noFormalPublication": true
+      }
     }
   ],
   "purpose": "Publisher article types establish these five exact DOI are commentary/highlights/briefings and not the original synthetic research they discuss; no keyword-only decisions",
@@ -812,5 +968,20 @@
   "chemPreviewTwoMoreDois": [
     "10.1016/j.chempr.2026.103146",
     "10.1016/j.chempr.2026.103219"
-  ]
+  ],
+  "chemSept2026PublisherKnownOnlineSecondaryCohort": {
+    "reviewedAt": "2026-10-15",
+    "count": 3,
+    "dois": [
+      "10.1016/j.chempr.2026.103244",
+      "10.1016/j.chempr.2026.103254",
+      "10.1016/j.chempr.2026.103264"
+    ],
+    "sourceRootId": "2026-09-22_2026-09-30_chem",
+    "sourceRootSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+    "reviewQueueGitBlobSha": "2b27bf95e5d71bc7f530d301e211efc79c3aeb24",
+    "rawSourceBatchGitBlobSha": "085438b03d94aa947b0d6caf0de34654698cf22c",
+    "dateStatus": "publisher_verified_date_matches_frozen_api_day",
+    "noFormalPublication": true
+  }
 }
