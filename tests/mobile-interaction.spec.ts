@@ -877,7 +877,9 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const canonicalDoiHref = 'https://doi.org/10.1021/jacs.6c08636';
   await expect(doiCard.locator('a.open')).toHaveAttribute('href', canonicalDoiHref);
   await expect(doiCard.locator('.user-title-link')).toHaveAttribute('href', canonicalDoiHref);
-  await expect(doiCard.locator('.user-doi-link')).toHaveAttribute('href', canonicalDoiHref);
+  await expect(doiCard.locator('.doi .doi-link')).toHaveAttribute('href', canonicalDoiHref);
+  await expect(doiCard.locator('.doi .doi-link')).toHaveAttribute('target', '_blank');
+  await expect(doiCard.locator('.doi .user-doi-link')).toHaveCount(0);
   const removedAfterDoiSearch = await page.evaluate(() =>
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
