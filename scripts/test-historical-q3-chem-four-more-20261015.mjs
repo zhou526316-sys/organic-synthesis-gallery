@@ -109,6 +109,11 @@ test('publisher date corrections retain four source DOI, avoid three spurious Q3
  assert.equal(coverage.counters.unfinishedQ3OrDateVerification,1);
  assert.equal(coverage.counters.sourceApprovedWaiting08,0);
  assert.equal(worklist.rows[0].doi,'10.1016/j.chempr.2026.103242');
+ assert.equal(worklist.rows[0].publisherFirstOnlineDateVerified,true,
+   'officially verified first-online date must not become an unverified Q3 label');
+ assert.equal(worklist.rows[0].publisherFirstOnlineDate,'2026-09-09');
+ assert.equal(worklist.rows[0].apiDateCandidate,'2026-09-01',
+   'original source issue-month date must remain auditable alongside publisher day');
  assert.equal(worklist.publisherOnlineDateCorrections.length,4);
  assert.equal(coverage.counters.publisherIssueResearchReconciliationComplete,false);
 });
