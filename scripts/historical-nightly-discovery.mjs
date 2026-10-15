@@ -560,20 +560,58 @@ export async function runNightly() {
         if(!split.pending.length){
           await finalizeSplitRoot(split,journal,articles);
           if(recovering){rescue.done.push(rootId);rescue.pending.shift()}
-          else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
-          delete state.activeSplit;
+          else if(retry){
+            if(retry.kind==='rsc_created_recheck')rescue.done.push(rootId);
+            else state.completed.push(rootId);
+            state.deferredRoots.shift();retryCompletions++;
+          }else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
+          if(!retry)delete state.activeSplit;
         }
       }else if(recovering){
         await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
         rescue.done.push(rootId);rescue.pending.shift();
+      }else if(retry){
+        if(retry.kind==='rsc_created_recheck'){
+          await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
+          rescue.done.push(rootId);
+        }else state.completed.push(rootId);
+        state.deferredRoots.shift();retryCompletions++;
       }else{
         state.completed.push(rootId);
         state.cursor=nextCursor(state.cursor,journals);
       }
     }else if(slices){
       if(split)split.pending.splice(0,1,...slices);
-      else state.activeSplit={rootId,rootRange,journalName:journal.name,
-        pending:slices,completed:[]};
+      else{
+        const nextSplit={rootId,rootRange,journalName:journal.name,
+          pending:slices,completed:[]};
+        if(retry)retry.activeSplit=nextSplit;
+        else state.activeSplit=nextSplit;
+      }
+    }else if(deferralEnabled){
+      if(retry){
+        const renewed=sourceRetryRecord({cursor:activeCursor,rootId,
+          activeSplit:split,kind:retry.kind,issues:status.issues,
+          previousFailures:retry.failures});
+        state.deferredRoots.shift();state.deferredRoots.push(renewed);
+      }else{
+        const receipt=sourceRetryRecord({cursor:activeCursor,rootId,
+          activeSplit:split,kind:recovering?'rsc_created_recheck':'chronological',
+          issues:status.issues});
+        if(state.deferredRoots.some(x=>x.rootId===rootId))
+          throw Error('historical_duplicate_deferred_root:'+rootId);
+        state.deferredRoots.push(receipt);
+        if(recovering)rescue.pending.shift();
+        else state.cursor=nextCursor(state.cursor,journals);
+        delete state.activeSplit;
+      }
+      deferredFailures++;
+      console.log('HISTORICAL_STAGING_SOURCE_DEFERRED '+JSON.stringify({
+        id,rootId,journal:journal.name,kind:retry?.kind||
+          (recovering?'rsc_created_recheck':'chronological'),
+        pendingSourceRoots:state.deferredRoots.length,issues:status.issues,
+        officialSourceComplete:false,canAdvanceOtherJournals:true
+      }));
     }else{blocked=true}
     await saveJson(staging,state);
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
@@ -586,6 +624,10 @@ export async function runNightly() {
   }
   state.lastRunFinished=new Date().toISOString();
   state.lastRun={processed,blocked,deferredBudget,requests:budget.count,
+    deferredFailures,retryCompletions,
+    incompleteDeferredRoots:deferralEnabled?state.deferredRoots.length:0,
+    sourceCoverageComplete:deferralEnabled
+      ?state.deferredRoots.length===0&&!blocked:!blocked,
     skippedBeforeFoundingWindows:skippedFoundingWindows,next:state.cursor,
     verifiedPublishedDois:articles.size,completeWindows:state.completed.length,
     activeSplit:state.activeSplit?{
