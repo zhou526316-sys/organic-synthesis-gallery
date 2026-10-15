@@ -508,7 +508,7 @@ export async function runQuarterAudit({
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
-    priorChemDates,additionalChemDates]=await Promise.all([
+    priorChemDates,additionalChemDates,thirdChemDates]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -532,7 +532,8 @@ export async function runQuarterAudit({
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
     readJson('audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'),
-    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json')
+    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -554,8 +555,25 @@ export async function runQuarterAudit({
     &&additionalChemDates.guards?.noSourceShardMutation===true
     &&additionalChemDates.guards?.noOffSlotPublisherWrite===true,
     'q3_chem_additional_publisher_date_schema_or_overlap_invalid');
+  // Four more publisher-first-online receipts preserve the pre-existing
+  // provenance and explicitly correct issue-month timestamps. These are
+  // DOI-specific DATE proofs, not new academic admission decisions.
+  const previouslyDateChecked=new Set([...priorChemDates.rows,...moreDates].map(x=>x.doi));
+  const thirdDateRows=thirdChemDates.rows;
+  ensure(thirdChemDates.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&thirdChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&thirdChemDates.recordCount===4&&thirdDateRows.length===4
+    &&thirdChemDates.verifiedOutsideQ3===1&&thirdChemDates.verifiedInsideQ3===3
+    &&thirdChemDates.verifiedSourceDateConflicts===4
+    &&new Set(thirdDateRows.map(x=>x.doi)).size===4
+    &&thirdDateRows.every(x=>!previouslyDateChecked.has(x.doi))
+    &&thirdDateRows.filter(x=>x.verifiedPublicationQuarter==='2026-Q1').length===1
+    &&thirdDateRows.filter(x=>x.verifiedPublicationQuarter==='2026-Q3').length===3
+    &&thirdChemDates.guards?.noSourceShardMutation===true
+    &&thirdChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_third_online_dates_schema_or_overlap_invalid');
   const chemPublisherDates={...priorChemDates,
-    rows:[...priorChemDates.rows,...moreDates]};
+    rows:[...priorChemDates.rows,...moreDates,...thirdDateRows]};
 
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
