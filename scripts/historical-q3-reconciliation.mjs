@@ -61,6 +61,7 @@ export function reconcileQ3({
   publisherNonResearch=EMPTY_PUBLISHER_NONRESEARCH,
   publisherReviewedScope=EMPTY_REVIEWED_SCOPE,
   chemPublisherDates=EMPTY_CHEM_ONLINE_DATES,
+  chemScienceApprovedDoiEvidence=[],
   reviewerQueueHistoricalBlobAliasesByRoot=new Map(),
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
@@ -269,6 +270,14 @@ export function reconcileQ3({
   // Correct dates are publisher-first-online evidence, not a mutation of
   // frozen Crossref/OpenAlex source roots or an academic include decision.
   const correctedChemDates=new Map();
+  // Mandatory approvals are declared from the separately committed original
+  // Chem scientific evidence (NOT derived from a mutable approval manifest).
+  // Otherwise a revoked/tampered acceptance could silently become "unreviewed".
+  const mandatoryChemScience=new Set(chemScienceApprovedDoiEvidence.map(normalize));
+  ensure(Array.isArray(chemScienceApprovedDoiEvidence)
+    &&mandatoryChemScience.size===chemScienceApprovedDoiEvidence.length
+    &&[...mandatoryChemScience].every(validDoi),
+    'q3_chem_mandatory_science_evidence_invalid');
   for(const r of chemPublisherDates.rows){
     const id=normalize(r?.doi),x=all.get(id);
     let publisherUrl,doiUrl;
@@ -312,9 +321,11 @@ export function reconcileQ3({
     ensure(r.verifiedPublicationQuarter===actualQuarter,
       'q3_chem_publisher_quarter_mismatch:'+id);
     const admission=manifest.accepted.find(a=>normalize(a.doi)===id);
-    if(inQ3){
+    if(inQ3&&(admission||mandatoryChemScience.has(id))){
+      // A formally reviewed/admitted DOI MUST continue to match its exact
+      // existing two-pass academic decision and original source receipt.
       ensure(admission?.journal==='Chem'
-        &&admission.reviewPasses===2&&admission.decision==='include'
+        &&admission?.reviewPasses===2&&admission?.decision==='include'
         &&admission.firstPassDecision==='include'
         &&admission.challengeDecision==='include'
         &&admission.date===r.publisherFirstOnlineDate
@@ -323,12 +334,23 @@ export function reconcileQ3({
         &&admission.reviewEvidence?.stageBatchSha===r.originalSourceBatchGitBlobSha
         &&admission.reviewEvidence?.sourceReviewQueueGitBlobSha===r.reviewQueueGitBlobSha,
         'q3_chem_date_conflict_missing_approved_science:'+id);
+    }else if(inQ3){
+      // Publisher date provenance alone never grants academic approval.
+      // Genuine Q3 Research Articles with verified dates, but no separate
+      // two-pass synthesis scope review, must remain UNFINISHED/UNADMITTED.
+      ensure(r.academicScopeDecision==='not_made_by_publication_date_evidence'
+        &&!formalRow&&!accepted.has(id),
+        'q3_chem_date_proof_unreviewed_must_not_claim_admission:'+id);
     }else{
       ensure(!accepted.has(id),
         'q3_chem_pre_q3_original_cannot_be_admitted_as_q3:'+id);
     }
     correctedChemDates.set(id,r);
   }
+  ensure([...mandatoryChemScience].every(id=>{
+    const r=correctedChemDates.get(id);
+    return r&&publishedQ3(r.publisherFirstOnlineDate);
+  }), 'q3_chem_mandatory_science_without_verified_date');
 
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
@@ -508,7 +530,8 @@ export async function runQuarterAudit({
     residualSourceProof,natsynthFrozen,natsynthTypes,natsynthNonOriginal,
     natsynthScienceProof,natsynthScience,nchemCensus,nchemFrozen,
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
-    priorChemDates,additionalChemDates]=await Promise.all([
+    priorChemDates,additionalChemDates,thirdChemDates,
+    initialChemScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -532,7 +555,9 @@ export async function runQuarterAudit({
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-21-excluded-pending.json'),
     readJson('audit/historical-scope-assessments/2026-10-14-nchem-24-original-two-pass.json'),
     readJson('audit/historical-publisher-dates/2026/chem-five-first-online-reconciled.json'),
-    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json')
+    readJson('audit/historical-publisher-dates/2026/chem-six-additional-online-reconciled.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-three-q3-methods-two-pass.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -554,8 +579,41 @@ export async function runQuarterAudit({
     &&additionalChemDates.guards?.noSourceShardMutation===true
     &&additionalChemDates.guards?.noOffSlotPublisherWrite===true,
     'q3_chem_additional_publisher_date_schema_or_overlap_invalid');
+  // Four more publisher-first-online receipts preserve the pre-existing
+  // provenance and explicitly correct issue-month timestamps. These are
+  // DOI-specific DATE proofs, not new academic admission decisions.
+  const previouslyDateChecked=new Set([...priorChemDates.rows,...moreDates].map(x=>x.doi));
+  const thirdDateRows=thirdChemDates.rows;
+  ensure(thirdChemDates.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&thirdChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&thirdChemDates.recordCount===4&&thirdDateRows.length===4
+    &&thirdChemDates.verifiedOutsideQ3===1&&thirdChemDates.verifiedInsideQ3===3
+    &&thirdChemDates.verifiedSourceDateConflicts===4
+    &&new Set(thirdDateRows.map(x=>x.doi)).size===4
+    &&thirdDateRows.every(x=>!previouslyDateChecked.has(x.doi))
+    &&thirdDateRows.filter(x=>x.verifiedPublicationQuarter==='2026-Q1').length===1
+    &&thirdDateRows.filter(x=>x.verifiedPublicationQuarter==='2026-Q3').length===3
+    &&thirdChemDates.guards?.noSourceShardMutation===true
+    &&thirdChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_third_online_dates_schema_or_overlap_invalid');
   const chemPublisherDates={...priorChemDates,
-    rows:[...priorChemDates.rows,...moreDates]};
+    rows:[...priorChemDates.rows,...moreDates,...thirdDateRows]};
+  const initialChemReviews=initialChemScience.assessments||[];
+  const initialChemAdmissionIds=initialChemReviews
+    .filter(x=>x.decision==='include').map(x=>x.doi);
+  const additionalChemAdmissionIds=moreDates
+    .filter(x=>x.academicScopeDecision===
+      'independent_two_pass_synthesis_include_waiting_original_08_slot')
+    .map(x=>x.doi);
+  const chemScienceApprovedDoiEvidence=[
+    ...initialChemAdmissionIds,...additionalChemAdmissionIds];
+  ensure(initialChemScience.counts?.include===3
+    &&initialChemAdmissionIds.length===3
+    &&initialChemAdmissionIds.every(id=>priorChemDates.rows.some(x=>
+      x.doi===id&&x.verifiedPublicationQuarter==='2026-Q3'))
+    &&additionalChemAdmissionIds.length===3
+    &&new Set(chemScienceApprovedDoiEvidence).size===6,
+    'q3_chem_approved_science_original_ledgers_invalid');
 
   const scienceBytes=await readFile(scopedSourceProof.scientificEvidenceFile);
   const scienceGitBlobSha=createHash('sha1').update('blob '+scienceBytes.length).update(Buffer.from([0])).update(scienceBytes).digest('hex');
@@ -927,7 +985,7 @@ export async function runQuarterAudit({
   }
   const {coverage,worklist}=reconcileQ3({
     state,triage,shards,formal,manifest,corrections,publisherNonResearch,
-    publisherReviewedScope,chemPublisherDates,
+    publisherReviewedScope,chemPublisherDates,chemScienceApprovedDoiEvidence,
     reviewerQueueHistoricalBlobAliasesByRoot,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);

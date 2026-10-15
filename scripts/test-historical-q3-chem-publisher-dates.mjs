@@ -111,6 +111,9 @@ function mock(extra={}){
     manifest:{accepted:authorized.accepted.filter(x=>items.has(x.doi)),pending:[]},
     corrections:{items:[]},
     journals:[{name:'Chem'}],chemPublisherDates:proof,
+    // These three DOI have separately committed first/second-pass science
+    // decisions, so their approval may not disappear from the manifest.
+    chemScienceApprovedDoiEvidence:expectedNew.map(([doi])=>doi),
     ...extra
   };
 }
