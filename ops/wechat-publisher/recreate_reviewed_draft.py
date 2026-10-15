@@ -11,6 +11,29 @@ import urllib.parse
 from pathlib import Path
 
 ACTION = "recreate_reviewed_draft"
+_PNG = re.compile(r"^(/(?:sz_)?mmbiz_png/[^/?#]+)/(0|640)$")
+
+
+def same_ordered_images(expected, actual):
+    """Match asset identity/order, allowing only the observed PNG /0 -> /640.
+
+    This is not pixel-equivalence approval. Original assets remain hash-locked;
+    the real displayed renditions must still pass browser and visual review.
+    """
+    if not isinstance(expected, list) or not isinstance(actual, list):
+        return False
+    if len(expected) != len(actual):
+        return False
+    for source, stored in zip(expected, actual):
+        if not isinstance(source, str) or not isinstance(stored, str):
+            return False
+        if source == stored:
+            continue
+        left, right = _PNG.fullmatch(source), _PNG.fullmatch(stored)
+        if not (left and right and left.group(1) == right.group(1)
+                and left.group(2) == '0' and right.group(2) == '640'):
+            return False
+    return True
 
 
 def _hash(obj):
@@ -93,9 +116,9 @@ def run(pub, args, request, *, token, publication_date, slot, papers, edition, a
             expected = pub.summarize_wechat_article_html(str(wanted.get("content") or ""))
             actual = pub.summarize_wechat_article_html(str(saved.get("content") or ""))
             for key in ("prose_sha256", "images", "links", "headings", "tables"):
-                if expected[key] != actual[key]:
-                    # Bounded diagnostics only. Keep rejection and the saved new ID;
-                    # never retry draft/add or modify cloud content on this path.
+                matches = (same_ordered_images(expected[key], actual[key]) if key == "images"
+                           else expected[key] == actual[key])
+                if not matches:
                     detail = {"newMediaId": media_id, "article": index + 1, "field": key,
                               "expected": expected[key], "actual": actual[key]}
                     record["readbackMismatch"] = detail
@@ -103,10 +126,18 @@ def run(pub, args, request, *, token, publication_date, slot, papers, edition, a
                     safe = json.dumps(detail, ensure_ascii=False)
                     raise RuntimeError("cloud article %d content differs: %s; %s" %
                                        (index + 1, key, safe[:12000]))
+                if key == "images" and expected[key] != actual[key]:
+                    record.setdefault("cdnRenditionNormalizations", {})[str(index + 1)] = {
+                        "allowedRewrite": "WeChat PNG /0 to /640 only",
+                        "orderedImageIdentitiesVerified": len(expected[key]),
+                        "rewrittenCount": sum(a != b for a, b in zip(expected[key], actual[key])),
+                        "pixelEquivalenceClaimed": False,
+                        "displayedRenditionVisualReview": "separate browser QA required"}
         preview_path, preview_url = pub.write_draft_preview(
             cloud, media_id=media_id, preview_dir=Path(args.preview_dir), base_url=args.preview_base_url)
         record.update({"status": "verified", "previewUrl": preview_url, "draftReadback": "ok",
-                       "allProseAndImageSemanticsVerified": True})
+                       "allProseAndImageSemanticsVerified": True,
+                       "priorReadbackMismatchResolved": bool(record.get("readbackMismatch"))})
         pub.save_state(journal_path, book)
         pub.save_state(pub.DEFAULT_STATE, {"publicationDate": publication_date, "publicationSlot": slot,
             "media_id": media_id, "previous_media_id": previous, "title": articles[0]["title"],
