@@ -1273,11 +1273,14 @@ try{
     if(location.origin!==fixtureOrigin)return;
     localStorage.setItem('organic-gallery-session-v1','fixture-session');
     window.addEventListener('message',event=>{
-      if(event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-v1')return;
-      window.postMessage({
-        type:'osg-private-pdf-capture-lease-ack-v1',
-        expiresAt:event.data.expiresAt,
-      },location.origin);
+      if(event.origin!==location.origin)return;
+      if(event.data?.type==='osg-private-pdf-capture-probe-v1'){
+        window.postMessage({type:'osg-private-pdf-capture-ready-v1',
+          requestId:event.data.requestId,ok:true,engine:'6.2.68'},location.origin);
+      }else if(event.data?.type==='osg-private-pdf-capture-lease-v1'){
+        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',
+          requestId:event.data.requestId,expiresAt:event.data.expiresAt},location.origin);
+      }
     });
   },base);
   let healthCalls=0,leaseCalls=0;
