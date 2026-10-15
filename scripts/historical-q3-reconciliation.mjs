@@ -648,7 +648,8 @@ export async function runQuarterAudit({
     nchemNonOriginal,nchemScopeProof,nchemScopeScience,nchemFullScience,
     priorChemDates,additionalChemDates,thirdChemDates,
     initialChemScience,newChemScience,fourthChemDates,nipuScience,
-    fifthChemDates,pidaScience,operandoChemDates,operandoScience]=await Promise.all([
+    fifthChemDates,pidaScience,operandoChemDates,operandoScience,
+    threeMoreChemDates,smallMoleculeScience]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
@@ -681,7 +682,9 @@ export async function runQuarterAudit({
     readJson('audit/historical-publisher-dates/2026/chem-four-more-first-online-20261015.json'),
     readJson('audit/historical-scope-assessments/2026-10-15-chem-pida-electroprocess-science-hold.json'),
     readJson('audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json'),
-    readJson('audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json')
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json'),
+    readJson('audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json'),
+    readJson('audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json')
   ]);
   const oldDateIds=new Set(priorChemDates.rows.map(x=>x.doi));
   const moreDates=additionalChemDates.rows;
@@ -783,8 +786,36 @@ export async function runQuarterAudit({
     &&operandoChemDates.guards?.noAutoAcademicDecision===true
     &&operandoChemDates.guards?.noOffSlotPublisherWrite===true,
     'q3_chem_operando_first_online_receipt_invalid');
+  const moreChemRows=threeMoreChemDates.rows||[];
+  const expectedMore=[
+    ['10.1016/j.chempr.2026.103074','2026-09-01','2026-06-02','2026-Q2'],
+    ['10.1016/j.chempr.2026.103136','2026-07-01','2026-07-10','2026-Q3'],
+    ['10.1016/j.chempr.2026.103194','2026-07-01','2026-07-30','2026-Q3']
+  ];
+  const priorChemDoiIds=new Set([...earlierChemDates,...foamDateRows,
+    ...newestDateRows,...operandoRows].map(r=>r.doi));
+  ensure(threeMoreChemDates?.schemaVersion===CHEM_ONLINE_DATE_SCHEMA
+    &&threeMoreChemDates.mode==='publisher_first_online_provenance_only_not_admission'
+    &&threeMoreChemDates.recordCount===3
+    &&threeMoreChemDates.verifiedOutsideQ3===1
+    &&threeMoreChemDates.verifiedInsideQ3===2
+    &&threeMoreChemDates.verifiedSourceDateConflicts===3
+    &&threeMoreChemDates.verifiedQ2OutsideQ3===1
+    &&moreChemRows.length===3
+    &&new Set(moreChemRows.map(r=>r.doi)).size===3
+    &&expectedMore.every(([doi,source,online,quarter])=>moreChemRows.some(
+      r=>r.doi===doi&&r.sourceDate===source
+        &&r.publisherFirstOnlineDate===online
+        &&r.verifiedPublicationQuarter===quarter))
+    &&moreChemRows.every(r=>!priorChemDoiIds.has(r.doi)
+      &&r.originalDateFrozenAndUnmodified===true
+      &&r.publisherEvidenceDateOverrulesSourceForQuarter===true)
+    &&threeMoreChemDates.guards?.noSourceShardMutation===true
+    &&threeMoreChemDates.guards?.noDateEvidenceAsAutomaticAdmission===true
+    &&threeMoreChemDates.guards?.noOffSlotPublisherWrite===true,
+    'q3_chem_three_more_true_online_dates_invalid');
   const chemPublisherDates={...priorChemDates,
-    rows:[...earlierChemDates,...foamDateRows,...newestDateRows,...operandoRows]};
+    rows:[...earlierChemDates,...foamDateRows,...newestDateRows,...operandoRows,...moreChemRows]};
   const initialChemReviews=initialChemScience.assessments||[];
   const initialChemAdmissionIds=initialChemReviews
     .filter(x=>x.decision==='include').map(x=>x.doi);
@@ -958,7 +989,40 @@ export async function runQuarterAudit({
     &&operandoScience.guards?.researchArticleNotReclassifiedAsReview===true
     &&operandoScience.guards?.noFormalPublication===true,
     'q3_chem_operando_scientific_scope_or_date_binding_invalid');
-  const chemSciencePendingEvidence=[...thirdSciencePendings,...foamEvidence,...pidaEvidence];
+  const smallDatePath='audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json';
+  const smallSciencePath='audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json';
+  const smallDatesBytes=await readFile(smallDatePath);
+  const smallPending=smallMoleculeScience.assessments||[];
+  const twoQ3More=moreChemRows.filter(r=>r.verifiedPublicationQuarter==='2026-Q3');
+  ensure(smallMoleculeScience?.schemaVersion==='gallery-historical-q3-chem-two-small-molecule-process-scope-pending-v1'
+    &&smallMoleculeScience.mode==='academic_two_pass_scope_only_not_publication'
+    &&smallMoleculeScience.dateEvidenceFile===smallDatePath
+    &&smallMoleculeScience.dateEvidenceGitBlobSha===gitBlobOf(smallDatesBytes)
+    &&smallMoleculeScience.counts?.assessed===2
+    &&smallMoleculeScience.counts.include===0
+    &&smallMoleculeScience.counts.exclude===0
+    &&smallMoleculeScience.counts.pending===2
+    &&smallPending.length===2&&twoQ3More.length===2
+    &&new Set(smallPending.map(x=>x.doi)).size===2
+    &&smallPending.every(x=>{const d=twoQ3More.find(r=>r.doi===x.doi);
+      return d&&x.date===d.publisherFirstOnlineDate&&x.title===d.title
+        &&x.publisherArticleType==='Research article'
+        &&x.decision==='pending'&&x.firstPassDecision==='pending'
+        &&x.challengeDecision==='pending'&&x.reviewPasses===2
+        &&x.firstPassReason!==x.independentChallengeReason
+        &&x.missingEvidenceMustNotMeanNoEvidenceExists===true
+        &&x.evidenceNeeded?.length>=70&&x.nextAction?.length>=70
+        &&x.reviewEvidence?.stageBatchSha===d.originalSourceBatchGitBlobSha
+        &&x.reviewEvidence?.sourceReviewQueueGitBlobSha===d.reviewQueueGitBlobSha
+        &&x.reviewEvidence?.stageSourceSha256===d.sourceRootSha256
+        &&x.reviewEvidence?.publisherOnlineDate===d.publisherFirstOnlineDate
+        &&x.reviewEvidence?.publisherArticlePage===d.officialPublisherArticlePage
+        &&x.reviewEvidence?.firstOnlineDateEvidence?.stageApiDate===d.sourceDate;})
+    &&smallMoleculeScience.guards?.noFormalPublication===true
+    &&smallMoleculeScience.guards?.notOwnerPermanentExclusion===true,
+    'q3_chem_two_small_molecule_science_pending_invalid');
+  const chemSciencePendingEvidence=[...thirdSciencePendings,...foamEvidence,
+    ...pidaEvidence,...smallPending];
   const chemScienceExcludedEvidence=[operandoAssessment];
   ensure(initialChemScience.counts?.include===3
     &&initialChemAdmissionIds.length===3
