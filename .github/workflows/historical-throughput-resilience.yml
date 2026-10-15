@@ -1,0 +1,63 @@
+name: Historical source deferral and batch academic preflight regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-discovery.mjs'
+      - 'scripts/historical-academic-preflight.mjs'
+      - 'scripts/test-historical-academic-preflight.mjs'
+      - 'scripts/historical-review-worklist.mjs'
+      - 'scripts/test-historical-review-worklist.mjs'
+      - 'scripts/historical-review-triage.mjs'
+      - 'scripts/test-historical-review-triage.mjs'
+      - '.github/workflows/historical-nightly-discovery.yml'
+      - '.github/workflows/historical-triage-bootstrap.yml'
+      - '.github/workflows/historical-throughput-resilience.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-discovery.mjs'
+      - 'scripts/historical-academic-preflight.mjs'
+      - 'scripts/test-historical-academic-preflight.mjs'
+      - '.github/workflows/historical-throughput-resilience.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Fail-closed source and academic batching
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and DOI-scoped source identity
+        run: |
+          set -euo pipefail
+          node --check scripts/historical-nightly-discovery.mjs
+          node --check scripts/historical-academic-preflight.mjs
+          node --check scripts/historical-review-triage.mjs
+          node --check scripts/historical-review-worklist.mjs
+      - name: Collector isolation, source deferral, split retry and batch queue
+        run: |
+          set -euo pipefail
+          node --test scripts/test-historical-nightly-discovery.mjs
+          node --test scripts/test-historical-review-triage.mjs
+          node --test scripts/test-historical-review-worklist.mjs
+          node --test scripts/test-historical-academic-preflight.mjs
+          node --test scripts/test-historical-nightly-schedule-gate.mjs
+      - name: Assert stage-only, no auto academic include, and single release slot
+        run: |
+          set -euo pipefail
+          grep -F "HISTORICAL_DEFER_BLOCKED" scripts/historical-nightly-discovery.mjs
+          grep -F "noAutomaticIncludeOrExclude:true" scripts/historical-academic-preflight.mjs
+          grep -F "scienceAdversarialPass:'not_performed'" scripts/historical-academic-preflight.mjs
+          grep -F "HISTORICAL_STAGING_ONLY" scripts/historical-nightly-discovery.mjs
+          grep -F "'0 15 * * *'" .github/workflows/historical-nightly-discovery.yml
+          grep -F "staging/historical-archive-nightly" .github/workflows/historical-triage-bootstrap.yml
+          grep -F "audit/historical-staging/academic-preflight-q3.json" .github/workflows/historical-triage-bootstrap.yml

@@ -52,6 +52,7 @@ jobs:
           set -euo pipefail
           node --check scripts/historical-review-triage.mjs
           node --test scripts/test-historical-review-triage.mjs
+          node --test scripts/test-historical-academic-preflight.mjs
       - name: Continue separate candidate-only staging branch
         run: |
           set -euo pipefail
@@ -69,11 +70,13 @@ jobs:
           node scripts/historical-global-coverage.mjs
           node scripts/historical-review-worklist.mjs
           node scripts/historical-q3-reconciliation.mjs
+          # Derived packets, not academic decisions; immutable source remains.
+          node scripts/historical-academic-preflight.mjs
       - name: Commit to historical staging only, never formal sources
         run: |
           set -euo pipefail
-          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json audit/historical-staging/global-coverage-ledger.json audit/historical-staging/reviewer-worklist.json audit/historical-staging/quarter-2026-q3-coverage.json audit/historical-staging/quarter-2026-q3-review-worklist.json
-          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$|global-coverage-ledger\.json$|reviewer-worklist\.json$|quarter-2026-q3-coverage\.json$|quarter-2026-q3-review-worklist\.json$)'; then
+          git add -- audit/historical-staging/review-queue audit/historical-staging/review-triage-ledger.json audit/historical-staging/global-coverage-ledger.json audit/historical-staging/reviewer-worklist.json audit/historical-staging/quarter-2026-q3-coverage.json audit/historical-staging/quarter-2026-q3-review-worklist.json audit/historical-staging/academic-preflight-q3.json audit/historical-staging/academic-preflight-global.json
+          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/(review-queue/|review-triage-ledger\.json$|global-coverage-ledger\.json$|reviewer-worklist\.json$|quarter-2026-q3-coverage\.json$|quarter-2026-q3-review-worklist\.json$|academic-preflight-q3\.json$|academic-preflight-global\.json$)'; then
             echo "Unsafe triage staged path" >&2
             exit 1
           fi
@@ -93,5 +96,7 @@ jobs:
             audit/historical-staging/reviewer-worklist.json
             audit/historical-staging/quarter-2026-q3-coverage.json
             audit/historical-staging/quarter-2026-q3-review-worklist.json
+            audit/historical-staging/academic-preflight-q3.json
+            audit/historical-staging/academic-preflight-global.json
           retention-days: 14
           if-no-files-found: warn

@@ -16,7 +16,8 @@ body{font-family:Inter,system-ui,sans-serif;max-width:720px;margin:48px auto;pad
 <p id="status" class="muted"></p>
 <button id="claim" disabled>确认将当前账号设为私有 PDF owner</button>
 <button id="authorize" disabled hidden>授权本浏览器抓取 PDF（7 天）</button>
-<p id="capture-status" class="muted"></p>
+<p id="capture-status" class="muted" role="status" aria-live="polite"></p>
+<p id="capture-help" class="muted" hidden>请检查 Tampermonkey 是否启用，以及 Chrome 扩展“网站访问权限”是否允许当前 Gallery 页面；再刷新页面重试。<a href="/gallery-vpn-bridge.user.js">安装或更新 VPN Bridge</a>。不要清除已有脚本数据或 PDF 缓存。</p>
 <section id="reader-grant-panel" hidden style="border-top:1px solid #d0d5dd;margin-top:24px;padding-top:16px">
   <h2>PDF 阅读权限管理</h2>
   <p class="muted">只有站长可以授权已验证邮箱的 Gallery 账号。仅添加 private_pdf_read；不添加站长、抓取或处理权限。现有阅读权限也允许下载，因此只对有权分享的文献授权。</p>
@@ -61,44 +62,81 @@ async function json(path,init={}){
       if(!capabilities.includes('private_pdf_capture'))return;
       authorize.hidden=false;
       authorize.disabled=false;
+      const help=document.querySelector('#capture-help');
       captureStatus.textContent='可单独授权本浏览器的 PDF 捕获模块。';
-      authorize.addEventListener('click',async()=>{
-        authorize.disabled=true;captureStatus.textContent='正在签发 PDF 捕获授权…';captureStatus.className='muted';
-        try{
-          // Do not preflight through the public healthcheck. The lease endpoint is
-          // already browser-CORS enabled and is the authoritative capability + kill-switch check.
-          const lease=await json('/api/user-ui/private-pdf/capture-lease',{method:'POST'});
-          if(!lease.token||!lease.expiresAt)throw new Error('capture_lease_invalid');
-          const message={type:'osg-private-pdf-capture-lease-v1',token:lease.token,expiresAt:lease.expiresAt,scope:lease.scope};
-          let acked=false,attempts=0,timer=null;
-          const cleanup=()=>{if(timer!==null){clearInterval(timer);timer=null;}window.removeEventListener('message',ack);};
-          const ack=event=>{
-            if(event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-ack-v1')return;
-            if(Number(event.data.expiresAt||0)!==Number(lease.expiresAt||0))return;
-            acked=true;cleanup();
-            captureStatus.textContent='PDF 捕获授权成功，本浏览器有效至 '+new Date(lease.expiresAt).toLocaleString()+'。';
-            captureStatus.className='ok';
+
+      // A missing userscript must be detected *before* minting an owner lease.
+      // Neither probe nor acknowledgement contains account credentials.
+      function exchange(message,successType,timeoutMs,intervalMs,failure){
+        return new Promise((resolve,reject)=>{
+          let settled=false,interval=null,deadline=null,attempts=0;
+          const cleanup=()=>{
+            if(interval!==null)clearInterval(interval);
+            if(deadline!==null)clearTimeout(deadline);
+            window.removeEventListener('message',onMessage);
           };
-          window.addEventListener('message',ack);
-          const send=()=>{
-            if(acked)return;
-            attempts+=1;
-            window.postMessage(message,location.origin);
-            captureStatus.textContent='正在向 Tampermonkey 交接 PDF 授权（'+attempts+'/12）…';
-            if(attempts>=12){
-              cleanup();
-              captureStatus.textContent='尚未收到 Tampermonkey 确认。请确认脚本已更新并启用，然后重新点击授权。';
-              captureStatus.className='bad';authorize.disabled=false;
+          const finish=(err,data)=>{
+            if(settled)return;
+            settled=true;cleanup();
+            if(err)reject(new Error(err));else resolve(data);
+          };
+          const onMessage=event=>{
+            if(event.origin!==location.origin||event.data?.requestId!==message.requestId)return;
+            if(event.data?.type===successType){
+              if(successType==='osg-private-pdf-capture-ready-v1'&&event.data.ok!==true)
+                finish(event.data.reason||'embedded_bridge_required');
+              else if(successType==='osg-private-pdf-capture-lease-ack-v1'
+                && Number(event.data.expiresAt||0)!==Number(message.expiresAt||0))
+                finish('lease_ack_mismatch');
+              else finish(null,event.data);
+            }else if(event.data?.type==='osg-private-pdf-capture-lease-nack-v1'){
+              finish(event.data.reason||'lease_storage_unavailable');
             }
           };
+          window.addEventListener('message',onMessage);
+          const send=()=>{
+            if(settled||attempts>=12)return;
+            attempts+=1;
+            window.postMessage(message,location.origin);
+          };
           send();
-          timer=setInterval(send,750);
+          interval=setInterval(send,intervalMs);
+          deadline=setTimeout(()=>finish(failure),timeoutMs);
+        });
+      }
+      authorize.addEventListener('click',async()=>{
+        authorize.disabled=true;help.hidden=true;
+        captureStatus.textContent='正在检查当前页面是否已启动 VPN Bridge…';
+        captureStatus.className='muted';
+        try{
+          const probeId=crypto.randomUUID();
+          await exchange({type:'osg-private-pdf-capture-probe-v1',requestId:probeId},
+            'osg-private-pdf-capture-ready-v1',4200,350,'tampermonkey_not_running_on_page');
+          captureStatus.textContent='VPN Bridge 已响应，正在签发 PDF 捕获授权…';
+          // The lease endpoint authoritatively checks account capability and
+          // service availability; no PDF bytes are touched by this request.
+          const lease=await json('/api/user-ui/private-pdf/capture-lease',{method:'POST'});
+          if(!lease.token||!Number.isSafeInteger(Number(lease.expiresAt)))throw new Error('capture_lease_invalid');
+          captureStatus.textContent='正在交接给 Tampermonkey 并检查本地保存结果…';
+          await exchange({type:'osg-private-pdf-capture-lease-v1',requestId:crypto.randomUUID(),
+            token:lease.token,expiresAt:lease.expiresAt,scope:lease.scope},
+            'osg-private-pdf-capture-lease-ack-v1',10000,750,'tampermonkey_ack_timeout');
+          captureStatus.textContent='PDF 捕获授权成功，本浏览器有效至 '+new Date(lease.expiresAt).toLocaleString()+'。';
+          captureStatus.className='ok';
         }catch(error){
           const reason=String(error?.message||error);
-          captureStatus.textContent=reason==='private_pdf_capture_disabled'
-            ? 'PDF 捕获模块当前已关闭；现有网页与图片抓取不受影响。'
-            : '授权失败：'+reason;
+          const labels={
+            tampermonkey_not_running_on_page:'Tampermonkey 没有在当前授权页面响应；请检查扩展启用状态和网站访问权限。',
+            embedded_bridge_required:'检测到的不是正式 VPN Bridge 内嵌抓取器；请只保留一份正式 Bridge 脚本。',
+            lease_storage_unavailable:'Tampermonkey 已响应，但授权写入或回读失败；请检查扩展存储权限。',
+            invalid_lease_payload:'授权信息格式校验失败，尚未写入 Tampermonkey。',
+            lease_ack_mismatch:'Tampermonkey 返回的授权有效期不匹配，未确认成功。',
+            tampermonkey_ack_timeout:'已签发 PDF 授权，但 Tampermonkey 未确认写入；请检查扩展状态并重试。',
+            private_pdf_capture_disabled:'PDF 捕获模块当前已关闭；现有网页与图片抓取不受影响。'
+          };
+          captureStatus.textContent=labels[reason]||'授权失败：'+reason;
           captureStatus.className='bad';authorize.disabled=false;
+          help.hidden=false;
         }
       });
     }

@@ -14,6 +14,28 @@ export const STAGE_ROOT='audit/historical-staging';
 export const START={from:'2026-09-22',to:'2026-09-30'};
 const FLOOR='1850-01-01';
 const MAX_ROWS=100, MAX_PAGES=10, MAX_RSC_JAN1_PAGES=100;
+// Crossref supports up to 1000 rows per call; enable 500 on the staging
+// collector only to reduce API paging without disabling DOI/source checks.
+const crossrefPageSize=()=>process.env.HISTORICAL_FAST_CROSSREF==='1'?500:MAX_ROWS;
+export const DEFERRED_SOURCE_SCHEMA='gallery-history-deferred-incomplete-roots-v1';
+const retryAfter=(at,failures)=>new Date(Date.parse(at)+
+  Math.min(24,2**Math.min(Math.max(0,failures),4))*3600000).toISOString();
+export function sourceRetryRecord({cursor,rootId,activeSplit=null,
+  kind='chronological',issues=[],at=new Date().toISOString(),
+  previousFailures=0}={}){
+  if(!cursor||!validDate(cursor?.range?.from)||!validDate(cursor?.range?.to)
+    ||!Number.isInteger(cursor.journalIndex)
+    ||!['chronological','rsc_created_recheck'].includes(kind)
+    ||typeof rootId!=='string'||!rootId
+    ||!Array.isArray(issues)||!issues.length||!issues.every(x=>typeof x==='string')
+    ||!Number.isInteger(previousFailures)||previousFailures<0)
+    throw Error('historical_invalid_deferred_source_receipt');
+  return {rootId,kind,cursor:structuredClone(cursor),
+    activeSplit:activeSplit?structuredClone(activeSplit):null,
+    failures:previousFailures+1,lastFailureAt:at,
+    nextRetryAt:retryAfter(at,previousFailures+1),issues:[...issues],
+    sourceCompleted:false,academicDecision:null,publicationAuthority:false};
+}
 export const RSC_CREATION_RESCUE_VERSION='rsc-created-date-rescue-20261012-v1';
 const RSC_JOURNALS=new Set(['Chemical Science','Green Chemistry']);
 export const requiresRscCreationRescue=journal=>RSC_JOURNALS.has(journal?.name);
@@ -217,7 +239,14 @@ async function request(url,budget,source){
   try{response=await fetch(url,{signal:AbortSignal.timeout(20000),
     headers:{accept:'application/json','user-agent':'OrganicSynthesisGallery-HistoryIndex/1.0 (gallery.gczhouwld.com)'}})}
   catch(e){throw Error(source+':transport_'+String(e?.name||'unknown'))}
-  if(!response.ok)throw Error(source+':http_'+response.status);
+  if(!response.ok){
+    // Log no credential bytes. Fail incomplete rather than silently pretending
+    // OpenAlex cursor coverage is possible without a valid API key.
+    if(source==='openalex'&&(response.status===401||response.status===403))
+      throw Error('openalex:http_'+response.status+
+        (process.env.OPENALEX_API_KEY?':api_key_present_rejected':':api_key_missing'));
+    throw Error(source+':http_'+response.status);
+  }
   try{return await response.json()}catch{throw Error(source+':invalid_json')}
 }
 async function crossrefWindow(journal,range,budget){
@@ -235,7 +264,7 @@ async function crossrefWindow(journal,range,budget){
           const u=new URL('https://api.crossref.org/journals/'+encodeURIComponent(issn)+'/works');
           const axis=lane==='created'?'created-date':'pub-date';
           u.searchParams.set('filter','from-'+axis+':'+range.from+',until-'+axis+':'+range.to+',type:journal-article');
-          u.searchParams.set('rows',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
+          u.searchParams.set('rows',String(crossrefPageSize()));u.searchParams.set('cursor',cursor);
           const res=await request(u,budget,'crossref');
           if(!res?.message||!Array.isArray(res.message.items))throw Error('crossref:invalid_items');
           const items=res.message.items,reported=Number(res.message['total-results']);
@@ -243,7 +272,7 @@ async function crossrefWindow(journal,range,budget){
           if(total!==null&&total!==reported)throw Error('crossref:total_changed');
           total=reported;count+=items.length;page++;
           for(const raw of items){const row=fromCrossref(raw);if(row)map.set(row.doi,row)}
-          if(items.length<MAX_ROWS||count>=reported)break;
+          if(items.length<crossrefPageSize()||count>=reported)break;
           const next=res.message['next-cursor'];
           if(typeof next!=='string'||!next||next===cursor)throw Error('crossref:missing_next_cursor');
           cursor=next;
@@ -380,6 +409,34 @@ export async function runNightly() {
     ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))
     throw Error('invalid_existing_staging_state');
   const journals=orderedJournals();
+  const deferralEnabled=process.env.HISTORICAL_DEFER_BLOCKED==='1';
+  if(deferralEnabled){
+    if(state.deferredSchemaVersion&&state.deferredSchemaVersion!==DEFERRED_SOURCE_SCHEMA)
+      throw Error('historical_incompatible_deferred_root_schema');
+    if(state.deferredRoots&&!Array.isArray(state.deferredRoots))
+      throw Error('historical_invalid_deferred_root_queue');
+    state.deferredSchemaVersion=DEFERRED_SOURCE_SCHEMA;
+    state.deferredRoots=state.deferredRoots||[];
+    const completed=new Set(state.completed),seen=new Set();
+    for(const r of state.deferredRoots){
+      const journal=journals[r?.cursor?.journalIndex];
+      if(!journal||!validDate(r?.cursor?.range?.from)
+        ||!validDate(r?.cursor?.range?.to)
+        ||r.cursor.range.from>r.cursor.range.to
+        ||r.rootId!==journalBatchId(r.cursor.range,journal)
+        ||!['chronological','rsc_created_recheck'].includes(r.kind)
+        ||(r.kind==='chronological'&&completed.has(r.rootId))
+        ||!Number.isSafeInteger(r.failures)||r.failures<1
+        ||!Number.isFinite(Date.parse(r.nextRetryAt))
+        ||seen.has(r.rootId)
+        ||(r.activeSplit&&(r.activeSplit.rootId!==r.rootId
+          ||r.activeSplit.journalName!==journal.name
+          ||!Array.isArray(r.activeSplit.pending)
+          ||!Array.isArray(r.activeSplit.completed))))
+        throw Error('historical_corrupt_deferred_root_checkpoint');
+      seen.add(r.rootId);
+    }
+  }
   // Once: reopen previously closed RSC publication-date-only windows.
   // Their source "0 results" was not a reliable source-coverage receipt.
   if(!state.rscCreatedRescue){
@@ -399,9 +456,11 @@ export async function runNightly() {
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
   let processed=0,blocked=false,deferredBudget=false,skippedFoundingWindows=0,visited=0;
+  let deferredFailures=0,retryCompletions=0,retriedThisRun=false;
   state.publishedMembershipSnapshot=articles.size;
   state.lastRunStarted=now;
-  while(processed<maxUnits&&state.cursor){
+  while(processed<maxUnits&&(state.cursor||(deferralEnabled&&state.deferredRoots?.some(
+    r=>Date.parse(r.nextRetryAt)<=Date.now())))){
     // Skipped pre-founding years are NOT source-complete windows.
     if(++visited>maxUnits*32)break;
     // Reserve the minimum three calls before beginning an unsplittable source pair.
@@ -410,10 +469,17 @@ export async function runNightly() {
     const recheckJournal=nextRecheck&&journals[nextRecheck.journalIndex];
     const recheckRoot=nextRecheck&&recheckJournal
       ?journalBatchId(nextRecheck.range,recheckJournal):null;
-    // Complete any previous chronological split before beginning RSC repairs.
-    const recovering=Boolean(nextRecheck
+    const canRetry=deferralEnabled&&!retriedThisRun&&state.deferredRoots.length
+      &&!nextRecheck&&!state.activeSplit
+      &&(processed>=Math.min(2,maxUnits-1)||!state.cursor)
+      &&Date.parse(state.deferredRoots[0].nextRetryAt)<=Date.now();
+    const retry=canRetry?state.deferredRoots[0]:null;
+    if(retry)retriedThisRun=true;
+    // A suspended root has its own split checkpoint and cannot overwrite
+    // the chronological cursor or another publisher's source receipts.
+    const recovering=Boolean(!retry&&nextRecheck
       &&(!state.activeSplit||state.activeSplit.rootId===recheckRoot));
-    const activeCursor=recovering?nextRecheck:state.cursor;
+    const activeCursor=retry?retry.cursor:(recovering?nextRecheck:state.cursor);
     const rootRange=activeCursor.range,journal=journals[activeCursor.journalIndex];
     if(!journal)throw Error('invalid_history_cursor_journal');
     if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
@@ -429,7 +495,7 @@ export async function runNightly() {
       continue;
     }
     const rootId=journalBatchId(rootRange,journal);
-    const split=state.activeSplit;
+    const split=retry?retry.activeSplit:state.activeSplit;
     if(split&&(
       split.rootId!==rootId||split.journalName!==journal.name
       ||split.rootRange?.from!==rootRange.from||split.rootRange?.to!==rootRange.to
@@ -477,7 +543,7 @@ export async function runNightly() {
     };
     // A failed recheck must not overwrite an older root until a complete
     // source enumeration is available. Leaf evidence goes to batch files.
-    const recordTarget=recovering&&!split
+    const recordTarget=(recovering||retry?.kind==='rsc_created_recheck')&&!split
       ?STAGE_ROOT+'/rechecks/'+id+'.json'
       :STAGE_ROOT+'/batches/'+id+'.json';
     await saveJson(recordTarget,record);
@@ -494,20 +560,58 @@ export async function runNightly() {
         if(!split.pending.length){
           await finalizeSplitRoot(split,journal,articles);
           if(recovering){rescue.done.push(rootId);rescue.pending.shift()}
-          else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
-          delete state.activeSplit;
+          else if(retry){
+            if(retry.kind==='rsc_created_recheck')rescue.done.push(rootId);
+            else state.completed.push(rootId);
+            state.deferredRoots.shift();retryCompletions++;
+          }else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
+          if(!retry)delete state.activeSplit;
         }
       }else if(recovering){
         await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
         rescue.done.push(rootId);rescue.pending.shift();
+      }else if(retry){
+        if(retry.kind==='rsc_created_recheck'){
+          await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
+          rescue.done.push(rootId);
+        }else state.completed.push(rootId);
+        state.deferredRoots.shift();retryCompletions++;
       }else{
         state.completed.push(rootId);
         state.cursor=nextCursor(state.cursor,journals);
       }
     }else if(slices){
       if(split)split.pending.splice(0,1,...slices);
-      else state.activeSplit={rootId,rootRange,journalName:journal.name,
-        pending:slices,completed:[]};
+      else{
+        const nextSplit={rootId,rootRange,journalName:journal.name,
+          pending:slices,completed:[]};
+        if(retry)retry.activeSplit=nextSplit;
+        else state.activeSplit=nextSplit;
+      }
+    }else if(deferralEnabled){
+      if(retry){
+        const renewed=sourceRetryRecord({cursor:activeCursor,rootId,
+          activeSplit:split,kind:retry.kind,issues:status.issues,
+          previousFailures:retry.failures});
+        state.deferredRoots.shift();state.deferredRoots.push(renewed);
+      }else{
+        const receipt=sourceRetryRecord({cursor:activeCursor,rootId,
+          activeSplit:split,kind:recovering?'rsc_created_recheck':'chronological',
+          issues:status.issues});
+        if(state.deferredRoots.some(x=>x.rootId===rootId))
+          throw Error('historical_duplicate_deferred_root:'+rootId);
+        state.deferredRoots.push(receipt);
+        if(recovering)rescue.pending.shift();
+        else state.cursor=nextCursor(state.cursor,journals);
+        delete state.activeSplit;
+      }
+      deferredFailures++;
+      console.log('HISTORICAL_STAGING_SOURCE_DEFERRED '+JSON.stringify({
+        id,rootId,journal:journal.name,kind:retry?.kind||
+          (recovering?'rsc_created_recheck':'chronological'),
+        pendingSourceRoots:state.deferredRoots.length,issues:status.issues,
+        officialSourceComplete:false,canAdvanceOtherJournals:true
+      }));
     }else{blocked=true}
     await saveJson(staging,state);
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
@@ -520,6 +624,13 @@ export async function runNightly() {
   }
   state.lastRunFinished=new Date().toISOString();
   state.lastRun={processed,blocked,deferredBudget,requests:budget.count,
+    deferredFailures,retryCompletions,
+    incompleteDeferredRoots:deferralEnabled?state.deferredRoots.length:0,
+    // Complete means ALL historical founder-year roots exhausted with no
+    // deferred/auth-failed/split/rescue work, not just this bounded attempt.
+    sourceCoverageComplete:!state.cursor&&!blocked&&!deferredBudget
+      &&!state.activeSplit&&state.rscCreatedRescue.pending.length===0
+      &&(!deferralEnabled||state.deferredRoots.length===0),
     skippedBeforeFoundingWindows:skippedFoundingWindows,next:state.cursor,
     verifiedPublishedDois:articles.size,completeWindows:state.completed.length,
     activeSplit:state.activeSplit?{

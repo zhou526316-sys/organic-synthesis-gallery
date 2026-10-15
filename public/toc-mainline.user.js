@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.67
+// @version      6.2.68
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.67';
+  var INSTALL_REVISION = '6.2.68';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -6886,15 +6886,43 @@ function embeddedJobDois(value) {
   function installPrivatePdfLeaseReceiver() {
     if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
     window.addEventListener('message',function(event){
+      if(event.origin!==location.origin)return;
+      var data=event.data||{},type=String(data.type||''),requestId=String(data.requestId||'');
+      if(!/^[0-9a-f-]{36}$/.test(requestId))return;
+      var reply=function(name,fields){
+        window.postMessage(Object.assign({type:name,requestId:requestId},fields||{}),location.origin);
+      };
+      // A ready check precedes issuing a seven-day bearer lease. Only the
+      // installed Bridge (not a separate standalone collector) may receive it.
+      var embedded=Boolean(globalThis.__OSG_TOC_BROWSER_MAINLINE__&&globalThis.__OSG_BRIDGE_VERSION__);
+      if(type==='osg-private-pdf-capture-probe-v1'){
+        reply('osg-private-pdf-capture-ready-v1',{ok:embedded,engine:INSTALL_REVISION,
+          reason:embedded?'ready':'embedded_bridge_required'});
+        return;
+      }
+      if(type!=='osg-private-pdf-capture-lease-v1')return;
+      if(!embedded||data.scope!=='private_pdf_capture'){
+        reply('osg-private-pdf-capture-lease-nack-v1',{reason:!embedded?'embedded_bridge_required':'invalid_lease_payload'});
+        return;
+      }
       try{
-        if(event.origin!==location.origin)return;
-        var data=event.data||{};
-        if(data.type!=='osg-private-pdf-capture-lease-v1'||data.scope!=='private_pdf_capture')return;
         var token=String(data.token||''),expiresAt=Number(data.expiresAt||0),receivedAt=Date.now();
-        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=receivedAt+60000)return;
-        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
-        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt,receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION},location.origin);
-      }catch(_){}
+        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||!Number.isSafeInteger(expiresAt)||expiresAt<=receivedAt+60000){
+          reply('osg-private-pdf-capture-lease-nack-v1',{reason:'invalid_lease_payload'});
+          return;
+        }
+        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,
+          scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        var saved=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
+        if(!saved||saved.token!==token||Number(saved.expiresAt)!==expiresAt||saved.scope!=='private_pdf_capture')
+          throw new Error('lease_readback_mismatch');
+        reply('osg-private-pdf-capture-lease-ack-v1',{expiresAt:expiresAt,
+          receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+      }catch(_){
+        // Do not report success unless the encrypted extension-owned GM store
+        // confirms the lease. Never echo the token or log a credential.
+        reply('osg-private-pdf-capture-lease-nack-v1',{reason:'lease_storage_unavailable'});
+      }
     });
   }
 
@@ -7575,7 +7603,11 @@ function embeddedJobDois(value) {
   installManualRestartListener();
   installMenu();
 
-  if (isGalleryPage()) {
+  // The owner setup is a lease handoff, not a capture-controller tab.
+  // Keep its event receiver active without starting queue scans or uploads.
+  if (isGalleryPage() && /\/private-pdf-owner-setup\.html$/.test(location.pathname)) {
+    // Receiver was installed above; the owner page owns its own UI.
+  } else if (isGalleryPage()) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
     startImageOutboxSender();
