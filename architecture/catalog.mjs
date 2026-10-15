@@ -48,8 +48,16 @@ export function buildCatalog(papers, { asOfDate, source, withdrawn = [], grants 
       ? null : (displayEvidence.firstOnlineDate ?? displayEvidence.date ?? null);
     const datePrecision = displayEvidence.dateUnverified === true
       ? 'unknown' : (displayEvidence.datePrecision ?? (typeof firstOnlineDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(firstOnlineDate) ? 'day' : 'unknown'));
+    // Publisher-verified author corrections belong only to the derived read
+    // model; do not mutate the fixed-slot protected source paper bytes or their
+    // original content revision. The exact DOI/title/journal evidence check
+    // lives in correctedPublisherDateForDisplay().
+    const verifiedPresentationAuthors = Array.isArray(displayEvidence.authors)
+      && displayEvidence.authors.length > (paper.authors?.length || 0)
+      ? [...displayEvidence.authors] : null;
     return { doi, firstOnlineDate, datePrecision, addedDate: paper.addedDate ?? null,
-      revision: digest(stable(paper)), paper };
+      revision: digest(stable(paper)), paper,
+      ...(verifiedPresentationAuthors ? { verifiedPresentationAuthors } : {}) };
   }).sort((a, b) => compare(a.doi, b.doi));
   const files = {}, refs = [], locator = {}, groups = new Map(), search = [];
   const put = (prefix, value) => {
@@ -70,7 +78,7 @@ export function buildCatalog(papers, { asOfDate, source, withdrawn = [], grants 
       refs.push({ ...ref, month, count: chunk.length });
       for (const r of chunk) locator[r.doi] = { shard: ref.path, revision: r.revision, status: 'published' };
       const entries = chunk.map(r => ({ doi: r.doi, title: r.paper.title ?? r.paper.titleEn ?? '', titleZh: r.paper.titleZh ?? '',
-        authors: r.paper.authors ?? [], journal: r.paper.journal ?? '', date: r.firstOnlineDate,
+        authors: r.verifiedPresentationAuthors ?? r.paper.authors ?? [], journal: r.paper.journal ?? '', date: r.firstOnlineDate,
         synthesisType: r.paper.synthesisType ?? null, shard: ref.path, revision: r.revision }));
       search.push({ ...put(`search/${month}`, { schema: SCHEMA, entries }), count: entries.length, month });
       chunk = [];
