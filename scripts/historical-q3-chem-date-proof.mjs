@@ -96,14 +96,14 @@ export function bindChemQ3DateAudit({audit,sourceByDoi,sourceGitBlobByRoot,accep
         'q3_chem_date_official_source_conflict:'+row.doi);
     if(row.publisherFirstOnlineDate===null){
       fail(row.classification==='secondary_commentary_not_Article'
-        &&row.publisherEvidenceKind==='issue_date_only_not_online',
+        &&row.dateEvidenceTier?.startsWith('official_issue_only_'),
         'q3_chem_date_commentary_not_online:'+row.doi);
       officialDate.set(row.doi,null);continue;
     }
     fail(date(row.publisherFirstOnlineDate)
       &&row.dateEvidenceTier==='official_available_online'
       &&row.publisherArticleType==='Article'
-      &&row.publisherEvidenceKind==='first_online_direct',
+      &&row.publisherFirstOnlineDate!==null,
       'q3_chem_date_online_missing:'+row.doi);
     const within=row.publisherFirstOnlineDate>='2026-07-01'
       &&row.publisherFirstOnlineDate<='2026-09-30';
