@@ -85,7 +85,12 @@ async function readObject(ref, objectMap, delivery) {
 }
 function paperProjection(record) {
   const paper = record?.paper || {};
-  const authors = Array.isArray(paper.authors) ? paper.authors.map(value => String(value ?? '')) : [];
+  // Trusted publisher evidence may supply display/search authors in the
+  // derived catalog while its immutable protected paper remains unchanged.
+  const rawAuthors = Array.isArray(record?.verifiedPresentationAuthors)
+    && record.verifiedPresentationAuthors.length
+      ? record.verifiedPresentationAuthors : paper.authors;
+  const authors = Array.isArray(rawAuthors) ? rawAuthors.map(value => String(value ?? '')) : [];
   const firstOnlineDate = typeof record?.firstOnlineDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(record.firstOnlineDate)
     ? record.firstOnlineDate : null;
   // Historical acquisitions may happen on the same day as a public release.
