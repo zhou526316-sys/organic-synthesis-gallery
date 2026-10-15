@@ -11,6 +11,11 @@ export const EMPTY=Object.freeze({
 });
 const ensure=(ok,what)=>{if(!ok)throw Error('q3_chem_cross_source_'+what)};
 const knownDOI=id=>/^10\.1016\/j\.chempr\.2026\.\d{6}$/.test(id||'');
+const PINNED_PUBLISHER_RECEIPTS=new Map([
+  ['10.1016/j.chempr.2026.103127',{
+    online:'2026-07-06',pii:'S2451929426001932'
+  }]
+]);
 const q3=date=>/^2026-(07|08|09)-\d\d$/.test(date||'');
 const validDay=date=>{
   try{return /^2026-\d\d-\d\d$/.test(date) &&
@@ -36,9 +41,13 @@ export function bindChemCrossSourceProof({
       .filter(row=>String(row.doi||'').toLowerCase()===id)
       .map(row=>({rootId:shard.rootId,sourceRootSha256:shard.sourceSha256,
         gitBlobSha:shard.gitBlobSha,row})));
+    const receipt=PINNED_PUBLISHER_RECEIPTS.get(id);
     const rootIds=new Set(proofs?.map(x=>x.rootId)||[]);
     const conflictingDates=new Set(proofs?.map(x=>x.sourceDate)||[]);
-    ensure(knownDOI(id)&&d.doi===id&&src?.journal==='Chem'
+    ensure(knownDOI(id)&&receipt
+      &&d.publisherFirstOnlineDate===receipt.online
+      &&url?.pathname==='/science/article/pii/'+receipt.pii
+      &&d.doi===id&&src?.journal==='Chem'
       &&src.title===d.title&&src.dateConflict===true&&!src.journalConflict
       &&Array.isArray(proofs)&&proofs.length===2
       &&rootIds.size===2&&conflictingDates.size===2
