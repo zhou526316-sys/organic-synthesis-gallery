@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "gallery-historical-q3-original-synthesis-two-pass-science-v1",
+  "mode": "science_review_only_not_publication",
+  "reviewedAt": "2026-10-15T01:08:13.129Z",
+  "journal": "Chem",
+  "period": "2026-07-01..2026-09-30",
+  "dateAuditPath": "audit/historical-publisher-issues/2026/chem-q3-source-date-conflicts-and-firstday-provisional.json",
+  "dateAuditBlobSha": "309f1f76e8e8c3607a6b343c0221cc38dffd1d26",
+  "counts": {
+    "checked": 3,
+    "academicInclude": 3,
+    "academicExclude": 0,
+    "needsEvidence": 0
+  },
+  "paperSpecificReviews": [
+    {
+      "doi": "10.1016/j.chempr.2026.103211",
+      "journal": "Chem",
+      "title": "Constructing chiral rotaxanes with both mechanical and macrocyclic planar chirality by enantioselective C–H activation",
+      "date": "2026-08-21",
+      "titleZh": "钴催化C–H环化构筑机械和大环双重平面手性轮烷",
+      "stageCandidateDate": "2026-08-01",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按原文具体的制备模式和一般性判断：通过钴/手性Salox配体催化C–H/N–H不对称环化，在单一步骤中同时构筑机械平面手性与大环平面手性的轮烷。 起始原料与产物：以预制含可脱除导向基的[2]轮烷与炔烃为反应伙伴，经Co(II)/Salox催化对映选择性C–H活化与N–H环化建立新的共价杂环连接并锁定互锁环的拓扑手性。 论文给出的实证：官方Chem原文给出不同轮烷及炔烃搭配的底物拓展，产率最高85%，对映体过量93%–99% ee；晶体海绵法辅助确认绝对构型并组装三层rotaxane-in-cage。",
+      "independentChallengeReason": "反向挑战：研究的产品属于定制超分子/机械互锁对象，不能直接宣称在普通非互锁小分子上普适；但作者展示基于Co/Salox的可转移不对称C–H/N–H成键、多个轮烷组合与可分离产品，核心是一种可推广的合成方法，不只是手性材料性能。",
+      "scopeAssessment": {
+        "primaryContribution": "通过钴/手性Salox配体催化C–H/N–H不对称环化，在单一步骤中同时构筑机械平面手性与大环平面手性的轮烷。",
+        "preparativeTransformation": "以预制含可脱除导向基的[2]轮烷与炔烃为反应伙伴，经Co(II)/Salox催化对映选择性C–H活化与N–H环化建立新的共价杂环连接并锁定互锁环的拓扑手性。",
+        "generalityEvidence": "官方Chem原文给出不同轮烷及炔烃搭配的底物拓展，产率最高85%，对映体过量93%–99% ee；晶体海绵法辅助确认绝对构型并组装三层rotaxane-in-cage。",
+        "sourceEvidence": "Chem/Elsevier在线文章 https://www.sciencedirect.com/science/article/pii/S2451929426002779 官方 Available online 2026-08-21; DOI 10.1016/j.chempr.2026.103211; 冻结Q3 Crossref/OpenAlex来源 2026-08-01_2026-08-07_chem Git blob 28f8dba728898d889343388ddd024909d2579023; 来源日期2026-08-01为卷期月初记录，不能用作首次在线；出版社优先。",
+        "boundaryChallenge": "反向挑战：研究的产品属于定制超分子/机械互锁对象，不能直接宣称在普通非互锁小分子上普适；但作者展示基于Co/Salox的可转移不对称C–H/N–H成键、多个轮烷组合与可分离产品，核心是一种可推广的合成方法，不只是手性材料性能。"
+      },
+      "evidenceBasis": "DOI与2026在线首发日期、原始来源和出版社文章类型分开核验。官方Chem原文给出不同轮烷及炔烃搭配的底物拓展，产率最高85%，对映体过量93%–99% ee；晶体海绵法辅助确认绝对构型并组装三层rotaxane-in-cage。 反向挑战：研究的产品属于定制超分子/机械互锁对象，不能直接宣称在普通非互锁小分子上普适；但作者展示基于Co/Salox的可转移不对称C–H/N–H成键、多个轮烷组合与可分离产品，核心是一种可推广的合成方法，不只是手性材料性能。",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103211",
+        "publisherOriginalArticleUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002779",
+        "publisherOnlineDate": "2026-08-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_chem",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "sourceReviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+        "stageSourceApiDate": "2026-08-01",
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-08-21",
+          "conflictKind": "source_issue_month_first_day_vs_official_Elsevier_available_online",
+          "authoritativeDate": "publisher_direct_available_online",
+          "frozenSourceUnmodified": true,
+          "independentOfficialUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002779"
+        },
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": "not_verified_do_not_republish_full_text",
+      "reviewMethod": "same_assistant_independent_first_pass_and_adversarial_second_pass_not_independent_humans",
+      "submissionAuthority": "academic_scope_only_released_by_separate_existing_08_writer"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103215",
+      "journal": "Chem",
+      "title": "Well-defined chiral binuclear copper catalysis in accessing trifluoromethyl amino acid derivatives",
+      "date": "2026-08-31",
+      "titleZh": "手性双核铜催化丙烯酸酯三氟甲基化–叠氮化构筑手性氨基酸砌块",
+      "stageCandidateDate": "2026-08-01",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按原文具体的制备模式和一般性判断：建立结构明确的手性双核铜催化体系，控制丙烯酸酯的自由基三氟甲基化–叠氮化并制备氟代手性氨基酸砌块。 起始原料与产物：以丙烯酸酯为受体，CF₃自由基先加成产生碳自由基，预组织的双核Cu/叠氮桥配合物完成对映选择性C–N₃成键，提供含CF₃季碳的α-叠氮酯，并可转为α-氨基酸及多肽。 论文给出的实证：官方Chem Highlights与Summary明确报道一系列手性季碳α-叠氮酯、优良对映选择性及氨基酸/肽合成应用；一Cu中心控制成键、另一中心参与叠氮桥配位的功能分配由机制研究支持，不能把模型直接写为绝对独占机制。",
+      "independentChallengeReason": "反向挑战：论文同时着重双核金属真实活性物种，不能把结构表征当作方法学证据；但独立的不对称烯烃双官能团化、多个丙烯酸酯制备范围和实际氨基酸衍生应用均已描述，满足主要制备贡献，而非仅报告催化剂晶体。",
+      "scopeAssessment": {
+        "primaryContribution": "建立结构明确的手性双核铜催化体系，控制丙烯酸酯的自由基三氟甲基化–叠氮化并制备氟代手性氨基酸砌块。",
+        "preparativeTransformation": "以丙烯酸酯为受体，CF₃自由基先加成产生碳自由基，预组织的双核Cu/叠氮桥配合物完成对映选择性C–N₃成键，提供含CF₃季碳的α-叠氮酯，并可转为α-氨基酸及多肽。",
+        "generalityEvidence": "官方Chem Highlights与Summary明确报道一系列手性季碳α-叠氮酯、优良对映选择性及氨基酸/肽合成应用；一Cu中心控制成键、另一中心参与叠氮桥配位的功能分配由机制研究支持，不能把模型直接写为绝对独占机制。",
+        "sourceEvidence": "Chem/Elsevier在线文章 https://www.sciencedirect.com/science/article/pii/S2451929426002810 官方 Available online 2026-08-31; DOI 10.1016/j.chempr.2026.103215; 冻结Q3 Crossref/OpenAlex来源 2026-08-01_2026-08-07_chem Git blob 28f8dba728898d889343388ddd024909d2579023; 来源日期2026-08-01为卷期月初记录，不能用作首次在线；出版社优先。",
+        "boundaryChallenge": "反向挑战：论文同时着重双核金属真实活性物种，不能把结构表征当作方法学证据；但独立的不对称烯烃双官能团化、多个丙烯酸酯制备范围和实际氨基酸衍生应用均已描述，满足主要制备贡献，而非仅报告催化剂晶体。"
+      },
+      "evidenceBasis": "DOI与2026在线首发日期、原始来源和出版社文章类型分开核验。官方Chem Highlights与Summary明确报道一系列手性季碳α-叠氮酯、优良对映选择性及氨基酸/肽合成应用；一Cu中心控制成键、另一中心参与叠氮桥配位的功能分配由机制研究支持，不能把模型直接写为绝对独占机制。 反向挑战：论文同时着重双核金属真实活性物种，不能把结构表征当作方法学证据；但独立的不对称烯烃双官能团化、多个丙烯酸酯制备范围和实际氨基酸衍生应用均已描述，满足主要制备贡献，而非仅报告催化剂晶体。",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103215",
+        "publisherOriginalArticleUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002810",
+        "publisherOnlineDate": "2026-08-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_chem",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "sourceReviewQueueGitBlobSha": "28f8dba728898d889343388ddd024909d2579023",
+        "stageSourceApiDate": "2026-08-01",
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "conflictKind": "source_issue_month_first_day_vs_official_Elsevier_available_online",
+          "authoritativeDate": "publisher_direct_available_online",
+          "frozenSourceUnmodified": true,
+          "independentOfficialUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426002810"
+        },
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": "not_verified_do_not_republish_full_text",
+      "reviewMethod": "same_assistant_independent_first_pass_and_adversarial_second_pass_not_independent_humans",
+      "submissionAuthority": "academic_scope_only_released_by_separate_existing_08_writer"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103241",
+      "journal": "Chem",
+      "title": "Site-selective Au(III)-mediated metalloenzyme conjugations",
+      "date": "2026-09-11",
+      "titleZh": "Au(III)介导金属酶半胱氨酸位点选择性S–芳基化",
+      "stageCandidateDate": "2026-09-01",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPasses": 2,
+      "firstPassReason": "第一遍按原文具体的制备模式和一般性判断：利用金(III)芳基化试剂与金属蛋白中溶剂暴露半胱氨酸选择性反应，保留关键金属–硫活性位而实现可迁移的生物偶联。 起始原料与产物：以Au(III)芳基试剂为偶联伙伴，对rubredoxin、含锌指及Fe–S蛋白中的游离Cys硫醇进行S–芳基化，借金属配位的硫醇位点天然保护，形成蛋白半胱氨酸–芳基C–S共价键。 论文给出的实证：Chem官方Highlights列出rubredoxins、zinc fingers、Fe–S proteins三个不同金属蛋白群，且报道首个Cys芳基化金属蛋白X射线晶体结构；不以蛋白质组学标记百分比伪装分离小分子收率，主要价值为金属酶通用的C–S生物偶联选择性。",
+      "independentChallengeReason": "反向挑战：蛋白上的化学修饰不同于可直接分离的小分子C–S偶联，不能宣称适合任意烷基硫醇或全部酶；但该工作揭示可重复的Au(III)介导化学键构建并在多个金属辅因子蛋白群证实，因此主要贡献属于可推广生物偶联方法学，而非仅做酶活性观察。",
+      "scopeAssessment": {
+        "primaryContribution": "利用金(III)芳基化试剂与金属蛋白中溶剂暴露半胱氨酸选择性反应，保留关键金属–硫活性位而实现可迁移的生物偶联。",
+        "preparativeTransformation": "以Au(III)芳基试剂为偶联伙伴，对rubredoxin、含锌指及Fe–S蛋白中的游离Cys硫醇进行S–芳基化，借金属配位的硫醇位点天然保护，形成蛋白半胱氨酸–芳基C–S共价键。",
+        "generalityEvidence": "Chem官方Highlights列出rubredoxins、zinc fingers、Fe–S proteins三个不同金属蛋白群，且报道首个Cys芳基化金属蛋白X射线晶体结构；不以蛋白质组学标记百分比伪装分离小分子收率，主要价值为金属酶通用的C–S生物偶联选择性。",
+        "sourceEvidence": "Chem/Elsevier在线文章 https://www.sciencedirect.com/science/article/pii/S2451929426003074 官方 Available online 2026-09-11; DOI 10.1016/j.chempr.2026.103241; 冻结Q3 Crossref/OpenAlex来源 2026-09-01_2026-09-07_chem Git blob ebb2de99e41ee7ebf9336f567be702c269eb2d36; 来源日期2026-09-01为卷期月初记录，不能用作首次在线；出版社优先。",
+        "boundaryChallenge": "反向挑战：蛋白上的化学修饰不同于可直接分离的小分子C–S偶联，不能宣称适合任意烷基硫醇或全部酶；但该工作揭示可重复的Au(III)介导化学键构建并在多个金属辅因子蛋白群证实，因此主要贡献属于可推广生物偶联方法学，而非仅做酶活性观察。"
+      },
+      "evidenceBasis": "DOI与2026在线首发日期、原始来源和出版社文章类型分开核验。Chem官方Highlights列出rubredoxins、zinc fingers、Fe–S proteins三个不同金属蛋白群，且报道首个Cys芳基化金属蛋白X射线晶体结构；不以蛋白质组学标记百分比伪装分离小分子收率，主要价值为金属酶通用的C–S生物偶联选择性。 反向挑战：蛋白上的化学修饰不同于可直接分离的小分子C–S偶联，不能宣称适合任意烷基硫醇或全部酶；但该工作揭示可重复的Au(III)介导化学键构建并在多个金属辅因子蛋白群证实，因此主要贡献属于可推广生物偶联方法学，而非仅做酶活性观察。",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103241",
+        "publisherOriginalArticleUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426003074",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_chem",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "sourceReviewQueueGitBlobSha": "ebb2de99e41ee7ebf9336f567be702c269eb2d36",
+        "stageSourceApiDate": "2026-09-01",
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-09-11",
+          "conflictKind": "source_issue_month_first_day_vs_official_Elsevier_available_online",
+          "authoritativeDate": "publisher_direct_available_online",
+          "frozenSourceUnmodified": true,
+          "independentOfficialUrl": "https://www.sciencedirect.com/science/article/pii/S2451929426003074"
+        },
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "rights": "not_verified_do_not_republish_full_text",
+      "reviewMethod": "same_assistant_independent_first_pass_and_adversarial_second_pass_not_independent_humans",
+      "submissionAuthority": "academic_scope_only_released_by_separate_existing_08_writer"
+    }
+  ],
+  "scopeContractFile": "docs/literature-scope-contract.md",
+  "guards": {
+    "publisherOnlineDateOverridesIssueMonth": true,
+    "originalSourceImmutable": true,
+    "noD1": true,
+    "noNewSlot": true,
+    "noPreOctoberPDFBodyMedia": true,
+    "noTodayHotWeChat": true,
+    "notTwoIndependentHumanReviewers": true
+  }
+}
