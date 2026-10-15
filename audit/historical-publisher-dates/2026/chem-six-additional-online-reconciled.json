@@ -135,7 +135,7 @@
       "sourceDate": "2026-09-01",
       "publisherFirstOnlineDate": "2026-04-14",
       "originalQ3QueueOrigin": "2026-09-01_2026-09-07_chem",
-      "verifiedPublicationQuarter": "2026-Q1",
+      "verifiedPublicationQuarter": "2026-Q2",
       "dateDiscrepancyKind": "issue_month_misclassified_as_Q3",
       "originalQ3SourceFamilies": [
         "crossref"
@@ -326,5 +326,7 @@
     "noMediaOrPdf": true,
     "noOffSlotPublisherWrite": true,
     "noSilentReplacementOfOriginalDate": true
-  }
+  },
+  "verifiedQ1OutsideQ3": 2,
+  "verifiedQ2OutsideQ3": 1
 }
