@@ -16,6 +16,7 @@ import { CROSSREF_DATE_MODES, crossrefModeQuery, wasRecentlyDeposited } from '..
 import { needsHistoricalDepositReview, buildHistoricalCrossrefDepositBacklog } from '../../scripts/lib/crossref-deposit-backlog.mjs';
 
 import { fetchOpenAlexDateWindows } from '../../scripts/lib/openalex-date-window-fetch.mjs';
+import { resolveRscFirstOnline } from '../../scripts/lib/rsc-first-online-rescue.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -537,6 +538,54 @@ console.log('AUDIT_PUBLIC_ABSTRACT_RESCUE '+JSON.stringify({
   backlogNotFetched:Math.max(0,[...merged.values()].filter(item=>!galleryDois.has(item.doi)&&!String(item.abstract||'').trim()).length-pubAbstractTargets.length)
 }));
 
+// DOI-bound RSC first-online date rescue. Priority: durable held DOIs, then
+// recently registered undated Chemical Science records. No guessed dates,
+// standalone article-body requests or separate recurring task. The original
+// 06:55 machine audit retries these automatically on every existing run.
+const RSC_FIRST_ONLINE_RESCUE_LIMIT=12;
+let heldFirstOnlineDois=[];
+try{
+  const state=JSON.parse(await readFile(path.resolve('audit/literature-update-state.json'),'utf8'));
+  heldFirstOnlineDois=(state.publicationDateVerificationBacklog||[]).map(x=>normalizeDoi(x.doi));
+}catch{/* Missing coordination state cannot fabricate date evidence. */}
+const undatedRscDois=[...merged.values()]
+  .filter(x=>x.journal==='Chemical Science'&&!x.date&&x.createdDate
+    && (x.sources||[]).some(y=>y.startsWith('crossref:')&&y.endsWith(':created')))
+  .map(x=>x.doi);
+const rscFirstOnlineTargets=[...new Set([...heldFirstOnlineDois,...undatedRscDois])]
+  .filter(doi=>{
+    const x=merged.get(doi);
+    return x?.journal==='Chemical Science'&&!x.date;
+  }).slice(0,RSC_FIRST_ONLINE_RESCUE_LIMIT);
+const rscFirstOnlineResults=[];
+for(let i=0;i<rscFirstOnlineTargets.length;i+=3){
+  const batch=await Promise.all(rscFirstOnlineTargets.slice(i,i+3).map(async doi=>{
+    try{return await resolveRscFirstOnline(doi,{endDate:END,timeoutMs:5500});}
+    catch(error){return {doi,status:'resolver_unavailable',firstOnlineDate:null,
+      attemptedSources:[],reason:String(error?.message||error).slice(0,120)};}
+  }));
+  for(const result of batch){
+    const x=merged.get(result.doi);
+    if(result.status==='verified'&&result.firstOnlineDate&&x){
+      x.date=result.firstOnlineDate;
+      x.onlineDate=result.firstOnlineDate;
+      x.firstOnlineDateEvidence={date:result.firstOnlineDate,source:result.evidenceSource,
+        url:result.attemptedSources.find(y=>y.source===result.evidenceSource)?.url||''};
+      x.sources=[...new Set([...(x.sources||[]),'first-online-verified:'+result.evidenceSource])];
+    }else if(x){
+      x.firstOnlineDateProbe={status:result.status,attemptedSources:result.attemptedSources,
+        ...(result.observedFutureDate?{observedFutureDate:result.observedFutureDate}:{})};
+    }
+    rscFirstOnlineResults.push(result);
+  }
+}
+console.log('AUDIT_RSC_FIRST_ONLINE '+JSON.stringify({
+  attempted:rscFirstOnlineResults.length,
+  verified:rscFirstOnlineResults.filter(x=>x.status==='verified').length,
+  stillUndated:rscFirstOnlineResults.filter(x=>x.status==='first_online_date_unavailable').length,
+  futureHeld:rscFirstOnlineResults.filter(x=>x.status==='future_publication_hold').length
+}));
+
 // Never confuse a recently REDEPOSITED historic article with today's first
 // online publication. Preserve its DOI/evidence for an independent review.
 const historicalRedepositRows=[];
@@ -856,6 +905,9 @@ const report = {
     historicalEvidenceChallenges: historicalEvidenceChallengeBacklog.length,
     historicalCrossrefRedepositBacklog: historicalCrossrefRedepositBacklog.length,
     publisherFirstOnlineBacklog: publisherDateVerificationBacklog.length,
+    rscFirstOnlineDateAttempts:rscFirstOnlineResults.length,
+    rscFirstOnlineDateResolved:rscFirstOnlineResults.filter(x=>x.status==='verified').length,
+    rscFirstOnlineDateUnverified:rscFirstOnlineResults.filter(x=>x.status!=='verified').length,
     publisherDateUnverified: publisherDateUnverifiedDois.length,
     publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
     publisherAbstractProbeBlocked: pubAbstractResults.filter(row=>row.status==='blocked_or_unavailable').length,
@@ -907,6 +959,7 @@ const report = {
     status:'independent_doi_date_and_science_review_required',
     count:historicalCrossrefRedepositBacklog.length,items:historicalCrossrefRedepositBacklog
   },
+  rscFirstOnlineDateRescue:{mode:'doi_bound_metadata_only',results:rscFirstOnlineResults},
   publicPublisherAbstractRescue: {mode:'doi_verified_abstract_only',
     selected:pubAbstractTargets.length,results:pubAbstractResults},
   missingCandidates,
@@ -934,6 +987,8 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   onlineDatePrecision: candidate.onlineDatePrecision || '',
   publishedDatePrecision: candidate.publishedDatePrecision || '',
   dateConflict: candidate.dateConflict || '',
+  ...(candidate.firstOnlineDateEvidence?{firstOnlineDateEvidence:candidate.firstOnlineDateEvidence}:{}),
+  ...(candidate.firstOnlineDateProbe?{firstOnlineDateProbe:candidate.firstOnlineDateProbe}:{}),
   lateIndexed: candidate.lateIndexed,
   safetyTail: candidate.safetyTail,
   reviewPriority: candidate.reviewPriority,
@@ -1004,6 +1059,7 @@ const reviewInput = {
   historicalEvidenceChallenges: {
     count:historicalEvidenceChallengeBacklog.length,items:historicalEvidenceChallengeBacklog
   },
+  rscFirstOnlineDateRescue:{mode:'doi_bound_metadata_only',results:rscFirstOnlineResults},
   historicalCrossrefRedepositBacklog: {
     count:historicalCrossrefRedepositBacklog.length,items:historicalCrossrefRedepositBacklog
   },

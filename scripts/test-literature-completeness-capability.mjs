@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import './test-openalex-date-window-fetch.mjs';
+import './test-rsc-first-online-rescue.mjs';
 import { readFile } from 'node:fs/promises';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-journals.js';
 import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
@@ -56,6 +57,8 @@ assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must r
 assert.ok(auditSource.includes('createdDate'), 'Crossref created date must be retained independently of publication date');
 assert.ok(auditSource.includes("if (!Array.isArray(p) || !p[0] || !p[1] || !p[2]) return '';"), 'Partial Crossref dates must stay unknown instead of being coerced to January/day 1');
 assert.ok(auditSource.includes('datePrecision'), 'Audit must retain Crossref date precision for incomplete publisher metadata');
+assert.ok(auditSource.includes('resolveRscFirstOnline'), 'Undated RSC papers must get bounded targeted first-online metadata rescue');
+assert.ok(auditSource.includes('heldFirstOnlineDois'), 'Previously held DOI dates must be retried automatically at the existing machine audit');
 assert.ok(!auditSource.includes("String(p[1] || 1)"), 'Audit must never fabricate a missing Crossref month');
 assert.ok(!auditSource.includes("String(p[2] || 1)"), 'Audit must never fabricate a missing Crossref day');
 assert.ok(auditSource.includes('createdInQuery'), 'Created/deposit rescue must survive publication-date filtering when within active coverage');
