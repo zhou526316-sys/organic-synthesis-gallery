@@ -7605,7 +7605,7 @@ function embeddedJobDois(value) {
 
   // The owner setup is a lease handoff, not a capture-controller tab.
   // Keep its event receiver active without starting queue scans or uploads.
-  if (isGalleryPage() && /\\/private-pdf-owner-setup\\.html$/.test(location.pathname)) {
+  if (isGalleryPage() && /\/private-pdf-owner-setup\.html$/.test(location.pathname)) {
     // Receiver was installed above; the owner page owns its own UI.
   } else if (isGalleryPage()) {
     mountCaptureLivePanel();
