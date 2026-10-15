@@ -36,7 +36,12 @@ jobs:
       STAGING_REF: staging/historical-archive-nightly
       HISTORICAL_STAGING_ONLY: '1'
       HISTORICAL_STAGING_BRANCH: '1'
-      MAX_HISTORICAL_TRIAGE_ROOTS: ${{ github.event_name == 'workflow_run' && '64' || (inputs.max_roots || '320') }}
+      # The source collector can finish more roots than an older reviewer
+      # checkpoint. 64 roots here left source-complete roots without shards,
+      # causing the all-DOI reviewer worklist to fail on ENOENT. Bound this
+      # staging-only catch-up to 320 roots; the nightly discovery itself
+      # remains limited to 48 roots and no academic decisions are made here.
+      MAX_HISTORICAL_TRIAGE_ROOTS: ${{ github.event_name == 'workflow_run' && '320' || (inputs.max_roots || '320') }}
       HISTORICAL_Q3_REVIEW_PAGE: ${{ inputs.q3_review_page || '0' }}
     steps:
       - name: Checkout sole baseline main
