@@ -52,12 +52,17 @@ test('DOI-exact publisher PII and frozen source fingerprint are mandatory',()=>{
     assert.equal(x.bibliographic.doi,x.doi);
   }
 });
-test('new first-online evidence does not itself admit any Q3 article',()=>{
+test('publisher first-online evidence alone admits nothing; two later science-reviewed Q3 DOI are independently approved',()=>{
   const cat=new Set(catalog.articles.map(x=>x.doi));
   const acc=new Set(approved.accepted.map(x=>x.doi));
+  const independentlyReviewed=new Set(approved.chemThirdReviewedOriginals?.acceptedDois||[]);
+  assert.deepEqual(independentlyReviewed,new Set([
+    '10.1016/j.chempr.2026.103205',
+    '10.1016/j.chempr.2026.103241'
+  ]));
   for(const x of proof.rows){
     assert.equal(cat.has(x.doi),false);
-    assert.equal(acc.has(x.doi),false);
+    assert.equal(acc.has(x.doi),independentlyReviewed.has(x.doi));
     assert.equal(x.academicScopeDecision,'not_made_by_publication_date_evidence');
   }
 });
