@@ -423,3 +423,69 @@ test('three DOI-specific Chem Review/Perspective receipts remove only nonorigina
     publisherNonResearch:mutation(1,{publisherPage:'https://wrong.example/pii/S2451929426001361'})}),
     /q3_nonresearch_publisher_evidence_invalid/);
 });
+
+
+test('two Chem Preview papers cite distinct Nature publisher original DOIs, not new Q3 synthesis cards',()=>{
+  const july='2026-07-01_2026-07-07_chem';
+  const sep='2026-09-01_2026-09-07_chem';
+  const inputPapers=[
+    {doi:'10.1016/j.chempr.2026.103146',
+      root:july,date:'2026-07-01',issue:'2026-07-09',
+      title:'Low-pressure CO2 insertion chemistry Preview',
+      pii:'S2451929426002123',original:'10.1038/s41557-026-02098-6'},
+    {doi:'10.1016/j.chempr.2026.103219',
+      root:sep,date:'2026-09-01',issue:'2026-09-10',
+      title:'Molecular recognition ionic liquid Preview',
+      pii:'S2451929426002858',original:'10.1038/s41893-026-01832-9'}
+  ];
+  const extraShards=inputPapers.map(x=>shard(x.root,'Chem',[
+    {doi:x.doi,title:x.title,date:x.date}
+  ]));
+  const extended={...input,journals:[...journals,{name:'Chem'}],
+    state:{...state,completed:[...state.completed,july,sep]},
+    triage:{...triage,rootSummaries:{...triage.rootSummaries,
+      [july]:{sourceSha256:sha(july)},[sep]:{sourceSha256:sha(sep)}}},
+    shards:[...input.shards,...extraShards]};
+  const reviewed=inputPapers.map(x=>({
+    doi:x.doi,title:x.title,journal:'Chem',date:x.date,
+    underlyingOriginalResearchDoi:x.original,publisherArticleType:'Preview',
+    decision:'exclude',firstPassDecision:'exclude',challengeDecision:'exclude',
+    reviewPasses:2,
+    firstPassReason:'The original publisher identifies a secondary commentary on Nature original research; this DOI has no independently reported new preparative chemistry.',
+    independentChallengeReason:'The original paper has important reaction/kinetic studies, but this Preview is not the primary source of its data. Do not duplicate an original method or shift first online.',
+    reviewEvidence:{publisherPage:'https://www.sciencedirect.com/science/article/abs/pii/'+x.pii,
+      publisherDoi:x.doi,publisherArticleType:'Preview',
+      publisherArticleDate:null,publisherFirstOnlineDateVerified:false,
+      sourceDateNotPublisherFirstOnline:true,frozenSourceDate:x.date,
+      publisherIssueDate:x.issue,underlyingOriginalResearchDoi:x.original,
+      sourceRootId:x.root,stageSourceSha256:sha(x.root),stageBatchGitBlobSha:'a'.repeat(40),
+      verificationKind:'publisher_direct_article_type_and_original_work_provenance'
+    }
+  }));
+  const publisherNonResearch={
+    schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+    mode:'publisher_verified_non_original_doi_only_not_publication',reviewed
+  };
+  const before=reconcileQ3(extended);
+  const after=reconcileQ3({...extended,publisherNonResearch});
+  assert.equal(after.coverage.counters.uniqueSourceDois,before.coverage.counters.uniqueSourceDois);
+  assert.equal(after.coverage.counters.sourcePublisherNonResearchExcluded,2);
+  assert.equal(after.coverage.counters.unfinishedQ3OrDateVerification,
+    before.coverage.counters.unfinishedQ3OrDateVerification-2);
+  for(const x of inputPapers)assert.ok(!after.worklist.rows.some(y=>y.doi===x.doi));
+  assert.equal(after.coverage.counters.publisherIssueResearchReconciliationComplete,false);
+  const broken=(idx,props)=>({...publisherNonResearch,reviewed:reviewed.map((x,i)=>
+    i===idx?{...x,reviewEvidence:{...x.reviewEvidence,...props}}:x)});
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(0,{publisherDoi:'10.1016/j.chempr.2026.100000'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(0,{publisherFirstOnlineDateVerified:true})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(1,{underlyingOriginalResearchDoi:null})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,
+    publisherNonResearch:broken(1,{publisherPage:'https://fake.example/abs/pii/S2451929426002858'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+});
