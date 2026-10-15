@@ -54,6 +54,7 @@ jobs:
           node --check scripts/finalize-fixed-slot-literature-state.mjs
           node --test scripts/test-historical-admission.mjs
           node --test scripts/test-historical-acs-q3-method-batch-20261016.mjs
+          node --test scripts/test-historical-joc-additional-four-methods-20261016.mjs
       - name: Verify old and new Pages marker partition, historical media policy
         run: |
           set -euo pipefail
