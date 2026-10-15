@@ -7206,7 +7206,7 @@ function embeddedJobDois(value) {
     var httpStatus=Number(error&&error.httpStatus||0);
     if(httpStatus>0&&![500,502,503,504].includes(httpStatus))return false;
     var reason=String(error&&error.message||error||'');
-    if(!/timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50[234]|stage_storage_/i.test(reason)
+    if(!/timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50(?:0|[234])|stage_storage_/i.test(reason)
       ||/cancelled|unbound|stale|permission|user_aborted|mismatch/i.test(reason))return false;
     var doi=normalizeDoi(job.doi),buffer=pdf.buffer,bytes=Number(buffer.byteLength||0);
     if(!doi||bytes<1024||bytes>8*1024*1024)return false;
