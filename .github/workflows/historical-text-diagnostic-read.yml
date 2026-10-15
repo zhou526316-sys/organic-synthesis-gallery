@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/historical-text-diagnostic-read.yml'
       - 'audit/automation-triggers/historical-text-diagnostic-read.json'
+      - 'scripts/audit-historical-text-diagnostics.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -28,6 +29,9 @@ jobs:
         env:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
         run: node scripts/audit-historical-text-diagnostics.mjs
+      - name: Validate private aggregate invariants without article content
+        run: |
+          node -e "const r=require(process.env.RUNNER_TEMP+'/historical-text-aggregate.json');const sum=v=>Object.values(v||{}).reduce((a,b)=>a+b,0);if(!r.ok||r.rawEventsReleased!==0||r.bodyReleased!==false||sum(r.byPublisherAndReason)!==r.attempts||sum(r.byPublisherAndHttpStatus)!==r.attempts||sum(r.byPublisherAndVersion)!==r.attempts)process.exit(1);console.log('HISTORICAL_DIAGNOSTIC_PUBLISHER_BREAKDOWN_VERIFIED '+r.attempts)"
       - name: Retain only aggregate statistics (no raw logs)
         if: always()
         uses: actions/upload-artifact@v4
