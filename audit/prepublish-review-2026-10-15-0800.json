@@ -4,7 +4,7 @@
   "executionMode": "manual_complete_two_pass_post_slot_no_publication",
   "publicationSlot": "2026-10-15T08:00:00+08:00",
   "createdAt": "2026-10-15T01:32:15.841Z",
-  "updatedAt": "2026-10-15T01:47:22.916Z",
+  "updatedAt": "2026-10-15T01:49:00.755Z",
   "evidenceAsOf": "2026-10-15T01:47:22.920Z",
   "handoffGeneratedAt": "2026-10-15T01:18:13.403Z",
   "freshAuditGeneratedAt": "2026-10-15T01:18:13.403Z",
@@ -281,8 +281,26 @@
     "10.1039/d6sc07058b",
     "10.1039/d6sc06967c"
   ],
-  "remainingDois": [],
-  "remainingUnresolved": [],
+  "remainingDois": [
+    "10.1021/acscatal.6c06572",
+    "10.1021/acs.orglett.6c04101",
+    "10.31635/ccschem.026.202608538",
+    "10.1021/acs.joc.6c01296",
+    "10.1039/d6sc06226a",
+    "10.1039/d6sc05550h",
+    "10.1039/d6sc07058b",
+    "10.1039/d6sc06967c"
+  ],
+  "remainingUnresolved": [
+    "10.1021/acscatal.6c06572",
+    "10.1021/acs.orglett.6c04101",
+    "10.31635/ccschem.026.202608538",
+    "10.1021/acs.joc.6c01296",
+    "10.1039/d6sc06226a",
+    "10.1039/d6sc05550h",
+    "10.1039/d6sc07058b",
+    "10.1039/d6sc06967c"
+  ],
   "durablePendingBacklogDois": [
     "10.1021/acscatal.6c06572",
     "10.1021/acs.orglett.6c04101",
@@ -2260,7 +2278,7 @@
       "decision": "include",
       "reason": "发展Katritzky盐和二硒化物无外加催化剂电偶联",
       "evidenceBasis": "同代compact中 DOI 10.1021/acs.joc.6c02068 的摘要明确给出该转化和文中所述一般性/路线事实。具体转化：Katritzky盐脱氨基后与二硒化物成C–Se键。一般性/路线：摘要明确宽底物范围、官能团耐受与放大。",
-      "challengeReason": "绿色电化学标签并非纳入理由；关键是两个底物伙伴及有机硒产物",
+      "challengeReason": "反向审查指出：绿色化学和免电解质条件本身不是收录证据；但文中Katritzky盐与二硒化物实际形成多类可分离非对称有机硒产物，故仍符合有机合成方法学范围。",
       "evidencePages": [
         "https://doi.org/10.1021/acs.joc.6c02068"
       ],
@@ -2269,7 +2287,7 @@
         "preparativeTransformation": "Katritzky盐脱氨基后与二硒化物成C–Se键",
         "generalityEvidence": "摘要明确宽底物范围、官能团耐受与放大",
         "sourceEvidence": "同代compact中 DOI 10.1021/acs.joc.6c02068 的摘要明确给出该转化和文中所述一般性/路线事实",
-        "boundaryChallenge": "绿色电化学标签并非纳入理由；关键是两个底物伙伴及有机硒产物"
+        "boundaryChallenge": "反向审查指出：绿色化学和免电解质条件本身不是收录证据；但文中Katritzky盐与二硒化物实际形成多类可分离非对称有机硒产物，故仍符合有机合成方法学范围。"
       }
     },
     {
@@ -5150,7 +5168,7 @@
       "decision": "include",
       "reason": "发展炔烃加氰与分子内Thorpe成环的串联制备法",
       "evidenceBasis": "同代compact中 DOI 10.1021/acs.orglett.6c04271 的摘要明确给出该转化和文中所述一般性/路线事实。具体转化：未活化炔烃在Zn(CN)₂提供氰基下先氢氰化再环化生成α-氰基-β-萘胺。一般性/路线：摘要明确底物控制模式、烯基腈中间体与可分离杂环产物。",
-      "challengeReason": "尽管机理含氢转移决速步，核心仍是新炔烃多步一锅骨架构建方法",
+      "challengeReason": "反向审查指出：机理部分强调氢转移为Thorpe环化决速步；然而镍催化未活化炔烃选择性氢氰化并继续成环，能够制备明确的α-氰基萘胺骨架，故非纯机理论文。",
       "evidencePages": [
         "https://doi.org/10.1021/acs.orglett.6c04271"
       ],
@@ -5159,7 +5177,7 @@
         "preparativeTransformation": "未活化炔烃在Zn(CN)₂提供氰基下先氢氰化再环化生成α-氰基-β-萘胺",
         "generalityEvidence": "摘要明确底物控制模式、烯基腈中间体与可分离杂环产物",
         "sourceEvidence": "同代compact中 DOI 10.1021/acs.orglett.6c04271 的摘要明确给出该转化和文中所述一般性/路线事实",
-        "boundaryChallenge": "尽管机理含氢转移决速步，核心仍是新炔烃多步一锅骨架构建方法"
+        "boundaryChallenge": "反向审查指出：机理部分强调氢转移为Thorpe环化决速步；然而镍催化未活化炔烃选择性氢氰化并继续成环，能够制备明确的α-氰基萘胺骨架，故非纯机理论文。"
       }
     },
     {
@@ -6832,7 +6850,8 @@
   "notes": [
     "Full 209-record two-pass scope review: 29 include, 172 exclude, 8 evidence-based pending; 0 unreviewed.",
     "Not claim independent external reviewers. Complete semantic accounting does not imply publication closure while eight evidence-gaps and fixed slot expiry remain.",
-    "No production card additions, Pages, TOC, automation schedule or media changes."
+    "No production card additions, Pages, TOC, automation schedule or media changes.",
+    "Validator semantics: remainingDois and remainingUnresolved equal exactly the eight legitimate evidenced pending DOI, not unreviewed papers. Zero unreviewed candidates."
   ],
   "productionDataModified": false,
   "mediaAcquisitionPerformed": false,
