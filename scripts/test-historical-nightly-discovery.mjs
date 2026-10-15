@@ -7,7 +7,7 @@ import {
   SCHEMA,normDoi,previousPeriod,orderedJournals,nextCursor,mediaPolicy,
   bisectDateRange,isTruncationOnly,isBudgetOnlyExhaustion,
   fromCrossref,fromOpenAlex,mergeCandidates,completeStatus,runNightly,
-  requiresRscCreationRescue,RSC_CREATION_RESCUE_VERSION
+  requiresRscCreationRescue,RSC_CREATION_RESCUE_VERSION,sourceRetryRecord
 } from './historical-nightly-discovery.mjs';
 
 test('journal order starts with JACS/Angew but keeps the full registry',()=>{
@@ -1139,4 +1139,105 @@ test('failure during resumed split retains its completed leaves without advancin
     assert.equal((await readBatch(rootId)).status,'source_enumeration_complete');
     assert.equal((await readBatch(rootId)).sourceStatus.splitSegments.length,2);
   },{priorState:prior});
+});
+
+test('retry cap drains three failed journal roots in one 6-unit source batch while preserving source order',async()=>{
+ const prior=stage0(),root=prior.cursor.range;
+ prior.cursor={range:root,journalIndex:4};
+ const names=['jacs','angew','nature'];
+ prior.deferredSchemaVersion='gallery-history-deferred-incomplete-roots-v1';
+ prior.deferredRoots=names.map((name,i)=>sourceRetryRecord({
+   cursor:{range:root,journalIndex:i},rootId:'2026-09-22_2026-09-30_'+name,
+   issues:['openalex:http_401:api_key_missing'],
+   at:'2020-01-01T00:00:00.000Z'}));
+ await isolatedHistoricalRun(async({readState,readBatch})=>{
+   process.env.HISTORICAL_DEFER_BLOCKED='1';
+   process.env.MAX_UNITS='6';
+   global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+     ?emptyCrossref():emptyOpenAlex();
+   const report=await runNightly(),state=await readState();
+   assert.equal(report.blocked,false);
+   assert.equal(report.processed,6);
+   assert.equal(report.retryAttempts,3);
+   assert.equal(report.maxDeferredRetries,3);
+   assert.equal(report.retryCompletions,3);
+   assert.equal(report.incompleteDeferredRoots,0);
+   assert.equal(report.completeWindows,6);
+   assert.deepEqual(state.deferredRoots,[]);
+   assert.equal(state.completed.length,6);
+   for(const name of names){
+     const id='2026-09-22_2026-09-30_'+name;
+     assert.ok(state.completed.includes(id));
+     const batch=await readBatch(id);
+     assert.equal(batch.consistency.complete,true);
+     assert.equal(batch.noFormalPublication,true);
+   }
+   assert.equal(report.sourceCoverageComplete,false,'other founding-year periods are not scanned');
+   assert.equal(state.cursor.journalIndex,7);
+ },{priorState:prior});
+});
+
+test('cooling deferred head does not hide a ready later source when main history cursor has ended',async()=>{
+ const prior=stage0(),range=prior.cursor.range;
+ prior.cursor=null;
+ prior.deferredSchemaVersion='gallery-history-deferred-incomplete-roots-v1';
+ prior.deferredRoots=[
+   sourceRetryRecord({cursor:{range,journalIndex:0},
+     rootId:'2026-09-22_2026-09-30_jacs',
+     issues:['openalex:http_401:api_key_missing'],
+     at:'2100-01-01T00:00:00.000Z'}),
+   sourceRetryRecord({cursor:{range,journalIndex:1},
+     rootId:'2026-09-22_2026-09-30_angew',
+     issues:['openalex:http_429'],
+     at:'2020-01-01T00:00:00.000Z'})
+ ];
+ await isolatedHistoricalRun(async({readState,readBatch})=>{
+   process.env.HISTORICAL_DEFER_BLOCKED='1';
+   process.env.MAX_UNITS='1';
+   global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+     ?emptyCrossref():emptyOpenAlex();
+   const report=await runNightly(),state=await readState();
+   assert.equal(report.processed,1);
+   assert.equal(report.retryAttempts,1);
+   assert.equal(report.retryCompletions,1);
+   assert.equal(report.incompleteDeferredRoots,1);
+   assert.equal(state.deferredRoots[0].rootId,'2026-09-22_2026-09-30_jacs');
+   assert.equal(state.cursor,null);
+   assert.deepEqual(state.completed,['2026-09-22_2026-09-30_angew']);
+   assert.equal((await readBatch('2026-09-22_2026-09-30_angew')).consistency.complete,true);
+   assert.equal(report.sourceCoverageComplete,false);
+ },{priorState:prior});
+});
+
+test('per-run retries are budget-bound and do not count a second 401 as complete',async()=>{
+ const prior=stage0(),range=prior.cursor.range;
+ prior.cursor={range,journalIndex:4};
+ prior.deferredSchemaVersion='gallery-history-deferred-incomplete-roots-v1';
+ prior.deferredRoots=[0,1,2].map(i=>sourceRetryRecord({
+    cursor:{range,journalIndex:i},
+    rootId:'2026-09-22_2026-09-30_'+['jacs','angew','nature'][i],
+    issues:['openalex:http_401:api_key_missing'],
+    at:'2020-01-01T00:00:00.000Z'}));
+ await isolatedHistoricalRun(async({readState,readBatch})=>{
+   process.env.HISTORICAL_DEFER_BLOCKED='1';
+   process.env.MAX_UNITS='6';
+   global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org'
+         &&(u.searchParams.get('filter')||'').includes('0002-7863'))return {ok:false,status:401};
+      return u.hostname==='api.crossref.org'?emptyCrossref():emptyOpenAlex();
+   };
+   const result=await runNightly(),state=await readState();
+   assert.equal(result.processed,6);
+   assert.equal(result.retryAttempts,3);
+   assert.equal(result.retryCompletions,2);
+   assert.equal(result.deferredFailures,1);
+   assert.equal(result.incompleteDeferredRoots,1);
+   assert.equal(state.deferredRoots.length,1);
+   assert.equal(state.deferredRoots[0].rootId,'2026-09-22_2026-09-30_jacs');
+   assert.equal(state.deferredRoots[0].failures,2);
+   assert.equal(state.completed.includes('2026-09-22_2026-09-30_jacs'),false);
+   assert.equal((await readBatch('2026-09-22_2026-09-30_jacs')).status,'incomplete_sources');
+   assert.equal(result.sourceCoverageComplete,false);
+ },{priorState:prior});
 });
