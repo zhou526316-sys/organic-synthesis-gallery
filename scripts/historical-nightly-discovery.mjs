@@ -626,8 +626,11 @@ export async function runNightly() {
   state.lastRun={processed,blocked,deferredBudget,requests:budget.count,
     deferredFailures,retryCompletions,
     incompleteDeferredRoots:deferralEnabled?state.deferredRoots.length:0,
-    sourceCoverageComplete:deferralEnabled
-      ?state.deferredRoots.length===0&&!blocked:!blocked,
+    // Complete means ALL historical founder-year roots exhausted with no
+    // deferred/auth-failed/split/rescue work, not just this bounded attempt.
+    sourceCoverageComplete:!state.cursor&&!blocked&&!deferredBudget
+      &&!state.activeSplit&&state.rscCreatedRescue.pending.length===0
+      &&(!deferralEnabled||state.deferredRoots.length===0),
     skippedBeforeFoundingWindows:skippedFoundingWindows,next:state.cursor,
     verifiedPublishedDois:articles.size,completeWindows:state.completed.length,
     activeSplit:state.activeSplit?{
