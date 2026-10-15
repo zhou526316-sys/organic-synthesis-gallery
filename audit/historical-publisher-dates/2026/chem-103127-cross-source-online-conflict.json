@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "gallery-historical-chem-cross-source-online-v1",
+  "mode": "publisher_verified_cross_source_date_conflict_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "recordCount": 1,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "journal": "Chem",
+      "title": "Germanium ligand redox cooperativity: A key to ambiphilicity and switchable two- and four-electron transfer",
+      "authors": [
+        "Sung Gyu Kim",
+        "Jinrok Oh",
+        "Dae Eui Choi",
+        "Seung Jun Hwang"
+      ],
+      "publisherArticleType": "Research article",
+      "publisherFirstOnlineDate": "2026-07-06",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426001932",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103127",
+      "publisherDateEvidenceKind": "official_sciencedirect_original_article_available_online_6_july_2026",
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "originalSourceRows": [
+        {
+          "rootId": "2026-07-01_2026-07-07_chem",
+          "sourceDate": "2026-07-06",
+          "sourceFamilies": [
+            "openalex"
+          ],
+          "sourceRootSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+          "rawSourceBatchGitBlobSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+          "reviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+          "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-07-01_2026-07-07_chem.json",
+          "sourceBatchPath": "audit/historical-staging/batches/2026-07-01_2026-07-07_chem.json"
+        },
+        {
+          "rootId": "2026-08-01_2026-08-07_chem",
+          "sourceDate": "2026-08-01",
+          "sourceFamilies": [
+            "crossref"
+          ],
+          "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+          "rawSourceBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+          "reviewQueueGitBlobSha": "e51ea4a4f2650a1f705ee640b1e7bdc3acdd6cfe",
+          "sourceReviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+          "sourceBatchPath": "audit/historical-staging/batches/2026-08-01_2026-08-07_chem.json"
+        }
+      ],
+      "originalFrozenRootRowsUnmodified": true,
+      "publisherDateOverrulesConflictingSourceForQuarter": true,
+      "publisherSynopsis": "Single molecular Ge–redox-active ligand architecture toggles 2e/4e pathways for O2 and S8, shows Ge ligand ambiphilicity and mild vicinal-dihalide dehalogenation to alkenes/alkynes; journal original Article available online July 6 not August issue-month.",
+      "evidenceConstraints": {
+        "noRestrictedFullTextSiPdfOrFigures": true,
+        "realFirstOnlineDistinctFromAugSource": true,
+        "JulySourceDateMatchesPublisherDay": true,
+        "sourceDateConflictExplicitlyRetained": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "sourceDateConflictPreservedForAudit": true,
+    "noAcademicAutoIncludeOrExclude": true,
+    "noD1": true,
+    "noMediaPdf": true,
+    "noOffSlotPublication": true,
+    "noFalseQuarterClosure": true
+  }
+}

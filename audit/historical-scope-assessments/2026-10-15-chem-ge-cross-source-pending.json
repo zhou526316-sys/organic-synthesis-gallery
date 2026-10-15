@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-ge-cross-source-science-pending-v1",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json",
+  "dateEvidenceGitBlobSha": "3dabe3f0802408ed91b1079c73bf2ad0902f96a8",
+  "counts": {
+    "assessed": 1,
+    "include": 0,
+    "exclude": 0,
+    "pending": 1
+  },
+  "reviewMethod": "same_assistant_two_pass_adversarial_challenge_not_two_independent_human_reviewers",
+  "evidenceLimitations": "Based on publisher-accessible Summary/Highlights; complete SI substrate matrix and isolated yields not verified, and no copyright-restricted material copied",
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103127",
+      "journal": "Chem",
+      "title": "Germanium ligand redox cooperativity: A key to ambiphilicity and switchable two- and four-electron transfer",
+      "date": "2026-07-06",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "reason": "真实主族Ge氧化还原协同和邻二卤代有机物脱卤应用均已证实，但是否具有独立而可迁移的有机制备普适性、Ge试剂催化周转和分离收率尚不明确，须与单纯主族元素电子结构研究区分。",
+      "firstPassReason": "第一遍从原研究最突出的Ge配位配体协同与两/四电子活化看，文章证明低价锗中间体能活化O2、S8等，并通过甲基化精确改变氧化态和亲核/亲电行为。论文用邻二卤有机底物还原脱卤为烯烃或炔烃，不应说它完全没有有机制备实证。但现在只能证实这是特定Ge体系的制备应用，不能凭一个Summary就认为存在多种底物收率、制备选择性和可循环催化体系，第一遍暂时维持学术证据待核。",
+      "independentChallengeReason": "第二遍专门质疑保留决定是否对主族合成过于苛刻：在温和条件由邻二卤底物生成烯烃/炔烃确实是明确的有机化学转化，若文章含多种有机底物、独立分离并发现可推广的Ge还原体系，应收录，不可只因题目是redox cooperativity就排除。但仅从Highlights与Summary尚不知道产物谱或锗试剂的当量/循环；论文核心论证或仍是原子电子结构和多电子活化，不足以判为通用有机合成路线。因此不改变作者真实化学，只留SCIENCE pending并列明补证问题。",
+      "evidenceBasis": "Chem Research Article https://www.sciencedirect.com/science/article/pii/S2451929426001932 明确 Available online 2026-07-06；出版社摘要报告GeK对S8/O2的四电子反应与GeMe对邻二卤化合物的温和脱卤。冻结Q3 Crossref/OpenAlex来源相冲突：2026-07-01_2026-07-07_chem OpenAlex DOI 日期为2026-07-06、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f；2026-08-01_2026-08-07_chem Crossref错用2026-08-01、source SHA256 26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa。两个原始来源均只读保留。",
+      "scopeAssessment": {
+        "primaryContribution": "以可发生氧化还原协同的锗配体框架通过芳香性和轨道耦合稳定低价高反应性Ge中间体，并通过调节甲基化实现两电子/四电子还原与两性反应性的切换。论文核心是可分离主族元素复合物的化学和多电子反应模式，而非已经建立可通用的有机合成反应。",
+        "preparativeTransformation": "原创合成应用包括使用Ge试剂温和脱除邻二卤有机底物中的卤素，使邻二卤烷转化为烯烃或炔烃；另有S8/O2等无机小分子的还原、Ge中心甲基化与活化反应，用于证明电子转移控制能力。",
+        "generalityEvidence": "Chem原论文官方Highlights/Summary明确给出vicinal-dihalide dehalogenation toward alkenes and alkynes，说明不是只做无机分子光谱。然而尚未从可访问证据确定不同卤化底物数量、各自产物分离收率、Ge是否催化循环或按化学计量消耗及其制备适用性；不能由一种Ge复合物的多电子反应或多个元素活化例子推断普适有机合成方法。",
+        "sourceEvidence": "Chem Research Article https://www.sciencedirect.com/science/article/pii/S2451929426001932 明确 Available online 2026-07-06；出版社摘要报告GeK对S8/O2的四电子反应与GeMe对邻二卤化合物的温和脱卤。冻结Q3 Crossref/OpenAlex来源相冲突：2026-07-01_2026-07-07_chem OpenAlex DOI 日期为2026-07-06、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f；2026-08-01_2026-08-07_chem Crossref错用2026-08-01、source SHA256 26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa。两个原始来源均只读保留。",
+        "boundaryChallenge": "一方面化学制备能力可能超出传统材料/机理研究，Ge复合物的还原脱卤若具有足够的有机底物范围、分离产物和循环使用可构成新的合成方法，不应因为主族配位化学而自动排除。另一方面，论文的主结果侧重电子数切换、主族电子结构和模型底物，若有机脱卤只是证明Ge多电子性质的少数化学计量案例，则并不符合Gallery的普适合成方法学目标。具体范围仍待补证。"
+      },
+      "evidenceNeeded": "从原始正文和合法可访问SI核实邻二卤化合物参与反应的完整底物列表、离去基团组合、烯烃/炔烃产物是否经独立分离及具体收率、Ge试剂的当量或催化周转、后续配体再生机制及与现有脱卤合成方法相比是否建立普适的新制备能力。",
+      "nextAction": "逐条查原始论文Results和授权可读的SI中化学计量Ge体系、底物拓展/产率表及催化循环，记录各邻二卤化合物—烯烃/炔烃的独立制备数据，再把有机合成方法学普适性与元素活化机理贡献分开复审。若能证实独立可推广的制备方法则include，若仅是单Ge体系少量脱卤演示则exclude，缺SI不得当成原文没有实验。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426001932",
+      "authors": [
+        "Sung Gyu Kim",
+        "Jinrok Oh",
+        "Dae Eui Choi",
+        "Seung Jun Hwang"
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103127",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426001932",
+        "publisherOnlineDate": "2026-07-06",
+        "frozenSourceDateConflictRetained": true,
+        "stageBranch": "staging/historical-archive-nightly",
+        "sourceRootIds": [
+          "2026-07-01_2026-07-07_chem",
+          "2026-08-01_2026-08-07_chem"
+        ],
+        "sourceDateEvidenceFile": "audit/historical-publisher-dates/2026/chem-103127-cross-source-online-conflict.json",
+        "sourceDateEvidenceGitBlobSha": "3dabe3f0802408ed91b1079c73bf2ad0902f96a8",
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      }
+    }
+  ],
+  "guards": {
+    "noDateEvidenceAsAcademicAdmission": true,
+    "noSourceShardMutation": true,
+    "crossSourceConflictRetained": true,
+    "noOwnerPermanentExclusions": true,
+    "noD1": true,
+    "noMediaPdf": true,
+    "noFormalPublication": true,
+    "noPublisherIssueClosureClaim": true
+  }
+}
