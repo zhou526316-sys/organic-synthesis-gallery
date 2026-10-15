@@ -4,6 +4,13 @@ on:
   pull_request:
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/test-historical-q3-chem-three-more-dates-process-scope.mjs'
+      - 'audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-plasma-amine-ethylene-glycol-two-pass.json'
+      - 'audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json'
+      - 'audit/historical-publisher-dates/2026/chem-operando-photoluminescence-20261015.json'
+      - 'audit/historical-scope-assessments/2026-10-15-chem-single-qd-operando-two-pass.json'
+      - 'scripts/test-historical-q3-chem-sept-secondary-operando.mjs'
       - 'scripts/historical-q3-reviewed-scope-proof.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-publisher-scope-proof.mjs'
@@ -83,6 +90,8 @@ jobs:
           node --test scripts/test-historical-q3-chem-nipu-boundary.mjs
           node --test scripts/test-historical-q3-chem-new-science.mjs
           node --test scripts/test-historical-q3-chem-four-more-20261015.mjs
+          node --test scripts/test-historical-q3-chem-sept-secondary-operando.mjs
+          node --test scripts/test-historical-q3-chem-three-more-dates-process-scope.mjs
       - name: Verify Chem five official publisher first-online dates with two Q1 and three Q3 scientific admissions
         run: node --test scripts/test-historical-q3-chem-publisher-dates.mjs
       - name: Cryptographically verify reviewed-queue status refresh against unchanged raw source

@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-two-small-molecule-process-scope-pending-v1",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-three-more-q2-q3-first-online-20261015.json",
+  "dateEvidenceGitBlobSha": "3ae9d4fb21552628f1e9114672fa8ba0f72e5e77",
+  "counts": {
+    "assessed": 2,
+    "include": 0,
+    "exclude": 0,
+    "pending": 2
+  },
+  "rights": "Publisher accessible Highlights/Summary only, no restricted SI/PDF or images copied",
+  "reviewMethod": "same_assistant_two_pass_adversarial_challenge_not_two_independent_human_reviewers",
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103136",
+      "journal": "Chem",
+      "title": "Direct conversion of N2 and CH4 to valuable N-containing compounds via a plasma-activated catalytic process",
+      "date": "2026-07-10",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "reason": "Ni/SiAlO非热等离子体催化协同活化惰性N₂与CH₄，直接形成甲胺、乙胺与NH₃，是具有真实C–N成键的制备化学；但是当前公开证据主要为固定气体原料组合的产物生成速率及转化率，尚不能证明通用有机底物适用性、产品分离量和总体物料平衡，需明确判别单一气体工艺与可迁移有机合成路线的范围边界。",
+      "firstPassReason": "第一遍确认原始Chem Article展示真正新的合成路径：约80°C、常压下用非热等离子体协同Ni/SiAlO催化剂，将N₂和CH₄共转化为甲胺、乙胺和NH₃，分别报告胺和氨的生产速率0.88和6.43 mmol gNi⁻¹ h⁻¹，N₂与CH₄转化率3.3%及49.3%。这不是只报道催化剂制备或能源转化，确有C–N成键及至少两种有机胺。但定量指标是气相反应速率而不是甲胺/乙胺分别纯化的收率；底物只有N₂和CH₄固定来源，无法直接把多种产物解释为普适底物拓展，因此先待核。",
+      "independentChallengeReason": "第二遍反向挑战过于强调分离底物扩展的倾向：从N₂与CH₄常压直接获取胺可能是非常有意义的全新原料转化，即使单一小分子底物，也可能构成值得收录的特殊通用砌块合成反应，不能因使用多相Ni或等离子体而一刀切。反面是原文主要评价产物浓度/产率、催化放电和表面中间体的科学证据，目前看不到独立有机结构多样性或可回收的制备批量。需检查支持信息中的GC-MS、同位素、分离捕集与实际制备数据，当前证据不足以草率include或exclude。",
+      "evidenceBasis": "Chem原始Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002020 指明 Available online 2026-07-10，论文官方Summary/Highlights可验证具体反应与工艺数据。冻结来源为 2026-07-01_2026-07-07_chem、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f、raw Git 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git 3116998c73fb18fd49f2abbabac0b026796c1dc3。未取得或复制受限全文/SI/PDF/图像。",
+      "scopeAssessment": {
+        "primaryContribution": "Ni/SiAlO非热等离子体催化协同活化惰性N₂与CH₄，直接形成甲胺、乙胺与NH₃，是具有真实C–N成键的制备化学；但是当前公开证据主要为固定气体原料组合的产物生成速率及转化率，尚不能证明通用有机底物适用性、产品分离量和总体物料平衡，需明确判别单一气体工艺与可迁移有机合成路线的范围边界。",
+        "preparativeTransformation": "惰性N₂与CH₄在Ni/SiAlO-非热等离子体中共同活化，形成CH₃NH₂、C₂H₅NH₂及NH₃等含氮产物；通过表面N–C/N–H偶联实现由简单气体生成有机胺。",
+        "generalityEvidence": "官方Chem报道甲胺和乙胺以及NH₃，约80°C、常压下有胺产率0.88 mmol gNi⁻¹ h⁻¹、NH₃ 6.43 mmol gNi⁻¹ h⁻¹。未得到独立其他烷烃/氮源底物范围或分别分离产率凭证；不等同于论文一定未做。",
+        "sourceEvidence": "Chem原始Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002020 指明 Available online 2026-07-10，论文官方Summary/Highlights可验证具体反应与工艺数据。冻结来源为 2026-07-01_2026-07-07_chem、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f、raw Git 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git 3116998c73fb18fd49f2abbabac0b026796c1dc3。未取得或复制受限全文/SI/PDF/图像。",
+        "boundaryChallenge": "尽管该论文催化剂、放电和表面机理占据篇幅，绝不能否认直接由N₂和CH₄构建C–N键的有机化学价值；但仅凭两种低分子胺的生成速率也不能证明跨底物的通用制备方法。留待核而不预先排除或收录。"
+      },
+      "evidenceNeeded": "核验主文/SI是否给出甲胺和乙胺的独立定量、同位素N₂归属、碳氮物料衡算、捕集/纯化与实际制备规模，以及能否拓展至其他小分子烷烃、有机气体和更复杂胺；明确是可推广的有机胺合成方法还是固定N₂/CH₄体系的过程催化突破。",
+      "nextAction": "在授权可获取范围内阅读原论文结果图和支持信息的催化产物分析方法、标定曲线、质量平衡、重复实验及合成实用性，核对是否给出分别可靠的胺产物收率和化学身份；据具体证据对照Gallery范围进行两遍实质性复核，再决定是否作为新C–N键构建方法收入。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002020",
+      "authors": [
+        "Di Li",
+        "Ziming Liu",
+        "Chenxin Wu",
+        "Tao Sha",
+        "Li Yi",
+        "Chengyuan Liu",
+        "Yanting Liu",
+        "Lei Hua",
+        "Haiyang Li",
+        "Xuhui Geng",
+        "Chunlei Xiao",
+        "Yang Pan",
+        "Liang Yu",
+        "Dehui Deng"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103136",
+        "articleNumber": "103136",
+        "doi": "10.1016/j.chempr.2026.103136"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103136",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002020",
+        "publisherOnlineDate": "2026-07-10",
+        "sourceDate": "2026-07-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_chem",
+        "stageBatchSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-07-10",
+          "sourceFrozenAndUnchanged": true,
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002020"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "reviewerIdentity": "same_assistant_two_pass_adversarial_challenge_not_two_independent_humans"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103194",
+      "journal": "Chem",
+      "title": "Phosphate group-assisted interfacial proton diffusion facilitates direct ethylene electro-oxidation to ethylene glycol",
+      "date": "2026-07-30",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "reason": "研究真实实现乙烯通过水参与的直接电氧化生成乙二醇，但核心创新是植酸修饰AgPd电极的界面质子缓冲与·OH形成，提高工业相关电流密度下的法拉第效率；报告FE 40.8%和生成速率758.6 μmol h⁻¹，不能擅自改写为乙二醇分离收率或一般烯烃双羟化底物范围，待核。",
+      "firstPassReason": "第一遍检查Article的反应事实：C₂H₄在AgPd-植酸修饰电催化表面借水提供氧生成乙二醇，作者定量说明质子在电极界面累积造成羟基自由基供给受限，植酸磷酸基团促进质子扩散，100 mA cm⁻²下FE达到40.8%，乙二醇生成速率758.6 μmol h⁻¹。是真实有机产物生成与重要工艺创新，但论文以电催化剂微环境和性能为主，暂未核实不同烯烃双羟化制备、产物独立纯化或应用路线。",
+      "independentChallengeReason": "第二遍质疑直接排除是否忽视方法学新意：用水为氧源将乙烯直接转成乙二醇，在电化学合成中具有工业与绿色化学价值，不能因为单一产物或材料催化剂而绝对排除。其独特的界面质子管理也可能可迁移至其他烯烃氧化。然而摘要所证明的普适性是电极界面的质子扩散原理，不是多个有机底物或新官能团化路线；无更多制备证据之前应待核，不能拿FE当成分离收率，也不能因为暂未读取SI声称没有其他例子。",
+      "evidenceBasis": "Chem原始Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002603 指明 Available online 2026-07-30，论文官方Summary/Highlights可验证具体反应与工艺数据。冻结来源为 2026-07-01_2026-07-07_chem、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f、raw Git 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git 3116998c73fb18fd49f2abbabac0b026796c1dc3。未取得或复制受限全文/SI/PDF/图像。",
+      "scopeAssessment": {
+        "primaryContribution": "研究真实实现乙烯通过水参与的直接电氧化生成乙二醇，但核心创新是植酸修饰AgPd电极的界面质子缓冲与·OH形成，提高工业相关电流密度下的法拉第效率；报告FE 40.8%和生成速率758.6 μmol h⁻¹，不能擅自改写为乙二醇分离收率或一般烯烃双羟化底物范围，待核。",
+        "preparativeTransformation": "乙烯在AgPd–植酸修饰电极上以水为氧源电氧化，构筑乙二醇的两个C–O键；植酸表面磷酸基团加快质子外扩散和活性·OH产生。",
+        "generalityEvidence": "公开摘要只可靠给出乙烯到乙二醇的FE=40.8%（100 mA cm⁻²）及758.6 μmol h⁻¹生成速率；无证据证明另一烯烃或独立分离收率，需SI核对。机理上的其他电氧化潜力不是已实验核实的底物范围。",
+        "sourceEvidence": "Chem原始Research Article https://www.sciencedirect.com/science/article/pii/S2451929426002603 指明 Available online 2026-07-30，论文官方Summary/Highlights可验证具体反应与工艺数据。冻结来源为 2026-07-01_2026-07-07_chem、source SHA256 341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f、raw Git 2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7、review Git 3116998c73fb18fd49f2abbabac0b026796c1dc3。未取得或复制受限全文/SI/PDF/图像。",
+        "boundaryChallenge": "文章确有乙烯转化为乙二醇的两个C–O成键，不应把其简单定性为完全不涉及有机合成；另一方面目前可核实创新中心是AgPd表面植酸修饰的质子缓冲动力学，缺少可推广合成路线的直接证据。保留SCIENCE evidence-pending。"
+      },
+      "evidenceNeeded": "核对SI全部产物分析、乙二醇的真实分离或捕集收率、催化剂稳定性和可重复性，以及是否验证丙烯、苯乙烯等其他烯烃转化或其他C–O成键有机产品；如只展示同一种乙烯氧化的电极工程，则不应把性能优化当作新通用有机合成方法。",
+      "nextAction": "在合法权限内取得原文完整结果表、支撑催化反应及产物定量的SI图表，核对专门的产物结构鉴定、NMR/GC测定和跨底物实验，仔细区分FE、生成速率和独立分离收率，最终依据主要有机制备贡献而不是电流密度单指标作出范围判断。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002603",
+      "authors": [
+        "Mingming Yan",
+        "Boqiang Miao",
+        "Kuo Pan",
+        "Cuibo Liu",
+        "Ying Gao",
+        "Peng He",
+        "Bin Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103194",
+        "articleNumber": "103194",
+        "doi": "10.1016/j.chempr.2026.103194"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103194",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002603",
+        "publisherOnlineDate": "2026-07-30",
+        "sourceDate": "2026-07-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_chem",
+        "stageBatchSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "sourceFrozenAndUnchanged": true,
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002603"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "reviewerIdentity": "same_assistant_two_pass_adversarial_challenge_not_two_independent_humans"
+    }
+  ],
+  "guards": {
+    "sourceCensusUnchanged": true,
+    "publisherFirstOnlineKnown": true,
+    "scopeUnknownNotAutoInclude": true,
+    "notOwnerPermanentExclusion": true,
+    "notFormalAdmissionManifestPending": true,
+    "full16JournalResearchIssueClosureUnknown": true,
+    "noD1": true,
+    "noPDFOrSI": true,
+    "noFormalPublication": true
+  }
+}

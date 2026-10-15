@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "gallery-historical-chem-first-online-date-proof-v1",
+  "mode": "publisher_first_online_provenance_only_not_admission",
+  "preparedAt": "2026-10-15",
+  "journal": "Chem",
+  "periodOfSourceRoots": "2026-07-01..2026-09-30",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceAuthority": "publisher_original_Article_Available_online_date_vs_issue_month_sentinel",
+  "recordCount": 1,
+  "verifiedOutsideQ3": 0,
+  "verifiedInsideQ3": 1,
+  "verifiedSourceDateConflicts": 1,
+  "rows": [
+    {
+      "doi": "10.1016/j.chempr.2026.103199",
+      "journal": "Chem",
+      "publisherArticleType": "Research article",
+      "title": "Single-catalyst operando photoluminescence spectroscopy of perovskite quantum-dot-driven photoredox reactions",
+      "authors": [
+        "Leon G. Feld",
+        "Yesim Sahin",
+        "Sebastian Sabisch",
+        "Gabriele Rainò",
+        "Maksym V. Kovalenko"
+      ],
+      "sourceDate": "2026-08-01",
+      "publisherFirstOnlineDate": "2026-08-13",
+      "originalQ3QueueOrigin": "2026-08-01_2026-08-07_chem",
+      "verifiedPublicationQuarter": "2026-Q3",
+      "dateDiscrepancyKind": "issue_month_first_day_not_true_online_day",
+      "originalQ3SourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceRootSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+      "reviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+      "originalSourceBatchGitBlobSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+      "reviewQueuePath": "audit/historical-staging/review-queue/2026-08-01_2026-08-07_chem.json",
+      "originalSourceBatchPath": "audit/historical-staging/batches/2026-08-01_2026-08-07_chem.json",
+      "officialPublisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002652",
+      "doiResolver": "https://doi.org/10.1016/j.chempr.2026.103199",
+      "officialEvidenceKind": "ScienceDirect_original_Research_Article_Available_online_13_Aug_2026",
+      "bibliographic": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103199",
+        "articleNumber": "103199",
+        "doi": "10.1016/j.chempr.2026.103199"
+      },
+      "originalDateFrozenAndUnmodified": true,
+      "publisherEvidenceDateOverrulesSourceForQuarter": true,
+      "academicScopeDecision": "not_made_by_publication_date_evidence",
+      "publisherSynopsis": "Single-quantum-dot operando photoluminescence to measure charge transfer, dormant states, Pb reduction, and catalyst degradation during known C–C coupling and C(sp3)–H bromination case studies; no standalone new preparative reaction scope claimed in publisher Summary",
+      "evidenceConstraints": {
+        "noRestrictedPublisherFullText": false,
+        "noPdfSiOrFigures": true,
+        "sourceStageNotOverwritten": true,
+        "firstOnlineDocumentedByOfficialPublisher": true
+      }
+    }
+  ],
+  "guards": {
+    "noSourceShardMutation": true,
+    "noOwnerPermanentExclusions": true,
+    "noAutoAcademicDecision": true,
+    "noD1": true,
+    "noMediaOrPdf": true,
+    "noOffSlotPublisherWrite": true,
+    "noSilentReplacementOfOriginalDate": true
+  }
+}
