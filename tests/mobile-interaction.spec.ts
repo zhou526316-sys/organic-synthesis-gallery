@@ -696,7 +696,19 @@ test('mobile title entry stays in Gallery and opens the summary before publisher
   const titleLink = card.locator('.user-title-link');
   const externalOpen = card.locator('a.open');
   await expect(titleLink).toHaveAttribute('href', /https:\/\/doi\.org\//);
-  await expect(externalOpen).toHaveAttribute('href', /https:\/\/doi\.org\//);
+  // The separate publisher-open link intentionally bypasses the DOI resolver
+  // for DOI-identical Nature Portfolio research landing pages. The summary
+  // title link remains a canonical DOI link and must not leave Gallery.
+  const cardDoi = (await card.getAttribute('data-doi')) || '';
+  const cardJournal = (await card.getAttribute('data-journal')) || '';
+  expect(cardDoi).toMatch(/^10\.\d{4,9}\/\S+$/);
+  if (/^Nature(?:\s|$)/i.test(cardJournal)
+    && /^10\.1038\/s\d{5}-\d{3}-\d{4,6}-[a-z0-9]+$/i.test(cardDoi)) {
+    await expect(externalOpen).toHaveAttribute('href',
+      'https://www.nature.com/articles/' + cardDoi.slice('10.1038/'.length));
+  } else {
+    await expect(externalOpen).toHaveAttribute('href', 'https://doi.org/' + cardDoi);
+  }
 
   const pagesBefore = context.pages().length;
   await titleLink.click();
