@@ -251,7 +251,8 @@ test('publisher worker emits only DOI verified local packet without PDF, media o
 test('worker cannot claim another tab, expired job, or unlicensed article',async()=>{
   const other=fixture({pageDoi:'10.1021/jacs.other'});
   await other.context.__batchTest.batchWorker();
-  assert.equal(other.values.has('gallery-historical-text-batch-v2:result'),false);
+  assert.equal(other.values.get('gallery-historical-text-batch-v2:result')?.status,'doi_unverified');
+  assert.equal(other.values.get('gallery-historical-text-batch-v2:result')?.packet,undefined);
   const unlicensed=fixture({license:'https://creativecommons.org/licenses/by-nc-nd/4.0/'});
   await unlicensed.context.__batchTest.batchWorker();
   assert.equal(unlicensed.values.get('gallery-historical-text-batch-v2:result')?.status,'license_not_verified');
@@ -350,7 +351,9 @@ test('historical batch does not write into media, PDF or Evidence interfaces',()
 test('retry policy separates temporary errors from license and access blocks',()=>{
   const api=fixture().context.__batchTest;
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:true},false),true);
-  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),false);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),true);
+  assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false,
+    captureRevision:'historic-body-evidence-v030'},false),false);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},true),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
