@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-15T01:02:43.732Z",
+  "generatedAt": "2026-10-15T01:18:13.403Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-19",
@@ -10,40 +10,40 @@
     "galleryDois": 1087,
     "sourceRecords": 3030,
     "rawMissingFromGallery": 2510,
-    "previouslyReviewedExcluded": 2303,
-    "missingFromGallery": 207,
-    "potentialGaps": 88,
-    "criticalSourceFailures": 5,
-    "sourceFamilyGaps": 5,
-    "sourceCoverageAnomalies": 6,
+    "previouslyReviewedExcluded": 2301,
+    "missingFromGallery": 209,
+    "potentialGaps": 91,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
     "historicalCoverageLosses": 0,
     "historicalNonJournalRecords": 0,
     "publisherFeedOnlyDois": 29,
     "redepositedWithinSafetyTail": 917,
-    "previousExclusionsReopened": 0,
-    "historicalEvidenceChallenges": 573,
+    "previousExclusionsReopened": 2,
+    "historicalEvidenceChallenges": 592,
     "historicalCrossrefRedepositBacklog": 502,
     "publisherFirstOnlineBacklog": 29,
     "publisherDateUnverified": 29,
     "publisherAbstractRescued": 0,
     "publisherAbstractProbeBlocked": 30,
     "publisherListingsComplete": 0,
-    "publisherListingsPartial": 14,
-    "publisherListingsUnavailable": 2,
-    "unresolved": 207,
+    "publisherListingsPartial": 13,
+    "publisherListingsUnavailable": 3,
+    "unresolved": 209,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 11
   },
   "discoveryGate": {
-    "criticalSourceFailures": 5,
-    "sourceFamilyGaps": 5,
-    "sourceCoverageAnomalies": 6,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
     "historicalCoverageLosses": 0,
     "publisherDateUnverified": 29,
-    "previousExclusionsReopened": 0,
-    "historicalEvidenceChallenges": 573,
+    "previousExclusionsReopened": 2,
+    "historicalEvidenceChallenges": 592,
     "historicalCrossrefRedepositBacklog": 502,
     "publisherFirstOnlineBacklog": 29
   },
@@ -57,15 +57,15 @@
         "effectiveStart": "2026-09-19",
         "queryStart": "2026-09-19",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "rawCrossrefCandidateRecords": 351,
-        "rawOpenAlexCandidateRecords": 200,
+        "rawOpenAlexCandidateRecords": 299,
         "rawUnionCandidateRecords": 351,
         "rawToUnionCollapse": false,
         "unionCandidateRecords": 340,
         "crossrefCandidateRecords": 316,
-        "openAlexCandidateRecords": 200,
-        "multiSourceCandidateRecords": 200,
+        "openAlexCandidateRecords": 299,
+        "multiSourceCandidateRecords": 299,
         "closureUnionRecords": 13,
         "closureCrossrefRecords": 13,
         "closureOpenAlexRecords": 0,
@@ -182,19 +182,19 @@
         "effectiveStart": "2026-09-19",
         "queryStart": "2026-09-19",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "rawCrossrefCandidateRecords": 847,
-        "rawOpenAlexCandidateRecords": 200,
+        "rawOpenAlexCandidateRecords": 644,
         "rawUnionCandidateRecords": 847,
         "rawToUnionCollapse": false,
         "unionCandidateRecords": 676,
         "crossrefCandidateRecords": 671,
-        "openAlexCandidateRecords": 200,
-        "multiSourceCandidateRecords": 200,
+        "openAlexCandidateRecords": 644,
+        "multiSourceCandidateRecords": 644,
         "closureUnionRecords": 21,
         "closureCrossrefRecords": 21,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -207,18 +207,18 @@
         "effectiveStart": "2026-09-19",
         "queryStart": "2026-09-19",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "rawCrossrefCandidateRecords": 404,
-        "rawOpenAlexCandidateRecords": 200,
+        "rawOpenAlexCandidateRecords": 364,
         "rawUnionCandidateRecords": 404,
         "rawToUnionCollapse": false,
         "unionCandidateRecords": 386,
         "crossrefCandidateRecords": 386,
-        "openAlexCandidateRecords": 200,
-        "multiSourceCandidateRecords": 200,
+        "openAlexCandidateRecords": 364,
+        "multiSourceCandidateRecords": 364,
         "closureUnionRecords": 20,
         "closureCrossrefRecords": 20,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 1,
         "coverageWarning": false,
         "closureCoverageWarning": true
       }
@@ -232,19 +232,19 @@
         "effectiveStart": "2026-09-19",
         "queryStart": "2026-09-19",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "rawCrossrefCandidateRecords": 872,
-        "rawOpenAlexCandidateRecords": 200,
+        "rawOpenAlexCandidateRecords": 410,
         "rawUnionCandidateRecords": 872,
         "rawToUnionCollapse": false,
         "unionCandidateRecords": 425,
         "crossrefCandidateRecords": 425,
-        "openAlexCandidateRecords": 200,
-        "multiSourceCandidateRecords": 200,
+        "openAlexCandidateRecords": 410,
+        "multiSourceCandidateRecords": 410,
         "closureUnionRecords": 3,
         "closureCrossrefRecords": 3,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": false
       }
     },
@@ -382,15 +382,15 @@
         "effectiveStart": "2026-09-19",
         "queryStart": "2026-09-19",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "rawCrossrefCandidateRecords": 318,
-        "rawOpenAlexCandidateRecords": 200,
+        "rawOpenAlexCandidateRecords": 263,
         "rawUnionCandidateRecords": 318,
         "rawToUnionCollapse": false,
         "unionCandidateRecords": 311,
         "crossrefCandidateRecords": 311,
-        "openAlexCandidateRecords": 200,
-        "multiSourceCandidateRecords": 200,
+        "openAlexCandidateRecords": 263,
+        "multiSourceCandidateRecords": 263,
         "closureUnionRecords": 0,
         "closureCrossrefRecords": 0,
         "closureOpenAlexRecords": 0,
@@ -4072,7 +4072,14 @@
         "Jingsong You",
         "Zhengyang Bin"
       ],
-      "topics": [],
+      "topics": [
+        "Organic Light-Emitting Diodes Research",
+        "Electrical and Electronic Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Luminescence and Fluorescent Materials",
+        "Organic Electronics and Photovoltaics"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
@@ -4082,6 +4089,7 @@
         "crossref:1520-5126:published",
         "crossref:1520-5126:created",
         "crossref:1520-5126:deposited",
+        "openalex:S111155417",
         "publisher-feed:JACS"
       ],
       "activeFrom": "2026-07-01",
@@ -6112,8 +6120,7 @@
         "crossref:2731-0582:online",
         "crossref:2731-0582:published",
         "crossref:2731-0582:created",
-        "crossref:2731-0582:deposited",
-        "publisher-feed:Nature Synthesis"
+        "crossref:2731-0582:deposited"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6128,10 +6135,7 @@
       "dateConflict": "",
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal",
-      "feedDate": "2026-10-14",
-      "publisherFeedUrl": "https://www.nature.com/natsynth.rss",
-      "publisherDateUnverified": true
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1038/s44160-026-01193-3",
@@ -6155,8 +6159,7 @@
         "crossref:2731-0582:online",
         "crossref:2731-0582:published",
         "crossref:2731-0582:created",
-        "crossref:2731-0582:deposited",
-        "publisher-feed:Nature Synthesis"
+        "crossref:2731-0582:deposited"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6171,10 +6174,7 @@
       "dateConflict": "",
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "high",
-      "feedDate": "2026-10-14",
-      "publisherFeedUrl": "https://www.nature.com/natsynth.rss",
-      "publisherDateUnverified": true
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1038/s44160-026-01171-9",
@@ -6197,8 +6197,7 @@
         "crossref:2731-0582:online",
         "crossref:2731-0582:published",
         "crossref:2731-0582:created",
-        "crossref:2731-0582:deposited",
-        "publisher-feed:Nature Synthesis"
+        "crossref:2731-0582:deposited"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6213,10 +6212,7 @@
       "dateConflict": "",
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "high",
-      "feedDate": "2026-10-14",
-      "publisherFeedUrl": "https://www.nature.com/natsynth.rss",
-      "publisherDateUnverified": true
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1021/acs.orglett.6c03941",
@@ -7094,7 +7090,14 @@
       "authors": [
         "Mariana Lenharo"
       ],
-      "topics": [],
+      "topics": [
+        "Neurotransmitter Receptor Influence on Behavior",
+        "Cellular and Molecular Neuroscience",
+        "Neuroscience",
+        "Life Sciences",
+        "Treatment of Major Depression",
+        "Diabetes Treatment and Management"
+      ],
       "sources": [
         "crossref:0028-0836:online",
         "crossref:0028-0836:published",
@@ -7103,7 +7106,8 @@
         "crossref:1476-4687:online",
         "crossref:1476-4687:published",
         "crossref:1476-4687:created",
-        "crossref:1476-4687:deposited"
+        "crossref:1476-4687:deposited",
+        "openalex:S137773608"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -7224,12 +7228,20 @@
         "Xenofon Baraliakos",
         "Andreas Ramming"
       ],
-      "topics": [],
+      "topics": [
+        "Immune cells in cancer",
+        "Immunology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Phagocytosis and Immune Regulation",
+        "Rheumatoid Arthritis Research and Therapies"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
         "crossref:2041-1723:created",
-        "crossref:2041-1723:deposited"
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -7266,12 +7278,20 @@
         "David Lin",
         "Wenzhe Jiao"
       ],
-      "topics": [],
+      "topics": [
+        "Sustainability and Ecological Systems Analysis",
+        "Environmental Engineering",
+        "Environmental Science",
+        "Physical Sciences",
+        "Environmental Impact and Sustainability",
+        "Sustainable Development and Environmental Policy"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
         "crossref:2041-1723:created",
-        "crossref:2041-1723:deposited"
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -7309,12 +7329,20 @@
         "Xueqing Wu",
         "Lin Liu"
       ],
-      "topics": [],
+      "topics": [
+        "Pluripotent Stem Cells Research",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Developmental Biology and Gene Regulation",
+        "Reproductive Biology and Fertility"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
         "crossref:2041-1723:created",
-        "crossref:2041-1723:deposited"
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -7349,12 +7377,20 @@
         "Cheng Qian",
         "Yaozu Liao"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Surface Modification and Superhydrophobicity"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
         "crossref:2041-1723:created",
-        "crossref:2041-1723:deposited"
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -7369,7 +7405,109 @@
       "dateConflict": "",
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/s41467-026-78527-4",
+      "journal": "Nature Communications",
+      "title": "Scellmate enables contamination aware curation and host mobilome linkage analysis of large SAG datasets",
+      "abstract": "Single-cell genomics enables cell-resolved insights into in-situ microbial communities, yet single amplified genomes (SAGs) are often fragmented, taxonomically ambiguous, and prone to contamination, limiting their biological interpretation. Here, we present Scellmate, a scalable, semi-supervised framework that integrates whole-SAG curation, species-level taxonomic anchoring and SAG–mobilome linkage analysis for large-scale SAG datasets. Following benchmarking of its SAG curation and SAG–eMGE linkage modules using in silico and four-strain mock SAG datasets, respectively, Scellmate was applied to 11,976 sewage-derived SAGs. This approach yielded 4,198 SAGs passing Scellmate’s whole-SAG curation, which captured pronounced heterogeneity masked by bulk methods. At the species level, we resolved extensive hidden diversity within abundant taxa such as Aliarcobacter that was unresolved by matched metagenome-assembled genomes; at the strain level, we pinpointed a distinct Agathobacter rectalis cluster carrying specialized carbon-utilization pathways, suggesting niche differentiation. Leveraging these curated SAGs, we identified 6,474 host–mobilome linkages across 2,378 SAGs; these linkages not only showed high concordance with host-association data within the Integrated Microbial Genomes (IMG) system but also significantly expanded species-level host assignments. Furthermore, we detect",
+      "date": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Yanren Wang",
+        "Xiaoqing Xu",
+        "Xi Chen",
+        "Yulin Zhang",
+        "Wenshan Zheng",
+        "Tong Zhang"
+      ],
+      "topics": [
+        "Genomics and Phylogenetic Studies",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Microbial Community Ecology and Physiology",
+        "Single-cell and spatial transcriptomics"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "onlineDate": "2026-10-13",
+      "publishedDate": "2026-10-13",
+      "createdDate": "2026-10-13",
+      "depositedDate": "2026-10-13",
+      "depositedDatePrecision": "day",
+      "redepositedInSafetyTail": true,
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "recheckPreviousExclusion": true,
+      "recheckReason": "new_substantive_abstract_after_previous_exclusion",
+      "previousReviewFile": "review-2026-10-14-0800.json"
+    },
+    {
+      "doi": "10.1038/s41467-026-74719-0",
+      "journal": "Nature Communications",
+      "title": "Unmet care needs at the end-of-life among older adults with activity limitations",
+      "abstract": "Despite the growing global demand for end-of-life care resulting from rapid social transformations, significant gaps exist in cross-national research examining unmet end-of-life care needs. Using harmonized end-of-life survey data (2010-2021) from the United States, 28 European countries, South Korea, China, and Mexico, here we show that the United States, Europe, and South Korea exhibit higher overall unmet end-of-life care needs than China and Mexico, where limited formal care provision is compensated with high levels of informal care. Death at institutions is associated with lower overall unmet end-of-life care needs in the United States and South Korea, with Mexico presenting an exception. Similarly, urban areas in Europe and South Korea exhibit lower unmet formal end-of-life care needs compared to rural areas. Among married individuals, only Mexico exhibits significantly lower unmet overall end-of-life care needs compared to unmarried individuals. Having children is consistently linked to lower unmet informal end-of-life care needs across the United States, Europe, and South Korea. Our findings highlight the complex interplay between care systems and family demographic structures in shaping end-of-life care access, and underscore the need for tailored policy approaches that strengthen both formal and informal care systems while addressing sociodemographic disparities in ca",
+      "date": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Chengxu Long",
+        "Zhuoer Lin",
+        "Hazal Swearinger",
+        "Jennifer Ailshire",
+        "Yuting Qian",
+        "Wai-Kit Ming",
+        "Huitong Zhao",
+        "Xiaohui Hou",
+        "Bei Wu",
+        "Wei Yang",
+        "Xi Chen",
+        "Shanquan Chen"
+      ],
+      "topics": [
+        "Palliative Care and End-of-Life Issues",
+        "Public Health, Environmental and Occupational Health",
+        "Medicine",
+        "Health Sciences",
+        "Aging, Health, and Disability",
+        "Geriatric Care and Nursing Homes"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "onlineDate": "2026-10-13",
+      "publishedDate": "2026-10-13",
+      "createdDate": "2026-10-13",
+      "depositedDate": "2026-10-13",
+      "depositedDatePrecision": "day",
+      "redepositedInSafetyTail": true,
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "recheckPreviousExclusion": true,
+      "recheckReason": "new_substantive_abstract_after_previous_exclusion",
+      "previousReviewFile": "review-2026-10-14-0800.json"
     },
     {
       "doi": "10.1038/s41467-026-77832-2",
@@ -7390,12 +7528,20 @@
         "Wei Gao",
         "Inkyu Park"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Sensor and Energy Harvesting Materials",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Non-Invasive Vital Sign Monitoring",
+        "Neuroscience and Neural Engineering"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
         "crossref:2041-1723:created",
-        "crossref:2041-1723:deposited"
+        "crossref:2041-1723:deposited",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -8911,6 +9057,9 @@
     "10.1002/anie.4699247",
     "10.31635/ccschem.026.202608538",
     "10.1021/acs.joc.6c01296",
+    "10.1038/s41467-026-78318-x",
+    "10.1038/s41467-026-78527-4",
+    "10.1038/s41467-026-74719-0",
     "10.1021/acs.joc.6c01813",
     "10.1039/d6sc06226a",
     "10.1039/d6sc05550h",
@@ -8985,13 +9134,13 @@
       {
         "journal": "Nature Synthesis",
         "url": "https://www.nature.com/natsynth.rss",
-        "status": "reachable_partial",
-        "items": 8,
+        "status": "blocked_or_unavailable",
+        "completeListing": false,
+        "items": 0,
         "unidentifiable": 0,
         "outOfRange": 0,
-        "completeListing": false,
-        "error": "",
-        "doiCount": 8
+        "error": "fetch failed",
+        "doiCount": 0
       },
       {
         "journal": "Nature Chemistry",
@@ -9405,8 +9554,48 @@
     ]
   },
   "historicalEvidenceChallenges": {
-    "count": 573,
+    "count": 592,
     "items": [
+      {
+        "doi": "10.1038/s41467-026-76388-5",
+        "journal": "Nature Communications",
+        "title": "Syndecan-3 couples tumor mechanics to immunosuppressive macrophage identity",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "high",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78389-w",
+        "journal": "Nature Communications",
+        "title": "Global rise of a wheat pathogen through two-stage evolutionary emergence coupled with aerial dispersal",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "high",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78437-5",
+        "journal": "Nature Communications",
+        "title": "Deep profiling of lysine methylation by covalent enrichment-enhanced proteomics",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "high",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78642-2",
+        "journal": "Nature Communications",
+        "title": "DHHC12 serves as a critical nutrient-responsive switch that couples amino acid sensing to insulin secretion",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "high",
+        "status": "historical_evidence_challenge_pending"
+      },
       {
         "doi": "10.1038/s41467-026-78101-y",
         "journal": "Nature Communications",
@@ -9633,6 +9822,16 @@
         "title": "How to control where semiconductor crystals start growing",
         "date": "2026-10-07",
         "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-08-0800.json",
+        "reviewPriority": "high",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/d41586-026-03093-0",
+        "journal": "Nature",
+        "title": "Chemistry Nobel awarded for solving mystery of how ‘handed’ organic molecules can emerge",
+        "date": "2026-10-07",
+        "reason": "changed_article_title",
         "previousReviewFile": "review-2026-10-08-0800.json",
         "reviewPriority": "high",
         "status": "historical_evidence_challenge_pending"
@@ -11828,6 +12027,156 @@
         "status": "historical_evidence_challenge_pending"
       },
       {
+        "doi": "10.1038/s41467-026-78071-1",
+        "journal": "Nature Communications",
+        "title": "An international multicenter study of MASLD prevalence among children and adolescents assessed by VCTE",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78284-4",
+        "journal": "Nature Communications",
+        "title": "DigiDent: integrated bristle-level sensing and AI for contact-aware toothbrushing assessment",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78369-0",
+        "journal": "Nature Communications",
+        "title": "Neuronal signatures of successful one-shot memory in mid-level visual cortex",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78397-w",
+        "journal": "Nature Communications",
+        "title": "The mechanosensitive PIEZO1 channel promotes CD54+/iNOS+ neutrophil expansion in pulmonary fibrosis",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78399-8",
+        "journal": "Nature Communications",
+        "title": "Metabolite-mediated reversal of motor hyperactivity restores ciliary function",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78418-8",
+        "journal": "Nature Communications",
+        "title": "Serine-65 phosphorylated ubiquitin associates with soluble tau and seeding activity in Alzheimer’s disease",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78431-x",
+        "journal": "Nature Communications",
+        "title": "Hysteresis of extreme precipitation in East Asia under various CO2 removal pathways",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78528-3",
+        "journal": "Nature Communications",
+        "title": "IL-4 exploits TNF signaling to shape its gene expression signature in monocytes and macrophages",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78534-5",
+        "journal": "Nature Communications",
+        "title": "The VPS33B-VPS16B protein complex facilitates Golgi ribbon formation and Golgi-endosome trafficking",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78544-3",
+        "journal": "Nature Communications",
+        "title": "Author Correction: UNCOVERseq enables sensitive and controlled gene editing off-target nomination across CRISPR-Cas modalities and systems",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78549-y",
+        "journal": "Nature Communications",
+        "title": "Tracing missing copper: ultrapotassic rocks record isotopic evidence of crustal Cu depletion",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78627-1",
+        "journal": "Nature Communications",
+        "title": "Author Correction: Nuclear condensates formed by truncated mutant NEK1s impede ribosomal RNA biogenesis and drive motor dysfunction",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78645-z",
+        "journal": "Nature Communications",
+        "title": "KMT2B facilitates long-range gene regulation through LINE1 elements",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41467-026-78757-6",
+        "journal": "Nature Communications",
+        "title": "Exocomets in a planet nursery",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
+        "doi": "10.1038/s41586-026-11253-5",
+        "journal": "Nature",
+        "title": "Author Correction: Timing and trajectory of BCR::ABL1-driven chronic myeloid leukaemia",
+        "date": "2026-10-12",
+        "reason": "new_substantive_abstract_after_previous_exclusion",
+        "previousReviewFile": "review-2026-10-13-0800.json",
+        "reviewPriority": "normal",
+        "status": "historical_evidence_challenge_pending"
+      },
+      {
         "doi": "10.1038/s41467-026-77962-7",
         "journal": "Nature Communications",
         "title": "ETSAM: effectively segmenting cell membranes in cryo-electron tomograms",
@@ -12253,16 +12602,6 @@
         "title": "Genome accessibility reveals disease risk that gene expression misses",
         "date": "2026-10-07",
         "reason": "new_substantive_abstract_after_previous_exclusion",
-        "previousReviewFile": "review-2026-10-08-0800.json",
-        "reviewPriority": "normal",
-        "status": "historical_evidence_challenge_pending"
-      },
-      {
-        "doi": "10.1038/d41586-026-03093-0",
-        "journal": "Nature",
-        "title": "Chemistry Nobel awarded for solving mystery of how ‘handed’ organic molecules can emerge",
-        "date": "2026-10-07",
-        "reason": "changed_article_title",
         "previousReviewFile": "review-2026-10-08-0800.json",
         "reviewPriority": "normal",
         "status": "historical_evidence_challenge_pending"
