@@ -164,7 +164,7 @@ export function reconcileQ3({
   const publisherNonOriginal=new Set();
   const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing',
     'Comment','Publisher Correction','Author Correction','Review Article','Editorial','Perspective','Q&A',
-    'In Your Element','Thesis','Books & Arts']);
+    'In Your Element','Thesis','Books & Arts','Preview','Erratum']);
   for(const item of publisherNonResearch.reviewed){
     const id=normalize(item?.doi),src=all.get(id),ev=item?.reviewEvidence;
     ensure(validDoi(id)&&id===item.doi&&src&&!publisherNonOriginal.has(id)
@@ -173,11 +173,31 @@ export function reconcileQ3({
     let url;
     try{url=new URL(ev?.publisherPage||'')}catch{url=null}
     const host=url?.hostname||'',path=url?.pathname.toLowerCase()||'';
-    const isOfficial=host==='www.nature.com'||host==='nature.com'
+    const officialNatureAcs=host==='www.nature.com'||host==='nature.com'
       ? path==='/articles/'+id.split('/')[1]
       : host==='pubs.acs.org'
         ? path.includes('/doi/'+id)
         : false;
+    // Chem secondary items can have an issue-month sentinel in the frozen
+    // Crossref/OpenAlex source row. Do not turn that date into first-online proof.
+    // These DOI-specific Preview/Erratum records must be bound to official
+    // ScienceDirect Chem PII and to the separately identified original DOI.
+    const officialChemSecondary=item.journal==='Chem'
+      && /^10\.1016\/j\.chempr\.2026\.\d{6}$/.test(id)
+      && (host==='www.sciencedirect.com'||host==='sciencedirect.com')
+      && /^\/science\/article\/(?:abs\/)?pii\/s2451929426\d{6}$/.test(path)
+      && ['Preview','Erratum'].includes(ev?.publisherArticleType)
+      && ev.publisherDoi===id
+      && ev.publisherArticleDate===null
+      && ev.publisherFirstOnlineDateVerified===false
+      && ev.sourceDateNotPublisherFirstOnline===true
+      && ev.frozenSourceDate===src.date
+      && /^2026-(07|08|09)-\d\d$/.test(ev.publisherIssueDate||'')
+      && ev.publisherIssueDate!==src.date
+      && item.underlyingOriginalResearchDoi===ev.underlyingOriginalResearchDoi
+      && validDoi(item.underlyingOriginalResearchDoi)
+      && item.title===src.title;
+    const isOfficial=officialNatureAcs||officialChemSecondary;
     ensure(isOfficial&&allowedArticleTypes.has(ev?.publisherArticleType)
       &&ev?.publisherArticleType===item.publisherArticleType
       &&item.decision==='exclude'&&item.firstPassDecision==='exclude'
@@ -186,7 +206,8 @@ export function reconcileQ3({
       &&typeof item.independentChallengeReason==='string'
       &&item.independentChallengeReason.trim().length>=40
       &&item.firstPassReason!==item.independentChallengeReason
-      &&item.date===src.date&&ev?.publisherArticleDate===item.date
+      &&item.date===src.date
+      &&(officialChemSecondary||ev?.publisherArticleDate===item.date)
       &&src.sourceRoots.includes(ev.sourceRootId)
       &&src.sourceHashes.includes(ev.stageSourceSha256)
       &&/^[a-f0-9]{40}$/.test(ev.stageBatchGitBlobSha||'')
