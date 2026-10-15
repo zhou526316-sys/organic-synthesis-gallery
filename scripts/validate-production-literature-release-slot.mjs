@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
+import {authorizeExistingAuthorCorrection,AUTHOR_CORRECTION_ROLLING} from './lib/author-metadata-correction.mjs';
 import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 const execFileAsync = promisify(execFile);
@@ -40,13 +41,19 @@ check(files.length >= 8, 'release-slot: protected production literature file set
 
 const actual = {};
 for (const file of files) {
-  try {
-    actual[file] = await blobSha(file);
-    check(actual[file] === protectedBlobs[file],
-      `release-slot: unauthorized production literature content for ${file}; expected ${protectedBlobs[file]}, got ${actual[file]}`);
-  } catch (error) {
-    failures.push(`release-slot: cannot hash ${file}: ${error.message}`);
-  }
+  try { actual[file] = await blobSha(file); }
+  catch (error) { failures.push(`release-slot: cannot hash ${file}: ${error.message}`); }
+}
+// Explicitly approved, source-pinned author-only reconciliation of ONE
+// previously published DOI. Do not modify the frozen 08:00 marker or allow
+// this narrow exception for any other metadata or policy change.
+const correctedRolling = actual[AUTHOR_CORRECTION_ROLLING] !== protectedBlobs[AUTHOR_CORRECTION_ROLLING]
+  ? authorizeExistingAuthorCorrection(ROOT,marker,actual[AUTHOR_CORRECTION_ROLLING]) : null;
+for(const file of files) {
+  if(!actual[file])continue;
+  check(actual[file] === protectedBlobs[file]
+    || (file===AUTHOR_CORRECTION_ROLLING && correctedRolling?.ok===true),
+    `release-slot: unauthorized production literature content for ${file}; expected ${protectedBlobs[file]}, got ${actual[file]}`);
 }
 
 const mode = String(marker?.mode || '');
@@ -148,6 +155,7 @@ const result = {
   publicationSlot: marker?.publicationSlot || null,
   productionCards: marker?.productionCards ?? null,
   protectedFiles: files.length,
+  authorOnlyCorrection: correctedRolling?.ok===true ? correctedRolling : null,
   slotGraceMinutes: slotGraceMinutes(String(marker?.publicationSlot || '')),
   singleDailySlotCutoverCommit: SINGLE_DAILY_SLOT_CUTOVER_COMMIT,
   markerCommitSha,
