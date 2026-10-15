@@ -164,7 +164,7 @@ export function reconcileQ3({
   const publisherNonOriginal=new Set();
   const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing',
     'Comment','Publisher Correction','Author Correction','Review Article','Editorial','Perspective','Q&A',
-    'In Your Element','Thesis','Books & Arts','Preview','Erratum']);
+    'In Your Element','Thesis','Books & Arts','Preview','Erratum','Insights']);
   for(const item of publisherNonResearch.reviewed){
     const id=normalize(item?.doi),src=all.get(id),ev=item?.reviewEvidence;
     ensure(validDoi(id)&&id===item.doi&&src&&!publisherNonOriginal.has(id)
@@ -186,7 +186,7 @@ export function reconcileQ3({
       && /^10\.1016\/j\.chempr\.2026\.\d{6}$/.test(id)
       && (host==='www.sciencedirect.com'||host==='sciencedirect.com')
       && /^\/science\/article\/(?:abs\/)?pii\/s2451929426\d{6}$/.test(path)
-      && ['Preview','Erratum'].includes(ev?.publisherArticleType)
+      && ['Preview','Erratum','Perspective','Insights'].includes(ev?.publisherArticleType)
       && ev.publisherDoi===id
       && ev.publisherArticleDate===null
       && ev.publisherFirstOnlineDateVerified===false
@@ -195,7 +195,12 @@ export function reconcileQ3({
       && /^2026-(07|08|09)-\d\d$/.test(ev.publisherIssueDate||'')
       && ev.publisherIssueDate!==src.date
       && item.underlyingOriginalResearchDoi===ev.underlyingOriginalResearchDoi
-      && validDoi(item.underlyingOriginalResearchDoi)
+      && (['Preview','Erratum'].includes(ev.publisherArticleType)
+        ? validDoi(item.underlyingOriginalResearchDoi)
+        : item.underlyingOriginalResearchDoi===null
+          && ev.originalResearchRelation===(ev.publisherArticleType==='Perspective'
+            ? 'multi_study_perspective'
+            : 'editorial_insight_not_original_article'))
       && item.title===src.title;
     const isOfficial=officialNatureAcs||officialChemSecondary;
     ensure(isOfficial&&allowedArticleTypes.has(ev?.publisherArticleType)

@@ -267,3 +267,88 @@ test('Chem publisher secondary records retain frozen source counts but leave the
     publisherNonResearch:broken(0,{stageSourceSha256:'0'.repeat(64)})}),
     /q3_nonresearch_publisher_evidence_invalid/);
 });
+
+
+test('Chem publisher Perspectives and Insights are evidence-bound and cannot invent a single original DOI',()=>{
+  const aug='2026-08-01_2026-08-07_chem';
+  const sep='2026-09-01_2026-09-07_chem';
+  const cases=[
+    {doi:'10.1016/j.chempr.2026.103187',title:'Recent applications of axially chiral skeletons',
+      bucket:aug,date:'2026-08-01',issue:'2026-08-13',
+      pii:'S2451929426002536',type:'Perspective',original:null,
+      relation:'multi_study_perspective'},
+    {doi:'10.1016/j.chempr.2026.103195',title:'Trading an atom for another',
+      bucket:aug,date:'2026-08-01',issue:'2026-08-13',
+      pii:'S2451929426002615',type:'Insights',original:null,
+      relation:'editorial_insight_not_original_article'},
+    {doi:'10.1016/j.chempr.2026.103218',title:'One catalyst, two geometries',
+      bucket:sep,date:'2026-09-01',issue:'2026-09-10',
+      pii:'S2451929426002846',type:'Preview',
+      original:'10.1016/j.checat.2026.101803',relation:'distinct_original_report'},
+    {doi:'10.1016/j.chempr.2026.103250',title:'Exploration of new sites',
+      bucket:sep,date:'2026-09-01',issue:'2026-09-10',
+      pii:'S2451929426003165',type:'Preview',
+      original:'10.1038/s41586-026-10931-8',relation:'distinct_original_report'}
+  ];
+  const shAug=shard(aug,'Chem',cases.filter(x=>x.bucket===aug)
+    .map(x=>({doi:x.doi,title:x.title,date:x.date})));
+  const shSep=shard(sep,'Chem',cases.filter(x=>x.bucket===sep)
+    .map(x=>({doi:x.doi,title:x.title,date:x.date})));
+  const extended={...input,journals:[...journals,{name:'Chem'}],
+    state:{...state,completed:[...state.completed,aug,sep]},
+    triage:{...triage,rootSummaries:{...triage.rootSummaries,
+      [aug]:{sourceSha256:sha(aug)},
+      [sep]:{sourceSha256:sha(sep)}}},
+    shards:[...input.shards,shAug,shSep]};
+  const rows=cases.map(x=>({
+    doi:x.doi,journal:'Chem',title:x.title,date:x.date,
+    publisherArticleType:x.type,underlyingOriginalResearchDoi:x.original,
+    decision:'exclude',firstPassDecision:'exclude',challengeDecision:'exclude',reviewPasses:2,
+    firstPassReason:'Original publisher labels this DOI as secondary publisher content; its main scientific result is a review or interpretative editorial, not an independently reported reaction.',
+    independentChallengeReason:'A synthetic transformation mentioned in a title does not make a publisher-designated Preview/Perspective/Insights into a new primary source of reaction evidence or synthesis scope.',
+    reviewEvidence:{
+      publisherPage:'https://www.sciencedirect.com/science/article/abs/pii/'+x.pii,
+      publisherDoi:x.doi,publisherArticleType:x.type,
+      publisherArticleDate:null,publisherFirstOnlineDateVerified:false,
+      sourceDateNotPublisherFirstOnline:true,frozenSourceDate:x.date,
+      publisherIssueDate:x.issue,underlyingOriginalResearchDoi:x.original,
+      originalResearchRelation:x.relation,sourceRootId:x.bucket,
+      stageSourceSha256:sha(x.bucket),
+      stageBatchGitBlobSha:'e'.repeat(40),
+      verificationKind:'publisher_direct_article_type_and_original_work_provenance'
+    }
+  }));
+  const publisherNonResearch={
+    schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+    mode:'publisher_verified_non_original_doi_only_not_publication',
+    reviewed:rows
+  };
+  const before=reconcileQ3(extended);
+  const after=reconcileQ3({...extended,publisherNonResearch});
+  assert.equal(after.coverage.counters.uniqueSourceDois,before.coverage.counters.uniqueSourceDois);
+  assert.equal(after.coverage.counters.sourcePublisherNonResearchExcluded,4);
+  assert.equal(after.coverage.counters.unfinishedQ3OrDateVerification,
+    before.coverage.counters.unfinishedQ3OrDateVerification-4);
+  for(const paper of cases)assert.equal(after.worklist.rows.some(x=>x.doi===paper.doi),false);
+  assert.equal(after.coverage.guards.officialPublisherIssueCompletenessNotEstablished,true);
+  const mutation=(idx,patch)=>({...publisherNonResearch,reviewed:rows.map((item,i)=>
+    i===idx?{...item,reviewEvidence:{...item.reviewEvidence,...patch}}:item)});
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(0,
+    {originalResearchRelation:'editorial_insight_not_original_article'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(1,
+    {originalResearchRelation:'multi_study_perspective'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(2,
+    {underlyingOriginalResearchDoi:null})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(3,
+    {publisherFirstOnlineDateVerified:true})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(0,
+    {publisherPage:'https://fake.example.com/article/pii/S2451929426002536'})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...extended,publisherNonResearch:mutation(0,
+    {stageSourceSha256:'0'.repeat(64)})}),
+    /q3_nonresearch_publisher_evidence_invalid/);
+});
