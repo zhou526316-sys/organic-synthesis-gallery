@@ -1,0 +1,301 @@
+{
+  "schemaVersion": "gallery-historical-q3-chem-original-science-review-v2",
+  "mode": "academic_two_pass_scope_only_not_publication",
+  "reviewedAt": "2026-10-15",
+  "journal": "Chem",
+  "publicationQuarter": "2026-Q3",
+  "dateEvidenceFile": "audit/historical-publisher-dates/2026/chem-four-third-online-reconciled.json",
+  "dateEvidenceGitBlobSha": "691ed7548e34b2b6c24bde8e65c7568d119bb166",
+  "reviewerMethod": "First DOI-specific substantive scientific assessment followed by a distinct adverse scope challenge by the same assistant; NOT two human peer reviewers",
+  "evidenceSources": [
+    "Original ScienceDirect Research Article pages",
+    "University research record",
+    "Author ChemRxiv preprint for triangulation only"
+  ],
+  "sourceRestriction": "No publisher abstract/full article copied, no PDF/SI/images downloaded into Gallery. Claims only grounded by public indexed text and research record.",
+  "accounting": {
+    "assessed": 3,
+    "include": 2,
+    "pending": 1,
+    "exclude": 0,
+    "pendingNotInAcceptedManifest": true,
+    "pendingRetainedForUnfinishedUntilSpecificPreparativeEvidenceArrives": true
+  },
+  "assessments": [
+    {
+      "doi": "10.1016/j.chempr.2026.103162",
+      "title": "An isolable nitrene radical anion as a nucleophilic open-shell nitrogen synthon",
+      "journal": "Chem",
+      "date": "2026-07-22",
+      "publisherArticleType": "Research article",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reviewPasses": 2,
+      "reason": "通过对空间位阻保护的三重态氮宾进行单电子还原，实现无过渡金属氮宾自由基阴离子的分离与直接结构表征，揭示反常HOMO/SOMO能级倒置和氮中心亲核反应。",
+      "firstPassReason": "原文成果真实且具有前沿合成子概念，但论文问题设置主要是分离假设的自由基阴离子、证明其电子结构及极性反转；仅3类亲电捕获示例不足以自动证明建立了一般性的氮宾亲核官能团化制备方法。第一遍保留pending，进一步查阅底物适用性和产物分离证据。",
+      "independentChallengeReason": "反向质疑：首次合成可分离的新氮中心试剂并实现N–Se/N–Si/N–C三类新键，本身可能构成重要可转移合成能力，不能简单因为EPR和理论计算占篇幅便排除。若SI证明亲电试剂范围或氮宾骨架有充分可推广的独立制备，应考虑include；在未得到这些证据前不能认定已满足一般方法学，第二遍仍pending。",
+      "evidenceBasis": "Chem官方研究 Article https://www.sciencedirect.com/science/article/pii/S2451929426002287 的Summary、Introduction及Synthesis and characterization章节明确显示空间位阻大骨架、KC₈还原、三类亲电捕获；出版社首次在线为2026-07-22。已有实验不因未获SI而视为不存在；数字和产率没有直接证据就不编造。",
+      "scopeAssessment": {
+        "primaryContribution": "通过对空间位阻保护的三重态氮宾进行单电子还原，实现无过渡金属氮宾自由基阴离子的分离与直接结构表征，揭示反常HOMO/SOMO能级倒置和氮中心亲核反应。",
+        "preparativeTransformation": "空间位阻保护的叠氮前体经光解给出三重态氮宾，再以KC₈还原为可分离的氮宾自由基阴离子；该特定阴离子与PhSeCl、Me₃SiCN、Cr(CO)₆等亲电试剂反应，构筑N–Se、N–Si和N–C键。",
+        "generalityEvidence": "原始Chem文章明确给出三个不同类型亲电试剂捕获和实际N–E键形成，并且获得结构表征充分的稳定试剂；但这些反应主要围绕一个特殊hydrindacenyl保护的氮宾骨架，现有证据未建立不同有机氮宾前体或多类产物独立制备的可迁移底物范围。",
+        "sourceEvidence": "Chem官方研究 Article https://www.sciencedirect.com/science/article/pii/S2451929426002287 的Summary、Introduction及Synthesis and characterization章节明确显示空间位阻大骨架、KC₈还原、三类亲电捕获；出版社首次在线为2026-07-22。已有实验不因未获SI而视为不存在；数字和产率没有直接证据就不编造。",
+        "boundaryChallenge": "反向质疑：首次合成可分离的新氮中心试剂并实现N–Se/N–Si/N–C三类新键，本身可能构成重要可转移合成能力，不能简单因为EPR和理论计算占篇幅便排除。若SI证明亲电试剂范围或氮宾骨架有充分可推广的独立制备，应考虑include；在未得到这些证据前不能认定已满足一般方法学，第二遍仍pending。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "pending",
+          "assessment": "原文成果真实且具有前沿合成子概念，但论文问题设置主要是分离假设的自由基阴离子、证明其电子结构及极性反转；仅3类亲电捕获示例不足以自动证明建立了一般性的氮宾亲核官能团化制备方法。第一遍保留pending，进一步查阅底物适用性和产物分离证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "pending",
+          "reason": "反向质疑：首次合成可分离的新氮中心试剂并实现N–Se/N–Si/N–C三类新键，本身可能构成重要可转移合成能力，不能简单因为EPR和理论计算占篇幅便排除。若SI证明亲电试剂范围或氮宾骨架有充分可推广的独立制备，应考虑include；在未得到这些证据前不能认定已满足一般方法学，第二遍仍pending。"
+        }
+      ],
+      "evidenceNeeded": "核查主文完整反应示意、SI不同氮宾前体/亲电试剂结构、N–E产物实际分离及收率、是否超越单一空间位阻大保护骨架，以区分可通用有机合成方法与特殊自由基阴离子的分离及表征。",
+      "nextAction": "取得许可允许的原文正文和支持信息后确认多个前体及反应伙伴的真实制备适用范围；若限于单例框架及少量捕获，按机制/结构为主排除；如有具体可推广的独立制备证据再纳入。",
+      "missingEvidenceMustNotMeanNoEvidenceExists": true,
+      "pendingNotAdmitted": true,
+      "titleZh": "可分离氮宾自由基阴离子的亲核开放壳层氮合成子",
+      "authors": [
+        "Yutong Jin",
+        "Lei Xu",
+        "Song Gao",
+        "Gengwen Tan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103162",
+        "articleNumber": "103162",
+        "doi": "10.1016/j.chempr.2026.103162",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002287",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103162",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002287",
+        "publisherOnlineDate": "2026-07-22",
+        "sourceDate": "2026-07-01",
+        "originalDoiStageDateConflict": true,
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_chem",
+        "stageBatchSha": "2efb3dc9219a5d244f34db3aff9aa2edfe4c45f7",
+        "sourceReviewQueueGitBlobSha": "3116998c73fb18fd49f2abbabac0b026796c1dc3",
+        "stageSourceSha256": "341f127a8b9fe6f24c4e882a4da89caeb04b8335bc32803fe664ee67cb51059f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-07-22",
+          "originalIssueOrApiMonthNotOnline": true,
+          "frozenSourceUnmodified": true,
+          "authoritativeDate": "publisher_official_available_online",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002287"
+        },
+        "publisherEvidenceTier": "Chem_official_article_plus_article_specific_preparative_science"
+      },
+      "noFullAbstractReproduction": true,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewerIdentity": "same_assistant_two_distinct_science_and_adversarial_passes_not_independent_humans"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103205",
+      "title": "A minimal photoreactive metallocofactor for carbon–sulfur bond formation in small molecules and proteins",
+      "journal": "Chem",
+      "date": "2026-08-20",
+      "publisherArticleType": "Research article",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展无需额外有机光敏团的单核镍–硫醇盐可见光催化模块，使水相中芳基卤化物与硫醇发生光致C–S偶联，并把同一反应能力拓展到含半胱氨酸蛋白的选择性修饰。",
+      "firstPassReason": "论文确有完整可识别的C–S成键转化，且不是仅设计Ni结构或报道光谱：Ni–硫醇盐单核模块在水相实做芳硫醚生成，并进一步用于蛋白的Cys共价改性。基于多个反应类型与不同硫醇底物类别的具体用途，第一遍符合可迁移有机/生物偶联合成方法。",
+      "independentChallengeReason": "反向检验：作者核心叙事强调最小光敏金属辅因子的电子结构、LMCT及机制，可能被误当成光催化材料论文；同时现有公开文本缺少完整底物表及独立分离收率，不能宣称全部反应高效或任意蛋白兼容。实际具不同分子尺度的光致C–S成键化学和蛋白官能化，因此在保留机制推断与制备适用性边界的情况下仍应纳入。",
+      "evidenceBasis": "首发Chem原始Article DOI https://doi.org/10.1016/j.chempr.2026.103205，出版社ScienceDirect https://www.sciencedirect.com/science/article/pii/S2451929426002718 首次在线2026-08-20。首尔国立大学研究简介 https://en.snu.ac.kr/research/highlights?bbsidx=174551&md=v 与研究机构记录 https://snu.elsevierpure.com/en/publications/a-minimal-photoreactive-metallocofactor-for-carbonsulfur-bond-for/ 具体给出可见光单核Ni–thiolate、水相芳基卤化物/硫醇C–S成键和蛋白Cys修饰证据；Ni(I)与LMCT按作者所支持的机理描述，非唯一实验确证。未获取SI或重发全文。",
+      "scopeAssessment": {
+        "primaryContribution": "发展无需额外有机光敏团的单核镍–硫醇盐可见光催化模块，使水相中芳基卤化物与硫醇发生光致C–S偶联，并把同一反应能力拓展到含半胱氨酸蛋白的选择性修饰。",
+        "preparativeTransformation": "由单核Ni–SR物种吸收可见光，经作者实验及计算支持的配体到金属电荷转移形成可进入Ni(I)循环的状态，芳基卤化物与有机硫醇偶联形成芳基硫醚C–S键；含Cys残基的蛋白质在相容条件下实现芳基化。",
+        "generalityEvidence": "原始研究描述多种可见光驱动的thiol转化，并报告小分子芳基卤化物/硫醇偶联及蛋白Cys位点修饰两个分子尺度的实验用途，反应伙伴覆盖有机和遗传编码硫醇来源；不能从摘要推算准确底物数、分离收率或对所有蛋白广泛有效。",
+        "sourceEvidence": "首发Chem原始Article DOI https://doi.org/10.1016/j.chempr.2026.103205，出版社ScienceDirect https://www.sciencedirect.com/science/article/pii/S2451929426002718 首次在线2026-08-20。首尔国立大学研究简介 https://en.snu.ac.kr/research/highlights?bbsidx=174551&md=v 与研究机构记录 https://snu.elsevierpure.com/en/publications/a-minimal-photoreactive-metallocofactor-for-carbonsulfur-bond-for/ 具体给出可见光单核Ni–thiolate、水相芳基卤化物/硫醇C–S成键和蛋白Cys修饰证据；Ni(I)与LMCT按作者所支持的机理描述，非唯一实验确证。未获取SI或重发全文。",
+        "boundaryChallenge": "反向检验：作者核心叙事强调最小光敏金属辅因子的电子结构、LMCT及机制，可能被误当成光催化材料论文；同时现有公开文本缺少完整底物表及独立分离收率，不能宣称全部反应高效或任意蛋白兼容。实际具不同分子尺度的光致C–S成键化学和蛋白官能化，因此在保留机制推断与制备适用性边界的情况下仍应纳入。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "论文确有完整可识别的C–S成键转化，且不是仅设计Ni结构或报道光谱：Ni–硫醇盐单核模块在水相实做芳硫醚生成，并进一步用于蛋白的Cys共价改性。基于多个反应类型与不同硫醇底物类别的具体用途，第一遍符合可迁移有机/生物偶联合成方法。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：作者核心叙事强调最小光敏金属辅因子的电子结构、LMCT及机制，可能被误当成光催化材料论文；同时现有公开文本缺少完整底物表及独立分离收率，不能宣称全部反应高效或任意蛋白兼容。实际具不同分子尺度的光致C–S成键化学和蛋白官能化，因此在保留机制推断与制备适用性边界的情况下仍应纳入。"
+        }
+      ],
+      "titleZh": "单核镍–硫醇盐光反应辅因子实现小分子及蛋白质C–S键构筑",
+      "authors": [
+        "Yerin Choe",
+        "Minchan Park",
+        "Jungjin Park",
+        "Jinjong Kim",
+        "Jaehee Lee",
+        "Junho Lee",
+        "Danbi Lee",
+        "Jaeyoung Jeong",
+        "Zee Hwan Kim",
+        "Tae Kyu Kim",
+        "Sang Hoon Joo",
+        "Woojae Kim",
+        "Woon Ju Song"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103205",
+        "articleNumber": "103205",
+        "doi": "10.1016/j.chempr.2026.103205",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426002718",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103205",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002718",
+        "publisherOnlineDate": "2026-08-20",
+        "sourceDate": "2026-08-01",
+        "originalDoiStageDateConflict": true,
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_chem",
+        "stageBatchSha": "6ea589ffc11c757ffd5e72b02d931e88e4778b68",
+        "sourceReviewQueueGitBlobSha": "26c5304d84ab4f5b7c470daa427d0249b6f524a5",
+        "stageSourceSha256": "26770f50e9727826aa1d8171817c7f6ad3ff27376721eb2684efd2d94e2a50aa",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-08-20",
+          "originalIssueOrApiMonthNotOnline": true,
+          "frozenSourceUnmodified": true,
+          "authoritativeDate": "publisher_official_available_online",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426002718"
+        },
+        "publisherEvidenceTier": "Chem_official_article_plus_article_specific_preparative_science"
+      },
+      "noFullAbstractReproduction": true,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewerIdentity": "same_assistant_two_distinct_science_and_adversarial_passes_not_independent_humans"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103241",
+      "title": "Site-selective Au(III)-mediated metalloenzyme conjugations",
+      "journal": "Chem",
+      "date": "2026-09-11",
+      "publisherArticleType": "Research article",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发Au(III)介导的金属蛋白半胱氨酸位点选择性S-芳基化，利用金属配位Cys的天然保护效应区分暴露巯基与活性位点配位硫醇盐，同时尽量维持蛋白构象与金属中心功能。",
+      "firstPassReason": "具有清晰通用的亲核Cys对Au(III)-Ar转移的S–C键构建方法；在多类真实金属蛋白中完成位点选择性共价产物制备，并通过结构与功能检测定位，从而解决有机金试剂通常可能干扰金属中心的合成应用痛点。不是仅测蛋白活性或纯做结构分析，第一遍纳入。",
+      "independentChallengeReason": "反向检验：现有蛋白类别有限，特别需要非配位且暴露的Cys，不能宣传为任何金属蛋白的无差别标记；Au(III)偶联对复杂蛋白内部可及性、金属种类与副反应存在边界。作者以Fe/Ni rubredoxin、锌指及Fe–S蛋白以及单晶/功能保留证据实际证实S-芳基化制备能力，这些不足不否定原论文方法学贡献，第二遍支持纳入。",
+      "evidenceBasis": "Chem官方Research Article https://www.sciencedirect.com/science/article/pii/S2451929426003074 （Available online 2026-09-11），原文Highlights与公开摘要列出Au(III)试剂、metal-thiolate天然保护、rubredoxin/zinc-finger/Fe–S及首个Cys-arylated metalloprotein单晶。作者公开预印本 https://doi.org/10.26434/chemrxiv-2025-z5kt1 补强Fe/Ni rubredoxin、多类标签、FPLC纯化、CD/CV/晶体等信息；预印本早于正式论文，不把其2025日期误写为Chem首发日。没有重新分发PDF、SI或出版社原图。",
+      "scopeAssessment": {
+        "primaryContribution": "开发Au(III)介导的金属蛋白半胱氨酸位点选择性S-芳基化，利用金属配位Cys的天然保护效应区分暴露巯基与活性位点配位硫醇盐，同时尽量维持蛋白构象与金属中心功能。",
+        "preparativeTransformation": "预制的有机Au(III)芳基试剂与rubredoxin、锌指或铁硫蛋白中溶剂可及的非金属配位Cys巯基在温和水相发生Cys–S–Ar键形成；Fe/Ni活性中心配位的Cys不被随机改造，获得选择性芳基标记的金属蛋白共价偶联产物。",
+        "generalityEvidence": "Chem官方Highlights明确报告rubredoxin、zinc fingers及Fe–S proteins不同金属蛋白类别，论文使用多种非天然芳基标签并有FPLC纯化产物、CD和CV保功能证据及单晶X射线位点结构；相关开放预印本含Fe/Ni rubredoxin实验和不同标签。不能将LC/MS显示的定量转化直接称为所有蛋白的纯化分离收率。",
+        "sourceEvidence": "Chem官方Research Article https://www.sciencedirect.com/science/article/pii/S2451929426003074 （Available online 2026-09-11），原文Highlights与公开摘要列出Au(III)试剂、metal-thiolate天然保护、rubredoxin/zinc-finger/Fe–S及首个Cys-arylated metalloprotein单晶。作者公开预印本 https://doi.org/10.26434/chemrxiv-2025-z5kt1 补强Fe/Ni rubredoxin、多类标签、FPLC纯化、CD/CV/晶体等信息；预印本早于正式论文，不把其2025日期误写为Chem首发日。没有重新分发PDF、SI或出版社原图。",
+        "boundaryChallenge": "反向检验：现有蛋白类别有限，特别需要非配位且暴露的Cys，不能宣传为任何金属蛋白的无差别标记；Au(III)偶联对复杂蛋白内部可及性、金属种类与副反应存在边界。作者以Fe/Ni rubredoxin、锌指及Fe–S蛋白以及单晶/功能保留证据实际证实S-芳基化制备能力，这些不足不否定原论文方法学贡献，第二遍支持纳入。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "具有清晰通用的亲核Cys对Au(III)-Ar转移的S–C键构建方法；在多类真实金属蛋白中完成位点选择性共价产物制备，并通过结构与功能检测定位，从而解决有机金试剂通常可能干扰金属中心的合成应用痛点。不是仅测蛋白活性或纯做结构分析，第一遍纳入。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：现有蛋白类别有限，特别需要非配位且暴露的Cys，不能宣传为任何金属蛋白的无差别标记；Au(III)偶联对复杂蛋白内部可及性、金属种类与副反应存在边界。作者以Fe/Ni rubredoxin、锌指及Fe–S蛋白以及单晶/功能保留证据实际证实S-芳基化制备能力，这些不足不否定原论文方法学贡献，第二遍支持纳入。"
+        }
+      ],
+      "titleZh": "Au(III)介导金属酶半胱氨酸的位点选择性芳基化偶联",
+      "authors": [
+        "Nima Adhami",
+        "Michael J.P. Rebelo",
+        "Pathorn H. Teptarakulkarn",
+        "Sofia H. Ando",
+        "Eileen J. Olivares",
+        "Thomas Louis-Goff",
+        "Aldo J. Muñoz",
+        "Varun Tej Raviprolu",
+        "Michael R. Sawaya",
+        "Doyeon Han",
+        "Itzel P. Vaca",
+        "Niko W. Vlahakis",
+        "Songrong Qu",
+        "Tyler A. Kerr",
+        "Reanne J. Coutinho",
+        "Rachel R. Ogorzalek Loo",
+        "Joseph A. Loo",
+        "Hannah S. Shafaat",
+        "Jose A. Rodriguez",
+        "Alexander M. Spokoyny"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "103241",
+        "articleNumber": "103241",
+        "doi": "10.1016/j.chempr.2026.103241",
+        "correctedInterpretation": "Printed issue month or provisional metadata is never publisher first online date; retain actual source separately."
+      },
+      "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2451929426003074",
+      "reviewEvidence": {
+        "publisherPage": "https://doi.org/10.1016/j.chempr.2026.103241",
+        "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003074",
+        "publisherOnlineDate": "2026-09-11",
+        "sourceDate": "2026-09-01",
+        "originalDoiStageDateConflict": true,
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_chem",
+        "stageBatchSha": "edaaef14cca66d44d1cc46f57cee778ff8234c36",
+        "sourceReviewQueueGitBlobSha": "d7a3fc4b5a88e9caf08b376b506e5ed34d3fb0f6",
+        "stageSourceSha256": "e3f7ff7f7112be2775f9599c05becd548e312c8dfba43f4cff993bc9f2eea6ae",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-09-11",
+          "originalIssueOrApiMonthNotOnline": true,
+          "frozenSourceUnmodified": true,
+          "authoritativeDate": "publisher_official_available_online",
+          "publisherArticlePage": "https://www.sciencedirect.com/science/article/pii/S2451929426003074"
+        },
+        "publisherEvidenceTier": "Chem_official_article_plus_article_specific_preparative_science"
+      },
+      "noFullAbstractReproduction": true,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reviewerIdentity": "same_assistant_two_distinct_science_and_adversarial_passes_not_independent_humans"
+    }
+  ]
+}
