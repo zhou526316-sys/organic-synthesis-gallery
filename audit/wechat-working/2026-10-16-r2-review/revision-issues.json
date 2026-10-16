@@ -1,0 +1,74 @@
+{
+  "revision": "2026-10-16-r2",
+  "status": "all_identified_editorial_issues_closed",
+  "issues": [
+    {
+      "id": "SCI-01",
+      "source": "JACS Scheme1c; SI S100–S101",
+      "fix": "补全邻图编号，说明电子分析的Ni(PPh3)2模型身份，避免将模型等同实测电荷。",
+      "status": "closed"
+    },
+    {
+      "id": "SCI-02",
+      "source": "JACS SI S105 SchemeS19",
+      "fix": "补入首次C–C成键的手性来源比较，保留原能差，未将其与99%ee宣称为精确拟合。",
+      "status": "closed"
+    },
+    {
+      "id": "IMG-01",
+      "source": "JACS SI S72",
+      "fix": "补入两项真实放大反应式；结果与操作条件按各自实验分别表述。",
+      "status": "closed"
+    },
+    {
+      "id": "LANG-01",
+      "source": "Nature Fig2c",
+      "fix": "将单一底物式标题改为准确的α位取代底物表述，并保留两种具体取代。",
+      "status": "closed"
+    },
+    {
+      "id": "SCI-03",
+      "source": "Nature SI TableS5/S7; PeerReview pp13–14",
+      "fix": "将产物比例修正为目标产物收率，明确不同水含量的原始数据与非单调关系。",
+      "status": "closed"
+    },
+    {
+      "id": "LOGIC-01",
+      "source": "Nature main pp5–6 Fig4c/d",
+      "fix": "恢复先描述符相关/预测、后构象解释的原文论证关系，不编造先有机理再拟合的因果顺序。",
+      "status": "closed"
+    },
+    {
+      "id": "LANG-02",
+      "source": "两篇全文",
+      "fix": "用数据与科学含义替代多处给编辑的禁止式句子；资料说明去除聊天语境，不改变事实和证据强度。",
+      "status": "closed"
+    },
+    {
+      "id": "COVER-01",
+      "source": "两张原始TOC/正文图及微信裁切参数",
+      "fix": "修复原先1:1截断今日图、2.35:1截断往期图的潜在裁切。今日横版像素不变，底部补白作为方形母版；往期等比例缩小10%居中，保留全部图像。",
+      "status": "closed"
+    },
+    {
+      "id": "TRANSPORT-01",
+      "source": "现有HTML与生产写稿器比较",
+      "fix": "锁定单张真实文献卡片及二维码，不让正式写稿时替换成未审查的动态四卡灰色占位。",
+      "status": "closed"
+    },
+    {
+      "id": "IMG-02",
+      "source": "SI S105 crop rendered comparison",
+      "fix": "第二轮视觉复核扩大顶部和左右安全边，保留过渡态配体的完整外缘。",
+      "status": "closed"
+    },
+    {
+      "id": "TEXT-QA-01",
+      "source": "Actual production renderer compared with text-only artifact",
+      "fix": "纯文字稿改为从最终渲染正文逐项提取，包含开篇图注、每日入口及全部来源说明，避免审核稿遗漏读者实际可见文字。",
+      "status": "closed"
+    }
+  ],
+  "openFindings": [],
+  "notAClaimOfUniversalErrorFreedom": true
+}

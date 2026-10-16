@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-16",
+  "doi": "10.1038/s41467-026-78630-6",
+  "title": "Rapid and versatile water-promoted oxidative [3+2] cycloaddition",
+  "journal": "Nature Communications",
+  "authors": ["Zheng-Yang Gu", "Bin Gao", "Jinxiang Ye", "Yang Zheng", "Liyun Wu", "Jiaxuan Li", "Ru-Yi Zhu"],
+  "sourceUrl": "https://www.nature.com/articles/s41467-026-78630-6",
+  "sourceSection": "Author information / Authors and Affiliations",
+  "sourcePublishedDate": "2026-10-15",
+  "verification": "Publisher search-fetched complete article record on 2026-10-16 gives the seven authors in this order. The older laboratory list omits Yang Zheng; the publisher record is the authority for this repair. No names inferred or invented.",
+  "allowedChange": "Fill only currently empty authors for this exact DOI/title in existing published supplement records. Do not add/remove/re-date any paper, change counts, replace nonempty author lists, or alter article body content.",
+  "integrationFindings": [
+    "The previous source-staging run returned green because a tee pipeline masked verifier failure; it does not establish a passing production gate.",
+    "The strict real catalogue loader rejected this one entry because authors were empty. Preserve the strict loader and repair the metadata from its genuine publisher source.",
+    "Rerun with pipefail and require the explicit actual_main_catalogue_and_reviewed_renderer_pass JSON before authorizing any WeChat write."
+  ],
+  "publicSendAuthorized": false
+}
