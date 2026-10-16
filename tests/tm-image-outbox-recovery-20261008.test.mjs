@@ -12,7 +12,7 @@ function fn(name){
   assert.ok(end>m.index,'missing function end '+name);
   return source.slice(m.index,end+5);
 }
-const names=['pendingImageTransferKeys','retainImageForGalleryUpload','imageReplayReceiptMatches',
+const names=['pendingImageTransferKeys','retainImageForGalleryUpload','queuedBodyFigure','imageReplayReceiptMatches',
   'imageReplayAlreadyStored','replayOneDeferredImage'];
 function fixture(){
   const store=new Map(),requests=[];
@@ -56,7 +56,7 @@ function fixture(){
   };
   vm.createContext(ctx);
   vm.runInContext(names.map(fn).join('\n')+
-    '\n globalThis.F={pendingImageTransferKeys,retainImageForGalleryUpload,imageReplayReceiptMatches,imageReplayAlreadyStored,replayOneDeferredImage};',ctx);
+    '\n globalThis.F={pendingImageTransferKeys,retainImageForGalleryUpload,queuedBodyFigure,imageReplayReceiptMatches,imageReplayAlreadyStored,replayOneDeferredImage};',ctx);
   const job={doi,jobId,addedDate:'2026-10-08',captureToc:true};
   function eligibleRow(){const key=ctx.F.pendingImageTransferKeys()[0];const row=store.get(key);row.nextAt=0;store.set(key,row);return key;}
   return {ctx,store,requests,job,payload,doi,CAP,STAGE,eligibleRow};
@@ -141,4 +141,35 @@ test('publisher image and owner PDF upload have bounded dynamic timeouts',()=>{
   assert.ok(source.includes("retainImageForGalleryUpload(job,endpoint,payload,stage,error)"));
   assert.ok(source.includes('startImageOutboxSender();'));
   assert.ok(!fn('retainImageForGalleryUpload').includes('PRIVATE_PDF_CAPTURE_ENDPOINT'));
+});
+
+test('Gallery image sender runs while a publisher capture task is active',async()=>{
+  const x=fixture();
+  assert.equal(x.ctx.F.retainImageForGalleryUpload(x.job,x.CAP,x.payload,'r2_upload',new Error('gm_request_timeout')),true);
+  x.eligibleRow();
+  x.store.set('osg-toc-v6:active-job',{jobId:'another-active-publisher-job'});
+  assert.equal(await x.ctx.F.replayOneDeferredImage(),true,'active DOI must not starve independently authorized transfer');
+  assert.equal(x.requests.filter(r=>r.kind==='write').length,1);
+});
+
+test('a queued body figure is recognized but not called a verified stage receipt',()=>{
+  const x=fixture(),p={...x.payload,id:'figure-2',label:'Figure 2',width:900,height:700};
+  delete p.kind;
+  assert.equal(x.ctx.F.retainImageForGalleryUpload(x.job,x.STAGE,p,'figure_stage',
+    new Error('image_upload_deferred_to_gallery')),true);
+  const queued=x.ctx.F.queuedBodyFigure(x.job,'Figure 2');
+  assert.equal(queued.doi,x.doi);
+  assert.equal(queued.payload.imageData,p.imageData);
+  assert.equal(x.ctx.F.queuedBodyFigure(x.job,'Figure 3'),null);
+  assert.equal(x.ctx.F.queuedBodyFigure({...x.job,addedDate:'2026-09-30'},'Figure 2'),null);
+  assert.match(source,/result\.figures\.items\.push\(\{label:label,status:'deferred',reason:'figure_gallery_replay_pending'\}\)/);
+  assert.match(source,/if\(retained&&stage==='figure_stage'\)job\._imageOutboxDeferFigures=true/);
+  assert.match(source,/result\.figures\.stored\+result\.figures\.failed\+Number\(result\.figures\.deferred\|\|0\)/);
+});
+
+test('image queue reports success only if extension storage readback matches exact bytes',()=>{
+  const x=fixture();
+  x.ctx.GM_setValue=(key,row)=>x.store.set(key,{...row,bytes:0});
+  assert.equal(x.ctx.F.retainImageForGalleryUpload(x.job,x.CAP,x.payload,'r2_upload',new Error('gm_request_timeout')),false);
+  assert.match(source,/if\(!isGalleryPage\(\)\|\|imageOutboxBusy\|\|!writeToken\(\)\)return false/);
 });
