@@ -5541,7 +5541,7 @@ function embeddedJobDois(value) {
       // Strict validation and the existing 80-DOI GET fallback stay intact.
       var bulkEndpoint=layer==='figures'?WORKER+'/api/article-figures/staged/inventory'
         :layer==='toc'?WORKER+'/api/media/local-capture-index/inventory':'';
-      if(bulkEndpoint&&dois.length<=2000){
+      if(bulkEndpoint&&dois.length>INVENTORY_SCOPED_BATCH_SIZE&&dois.length<=2000){
         try{
           var bulk=await inventoryReadMetadataJson({method:'POST',url:bulkEndpoint,
             timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},
@@ -5558,10 +5558,19 @@ function embeddedJobDois(value) {
             +';readMs='+Number(bulk.inventoryReadMs||0)+';cacheHits='+Number(bulk.inventoryCacheHits||0));
           return {complete:true,count:bulk.items.length,items:bulk.items};
         }catch(error){
-          // The fallback is authoritative if every 80-DOI chunk succeeds.
-          // Do not poison inventoryComplete() with a recovered optimization miss.
+          var bulkReason=String(error&&error.message||error||'');
+          // A browser+GM timeout is an exhausted transport budget, not a
+          // version-capability miss. A second full hedge would make startup
+          // even slower and violate the existing no-repeat inventory guard.
+          if(/(?:inventory_deadline|inventory_transport_failed|gm_request_timeout|controller_native_timeout|network_timeout|fetch_timeout)/i.test(bulkReason)){
+            errors.push(layer+'库存快照超时:'+captureLiveError(bulkReason));
+            updateInventoryProgress(run,layer,'error',layerStart,'bulk_exhausted_no_hedge');
+            return {complete:false,count:0,items:[]};
+          }
+          // A failed fast endpoint can fall back to old fully verified chunks,
+          // and a recovered fallback must not poison inventoryComplete().
           updateInventoryProgress(run,layer,'loading',layerStart,
-            'bulk_fallback_to_chunked:'+captureLiveError(error.message||error));
+            'bulk_fallback_to_chunked:'+captureLiveError(bulkReason));
         }
       }
       for(var offset=0;offset<chunks.length;offset+=2){
