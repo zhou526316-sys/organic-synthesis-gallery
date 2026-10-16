@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 const rawSource=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const source=rawSource.replace(
   "  function batchBoot(){",
-  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet};\n"+
+  "  globalThis.__historicalDiagTest={batchDrainReports,batchReportKeys,batchQueueDiagnostic,batchRetryAllowed,batchDbOp,batchParseOfficialOa,batchOfficialOaGet,batchStatusWrite};\n"+
   "  function batchBoot(){");
 const browser=await chromium.launch({headless:true});
 const doiOld=['10.1021/jacs.6c08636','10.1038/s44160-026-01100-1'];
@@ -474,6 +474,78 @@ else throw Error('unexpected historical network request '+options.url);
     rights:'https://creativecommons.org/licenses/by-nc-nd/4.0/',probeMs:1700});
   assert.equal(restrictedRights.status,'license_not_verified');
   assert.equal(restrictedRights.packet,undefined,'NC/ND must not be saved');
+
+  // The publisher may block HTML parsing before DOMContentLoaded. Confirm
+  // document-start emits an exact, DOI-bound activation receipt first.
+  const slowPublisher=await browser.newPage();
+  let releaseBlockingScript;
+  const holdScript=new Promise(resolve=>{releaseBlockingScript=resolve;});
+  const boundDoi=doiOld[0],boundToken='c'.repeat(24),boundRun='d'.repeat(24);
+  const strongScience=('Results of ligand-to-metal charge transfer photochemistry show reproducible synthetic coupling under verified controlled conditions. ').repeat(10);
+  const slowHtml='<!doctype html><html><head><script src="https://pubs.acs.org/block-dcl.js"></script>'+
+    '<meta name="citation_doi" content="'+boundDoi+'">'+
+    '<meta name="citation_license_url" content="https://creativecommons.org/licenses/by/4.0/">'+
+    '</head><body><main><article><h2>Results and discussion</h2><p>'+strongScience+
+    '</p><h2>Conclusion</h2><p>'+strongScience+'</p></article></main></body></html>';
+  await slowPublisher.route('https://pubs.acs.org/block-dcl.js',async route=>{
+    await holdScript;
+    await route.fulfill({status:200,contentType:'application/javascript',body:'/* released */'});
+  });
+  await slowPublisher.route('https://pubs.acs.org/doi/**',route=>route.fulfill({
+    status:200,contentType:'text/html',body:slowHtml
+  }));
+  const publisherPrelude=[
+    'window.__publisherGm=new Map([["gallery-historical-text-batch-v2:job",{',
+    'doi:'+JSON.stringify(boundDoi)+',publication:"2026-09-14",journal:"JACS",',
+    'title:"Delayed publisher HTML",runId:'+JSON.stringify(boundRun)+',',
+    'token:'+JSON.stringify(boundToken)+',expiresAt:Date.now()+25000}]]);',
+    'window.GM_getValue=(key,def)=>window.__publisherGm.has(key)?window.__publisherGm.get(key):def;',
+    'window.GM_setValue=(key,value)=>window.__publisherGm.set(key,value);',
+    'window.GM_deleteValue=key=>window.__publisherGm.delete(key);',
+    'window.GM_registerMenuCommand=()=>{};'
+  ].join('\n');
+  await slowPublisher.addInitScript({content:publisherPrelude+'\n'+source});
+  try{
+    await slowPublisher.goto('https://pubs.acs.org/doi/'+boundDoi+
+      '#gallery-historical-job='+boundToken,{waitUntil:'commit'});
+    await slowPublisher.waitForFunction(()=>
+      window.__publisherGm?.get('gallery-historical-text-batch-v2:publisher-progress-v1')
+        ?.stage==='publisher_dom_wait',null,{timeout:7000});
+    const premature=await slowPublisher.evaluate(()=>({
+      ready:document.readyState,
+      progress:window.__publisherGm.get('gallery-historical-text-batch-v2:publisher-progress-v1'),
+      hasResult:window.__publisherGm.has('gallery-historical-text-batch-v2:result')
+    }));
+    assert.equal(premature.ready,'loading','heartbeat should precede slow DOMContentLoaded');
+    assert.equal(premature.progress.token,boundToken);
+    assert.equal(premature.progress.pageDoiVerified,false);
+    assert.equal(premature.hasResult,false);
+    releaseBlockingScript();
+    await slowPublisher.waitForFunction(()=>
+      window.__publisherGm?.get('gallery-historical-text-batch-v2:result')
+        ?.status==='ok',null,{timeout:14000});
+    const eventual=await slowPublisher.evaluate(()=>
+      window.__publisherGm.get('gallery-historical-text-batch-v2:result'));
+    assert.equal(eventual.packet.publicUploadAllowed,false);
+    assert.equal(eventual.packet.doi,boundDoi);
+  }finally{
+    releaseBlockingScript();
+    await slowPublisher.close();
+  }
+
+  // A completed pause cannot still display the controller's pausing state.
+  await page.evaluate(lastDoi=>window.__historicalDiagTest.batchStatusWrite({
+    state:'paused',currentStage:'本轮已暂停',
+    lastDoi,lastError:'publisher_script_not_confirmed'
+  }),doiOld[0]);
+  const pausedPanel=await page.locator('#osg-historical-batch').innerText();
+  assert.ok(pausedPanel.includes('已暂停'));
+  assert.ok(pausedPanel.includes('上次受阻：publisher_script_not_confirmed'));
+  assert.ok(pausedPanel.includes('最终状态：本轮已暂停'));
+  assert.ok(!pausedPanel.includes('准备暂停…'));
+  const pausedButton=page.getByRole('button',{name:'已暂停'});
+  assert.equal(await pausedButton.count(),1);
+  assert.equal(await pausedButton.isDisabled(),true);
 
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,

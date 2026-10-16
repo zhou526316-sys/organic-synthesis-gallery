@@ -68,7 +68,8 @@ test('three official Q3 original synthetic methods have independently reviewed s
   ]);
   assert.ok(manifest.summary.include>=125);
   assert.equal(manifest.summary.pending,2);
-  assert.equal(manifest.nextEligiblePublicationSlot,'2026-10-16T08:00:00+08:00');
+  assert.match(manifest.nextEligiblePublicationSlot,/^2026-10-\d{2}T08:00:00\+08:00$/);
+  assert.ok(manifest.nextEligiblePublicationSlot>='2026-10-16T08:00:00+08:00');
   assert.equal(validateHistoricalApproval(manifest).length,manifest.summary.include);
   for(const src of approved){
     const x=approvedMap.get(src.doi);

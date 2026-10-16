@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.10
+// @version      0.2.11
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -39,12 +39,9 @@
 (() => {
   'use strict';
   const BATCH_TAB_BIND_KEY='gallery-historical-text-batch-v2:tab-binding-v030';
-  // TOC-inspired early binding survives publisher SPA hash cleanup.
-  try{
-    const early=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
-    if(early&&publisher(location.hostname)&&typeof sessionStorage!=='undefined')
-      sessionStorage.setItem(BATCH_TAB_BIND_KEY,early[1]);
-  }catch(_){}
+  // The tab binding is established only after checking the active job at
+  // document-start below. Calling publisher() here would access KNOWN_HOSTS
+  // before its const declaration and silently lose the old fragment binding.
   const CUTOFF='2026-10-01';
   const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Complete 1-shot TOC-aligned DOI registry
   const CANONICAL_RELEASE_URL='https://gallery.gczhouwld.com/release-delivery.json';
@@ -344,7 +341,8 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.10';
+  const BATCH_SCRIPT_VERSION='0.2.11';
+  const BATCH_BINDING_REVISION='historic-body-early-bound-v031';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v030';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -723,9 +721,11 @@
       clearInterval(leaseTimer);
       if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
       db.close();batchActive=false;
-      batchStatusWrite({state:batchPaused||rateLimited?'paused':'finished',
+      const requestedPause=batchPaused;
+      batchPaused=false; // Reset before the UI renders its terminal state.
+      batchStatusWrite({state:requestedPause||rateLimited?'paused':'finished',
+        currentStage:requestedPause?'本轮已暂停':rateLimited?'官方 OA 接口限流，剩余待续':'本轮已结束',
         attempted,saved,failed,rightsPending,finishedAt:Date.now()});
-      batchPaused=false;
     }
   }
 
@@ -1021,7 +1021,7 @@
     if(['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
       &&prior.pageDoiVerified!==true){
       // Exactly one automatic replay after the publisher binding revision.
-      return manualBlocked===true||(prior.captureRevision!==BATCH_CAPTURE_REVISION
+      return manualBlocked===true||(prior.bindingRevision!==BATCH_BINDING_REVISION
         &&![403,429].includes(Number(prior.httpStatus||0)));
     }
     if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
@@ -1244,14 +1244,14 @@
     });
     const refresh=()=>{
       const s=GM_getValue(BATCH_STATE,{})||{};
-      const progress=[s.state==='loading'?'读取全库注册表中':s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
+      const progress=[s.state==='loading'?'读取全库注册表中':s.state==='running'?'运行中':s.state==='pausing'?'准备暂停…':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
         '留供检查的出版社页 '+Number(s.reviewTabs||0)+' / '+BATCH_MAX_REVIEW_TABS,
-        s.currentStage?'当前阶段：'+s.currentStage:'',
-        s.lastDoi?'当前/最近：'+s.lastDoi:'',
-        s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
+        s.currentStage?(batchActive?'当前阶段：':'最终状态：')+s.currentStage:'',
+        s.lastDoi?(batchActive?'当前 DOI：':'最后处理 DOI：')+s.lastDoi:'',
+        s.lastError?(batchActive?'本地错误：':'上次受阻：')+String(s.lastError).slice(0,85):''].filter(Boolean);
       const diag=GM_getValue(BATCH_DIAG_STATE,{})||{};
       const tokenConfigured=Boolean(batchReportToken());
       configure.textContent=tokenConfigured?'更换诊断密钥':'配置诊断密钥';
@@ -1267,8 +1267,9 @@
       start.disabled=batchActive||s.state==='loading';
       openOa.disabled=batchActive||s.state==='loading';
       coverageButton.disabled=false;
-      pause.disabled=!batchActive;
-      pause.textContent=batchPaused?'准备暂停…':'暂停';
+      pause.disabled=!batchActive||batchPaused;
+      pause.textContent=batchActive&&batchPaused?'准备暂停…'
+        :!batchActive&&s.state==='paused'?'已暂停':'暂停';
     };
     coverageButton.addEventListener('click',()=>{
       coverageDetails.style.display='block';
@@ -1307,7 +1308,11 @@
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
-    pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
+    pause.addEventListener('click',()=>{
+      if(!batchActive||batchPaused)return;
+      batchPaused=true;
+      batchStatusWrite({state:'pausing',currentStage:'等待当前 DOI 结束后暂停'});
+    });
     recheck.addEventListener('click',()=>void batchStart(true,'blocked').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
@@ -1790,7 +1795,8 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:job.token,captureRevision:BATCH_CAPTURE_REVISION,navigationMode,
+          runId,jobId:job.token,captureRevision:BATCH_CAPTURE_REVISION,
+          bindingRevision:BATCH_BINDING_REVISION,navigationMode,
           rightsSignal,bodyEvidence,bodyCompleteness:
             status==='saved_local'?String(result.packet?.bodyCompleteness||'partial'):'not_saved',
           reportEventId:''};
@@ -1821,9 +1827,11 @@
       if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
       GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
       db.close();batchActive=false;
-      batchStatusWrite({state:batchPaused?'paused':'finished',attempted,saved,
-        rightsPending,failed,skipped,finishedAt:Date.now()});
-      batchPaused=false;
+      const requestedPause=batchPaused;
+      batchPaused=false; // A final render must never say both paused and pausing.
+      batchStatusWrite({state:requestedPause?'paused':'finished',
+        currentStage:requestedPause?'本轮已暂停':'本轮已结束',
+        attempted,saved,rightsPending,failed,skipped,finishedAt:Date.now()});
     }
   }
   // Wait for relevant DOM hydration, not a long fixed sleep or blind 24s timeout.
@@ -2010,6 +2018,41 @@
     storeResult({status:'ok',stage:'local_store',packet,sourceSha256});
   }
 
+  // The controller requires evidence that Tampermonkey actually entered the
+  // publisher tab. DOMContentLoaded can be delayed by a publisher shell, so
+  // report *only script activation* at document-start, not a verified DOI,
+  // licence or reusable manuscript. A random/open publisher tab is not a job.
+  function batchEarlyPublisherHeartbeat(){
+    if(!publisher(location.hostname)||typeof GM_getValue!=='function'
+      ||typeof GM_setValue!=='function')return false;
+    const job=GM_getValue(BATCH_JOB,null);
+    if(!job||!normalizeDoi(job.doi)||!job.runId
+      ||!/^[a-f0-9]{24}$/.test(String(job.token||''))
+      ||Number(job.expiresAt||0)<=Date.now())return false;
+    const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
+    if(fragment&&fragment[1]!==job.token)return false;
+    let remembered='';
+    try{remembered=sessionStorage.getItem(BATCH_TAB_BIND_KEY)||'';}catch(_){}
+    if(fragment?.[1]!==job.token&&remembered!==job.token)return false;
+    let observedDoi='';
+    try{observedDoi=pageDoi();}catch(_){}
+    if(observedDoi&&observedDoi!==job.doi)return false;
+    // Bind this tab only after the active job's run, token, expiration and
+    // any DOI already present have been verified. Survives same-tab SPA hash
+    // rewrites without granting an unrelated publisher tab a capture lease.
+    if(fragment?.[1]===job.token){
+      try{sessionStorage.setItem(BATCH_TAB_BIND_KEY,job.token);}catch(_){}
+    }
+    const prior=GM_getValue(BATCH_PROGRESS,null);
+    if(prior?.runId===job.runId&&prior?.token===job.token)return true;
+    GM_setValue(BATCH_PROGRESS,{
+      runId:job.runId,token:job.token,doi:job.doi,
+      stage:'publisher_dom_wait',failed:false,reasonCode:'',
+      at:Date.now(),pageDoiVerified:false,sectionCount:0,
+      evidenceChars:0,httpStatus:null,bindingRevision:BATCH_BINDING_REVISION
+    });
+    return true;
+  }
   function batchBoot(){
     if(location.hostname==='gallery.gczhouwld.com'){
       if(location.pathname==='/'||location.pathname==='/index.html'){
@@ -2023,8 +2066,18 @@
       void batchWorker().catch(()=>{});
     }
   }
-  // Capture fragment binding at document-start, but defer DOM work until ready.
-  if(document.readyState==='loading'&&typeof document.addEventListener==='function')
-    document.addEventListener('DOMContentLoaded',batchBoot,{once:true});
-  else batchBoot();
+  // Run the DOI-bound startup receipt synchronously before the document is
+  // ready. Only DOM extraction waits; interactive fires before delayed DCL.
+  if(publisher(location.hostname))batchEarlyPublisherHeartbeat();
+  let batchBooted=false;
+  function batchBootOnce(){
+    if(batchBooted)return;
+    batchBooted=true;batchBoot();
+  }
+  if(document.readyState==='loading'&&typeof document.addEventListener==='function'){
+    document.addEventListener('readystatechange',()=>{
+      if(document.readyState!=='loading')batchBootOnce();
+    });
+    document.addEventListener('DOMContentLoaded',batchBootOnce,{once:true});
+  }else batchBootOnce();
 })();

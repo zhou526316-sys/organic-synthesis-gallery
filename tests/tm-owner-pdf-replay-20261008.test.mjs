@@ -75,6 +75,22 @@ test('ACS private PDF fetched over authorized publisher browser is retained only
   assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure({...h.job,addedDate:'2026-09-30'},h.pdf,new Error('gm_request_timeout')),false);
 });
 
+test('proactively deferred PDF bytes are durable, hashed, owner-only and nonblocking',async()=>{
+  const h=fixture();
+  assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('private_pdf_upload_deferred')),true);
+  const row=h.store.get(h.ctx.O.pendingOwnerPdfKeys()[0]);
+  assert.equal(row.byteLength,2048);
+  assert.equal(row.sha256.length,64);
+  assert.equal(JSON.stringify(row).includes('测试专属PDF捕获授权占位符'),false);
+  assert.match(source,/var deferred=await retainOwnerPdfAfterUploadFailure\(job,pdf,new Error\('private_pdf_upload_deferred'\)\)/);
+  assert.match(source,/if\(!isGalleryPage\(\)\|\|ownerPdfReplayBusy\)return false/);
+  assert.match(source,/reason:'owner_pdf_local_replay_pending'/);
+  h.makeReady();
+  h.store.set('osg-toc-v6:active-job',{jobId:'publisher-is-capturing'});
+  assert.equal(await h.ctx.O.replayOneOwnerPdf(),true,'Gallery owner replay must not await the publisher DOI queue');
+  assert.equal(h.network.filter(x=>x.kind==='upload').length,1);
+});
+
 test('a downloaded owner PDF survives an expired upload deadline for later verified local replay',async()=>{
   const h=fixture();
   assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,

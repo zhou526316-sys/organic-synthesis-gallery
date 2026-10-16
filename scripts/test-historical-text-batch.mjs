@@ -5,20 +5,22 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.10/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.10'/);
+assert.match(original,/\/\/ @version\s+0\.2\.11/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.11'/);
+assert.match(original,/const BATCH_BINDING_REVISION='historic-body-early-bound-v031'/);
 assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v030'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  function batchBoot(){";
 assert.ok(original.includes(anchor));
 const source=original.replace('const BATCH_PUBLISHER_PROBE_MS=9500;',
-  'const BATCH_PUBLISHER_PROBE_MS=45;').replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket,batchFinishPublisherTab,batchCloseReviewTabs,batchArticlePageReady,batchReviewTabs};\n"+anchor);
+  'const BATCH_PUBLISHER_PROBE_MS=45;').replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch,batchBodyStructure,batchReuseRights,batchBodyCompleteness,gather,batchPathBindsCurrentJob,batchUnconfirmedPublisherResult,batchParseOfficialOa,batchFetchOfficialOaPacket,batchFinishPublisherTab,batchCloseReviewTabs,batchArticlePageReady,batchEarlyPublisherHeartbeat,batchReviewTabs};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false,
-  routePath='/doi/'+DOI,routeHash='#gallery-historical-job='+TOKEN}={}){
+  routePath='/doi/'+DOI,routeHash='#gallery-historical-job='+TOKEN,
+  deferDocument=false,expiredJob=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
-    title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
+    title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+(expiredJob?-20000:20000)
   }]]);
   const nodes=[
     {tagName:'H2',textContent:'Abstract'},
@@ -50,9 +52,17 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     }]:[];
     throw Error('unexpected selector '+selector);
   }};
-  let licenseReads=0,readyReads=0;
+  let licenseReads=0,readyReads=0,documentReleased=!deferDocument;
+  const listeners=new Map(),tabSession=new Map();
   const document={body:footer,title:pageTitle,
-    get readyState(){readyReads++;return readyReads<=readyAfter?'loading':'complete';},
+    get readyState(){
+      if(!documentReleased)return 'loading';
+      readyReads++;return readyReads<=readyAfter?'loading':'complete';
+    },
+    addEventListener(name,handler){
+      const callbacks=listeners.get(name)||[];
+      callbacks.push(handler);listeners.set(name,callbacks);
+    },
     querySelectorAll(selector){
       if(selector.startsWith('meta[name="citation_doi"'))return [{content:pageDoi}];
       if(selector.startsWith('meta[name="citation_license_url"'))return license?[{content:license}]:[];
@@ -68,6 +78,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     location:{hostname:'pubs.acs.org',origin:'https://pubs.acs.org',
       pathname:routePath,hash:routeHash},
     document,window:{alert(){},confirm:()=>true},TextEncoder,Blob,crypto:webcrypto,URL,URLSearchParams,
+    sessionStorage:{getItem:key=>tabSession.get(key)||null,setItem:(key,value)=>tabSession.set(key,value)},
     performance:{getEntriesByType:()=>[{responseStatus:navigationStatus||0}]},
     GM_getValue:(key,def)=>values.has(key)?values.get(key):def,
     GM_setValue:(key,value)=>values.set(key,value),
@@ -77,7 +88,13 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     console
   };
   vm.runInNewContext(source,context,{timeout:3000});
-  return {context,values,root};
+  return {context,values,root,tabSession,
+    releaseDocument(){
+      documentReleased=true;
+      for(const kind of ['readystatechange','DOMContentLoaded'])
+        for(const callback of listeners.get(kind)||[])callback();
+    }
+  };
 }
 const registry={pairedCaptureRegistry:true,webpageDoiCount:5,articles:[
   {doi:DOI,date:'2026-09-14',journal:'JACS'},
@@ -86,6 +103,56 @@ const registry={pairedCaptureRegistry:true,webpageDoiCount:5,articles:[
   {doi:'10.1021/acs.orglett.2026fake',date:'2025-01-01',journal:'Organic Letters'},
   {doi:DOI,date:'2026-09-14',journal:'JACS'}
 ]};
+
+test('document-start DOI-bound heartbeat arrives before delayed publisher DOM without claiming content',async()=>{
+  const f=fixture({deferDocument:true});
+  const progress=f.values.get('gallery-historical-text-batch-v2:publisher-progress-v1');
+  assert.equal(progress?.stage,'publisher_dom_wait');
+  assert.equal(progress?.token,TOKEN);
+  assert.equal(progress?.runId,RUN);
+  assert.equal(progress?.pageDoiVerified,false);
+  assert.equal(progress?.sectionCount,0);
+  assert.equal(progress?.bindingRevision,'historic-body-early-bound-v031');
+  assert.equal(f.values.has('gallery-historical-text-batch-v2:result'),false,
+    'script activation may not claim scientific text or licence before the page is ready');
+  // A publisher SPA may erase its hash before DOM readiness, but a binding
+  // recorded in this exact tab's sessionStorage is still valid.
+  f.context.location.hash='';
+  assert.equal(f.tabSession.get('gallery-historical-text-batch-v2:tab-binding-v030'),TOKEN);
+  f.releaseDocument();
+  for(let n=0;n<60&&!f.values.has('gallery-historical-text-batch-v2:result');n++)
+    await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(f.values.get('gallery-historical-text-batch-v2:result')?.status,'ok');
+  assert.equal(f.values.get('gallery-historical-text-batch-v2:result')?.packet?.publicUploadAllowed,false);
+});
+
+test('early heartbeat cannot claim a different token, unrelated tab, expired job or wrong DOI',()=>{
+  for(const params of [
+    {routeHash:'#gallery-historical-job='+'c'.repeat(24)},
+    {routeHash:''},
+    {expiredJob:true},
+    {pageDoi:'10.1021/jacs.unrelated'}
+  ]){
+    const f=fixture({...params,deferDocument:true});
+    assert.equal(f.values.has('gallery-historical-text-batch-v2:publisher-progress-v1'),false,
+      'unbound or mismatched publisher must not gain an early job receipt');
+    assert.equal(f.values.has('gallery-historical-text-batch-v2:result'),false);
+  }
+});
+
+test('v0.2.11 early-handshake retry is once-only and never overrides observed HTTP 403',()=>{
+  const api=fixture().context.__batchTest;
+  const prior={status:'publisher_script_not_confirmed',pageDoiVerified:false,
+    captureRevision:'historic-body-evidence-v030'};
+  assert.equal(api.batchRetryAllowed(prior,false),true);
+  assert.equal(api.batchRetryAllowed({...prior,
+    bindingRevision:'historic-body-early-bound-v031'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,status:'license_not_verified',
+    pageDoiVerified:true},false),false,
+    'same scientific parser must not reclassify a rights block during binding-only upgrade');
+});
 
 test('DOI-bound article structure remains metadata only when no reusable licence exists',async()=>{
   const x=fixture({license:''});
@@ -353,7 +420,7 @@ test('retry policy separates temporary errors from license and access blocks',()
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:true},false),true);
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),true);
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false,
-    captureRevision:'historic-body-evidence-v030'},false),false);
+    bindingRevision:'historic-body-early-bound-v031'},false),false);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},true),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
