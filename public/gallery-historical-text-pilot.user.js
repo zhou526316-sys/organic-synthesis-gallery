@@ -1193,7 +1193,7 @@
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
     root.id='osg-historical-batch';
-    root.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147482500;width:300px;max-width:calc(100vw - 24px);background:#fff;color:#172439;border:1px solid #b7c9dd;border-radius:12px;box-shadow:0 4px 18px #15263c33;padding:10px;font:13px/1.5 system-ui,sans-serif';
+    root.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147482500;width:300px;max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172439;border:1px solid #b7c9dd;border-radius:12px;box-shadow:0 4px 18px #15263c33;padding:10px;font:13px/1.5 system-ui,sans-serif';
     const head=document.createElement('div');
     head.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px';
     const label=document.createElement('strong');label.textContent='历史正文 · 独立补抓';
