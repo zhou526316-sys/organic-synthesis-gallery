@@ -63,7 +63,7 @@ test('ten DOI-distinct original syntheses pass full immutable, bibliography and 
    assert.equal(evidence.publisherPage,'https://pubs.acs.org/doi/'+x.doi);
    assert.equal(x.citation.doi,x.doi);
    assert.equal(x.citation.year,2026);
-   assert.ok(x.citation.volume&&x.citation.issue&&/^\\d+-\\d+$/.test(x.citation.pages),x.doi);
+   assert.ok(x.citation.volume&&x.citation.issue&&/^\d+-\d+$/.test(x.citation.pages),x.doi);
    assert.ok(x.authors.length>=3);
    assert.equal(validChineseTitle(x.titleZh),true,x.doi);
    assert.equal(x.reviewPasses,2);
