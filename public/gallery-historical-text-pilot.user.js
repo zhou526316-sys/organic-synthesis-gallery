@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.11
+// @version      0.2.12
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -341,7 +341,7 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.11';
+  const BATCH_SCRIPT_VERSION='0.2.12';
   const BATCH_BINDING_REVISION='historic-body-early-bound-v031';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v030';
@@ -1193,7 +1193,7 @@
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
     root.id='osg-historical-batch';
-    root.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147482500;width:300px;max-width:calc(100vw - 24px);background:#fff;color:#172439;border:1px solid #b7c9dd;border-radius:12px;box-shadow:0 4px 18px #15263c33;padding:10px;font:13px/1.5 system-ui,sans-serif';
+    root.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147482500;width:300px;max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172439;border:1px solid #b7c9dd;border-radius:12px;box-shadow:0 4px 18px #15263c33;padding:10px;font:13px/1.5 system-ui,sans-serif';
     const head=document.createElement('div');
     head.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px';
     const label=document.createElement('strong');label.textContent='历史正文 · 独立补抓';
@@ -1217,6 +1217,9 @@
     evidencePilot.textContent='跨期刊正文证据核验（12篇）';
     const receiptPilot=document.createElement('button');
     receiptPilot.textContent='出版社回执核验（最多8篇）';
+    const foregroundOne=document.createElement('button');
+    foregroundOne.textContent='单篇前台重试（手动）';
+    foregroundOne.title='仅手动选择此前未确认启动的单篇论文，明确确认后才切到出版社页';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
@@ -1232,10 +1235,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,hide]){
+    for(const btn of [start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,foregroundOne,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot);
+    controls.append(start,openOa,coverageButton,closeReview,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,receiptPilot,foregroundOne);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -1266,6 +1269,7 @@
       message.textContent=progress.join('\n');
       start.disabled=batchActive||s.state==='loading';
       openOa.disabled=batchActive||s.state==='loading';
+      foregroundOne.disabled=batchActive||s.state==='loading';
       coverageButton.disabled=false;
       pause.disabled=!batchActive||batchPaused;
       pause.textContent=batchActive&&batchPaused?'准备暂停…'
@@ -1323,6 +1327,11 @@
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     receiptPilot.addEventListener('click',()=>void batchStart(true,'reachability').catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    // One user click + an exact DOI confirmation is the *only* path that
+    // authorizes a foreground publisher tab. Never switch focus in a bulk run.
+    foregroundOne.addEventListener('click',()=>void batchStart(true,'foreground_one').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     failures.addEventListener('click',()=>{
@@ -1603,6 +1612,10 @@
       if(mode==='acs_license'
         &&(batchPublisher(paper.doi)!=='acs'||!['license_not_verified','license_pending_load'].includes(prior?.status)))
         continue;
+      if(mode==='foreground_one'&&(!prior||prior.pageDoiVerified===true
+        ||!['publisher_script_not_confirmed','publisher_no_response','timeout'].includes(prior.status)
+        ||[403,429].includes(Number(prior.httpStatus||0))
+        ||!publisherAllowedForForeground(paper.doi)))continue;
       if(mode==='reachability'&&(!prior||prior.pageDoiVerified===true
         ||!['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
         ||[403,429].includes(Number(prior.httpStatus||0))))continue;
@@ -1616,6 +1629,13 @@
           &&prior?.bodyCompleteness==='partial'&&!existing.has(paper.doi)))continue;
       selected.push(paper);
       if(mode==='acs_license'&&selected.length>=10)break;
+    }
+    if(mode==='foreground_one'){
+      // A real click is never blanket consent to foreground all failed DOI.
+      // Use the most recently failed no-handler paper and one visit maximum.
+      selected.sort((a,b)=>Number(previous.get(b.doi)?.checkedAt||0)
+        -Number(previous.get(a.doi)?.checkedAt||0));
+      return selected.slice(0,1);
     }
     if(mode==='pilot'||mode==='reachability'){
       const groups=new Map();
@@ -1669,12 +1689,19 @@
         currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
       return;
     }
-    const label=mode==='reachability'?'仅核验此前无回执的出版社脚本执行（最多8篇）'
+    const label=mode==='foreground_one'?'单篇手动前台重试'
+      :mode==='reachability'?'仅核验此前无回执的出版社脚本执行（最多8篇）'
       :mode==='pilot'?'跨期刊正文/许可证证据核验（不保证保存）'
       :mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
       :mode==='blocked'?'重新检查此前已受阻的文章':'开始独立补抓';
-    if(!window.confirm(label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。')){
-      db.close();return;
+    const confirmation=mode==='foreground_one'
+      ?'确认单篇前台重试 DOI：'+selected[0].doi
+        +'\n这会主动切换到出版社标签页，仅此一篇。仅保存文章级 CC BY/CC0 授权且 DOI 核实的科学正文；不采 PDF/图片/SI。'
+      :label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇后台打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。';
+    if(!window.confirm(confirmation)){
+      db.close();
+      batchStatusWrite({state:'paused',currentStage:'已取消，未打开出版社标签页',lastError:''});
+      return;
     }
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
@@ -1695,39 +1722,29 @@
       for(const paper of selected){
         if(batchPaused)break;
         const token=batchId();
-        const navigationMode=mode==='reachability'
-          &&batchPublisher(paper.doi)==='acs'&&attempted%2===1?'doi_resolver':'publisher_direct';
+        const navigationMode=mode==='foreground_one'?'manual_foreground'
+          :mode==='reachability'&&batchPublisher(paper.doi)==='acs'
+            &&attempted%2===1?'doi_resolver':'publisher_direct';
         let job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS,
           pilotMode:mode==='reachability'?'reachability':'',navigationMode};
         GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);GM_setValue(BATCH_JOB,job);
-        batchStatusWrite({lastDoi:paper.doi,currentStage:'publisher_open'});
+        const manualForeground=mode==='foreground_one'&&selected.length===1;
+        batchStatusWrite({lastDoi:paper.doi,currentStage:
+          manualForeground?'publisher_open_manual_foreground':'publisher_open'});
         let result={status:'publisher_unreachable',stage:'publisher_open'};
         try{
           const resolved=await batchResolvePublisherTaskUrl(paper,navigationMode);
           if(!resolved)throw Error('publisher_route_missing');
-          const navigate=(record)=>resolved+'#gallery-historical-job='+record.token;
+          const navigate=record=>resolved+'#gallery-historical-job='+record.token;
+          // All automatic/full-corpus/pilot runs stay in background. A
+          // publisher no-handler result is recorded for manual review rather
+          // than stealing focus from the Gallery's two controller panels.
           batchTab=GM_openInTab(navigate(job),
-            {active:false,insert:true,setParent:true});
+            {active:manualForeground,insert:true,setParent:true});
           if(!batchTab||typeof batchTab.close!=='function')
             throw Error('publisher_tab_handle_unavailable');
           result=await batchAwaitResponse(job);
-          // TOC's ACS/wiley startup recovery: one *foreground* retry if the
-          // first background tab never produced a script heartbeat. No rerun
-          // of observed 403/429, auth challenges, or uncertain licenses.
-          if(result.status==='publisher_script_not_confirmed'&&!batchPaused
-            &&navigationMode!=='doi_resolver'&&publisherAllowedForForeground(paper.doi)){
-            try{batchTab.close();}catch(_){}
-            batchTab=null;GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);
-            job={...job,token:batchId(),expiresAt:Date.now()+BATCH_LIMIT_MS,foregroundRetry:true};
-            GM_setValue(BATCH_JOB,job);
-            batchStatusWrite({currentStage:'publisher_foreground_retry',lastDoi:paper.doi});
-            batchTab=GM_openInTab(navigate(job),
-              {active:true,insert:true,setParent:true});
-            if(!batchTab||typeof batchTab.close!=='function')
-              throw Error('publisher_retry_tab_handle_unavailable');
-            result=await batchAwaitResponse(job);
-          }
         }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
         finally{
           batchFinishPublisherTab(batchTab,result,paper.doi);

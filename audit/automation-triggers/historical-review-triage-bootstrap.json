@@ -1,6 +1,6 @@
 {
-  "version": 17,
-  "purpose": "staging_only_rescore_eight_Q3_original_science_reviews_after_PR713",
+  "version": 18,
+  "purpose": "post_PR716_189_approved_Q3_Q1_date_correct_staging_only_review_refresh",
   "approvedAt": "2026-10-16",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,8 +8,8 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-16T03:21:59.388Z",
-  "reason": "PR #713 merged ee3c1fc580419fd65b1f660fe1dff6595c1feeff; academic approvals now 184 (8 new), original date pending 2, formal historical 122; rerun current preflight/review staging only and validate actual 12,286 Q3 sources, 192 roots, original source hashes. Do not assume 11199-8 until same-generation readback. No D1/media/fulltext/PDF, daily New/Hot or offslot publication.",
+  "requestedAt": "2026-10-16T03:44:07.987Z",
+  "reason": "PR #716 merged 4cc9f895194096961d4ce4c716b0a69bcf9f49c6 with four Q3 preparative methods and one Q1-first-online CCS Chemistry DOI appearing under Q3 issue source, plus reviewed SHA-pinned off-quarter exclusion in staging reconciler. Replay staging only, preserve 12286 Q3 DOI, 192/192 source roots, source SHA/DOI and 57266 all-history source candidates; verify actual unfinished, Q3 approved-wait, Q1 publisher-verified-outside-Q3 and global stale reviewer cursor. No D1, copyrighted media or formal admissions.",
   "retainsNoScopeAutoApproval": true,
   "triggerScope": "20261016_recheck_13_stale_global_reviewer_shard_statuses",
   "expectedCompleteRootCount": 371,
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 396,
   "expectedStageCompletedRoots": 396,
-  "expectedAcademicInclude": 184,
+  "expectedAcademicInclude": 189,
   "academicDecisionSource": "Git_main_PR707_merger_151_approved_122_formal_29_formally_missing_of_which_1_owner_excluded",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "ee3c1fc580419fd65b1f660fe1dff6595c1feeff",
+  "lastRelatedMergeCommit": "4cc9f895194096961d4ce4c716b0a69bcf9f49c6",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -42,7 +42,7 @@
   "lastTriggerReason": "post_eight_more_Q3_ACS_approved_116_include_and_1087_unchanged_Git_formal",
   "exactNextEligibleHistoricalPublicationSlot": "2026-10-17T08:00:00+08:00",
   "previousHistoricalFormallyPresent": 122,
-  "newlyApprovedAwaiting08": 62,
+  "newlyApprovedAwaiting08": 67,
   "originalDateConflictHolds": [
     "10.1021/acs.orglett.6c03028",
     "10.1021/acs.orglett.6c02707",
@@ -63,7 +63,7 @@
     "10.1038/s44160-026-01146-w",
     "10.1038/s41557-026-02226-2"
   ],
-  "expectedReviewedWaitingAt08": 62,
+  "expectedReviewedWaitingAt08": 67,
   "expectedQ3Formal": 851,
   "expectedQ3UniqueSources": 12286,
   "newHistoricalApprovalDoiExact": [
@@ -113,17 +113,14 @@
   "expectedQ3SourceUniqueDoi": 12286,
   "expectedSourceRoots": 192,
   "expectedCurrentMainQ3FormalAtPreflight": 851,
-  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 62,
+  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 66,
   "provisionalUnfinishedIfInputsUnchanged": null,
   "newAcademicDoiExact": [
-    "10.1021/jacs.6c14333",
-    "10.1021/acs.joc.6c01263",
-    "10.1021/acscatal.6c05012",
-    "10.1002/anie.7084396",
-    "10.1002/anie.7251439",
-    "10.1021/acs.orglett.6c02963",
-    "10.1021/acs.orglett.6c02609",
-    "10.31635/ccschem.026.202607864"
+    "10.1021/acs.orglett.6c02958",
+    "10.1021/acs.joc.6c01515",
+    "10.1021/acs.joc.6c00729",
+    "10.1002/anie.9818208",
+    "10.31635/ccschem.025.202506810"
   ],
   "scientificSupplementPendingButNotSourceIntegrated": [
     "10.1038/s41467-026-75484-w"
@@ -168,5 +165,9 @@
   "existingGlobalStatusStaleCount": 0,
   "expectedQ3UnfinishedBeforeRecount": 11212,
   "confirmedQ3UnfinishedAfterRecount": null,
-  "expectedCurrentMainFormalCatalogCountAtPreflight": 1186
+  "expectedCurrentMainFormalCatalogCountAtPreflight": 1186,
+  "latestCrossQuarterPublisherFirstOnlineDoi": "10.31635/ccschem.025.202506810",
+  "latestCrossQuarterPublisherFirstOnline": "2026-01-11",
+  "latestCrossQuarterStageIssueDate": "2026-08-01",
+  "latestCrossQuarterMediaPolicy": "metadata_only"
 }

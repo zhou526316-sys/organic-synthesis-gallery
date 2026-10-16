@@ -1,0 +1,88 @@
+name: WeChat Oct16 reviewed source staging
+on:
+  push:
+    branches: [wechat-oct16-autoreview-r2]
+    paths: ['audit/automation-triggers/wechat-oct16-reviewed-stage.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct16-reviewed-stage
+  cancel-in-progress: false
+defaults:
+  run:
+    shell: bash
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore frozen catalogue and reconcile latest main without weakening its guards
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          BASE="$(git merge-base HEAD origin/main)"
+          git show "$BASE:public/rolling-supplement.json" > public/rolling-supplement.json
+          git add public/rolling-supplement.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(wechat): restore frozen Gallery publication; author completion belongs in draft memory'
+          fi
+          git merge --no-edit origin/main
+          git diff --exit-code origin/main HEAD -- public/rolling-supplement.json public/papers.gz.b64 scripts/audit-literature.mjs shared/literature-journals.js docs/literature-scope-contract.md docs/literature-update-protocol.md
+      - name: Apply exact reviewed metadata adapter, preserving all scientific text and image fingerprints
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,json,hashlib
+          root=pathlib.Path.cwd();gp=root/'audit/wechat-working/2026-10-16-review-gate.json'
+          g=json.loads(gp.read_text())
+          def blob(p):
+            b=p.read_bytes();return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          for r in g['sources']+g['assets']:
+            assert blob(root/r['path'])==r['blobSha'],'Previously reviewed source changed: '+r['path']
+          p=root/'ops/wechat-publisher/create-draft.py';s=p.read_text()
+          old='        paper["doi"] = doi\n        if not paper.get("titleZh")'
+          new='        paper["doi"] = doi\n        from reviewed_daily_metadata import complete_authors\n        paper = complete_authors(ROOT, slot, paper)\n        if not paper.get("titleZh")'
+          assert s.count(old)==1,'Publisher patch no longer exact'
+          s=s.replace(old,new);p.write_text(s)
+          for row in g['sources']:
+            if row['path']=='ops/wechat-publisher/create-draft.py':row['blobSha']=blob(p)
+          for name in ['ops/wechat-publisher/reviewed_daily_metadata.py','scripts/test-wechat-reviewed-daily-metadata.py','audit/wechat-working/2026-10-16-integration-author-evidence.json']:
+            assert all(r['path']!=name for r in g['sources'])
+            g['sources'].append({'path':name,'blobSha':blob(root/name)})
+          g['integrationAdjustment']={'reason':'Frozen Gallery records must not be rewritten for a draft. Complete one verified missing author field in memory only.','scientificNarrativeChanged':False,'imagesChanged':False,'frozenPublicationChanged':False,'requiresActualIntegrationPass':True}
+          gp.write_text(json.dumps(g,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Install image decoder
+        run: python3 -m pip install --quiet Pillow
+      - name: Require actual successful original checks and memory-only metadata tests
+        run: |
+          set -euo pipefail
+          python3 scripts/test-wechat-reviewed-daily-metadata.py
+          python3 scripts/verify-wechat-oct16-review.py | tee /tmp/wechat-oct16-integration.json
+          python3 - <<'PY'
+          import pathlib,json,subprocess
+          r=json.loads(pathlib.Path('/tmp/wechat-oct16-integration.json').read_text())
+          assert r['status']=='actual_main_catalogue_and_reviewed_renderer_pass'
+          assert r['papers']==35 and r['assets']==41 and r['bodyFigures']==[20,18]
+          subprocess.run(['git','diff','--exit-code','origin/main','--','public/rolling-supplement.json','public/papers.gz.b64'],check=True)
+          r.update({'metadataCompletion':'publisher-proven authors in draft memory only','frozenPublicationChanged':False,'draftWritePerformed':False,'publicSendAuthorized':False,'priorMetadataRepairNotMerged':True,'reviewedBodiesAndCoversUnchanged':True})
+          pathlib.Path('audit/wechat-working/2026-10-16-r2-integration-check.json').write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Save only validated draft adapter and receipt, then push branch
+        run: |
+          set -euo pipefail
+          git add ops/wechat-publisher/create-draft.py audit/wechat-working/2026-10-16-review-gate.json audit/wechat-working/2026-10-16-r2-integration-check.json
+          git diff --cached --check
+          git commit -m 'fix(wechat): pass Oct16 draft integration without changing any frozen publication'
+          git push origin HEAD:wechat-oct16-autoreview-r2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct16-integration-final
+          path: /tmp/wechat-oct16-integration.json
+          retention-days: 7

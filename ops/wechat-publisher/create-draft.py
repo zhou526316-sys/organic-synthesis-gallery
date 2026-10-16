@@ -223,6 +223,8 @@ def load_latest_release():
     for doi in dois:
         paper = dict(index.get(doi) or {})
         paper["doi"] = doi
+        from reviewed_daily_metadata import complete_authors
+        paper = complete_authors(ROOT, slot, paper)
         if not paper.get("titleZh") and translations.get(doi):
             paper["titleZh"] = translations[doi]
         paper["authors"] = [
@@ -567,15 +569,15 @@ def build_content(
 
     if gallery_qr_url:
         card_visuals = uploaded_urls.get("__gallery_cards__", {}) if isinstance(uploaded_urls.get("__gallery_cards__"), dict) else {}
-        parts.append(
-            build_gallery_jump_card(
-                slot[:10],
-                papers,
-                featured,
-                gallery_qr_url,
-                card_visuals=card_visuals,
+        if isinstance((featured or {}).get("reviewed_gallery_entry"), dict):
+            from reviewed_gallery_entry import build as build_reviewed_entry
+            parts.append(build_reviewed_entry(sys.modules[__name__], slot[:10], papers,
+                                              featured, uploaded_urls, gallery_qr_url))
+        else:
+            parts.append(
+                build_gallery_jump_card(slot[:10], papers, featured, gallery_qr_url,
+                                        card_visuals=card_visuals)
             )
-        )
 
     if featured:
         figures = {str(x.get("id")): x for x in featured.get("figures", []) if isinstance(x, dict)}
@@ -2719,6 +2721,7 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
     title = str((items[0] or {}).get("title") or "")
     card_nav = []
     rendered = []
+    preview_heading = "封面排版示意"
     for idx, item in enumerate(items):
         if not isinstance(item, dict):
             continue
@@ -2728,14 +2731,19 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
         content = normalize_preview_lazy_images(str(item.get("content") or ""))
         source_url = str(item.get("content_source_url") or "")
         thumb_url = str(item.get("thumb_url") or "")
+        preview_cover_style = ""
+        crop_text = str(item.get("pic_crop_235_1") or "")
+        if idx == 0 and crop_text == "0_0_1_0.4255319149":
+            preview_cover_style = "object-position:50% 0%;"
+            preview_heading = "云端图文回读 · 原图与标题分开展示，非客户端叠字模拟"
         anchor = f"article-{idx + 1}"
         if idx == 0:
             card_nav.append(
                 "<a class='push-card push-card-main' href='#" + anchor
                 + "' aria-label='" + html.escape(item_title, quote=True) + "'>"
                 + "<span class='cover-frame'>"
-                + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
-                + "<b class='cover-title' title='" + html.escape(item_title, quote=True)
+                + (f"<img src='{html.escape(thumb_url, quote=True)}' style='{preview_cover_style}'/>" if thumb_url else "")
+                + ("<b class='cover-title' style='position:static;display:block;color:#222;font-size:15px;line-height:1.5;max-height:none;margin-top:8px;' title='" if preview_cover_style else "<b class='cover-title' title='") + html.escape(item_title, quote=True)
                 + "'>" + html.escape(item_title) + "</b></span>"
                 + (f"<small class='cover-digest'>{html.escape(digest)}</small>" if digest else "")
                 + "</a>"
@@ -2803,7 +2811,7 @@ h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 <body>
 <main class="bundle">
 <section class="bundle-head">
-<p>封面排版示意 · 共 {len(items)} 篇</p>
+<p>{preview_heading} · 共 {len(items)} 篇</p>
 {''.join(card_nav)}
 </section>
 {''.join(rendered)}
@@ -3506,6 +3514,16 @@ def main() -> int:
         required_review_sources,
     )
 
+    if metadata_request_path.exists():
+        authorized_request = json.loads(metadata_request_path.read_text(encoding="utf-8"))
+        if (authorized_request.get("publicationDate") == publication_date
+            and authorized_request.get("draftOnly") is True
+            and authorized_request.get("publicSendAuthorized") is False
+            and (args.publish or pending_publish_request(publication_date))):
+            raise RuntimeError("draft-only authorization conflicts with a public release request")
+    if isinstance((featured or {}).get("reviewed_gallery_entry"), dict):
+        from reviewed_gallery_entry import validate as validate_reviewed_entry
+        validate_reviewed_entry(sys.modules[__name__], publication_date, papers, featured)
     load_env(Path(args.env_file))
     token = get_access_token()
     # A source-link repair explicitly approved by the owner must update only
@@ -3521,9 +3539,16 @@ def main() -> int:
                 request=source_link_request, args=args,
             )
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
-    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 5 if daily_guide else 4)
-    gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
-    qr_local = prepare_gallery_qr_image(gallery_target_url)
+    if isinstance((featured or {}).get("reviewed_gallery_entry"), dict):
+        from reviewed_gallery_entry import validate as validate_reviewed_entry
+        reviewed_entry = validate_reviewed_entry(sys.modules[__name__], publication_date, papers, featured)
+        qr_local = local_images.get(reviewed_entry["qr_figure_id"])
+        if qr_local is None:
+            raise RuntimeError("reviewed date QR asset is unavailable")
+    else:
+        uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 5 if daily_guide else 4)
+        gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
+        qr_local = prepare_gallery_qr_image(gallery_target_url)
     gallery_qr_url = upload_local_body_image(
         token,
         qr_local,

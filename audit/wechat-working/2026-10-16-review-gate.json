@@ -1,0 +1,353 @@
+{
+  "date": "2026-10-16",
+  "revision": "2026-10-16-r2",
+  "articleCount": 2,
+  "selectionDois": [
+    "10.1021/jacs.6c17168",
+    "10.1038/s41586-026-10933-6"
+  ],
+  "textReview": "pass",
+  "imageReview": "pass",
+  "status": "identified_editorial_findings_closed_production_integration_required",
+  "reviewedAt": "2026-10-16T11:07:03.843532+08:00",
+  "materializedCropReviewRequired": true,
+  "strictFigurePlacement": true,
+  "sources": [
+    {
+      "path": "scripts/verify-wechat-oct16-review.py",
+      "blobSha": "d7bda280b8c38ee5a15758e28c347f2fb3542c1a"
+    },
+    {
+      "path": "public/wechat-editions/2026-10-16.json",
+      "blobSha": "147a5ca237d40b965407c026b22d4bf2a82ea458"
+    },
+    {
+      "path": "public/wechat-featured/2026-10-16.json",
+      "blobSha": "d32d53cbdbe4c003b4548d6020c8873bfe29bc83"
+    },
+    {
+      "path": "public/wechat-retrospective/levin-isoxazole-pyrrole-edit-20261016.json",
+      "blobSha": "72fe1451d4b3ebadf91266e5f53464dc3f054c76"
+    },
+    {
+      "path": "ops/wechat-publisher/reviewed_gallery_entry.py",
+      "blobSha": "c8332dc5825572d625fdbeb15cff64a8deb40c47"
+    },
+    {
+      "path": "ops/wechat-publisher/create-draft.py",
+      "blobSha": "1280c0ddcb0d567ff492838f325ec1d101935ff5"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/retro-text-only.md",
+      "blobSha": "f6fa17b47e90f4ea5ccec0e725356ad5ffdd267d"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/daily-papers-local-snapshot.json",
+      "blobSha": "023b35f6c1a571c5e33e074b1c7fed0f95aed129"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/daily-release.json",
+      "blobSha": "b738afb9b321babccf4a7ed309041769649075e8"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/retro-assembled-symbolic.html",
+      "blobSha": "86408b399b00d2a8065ece02749f85ba981807f2"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/covers.json",
+      "blobSha": "122219024379802076c3ce65a1a57f2d1d1f6f8d"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/images-only.json",
+      "blobSha": "23a48c534389da042badcddd5a525027a84f6ba2"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/today-text-only.md",
+      "blobSha": "445fe6b8b78493385704de9898241e028ca595f8"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/text-only-combined.md",
+      "blobSha": "2049c646af238c304105c7c7d8b876d84251b5a8"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/sources.json",
+      "blobSha": "309cbaf3c40a0e3abe5f765323d5c29ca2b5b261"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/revision-issues.json",
+      "blobSha": "e0fd6212f54a8bd1808aee29049d29df434275f9"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/editorial-review.md",
+      "blobSha": "7256bc92531b57cf759d0a26bce7c3ce0d3c8781"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/today-assembled-symbolic.html",
+      "blobSha": "9cbb3593c23add52a600711130e15fda9b663cda"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/figure_manifest.json",
+      "blobSha": "ac6af8fcfec76c391fe5cd5b8d80182784605c8d"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/automated-checks.json",
+      "blobSha": "d1f0f57351035bd2c504e0b99fc0734d664fa213"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-r2-review/mobile-layout-qa.json",
+      "blobSha": "85512f5552da85c09040c6c943a28a1913165d62"
+    },
+    {
+      "path": "ops/wechat-publisher/reviewed_daily_metadata.py",
+      "blobSha": "6b2113d414bf5a1bde1d607b09bf544b5a548bb1"
+    },
+    {
+      "path": "scripts/test-wechat-reviewed-daily-metadata.py",
+      "blobSha": "3e3131fd8b1231caadd14f1bdad40ec350870dcd"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-integration-author-evidence.json",
+      "blobSha": "6491588600eb5afd44ab703f668d57fa5b5060d1"
+    }
+  ],
+  "assets": [
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_si_tempo.png",
+      "blobSha": "9233612a870cefc902b1fa770889d03e76fefe52",
+      "sha256": "4c3b923f89111dd9b30322c3290f8250acdb7b9b1c258aa97bc96db9d3cadc04"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig2bc.png",
+      "blobSha": "6197308b05eee5848289cbb32a3c98f4fb1452be",
+      "sha256": "b3dccb58b62e989b3439e91ebfea66f97f5a5bd62e89f8049f9820dd4234b198"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_table1.png",
+      "blobSha": "2cecc06e0b473ac5e33a4aa88147ef6cb1b8ffd9",
+      "sha256": "06fe83504caa0e7c7b4630321f6e9094acc0387bfee87c4204826f40e948be47"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_schemeS11.png",
+      "blobSha": "bb89df6156d6d1f8fe7b520c9e97c53d3dadcabb",
+      "sha256": "02fd79f2b6a0c7c3a02276338c4220a2caf0cf0d2ff58a412e6139f93c35632f"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme6d.png",
+      "blobSha": "31e740d25bacea3d5a9d15ce07b6e740a9c54a07",
+      "sha256": "c3c0483ea2feabd1632b9bb6e0e46cabcc70a2b76f3bca80052f5f26d0378ddd"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme1d.png",
+      "blobSha": "1a1111654047eef5f8e1305278a0bf1957559d64",
+      "sha256": "65cdddd1542b858e74dd8e45482c675e0af59e2f6cd43792e4aa35e261619a96"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/cover_featured.png",
+      "blobSha": "e2871516356d41dc542614b0fc53a620194a6d23",
+      "sha256": "48dd7c86b36e5f6c6a5a4359dcc9d8749f5b9b45c7f0a67cf8fc01079081e6a5"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme4.png",
+      "blobSha": "6099211e3a66c59ed4d9ab758ae0c6092b39e7c0",
+      "sha256": "8acb0af8f5e44548ec11f3cf13e77bfea961b3a57e65fcceb003aff6f725b75d"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig1.png",
+      "blobSha": "357f17e1bb090148599666bd449343770c1e43de",
+      "sha256": "34720ffc3de9246376b5817322def867e282861f917cee9115f8dd632259ee99"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_tableS4.png",
+      "blobSha": "4db87bb1babb96c6643198efedc9e6f0700ca29f",
+      "sha256": "8ad4c8de9cf230f969487d4a4bb0bcfbd68c364b4e5e9c30cfb7be223ceca92e"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme6ab.png",
+      "blobSha": "b66eea8e629320782efd8d692b94ae5a5ef45ab6",
+      "sha256": "2bdfe9062615c27db2bf772f409a611e1d4e06ad0b2b30abd7c19b06debd69de"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme6c_cycle.png",
+      "blobSha": "b0dd202e8788ba2d97645ba981f4974e2562ea6a",
+      "sha256": "086fd82c0b10d430de7753fc9bd3b8a426ea297c41675a6ca6ba8e2c3ef4d6d3"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_tableS3.png",
+      "blobSha": "4fe4a78c8e018d15a92128cde0849bf4dd5f965e",
+      "sha256": "8b5d4db2637b9a15d05fab0a47094c55709d3144aba2e362c8156228c2ddffe8"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig3a.png",
+      "blobSha": "23d348e72ea2980e6dafb2c541d2eb7a59ebb677",
+      "sha256": "92da77289ff009a333b3a1db2e8d131abdd976defd3b23a592c4944d103d84e5"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_si_schemeS3.png",
+      "blobSha": "c23f86fb245b5bbb15a2d113dc92408c36bc9c5c",
+      "sha256": "27336cb4dbf143eb3226f18609b9f95f07428e82aa922f2ea21c41603b1b5bac"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_si_tableS5.png",
+      "blobSha": "467718a1ab5c094e7fc006aef4dc44e0b6a97949",
+      "sha256": "fb551c10dff4c568ce9abe2c71fad0ef3dd25aab67a4a123088fa3fcfa8eef7c"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig4d.png",
+      "blobSha": "473703d0bb1bbcc7d7595fdc69fb0aeb24421781",
+      "sha256": "8cf6a87704621c62d5e21ee4256c4760e68e28d2872900aedeb4a34c2bd040a8"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/gallery-20261016-qr.png",
+      "blobSha": "47eae0be8f9ebcd21c2870f23d5e811132d555d3",
+      "sha256": "91b72157cd7e93ee607752233308543cb4c068a613995ea0925f67b0ebb30041"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/cover_retrospective.png",
+      "blobSha": "73675e6bc2e36b54875b3567c59797f0340cae8f",
+      "sha256": "ad65c36f02508ad9071cc5da6a73f4d35d23ee77859c33267a991befc0d5a55d"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig2d.png",
+      "blobSha": "dd67286530f5de6ab59a9140bbd70c647f48f1be",
+      "sha256": "95fd7491487f471cca5f12d7419d9a3aa4ffec0d53515bfbf2c251c11c52ceea"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig3b.png",
+      "blobSha": "1bbc9ea97c8b3d3324e2b402b4647683f5bab054",
+      "sha256": "825a55bebae4d1a499bfd9752dd9772c449f1ca0b413bd587c441f599ef24c78"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme2_upper.png",
+      "blobSha": "4e4af152c1dc4b0bf85df18f99767a29aa30e4d6",
+      "sha256": "0b71b556681302b69f3b465fb5b386f3b64bd31ee8fa264c93b39ff87c55819a"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig4e.png",
+      "blobSha": "56adcec031a4387df122c3cb2606ac54b775a76d",
+      "sha256": "ae734532878a7db33e333cb3838de06aeaeb8b9bc8017c1f2ca893e7a43878f6"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_toc.png",
+      "blobSha": "a3d105ef9ae644382afa5a08eecf1efa1489c8f0",
+      "sha256": "207271a793ba2aff85448ca3ee296e51f13e662d231e67bd73955fa8446ffb3e"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_scaleS72.png",
+      "blobSha": "0780bfcd6c7a68730c5d2e0fa967f03f336f2a09",
+      "sha256": "85cc43d6aee3b6100b0d1d977c8d032904b879ab7179d4f7d3ec9f9cf8756b70"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme3.png",
+      "blobSha": "25785ef683f4c078c5c3d27a5fbe908910fcb00e",
+      "sha256": "7e9abc8be5aa92c8473e548b66e9340a8d64f833341886f3a37c3992102b7950"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme2_lower.png",
+      "blobSha": "95581ce842d1e59d02d3835510481a191e513873",
+      "sha256": "19ca1f7e9b6d17bcd648ab17c885820b542cf5e1994efbebcc88916602b23739"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme1ab.png",
+      "blobSha": "a3ee790086dbf658999141673b8be23d4218af2d",
+      "sha256": "decf22bd0827376c429cb5f6b99b06756f00939a994d0edeec93859a53a271ca"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme5.png",
+      "blobSha": "d4808ece5d86588eae0bb2ef90fa4a16e460bce5",
+      "sha256": "558e383e635f5060ffbed0e525ac93c9a952cd1160b0d7771a7dc861d9f2e4e3"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme6c_energy.png",
+      "blobSha": "72fa8a89f0760df0e8cc5f1c725cb675b3683a72",
+      "sha256": "5e525a8265dff22abdec89741a0853c524cee82176a063b61b9ce8f99a4b23a5"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig4c.png",
+      "blobSha": "93ed2259537e6a931b7cbed9ac640b235c6bec70",
+      "sha256": "b2e0d05e7e44341450b15da2de6c9a1d8ed22aafd8d579da7a9874cbab3a1d51"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig2a.png",
+      "blobSha": "8de21d16956ac86d60ff30143273df4f77a30547",
+      "sha256": "48b3d0ee6ed6ce7589cb9f0aa503b20ff922a7ec699921093566b41b584af387"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_scheme1c.png",
+      "blobSha": "39f50d50556849b3da1d1d011684e476886034b2",
+      "sha256": "44f1f5efc6a346887ff38acfec85067e750fce233fe7517eefee8ebaa467bba7"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_schemeS10.png",
+      "blobSha": "67af429cdba34548883c023235c1f977ca34d057",
+      "sha256": "eab5667b4c4835b68532eb2272360d59b6aee306134427c47ce257f20381abdb"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig2f.png",
+      "blobSha": "dca3bbbbaaa3d5674dabd58ee62879df22b23c55",
+      "sha256": "798277914ea96a1a6c19614d3487987bf2e1d18918f8d1239d56e2846282b95e"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig4ab.png",
+      "blobSha": "acf1eb16349769448a224b90c927b6f6caacc3b9",
+      "sha256": "8385df66e3f963d3be10a433c9d84333a3f8dc91987105ceae0d9b1563e0ba14"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/today_si_schemeS19.png",
+      "blobSha": "54c611d2a77dd46dcb093cdb6bbddbab90839140",
+      "sha256": "d420b28d8163a8520b96a3e26e6486feb3bbad35e5ae7f5fb8e161ac1c3778e4"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_si_tableS13.png",
+      "blobSha": "d470e20e9f52c9c78dd86e6cb4c5ad3e7b89ee42",
+      "sha256": "8e6a14675a974bbd4d1653cff90bcc36007a53290d0d09432e69ab5334956d56"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_si_tableS7.png",
+      "blobSha": "206a79d245a8069184d08702d4a4ef8388b649c4",
+      "sha256": "43b65fa8455a43c79819cc0d70a2c460d8219d7513453ae0de95e4e95b3dd9eb"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_peer_complex.png",
+      "blobSha": "eae3317b96f9814e02054f48cfb64d6e5ee98212",
+      "sha256": "a20e7854441658118666271fe9d95f603c50c5c62db58be8379c0863e7a68218"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-16-r2/retro_fig2e.png",
+      "blobSha": "0073db86c52b011f152742f25aafa158b573113b",
+      "sha256": "af8be2ee06e18d945cd0576ea4cff68629df0c5d39d9fbcaf379ca0707c12a05"
+    }
+  ],
+  "artifacts": {
+    "textOnly": "audit/wechat-working/2026-10-16-r2-review/text-only-combined.md",
+    "imagesOnly": "audit/wechat-working/2026-10-16-r2-review/images-only.json",
+    "editorialReview": "audit/wechat-working/2026-10-16-r2-review/editorial-review.md"
+  },
+  "expectedJournalTotal": 35,
+  "expectedBodyFigures": [
+    20,
+    18
+  ],
+  "expectedBodyImageTags": [
+    22,
+    18
+  ],
+  "expectedPreviewImageTags": 42,
+  "exactReadOriginal": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-16&doi=10.1021%2Fjacs.6c17168&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41586-026-10933-6&summary=0"
+  ],
+  "publicSendAuthorized": false,
+  "identifiedIssuesClosed": 11,
+  "openEditorialFindings": 0,
+  "sourceUncertaintiesDocumented": true,
+  "nativeWechatClientInspected": false,
+  "newOct16DraftAuthorized": true,
+  "priorOct15MediaToPreserve": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+  "integrationAdjustment": {
+    "reason": "Frozen Gallery records must not be rewritten for a draft. Complete one verified missing author field in memory only.",
+    "scientificNarrativeChanged": false,
+    "imagesChanged": false,
+    "frozenPublicationChanged": false,
+    "requiresActualIntegrationPass": true
+  }
+}

@@ -154,6 +154,7 @@ export function reconcileQ3({
 
   const pub=new Set(formal.articles.map(x=>normalize(x.doi)));
   const accepted=new Set(manifest.accepted.map(x=>normalize(x.doi)));
+  const acceptedByDoi=new Map(manifest.accepted.map(x=>[normalize(x.doi),x]));
   const pending=new Set(manifest.pending.map(x=>normalize(x.doi)));
   const excluded=new Set(corrections.items.filter(x=>x.decision==='exclude')
     .map(x=>normalize(x.doi)));
@@ -514,7 +515,29 @@ export function reconcileQ3({
     if(officialChem){
       counters.sourcePublisherDateDiscrepancies++;c.publisherDateDiscrepancies++;
     }
-    const status=pub.has(row.doi)?'published':
+    // A source root may be an issue-month bucket, not the first public online
+    // month. Use only DOI-specific previously approved publisher-date evidence
+    // pinned to this exact immutable root+SHA to classify Q1 papers in a Q3
+    // source census. Preserve the wrong source row; never fabricate a Q3 paper.
+    const archivedApproval=acceptedByDoi.get(row.doi);
+    const archivedProof=archivedApproval?.reviewEvidence;
+    const markedAsIssueDate=archivedProof?.firstOnlineDateEvidence?.stageDateIsIssueNotPublication===true;
+    const archiveOutOfQuarter=Boolean(markedAsIssueDate && archivedApproval?.date
+      && !publishedQ3(archivedApproval.date));
+    if(archiveOutOfQuarter){
+      ensure(archivedProof?.publisherOnlineDate===archivedApproval.date
+        && archivedProof?.firstOnlineDateEvidence?.officialPublisherFirstOnline===archivedApproval.date
+        && archivedProof?.firstOnlineDateEvidence?.stageApiDate===row.date
+        && row.sourceRoots.includes(archivedProof.stageBatchId)
+        && row.sourceHashes.includes(archivedProof.stageSourceSha256)
+        && archivedApproval.ingestionChannel==='historical_backfill'
+        && archivedApproval.mediaPolicy==='metadata_only',
+        'q3_historical_offquarter_source_evidence_invalid:'+row.doi);
+      counters.sourcePublisherDateDiscrepancies++;
+      c.publisherDateDiscrepancies++;
+    }
+    const status=archiveOutOfQuarter?'publisher_verified_outside_Q3':
+      pub.has(row.doi)?'published':
       accepted.has(row.doi)?'approved_waiting08':
       pending.has(row.doi)?'pending_date_or_scope':
       excluded.has(row.doi)?'explicit_excluded':

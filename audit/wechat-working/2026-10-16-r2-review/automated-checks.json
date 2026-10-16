@@ -1,0 +1,29 @@
+{
+  "stage": "post_revision_structure_data_and_renderer_check",
+  "publicationSlot": "2026-10-16T08:00:00+08:00",
+  "dailyCount": 35,
+  "journalCounts": {
+    "Science": 1,
+    "Nature Communications": 3,
+    "JACS": 6,
+    "Angew": 6,
+    "ACS Catalysis": 2,
+    "JOC": 7,
+    "Organic Letters": 10
+  },
+  "bodyFigures": [
+    20,
+    18
+  ],
+  "assets": 41,
+  "negativeTestsRejected": [
+    "count",
+    "date",
+    "doi",
+    "wrong QR target"
+  ],
+  "sourceProofs": "Original 36 proofs retained in supplied review package; added S19 and S72 source rectangles provided in R2 proofs.",
+  "cloudWritePerformed": false,
+  "status": "all_local_editorial_checks_pass",
+  "currentProductionMetadataCheck": "must run verifier without --offline on freshly checked-out repository before merge/write"
+}
