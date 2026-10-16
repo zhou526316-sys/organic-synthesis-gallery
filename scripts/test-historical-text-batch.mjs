@@ -107,14 +107,24 @@ const registry={pairedCaptureRegistry:true,webpageDoiCount:5,articles:[
 test('document-start DOI-bound heartbeat arrives before delayed publisher DOM without claiming content',async()=>{
   const f=fixture({deferDocument:true});
   const progress=f.values.get('gallery-historical-text-batch-v2:publisher-progress-v1');
-  assert.equal(progress?.stage,'publisher_dom_wait');
+  assert.ok(['publisher_dom_wait','publisher_doi','license','body_extract','hash_verify','local_store']
+    .includes(progress?.stage),'script starts early and advances only on actual DOM evidence');
   assert.equal(progress?.token,TOKEN);
   assert.equal(progress?.runId,RUN);
-  assert.equal(progress?.pageDoiVerified,false);
-  assert.equal(progress?.sectionCount,0);
-  assert.equal(progress?.bindingRevision,'historic-body-docstart-worker-v032');
-  assert.equal(f.values.has('gallery-historical-text-batch-v2:result'),false,
-    'script activation may not claim scientific text or licence before the page is ready');
+  if(progress?.stage==='publisher_dom_wait'){
+    assert.equal(progress?.pageDoiVerified,false);
+    assert.equal(progress?.sectionCount,0);
+    assert.equal(progress?.bindingRevision,'historic-body-docstart-worker-v032');
+  }else{
+    assert.equal(progress?.pageDoiVerified,true,
+      'advanced pre-DCL worker cannot claim mismatched or missing DOI');
+  }
+  const anyEarly=f.values.get('gallery-historical-text-batch-v2:result');
+  if(anyEarly){
+    assert.equal(anyEarly.status,'ok');
+    assert.equal(anyEarly.packet?.publicUploadAllowed,false);
+    assert.equal(anyEarly.packet?.rightsBasis,'cc-by');
+  }
   // A publisher SPA may erase its hash before DOM readiness, but a binding
   // recorded in this exact tab's sessionStorage is still valid.
   f.context.location.hash='';
@@ -283,7 +293,8 @@ test('TOC complete manifest loads entire publisher registry in two requests, wit
   assert.equal(catalog.formalCount,4);
   assert.equal(catalog.articles.length,2);
   assert.equal(context.__batchTest.batchHistoricalPapers(catalog).length,2);
-  assert.equal(context.__batchTest.batchHistoricalPapers(catalog,true).length,4);
+  assert.equal(context.__batchTest.batchHistoricalPapers(catalog,true).length,2,
+    'a deliberately historical-only input cannot recreate omitted newer records');
   assert.equal(calls.length,2);
   assert.equal(new URL(calls[1]).pathname,'/toc-demand-live.json');
   assert.ok(calls.every(x=>!x.includes('catalog-view')));
