@@ -17,7 +17,7 @@ function fixture(retained=true){
   const candidate={label:'Figure 4',text:'Source scientific figure',url:'https://pubs.acs.org/doi/'+doi};
   const image={imageData:'data:image/png;base64,'+'a'.repeat(1024),width:900,height:800,byteLength:768};
   const ctx={
-    Number,String,Boolean,Object,Error,
+    Number,String,Boolean,Object,Error,VERSION:'6.2.20',
     location:{href:'https://pubs.acs.org/doi/'+doi},
     FIGURE_STAGE_ENDPOINT:'https://api.gczhouwld.com/api/article-figures/stage',
     assertBoundCaptureJob:()=>doi,normalizeDoi:x=>String(x||'').toLowerCase(),
