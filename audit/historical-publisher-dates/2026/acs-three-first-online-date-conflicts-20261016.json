@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "gallery-acs-official-first-online-vs-frozen-metadata-20261016-v1",
+  "mode": "publisher_date_provenance_and_independent_science_only_not_publication",
+  "preparedAt": "2026-10-16T01:01:15.970Z",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "sourceDateImmutable": true,
+  "officialPublisher": "American Chemical Society",
+  "correctedPublisherFirstOnline": [
+    {
+      "doi": "10.1021/acs.joc.6c01064",
+      "sourceDate": "2026-08-10",
+      "publisherOnline": "2026-08-11",
+      "articlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01064/5251775/Electrochemical-Synthesis-of-Arylamino-Ketones",
+      "sourceRoot": "2026-08-08_2026-08-14_joc",
+      "rawGitBlob": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+      "reviewQueueGitBlob": "e1278ac417c9c293357ae000360b08fa5c43c84d",
+      "sourceSha256": "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03015",
+      "sourceDate": "2026-08-14",
+      "publisherOnline": "2026-08-15",
+      "articlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03015/5257681/Nickel-Catalyzed-Asymmetric-C-sp2-P-Coupling-for",
+      "sourceRoot": "2026-08-08_2026-08-14_organic-letters",
+      "rawGitBlob": "7bd5ce16a4ea71b93c86b143b95ef2c50b59e753",
+      "reviewQueueGitBlob": "b0da74bc624dbc867829b22d52e57a32ab9cd878",
+      "sourceSha256": "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c"
+    }
+  ],
+  "doubleReviewedNewAccepted": [
+    {
+      "doi": "10.1021/acs.joc.6c01064",
+      "journal": "JOC",
+      "title": "Electrochemical Synthesis of β-Arylamino Ketones from Tertiary Anilines and Silyl Enol Ethers",
+      "titleZh": "叔苯胺与硅烯醇醚电化学偶联制备β-芳氨基酮",
+      "date": "2026-08-11",
+      "authors": [
+        "Yingli Xu",
+        "Zhiqi Yang",
+        "Chenxi Cai",
+        "Wangqing Xiao",
+        "Chongduo Xiong",
+        "Ting Bai",
+        "Pengcheng Zhou"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "33",
+        "pages": "11356-11361",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01064"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发叔苯胺与硅烯醇醚在金属和额外氧化剂均不加入的条件下电化学合成β-芳氨基酮的C–C键成键反应，扩展了阳极氧化氨基自由基反应方法。",
+      "evidenceBasis": "美国化学会ACS出版社正式原文https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01064/5251775/Electrochemical-Synthesis-of-Arylamino-Ketones确认Published Online 2026-08-11，优先于原冻结Crossref/OpenAlex source date 2026-08-10；两种日期不一致且保留双来源根2026-08-08_2026-08-14_joc、原始Git blob 1e304fff3b34a0833ab461bd5381b34f722c798b、review队列Git blob e1278ac417c9c293357ae000360b08fa5c43c84d及SHA256 4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd。出版社文章类型为原始研究，不复制受限摘要、全文、SI或PDF，也不篡改冻结来源。 ACS JOC官方DOI文章页明确Published Online 2026-08-11，非冻结Crossref/OpenAlex日期2026-08-10。正文摘要记载多种叔苯胺和硅烯醇醚底物、连续流电化学反应器放大制备，不将可扩展性夸大为已工业运行。",
+      "challengeReason": "第二遍反证：是否只是模型反应中的电解氧化而缺少制备贡献？作者实际获得β-芳氨基酮并进行连续流放大，符合原创有机制备方法；自由基过程是捕获实验与CV所支持的路径，不是证明所有瞬态物种已经直接观察。出版社首发日修正必须留存冻结原日期。",
+      "scopeAssessment": {
+        "primaryContribution": "开发叔苯胺与硅烯醇醚在金属和额外氧化剂均不加入的条件下电化学合成β-芳氨基酮的C–C键成键反应，扩展了阳极氧化氨基自由基反应方法。",
+        "preparativeTransformation": "阳极氧化叔苯胺形成α-氨基烷基自由基，与硅烯醇醚反应并经后续过程生成β-芳氨基酮，建立新的碳—碳键；作者用自由基捕获和循环伏安支持该机制。",
+        "generalityEvidence": "ACS JOC官方DOI文章页明确Published Online 2026-08-11，非冻结Crossref/OpenAlex日期2026-08-10。正文摘要记载多种叔苯胺和硅烯醇醚底物、连续流电化学反应器放大制备，不将可扩展性夸大为已工业运行。",
+        "sourceEvidence": "美国化学会ACS出版社正式原文https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01064/5251775/Electrochemical-Synthesis-of-Arylamino-Ketones确认Published Online 2026-08-11，优先于原冻结Crossref/OpenAlex source date 2026-08-10；两种日期不一致且保留双来源根2026-08-08_2026-08-14_joc、原始Git blob 1e304fff3b34a0833ab461bd5381b34f722c798b、review队列Git blob e1278ac417c9c293357ae000360b08fa5c43c84d及SHA256 4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd。出版社文章类型为原始研究，不复制受限摘要、全文、SI或PDF，也不篡改冻结来源。",
+        "boundaryChallenge": "第二遍反证：是否只是模型反应中的电解氧化而缺少制备贡献？作者实际获得β-芳氨基酮并进行连续流放大，符合原创有机制备方法；自由基过程是捕获实验与CV所支持的路径，不是证明所有瞬态物种已经直接观察。出版社首发日修正必须留存冻结原日期。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01064",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01064/5251775/Electrochemical-Synthesis-of-Arylamino-Ketones",
+        "publisherOnlineDate": "2026-08-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_joc",
+        "stageBatchSha": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+        "sourceReviewQueueGitBlobSha": "e1278ac417c9c293357ae000360b08fa5c43c84d",
+        "stageSourceSha256": "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-10",
+          "sourceFrozenDate": "2026-08-10",
+          "officialPublisherFirstOnline": "2026-08-11",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01064/5251775/Electrochemical-Synthesis-of-Arylamino-Ketones",
+          "sourceFrozenAndUnchanged": true,
+          "publisherDateOutranksSource": true,
+          "dateKind": "ACS_Published_Online_not_API_created_or_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发叔苯胺与硅烯醇醚在金属和额外氧化剂均不加入的条件下电化学合成β-芳氨基酮的C–C键成键反应，扩展了阳极氧化氨基自由基反应方法。 阳极氧化叔苯胺形成α-氨基烷基自由基，与硅烯醇醚反应并经后续过程生成β-芳氨基酮，建立新的碳—碳键；作者用自由基捕获和循环伏安支持该机制。 ACS JOC官方DOI文章页明确Published Online 2026-08-11，非冻结Crossref/OpenAlex日期2026-08-10。正文摘要记载多种叔苯胺和硅烯醇醚底物、连续流电化学反应器放大制备，不将可扩展性夸大为已工业运行。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：是否只是模型反应中的电解氧化而缺少制备贡献？作者实际获得β-芳氨基酮并进行连续流放大，符合原创有机制备方法；自由基过程是捕获实验与CV所支持的路径，不是证明所有瞬态物种已经直接观察。出版社首发日修正必须留存冻结原日期。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03015",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Asymmetric C(sp2)–P Coupling for the Direct Synthesis of the PMOP Atropisomeric Phosphine Ligand",
+      "titleZh": "镍催化联萘三氟甲磺酸酯不对称碳磷偶联动力学拆分合成PMOP配体",
+      "date": "2026-08-15",
+      "authors": [
+        "Bendu Pan",
+        "Mingliang Li",
+        "Zhiping Yang",
+        "Jun Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "34",
+        "pages": "10785-10790",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03015"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过镍催化联萘三氟甲磺酸酯不对称C(sp²)–P交叉偶联的动力学拆分直接制备含轴手性的PMOP膦配体骨架，并研究其在钯催化烯丙基取代中的手性诱导。",
+      "evidenceBasis": "美国化学会ACS出版社正式原文https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03015/5257681/Nickel-Catalyzed-Asymmetric-C-sp2-P-Coupling-for确认Published Online 2026-08-15，优先于原冻结Crossref/OpenAlex source date 2026-08-14；两种日期不一致且保留双来源根2026-08-08_2026-08-14_organic-letters、原始Git blob 7bd5ce16a4ea71b93c86b143b95ef2c50b59e753、review队列Git blob b0da74bc624dbc867829b22d52e57a32ab9cd878及SHA256 1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c。出版社文章类型为原始研究，不复制受限摘要、全文、SI或PDF，也不篡改冻结来源。 ACS Organic Letters官方Letter页面显示Published Online 2026-08-15，冻结Crossref/OpenAlex为2026-08-14。摘要证实动力学拆分、吡啶环作为第二配位位点与立体控制因素、产物应用于Pd催化不对称烯丙基取代；未核实统一最高ee，不能编造。",
+      "challengeReason": "第二遍反证：只做配体制备会否不足以收录有机反应方法？论文开发了可复用的Ni催化不对称C–P键成键方法，并通过Pd催化反应应用证实手性配体价值；但动力学拆分最大理论单一对映体收率和原位双配位结构不能未经证据便视为定论。",
+      "scopeAssessment": {
+        "primaryContribution": "通过镍催化联萘三氟甲磺酸酯不对称C(sp²)–P交叉偶联的动力学拆分直接制备含轴手性的PMOP膦配体骨架，并研究其在钯催化烯丙基取代中的手性诱导。",
+        "preparativeTransformation": "Ni催化芳基三氟甲磺酸酯与膦基来源进行C(sp²)–P键偶联，选择性消耗外消旋联萘前体的一种构型，获得轴手性膦和具有N,P双位点的PMOP骨架。",
+        "generalityEvidence": "ACS Organic Letters官方Letter页面显示Published Online 2026-08-15，冻结Crossref/OpenAlex为2026-08-14。摘要证实动力学拆分、吡啶环作为第二配位位点与立体控制因素、产物应用于Pd催化不对称烯丙基取代；未核实统一最高ee，不能编造。",
+        "sourceEvidence": "美国化学会ACS出版社正式原文https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03015/5257681/Nickel-Catalyzed-Asymmetric-C-sp2-P-Coupling-for确认Published Online 2026-08-15，优先于原冻结Crossref/OpenAlex source date 2026-08-14；两种日期不一致且保留双来源根2026-08-08_2026-08-14_organic-letters、原始Git blob 7bd5ce16a4ea71b93c86b143b95ef2c50b59e753、review队列Git blob b0da74bc624dbc867829b22d52e57a32ab9cd878及SHA256 1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c。出版社文章类型为原始研究，不复制受限摘要、全文、SI或PDF，也不篡改冻结来源。",
+        "boundaryChallenge": "第二遍反证：只做配体制备会否不足以收录有机反应方法？论文开发了可复用的Ni催化不对称C–P键成键方法，并通过Pd催化反应应用证实手性配体价值；但动力学拆分最大理论单一对映体收率和原位双配位结构不能未经证据便视为定论。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03015",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03015/5257681/Nickel-Catalyzed-Asymmetric-C-sp2-P-Coupling-for",
+        "publisherOnlineDate": "2026-08-15",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_organic-letters",
+        "stageBatchSha": "7bd5ce16a4ea71b93c86b143b95ef2c50b59e753",
+        "sourceReviewQueueGitBlobSha": "b0da74bc624dbc867829b22d52e57a32ab9cd878",
+        "stageSourceSha256": "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "stageApiDate": "2026-08-14",
+          "sourceFrozenDate": "2026-08-14",
+          "officialPublisherFirstOnline": "2026-08-15",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03015/5257681/Nickel-Catalyzed-Asymmetric-C-sp2-P-Coupling-for",
+          "sourceFrozenAndUnchanged": true,
+          "publisherDateOutranksSource": true,
+          "dateKind": "ACS_Published_Online_not_API_created_or_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过镍催化联萘三氟甲磺酸酯不对称C(sp²)–P交叉偶联的动力学拆分直接制备含轴手性的PMOP膦配体骨架，并研究其在钯催化烯丙基取代中的手性诱导。 Ni催化芳基三氟甲磺酸酯与膦基来源进行C(sp²)–P键偶联，选择性消耗外消旋联萘前体的一种构型，获得轴手性膦和具有N,P双位点的PMOP骨架。 ACS Organic Letters官方Letter页面显示Published Online 2026-08-15，冻结Crossref/OpenAlex为2026-08-14。摘要证实动力学拆分、吡啶环作为第二配位位点与立体控制因素、产物应用于Pd催化不对称烯丙基取代；未核实统一最高ee，不能编造。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：只做配体制备会否不足以收录有机反应方法？论文开发了可复用的Ni催化不对称C–P键成键方法，并通过Pd催化反应应用证实手性配体价值；但动力学拆分最大理论单一对映体收率和原位双配位结构不能未经证据便视为定论。"
+        }
+      ]
+    }
+  ],
+  "publisherConflictStillHeld": [
+    {
+      "doi": "10.1021/acs.joc.6c01242",
+      "title": "Photochemical Ni-Catalyzed Cross-Coupling of Aryl Bromides with Hydrazides",
+      "sourceDate": "2026-07-01",
+      "sourceRoot": "2026-07-01_2026-07-07_joc",
+      "sourceRawGitBlob": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+      "sourceReviewerGitBlob": "e7070354aa6d62ad942985508d913c21f86992f2",
+      "sourceSha256": "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7",
+      "firstOfficialPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01242",
+      "firstOfficialPageOnlineDate": "2026-07-01",
+      "secondOfficialPage": "https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c01242",
+      "secondOfficialPageOnlineDate": "2026-06-30",
+      "issuePublicationDate": "2026-07-10",
+      "researchScope": "Original Ni-bipyridine photochemical C–N coupling of aryl bromides with hydrazides, reported 94 examples and medicinal molecule preparations",
+      "academicScopeDisposition": "scientific_include_candidate_but_online_Q2_vs_Q3_conflict_pending",
+      "reason": "Two ACS first-party DOI pages contradict one another across June 30 vs July 1, directly changing actual quarter. No overriding official proof sufficient yet.",
+      "publicationAuthority": false
+    }
+  ],
+  "guards": {
+    "doNotChangeFrozenSource": true,
+    "doNotTreatTwoOfficialConflictsAsResolved": true,
+    "doNotAutoRemoveHeldDoi": true,
+    "noOffSlotPublication": true,
+    "noMediaWrites": true,
+    "noD1": true,
+    "noPDF": true
+  }
+}
