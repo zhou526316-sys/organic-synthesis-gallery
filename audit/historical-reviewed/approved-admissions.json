@@ -1,8 +1,8 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-16T00:34:02.531Z",
-  "nextEligiblePublicationSlot": "2026-10-16T08:00:00+08:00",
+  "generatedAt": "2026-10-16T00:59:24.319Z",
+  "nextEligiblePublicationSlot": "2026-10-17T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
   "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 153,
-    "include": 151,
+    "checked": 163,
+    "include": 161,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -11126,6 +11126,795 @@
           "reason": "第二遍质疑：该工业转化早已有先例，论文会不会只是机理文章？其新的空气稳定Rh配合物可复用且有实证循环数据，属于具有方法改良价值的有机制备；研究主要限于柠檬醛，不能扩展到任意烯烃，也不能把DFT解释写为已直接证明。"
         }
       ]
+    },
+    {
+      "doi": "10.1021/jacs.6c05261",
+      "journal": "JACS",
+      "title": "Nickel-Catalyzed Regio-Controllable α- or β-Hydroalkylation of α,β-Unsaturated Amides",
+      "titleZh": "镍催化α,β-不饱和酰胺的区域可控α位或β位氢烷基化",
+      "date": "2026-08-31",
+      "authors": [
+        "Tingzhi Lin",
+        "Guorong Li",
+        "Jiaxin Lu",
+        "Yan-En Wang",
+        "Shenhao Zuo",
+        "Baohao Zheng",
+        "Zifan Ding",
+        "Shangle Yang",
+        "Dan Xiong",
+        "Xiufang Xu",
+        "Patrick J. Walsh",
+        "Jianyou Mao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "36",
+        "pages": "38663-38676",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05261"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "镍催化α,β-不饱和酰胺与非活化烷基溴化物进行交叉亲电还原偶联，通过氮配体及CaCl₂控制烷基化发生在α位还是β位。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/jacsat/article/doi/10.1021/jacs.6c05261/5385592/Nickel-Catalyzed-Regio-Controllable-or 核对首次在线日期2026-08-31、题名、摘要和文章类型；原冻结双来源根2026-08-22_2026-08-31_jacs，原始Git blob ecd439f952961b18f227a8997d7dac259cf10431、审核队列Git blob 13f6722bfdf40255eebe5773313a0d56a89684b7、来源SHA256 30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS官方研究摘要描述了优良的α/β区域选择性和两条受配体结构及CaCl₂影响的反应路径。出版社在线日期8月31日、期次日期9月16日可区分；机理实验和DFT支持，但不等于直接捕获全部中间体。",
+      "challengeReason": "第二遍挑战：是否只是烯烃简单还原而无新方法学？论文明确实现α或β位烷基化两种产物的可控合成，制备贡献充分；两种机理途径仍属于实验与计算共同支持的假说，不能写为每一步已直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "镍催化α,β-不饱和酰胺与非活化烷基溴化物进行交叉亲电还原偶联，通过氮配体及CaCl₂控制烷基化发生在α位还是β位。",
+        "preparativeTransformation": "以烷基溴化物作为烷基碳来源，针对同一类不饱和酰胺在两个不同碳位选择性形成新的碳—碳键；hydroalkylation并不意味着气态H₂直接氢化。",
+        "generalityEvidence": "ACS官方研究摘要描述了优良的α/β区域选择性和两条受配体结构及CaCl₂影响的反应路径。出版社在线日期8月31日、期次日期9月16日可区分；机理实验和DFT支持，但不等于直接捕获全部中间体。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/jacsat/article/doi/10.1021/jacs.6c05261/5385592/Nickel-Catalyzed-Regio-Controllable-or 核对首次在线日期2026-08-31、题名、摘要和文章类型；原冻结双来源根2026-08-22_2026-08-31_jacs，原始Git blob ecd439f952961b18f227a8997d7dac259cf10431、审核队列Git blob 13f6722bfdf40255eebe5773313a0d56a89684b7、来源SHA256 30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：是否只是烯烃简单还原而无新方法学？论文明确实现α或β位烷基化两种产物的可控合成，制备贡献充分；两种机理途径仍属于实验与计算共同支持的假说，不能写为每一步已直接观测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c05261",
+        "publisherArticlePage": "https://pubs.acs.org/jacsat/article/doi/10.1021/jacs.6c05261/5385592/Nickel-Catalyzed-Regio-Controllable-or",
+        "publisherOnlineDate": "2026-08-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_jacs",
+        "stageBatchSha": "ecd439f952961b18f227a8997d7dac259cf10431",
+        "sourceReviewQueueGitBlobSha": "13f6722bfdf40255eebe5773313a0d56a89684b7",
+        "stageSourceSha256": "30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-31",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "publisherArticlePage": "https://pubs.acs.org/jacsat/article/doi/10.1021/jacs.6c05261/5385592/Nickel-Catalyzed-Regio-Controllable-or",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "镍催化α,β-不饱和酰胺与非活化烷基溴化物进行交叉亲电还原偶联，通过氮配体及CaCl₂控制烷基化发生在α位还是β位。 以烷基溴化物作为烷基碳来源，针对同一类不饱和酰胺在两个不同碳位选择性形成新的碳—碳键；hydroalkylation并不意味着气态H₂直接氢化。 ACS官方研究摘要描述了优良的α/β区域选择性和两条受配体结构及CaCl₂影响的反应路径。出版社在线日期8月31日、期次日期9月16日可区分；机理实验和DFT支持，但不等于直接捕获全部中间体。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：是否只是烯烃简单还原而无新方法学？论文明确实现α或β位烷基化两种产物的可控合成，制备贡献充分；两种机理途径仍属于实验与计算共同支持的假说，不能写为每一步已直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01054",
+      "journal": "JOC",
+      "title": "Photocatalytic Decarboxylative Coupling of Diacyl Peroxides with TEMPO",
+      "titleZh": "可见光促进二酰基过氧化物与TEMPO脱羧偶联构筑碳氧键",
+      "date": "2026-07-07",
+      "authors": [
+        "Jiabin Shen",
+        "Xiangbo Ma",
+        "Guili Jian",
+        "Hao Xu",
+        "Chao Shen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "28",
+        "pages": "9895-9899",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01054"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过可见光诱导二酰基过氧化物脱羧并与TEMPO偶联，建立无额外金属、碱或添加剂条件下的C(sp³)–O键形成方法。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/doi/10.1021/acs.joc.6c01054 核对首次在线日期2026-07-07、题名、摘要和文章类型；原冻结双来源根2026-07-01_2026-07-07_joc，原始Git blob 158a2415687e4a0ecf0c588356f417cc1679d70a、审核队列Git blob e7070354aa6d62ad942985508d913c21f86992f2、来源SHA256 00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS官方JOC Article 2026年7月7日首发；摘要确有较广兼容性、复杂分子后期修饰与TEMPO衍生物的后续制备。未直接核实所有底物的分离收率和量子产率，不捏造数值。",
+      "challengeReason": "第二遍挑战：TEMPO捕获自由基常见，是否仅重复常识？本工作有特定的二酰基过氧化物光促脱羧成键和实际复杂分子应用，因此具备可检索的合成新方法；光吸收体和链过程尚未由公开摘要独立确证，不能擅自补机理。",
+      "scopeAssessment": {
+        "primaryContribution": "通过可见光诱导二酰基过氧化物脱羧并与TEMPO偶联，建立无额外金属、碱或添加剂条件下的C(sp³)–O键形成方法。",
+        "preparativeTransformation": "二酰基过氧化物提供脱羧生成的烷基片段，TEMPO作为氮氧自由基反应伙伴构筑烷基—氧键，产物可用于进一步官能团转化。",
+        "generalityEvidence": "ACS官方JOC Article 2026年7月7日首发；摘要确有较广兼容性、复杂分子后期修饰与TEMPO衍生物的后续制备。未直接核实所有底物的分离收率和量子产率，不捏造数值。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/doi/10.1021/acs.joc.6c01054 核对首次在线日期2026-07-07、题名、摘要和文章类型；原冻结双来源根2026-07-01_2026-07-07_joc，原始Git blob 158a2415687e4a0ecf0c588356f417cc1679d70a、审核队列Git blob e7070354aa6d62ad942985508d913c21f86992f2、来源SHA256 00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：TEMPO捕获自由基常见，是否仅重复常识？本工作有特定的二酰基过氧化物光促脱羧成键和实际复杂分子应用，因此具备可检索的合成新方法；光吸收体和链过程尚未由公开摘要独立确证，不能擅自补机理。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01054",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01054",
+        "publisherOnlineDate": "2026-07-07",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_joc",
+        "stageBatchSha": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+        "sourceReviewQueueGitBlobSha": "e7070354aa6d62ad942985508d913c21f86992f2",
+        "stageSourceSha256": "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-07",
+          "officialPublisherFirstOnline": "2026-07-07",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01054",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过可见光诱导二酰基过氧化物脱羧并与TEMPO偶联，建立无额外金属、碱或添加剂条件下的C(sp³)–O键形成方法。 二酰基过氧化物提供脱羧生成的烷基片段，TEMPO作为氮氧自由基反应伙伴构筑烷基—氧键，产物可用于进一步官能团转化。 ACS官方JOC Article 2026年7月7日首发；摘要确有较广兼容性、复杂分子后期修饰与TEMPO衍生物的后续制备。未直接核实所有底物的分离收率和量子产率，不捏造数值。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：TEMPO捕获自由基常见，是否仅重复常识？本工作有特定的二酰基过氧化物光促脱羧成键和实际复杂分子应用，因此具备可检索的合成新方法；光吸收体和链过程尚未由公开摘要独立确证，不能擅自补机理。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01396",
+      "journal": "JOC",
+      "title": "Visible-Light Photoredox-Catalyzed Reductive Coupling of Heteroaryl Chlorides with Alkenes",
+      "titleZh": "光氧化还原催化杂芳基氯与烯烃的还原偶联",
+      "date": "2026-08-13",
+      "authors": [
+        "Yu-Qing Tang",
+        "Zhong-Yi Kou",
+        "Shao-Cong Zhan",
+        "Ying Han",
+        "Tao Ju",
+        "Chao-Guo Yan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "34",
+        "pages": "11797-11808",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01396"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展可见光促进杂芳基氯和烯烃直接还原偶联的C–C键形成反应，使较难活化的杂芳基C–Cl键获得烷基化。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01396/5254176/Visible-Light-Photoredox-Catalyzed-Reductive 核对首次在线日期2026-08-13、题名、摘要和文章类型；原冻结双来源根2026-08-08_2026-08-14_joc，原始Git blob 1e304fff3b34a0833ab461bd5381b34f722c798b、审核队列Git blob e1278ac417c9c293357ae000360b08fa5c43c84d、来源SHA256 4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS原始JOC Article载明2026年8月13日Published Online，91(34)11797–11808。出版社摘要证实杂芳基氯与烯烃偶联产物，但未给出足以逐项核验的反应范围统计与统一最高分离收率。",
+      "challengeReason": "第二遍挑战：是否把提出的双电子还原过程误当实测机制？文章的有机制备转化有独立产物证据，可作为原创C–C偶联方法收录；苄基自由基到碳负离子的证据层级仍是机制提出，不能宣称瞬态负离子已直接分离。",
+      "scopeAssessment": {
+        "primaryContribution": "发展可见光促进杂芳基氯和烯烃直接还原偶联的C–C键形成反应，使较难活化的杂芳基C–Cl键获得烷基化。",
+        "preparativeTransformation": "烯烃用作烷基碳骨架来源；作者提出先发生芳基C–Cl键单电子还原，再由苄基自由基接受第二个电子形成碳负离子的反应路径。",
+        "generalityEvidence": "ACS原始JOC Article载明2026年8月13日Published Online，91(34)11797–11808。出版社摘要证实杂芳基氯与烯烃偶联产物，但未给出足以逐项核验的反应范围统计与统一最高分离收率。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01396/5254176/Visible-Light-Photoredox-Catalyzed-Reductive 核对首次在线日期2026-08-13、题名、摘要和文章类型；原冻结双来源根2026-08-08_2026-08-14_joc，原始Git blob 1e304fff3b34a0833ab461bd5381b34f722c798b、审核队列Git blob e1278ac417c9c293357ae000360b08fa5c43c84d、来源SHA256 4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：是否把提出的双电子还原过程误当实测机制？文章的有机制备转化有独立产物证据，可作为原创C–C偶联方法收录；苄基自由基到碳负离子的证据层级仍是机制提出，不能宣称瞬态负离子已直接分离。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01396",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01396/5254176/Visible-Light-Photoredox-Catalyzed-Reductive",
+        "publisherOnlineDate": "2026-08-13",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_joc",
+        "stageBatchSha": "1e304fff3b34a0833ab461bd5381b34f722c798b",
+        "sourceReviewQueueGitBlobSha": "e1278ac417c9c293357ae000360b08fa5c43c84d",
+        "stageSourceSha256": "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-13",
+          "officialPublisherFirstOnline": "2026-08-13",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01396/5254176/Visible-Light-Photoredox-Catalyzed-Reductive",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展可见光促进杂芳基氯和烯烃直接还原偶联的C–C键形成反应，使较难活化的杂芳基C–Cl键获得烷基化。 烯烃用作烷基碳骨架来源；作者提出先发生芳基C–Cl键单电子还原，再由苄基自由基接受第二个电子形成碳负离子的反应路径。 ACS原始JOC Article载明2026年8月13日Published Online，91(34)11797–11808。出版社摘要证实杂芳基氯与烯烃偶联产物，但未给出足以逐项核验的反应范围统计与统一最高分离收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：是否把提出的双电子还原过程误当实测机制？文章的有机制备转化有独立产物证据，可作为原创C–C偶联方法收录；苄基自由基到碳负离子的证据层级仍是机制提出，不能宣称瞬态负离子已直接分离。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01509",
+      "journal": "JOC",
+      "title": "Photoredox-Neutral Ni-Catalyzed Regio- and Diastereoselective Synthesis of Vicinal Amino Alcohols",
+      "titleZh": "光氧化还原与镍双催化区域及非对映选择性制备邻位氨基醇",
+      "date": "2026-09-07",
+      "authors": [
+        "Tao Huang",
+        "Fengzhen Li",
+        "Junru Wang",
+        "Meng Peng",
+        "Yaojie Xu",
+        "Qiu Yuan",
+        "Guangpin Zhang",
+        "Xueping Zong",
+        "Fusheng Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12658-12663",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01509"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "将光氧化还原与镍催化结合，在整体氧化还原中性的体系中区域及非对映选择性地构筑邻位氨基醇，利用烯丙基片段的导向作用。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01509/5422122/Photoredox-Neutral-Ni-Catalyzed-Regio-and 核对首次在线日期2026-09-07、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_joc，原始Git blob 0511ff2e2a122b1c5ee6784e1c2953698b8d6dea、审核队列Git blob c53fb59d52157f6e6e63144d3cc6fd06899220fa、来源SHA256 f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS JOC Article出版社在线2026年9月7日，摘要报告多种邻位氨基醇、dr大于20:1及底物兼容；91(37)12658–12663为后续卷期归档。dr属于非对映选择性而不是ee。",
+      "challengeReason": "第二遍挑战：若标题提到selective，不应推定手性催化得到高ee；文章证明的是dr>20:1的非对映控制而非一般的对映控制。对自由基—极性交叉与烷基镍的论述属于初步机制支持，不等于所有步骤均被观察。",
+      "scopeAssessment": {
+        "primaryContribution": "将光氧化还原与镍催化结合，在整体氧化还原中性的体系中区域及非对映选择性地构筑邻位氨基醇，利用烯丙基片段的导向作用。",
+        "preparativeTransformation": "构建两种相邻官能团的氨基醇合成框架；初步机理研究把烷基镍中间体以及还原性自由基—极性交叉与选择性联系起来。",
+        "generalityEvidence": "ACS JOC Article出版社在线2026年9月7日，摘要报告多种邻位氨基醇、dr大于20:1及底物兼容；91(37)12658–12663为后续卷期归档。dr属于非对映选择性而不是ee。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01509/5422122/Photoredox-Neutral-Ni-Catalyzed-Regio-and 核对首次在线日期2026-09-07、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_joc，原始Git blob 0511ff2e2a122b1c5ee6784e1c2953698b8d6dea、审核队列Git blob c53fb59d52157f6e6e63144d3cc6fd06899220fa、来源SHA256 f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：若标题提到selective，不应推定手性催化得到高ee；文章证明的是dr>20:1的非对映控制而非一般的对映控制。对自由基—极性交叉与烷基镍的论述属于初步机制支持，不等于所有步骤均被观察。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01509",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01509/5422122/Photoredox-Neutral-Ni-Catalyzed-Regio-and",
+        "publisherOnlineDate": "2026-09-07",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_joc",
+        "stageBatchSha": "0511ff2e2a122b1c5ee6784e1c2953698b8d6dea",
+        "sourceReviewQueueGitBlobSha": "c53fb59d52157f6e6e63144d3cc6fd06899220fa",
+        "stageSourceSha256": "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-07",
+          "officialPublisherFirstOnline": "2026-09-07",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01509/5422122/Photoredox-Neutral-Ni-Catalyzed-Regio-and",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "将光氧化还原与镍催化结合，在整体氧化还原中性的体系中区域及非对映选择性地构筑邻位氨基醇，利用烯丙基片段的导向作用。 构建两种相邻官能团的氨基醇合成框架；初步机理研究把烷基镍中间体以及还原性自由基—极性交叉与选择性联系起来。 ACS JOC Article出版社在线2026年9月7日，摘要报告多种邻位氨基醇、dr大于20:1及底物兼容；91(37)12658–12663为后续卷期归档。dr属于非对映选择性而不是ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：若标题提到selective，不应推定手性催化得到高ee；文章证明的是dr>20:1的非对映控制而非一般的对映控制。对自由基—极性交叉与烷基镍的论述属于初步机制支持，不等于所有步骤均被观察。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01757",
+      "journal": "JOC",
+      "title": "Iridium-Catalyzed Enantioselective N -Allylation of Aminoquinones with Racemic Allylic Alcohols",
+      "titleZh": "铱催化氨基醌与外消旋烯丙醇的不对称氮烯丙基化",
+      "date": "2026-08-29",
+      "authors": [
+        "Shiliu Chen",
+        "Shaozhong Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12424-12434",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01757"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "Ir催化氨基醌与外消旋烯丙基醇不对称N-烯丙基化，提供手性氨基醌衍生物的直接合成并处理氮亲核位点的选择性。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01757/5361421/Iridium-Catalyzed-Enantioselective-N-Allylation-of 核对首次在线日期2026-08-29、题名、摘要和文章类型；原冻结双来源根2026-08-22_2026-08-31_joc，原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、审核队列Git blob a630f6037d4c824566db8a721fbefcd97dfc3bd7、来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS官方JOC Article 2026-08-29首发，正式91(36)12424–12434；公开摘要报告包括芳基、烷基和杂芳环取代烯丙醇以及氨基醌，最高96%收率与99% ee，数值不代表每个底物。",
+      "challengeReason": "第二遍挑战：氨基醌的碳位也可能反应，不能忽略C/N区域竞争。论文报告N-烯丙基化与高ee，制备贡献明确；关于互变异构怎样控制N选择性仅是作者提出的解释，未必直接证明立体决定过渡态。",
+      "scopeAssessment": {
+        "primaryContribution": "Ir催化氨基醌与外消旋烯丙基醇不对称N-烯丙基化，提供手性氨基醌衍生物的直接合成并处理氮亲核位点的选择性。",
+        "preparativeTransformation": "将烯丙醇与氨基醌氮中心形成新C–N键，获得不对称引入的烯丙片段；作者用氨基醌互变异构解释N优先于C反应。",
+        "generalityEvidence": "ACS官方JOC Article 2026-08-29首发，正式91(36)12424–12434；公开摘要报告包括芳基、烷基和杂芳环取代烯丙醇以及氨基醌，最高96%收率与99% ee，数值不代表每个底物。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01757/5361421/Iridium-Catalyzed-Enantioselective-N-Allylation-of 核对首次在线日期2026-08-29、题名、摘要和文章类型；原冻结双来源根2026-08-22_2026-08-31_joc，原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、审核队列Git blob a630f6037d4c824566db8a721fbefcd97dfc3bd7、来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：氨基醌的碳位也可能反应，不能忽略C/N区域竞争。论文报告N-烯丙基化与高ee，制备贡献明确；关于互变异构怎样控制N选择性仅是作者提出的解释，未必直接证明立体决定过渡态。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01757",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01757/5361421/Iridium-Catalyzed-Enantioselective-N-Allylation-of",
+        "publisherOnlineDate": "2026-08-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "a630f6037d4c824566db8a721fbefcd97dfc3bd7",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-29",
+          "officialPublisherFirstOnline": "2026-08-29",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01757/5361421/Iridium-Catalyzed-Enantioselective-N-Allylation-of",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "Ir催化氨基醌与外消旋烯丙基醇不对称N-烯丙基化，提供手性氨基醌衍生物的直接合成并处理氮亲核位点的选择性。 将烯丙醇与氨基醌氮中心形成新C–N键，获得不对称引入的烯丙片段；作者用氨基醌互变异构解释N优先于C反应。 ACS官方JOC Article 2026-08-29首发，正式91(36)12424–12434；公开摘要报告包括芳基、烷基和杂芳环取代烯丙醇以及氨基醌，最高96%收率与99% ee，数值不代表每个底物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：氨基醌的碳位也可能反应，不能忽略C/N区域竞争。论文报告N-烯丙基化与高ee，制备贡献明确；关于互变异构怎样控制N选择性仅是作者提出的解释，未必直接证明立体决定过渡态。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00954",
+      "journal": "JOC",
+      "title": "Chalcogen-Bond-Assisted Catalytic Asymmetric Synthesis of Eight-Membered Cyclic Hemiacetal Esters",
+      "titleZh": "硫族键辅助催化不对称合成八元环半缩醛酯",
+      "date": "2026-09-03",
+      "authors": [
+        "Ruirui Jing",
+        "Yufeng Deng",
+        "Jingtong Jiang",
+        "Chen Zhang",
+        "Jiatao Guo",
+        "Junming Mo"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12496-12502",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00954"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用硫族键非共价相互作用稳定八元环框架，实现从外消旋原料制备手性八元环半缩醛酯的催化不对称合成。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00954/5413638/Chalcogen-Bond-Assisted-Catalytic-Asymmetric 核对首次在线日期2026-09-03、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_joc，原始Git blob 0511ff2e2a122b1c5ee6784e1c2953698b8d6dea、审核队列Git blob c53fb59d52157f6e6e63144d3cc6fd06899220fa、来源SHA256 f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS JOC Article 2026-09-03 Published Online，91(37)12496–12502；原文摘要明确硫族键稳定八元环和硫中心反转介导的动态动力学拆分，但没有公开足够信息去断言统一产率或ee。",
+      "challengeReason": "第二遍挑战：硫族键参与是不是只有材料或晶体学观察？论文确有新的八元环半缩醛酯产物的催化制备，因此属于有机合成。硫族键对立体决定步骤的定量贡献及每一种过渡态尚未通过公开数据全面证实。",
+      "scopeAssessment": {
+        "primaryContribution": "利用硫族键非共价相互作用稳定八元环框架，实现从外消旋原料制备手性八元环半缩醛酯的催化不对称合成。",
+        "preparativeTransformation": "通过硫中心锥形反转所带来的构型动态平衡进行动态动力学拆分，得到可稳定存在的含氧中环半缩醛酯，而不是硫族材料自组装。",
+        "generalityEvidence": "ACS JOC Article 2026-09-03 Published Online，91(37)12496–12502；原文摘要明确硫族键稳定八元环和硫中心反转介导的动态动力学拆分，但没有公开足够信息去断言统一产率或ee。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00954/5413638/Chalcogen-Bond-Assisted-Catalytic-Asymmetric 核对首次在线日期2026-09-03、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_joc，原始Git blob 0511ff2e2a122b1c5ee6784e1c2953698b8d6dea、审核队列Git blob c53fb59d52157f6e6e63144d3cc6fd06899220fa、来源SHA256 f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：硫族键参与是不是只有材料或晶体学观察？论文确有新的八元环半缩醛酯产物的催化制备，因此属于有机合成。硫族键对立体决定步骤的定量贡献及每一种过渡态尚未通过公开数据全面证实。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00954",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00954/5413638/Chalcogen-Bond-Assisted-Catalytic-Asymmetric",
+        "publisherOnlineDate": "2026-09-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_joc",
+        "stageBatchSha": "0511ff2e2a122b1c5ee6784e1c2953698b8d6dea",
+        "sourceReviewQueueGitBlobSha": "c53fb59d52157f6e6e63144d3cc6fd06899220fa",
+        "stageSourceSha256": "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-03",
+          "officialPublisherFirstOnline": "2026-09-03",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00954/5413638/Chalcogen-Bond-Assisted-Catalytic-Asymmetric",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用硫族键非共价相互作用稳定八元环框架，实现从外消旋原料制备手性八元环半缩醛酯的催化不对称合成。 通过硫中心锥形反转所带来的构型动态平衡进行动态动力学拆分，得到可稳定存在的含氧中环半缩醛酯，而不是硫族材料自组装。 ACS JOC Article 2026-09-03 Published Online，91(37)12496–12502；原文摘要明确硫族键稳定八元环和硫中心反转介导的动态动力学拆分，但没有公开足够信息去断言统一产率或ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：硫族键参与是不是只有材料或晶体学观察？论文确有新的八元环半缩醛酯产物的催化制备，因此属于有机合成。硫族键对立体决定步骤的定量贡献及每一种过渡态尚未通过公开数据全面证实。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02280",
+      "journal": "Organic Letters",
+      "title": "Visible Light-Mediated Enantioselective Alkylation Using a Deaminative Approach: Access to Unnatural Amino Acids and Peptides",
+      "titleZh": "铜光催化脱氨不对称烷基化合成非天然氨基酸与多肽",
+      "date": "2026-07-17",
+      "authors": [
+        "Shashank Singh",
+        "Altaf Ansari",
+        "Shreya Tewari",
+        "Diksha Gambhir",
+        "Ravi P. Singh"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "9621-9627",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02280"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "原位手性铜配合物在可见光下还原Katritzky盐产生烷基自由基，并对甘氨酸衍生物实施对映选择性烷基化，合成非天然氨基酸。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/doi/abs/10.1021/acs.orglett.6c02280 核对首次在线日期2026-07-17、题名、摘要和文章类型；原冻结双来源根2026-07-15_2026-07-21_organic-letters，原始Git blob 191472933f6e4097799a5642b86061b865421825、审核队列Git blob 9e2a8438eeed19db5adcfe1d4846e175d0347a98、来源SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS Organic Letters Letter 2026年7月17日Published Online；官方摘要包含较广底物、天然产物来源或构象受限骨架，并说明氨基酸与多肽进一步合成时保持对映纯度。具体最高收率与ee不推定。",
+      "challengeReason": "第二遍挑战：脱氨自由基偶联不是首例，主要贡献在手性铜诱导的不对称C–C键构造和向非天然氨基酸/多肽延伸；铜络合物真实手性决定构型及可能存在的背景反应，还不能只凭摘要声称完全阐明。",
+      "scopeAssessment": {
+        "primaryContribution": "原位手性铜配合物在可见光下还原Katritzky盐产生烷基自由基，并对甘氨酸衍生物实施对映选择性烷基化，合成非天然氨基酸。",
+        "preparativeTransformation": "经脱氨生成的烷基自由基与甘氨酸衍生物建立新C(sp³)–C(sp³)键，所得非天然氨基酸骨架进一步用于多肽及生物活性片段。",
+        "generalityEvidence": "ACS Organic Letters Letter 2026年7月17日Published Online；官方摘要包含较广底物、天然产物来源或构象受限骨架，并说明氨基酸与多肽进一步合成时保持对映纯度。具体最高收率与ee不推定。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/doi/abs/10.1021/acs.orglett.6c02280 核对首次在线日期2026-07-17、题名、摘要和文章类型；原冻结双来源根2026-07-15_2026-07-21_organic-letters，原始Git blob 191472933f6e4097799a5642b86061b865421825、审核队列Git blob 9e2a8438eeed19db5adcfe1d4846e175d0347a98、来源SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：脱氨自由基偶联不是首例，主要贡献在手性铜诱导的不对称C–C键构造和向非天然氨基酸/多肽延伸；铜络合物真实手性决定构型及可能存在的背景反应，还不能只凭摘要声称完全阐明。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02280",
+        "publisherArticlePage": "https://pubs.acs.org/doi/abs/10.1021/acs.orglett.6c02280",
+        "publisherOnlineDate": "2026-07-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_organic-letters",
+        "stageBatchSha": "191472933f6e4097799a5642b86061b865421825",
+        "sourceReviewQueueGitBlobSha": "9e2a8438eeed19db5adcfe1d4846e175d0347a98",
+        "stageSourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-17",
+          "officialPublisherFirstOnline": "2026-07-17",
+          "publisherArticlePage": "https://pubs.acs.org/doi/abs/10.1021/acs.orglett.6c02280",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "原位手性铜配合物在可见光下还原Katritzky盐产生烷基自由基，并对甘氨酸衍生物实施对映选择性烷基化，合成非天然氨基酸。 经脱氨生成的烷基自由基与甘氨酸衍生物建立新C(sp³)–C(sp³)键，所得非天然氨基酸骨架进一步用于多肽及生物活性片段。 ACS Organic Letters Letter 2026年7月17日Published Online；官方摘要包含较广底物、天然产物来源或构象受限骨架，并说明氨基酸与多肽进一步合成时保持对映纯度。具体最高收率与ee不推定。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：脱氨自由基偶联不是首例，主要贡献在手性铜诱导的不对称C–C键构造和向非天然氨基酸/多肽延伸；铜络合物真实手性决定构型及可能存在的背景反应，还不能只凭摘要声称完全阐明。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02715",
+      "journal": "Organic Letters",
+      "title": "Divergent Synthesis of Ketones and Alcohols via Iron-Catalyzed Three-Component Alcohol Cross-Coupling",
+      "titleZh": "铁催化三组分醇交叉偶联发散合成酮和醇",
+      "date": "2026-08-11",
+      "authors": [
+        "Dingguo Song",
+        "Guan Wang",
+        "Fangyuan Hu",
+        "Fei Ling",
+        "Weihui Zhong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "33",
+        "pages": "10463-10468",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02715"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "设计易获得的铁催化剂实施三组分醇借氢交叉偶联，通过不同反应条件分别获得β,β-甲基化或烷基化醇和α,α-甲基化或烷基化酮。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02715/5251860/Divergent-Synthesis-of-Ketones-and-Alcohols-via 核对首次在线日期2026-08-11、题名、摘要和文章类型；原冻结双来源根2026-08-08_2026-08-14_organic-letters，原始Git blob 7bd5ce16a4ea71b93c86b143b95ef2c50b59e753、审核队列Git blob b0da74bc624dbc867829b22d52e57a32ab9cd878、来源SHA256 1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS Organic Letters 2026-08-11 Published Online，28(33)10463–10468；摘要报告广泛底物、较低催化剂用量、放大与后续产物转化。未提供可靠统一产率，不能假定所有三醇组合均高度交叉选择性。",
+      "challengeReason": "第二遍挑战：多组分醇借氢体系往往存在同偶联与混合产物问题，不能用单次示例称普适。出版社摘要确证可选择合成酮与醇及规模化实用性，属于实质有机合成创新；中间醛是否独立观察不明，不得无证据推断。",
+      "scopeAssessment": {
+        "primaryContribution": "设计易获得的铁催化剂实施三组分醇借氢交叉偶联，通过不同反应条件分别获得β,β-甲基化或烷基化醇和α,α-甲基化或烷基化酮。",
+        "preparativeTransformation": "多个醇原料经过借氢催化的脱氢、C–C成键以及选择性氢转移，给出氧化态不同的酮或醇产物，实现从同一类起始物的发散制备。",
+        "generalityEvidence": "ACS Organic Letters 2026-08-11 Published Online，28(33)10463–10468；摘要报告广泛底物、较低催化剂用量、放大与后续产物转化。未提供可靠统一产率，不能假定所有三醇组合均高度交叉选择性。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02715/5251860/Divergent-Synthesis-of-Ketones-and-Alcohols-via 核对首次在线日期2026-08-11、题名、摘要和文章类型；原冻结双来源根2026-08-08_2026-08-14_organic-letters，原始Git blob 7bd5ce16a4ea71b93c86b143b95ef2c50b59e753、审核队列Git blob b0da74bc624dbc867829b22d52e57a32ab9cd878、来源SHA256 1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：多组分醇借氢体系往往存在同偶联与混合产物问题，不能用单次示例称普适。出版社摘要确证可选择合成酮与醇及规模化实用性，属于实质有机合成创新；中间醛是否独立观察不明，不得无证据推断。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02715",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02715/5251860/Divergent-Synthesis-of-Ketones-and-Alcohols-via",
+        "publisherOnlineDate": "2026-08-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_organic-letters",
+        "stageBatchSha": "7bd5ce16a4ea71b93c86b143b95ef2c50b59e753",
+        "sourceReviewQueueGitBlobSha": "b0da74bc624dbc867829b22d52e57a32ab9cd878",
+        "stageSourceSha256": "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-11",
+          "officialPublisherFirstOnline": "2026-08-11",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02715/5251860/Divergent-Synthesis-of-Ketones-and-Alcohols-via",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "设计易获得的铁催化剂实施三组分醇借氢交叉偶联，通过不同反应条件分别获得β,β-甲基化或烷基化醇和α,α-甲基化或烷基化酮。 多个醇原料经过借氢催化的脱氢、C–C成键以及选择性氢转移，给出氧化态不同的酮或醇产物，实现从同一类起始物的发散制备。 ACS Organic Letters 2026-08-11 Published Online，28(33)10463–10468；摘要报告广泛底物、较低催化剂用量、放大与后续产物转化。未提供可靠统一产率，不能假定所有三醇组合均高度交叉选择性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：多组分醇借氢体系往往存在同偶联与混合产物问题，不能用单次示例称普适。出版社摘要确证可选择合成酮与醇及规模化实用性，属于实质有机合成创新；中间醛是否独立观察不明，不得无证据推断。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02933",
+      "journal": "Organic Letters",
+      "title": "Iron-Catalyzed Sodium Iodide-Promoted Aerobic Oxidative Cross-Coupling of Benzofurans with Indoles",
+      "titleZh": "三价铁与碘化钠促进苯并呋喃和吲哚有氧氧化交叉偶联",
+      "date": "2026-08-18",
+      "authors": [
+        "Angulimal Kamble",
+        "Shon Gangai",
+        "Rishikesh Narayan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "34",
+        "pages": "10749-10754",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02933"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "在Fe(III)催化、NaI促进和空气条件下使苯并呋喃与吲哚直接氧化交叉偶联，避免必须使用预官能团化底物或贵金属钯体系。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02933/5272110/Iron-Catalyzed-Sodium-Iodide-Promoted-Aerobic 核对首次在线日期2026-08-18、题名、摘要和文章类型；原冻结双来源根2026-08-15_2026-08-21_organic-letters，原始Git blob 9b28580b6638049b3007fea208c8d489c769ed79、审核队列Git blob a9bc9b1ec079a894081b7629a5c1d80ff478b8cb、来源SHA256 4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS Organic Letters 2026-08-18首次在线，28(34)10749–10754；官方摘要支持底物范围、化学及区域选择性，也指出自由基阳离子途径属于初步机制证据。",
+      "challengeReason": "第二遍挑战：空气氧化偶联可能因均偶联或过氧化导致选择性欠佳，不能忽略方法边界。文章报告直接交叉偶联产物与选择性，适合纳入有机制备；但不把提出的自由基阳离子路径误写为逐个瞬态已实验证实。",
+      "scopeAssessment": {
+        "primaryContribution": "在Fe(III)催化、NaI促进和空气条件下使苯并呋喃与吲哚直接氧化交叉偶联，避免必须使用预官能团化底物或贵金属钯体系。",
+        "preparativeTransformation": "苯并呋喃与吲哚两个杂芳环直接构筑碳—碳键，生成杂联芳基产物。初步机理实验支持SET生成自由基阳离子并与亲核体进行成键。",
+        "generalityEvidence": "ACS Organic Letters 2026-08-18首次在线，28(34)10749–10754；官方摘要支持底物范围、化学及区域选择性，也指出自由基阳离子途径属于初步机制证据。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02933/5272110/Iron-Catalyzed-Sodium-Iodide-Promoted-Aerobic 核对首次在线日期2026-08-18、题名、摘要和文章类型；原冻结双来源根2026-08-15_2026-08-21_organic-letters，原始Git blob 9b28580b6638049b3007fea208c8d489c769ed79、审核队列Git blob a9bc9b1ec079a894081b7629a5c1d80ff478b8cb、来源SHA256 4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：空气氧化偶联可能因均偶联或过氧化导致选择性欠佳，不能忽略方法边界。文章报告直接交叉偶联产物与选择性，适合纳入有机制备；但不把提出的自由基阳离子路径误写为逐个瞬态已实验证实。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02933",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02933/5272110/Iron-Catalyzed-Sodium-Iodide-Promoted-Aerobic",
+        "publisherOnlineDate": "2026-08-18",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_organic-letters",
+        "stageBatchSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "sourceReviewQueueGitBlobSha": "a9bc9b1ec079a894081b7629a5c1d80ff478b8cb",
+        "stageSourceSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-18",
+          "officialPublisherFirstOnline": "2026-08-18",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02933/5272110/Iron-Catalyzed-Sodium-Iodide-Promoted-Aerobic",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "在Fe(III)催化、NaI促进和空气条件下使苯并呋喃与吲哚直接氧化交叉偶联，避免必须使用预官能团化底物或贵金属钯体系。 苯并呋喃与吲哚两个杂芳环直接构筑碳—碳键，生成杂联芳基产物。初步机理实验支持SET生成自由基阳离子并与亲核体进行成键。 ACS Organic Letters 2026-08-18首次在线，28(34)10749–10754；官方摘要支持底物范围、化学及区域选择性，也指出自由基阳离子途径属于初步机制证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：空气氧化偶联可能因均偶联或过氧化导致选择性欠佳，不能忽略方法边界。文章报告直接交叉偶联产物与选择性，适合纳入有机制备；但不把提出的自由基阳离子路径误写为逐个瞬态已实验证实。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03349",
+      "journal": "Organic Letters",
+      "title": "Asymmetric Access to Structurally Complex 1-Tetralols through Diels–Alder Cycloadditions of Photogenerated Hydroxy- o -quinodimethanes and Acrylates",
+      "titleZh": "光生成羟基邻醌二甲烷与丙烯酸酯不对称环加成合成1-四氢萘酚",
+      "date": "2026-09-02",
+      "authors": [
+        "María González-Marcos",
+        "José Trujillo-Sierra",
+        "Enara Esteban",
+        "José M. Sansano",
+        "Ana Sirvent",
+        "María de Gracia Retamosa"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11701-11706",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03349"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过光烯醇化形成瞬态羟基邻醌二甲烷，再与活化丙烯酸酯发生Diels–Alder环加成，制备高官能团化1-四氢萘酚和螺环结构。",
+      "evidenceBasis": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03349/5405829/Asymmetric-Access-to-Structurally-Complex-1 核对首次在线日期2026-09-02、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_organic-letters，原始Git blob 80aca4837373541c9ba22bdcae30cd0bd2f64511、审核队列Git blob cb28e08c12fbffee949d4b64a4e316ab32c3b4b2、来源SHA256 998b9f30c1feff468763b6170f3c813908d832f9897102ab8f2b81306dc2eed1；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。 ACS Organic Letters开放获取Letter 2026-09-02首发，28(37)11701–11706；出版社摘要确证高非对映选择性、靛红螺环衍生物及手性辅基辅助的不对称变体。不能将辅基方法误记为手性催化。",
+      "challengeReason": "第二遍挑战：论文标题Asymmetric是否意味着催化不对称Diels–Alder？原文使用手性辅基丙烯酸酯进行不对称诱导，并非普遍的手性催化剂控制。制备了密集取代四氢萘酚和螺环骨架，属于原创合成，但不能凭摘要推断所有环加成中间体已直接检测。",
+      "scopeAssessment": {
+        "primaryContribution": "通过光烯醇化形成瞬态羟基邻醌二甲烷，再与活化丙烯酸酯发生Diels–Alder环加成，制备高官能团化1-四氢萘酚和螺环结构。",
+        "preparativeTransformation": "采用光生二烯体与丙烯酸酯进行[4+2]成环；靛红衍生丙烯酸酯给出螺环产物，手性辅基修饰的丙烯酸酯可获得对映富集产物。",
+        "generalityEvidence": "ACS Organic Letters开放获取Letter 2026-09-02首发，28(37)11701–11706；出版社摘要确证高非对映选择性、靛红螺环衍生物及手性辅基辅助的不对称变体。不能将辅基方法误记为手性催化。",
+        "sourceEvidence": "美国化学会ACS出版社正式Article/Letter DOI页 https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03349/5405829/Asymmetric-Access-to-Structurally-Complex-1 核对首次在线日期2026-09-02、题名、摘要和文章类型；原冻结双来源根2026-09-01_2026-09-07_organic-letters，原始Git blob 80aca4837373541c9ba22bdcae30cd0bd2f64511、审核队列Git blob cb28e08c12fbffee949d4b64a4e316ab32c3b4b2、来源SHA256 998b9f30c1feff468763b6170f3c813908d832f9897102ab8f2b81306dc2eed1；本次未获取、复制受限全文摘要、正文图、SI或PDF，绝不以期次替代首发日。",
+        "boundaryChallenge": "第二遍挑战：论文标题Asymmetric是否意味着催化不对称Diels–Alder？原文使用手性辅基丙烯酸酯进行不对称诱导，并非普遍的手性催化剂控制。制备了密集取代四氢萘酚和螺环骨架，属于原创合成，但不能凭摘要推断所有环加成中间体已直接检测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03349",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03349/5405829/Asymmetric-Access-to-Structurally-Complex-1",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "sourceReviewQueueGitBlobSha": "cb28e08c12fbffee949d4b64a4e316ab32c3b4b2",
+        "stageSourceSha256": "998b9f30c1feff468763b6170f3c813908d832f9897102ab8f2b81306dc2eed1",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-02",
+          "officialPublisherFirstOnline": "2026-09-02",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03349/5405829/Asymmetric-Access-to-Structurally-Complex-1",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Published_Online_not_issue"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过光烯醇化形成瞬态羟基邻醌二甲烷，再与活化丙烯酸酯发生Diels–Alder环加成，制备高官能团化1-四氢萘酚和螺环结构。 采用光生二烯体与丙烯酸酯进行[4+2]成环；靛红衍生丙烯酸酯给出螺环产物，手性辅基修饰的丙烯酸酯可获得对映富集产物。 ACS Organic Letters开放获取Letter 2026-09-02首发，28(37)11701–11706；出版社摘要确证高非对映选择性、靛红螺环衍生物及手性辅基辅助的不对称变体。不能将辅基方法误记为手性催化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍挑战：论文标题Asymmetric是否意味着催化不对称Diels–Alder？原文使用手性辅基丙烯酸酯进行不对称诱导，并非普遍的手性催化剂控制。制备了密集取代四氢萘酚和螺环骨架，属于原创合成，但不能凭摘要推断所有环加成中间体已直接检测。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -11302,5 +12091,28 @@
     "noOffSlotAdmission": true,
     "noD1": true,
     "noMediaWrites": true
+  },
+  "newOctober16TenACSPreparativeBatch": {
+    "reviewedAt": "2026-10-16T00:58:58.195Z",
+    "reviewMethod": "same_assistant_adversarial_two_pass_not_two_independent_human_reviewers",
+    "count": 10,
+    "approvedDois": [
+      "10.1021/jacs.6c05261",
+      "10.1021/acs.joc.6c01054",
+      "10.1021/acs.joc.6c01396",
+      "10.1021/acs.joc.6c01509",
+      "10.1021/acs.joc.6c01757",
+      "10.1021/acs.joc.6c00954",
+      "10.1021/acs.orglett.6c02280",
+      "10.1021/acs.orglett.6c02715",
+      "10.1021/acs.orglett.6c02933",
+      "10.1021/acs.orglett.6c03349"
+    ],
+    "scienceEvidenceFile": "audit/historical-reviewed/2026-10-16-q3-ten-acs-original-synthesis-two-pass.json",
+    "frozenPublisherDatesMatchStaging": true,
+    "novelFormalDoiAtReview": true,
+    "noD1": true,
+    "noMediaWrites": true,
+    "noOffSlotPublication": true
   }
 }
