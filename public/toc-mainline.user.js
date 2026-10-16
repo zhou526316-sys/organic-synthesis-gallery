@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.71
+// @version      6.2.72
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.71';
+  var INSTALL_REVISION = '6.2.72';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -104,7 +104,12 @@
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
   var INVENTORY_TRANSPORT_REPAIR_REVISION = '20261012-doi-scoped-bounded-layers-v2';
-  var INVENTORY_REQUEST_TIMEOUT_MS = 16000; // Independent bounded small reads, not a longer global wait.
+  var INVENTORY_REQUEST_TIMEOUT_MS = 16000; // Preserve strict individual request deadlines.
+  // Long owner sessions previously reloaded 6+ MB R2 indexes after every DOI
+  // (~60s). Coalesce full inventory snapshots; per-DOI stored receipts and the
+  // current owner outboxes remain authoritative between refreshes.
+  var INVENTORY_FULL_REFRESH_MIN_MS = 20 * 60 * 1000;
+  var INVENTORY_SNAPSHOT_THROUGHPUT_REVISION = '20261016-full-inventory-20min-v1';
   var INVENTORY_SCOPED_BATCH_SIZE = 80;
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
@@ -5376,6 +5381,11 @@ function embeddedJobDois(value) {
       job&&job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
   }
   function compareMissingCaptureJobs(a,b) {
+    // Historical 7–9 month official-TOC recovery must not consume the first
+    // several hours of a run while Oct-1+ production intake remains uncovered.
+    // Scope, media policies and existing archived receipts remain unchanged.
+    var newA=recentFullCaptureEligible(a),newB=recentFullCaptureEligible(b);
+    if(newA!==newB)return newA?-1:1;
     return captureBatchDate(b).localeCompare(captureBatchDate(a))
       ||journalPriority(a)-journalPriority(b)
       ||String(b.date||'').localeCompare(String(a.date||''))
@@ -5446,7 +5456,7 @@ function embeddedJobDois(value) {
       return {complete:false,items:[],unknown:dois.length,reason:reason};
     }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
-    var batches=[];for(var i=0;i<dois.length;i+=12)batches.push(dois.slice(i,i+12));
+    var batches=[];for(var i=0;i<dois.length;i+=40)batches.push(dois.slice(i,i+40));
     var all=[];
     for(var offset=0;offset<batches.length;offset+=2){
       var pair=await Promise.all(batches.slice(offset,offset+2).map(async function(batch){
@@ -5569,7 +5579,11 @@ function embeddedJobDois(value) {
             if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
             try{var x=await mediaRequest(ds);if(!mediaValid(x,ds))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
             catch(e){
-              if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(600);continue;}
+              // A 16-second exhausted inventory transport must not launch
+              // another identical 16-second request while the same DOI queue
+              // can proceed with its last verified snapshot.
+              if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)
+                &&!/inventory_(?:deadline|transport_failed)|controller_native_timeout_16000ms/i.test(String(e.message||''))){await sleep(600);continue;}
               errors.push('媒体库存分片'+(index+1)+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
               return cache.get(key)||null;
             }
@@ -5930,7 +5944,7 @@ function embeddedJobDois(value) {
   }
   function coveragePending(run) {
     return Array.from(run.coverage.values()).filter(function(r){return r.state==='pending'&&coverageHasNeeds(r.job);})
-      .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
+      .sort(function(a,b){return Number(recentFullCaptureEligible(b.job))-Number(recentFullCaptureEligible(a.job))||captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
   }
   function coverageApplyFreshPlan(run,jobs,complete) {
     var fresh=new Set((jobs||[]).map(function(j){return normalizeDoi(j.doi);}));
@@ -6181,7 +6195,7 @@ function embeddedJobDois(value) {
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
-        if(Date.now()-checkedAt>=60000&&(!freshState||freshState.applied)){
+        if(Date.now()-checkedAt>=INVENTORY_FULL_REFRESH_MIN_MS&&(!freshState||freshState.applied)){
           s.phase='queue_refresh';manualSummary(run);queue=await getJson(QUEUE_URL+'?ts='+Date.now());queueIdentity();checkedAt=Date.now();beginFreshInventory();s.phase='running';manualSummary(run);
         }
       }

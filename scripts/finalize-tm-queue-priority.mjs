@@ -2,14 +2,16 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const oldSort=".sort(function(a,b){return Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
-const newSort=".sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
+const previousSort=".sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
+const newSort=".sort(function(a,b){return Number(recentFullCaptureEligible(b.job))-Number(recentFullCaptureEligible(a.job))||captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
 const sourcePath='public/toc-mainline.user.js';
 if(process.argv.includes('--apply')){
   for(const file of [sourcePath,'scripts/tm-queue-coverage.inc.js']){
     let text=fs.readFileSync(file,'utf8');
     if(!text.includes(newSort)){
-      assert.equal(text.split(oldSort).length-1,1,file+' exact priority anchor');
-      text=text.replace(oldSort,newSort);fs.writeFileSync(file,text);
+      const prior=text.includes(previousSort)?previousSort:oldSort;
+      assert.equal(text.split(prior).length-1,1,file+' exact priority anchor');
+      text=text.replace(prior,newSort);fs.writeFileSync(file,text);
     }
   }
   const text=fs.readFileSync(sourcePath,'utf8');
@@ -19,7 +21,8 @@ if(process.argv.includes('--apply')){
 const source=fs.readFileSync(sourcePath,'utf8');
 assert.ok(source.includes(newSort));
 function between(a,b){const start=source.indexOf(a),end=source.indexOf(b,start);assert.ok(start>=0&&end>start);return source.slice(start,end);}
-const ctx=vm.createContext({console,Map,String,Number,Boolean});
+const ctx=vm.createContext({console,Map,String,Number,Boolean,
+  RECENT_FULL_CAPTURE_CUTOFF:'2026-10-01'});
 vm.runInContext(between('  function journalPriority(','  function isNatureScienceFamilyJob(')+between('  function captureBatchDate(','  function validCapturedFigure(')+between('  function coverageHasNeeds(','  function coverageNeedKey(')+between('  function coveragePending(','  function coverageStats(')+';globalThis.select=coveragePending;',ctx);
 const row=(doi,addedDate,journal,attempts=0)=>({job:{doi,addedDate,journal,captureFigures:true},state:'pending',attempts});
 const newestRetry=row('newest','2026-10-03','Chem',1),oldNew=row('older','2026-10-02','Nature');

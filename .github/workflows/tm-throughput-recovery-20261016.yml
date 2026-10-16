@@ -6,6 +6,7 @@ on:
       - 'public/toc-mainline.user.js'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'tests/tm-throughput-20261016.test.mjs'
+      - 'tests/tm-20261016-inventory-priority-regression.test.mjs'
       - 'tests/tm-image-outbox-recovery-20261008.test.mjs'
       - 'tests/tm-owner-pdf-replay-20261008.test.mjs'
       - '.github/workflows/tm-throughput-recovery-20261016.yml'
@@ -30,7 +31,7 @@ jobs:
           set -euo pipefail
           node --check public/toc-mainline.user.js
           node --check cloudflare/scripts/build-bridge-loader.mjs
-          node --test tests/tm-throughput-20261016.test.mjs tests/tm-image-outbox-recovery-20261008.test.mjs tests/tm-owner-pdf-replay-20261008.test.mjs tests/tm-heartbeat-circuit-20261015.test.mjs
+          node --test tests/tm-throughput-20261016.test.mjs tests/tm-20261016-inventory-priority-regression.test.mjs tests/tm-image-outbox-recovery-20261008.test.mjs tests/tm-owner-pdf-replay-20261008.test.mjs tests/tm-heartbeat-circuit-20261015.test.mjs
           node --test tests/tm-gap-recovery.test.mjs tests/tm-inventory-startup.test.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
@@ -45,8 +46,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.90' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.71';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.91' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.72';" public/gallery-vpn-bridge.user.js
           grep -F '// @run-at       document-end' public/gallery-vpn-bridge.user.js
       - name: Keep immutable tested installer artifact
         if: always()
