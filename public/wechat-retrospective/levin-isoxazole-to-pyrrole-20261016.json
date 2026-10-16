@@ -1,0 +1,1033 @@
+{
+  "date": "2026-10-16",
+  "editorialRevision": "2026-10-16-r1",
+  "selectionAuthority": "owner_selected_20261015_for_oct16",
+  "slug": "levin-isoxazole-to-pyrrole-20261016",
+  "paper": {
+    "doi": "10.1038/s41586-026-10933-6",
+    "journal": "Nature",
+    "title": "Synthesis of pyrroles from isoxazoles by an O-to-C skeletal edit",
+    "authors": "Abigail J. Bracken, Alexandra P. Lawrie, Isabella F. Romita, Mark D. Levin"
+  },
+  "headline": "通过氧—碳骨架编辑将异噁唑转化为吡咯",
+  "title": "往期精选｜Nature｜Levin：通过氧—碳骨架编辑将异噁唑转化为吡咯",
+  "kicker": "往期精选｜Nature｜Levin",
+  "digest": "把异噁唑的合成与官能化路线用于吡咯，从分段机理实验、异常产物及真实审稿往返中理解方法的价值与边界。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41586-026-10933-6&summary=0",
+  "lead_figure_id": "N_Fig2a",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "值得读的是合成路线与反应认识的共同推进",
+      "text": "Levin团队这篇工作的价值，是让吡咯合成借用异噁唑的构筑与官能化方法：先安排取代基，再通过O→C骨架编辑进入特定吡咯。研究没有停在换原子的形式结果上，还从异常产物出发修订机理、建立反应结果预测模型。下图为原文 Fig. 2a 的一锅三阶段流程。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "先在异噁唑上安排取代基，再进入吡咯",
+      "eyebrow": "合成问题",
+      "paragraphs": [
+        "原文 Fig. 1 提出的合成价值来自两类杂环的互补性。虽然异噁唑与吡咯只差一个环内原子，但常用的成环原料、断键方式和官能化位置并不相同。能够保留其余连接关系进行O→C替换，就有机会把前者的路线用于后者，而不必从头围绕吡咯重新设计。",
+        "这也是审稿人2要求作者说得更准确的地方。初稿笼统强调异噁唑更易合成、传统吡咯路线常留下不需要的基团；审稿人指出已有吡咯合成彼此互补。作者随后将论点收窄为“正交的逆合成选择”，而非宣称这条新路线优于所有传统方法（审稿文件第2、8页）。"
+      ],
+      "figures": [
+        "N_Fig1"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig1"
+        ]
+      }
+    },
+    {
+      "heading": "共同中间体让三个已有过程成为一条新路线",
+      "eyebrow": "路线建立",
+      "paragraphs": [
+        "作者从已有的N-炔丙基烯胺酮成吡咯反应找到连接点。前文 Fig. 2a 中，异噁唑先经N-炔丙基化，再以Zn/PTSA还原开环，随后加碱升温环化。其要点是中间体的区域确定性与阶段兼容性；“一锅”并非一个基元步骤，烷基化之后实际还需要除去DCM并换入NMP/水。",
+        "原文 Fig. 2b 将关键假设落到实物：不进行后续环化时，可分离得到烯胺酮4a，收率81%；再单独使其环化，以97%的核磁收率得到吡咯。它证明这是一条可行的连接路线，但不能据此把随后所有瞬态物种都看作已被分离。",
+        "审稿人1也明确提出，烷基化、还原及烯胺酮成吡咯均有先例。作者的回应着重于原本没有显现的骨架编辑用途、扩大的取代模式，以及对竞争路径的新认识。因此，本篇的创新要从“新增的合成能力与机制认识”评价，而不是把三个已知反应重新说成首次发现（审稿文件第1、5页）。"
+      ],
+      "figures": [
+        "N_Fig2b"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "N_Fig2b"
+        ]
+      }
+    },
+    {
+      "heading": "能反驳旧机理的底物，比重复成功更有信息",
+      "eyebrow": "机制转折",
+      "paragraphs": [
+        "此前解释依赖某个丙二烯负离子及特定位点去质子化。原文 Fig. 2c 改用炔丙位带取代基的烯胺酮，仍能得到相应吡咯；按旧路径，所需的α-丙二烯位已经无法发生那一步去质子化。这个结构性检验迫使作者重新考虑环化顺序。",
+        "下一步，作者把异构化与成环拆开。Fig. 2d 中，4a在室温不环化；但以KOtBu在低温THF中可得到经谱学表征的丙二烯5a溶液。换入NMP后，5a即使不再加碱也能在室温形成吡咯。5a不能稳定浓缩分离，不能称为已分离纯品。",
+        "该实验把高温需求主要指向炔丙基—丙二烯异构化。Fig. 2e 再比较后段反应：DMSO-d₆中，无碱与Et₃N的速率相近，Barton碱使速率约增至三倍。因此不能笼统宣称“碱只管异构化”；更强的碱促进环化的可能性仍需保留。"
+      ],
+      "figures": [
+        "N_Fig2c",
+        "N_Fig2d",
+        "N_Fig2e"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig2c"
+        ],
+        "2": [
+          "N_Fig2d"
+        ],
+        "3": [
+          "N_Fig2e"
+        ]
+      }
+    },
+    {
+      "heading": "计算提出环化路径，溶剂实验限定解释",
+      "eyebrow": "模型与实验",
+      "paragraphs": [
+        "原文 Fig. 2f 的工作模型以丙二烯烯胺酮为起点：氧参与7-endo-dig环化，继而6π电环化形成桥环，再开环到酰基取代的吡咯前体。后续经脱酰基和芳构化得到产物；作者讨论了失去烯酮或水解等不同可能途径，不能把每一步都当作已直接观测。",
+        "图中还用独立合成的中性噁氮杂七元环6检验路径：90 °C下只给8%吡咯，并回收66%原料；升至120 °C也只有26%。作者因此不将中性6视作动力学合格中间体，而保留计算中的两性离子或阴离子路径。“能得到同一产物”不足以证明它承担主要反应通量。",
+        "溶剂问题在审稿中得到具体追问：实验用NMP，计算却以DMF作隐式溶剂，而SI Table S5 中两者对应产率为76%与13%。作者按NMP介电常数重算，所得能垒变化很小，因此承认隐式模型不足以解释实验差别，提出溶剂参与氢键或一般碱活化的可能性。",
+        "追问还推动了新的实验。DMA原先只给3%，加入水后提高到58%；SI Table S7 又显示NMP含水比例显著影响结果。这里值得保留的结论是反应对实际溶剂环境敏感，而非DFT已经证明某种氢键是全部差异的唯一原因（审稿文件第13–14页）。"
+      ],
+      "figures": [
+        "N_Fig2f",
+        "N_SI_TableS5",
+        "N_SI_TableS7"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig2f"
+        ],
+        "3": [
+          "N_SI_TableS5"
+        ],
+        "4": [
+          "N_SI_TableS7"
+        ]
+      }
+    },
+    {
+      "heading": "底物范围说明可做什么，路线实例说明为何要做",
+      "eyebrow": "合成验证",
+      "paragraphs": [
+        "原文 Fig. 3a 展示了二芳基、稠环等多类底物。10 mmol实验以74%收率得到超过一克的2a，说明路线可以放大；但该例环化延长至40 h，不能与所有小试视为同一操作条件。部分二芳基底物还需要在还原阶段加入TEMPO。",
+        "Fig. 3a 下部进一步展示酰胺、酮、保护胺和醇等官能团。兼容性与操作调整相伴：有的例子不加水，有的在烷基化阶段加酸；TBS保护醇则经历后续脱保护。这些脚注决定了结果能够怎样复用，不能在概括底物范围时省略。",
+        "更直接体现路线价值的是 Fig. 3b：异噁唑先经C4碘化/Suzuki偶联，再转换为对应吡咯；另一例先利用异噁唑C4锂化安装取代基，再以68%收率取得2x。这些实例把“合成互补性”具体化为取代位置选择，而不是抽象地说新反应扩大了化学空间。"
+      ],
+      "figures": [
+        "N_Fig3a_upper",
+        "N_Fig3a_lower",
+        "N_Fig3b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig3a_upper"
+        ],
+        "2": [
+          "N_Fig3a_lower"
+        ],
+        "3": [
+          "N_Fig3b"
+        ]
+      }
+    },
+    {
+      "heading": "异常产物表明，并非每一次成吡咯都只换一个原子",
+      "eyebrow": "从失败到预测",
+      "paragraphs": [
+        "原文 Fig. 4a 分离到非常规环化产物7，再回投可得到2y。结合结构，作者提出另一条Conia-ene型路线：由碳位点而非氧参与成环，最终改变的原子对应关系不同于单原子O→C替换。Fig. 4b 的酰基保留、迁移或甲基取代产物进一步暴露了这类竞争。",
+        "改变条件并没有普遍扭转这些结果，作者于是转向底物构象。Fig. 4d 用不同位置的位阻解释：C3、C4更拥挤时，目标7-endo路径所需构象受到不利影响；较大的C5取代基则可能使Conia-ene构象更不利。这是具有具体位置含义的构象模型，不能压缩成“位阻越大越不好”。",
+        "作者进一步用三个位点的埋藏体积分数组合成Λ指标，见 Fig. 4c。它在初始集合之外11个例子中判断正确10例，同时保留1t这一电子效应相关例外。SI Table S13 的AUROC=0.968描述该数据集的区分表现，不等于对任何新底物都有96.8%的准确率。"
+      ],
+      "figures": [
+        "N_Fig4ab",
+        "N_Fig4d",
+        "N_Fig4c"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig4ab"
+        ],
+        "2": [
+          "N_Fig4d"
+        ],
+        "3": [
+          "N_Fig4c"
+        ]
+      }
+    },
+    {
+      "heading": "产物相同，也未必意味着原子经历了相同路径",
+      "eyebrow": "真实边界",
+      "paragraphs": [
+        "原文 Fig. 4e 的Parecoxib衍生物2ad得到49%。但作者指出，对C5原本为甲基的底物，两种机制可能收敛到相同产物；仅看终产物无法判断这个甲基的原子来源。它是有用的合成实例，却不是逐原子证明单原子编辑的证据。",
+        "应审稿人关于复杂分子的建议，作者又测试了Cloxacillin和Rimisoxafen。审稿文件第10页的原图显示，炔丙基化发生在其他更易反应的位点，未完成目标编辑。这些结果把限制定位到了早期化学选择性，而不只是最后的环化步骤。",
+        "审稿人1还要求区分单取代底物的反应失败与纯化问题。SI Scheme S3 补入三种单苯基异噁唑：目标产物极低或未检出。作者倾向于将其与途中中间体稳定性联系起来，但该原因仍是解释，不是已经直接观测到的分解过程。"
+      ],
+      "figures": [
+        "N_Fig4e",
+        "N_Review_complex",
+        "N_SI_SchemeS3"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_Fig4e"
+        ],
+        "2": [
+          "N_Review_complex"
+        ],
+        "3": [
+          "N_SI_SchemeS3"
+        ]
+      }
+    },
+    {
+      "heading": "TEMPO改善一个阶段，不等于整条路线单调改善",
+      "eyebrow": "审稿推动的验证",
+      "paragraphs": [
+        "审稿人2追问TEMPO到底抑制哪种副反应，作者补了分阶段的核磁定量数据。SI Table S8 中，加1当量TEMPO使还原后烯胺酮4h由19%提高到53%，同时减少副产物。这说明添加剂改变了还原阶段的产物分布，但单靠抑制现象还不能确认自由基链。",
+        "SI Table S10 给出了更重要的限度：TEMPO从1增至10当量时，一锅还原/环化所得目标吡咯反而从35%降至15%，尽管所考察副产物已被抑制。只优化中间体产量，可能错过后续阶段的损失。",
+        "作者在审稿答复第15–16页讨论了可能的单电子过程，却明确表示对具体细节信心不足，只将实验数据收入SI，没有纳入该具体机理提案。公开审稿档案在这里提供的不是一句赞扬，而是解释应停在哪里的清楚边界。"
+      ],
+      "figures": [
+        "N_SI_TableS8",
+        "N_SI_TableS10"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "N_SI_TableS8"
+        ],
+        "2": [
+          "N_SI_TableS10"
+        ]
+      }
+    },
+    {
+      "heading": "这篇研究值得学习的三种做法",
+      "eyebrow": "研究启示",
+      "paragraphs": [
+        "首先，以合成路线互补性界定价值：Fig. 3b 的取代位置实例比“换一个原子”的口号更有说服力。其次，让能区分不同解释的底物和分段实验推动机理修订。再者，把异常产物纳入模型，并用初始集合之外的底物检验预测，而不只展示拟合良好的成功例。",
+        "同时要保留研究没有解决的部分：氧化敏感吡咯的分离、单取代底物低效、竞争烷基化及溶剂模型不足。第二轮审稿中，审稿人2认可主要问题已得到回应，但仍明确指出复杂底物适用性有限。这不抵消论文的价值，而是告诉读者，哪些设计原则可以学习，哪些具体反应能力还不能外推。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "ai_notice": "资料范围：Nature正文、补充信息及公开Peer Review File。审稿意见均归于该档案中的匿名审稿人，作者答复与编辑归纳分别表述；审稿文件来源为该论文随文附件，CC BY 4.0。",
+  "figures": [
+    {
+      "id": "N_Fig2a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2a.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          41.00790228949653,
+          47.622080078125,
+          560.8822764756944,
+          126.33079576280383
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          62,
+          72,
+          848,
+          191
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2a：异噁唑N-炔丙基化、还原开环及环化的一锅三阶段流程；并非一个基元步骤。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        263
+      ],
+      "bytes": 66369,
+      "sha256": "523cfd4dbe3ee5ea51ea6701f631fc3b0244e54c07f36323952df0ee66394285"
+    },
+    {
+      "id": "N_Fig1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig1.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 2,
+      "crop_rects_pdf_points": [
+        [
+          119.05520019531251,
+          50.26775119357639,
+          484.81923190646705,
+          308.8821027289497
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          180,
+          76,
+          733,
+          467
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 1：异噁唑与吡咯的合成互补性。0.1%是文中ChEMBL虚拟替换分析所得的特定数据库结果。",
+      "display_width_pct": 96,
+      "body": true,
+      "dimensions": [
+        1621,
+        1153
+      ],
+      "bytes": 223590,
+      "sha256": "0c42a321b3f39769152b8d6899cb66b00c434eee53f104cc8f7f8f64db239636"
+    },
+    {
+      "id": "N_Fig2b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2b.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          40.34648451063368,
+          128.97646687825522,
+          291.0238226996528,
+          207.02376478407118
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          61,
+          195,
+          440,
+          313
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2b：还原后分离得到N-炔丙基烯胺酮4a，分离收率81%。",
+      "display_width_pct": 88,
+      "body": true,
+      "dimensions": [
+        1621,
+        519
+      ],
+      "bytes": 63220,
+      "sha256": "06aa5eee31ea296de956e56fa18262bc8d78fbfc0b2aadb8da732434bbc86db1"
+    },
+    {
+      "id": "N_Fig2c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2c.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          286.39389824761287,
+          127.65363132052951,
+          561.5436942545573,
+          209.00801812065973
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          433,
+          193,
+          849,
+          316
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2c：带炔丙位取代基的中间体仍成吡咯，检验旧的丙二烯负离子解释。星号为qNMR收率。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        494
+      ],
+      "bytes": 84058,
+      "sha256": "989e02c538f7245ba04183770e9bdbace7248b5957b3fc5fadd8dae39bad069b"
+    },
+    {
+      "id": "N_Fig2d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2d.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          40.34648451063368,
+          209.00801812065973,
+          291.68524047851565,
+          338.6459027777778
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          61,
+          316,
+          441,
+          512
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2d：异构化与后续成环的分段实验。5a为经谱学表征的溶液，不是稳定分离纯品。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        846
+      ],
+      "bytes": 119470,
+      "sha256": "68778a182735af8b252719be22f59fd7d48d2d6f3a814323299f1437a392820d"
+    },
+    {
+      "id": "N_Fig2e",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2e.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          295.6537471516927,
+          212.9765247938368,
+          561.5436942545573,
+          336.0002316623264
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          447,
+          322,
+          849,
+          508
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2e：均相DMSO-d₆中的碱效应与丙二烯消耗速率；n=3–4。",
+      "display_width_pct": 90,
+      "body": true,
+      "dimensions": [
+        1621,
+        761
+      ],
+      "bytes": 82710,
+      "sha256": "823af434d09503b9c4c82e698f263f6d708e49983855a8b9ace3c47a0f8e7001"
+    },
+    {
+      "id": "N_Fig2f",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig2f.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          40.34648451063368,
+          339.30732055664066,
+          562.2051120334202,
+          591.9689120822483
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          61,
+          513,
+          850,
+          895
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 2f：作者提出的中性／阴离子路径与计算能量图。右上为中性七元环6的独立测试；黑／红两条路径与原图一致。",
+      "display_width_pct": 100,
+      "body": true,
+      "dimensions": [
+        1921,
+        941
+      ],
+      "bytes": 353993,
+      "sha256": "8f8509f9d6646a455f184d09af59415d54d2d022a25a5983c6f106993283d198"
+    },
+    {
+      "id": "N_SI_TableS5",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_SI_TableS5.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "41586_2026_10933_MOESM1_ESM.pdf",
+      "source_pdf_sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf",
+      "source_pdf_page": 15,
+      "crop_rects_pdf_points": [
+        [
+          68.68,
+          72.76,
+          544.0,
+          374.0
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          101,
+          107,
+          800,
+          550
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Table S5：溶剂筛选，保留反应中间体及产物分布。数据为定量¹⁹F NMR收率。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        1035
+      ],
+      "bytes": 135881,
+      "sha256": "60d9fcc021a195f1ce28b8b142d28adf4d3b786c5b881c7fc6fd4ec459126137"
+    },
+    {
+      "id": "N_SI_TableS7",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_SI_TableS7.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "41586_2026_10933_MOESM1_ESM.pdf",
+      "source_pdf_sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf",
+      "source_pdf_page": 16,
+      "crop_rects_pdf_points": [
+        [
+          68.68,
+          156.4,
+          544.0,
+          490.96000000000004
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          101,
+          230,
+          800,
+          722
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Table S7：NMP／水比例筛选。与单独改变介电常数的计算不是同一类证据。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        1147
+      ],
+      "bytes": 140479,
+      "sha256": "a0f8213a33647deced8979b4396316611904bddd35f69799333c96676306b557"
+    },
+    {
+      "id": "N_Fig3a_upper",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig3a_upper.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          92.59848904079861,
+          47.622080078125,
+          499.37042304144967,
+          110.45676907009549
+        ],
+        [
+          92.59848904079861,
+          111.11818684895835,
+          499.37042304144967,
+          245.38599595811633
+        ],
+        [
+          39.02364895290799,
+          531.7798942057292,
+          561.5436942545573,
+          552.9452631293403
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          140,
+          72,
+          755,
+          167
+        ],
+        [
+          140,
+          168,
+          755,
+          371
+        ],
+        [
+          59,
+          804,
+          849,
+          836
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Fig. 3a，上部底物及放大实验。10 mmol的2a为74%，原注a为环化40 h；b为还原阶段加入TEMPO。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        718
+      ],
+      "bytes": 161503,
+      "sha256": "f480d15786d85685351520ce96f09eec7416157239d96d83f8b0dcbc17f8e1ca"
+    },
+    {
+      "id": "N_Fig3a_lower",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig3a_lower.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          92.59848904079861,
+          47.622080078125,
+          499.37042304144967,
+          110.45676907009549
+        ],
+        [
+          92.59848904079861,
+          246.04741373697917,
+          499.37042304144967,
+          386.2679828559028
+        ],
+        [
+          39.02364895290799,
+          531.7798942057292,
+          561.5436942545573,
+          552.9452631293403
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          140,
+          72,
+          755,
+          167
+        ],
+        [
+          140,
+          372,
+          755,
+          584
+        ],
+        [
+          59,
+          804,
+          849,
+          836
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Fig. 3a，下部官能团范围。完整原脚注保留：c不加水，d烷基化时加TfOH，e来自OTBS底物。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        736
+      ],
+      "bytes": 165680,
+      "sha256": "9cf14eeaab3732c8b36df366a8aa53998e2f3600b16c0f14a9cd119e9964b415"
+    },
+    {
+      "id": "N_Fig3b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig3b.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          92.59848904079861,
+          47.622080078125,
+          499.37042304144967,
+          110.45676907009549
+        ],
+        [
+          79.37013346354166,
+          391.5593250868056,
+          543.6854142252604,
+          524.5042986382379
+        ],
+        [
+          39.02364895290799,
+          531.7798942057292,
+          561.5436942545573,
+          552.9452631293403
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          140,
+          72,
+          755,
+          167
+        ],
+        [
+          120,
+          592,
+          822,
+          793
+        ],
+        [
+          59,
+          804,
+          849,
+          836
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Fig. 3b：通过异噁唑的区域选择性官能化取得互补的吡咯连接方式。",
+      "display_width_pct": 100,
+      "body": true,
+      "dimensions": [
+        1621,
+        715
+      ],
+      "bytes": 171352,
+      "sha256": "25ccdee7f67a3fbb539b056b31224da1987e058b20a0e1f5d8a280aee7b441af"
+    },
+    {
+      "id": "N_Fig4ab",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig4ab.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          79.37013346354166,
+          47.622080078125,
+          316.15769829644097,
+          377.0081339518229
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          120,
+          72,
+          478,
+          570
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 4a,b：异常环化产物与不同的酰基／甲基取代结果。图a使用α-甲基炔丙基试剂，不能误认作所有实验均用未取代炔丙基。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        2247
+      ],
+      "bytes": 287132,
+      "sha256": "b05589bec410989fe19760194b15b255c36e30b51951c14137bd8724217af7ad"
+    },
+    {
+      "id": "N_Fig4d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig4d.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          319.4647871907552,
+          47.622080078125,
+          525.8271341959636,
+          363.11836059570317
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          483,
+          72,
+          795,
+          549
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 4d：具有位置含义的构象和张力模型，比较目标7-endo路径与Conia-ene型路径。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        2467
+      ],
+      "bytes": 449815,
+      "sha256": "42503cddf3304caebe31d41f24687ad31af7be15f623b618305ea1da59f323e2"
+    },
+    {
+      "id": "N_Fig4c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig4c.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          80.03155124240452,
+          380.31522284613715,
+          298.2994182671441,
+          517.2287030707465
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          121,
+          575,
+          451,
+          782
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 4c：Λ=%Vbur(C3)×%Vbur(C4)/%Vbur(C5)与反应结果。模型例外仍保留。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        1025
+      ],
+      "bytes": 107857,
+      "sha256": "a6356630536ed3b6903ab2f70e92339f7faa7435510f54159c2af7539929f337"
+    },
+    {
+      "id": "N_Fig4e",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Fig4e.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          325.41754720052086,
+          379.65380506727433,
+          522.5200453016494,
+          515.244449734158
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          492,
+          574,
+          790,
+          779
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Fig. 4e：两种机制可能产生相同产物的实例，包括Parecoxib衍生物2ad。",
+      "display_width_pct": 90,
+      "body": true,
+      "dimensions": [
+        1621,
+        1122
+      ],
+      "bytes": 139872,
+      "sha256": "824825aeead65d8e555b22155008e128ead47a98847d0b49ebca6a73a85bbe8d"
+    },
+    {
+      "id": "N_Review_complex",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_Review_complex.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_peer_review_author_response_figure",
+      "source_pdf": "41586_2026_10933_MOESM2_ESM.pdf",
+      "source_pdf_sha256": "df7d0bcc3dc441a6109f5c597e586f9bf1c8dd4485311fcafbdf2df45c257006",
+      "source_pdf_page": 10,
+      "crop_rects_pdf_points": [
+        [
+          124.44000000000001,
+          165.92000000000002,
+          510.00000000000006,
+          512.72
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          183,
+          244,
+          750,
+          754
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "公开审稿文件第10页，作者补充的复杂分子实验（与原文 Fig. 4e 对照）。Cloxacillin、Rimisoxafen发生竞争烷基化；原图节选，来源作者答复／匿名审稿档案，CC BY 4.0。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        1460
+      ],
+      "bytes": 183855,
+      "sha256": "a63e825f1fbc07a6287e1a4dd3a04181f9ca60ab74e47ef1c6dc949bed626e6b"
+    },
+    {
+      "id": "N_SI_SchemeS3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_SI_SchemeS3.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "41586_2026_10933_MOESM1_ESM.pdf",
+      "source_pdf_sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf",
+      "source_pdf_page": 27,
+      "crop_rects_pdf_points": [
+        [
+          68.68,
+          152.32000000000002,
+          544.0,
+          473.96000000000004
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          101,
+          224,
+          800,
+          697
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Scheme S3：三种单苯基异噁唑的低效或失败结果；全部为以TMB作内标的qNMR收率。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        1104
+      ],
+      "bytes": 195671,
+      "sha256": "cf215137fbc0856e3c4c0ba5d8bf3363cb2be82142cd2001827f620c54d190b5"
+    },
+    {
+      "id": "N_SI_TableS8",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_SI_TableS8.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "41586_2026_10933_MOESM1_ESM.pdf",
+      "source_pdf_sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf",
+      "source_pdf_page": 17,
+      "crop_rects_pdf_points": [
+        [
+          68.68,
+          156.4,
+          544.0,
+          431.12
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          101,
+          230,
+          800,
+          634
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Table S8：TEMPO等添加剂对3,5-二芳基底物还原阶段的影响。不要与最终一锅产率混为一谈。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        946
+      ],
+      "bytes": 124032,
+      "sha256": "42201962ee092c55cdd16f6ee8c66bea49899163bfaccb00bfb7ef5092c5e6ff"
+    },
+    {
+      "id": "N_SI_TableS10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/N_SI_TableS10.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "41586_2026_10933_MOESM1_ESM.pdf",
+      "source_pdf_sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf",
+      "source_pdf_page": 18,
+      "crop_rects_pdf_points": [
+        [
+          68.68,
+          72.76,
+          544.0,
+          301.24
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          101,
+          107,
+          800,
+          443
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Table S10：TEMPO用量与一锅还原／环化结果。减少所测副产物，不等于最终目标产率不断提高。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        791
+      ],
+      "bytes": 110031,
+      "sha256": "969f9cd0c1106d94444628f2659af7de9e0ff8c8584f525211a485b8a357812b"
+    },
+    {
+      "id": "cover_retrospective",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/cover_retrospective.png",
+      "source_doi": "10.1038/s41586-026-10933-6",
+      "source_pdf": "s41586-026-10933-6.pdf",
+      "source_pdf_page": 2,
+      "source_figure": "Fig.1c (body-figure fallback; not official TOC)",
+      "source_kind": "original_source_raster_scaled_and_white_padded",
+      "body": false,
+      "caption": "原文 Fig. 1c 概念图截图，居中补白；不冒称官方TOC。",
+      "sha256": "1cbe13bf33b9c03357ea48c3ae84a9531000e59ba3c47434c4fe86b162d8545e",
+      "dimensions": [
+        800,
+        800
+      ],
+      "bytes": 74704,
+      "contentRect": [
+        12,
+        233,
+        788,
+        566
+      ],
+      "addedText": false,
+      "addedBlueBand": false,
+      "chemicalRedraw": false
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_retrospective",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "1cbe13bf33b9c03357ea48c3ae84a9531000e59ba3c47434c4fe86b162d8545e",
+    "canvas": {
+      "width": 800,
+      "height": 800,
+      "background": "white"
+    },
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "crop_1_1": "0_0_1_1",
+    "sourceAuthority": "owner_requested_TOC_or_original_screenshot_no_added_text",
+    "description": "原文 Fig. 1c 概念图截图，居中补白；不冒称官方TOC。"
+  }
+}

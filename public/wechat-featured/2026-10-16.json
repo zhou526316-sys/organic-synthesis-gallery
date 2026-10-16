@@ -1,0 +1,1285 @@
+{
+  "date": "2026-10-16",
+  "editorialRevision": "2026-10-16-r1",
+  "selectionAuthority": "owner_uploaded_main_and_SI_on_20261016",
+  "paper": {
+    "doi": "10.1021/jacs.6c17168",
+    "journal": "JACS",
+    "title": "Construction of Divergent Enantioenriched 3D-Fluoro Scaffolds via Ni(0) π-Lewis Base-Mediated Umpolung of Fluorodienes",
+    "authors": "Shun-Zhong Tan, Lei Zhu, Quan-Xu Chen, Chuang-Qi Wang, Qin Ouyang, Wei Du, Ying-Chun Chen"
+  },
+  "headline": "氟代二烯极性反转驱动的手性含氟三维骨架多样化合成",
+  "kicker": "今日精选｜JACS",
+  "lead_figure_id": "J_TOC",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "从含氟烯烃出发，选择氟的保留方式",
+      "text": "这篇工作的价值，是让通常偏亲电的含氟碳成为亲核反应位点，再分别制得单氟烯基、偕二氟亚甲基和相邻含氟手性中心。关键不只在于形成一个新的 C–C 键，还在于同一类底物怎样兼顾成键位置、对映选择性，以及脱氟或保氟的不同结果。下图为论文图形摘要。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "给含氟碳建立一条亲核反应通道",
+      "eyebrow": "反应设计",
+      "paragraphs": [
+        "作者从偕二氟烯烃的极性限制出发：含氟端碳通常接受亲核试剂进攻，难以直接与同样亲电的醛或亚胺连接。原文 Scheme 1 的设计是在旁边引入共轭烯烃，使低价镍能够先配位，再通过金属向二烯的反馈作用改变含氟端的反应性。",
+        "所谓“π-路易斯碱活化”，在这里指金属配位后增强二烯的亲核反应能力，不意味着溶液中已经生成了游离碳负离子。作者以计算支持这一电子结构解释；真正需要实验回答的是，成键能否发生，以及所得含氟中间体能否进入可控的后续反应。"
+      ],
+      "figures": [
+        "J_Scheme1"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme1"
+        ]
+      }
+    },
+    {
+      "heading": "常规还原剂失败，联硼与碱共同起作用",
+      "eyebrow": "实验转折",
+      "paragraphs": [
+        "原文 Table 1 显示，Zn、Mn、Et₃SiH 均未给出目标脱氟产物，即使使用化学计量的 Ni(0) 也只有痕量产物。加入 B₂(pin)₂/t-BuOK 后，模型反应才得到 51% 收率、90% ee 的产物；单独去掉联硼或碱，反应又停止。",
+        "这组结果把问题从“怎样还原镍”推进到“哪种试剂组合能让脱氟完成”。进一步调整硼试剂、碱、温度和分子筛后，3a 达到 76% 分离收率、99% ee，Z/E >19:1。这里同时改变了多个条件，不能把全部提高归功于某一个添加剂。",
+        "联硼因此不能仅被当作普通还原剂。至于它是否直接参与 C–F 键断裂，还要结合后面的排他性对照与计算路径判断；“缺少就不反应”本身并不证明某一种过渡态。"
+      ],
+      "figures": [
+        "J_Table1"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Table1"
+        ]
+      }
+    },
+    {
+      "heading": "脱氟加成建立了新的含氟醇和胺合成入口",
+      "eyebrow": "结构范围",
+      "paragraphs": [
+        "原文 Scheme 2 先检验这一设计的结构范围。芳基、杂芳基及部分脂肪族二烯均可参与，但结果并非整齐一致：3k 为 47%、75% ee，而3l为51%、98% ee。成键与脱氟可行，并不保证所有取代基都获得同等的对映区分。",
+        "醛的范围从芳香醛延伸到脂肪醛，保留了与后续衍生化有关的官能团。Scheme 2 中3aa、3ab来自已有手性的醛，报告的是 >19:1 dr；它们不能与其他底物的 ee 当作同一种选择性指标比较。",
+        "醛亚胺也能给出含氟胺，但通常需要改用 L5 或 L6，部分例子还需40 °C、48 h。Scheme 2 的这部分拓展说明反应逻辑可跨越两类亲电组分，同时也明确了配体和条件仍需随反应对象调整。"
+      ],
+      "figures": [
+        "J_Scheme2_diene",
+        "J_Scheme2_aldehyde",
+        "J_Scheme2_imine"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme2_diene"
+        ],
+        "2": [
+          "J_Scheme2_aldehyde"
+        ],
+        "3": [
+          "J_Scheme2_imine"
+        ]
+      }
+    },
+    {
+      "heading": "保留 CF₂，还要解决加成位置的竞争",
+      "eyebrow": "路径选择",
+      "paragraphs": [
+        "作者随后以 ZnEt₂ 建立保留两个氟原子的还原偶联，模型产物4a达到92%、99% ee。但这不是简单替换一个试剂就结束：SI Table S3 显示，0.2 M 时总收率为95%，α/δ却只有5:1；降到0.025 M后，总收率为92%，α/δ才提高至 >19:1。",
+        "这一对照值得单独看：高总收率和高 ee，仍可能掩盖不理想的成键位置。原文 Scheme 3 的二烯范围表明优化后的体系可用于芳基、杂芳基、二茂铁及部分脂肪族底物；这些结果要与区域异构体比例一起评价。",
+        "即使完成优化，部分醛仍存在δ-加成。Scheme 3 中4v为52%、95% ee，但4v/4v′仅为5:1；4w/4w′为9:1。区域控制尚未成为不受底物影响的固定性质。",
+        "亚胺在保氟路径中同样可用，见 Scheme 3 下部的4x–aa，但这里也使用了不同配体及部分升温条件。两条路径共享的是反应设计与底物家族，不是所有实例完全相同的实验配方。"
+      ],
+      "figures": [
+        "J_SI_TableS3",
+        "J_Scheme3_diene",
+        "J_Scheme3_aldehyde",
+        "J_Scheme3_imine"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_SI_TableS3"
+        ],
+        "2": [
+          "J_Scheme3_diene"
+        ],
+        "3": [
+          "J_Scheme3_aldehyde"
+        ],
+        "4": [
+          "J_Scheme3_imine"
+        ]
+      }
+    },
+    {
+      "heading": "用二烯构型控制相邻手性中心的相对关系",
+      "eyebrow": "立体控制",
+      "paragraphs": [
+        "单氟二烯把问题推进到两个相邻手性中心。原文 Scheme 4 改用 Et₃B；(Z,E)-二烯主要给出syn产物，(E,E)-二烯主要给出anti产物。底物原有的双键构型由此参与控制新形成的相对立体化学。",
+        "同一图中，氟代季碳中心的构筑更具挑战：6i为53%、84% ee，8e为46%、70% ee，尽管二者仍具有较高 dr。新增结构复杂度之后，对映控制已经出现下降，不能用模型反应的99% ee代表整个体系。",
+        "Scheme 4 底部把两种二烯构型与 L1/ent-L1 组合，在代表性体系中得到四种立体异构体。值得学习的是将底物几何信息与手性催化剂选择配合使用；其适用范围仍需由具体底物检验，不能据此推广到任意含氟烯烃。"
+      ],
+      "figures": [
+        "J_Scheme4_syn",
+        "J_Scheme4_anti",
+        "J_Scheme4_four"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme4_syn"
+        ],
+        "2": [
+          "J_Scheme4_anti"
+        ],
+        "3": [
+          "J_Scheme4_four"
+        ]
+      }
+    },
+    {
+      "heading": "对照实验检验亲核加成，而不是只画一条循环",
+      "eyebrow": "机制证据",
+      "paragraphs": [
+        "原文 Scheme 6a 中，去掉共轭烯烃的简单偕二氟烯烃15在两套条件下都不反应。作者据此支持共轭二烯参与活化，并反对“先直接插入 C–F 键，再加成醛”的解释。该阴性对照需要与其余证据合读，不能单独排除所有可能的金属反应。",
+        "SI Scheme S10 进一步检验另一条容易想到的路线：是否先脱氟硼化，再由二烯基硼酸酯加成醛？无醛时没有检出所考察的硼化物；预制硼酸酯与醛在有、无镍及升温条件下也未给出目标产物。这使该简单串联解释缺乏实验支持。",
+        "原文 Scheme 6b 的分子间竞争实验给出ρ=+1.40、R²=0.996，吸电子取代醛反应更有利。它支持醛作为亲电组分接受进攻；不过这是条件B下由产物比推算的相对反应性，不能单凭这张图宣布 C–C 成键就是整个催化循环的定速步骤。"
+      ],
+      "figures": [
+        "J_Scheme6a",
+        "J_SI_S10",
+        "J_Scheme6b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme6a"
+        ],
+        "2": [
+          "J_SI_S10"
+        ],
+        "3": [
+          "J_Scheme6b"
+        ]
+      }
+    },
+    {
+      "heading": "硼参与脱氟，锌试剂引导后续氢转移",
+      "eyebrow": "计算模型",
+      "paragraphs": [
+        "原文 Scheme 6c 的计算从共同加成中间体 Int2 出发：脱氟路径先经碱协助的转金属化生成含硼物种，再通过五元过渡态完成 C–F 断裂与 B–F 形成，伴随镍的形式还原。计算采用 NaOMe 代替实验最优的 Cs₂CO₃，因此应作为与对照相容的模型阅读。",
+        "Scheme 6d 的相互作用和反应坐标分析进一步支持硼靠近离去的氟，并将断 C–F 与成 B–F 联系起来。相应局部能垒为22.3 kcal mol⁻¹；另一脱氟构象计算上高1.7 kcal mol⁻¹。它们解释了作者提出的脱氟方式与Z偏好，而非直接观测到这些过渡态。",
+        "保氟路径则在前文 Scheme 6c 中由 ZnEt₂ 捕获 Int2，经转金属化、β-H消除及 C–H 还原消除结束反应。作者将两类产物相同的绝对构型归因于共同的早期成键步骤。这里最有启发的是：促进催化周转的试剂，也可能直接改变形成产物的反应步骤。"
+      ],
+      "figures": [
+        "J_Scheme6c",
+        "J_Scheme6d"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme6c"
+        ],
+        "2": [
+          "J_Scheme6d"
+        ]
+      }
+    },
+    {
+      "heading": "合成用途已展示，药理优势仍需另行验证",
+      "eyebrow": "合成意义",
+      "paragraphs": [
+        "原文 Scheme 5a 制备了与 ASPP 049、Darlingianine及二芳基庚烷骨架相关的含氟类似物。它说明这套方法可以在合成层面实现特定 H/F 结构替换，但没有提供这些新分子的药效或代谢数据，不能把结构类比写成活性已经改善。",
+        "Scheme 5b 又把保氟产物转为二氟羟基酯、含氟四氢吡喃和吡咯。不同氟保留方式由此成为继续构筑分子的起点，而非只是一张彼此分离的底物表。"
+      ],
+      "figures": [
+        "J_Scheme5a",
+        "J_Scheme5b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_Scheme5a"
+        ],
+        "2": [
+          "J_Scheme5b"
+        ]
+      }
+    },
+    {
+      "heading": "可借鉴的设计判断与尚待解决的问题",
+      "eyebrow": "研究启示",
+      "paragraphs": [
+        "SI 的1.0 mmol实验提供了实际操作尺度：3a为66%、99% ee，反应72 h；4a为93%、99% ee，反应24 h。两者均为毫摩尔级验证，不能写成克级放大；10 mol%镍用量及保氟反应的稀溶液条件也仍有优化空间。",
+        "本篇可学习的研究思路有明确的实验落点：以共轭配位部位改变另一端的反应性；遇到还原剂失效时，继续检验试剂是否需要参与具体成键或断键；筛选时同时记录总收率、区域比例与ee。沿这些问题开展速率或中间体研究，才可能判断不同底物为何偏离预期，而不只是继续寻找一个更高的收率。"
+      ],
+      "figures": [
+        "J_SI_scale"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "J_SI_scale"
+        ]
+      }
+    }
+  ],
+  "ai_notice": "资料范围：论文正文及补充材料。未取得对应审稿报告与作者答复，文中的实验解读不归因于审稿人。所述研究启示为依据本文证据作出的编辑归纳。",
+  "figures": [
+    {
+      "id": "J_TOC",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_TOC.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 1,
+      "crop_rects_pdf_points": [
+        [
+          317.20196601019967,
+          252.41177720811632,
+          556.1157872178819,
+          369.84399441189237
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          470,
+          374,
+          824,
+          548
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "论文图形摘要：Ni(0)介导的氟代二烯极性反转及不同含氟产物；与原文 Scheme 1 的总体设计对应。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        807
+      ],
+      "bytes": 142990,
+      "sha256": "dcb36cea75779c03b88b35720c8beb43766ba17e532471f876bfdd64ba40b08b"
+    },
+    {
+      "id": "J_Scheme1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme1.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 2,
+      "crop_rects_pdf_points": [
+        [
+          51.292232801649305,
+          59.39100640190972,
+          556.1157872178819,
+          660.050048421224
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          76,
+          88,
+          824,
+          978
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Scheme 1：含氟结构的合成问题、共轭二烯设计及不同反应结果。电子结构面板为计算分析。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        1924
+      ],
+      "bytes": 595444,
+      "sha256": "f342c00079862119fe6d6ee0b2a0c437c4ffc6c0c88f1b925ed7d062fac9479b"
+    },
+    {
+      "id": "J_Table1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Table1.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 3,
+      "crop_rects_pdf_points": [
+        [
+          313.15257921006946,
+          59.39100640190972,
+          556.7906850179037,
+          454.8811172146267
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          464,
+          88,
+          825,
+          674
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Table 1：脱氟反应的条件发展。保留反应式、配体结构、全部数据及温度／时间脚注。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        2618
+      ],
+      "bytes": 480451,
+      "sha256": "bf2ed08820eddbf2d867b738c6df5ea8dc157803389bd100ee113ba69e0b7360"
+    },
+    {
+      "id": "J_Scheme2_diene",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme2_diene.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 4,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          172.09893900553385
+        ],
+        [
+          51.96713060167101,
+          172.09893900553385,
+          555.4408894178603,
+          348.9221626112196
+        ],
+        [
+          51.96713060167101,
+          615.5067936197917,
+          555.4408894178603,
+          658.7002528211806
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          255
+        ],
+        [
+          77,
+          255,
+          823,
+          517
+        ],
+        [
+          77,
+          912,
+          823,
+          976
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 2，二烯范围。上方总条件与原始脚注保留；分离收率、ee和Z/E分别评价。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        1106
+      ],
+      "bytes": 293107,
+      "sha256": "ee10809f434c9967bc8c26ceeb20a11d0633b3734377f23e1352de9dc50dbbb5"
+    },
+    {
+      "id": "J_Scheme2_aldehyde",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme2_aldehyde.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 4,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          172.09893900553385
+        ],
+        [
+          51.96713060167101,
+          349.59706041124133,
+          555.4408894178603,
+          527.7700796169705
+        ],
+        [
+          51.96713060167101,
+          615.5067936197917,
+          555.4408894178603,
+          658.7002528211806
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          255
+        ],
+        [
+          77,
+          518,
+          823,
+          782
+        ],
+        [
+          77,
+          912,
+          823,
+          976
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 2，醛范围。3aa、3ab标为dr；其已有手性来自所用醛。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        1111
+      ],
+      "bytes": 310341,
+      "sha256": "c58d46e61c6ba4594066dc915f29ce9e6867b7c34c5f236e8bda7f164271efde"
+    },
+    {
+      "id": "J_Scheme2_imine",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme2_imine.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 4,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          172.09893900553385
+        ],
+        [
+          51.96713060167101,
+          528.4449774169922,
+          555.4408894178603,
+          612.1323046196832
+        ],
+        [
+          51.96713060167101,
+          615.5067936197917,
+          555.4408894178603,
+          658.7002528211806
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          255
+        ],
+        [
+          77,
+          783,
+          823,
+          907
+        ],
+        [
+          77,
+          912,
+          823,
+          976
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 2，亚胺范围及配体。原注c为L5、40 °C、48 h，d为L6，不能概括为全部同条件。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        810
+      ],
+      "bytes": 244006,
+      "sha256": "1d5a870dbd242e1598c5abc20d6ecac282cc88690f0e3f8364162d3ad072242f"
+    },
+    {
+      "id": "J_SI_TableS3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_SI_TableS3.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "ja6c17168_si_001.pdf",
+      "source_pdf_sha256": "acaf22919aa9a0900da9f27d58a5fd78e0d79439a732881e84093ed7402a50ed",
+      "source_pdf_page": 7,
+      "crop_rects_pdf_points": [
+        [
+          54.8925084092882,
+          117.05992757161458,
+          530.4071294487848,
+          567.4430387369791
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          83,
+          177,
+          802,
+          858
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Table S3：保氟偶联的溶剂和浓度优化。total yield是两种区域异构体的总量，不等于4a的单独收率。",
+      "display_width_pct": 96,
+      "body": true,
+      "dimensions": [
+        1621,
+        1537
+      ],
+      "bytes": 237044,
+      "sha256": "e90561defb3839aab9e5d889d8da53d6ab22db015a5feb64ae9e0b1030716425"
+    },
+    {
+      "id": "J_Scheme3_diene",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme3_diene.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          60.065904201931424,
+          555.4408894178603,
+          264.55993760850697
+        ],
+        [
+          51.96713060167101,
+          467.02927761501735,
+          555.4408894178603,
+          508.19804341634114
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          89,
+          823,
+          392
+        ],
+        [
+          77,
+          692,
+          823,
+          753
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 3，二烯范围与区域异构体定义。图中4a附有1.0 mmol实验结果。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        816
+      ],
+      "bytes": 267150,
+      "sha256": "802e8b8f3d9053e5ea9df2b8611ba0eb193671aa067a32497f35e0f275e945d2"
+    },
+    {
+      "id": "J_Scheme3_aldehyde",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme3_aldehyde.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          60.065904201931424,
+          555.4408894178603,
+          72.88896240234375
+        ],
+        [
+          51.96713060167101,
+          76.26345140245226,
+          452.18152601453994,
+          140.3787424045139
+        ],
+        [
+          51.96713060167101,
+          265.2348354085287,
+          555.4408894178603,
+          388.74113281250004
+        ],
+        [
+          51.96713060167101,
+          467.02927761501735,
+          555.4408894178603,
+          508.19804341634114
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          89,
+          823,
+          108
+        ],
+        [
+          77,
+          113,
+          670,
+          208
+        ],
+        [
+          77,
+          393,
+          823,
+          576
+        ],
+        [
+          77,
+          692,
+          823,
+          753
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 3，醛范围。4o、4q、4v、4w等条目保留其实际区域异构体比例。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        832
+      ],
+      "bytes": 241653,
+      "sha256": "331d89da054c8e5e3836dd8a55567722d82fd17b864b4b49c0c755e51ff16414"
+    },
+    {
+      "id": "J_Scheme3_imine",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme3_imine.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 5,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          60.065904201931424,
+          555.4408894178603,
+          72.88896240234375
+        ],
+        [
+          51.96713060167101,
+          76.26345140245226,
+          452.18152601453994,
+          140.3787424045139
+        ],
+        [
+          51.96713060167101,
+          390.0909284125434,
+          555.4408894178603,
+          458.93050401475693
+        ],
+        [
+          51.96713060167101,
+          467.02927761501735,
+          555.4408894178603,
+          508.19804341634114
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          89,
+          823,
+          108
+        ],
+        [
+          77,
+          113,
+          670,
+          208
+        ],
+        [
+          77,
+          578,
+          823,
+          680
+        ],
+        [
+          77,
+          692,
+          823,
+          753
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 3，亚胺范围。原注c采用L5并调整浓度、温度和时间；d采用L6。",
+      "display_width_pct": 96,
+      "body": true,
+      "dimensions": [
+        1621,
+        658
+      ],
+      "bytes": 169196,
+      "sha256": "84707749beb2ecade2346f9ee8edf455919255d248f7a754e43e5979f94dcfeb"
+    },
+    {
+      "id": "J_Scheme4_syn",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme4_syn.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          72.21406460232205
+        ],
+        [
+          51.96713060167101,
+          74.91365580240885,
+          555.4408894178603,
+          254.43647060818142
+        ],
+        [
+          51.96713060167101,
+          499.42437201605907,
+          555.4408894178603,
+          529.1198752170139
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          107
+        ],
+        [
+          77,
+          111,
+          823,
+          377
+        ],
+        [
+          77,
+          740,
+          823,
+          784
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 4，(Z,E)-单氟二烯的syn产物范围。Et₃B体系，6i报告53%收率、84% ee。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        754
+      ],
+      "bytes": 218092,
+      "sha256": "eb31b712da40198122e6944477691f867891770742e3acaa18228bed24b65484"
+    },
+    {
+      "id": "J_Scheme4_anti",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme4_anti.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          72.21406460232205
+        ],
+        [
+          51.96713060167101,
+          255.78626620822484,
+          555.4408894178603,
+          376.59297241210936
+        ],
+        [
+          51.96713060167101,
+          499.42437201605907,
+          555.4408894178603,
+          529.1198752170139
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          107
+        ],
+        [
+          77,
+          379,
+          823,
+          558
+        ],
+        [
+          77,
+          740,
+          823,
+          784
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 4，(E,E)-单氟二烯的anti产物范围。8e的对映控制下降，不能用模型99% ee替代。",
+      "display_width_pct": 96,
+      "body": true,
+      "dimensions": [
+        1621,
+        568
+      ],
+      "bytes": 149341,
+      "sha256": "bc169aad8ffa60c162f8879771417a8cf883fcd2c02c1a939a18a526d57ec527"
+    },
+    {
+      "id": "J_Scheme4_four",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme4_four.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 6,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          72.21406460232205
+        ],
+        [
+          51.96713060167101,
+          379.2925636121962,
+          555.4408894178603,
+          491.32559841579865
+        ],
+        [
+          51.96713060167101,
+          499.42437201605907,
+          555.4408894178603,
+          529.1198752170139
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          107
+        ],
+        [
+          77,
+          562,
+          823,
+          728
+        ],
+        [
+          77,
+          740,
+          823,
+          784
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 4，代表性底物的四种立体异构体：二烯E/Z构型与L1/ent-L1配合。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        540
+      ],
+      "bytes": 138621,
+      "sha256": "897b79f72d0c22222c88d17dff0786e84537542824f94d5570b162789bbe59d7"
+    },
+    {
+      "id": "J_Scheme6a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme6a.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 8,
+      "crop_rects_pdf_points": [
+        [
+          63.440393202039935,
+          74.23875800238716,
+          296.95503200954863,
+          210.56811360677085
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          94,
+          110,
+          440,
+          312
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Scheme 6a：共轭二烯要求及作者考察的C–F插入解释。阴性对照须与其余证据合读。",
+      "display_width_pct": 92,
+      "body": true,
+      "dimensions": [
+        1621,
+        955
+      ],
+      "bytes": 133714,
+      "sha256": "7ea75bbbb5e64e93b37e7800136e73eff31dd280f0d0e7e8dede4f7c9845e990"
+    },
+    {
+      "id": "J_SI_S10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_SI_S10.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "ja6c17168_si_001.pdf",
+      "source_pdf_sha256": "acaf22919aa9a0900da9f27d58a5fd78e0d79439a732881e84093ed7402a50ed",
+      "source_pdf_page": 94,
+      "crop_rects_pdf_points": [
+        [
+          65.47419677734375,
+          61.50606363932292,
+          541.6501733398437,
+          529.0844184027778
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          99,
+          93,
+          819,
+          800
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "SI Scheme S10：底物、催化剂、产物回投及预制硼酸酯对照。ND指未检出，NR指未反应。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1620,
+        1592
+      ],
+      "bytes": 264902,
+      "sha256": "bface8f18e5b72e63b0ae7bd7452ade97da325ba89fb07012f4e20e637365e2c"
+    },
+    {
+      "id": "J_Scheme6b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme6b.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 8,
+      "crop_rects_pdf_points": [
+        [
+          300.3295210096571,
+          74.23875800238716,
+          543.2927290174696,
+          210.56811360677085
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          445,
+          110,
+          805,
+          312
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Scheme 6b：条件B下的分子间竞争Hammett分析。ρ=+1.40、R²=0.996。",
+      "display_width_pct": 92,
+      "body": true,
+      "dimensions": [
+        1621,
+        919
+      ],
+      "bytes": 187465,
+      "sha256": "695c1d26c1edaaac3b9f0109678371807a392afa08a92e9cc3a636d1de82fc89"
+    },
+    {
+      "id": "J_Scheme6c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme6c.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 8,
+      "crop_rects_pdf_points": [
+        [
+          63.440393202039935,
+          216.64219380696616,
+          543.9676268174914,
+          556.1157872178819
+        ],
+        [
+          51.96713060167101,
+          724.8402372233073,
+          556.1157872178819,
+          754.5357404242621
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          94,
+          321,
+          806,
+          824
+        ],
+        [
+          77,
+          1074,
+          824,
+          1118
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 6c：两条计算催化路径、过渡态及相对自由能。保留原始模型脚注；计算以NaOMe代替Cs₂CO₃。",
+      "display_width_pct": 100,
+      "body": true,
+      "dimensions": [
+        1921,
+        1428
+      ],
+      "bytes": 369881,
+      "sha256": "65cf20d170b4f9e4b6f395a801519b99f770633323cfc8d176c8f1bc8cadc3ca"
+    },
+    {
+      "id": "J_Scheme6d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme6d.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 8,
+      "crop_rects_pdf_points": [
+        [
+          63.440393202039935,
+          562.1898674180773,
+          543.9676268174914,
+          687.045960422092
+        ],
+        [
+          51.96713060167101,
+          724.8402372233073,
+          556.1157872178819,
+          754.5357404242621
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          94,
+          833,
+          806,
+          1018
+        ],
+        [
+          77,
+          1074,
+          824,
+          1118
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 6d：硼–氟相互作用、IRC/NBO分析及Z/E竞争过渡态。均为计算证据。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        525
+      ],
+      "bytes": 262282,
+      "sha256": "f1e6009af775df2492447eaf9a2a1fdfa50677ef7315de5654c9f29188c1186a"
+    },
+    {
+      "id": "J_Scheme5a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme5a.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 7,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          59.39100640190972,
+          555.4408894178603,
+          71.53916680230034
+        ],
+        [
+          51.96713060167101,
+          74.23875800238716,
+          555.4408894178603,
+          289.5311562093099
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          88,
+          823,
+          106
+        ],
+        [
+          77,
+          110,
+          823,
+          429
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "原文 Scheme 5a：生物相关骨架的含氟类似物合成。图示结构对应关系不代表新产物已有药理验证。",
+      "display_width_pct": 98,
+      "body": true,
+      "dimensions": [
+        1621,
+        759
+      ],
+      "bytes": 162381,
+      "sha256": "69fb2d93b796a100f8496eb9c1e38e2996385273f9fd2dbdd90a08df81ccc0cc"
+    },
+    {
+      "id": "J_Scheme5b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_Scheme5b.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b",
+      "source_pdf_page": 7,
+      "crop_rects_pdf_points": [
+        [
+          51.96713060167101,
+          296.95503200954863,
+          555.4408894178603,
+          497.39967861599393
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          77,
+          440,
+          823,
+          737
+        ]
+      ],
+      "source_parts_restacked": false,
+      "caption": "原文 Scheme 5b：保氟产物的后续转化，包括羟基酯、四氢吡喃及吡咯。",
+      "display_width_pct": 96,
+      "body": true,
+      "dimensions": [
+        1621,
+        658
+      ],
+      "bytes": 163720,
+      "sha256": "f589739c7482ad881cf15c57b3b903e9f5e9202dd2b1bcef0c8210add561fb3b"
+    },
+    {
+      "id": "J_SI_scale",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/J_SI_scale.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_kind": "original_pdf_pixel_crop",
+      "source_pdf": "ja6c17168_si_001.pdf",
+      "source_pdf_sha256": "acaf22919aa9a0900da9f27d58a5fd78e0d79439a732881e84093ed7402a50ed",
+      "source_pdf_page": 72,
+      "crop_rects_pdf_points": [
+        [
+          55.55386393229167,
+          64.81284125434028,
+          539.0047512478299,
+          82.66944037543402
+        ],
+        [
+          99.20332845052083,
+          94.57383978949653,
+          490.06444254557294,
+          171.95243598090278
+        ],
+        [
+          99.20332845052083,
+          431.2038009982639,
+          490.06444254557294,
+          507.92104166666667
+        ]
+      ],
+      "crop_rects_preview900": [
+        [
+          84,
+          98,
+          815,
+          125
+        ],
+        [
+          150,
+          143,
+          741,
+          260
+        ],
+        [
+          150,
+          652,
+          741,
+          768
+        ]
+      ],
+      "source_parts_restacked": true,
+      "caption": "SI第S72页反应式节选：原文 Scheme 2/3 的1.0 mmol验证。3a为66%、99% ee、72 h；4a为93%、99% ee、24 h。",
+      "display_width_pct": 94,
+      "body": true,
+      "dimensions": [
+        1621,
+        618
+      ],
+      "bytes": 112709,
+      "sha256": "193c51b634523de44675e06a90ed491d2f9ea7a18faa52a269c7a5afb805e4fc"
+    },
+    {
+      "id": "cover_featured",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-16-r1/cover_featured.png",
+      "source_doi": "10.1021/jacs.6c17168",
+      "source_pdf": "jacs.6c17168.pdf",
+      "source_pdf_page": 1,
+      "source_figure": "Graphical abstract",
+      "source_kind": "original_source_raster_scaled_and_white_padded",
+      "body": false,
+      "caption": "原始图形摘要等比例缩放，仅补白。",
+      "sha256": "efa094964efd100c330e0197fea750f6bb83b13c7f83244562fdcafe46af201c",
+      "dimensions": [
+        940,
+        400
+      ],
+      "bytes": 103869,
+      "contentRect": [
+        88,
+        10,
+        851,
+        390
+      ],
+      "addedText": false,
+      "addedBlueBand": false,
+      "chemicalRedraw": false
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_featured",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "efa094964efd100c330e0197fea750f6bb83b13c7f83244562fdcafe46af201c",
+    "canvas": {
+      "width": 940,
+      "height": 400,
+      "background": "white"
+    },
+    "crop_235_1": "0_0_1_1",
+    "crop_1_1": "0.287234_0_0.712766_1",
+    "sourceAuthority": "owner_requested_TOC_or_original_screenshot_no_added_text",
+    "description": "原始图形摘要等比例缩放，仅补白。"
+  }
+}
