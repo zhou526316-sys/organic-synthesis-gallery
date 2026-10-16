@@ -1,0 +1,30 @@
+{
+  "today": {
+    "source_figure_id": "cover_featured",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "48dd7c86b36e5f6c6a5a4359dcc9d8749f5b9b45c7f0a67cf8fc01079081e6a5",
+    "canvas": {
+      "width": 940,
+      "height": 940,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0_1_0.4255319149",
+    "crop_1_1": "0_0_1_1",
+    "description": "原始940×400 TOC封面像素不变，置于940×940白色母版顶端；横版裁切为顶端940×400，方形裁切包含完整图与底部留白。无新增文字、蓝条或结构重绘。"
+  },
+  "retro": {
+    "source_figure_id": "cover_retrospective",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "ad65c36f02508ad9071cc5da6a73f4d35d23ee77859c33267a991befc0d5a55d",
+    "canvas": {
+      "width": 800,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "crop_1_1": "0_0_1_1",
+    "description": "原文Fig.1正文图替代（非官方TOC）等比例缩小10%后保持方形居中，使1:1与2.35:1裁切均不截断科学信息；无新增文字或蓝条。"
+  }
+}
