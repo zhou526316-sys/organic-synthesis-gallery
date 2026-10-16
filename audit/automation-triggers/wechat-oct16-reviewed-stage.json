@@ -1,15 +1,14 @@
 {
   "date": "2026-10-16",
   "revision": "2026-10-16-r2",
-  "requestId": "oct16-r2-strict-real-catalogue-authors-repaired-v2",
+  "requestId": "oct16-r2-memory-only-metadata-final-integration",
   "selectedDois": ["10.1021/jacs.6c17168", "10.1038/s41586-026-10933-6"],
-  "sourceArchiveSha256": "9dd6d83a86e7addd7eb80e627ca6611ac96701d402a7d6b525ad12ee6cd4d6bd",
-  "sourceFilesAlreadyStaged": 63,
   "scienceFigures": 38,
   "assets": 41,
   "expectedDailyTotal": 35,
   "metadataEvidence": "audit/wechat-working/2026-10-16-integration-author-evidence.json",
+  "frozenPublicationChangeAuthorized": false,
+  "authorCompletionScope": "one exact DOI in draft memory only; all strict validation retained",
   "thisActionWritesWeChat": false,
-  "publicSendAuthorized": false,
-  "note": "Previous green run masked a verifier error and is not approval. Require actual passing JSON under pipefail before continuing."
+  "publicSendAuthorized": false
 }
