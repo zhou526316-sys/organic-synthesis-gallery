@@ -769,7 +769,7 @@ export async function getStagedArticleFigures(request, env, bodyDois=undefined) 
     return publicationPage(request,env,ARTICLE_FIGURE_STAGE_INDEX_KEY,'stage',index=>Object.values(index.items||{})
       .filter(item=>{const doi=normalizeDoi(item?.doi);return doi&&Number(item.updatedAt)>=MEDIA_REBUILD_EPOCH&&captureBelongsToDoi(item,doi);})
       .sort((a,b)=>String(a.doi).localeCompare(String(b.doi))||String(a.id).localeCompare(String(b.id))));
-  if(new URL(request.url).searchParams.get('inventory')==='1'){
+  if(bodyDois!==undefined||new URL(request.url).searchParams.get('inventory')==='1'){
     if(!env?.MEDIA)return {status:503,body:{error:'capture_inventory_unavailable'}};
     let scope;
     try{scope=requestedInventoryDoiScope(request,bodyDois);}
