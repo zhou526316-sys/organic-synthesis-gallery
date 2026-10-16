@@ -1,0 +1,434 @@
+{
+  "schemaVersion": "gallery-historical-20261016-ten-cross-source-originals-v1",
+  "reviewedAt": "2026-10-16T14:38:14.990Z",
+  "mode": "doi_exact_official_first_online_and_real_preparative_scope",
+  "reviewMethod": "one_model_two_separately_written_passes_with_adversarial_second_not_two_human_reviewers",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "baselineApproved": 244,
+  "part": 1,
+  "partCount": 2,
+  "newApprovals": 5,
+  "approved": [
+    {
+      "doi": "10.1021/acs.orglett.6c02582",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Reductive Coupling for the C -Alkyl Glycosylation of Saccharides with Alkenes",
+      "titleZh": "原位端基溴化与镍催化还原偶联一锅构筑糖与烯烃的碳烷基糖苷",
+      "date": "2026-07-29",
+      "authors": [
+        "Qian Zhang",
+        "Lai Li",
+        "Xuqing Fang",
+        "Tingya Wu",
+        "Mingyu Yang",
+        "Zhang-Jie Shi"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9979-9984",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02582"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展将糖苷端基溴化与镍催化还原偶联结合的一锅法，直接从仅保留游离异头羟基的部分保护糖和活化烯烃制备饱和碳烷基糖苷。",
+      "evidenceBasis": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-29，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02582；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+      "challengeReason": "第二遍反证：标题中的direct glycosylation不能误读为游离糖异头羟基直接在Ni中心发生C–C偶联，关键是原位异头溴化；烯烃原文以丙烯酸酯等活化烯烃为例，不能推广到所有非活化烯烃。所述方法不是糖氧苷化，也不能未核实就宣称所有底物具有同一绝对立体选择性。",
+      "scopeAssessment": {
+        "primaryContribution": "发展将糖苷端基溴化与镍催化还原偶联结合的一锅法，直接从仅保留游离异头羟基的部分保护糖和活化烯烃制备饱和碳烷基糖苷。",
+        "preparativeTransformation": "部分保护的糖先通过原位异头位溴化形成可与镍催化体系匹配的糖基卤代中间体，再与丙烯酸乙酯等活化烯烃还原偶联形成稳定的C–C糖苷键。",
+        "generalityEvidence": "ACS Original Letter报道在同一反应容器内合并两步预活化与还原偶联，利用商业可得部分保护糖以及具有电子吸引基的烯烃获取系列C-烷基糖苷；作者展示合成适用性，但不意味着全部未保护糖或普通乙烯均适用。",
+        "sourceEvidence": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-29，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02582；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+        "boundaryChallenge": "第二遍反证：标题中的direct glycosylation不能误读为游离糖异头羟基直接在Ni中心发生C–C偶联，关键是原位异头溴化；烯烃原文以丙烯酸酯等活化烯烃为例，不能推广到所有非活化烯烃。所述方法不是糖氧苷化，也不能未核实就宣称所有底物具有同一绝对立体选择性。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02582",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02582",
+        "publisherOnlineDate": "2026-07-29",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-29",
+          "officialPublisherFirstOnline": "2026-07-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02582",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展将糖苷端基溴化与镍催化还原偶联结合的一锅法，直接从仅保留游离异头羟基的部分保护糖和活化烯烃制备饱和碳烷基糖苷。 部分保护的糖先通过原位异头位溴化形成可与镍催化体系匹配的糖基卤代中间体，再与丙烯酸乙酯等活化烯烃还原偶联形成稳定的C–C糖苷键。 ACS Original Letter报道在同一反应容器内合并两步预活化与还原偶联，利用商业可得部分保护糖以及具有电子吸引基的烯烃获取系列C-烷基糖苷；作者展示合成适用性，但不意味着全部未保护糖或普通乙烯均适用。",
+          "reason": "发展将糖苷端基溴化与镍催化还原偶联结合的一锅法，直接从仅保留游离异头羟基的部分保护糖和活化烯烃制备饱和碳烷基糖苷。 部分保护的糖先通过原位异头位溴化形成可与镍催化体系匹配的糖基卤代中间体，再与丙烯酸乙酯等活化烯烃还原偶联形成稳定的C–C糖苷键。 ACS Original Letter报道在同一反应容器内合并两步预活化与还原偶联，利用商业可得部分保护糖以及具有电子吸引基的烯烃获取系列C-烷基糖苷；作者展示合成适用性，但不意味着全部未保护糖或普通乙烯均适用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：标题中的direct glycosylation不能误读为游离糖异头羟基直接在Ni中心发生C–C偶联，关键是原位异头溴化；烯烃原文以丙烯酸酯等活化烯烃为例，不能推广到所有非活化烯烃。所述方法不是糖氧苷化，也不能未核实就宣称所有底物具有同一绝对立体选择性。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02743",
+      "journal": "Organic Letters",
+      "title": "Solvent-Driven Switchable Annulation of Cyclopropanols with 1,2-Diaminoarenes Enables Divergent Synthesis of 1,5-Benzodiazepines and Quinoxaline-2-carbaldehydes",
+      "titleZh": "溶剂切换环丙醇与邻二胺的分歧环化合成苯并二氮杂卓和喹喔啉甲醛",
+      "date": "2026-07-30",
+      "authors": [
+        "Jun-Long Zhan",
+        "Yu Wang",
+        "Yu-Tong Wang",
+        "Yu-Xin Wei",
+        "Yang Wang",
+        "Qiaoqiao Yang",
+        "Chen Liang",
+        "Wen-Jun Han",
+        "Lin Zhu",
+        "Yunhe Lv"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10290-10295",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02743"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "揭示同一环丙醇与1,2-芳二胺底物通过溶剂控制不同环开裂及关环路径，分别得到七元1,5-苯并二氮杂卓和喹喔啉-2-甲醛。",
+      "evidenceBasis": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-30，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02743；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+      "challengeReason": "第二遍质疑：不能因两种产物都含N而称其为简单保护基切换，两条路径分别涉及[4+3]与[4+2]类型及DMSO促进的进一步氧化异构化；HFIP促进七元环形成与稳定不代表HFIP是普适氧化剂，DMSO用途亦不可忽略。该工作属于方法学而非只有反应机理推测。",
+      "scopeAssessment": {
+        "primaryContribution": "揭示同一环丙醇与1,2-芳二胺底物通过溶剂控制不同环开裂及关环路径，分别得到七元1,5-苯并二氮杂卓和喹喔啉-2-甲醛。",
+        "preparativeTransformation": "以环丙醇与邻苯二胺类伙伴反应，在HFIP中偏向选择性形式[4+3]关环并稳定七元苯并二氮杂卓；改为DMSO则促进后续氧化及异构化，导向形式[4+2]构筑喹喔啉-2-甲醛。",
+        "generalityEvidence": "ACS原始Letter报道不需要过渡金属催化的同一组底物分歧性制备，生成两类可表征、可分离含氮杂环；HFIP与DMSO的产物选择性差异构成方法核心，不能把两个溶剂路径的收率混成一个指标。",
+        "sourceEvidence": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-30，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02743；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+        "boundaryChallenge": "第二遍质疑：不能因两种产物都含N而称其为简单保护基切换，两条路径分别涉及[4+3]与[4+2]类型及DMSO促进的进一步氧化异构化；HFIP促进七元环形成与稳定不代表HFIP是普适氧化剂，DMSO用途亦不可忽略。该工作属于方法学而非只有反应机理推测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02743",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02743",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02743",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "揭示同一环丙醇与1,2-芳二胺底物通过溶剂控制不同环开裂及关环路径，分别得到七元1,5-苯并二氮杂卓和喹喔啉-2-甲醛。 以环丙醇与邻苯二胺类伙伴反应，在HFIP中偏向选择性形式[4+3]关环并稳定七元苯并二氮杂卓；改为DMSO则促进后续氧化及异构化，导向形式[4+2]构筑喹喔啉-2-甲醛。 ACS原始Letter报道不需要过渡金属催化的同一组底物分歧性制备，生成两类可表征、可分离含氮杂环；HFIP与DMSO的产物选择性差异构成方法核心，不能把两个溶剂路径的收率混成一个指标。",
+          "reason": "揭示同一环丙醇与1,2-芳二胺底物通过溶剂控制不同环开裂及关环路径，分别得到七元1,5-苯并二氮杂卓和喹喔啉-2-甲醛。 以环丙醇与邻苯二胺类伙伴反应，在HFIP中偏向选择性形式[4+3]关环并稳定七元苯并二氮杂卓；改为DMSO则促进后续氧化及异构化，导向形式[4+2]构筑喹喔啉-2-甲醛。 ACS原始Letter报道不需要过渡金属催化的同一组底物分歧性制备，生成两类可表征、可分离含氮杂环；HFIP与DMSO的产物选择性差异构成方法核心，不能把两个溶剂路径的收率混成一个指标。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍质疑：不能因两种产物都含N而称其为简单保护基切换，两条路径分别涉及[4+3]与[4+2]类型及DMSO促进的进一步氧化异构化；HFIP促进七元环形成与稳定不代表HFIP是普适氧化剂，DMSO用途亦不可忽略。该工作属于方法学而非只有反应机理推测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02778",
+      "journal": "Organic Letters",
+      "title": "Transannular 1,3-Addition of Cyclic Ethers via C–O Bond Cleavage Triggered by Low-Valent Phosphorus",
+      "titleZh": "低价磷诱导环醚碳氧键断裂与跨环一三加成构筑环番骨架",
+      "date": "2026-07-28",
+      "authors": [
+        "Yang Li",
+        "Zhenhai Shan",
+        "Rongqiang Tian",
+        "Zheng Duan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10040-10044",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02778"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用磷宾与炔烃构成受空间约束的两性离子磷茚中间体，诱导环醚C–Oσ键的跨环1,3-加成，制备传统方法难以获得的环番骨架。",
+      "evidenceBasis": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-28，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02778；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+      "challengeReason": "第二遍反证：这里不是普通磷烷配体催化的C–O交叉偶联，关键是低价磷与炔烃形成的两性离子磷茚参与跨环反应。作者展示模型支持的C–O键活化，不能把中间体活性推断等同于任意环醚在无空间预组织条件下都可顺利开环，也不能无依据声称催化量磷循环。",
+      "scopeAssessment": {
+        "primaryContribution": "利用磷宾与炔烃构成受空间约束的两性离子磷茚中间体，诱导环醚C–Oσ键的跨环1,3-加成，制备传统方法难以获得的环番骨架。",
+        "preparativeTransformation": "低价磷物种与炔烃首先形成具备高反应性的两性离子磷茚，随后由邻近环醚通过碳氧键断裂发生跨环1,3-加成，将不同分子片段组织进环番骨架。",
+        "generalityEvidence": "ACS Original Letter展示利用构象和空间约束改变磷宾–炔烃常规反应行为，取得可分离的大环桥连环番产物，具有有机主族元素驱动碳氧键活化与复杂骨架构建的实际合成贡献。",
+        "sourceEvidence": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-28，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02778；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+        "boundaryChallenge": "第二遍反证：这里不是普通磷烷配体催化的C–O交叉偶联，关键是低价磷与炔烃形成的两性离子磷茚参与跨环反应。作者展示模型支持的C–O键活化，不能把中间体活性推断等同于任意环醚在无空间预组织条件下都可顺利开环，也不能无依据声称催化量磷循环。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02778",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02778",
+        "publisherOnlineDate": "2026-07-28",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-28",
+          "officialPublisherFirstOnline": "2026-07-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02778",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用磷宾与炔烃构成受空间约束的两性离子磷茚中间体，诱导环醚C–Oσ键的跨环1,3-加成，制备传统方法难以获得的环番骨架。 低价磷物种与炔烃首先形成具备高反应性的两性离子磷茚，随后由邻近环醚通过碳氧键断裂发生跨环1,3-加成，将不同分子片段组织进环番骨架。 ACS Original Letter展示利用构象和空间约束改变磷宾–炔烃常规反应行为，取得可分离的大环桥连环番产物，具有有机主族元素驱动碳氧键活化与复杂骨架构建的实际合成贡献。",
+          "reason": "利用磷宾与炔烃构成受空间约束的两性离子磷茚中间体，诱导环醚C–Oσ键的跨环1,3-加成，制备传统方法难以获得的环番骨架。 低价磷物种与炔烃首先形成具备高反应性的两性离子磷茚，随后由邻近环醚通过碳氧键断裂发生跨环1,3-加成，将不同分子片段组织进环番骨架。 ACS Original Letter展示利用构象和空间约束改变磷宾–炔烃常规反应行为，取得可分离的大环桥连环番产物，具有有机主族元素驱动碳氧键活化与复杂骨架构建的实际合成贡献。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：这里不是普通磷烷配体催化的C–O交叉偶联，关键是低价磷与炔烃形成的两性离子磷茚参与跨环反应。作者展示模型支持的C–O键活化，不能把中间体活性推断等同于任意环醚在无空间预组织条件下都可顺利开环，也不能无依据声称催化量磷循环。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02806",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic 1,6-HAT-Enabled Formal [3 + 3] Annulation of Vinyl Azides with α-Bromomalonates to Tetrahydropyridines",
+      "titleZh": "光催化一六氢原子转移驱动乙烯基叠氮与溴代丙二酸酯三加三环化",
+      "date": "2026-07-29",
+      "authors": [
+        "Wen-Jun Li",
+        "Li-Fa Zhong",
+        "Limin Yang",
+        "Weidong Rao",
+        "Shu-Su Shen",
+        "DaoPeng Sheng",
+        "Gang Wang",
+        "Kai Liu",
+        "Zhao-Ying Yang",
+        "Shun-Yi Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10051-10056",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02806"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立乙烯基叠氮和支链烷基取代α-溴代丙二酸酯的可见光自由基串联反应，合成多取代2,3,4,5-四氢吡啶。",
+      "evidenceBasis": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-29，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02806；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+      "challengeReason": "第二遍反向审核：题名的形式[3+3]不能等同协同周环反应，关键自由基加成、N2挤出、亚胺自由基1,6-HAT和环化必须分开。原文限定支链烷基取代α-溴丙二酸酯，不能将普通单取代溴乙酸酯或任意乙烯基叠氮视为已系统适用。下游哌啶来自氢化步骤而非直接光反应。",
+      "scopeAssessment": {
+        "primaryContribution": "建立乙烯基叠氮和支链烷基取代α-溴代丙二酸酯的可见光自由基串联反应，合成多取代2,3,4,5-四氢吡啶。",
+        "preparativeTransformation": "光催化先由α-溴代丙二酸酯生成碳自由基，加成乙烯基叠氮并放出N2产生亚胺基自由基，随后发生1,6-HAT与环化，表现为形式[3+3]成环。",
+        "generalityEvidence": "ACS原始Letter给出不同底物的广泛兼容、温和反应、克级放大；可将四氢吡啶进一步氢化成高度取代哌啶。这是系列分离含氮六元环制备，不是仅凭实验对照提出的设想。",
+        "sourceEvidence": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-29，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02806；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+        "boundaryChallenge": "第二遍反向审核：题名的形式[3+3]不能等同协同周环反应，关键自由基加成、N2挤出、亚胺自由基1,6-HAT和环化必须分开。原文限定支链烷基取代α-溴丙二酸酯，不能将普通单取代溴乙酸酯或任意乙烯基叠氮视为已系统适用。下游哌啶来自氢化步骤而非直接光反应。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02806",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02806",
+        "publisherOnlineDate": "2026-07-29",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-29",
+          "officialPublisherFirstOnline": "2026-07-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02806",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立乙烯基叠氮和支链烷基取代α-溴代丙二酸酯的可见光自由基串联反应，合成多取代2,3,4,5-四氢吡啶。 光催化先由α-溴代丙二酸酯生成碳自由基，加成乙烯基叠氮并放出N2产生亚胺基自由基，随后发生1,6-HAT与环化，表现为形式[3+3]成环。 ACS原始Letter给出不同底物的广泛兼容、温和反应、克级放大；可将四氢吡啶进一步氢化成高度取代哌啶。这是系列分离含氮六元环制备，不是仅凭实验对照提出的设想。",
+          "reason": "建立乙烯基叠氮和支链烷基取代α-溴代丙二酸酯的可见光自由基串联反应，合成多取代2,3,4,5-四氢吡啶。 光催化先由α-溴代丙二酸酯生成碳自由基，加成乙烯基叠氮并放出N2产生亚胺基自由基，随后发生1,6-HAT与环化，表现为形式[3+3]成环。 ACS原始Letter给出不同底物的广泛兼容、温和反应、克级放大；可将四氢吡啶进一步氢化成高度取代哌啶。这是系列分离含氮六元环制备，不是仅凭实验对照提出的设想。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反向审核：题名的形式[3+3]不能等同协同周环反应，关键自由基加成、N2挤出、亚胺自由基1,6-HAT和环化必须分开。原文限定支链烷基取代α-溴丙二酸酯，不能将普通单取代溴乙酸酯或任意乙烯基叠氮视为已系统适用。下游哌啶来自氢化步骤而非直接光反应。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02645",
+      "journal": "Organic Letters",
+      "title": "Photoredox-Catalyzed Divergent Functionalizations of α-Trifluoromethyl Alkenes with Alcohols via Single-Electron Oxidation",
+      "titleZh": "光氧化还原单电子氧化控制三氟甲基烯烃与醇的三向分歧官能团化",
+      "date": "2026-07-27",
+      "authors": [
+        "Xu-Yan Li",
+        "Yue Lu",
+        "Ke-Jia Xu",
+        "Yi-Jing Huang",
+        "Jie Liu",
+        "Xiao-Lin Chen",
+        "Xin-Yi Hong",
+        "Lei Fu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10003-10008",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02645"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展α-三氟甲基烯烃与醇的光氧化还原选择性切换平台，通过条件变化分别生成保留CF3的反马氏氢烷氧基化产物、脱氟酯与需氧羟基烷氧基化产物。",
+      "evidenceBasis": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-27，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02645；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+      "challengeReason": "第二遍反证：不能把三条产物路线写成同一条件并行等收率生成，选择性依靠光催化剂、气氛和溶剂独立调节；保留CF3的hydroalkoxylation与另外两条脱氟及有氧支线化学上不同，不能笼统称全部均通过β-F消除。SET路径是作者机理支持的模型，并非每种激发态直接确认。",
+      "scopeAssessment": {
+        "primaryContribution": "发展α-三氟甲基烯烃与醇的光氧化还原选择性切换平台，通过条件变化分别生成保留CF3的反马氏氢烷氧基化产物、脱氟酯与需氧羟基烷氧基化产物。",
+        "preparativeTransformation": "以α-CF3烯烃和醇为共同底物，在适当光催化条件下经SET氧化走CF3保留的反马氏氢烷氧基化；按光催化剂、空气环境和溶剂切换可获得脱氟酯化以及有氧羟基烷氧基化两条分歧产品支线。",
+        "generalityEvidence": "ACS Original Letter明确报告三条可调产物类别，区别于CF3烯烃常见的β-F消除通道；不同光催化剂、溶剂及气氛下有可分离的含氟与含酯产物，兼具官能团兼容及药物片段应用潜力。",
+        "sourceEvidence": "ACS Org. Lett. 原始Letter Article History官方首次在线日期 2026-07-27，出版商DOI主页 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02645；与冻结Crossref+OpenAlex来源日期相符，来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。逐篇校核2026年作者、期卷页和制备贡献，未复制完整受限摘要、正文、图、SI或PDF。",
+        "boundaryChallenge": "第二遍反证：不能把三条产物路线写成同一条件并行等收率生成，选择性依靠光催化剂、气氛和溶剂独立调节；保留CF3的hydroalkoxylation与另外两条脱氟及有氧支线化学上不同，不能笼统称全部均通过β-F消除。SET路径是作者机理支持的模型，并非每种激发态直接确认。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02645",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02645",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02645",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展α-三氟甲基烯烃与醇的光氧化还原选择性切换平台，通过条件变化分别生成保留CF3的反马氏氢烷氧基化产物、脱氟酯与需氧羟基烷氧基化产物。 以α-CF3烯烃和醇为共同底物，在适当光催化条件下经SET氧化走CF3保留的反马氏氢烷氧基化；按光催化剂、空气环境和溶剂切换可获得脱氟酯化以及有氧羟基烷氧基化两条分歧产品支线。 ACS Original Letter明确报告三条可调产物类别，区别于CF3烯烃常见的β-F消除通道；不同光催化剂、溶剂及气氛下有可分离的含氟与含酯产物，兼具官能团兼容及药物片段应用潜力。",
+          "reason": "发展α-三氟甲基烯烃与醇的光氧化还原选择性切换平台，通过条件变化分别生成保留CF3的反马氏氢烷氧基化产物、脱氟酯与需氧羟基烷氧基化产物。 以α-CF3烯烃和醇为共同底物，在适当光催化条件下经SET氧化走CF3保留的反马氏氢烷氧基化；按光催化剂、空气环境和溶剂切换可获得脱氟酯化以及有氧羟基烷氧基化两条分歧产品支线。 ACS Original Letter明确报告三条可调产物类别，区别于CF3烯烃常见的β-F消除通道；不同光催化剂、溶剂及气氛下有可分离的含氟与含酯产物，兼具官能团兼容及药物片段应用潜力。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：不能把三条产物路线写成同一条件并行等收率生成，选择性依靠光催化剂、气氛和溶剂独立调节；保留CF3的hydroalkoxylation与另外两条脱氟及有氧支线化学上不同，不能笼统称全部均通过β-F消除。SET路径是作者机理支持的模型，并非每种激发态直接确认。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "notReleased": true,
+    "noD1": true,
+    "noMediaOrPDF": true,
+    "notTodayHot": true,
+    "noEveningRelease": true,
+    "originalTwoPendingPreserved": true
+  }
+}

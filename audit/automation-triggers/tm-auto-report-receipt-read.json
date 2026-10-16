@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-10-16T06:42:30.219Z",
-  "reason": "After 2.2.90 / 6.2.71 deploy, read current rolling server DOI final reports; distinguish live 6.2.71 from earlier 6.2.70 and verify image outbox drain and PDF cloud confirmations via DOI receipts. Read-only, no publisher requests.",
+  "requestedAt": "2026-10-16T14:38:51.523Z",
+  "reason": "User new 22:37 Beijing Tampermonkey 2.2.90 / engine 6.2.71 logs. Read current rolling R2 automatic final reports, extract unique DOI after latest owner upload, compare live 6.2.71 only (not 6.2.70), layer statuses, publisher heartbeat failures, figure staging deferred and PDF stored vs local queue. Strict read-only no private PDF bytes or publisher requests.",
   "targetDois": [
     "10.1039/d6sc06879k",
     "10.1016/j.chempr.2026.103008",
