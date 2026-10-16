@@ -953,6 +953,7 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/article-figures/staged/inventory') {
     const payload=await readJson(request);
     if(payload?.readOnly!==true)return json({error:'read_only_required'},{status:400,headers:cors});
+    if(!Array.isArray(payload.dois))return json({error:'inventory_doi_scope_required'},{status:400,headers:cors});
     return resultResponse(await getStagedArticleFigures(request,env,payload.dois),cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/batch') {
@@ -981,6 +982,7 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture-index/inventory') {
     const payload=await readJson(request);
     if(payload?.readOnly!==true)return json({error:'read_only_required'},{status:400,headers:cors});
+    if(!Array.isArray(payload.dois))return json({error:'inventory_doi_scope_required'},{status:400,headers:cors});
     return resultResponse(await getLocalCaptureIndex(request,env,payload.dois),cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/local-diagnostics') {
