@@ -1699,7 +1699,9 @@
         +'\n这会主动切换到出版社标签页，仅此一篇。仅保存文章级 CC BY/CC0 授权且 DOI 核实的科学正文；不采 PDF/图片/SI。'
       :label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇后台打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。';
     if(!window.confirm(confirmation)){
-      db.close();return;
+      db.close();
+      batchStatusWrite({state:'paused',currentStage:'已取消，未打开出版社标签页',lastError:''});
+      return;
     }
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
