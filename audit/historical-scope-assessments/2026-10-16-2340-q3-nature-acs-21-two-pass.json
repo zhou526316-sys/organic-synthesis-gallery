@@ -1,0 +1,1193 @@
+{
+  "schemaVersion": "gallery-historical-q3-doi-two-pass-evidence-v1",
+  "mode": "science_recommendation_exclude_or_evidence_pending_only",
+  "producedAt": "2026-10-16T15:51:36.541Z",
+  "authoritativeMainCommitAtAudit": "5fb5ecbedc67ecf51aea2668f728160fbc2f8001",
+  "stageReportGeneratedAt": "2026-10-16T08:06:03.031Z",
+  "stageCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+  "preflightGitBlobSha": "bd1223ba2e5f806a000b6dd6ec9543e2e114b40d",
+  "triageGitBlobSha": "f71d200d4b6c8220be68fe057a515ccb15556d94",
+  "q3SourceCandidateCensusPreserved": 12286,
+  "sourceRootExpected": 192,
+  "publisherIssueClosure": false,
+  "manifestAcceptedAtRead": 254,
+  "manifestPendingAtRead": 2,
+  "doisAttempted": 21,
+  "sourceHashBound": 21,
+  "firstAndAdversarialPassComplete": 21,
+  "summary": {
+    "include": 0,
+    "exclude": 18,
+    "sciencePending": 3,
+    "newFormalApprovals": 0,
+    "newOwnerPermanentExclusions": 0,
+    "newManifestPending": 0,
+    "unfinishedQ3LastSnapshot": 11148
+  },
+  "interpretation": "This audit does not create an admission/owner permanent exclusion; the reconciler must treat each verified DOI according to an explicitly approved mapping after real CI; preflight/metadata alone are not scientific reviews.",
+  "guard": {
+    "D1Queries": 0,
+    "D1Writes": 0,
+    "PDForSIorFiguresFetched": 0,
+    "offslotRelease": false,
+    "priorToJuly": "metadata_only",
+    "JulyToSeptember": "toc_only"
+  },
+  "rows": [
+    {
+      "doi": "10.1038/s41586-026-10866-0",
+      "journal": "Nature",
+      "title": "Photocatalytic water splitting by 2D polymer with out-of-plane carrier flow",
+      "publisherFirstOnlineDate": "2026-07-29",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "聚合氮化碳是有机/聚合材料，是否应作为聚合合成方法纳入？本文主要调节既有晶体的电荷传输，无新聚合制备模式。",
+      "scopeAssessment": {
+        "primaryContribution": "聚合氮化碳晶面纳米膜调节载流子出平面迁移以提高光催化水分解量子效率。",
+        "preparativeTransformation": "聚合物晶体表面包覆纳米膜，实现水到氢和氧的能量转化；没有新的一般性有机底物到产物反应。",
+        "generalityEvidence": "两种内电场设计报告53.4%和82.1%表观量子效率，但属于光解水能量指标。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10866-0; first online 2026-07-29; exact staging raw Git blob e93928ea831605b5ad318c4222dc09e8040c1cf1; Crossref/OpenAlex root source SHA256 f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "聚合氮化碳是有机/聚合材料，是否应作为聚合合成方法纳入？本文主要调节既有晶体的电荷传输，无新聚合制备模式。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。聚合氮化碳晶面纳米膜调节载流子出平面迁移以提高光催化水分解量子效率。 聚合物晶体表面包覆纳米膜，实现水到氢和氧的能量转化；没有新的一般性有机底物到产物反应。 两种内电场设计报告53.4%和82.1%表观量子效率，但属于光解水能量指标。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：聚合氮化碳是有机/聚合材料，是否应作为聚合合成方法纳入？本文主要调节既有晶体的电荷传输，无新聚合制备模式。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature",
+        "sourceSha256": "f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa",
+        "rawBatchGitBlobSha": "e93928ea831605b5ad318c4222dc09e8040c1cf1",
+        "reviewQueueGitBlobSha": "6abd095b6162dd92e0aa7f6da5d96cd04d2c6a88",
+        "sourceFrozenDate": "2026-07-29",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10866-0",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10900-1",
+      "journal": "Nature",
+      "title": "Asymmetric prefrontal representations for leader–follower dynamics",
+      "publisherFirstOnlineDate": "2026-08-19",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "标题有asymmetric，但指领导者与跟随者的非对称影响，完全不涉及不对称有机合成。",
+      "scopeAssessment": {
+        "primaryContribution": "利用小鼠社会协作、前额叶钙成像和强化学习研究领随角色脑神经表征。",
+        "preparativeTransformation": "无有机化学起始物、产物和新键构建。",
+        "generalityEvidence": "行为学、电生理与计算模型的神经科学验证，非化学制备证据。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10900-1; first online 2026-08-19; exact staging raw Git blob 0c51d0a94603797d4919a9c151686c473a74db02; Crossref/OpenAlex root source SHA256 eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "标题有asymmetric，但指领导者与跟随者的非对称影响，完全不涉及不对称有机合成。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。利用小鼠社会协作、前额叶钙成像和强化学习研究领随角色脑神经表征。 无有机化学起始物、产物和新键构建。 行为学、电生理与计算模型的神经科学验证，非化学制备证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：标题有asymmetric，但指领导者与跟随者的非对称影响，完全不涉及不对称有机合成。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-15_2026-08-21_nature",
+        "sourceSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+        "rawBatchGitBlobSha": "0c51d0a94603797d4919a9c151686c473a74db02",
+        "reviewQueueGitBlobSha": "5db179dfffe1525f4c6ad09001167d2a23d941d6",
+        "sourceFrozenDate": "2026-08-19",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10900-1",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-11160-9",
+      "journal": "Nature",
+      "title": "Chemist-aligned retrosynthesis by ensembling diverse inductive bias models",
+      "publisherFirstOnlineDate": "2026-09-21",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "虽标题和应用直接针对organic synthesis，是否属于新合成方法？创新在计算辅助设计，没有实验建立新的化学键构建条件。",
+      "scopeAssessment": {
+        "primaryContribution": "提出RetroChimera机器学习逆合成规划模型和集成算法。",
+        "preparativeTransformation": "预测反应路线和反应类型，而不是实际从底物进行实验制备新产物。",
+        "generalityEvidence": "模型预测与药企内部数据验证属于计算泛化，不是底物分离收率或全合成证据。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-11160-9; first online 2026-09-21; exact staging raw Git blob 8dfb2567aa9fb9a76a9922092efb7eb74f4cf202; Crossref/OpenAlex root source SHA256 77c508da62bdb27d55b8f07aad3b6e86b84bdcd5a0da8abf1013bc25e308d797. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "虽标题和应用直接针对organic synthesis，是否属于新合成方法？创新在计算辅助设计，没有实验建立新的化学键构建条件。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。提出RetroChimera机器学习逆合成规划模型和集成算法。 预测反应路线和反应类型，而不是实际从底物进行实验制备新产物。 模型预测与药企内部数据验证属于计算泛化，不是底物分离收率或全合成证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：虽标题和应用直接针对organic synthesis，是否属于新合成方法？创新在计算辅助设计，没有实验建立新的化学键构建条件。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-09-15_2026-09-21_nature",
+        "sourceSha256": "77c508da62bdb27d55b8f07aad3b6e86b84bdcd5a0da8abf1013bc25e308d797",
+        "rawBatchGitBlobSha": "8dfb2567aa9fb9a76a9922092efb7eb74f4cf202",
+        "reviewQueueGitBlobSha": "1231e5fe1d4b7c86294a63079de3eda7d3649a31",
+        "sourceFrozenDate": "2026-09-21",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-11160-9",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10801-3",
+      "journal": "Nature",
+      "title": "Ammonia pressure controls colloidal metal nitride synthesis in molten salts",
+      "publisherFirstOnlineDate": "2026-07-15",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "确有一般性制备反应和多组样品，但其目标为无机氮化物，因此不满足有机合成学科范围。",
+      "scopeAssessment": {
+        "primaryContribution": "通过熔融盐中氨压控制合成金属氮化物胶体纳米晶。",
+        "preparativeTransformation": "金属卤化物和氨合成TiN、VN、GaN、Mo2N等无机氮化物纳米晶；不是有机底物到有机产物。",
+        "generalityEvidence": "多种无机材料组成的范围是材料无机合成通用性，不等同有机方法学底物范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10801-3; first online 2026-07-15; exact staging raw Git blob c81d4dab2c2fb7f12dbd18bcc30aab113c1729e5; Crossref/OpenAlex root source SHA256 4094d4c06419a0f6aa499d932bc3d76dbc6abdf6e8b138dff207891cdcee6b13. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "确有一般性制备反应和多组样品，但其目标为无机氮化物，因此不满足有机合成学科范围。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。通过熔融盐中氨压控制合成金属氮化物胶体纳米晶。 金属卤化物和氨合成TiN、VN、GaN、Mo2N等无机氮化物纳米晶；不是有机底物到有机产物。 多种无机材料组成的范围是材料无机合成通用性，不等同有机方法学底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：确有一般性制备反应和多组样品，但其目标为无机氮化物，因此不满足有机合成学科范围。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-15_2026-07-21_nature",
+        "sourceSha256": "4094d4c06419a0f6aa499d932bc3d76dbc6abdf6e8b138dff207891cdcee6b13",
+        "rawBatchGitBlobSha": "c81d4dab2c2fb7f12dbd18bcc30aab113c1729e5",
+        "reviewQueueGitBlobSha": "b00bd0a7a91f652d0c5f95d93fbbf44e404d67d8",
+        "sourceFrozenDate": "2026-07-15",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10801-3",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10883-z",
+      "journal": "Nature",
+      "title": "In situ particle-to-fibre transformation of hydrogels for 3D printing",
+      "publisherFirstOnlineDate": "2026-08-05",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "水凝胶可含聚合物且方法有可转移性，但本文新增的是物理加工而非聚合/有机键构建方法。",
+      "scopeAssessment": {
+        "primaryContribution": "提出SHIFT剪切-拉伸诱导水凝胶粒子到微纤维的物理3D打印工艺。",
+        "preparativeTransformation": "已形成的水凝胶粒子/基质通过流动、凝胶相转化成定向微纤维，没有说明新聚合反应。",
+        "generalityEvidence": "微纤维尺寸5–30微米和肌肉再生属加工与功能证据。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10883-z; first online 2026-08-05; exact staging raw Git blob 6d1a4eeb3d900fdd2689ab31113ade80fc3ca8a3; Crossref/OpenAlex root source SHA256 1a345d42fd5fd835d5591b1d335939ff32c94f7fa4c612bafd443be7419f0be2. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "水凝胶可含聚合物且方法有可转移性，但本文新增的是物理加工而非聚合/有机键构建方法。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。提出SHIFT剪切-拉伸诱导水凝胶粒子到微纤维的物理3D打印工艺。 已形成的水凝胶粒子/基质通过流动、凝胶相转化成定向微纤维，没有说明新聚合反应。 微纤维尺寸5–30微米和肌肉再生属加工与功能证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：水凝胶可含聚合物且方法有可转移性，但本文新增的是物理加工而非聚合/有机键构建方法。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-01_2026-08-07_nature",
+        "sourceSha256": "1a345d42fd5fd835d5591b1d335939ff32c94f7fa4c612bafd443be7419f0be2",
+        "rawBatchGitBlobSha": "6d1a4eeb3d900fdd2689ab31113ade80fc3ca8a3",
+        "reviewQueueGitBlobSha": "3cb3b280eef251fd9dfcd913b52e304b96e69403",
+        "sourceFrozenDate": "2026-08-05",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10883-z",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10889-7",
+      "journal": "Nature",
+      "title": "Luminescent-reaction-enabled super-resolution imaging",
+      "publisherFirstOnlineDate": "2026-08-12",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "存在化学发光反应并不能替代新有机合成方法；论文主旨是成像。",
+      "scopeAssessment": {
+        "primaryContribution": "提出利用电化学发光、化学发光和生物发光的超分辨重建成像框架。",
+        "preparativeTransformation": "化学发光作为成像信号，未建立可推广的有机分子制备转化。",
+        "generalityEvidence": "约100nm分辨率、细胞成像持续时间是分析指标，非合成底物范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10889-7; first online 2026-08-12; exact staging raw Git blob bd505b20ba1b8c5dbf61f6ba8c490a1c6470b45b; Crossref/OpenAlex root source SHA256 d7556b797144681c5f51079720e3392e55107f1e0c68bfcf40bd7249032d1798. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "存在化学发光反应并不能替代新有机合成方法；论文主旨是成像。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。提出利用电化学发光、化学发光和生物发光的超分辨重建成像框架。 化学发光作为成像信号，未建立可推广的有机分子制备转化。 约100nm分辨率、细胞成像持续时间是分析指标，非合成底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：存在化学发光反应并不能替代新有机合成方法；论文主旨是成像。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-08_2026-08-14_nature",
+        "sourceSha256": "d7556b797144681c5f51079720e3392e55107f1e0c68bfcf40bd7249032d1798",
+        "rawBatchGitBlobSha": "bd505b20ba1b8c5dbf61f6ba8c490a1c6470b45b",
+        "reviewQueueGitBlobSha": "2eba8dd01169a727e90396cd50c6fe79c4bacd53",
+        "sourceFrozenDate": "2026-08-12",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10889-7",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10913-w",
+      "journal": "Nature",
+      "title": "RNA synthesis and substrate analogue inhibition in the CCHFV polymerase",
+      "publisherFirstOnlineDate": "2026-07-22",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "生物聚合反应确实存在，但本研究不以RNA合成产量、底物范围或方法革新为中心。",
+      "scopeAssessment": {
+        "primaryContribution": "解析克里米亚-刚果出血热病毒大聚合酶的RNA延伸结构与核苷酸类似物抑制。",
+        "preparativeTransformation": "酶催化RNA延伸作为结构/病毒机制研究对象，没有展示新通用RNA制备工艺或有机产物合成。",
+        "generalityEvidence": "冷冻电镜、抑制剂竞争与复制实验是结构生物学证据。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10913-w; first online 2026-07-22; exact staging raw Git blob e93928ea831605b5ad318c4222dc09e8040c1cf1; Crossref/OpenAlex root source SHA256 f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "生物聚合反应确实存在，但本研究不以RNA合成产量、底物范围或方法革新为中心。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。解析克里米亚-刚果出血热病毒大聚合酶的RNA延伸结构与核苷酸类似物抑制。 酶催化RNA延伸作为结构/病毒机制研究对象，没有展示新通用RNA制备工艺或有机产物合成。 冷冻电镜、抑制剂竞争与复制实验是结构生物学证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：生物聚合反应确实存在，但本研究不以RNA合成产量、底物范围或方法革新为中心。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature",
+        "sourceSha256": "f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa",
+        "rawBatchGitBlobSha": "e93928ea831605b5ad318c4222dc09e8040c1cf1",
+        "reviewQueueGitBlobSha": "6abd095b6162dd92e0aa7f6da5d96cd04d2c6a88",
+        "sourceFrozenDate": "2026-07-22",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10913-w",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-74290-8",
+      "journal": "Nature Communications",
+      "title": "Spin-controlled enantioselective near-infrared photocatalysis with chiral MgO/Co3O4 nanoparticles",
+      "publisherFirstOnlineDate": "2026-07-10",
+      "publisherArticleType": "Article",
+      "decision": "science_pending",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "include_possible_requires_scope_check",
+      "challengeDecision": "pending",
+      "challengeReason": "是否属于有实质制备贡献的手性光催化？目前主要证据为纳米颗粒设计、电子结构和单种氨基酸转化差异；需核实产物结构纯度、分离产率和不同底物适用性。",
+      "scopeAssessment": {
+        "primaryContribution": "D/L-青霉胺诱导MgO/Co3O4纳米颗粒的近红外选择性酪氨酸羟基化。",
+        "preparativeTransformation": "酪氨酸羟基化到二羟基苯丙氨酸；比较D/L对映底物的转化消耗。",
+        "generalityEvidence": "报道L-酪氨酸92.48%与D-酪氨酸53.85%消耗，尚不能据此确定可分离产物收率或通用底物范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-74290-8; first online 2026-07-10; exact staging raw Git blob 9bca03d607c47df2030b92261de4353a0c86fba2; Crossref/OpenAlex root source SHA256 a09942d601673db18c8051dcd09ec77b235916eaac5fca3e7bb4b632b9711881. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "是否属于有实质制备贡献的手性光催化？目前主要证据为纳米颗粒设计、电子结构和单种氨基酸转化差异；需核实产物结构纯度、分离产率和不同底物适用性。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include_possible",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。D/L-青霉胺诱导MgO/Co3O4纳米颗粒的近红外选择性酪氨酸羟基化。 酪氨酸羟基化到二羟基苯丙氨酸；比较D/L对映底物的转化消耗。 报道L-酪氨酸92.48%与D-酪氨酸53.85%消耗，尚不能据此确定可分离产物收率或通用底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "pending",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：是否属于有实质制备贡献的手性光催化？目前主要证据为纳米颗粒设计、电子结构和单种氨基酸转化差异；需核实产物结构纯度、分离产率和不同底物适用性。"
+        }
+      ],
+      "evidenceNeeded": "核对原文是否报告分离的DOPA或其他产物，是否多个有机底物范围；区分底物消耗率、对映选择性和产品ee。",
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-08_2026-07-14_nature-communications",
+        "sourceSha256": "a09942d601673db18c8051dcd09ec77b235916eaac5fca3e7bb4b632b9711881",
+        "rawBatchGitBlobSha": "9bca03d607c47df2030b92261de4353a0c86fba2",
+        "reviewQueueGitBlobSha": "0659a20185f44ecbbd26eb13e114f7bb862dee9b",
+        "sourceFrozenDate": "2026-07-10",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-74290-8",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-75221-3",
+      "journal": "Nature Communications",
+      "title": "Cascade electrosynthesis of glycolic acid from ethylene and oxygen with an energy efficiency of 62.9%",
+      "publisherFirstOnlineDate": "2026-08-29",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "论文具有真实有机产品制备价值，但电极与级联系统优化主要支持单目标化工生产，不能以FE直接证明一般合成方法学。",
+      "scopeAssessment": {
+        "primaryContribution": "将氧还原、乙烯氧化和乙二醇氧化级联用于工业乙醇酸电合成。",
+        "preparativeTransformation": "乙烯和氧经乙二醇转化为单一乙醇酸产品，主旨是电解系统与工艺效率。",
+        "generalityEvidence": "报告乙醇酸法拉第效率93.5%、系统能量效率62.9%和经济估算；未给出可迁移的有机底物范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-75221-3; first online 2026-08-29; exact staging raw Git blob 5570659ab9447f7ffbfcd4d222aadea3790546bd; Crossref/OpenAlex root source SHA256 009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "论文具有真实有机产品制备价值，但电极与级联系统优化主要支持单目标化工生产，不能以FE直接证明一般合成方法学。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。将氧还原、乙烯氧化和乙二醇氧化级联用于工业乙醇酸电合成。 乙烯和氧经乙二醇转化为单一乙醇酸产品，主旨是电解系统与工艺效率。 报告乙醇酸法拉第效率93.5%、系统能量效率62.9%和经济估算；未给出可迁移的有机底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：论文具有真实有机产品制备价值，但电极与级联系统优化主要支持单目标化工生产，不能以FE直接证明一般合成方法学。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-communications",
+        "sourceSha256": "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3",
+        "rawBatchGitBlobSha": "5570659ab9447f7ffbfcd4d222aadea3790546bd",
+        "reviewQueueGitBlobSha": "691dfc873c2853eb146c684d1fd2371534bf97a9",
+        "sourceFrozenDate": "2026-08-29",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-75221-3",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-76066-6",
+      "journal": "Nature Communications",
+      "title": "Metal-mediated weak adsorption enables the selective electrosynthesis of N-phenylhydroxylamine from nitrobenzene hydrogenation in water",
+      "publisherFirstOnlineDate": "2026-07-30",
+      "publisherArticleType": "Article",
+      "decision": "science_pending",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "include_possible_requires_scope_check",
+      "challengeDecision": "pending",
+      "challengeReason": "单一底物制备和大电流电极工程可属于重要工艺，但尚缺多种取代硝基芳烃/底物普适性证据，需避免凭克级误判通用方法。",
+      "scopeAssessment": {
+        "primaryContribution": "银表面弱吸附策略抑制硝基苯电还原过度氢化，制备N-苯基羟胺。",
+        "preparativeTransformation": "硝基苯在电化学条件选择性还原为N-苯基羟胺，构建C? 不新增C–C键，发生硝基选择性氢化。",
+        "generalityEvidence": "近99.6%选择性且5.85g/批连续制备，有真实可分离制备潜力。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-76066-6; first online 2026-07-30; exact staging raw Git blob 1f673829afd716ab3e0081b9cab56b7398e11cda; Crossref/OpenAlex root source SHA256 7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "单一底物制备和大电流电极工程可属于重要工艺，但尚缺多种取代硝基芳烃/底物普适性证据，需避免凭克级误判通用方法。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include_possible",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。银表面弱吸附策略抑制硝基苯电还原过度氢化，制备N-苯基羟胺。 硝基苯在电化学条件选择性还原为N-苯基羟胺，构建C? 不新增C–C键，发生硝基选择性氢化。 近99.6%选择性且5.85g/批连续制备，有真实可分离制备潜力。"
+        },
+        {
+          "pass": 2,
+          "decision": "pending",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：单一底物制备和大电流电极工程可属于重要工艺，但尚缺多种取代硝基芳烃/底物普适性证据，需避免凭克级误判通用方法。"
+        }
+      ],
+      "evidenceNeeded": "查明是否有不同取代硝基芳烃范围、产物分离结构证明与对应收率；核实电极材料而非单一产物工艺为主要贡献。",
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-communications",
+        "sourceSha256": "7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209",
+        "rawBatchGitBlobSha": "1f673829afd716ab3e0081b9cab56b7398e11cda",
+        "reviewQueueGitBlobSha": "c94bd0f1448c5c5fc043b9620a6e98ef7142fef5",
+        "sourceFrozenDate": "2026-07-30",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-76066-6",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-75533-4",
+      "journal": "Nature Communications",
+      "title": "Unassisted bipolar photoelectrochemical synthesis of H2O2",
+      "publisherFirstOnlineDate": "2026-08-31",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "H2O2可作有机合成氧化剂，但该论文没有建立任何可推广有机制备反应。",
+      "scopeAssessment": {
+        "primaryContribution": "无外加偏压的双极光电催化阳极/阴极水氧化与氧还原产过氧化氢。",
+        "preparativeTransformation": "水和氧生成过氧化氢，未展示有机底物变换。",
+        "generalityEvidence": "法拉第效率与灭菌率及稳定性是能源/环境电极性能指标。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-75533-4; first online 2026-08-31; exact staging raw Git blob 5570659ab9447f7ffbfcd4d222aadea3790546bd; Crossref/OpenAlex root source SHA256 009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "H2O2可作有机合成氧化剂，但该论文没有建立任何可推广有机制备反应。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。无外加偏压的双极光电催化阳极/阴极水氧化与氧还原产过氧化氢。 水和氧生成过氧化氢，未展示有机底物变换。 法拉第效率与灭菌率及稳定性是能源/环境电极性能指标。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：H2O2可作有机合成氧化剂，但该论文没有建立任何可推广有机制备反应。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-communications",
+        "sourceSha256": "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3",
+        "rawBatchGitBlobSha": "5570659ab9447f7ffbfcd4d222aadea3790546bd",
+        "reviewQueueGitBlobSha": "691dfc873c2853eb146c684d1fd2371534bf97a9",
+        "sourceFrozenDate": "2026-08-31",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-75533-4",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-77022-0",
+      "journal": "Nature Communications",
+      "title": "Calcium-tolerant electrode strategy for efficient hydrogen peroxide electrosynthesis in natural water",
+      "publisherFirstOnlineDate": "2026-08-31",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "虽存在有机表面活性剂修饰，不意味着有机化学制备方法作为核心原创贡献。",
+      "scopeAssessment": {
+        "primaryContribution": "通过表面活性剂修饰和海绵围栏阴极抑制自然水钙沉积对产H2O2的影响。",
+        "preparativeTransformation": "氧两电子电还原为过氧化氢，不涉及有机底物到有机产物。",
+        "generalityEvidence": "产率增幅和抗钙能力验证电极制备性能，而非有机合成范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-77022-0; first online 2026-08-31; exact staging raw Git blob 5570659ab9447f7ffbfcd4d222aadea3790546bd; Crossref/OpenAlex root source SHA256 009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "虽存在有机表面活性剂修饰，不意味着有机化学制备方法作为核心原创贡献。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。通过表面活性剂修饰和海绵围栏阴极抑制自然水钙沉积对产H2O2的影响。 氧两电子电还原为过氧化氢，不涉及有机底物到有机产物。 产率增幅和抗钙能力验证电极制备性能，而非有机合成范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：虽存在有机表面活性剂修饰，不意味着有机化学制备方法作为核心原创贡献。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-communications",
+        "sourceSha256": "009ae573ad9c61028229f6f07a6b763ae5317728dbdb2b548498f234ba95fac3",
+        "rawBatchGitBlobSha": "5570659ab9447f7ffbfcd4d222aadea3790546bd",
+        "reviewQueueGitBlobSha": "691dfc873c2853eb146c684d1fd2371534bf97a9",
+        "sourceFrozenDate": "2026-08-31",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-77022-0",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-75923-8",
+      "journal": "Nature Communications",
+      "title": "Split intron-exon system for circular RNA synthesis",
+      "publisherFirstOnlineDate": "2026-07-28",
+      "publisherArticleType": "Article",
+      "decision": "science_pending",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "include_possible_requires_scope_check",
+      "challengeDecision": "pending",
+      "challengeReason": "这确有实质生物聚合物制备新方法；其是否属于本有机合成数据库认可的生物催化/聚合制备范围取决于实际底物序列、化学修饰、分离纯度与转化的一般性，不能标题排除。",
+      "scopeAssessment": {
+        "primaryContribution": "分裂内含子-外显子SIE核酶体系提高环状RNA合成效率、可回收性与修饰核酸适用性。",
+        "preparativeTransformation": "线性核酸片段经催化环化形成未修饰或化学修饰的环状RNA，实质发生生物聚合物共价环化。",
+        "generalityEvidence": "摘要有未修饰和化学修饰circRNA的制备及回收，但缺分离产量、化学键构建普适性细节。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-75923-8; first online 2026-07-28; exact staging raw Git blob 1f673829afd716ab3e0081b9cab56b7398e11cda; Crossref/OpenAlex root source SHA256 7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "这确有实质生物聚合物制备新方法；其是否属于本有机合成数据库认可的生物催化/聚合制备范围取决于实际底物序列、化学修饰、分离纯度与转化的一般性，不能标题排除。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include_possible",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。分裂内含子-外显子SIE核酶体系提高环状RNA合成效率、可回收性与修饰核酸适用性。 线性核酸片段经催化环化形成未修饰或化学修饰的环状RNA，实质发生生物聚合物共价环化。 摘要有未修饰和化学修饰circRNA的制备及回收，但缺分离产量、化学键构建普适性细节。"
+        },
+        {
+          "pass": 2,
+          "decision": "pending",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：这确有实质生物聚合物制备新方法；其是否属于本有机合成数据库认可的生物催化/聚合制备范围取决于实际底物序列、化学修饰、分离纯度与转化的一般性，不能标题排除。"
+        }
+      ],
+      "evidenceNeeded": "审查核酶底物序列、不同化学修饰/规模、分离的环状RNA产物与通用制备能力，再以聚合/生物催化边界判断。",
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-communications",
+        "sourceSha256": "7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209",
+        "rawBatchGitBlobSha": "1f673829afd716ab3e0081b9cab56b7398e11cda",
+        "reviewQueueGitBlobSha": "c94bd0f1448c5c5fc043b9620a6e98ef7142fef5",
+        "sourceFrozenDate": "2026-07-28",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-75923-8",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-78255-9",
+      "journal": "Nature Communications",
+      "title": "Methane oxidation in African lakes increases with phytoplankton and outweighs photosynthesis-driven oxic methane production",
+      "publisherFirstOnlineDate": "2026-09-29",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "包含methane oxidation等化学术语，但没有新催化合成方法或基于底物的制备范围。",
+      "scopeAssessment": {
+        "primaryContribution": "测量79个非洲湖泊的甲烷氧化与浮游植物相关性。",
+        "preparativeTransformation": "甲烷天然环境氧化是生态通量，不是人工制备的有机产品反应。",
+        "generalityEvidence": "湖泊浓度和生态通量属于环境科学，不是有机化学可分离产物。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-78255-9; first online 2026-09-29; exact staging raw Git blob a563ccc5663f8b9d1bc412762be4ed1d9dde9ad1; Crossref/OpenAlex root source SHA256 2e3475048ac0d07885f2145bdd78cf38ce418af568b2c99ce49c67cb581d6fce. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "包含methane oxidation等化学术语，但没有新催化合成方法或基于底物的制备范围。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。测量79个非洲湖泊的甲烷氧化与浮游植物相关性。 甲烷天然环境氧化是生态通量，不是人工制备的有机产品反应。 湖泊浓度和生态通量属于环境科学，不是有机化学可分离产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：包含methane oxidation等化学术语，但没有新催化合成方法或基于底物的制备范围。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-communications",
+        "sourceSha256": "2e3475048ac0d07885f2145bdd78cf38ce418af568b2c99ce49c67cb581d6fce",
+        "rawBatchGitBlobSha": "a563ccc5663f8b9d1bc412762be4ed1d9dde9ad1",
+        "reviewQueueGitBlobSha": "d1dcded2d87d6836bfaf86eef7cdd4390d680214",
+        "sourceFrozenDate": "2026-09-29",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-78255-9",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-74482-2",
+      "journal": "Nature Communications",
+      "title": "Accurate, transferable, and verifiable machine-learned interatomic potentials for layered materials",
+      "publisherFirstOnlineDate": "2026-07-31",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "模型可转移性是材料计算泛化而非合成方法的反应适用性。",
+      "scopeAssessment": {
+        "primaryContribution": "开发层状范德华材料机器学习原子间势和堆叠结构验证指标。",
+        "preparativeTransformation": "模型预测HfS2/GaS双层的结构与电子性质，无有机制备反应。",
+        "generalityEvidence": "机器学习能量/力的误差指标非底物范围。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-74482-2; first online 2026-07-31; exact staging raw Git blob 1f673829afd716ab3e0081b9cab56b7398e11cda; Crossref/OpenAlex root source SHA256 7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "模型可转移性是材料计算泛化而非合成方法的反应适用性。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。开发层状范德华材料机器学习原子间势和堆叠结构验证指标。 模型预测HfS2/GaS双层的结构与电子性质，无有机制备反应。 机器学习能量/力的误差指标非底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：模型可转移性是材料计算泛化而非合成方法的反应适用性。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature-communications",
+        "sourceSha256": "7dae6e568f4f1a29440accca3f91305279f4c5e68e5c400459d46da0da07b209",
+        "rawBatchGitBlobSha": "1f673829afd716ab3e0081b9cab56b7398e11cda",
+        "reviewQueueGitBlobSha": "c94bd0f1448c5c5fc043b9620a6e98ef7142fef5",
+        "sourceFrozenDate": "2026-07-31",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-74482-2",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-76745-4",
+      "journal": "Nature Communications",
+      "title": "Interface-shrunk regulated synthesis of asymmetric ultrafine mono-mesopore Nepenthes with tailored window",
+      "publisherFirstOnlineDate": "2026-08-15",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "存在可控组装及材料合成，但无通用有机/高分子反应底物及产物，不能因asymmetric字样纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "界面收缩单胶束组装制备瓶子草样偏心介孔纳米颗粒供储能电容器。",
+        "preparativeTransformation": "调控介孔纳米颗粒孔腔、壳层和窗口尺寸，而不是建立新有机反应/聚合成键。",
+        "generalityEvidence": "45nm粒径、1312m²/g比表面及210mAh/g容量主要是材料结构-性能。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-76745-4; first online 2026-08-15; exact staging raw Git blob 80f640f140bd41d22c6e7cdf9a4046e9a5331568; Crossref/OpenAlex root source SHA256 ccbce6419292fbcff256d90cccb600595964b4dcfe1b8200f6c182283a7bdb31. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "存在可控组装及材料合成，但无通用有机/高分子反应底物及产物，不能因asymmetric字样纳入。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。界面收缩单胶束组装制备瓶子草样偏心介孔纳米颗粒供储能电容器。 调控介孔纳米颗粒孔腔、壳层和窗口尺寸，而不是建立新有机反应/聚合成键。 45nm粒径、1312m²/g比表面及210mAh/g容量主要是材料结构-性能。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：存在可控组装及材料合成，但无通用有机/高分子反应底物及产物，不能因asymmetric字样纳入。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-15_2026-08-21_nature-communications",
+        "sourceSha256": "ccbce6419292fbcff256d90cccb600595964b4dcfe1b8200f6c182283a7bdb31",
+        "rawBatchGitBlobSha": "80f640f140bd41d22c6e7cdf9a4046e9a5331568",
+        "reviewQueueGitBlobSha": "acfd1cc100c56f7db817b1dd5a51a851d6874fe2",
+        "sourceFrozenDate": "2026-08-15",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-76745-4",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41467-026-77096-w",
+      "journal": "Nature Communications",
+      "title": "Shaping light in 3D for direct asymmetric photochemistry: a 1000-fold enantioselectivity enhancement",
+      "publisherFirstOnlineDate": "2026-09-04",
+      "publisherArticleType": "Article",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "作者提出可能控制光化学产物手性，但并未实验展示可分离不对称合成方法，不能把理论预测当作已成立转化。",
+      "scopeAssessment": {
+        "primaryContribution": "三维手性激光场改变香芹酮电子激发的选择性，从头算预测约30%不对称激发。",
+        "preparativeTransformation": "香芹酮对映体激发态的人为选择，不是经实验分离的有机反应新产物。",
+        "generalityEvidence": "约30%是模拟电子激发选择性，不是实际产品ee或制备收率。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41467-026-77096-w; first online 2026-09-04; exact staging raw Git blob 7503729802ebfb648e3f2807d5f5ebec3589ae66; Crossref/OpenAlex root source SHA256 ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "作者提出可能控制光化学产物手性，但并未实验展示可分离不对称合成方法，不能把理论预测当作已成立转化。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。三维手性激光场改变香芹酮电子激发的选择性，从头算预测约30%不对称激发。 香芹酮对映体激发态的人为选择，不是经实验分离的有机反应新产物。 约30%是模拟电子激发选择性，不是实际产品ee或制备收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：作者提出可能控制光化学产物手性，但并未实验展示可分离不对称合成方法，不能把理论预测当作已成立转化。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-09-01_2026-09-07_nature-communications",
+        "sourceSha256": "ca742dcc231984231a6d2e144e0e74aefcaa0ad4ee5e009f56a24a4402bdb44c",
+        "rawBatchGitBlobSha": "7503729802ebfb648e3f2807d5f5ebec3589ae66",
+        "reviewQueueGitBlobSha": "e995d3a509f00abcc3f630f8614087df1881f5ad",
+        "sourceFrozenDate": "2026-09-04",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41467-026-77096-w",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/d41586-026-02237-6",
+      "journal": "Nature",
+      "title": "A radical approach to making C-glycoside molecules",
+      "publisherFirstOnlineDate": "2026-07-22",
+      "publisherArticleType": "Research Briefing",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "简报标题具有高价值合成关键词，但不能把原始Article和Briefing算作两篇原创合成论文。",
+      "scopeAssessment": {
+        "primaryContribution": "对另一篇C-糖苷自由基偶联原创论文作新闻性质科学解读。",
+        "preparativeTransformation": "该DOI本身没有新的独立实验反应，原研究DOI为10.1038/s41586-026-10807-x。",
+        "generalityEvidence": "简报转述糖磺酰肼构筑C-糖苷，实验属于被总结的独立原始DOI。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/d41586-026-02237-6; first online 2026-07-22; exact staging raw Git blob e93928ea831605b5ad318c4222dc09e8040c1cf1; Crossref/OpenAlex root source SHA256 f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "简报标题具有高价值合成关键词，但不能把原始Article和Briefing算作两篇原创合成论文。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。对另一篇C-糖苷自由基偶联原创论文作新闻性质科学解读。 该DOI本身没有新的独立实验反应，原研究DOI为10.1038/s41586-026-10807-x。 简报转述糖磺酰肼构筑C-糖苷，实验属于被总结的独立原始DOI。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：简报标题具有高价值合成关键词，但不能把原始Article和Briefing算作两篇原创合成论文。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-22_2026-07-31_nature",
+        "sourceSha256": "f0004a24c272c562e581c90a70dd0028e0effcb744199c33b8e52a2b7aaa4caa",
+        "rawBatchGitBlobSha": "e93928ea831605b5ad318c4222dc09e8040c1cf1",
+        "reviewQueueGitBlobSha": "6abd095b6162dd92e0aa7f6da5d96cd04d2c6a88",
+        "sourceFrozenDate": "2026-07-22",
+        "publisherHtmlUrl": "https://www.nature.com/articles/d41586-026-02237-6",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1038/s41586-026-10854-4",
+      "journal": "Nature",
+      "title": "Author Correction: Synthesis of enantioenriched atropisomers by biocatalytic deracemization",
+      "publisherFirstOnlineDate": "2026-07-02",
+      "publisherArticleType": "Author Correction",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "原标题包含enantioenriched和biocatalytic，但2026年这一条是纠错，不是原创新反应。",
+      "scopeAssessment": {
+        "primaryContribution": "更正2025年酶催化阻转异构体去消旋原文漏引文献。",
+        "preparativeTransformation": "本独立DOI只是增加前人文献引用，没有新底物—产物制备实验。",
+        "generalityEvidence": "更正对应原始DOI 10.1038/s41586-025-09738-w，正式首发在2025年11月12日。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://www.nature.com/articles/s41586-026-10854-4; first online 2026-07-02; exact staging raw Git blob ab6ec5de4d861d65a54a55a0a8fe04ce0963a61c; Crossref/OpenAlex root source SHA256 faa3ae33cb6866dc670fe161df0481633e1760e08a6a16ea394e110445aafed1. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "原标题包含enantioenriched和biocatalytic，但2026年这一条是纠错，不是原创新反应。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。更正2025年酶催化阻转异构体去消旋原文漏引文献。 本独立DOI只是增加前人文献引用，没有新底物—产物制备实验。 更正对应原始DOI 10.1038/s41586-025-09738-w，正式首发在2025年11月12日。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：原标题包含enantioenriched和biocatalytic，但2026年这一条是纠错，不是原创新反应。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-01_2026-07-07_nature",
+        "sourceSha256": "faa3ae33cb6866dc670fe161df0481633e1760e08a6a16ea394e110445aafed1",
+        "rawBatchGitBlobSha": "ab6ec5de4d861d65a54a55a0a8fe04ce0963a61c",
+        "reviewQueueGitBlobSha": "24c7721495764f21011e0343b5d3baf6baedf7bb",
+        "sourceFrozenDate": "2026-07-02",
+        "publisherHtmlUrl": "https://www.nature.com/articles/s41586-026-10854-4",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02893",
+      "journal": "Organic Letters",
+      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
+      "publisherFirstOnlineDate": "2026-07-15",
+      "publisherArticleType": "Addition/Correction",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "所更正的原论文是全合成且应独立评价，但本更正稿不具有另一项新合成贡献。",
+      "scopeAssessment": {
+        "primaryContribution": "修正Penisuloxazin A全合成原文的化合物结构绘法和外消旋体标识。",
+        "preparativeTransformation": "纠正Scheme 4/5和补充信息图示；没有新增独立全合成方法。",
+        "generalityEvidence": "属于原研究勘误，原论文不能再借此DOI重复计数。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://pubs.acs.org/doi/10.1021/acs.orglett.6c02893; first online 2026-07-15; exact staging raw Git blob 191472933f6e4097799a5642b86061b865421825; Crossref/OpenAlex root source SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "所更正的原论文是全合成且应独立评价，但本更正稿不具有另一项新合成贡献。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。修正Penisuloxazin A全合成原文的化合物结构绘法和外消旋体标识。 纠正Scheme 4/5和补充信息图示；没有新增独立全合成方法。 属于原研究勘误，原论文不能再借此DOI重复计数。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：所更正的原论文是全合成且应独立评价，但本更正稿不具有另一项新合成贡献。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-07-15_2026-07-21_organic-letters",
+        "sourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "rawBatchGitBlobSha": "191472933f6e4097799a5642b86061b865421825",
+        "reviewQueueGitBlobSha": "8a351b11551a6896313786becc54a14581db8318",
+        "sourceFrozenDate": "2026-07-15",
+        "publisherHtmlUrl": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02893",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01663",
+      "journal": "JOC",
+      "title": "Correction to “A Second-Generation Approach toward the Total Synthesis of Dodecahedrane Using a Photochemical Stereoisomerization”",
+      "publisherFirstOnlineDate": "2026-08-05",
+      "publisherArticleType": "Addition/Correction",
+      "decision": "exclude",
+      "publicationAuthority": false,
+      "ownerPermanentExclude": false,
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "虽然标题含总合成和光化学，勘误不满足原始有机合成研究，不能复用原论文的方法学身份。",
+      "scopeAssessment": {
+        "primaryContribution": "修正十二面体全合成研究致谢中的基金编号。",
+        "preparativeTransformation": "仅改正基金资助号，无新反应。",
+        "generalityEvidence": "出版商直接标注Correction to原文；原论文DOI必须与更正DOI分别处理。",
+        "sourceEvidence": "DOI-specific publisher Article/Correction/Briefing HTML and scientific abstract: https://pubs.acs.org/doi/10.1021/acs.joc.6c01663; first online 2026-08-05; exact staging raw Git blob fdbac4c465d92dcc0817d7507348d985349331f3; Crossref/OpenAlex root source SHA256 fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b. No PDF/SI/figure downloaded.",
+        "boundaryChallenge": "虽然标题含总合成和光化学，勘误不满足原始有机合成研究，不能复用原论文的方法学身份。"
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "assessment": "核查出版商论文身份、在线发表日期和具体化学贡献。修正十二面体全合成研究致谢中的基金编号。 仅改正基金资助号，无新反应。 出版商直接标注Correction to原文；原论文DOI必须与更正DOI分别处理。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "assessment": "从网站核心原创制备范围作对抗性质疑：虽然标题含总合成和光化学，勘误不满足原始有机合成研究，不能复用原论文的方法学身份。"
+        }
+      ],
+      "evidenceNeeded": null,
+      "sourceProof": {
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageHeadGitCommit": "8827e35fe2148425c6fd37107523b9f12d805126",
+        "sourceRootId": "2026-08-01_2026-08-07_joc",
+        "sourceSha256": "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b",
+        "rawBatchGitBlobSha": "fdbac4c465d92dcc0817d7507348d985349331f3",
+        "reviewQueueGitBlobSha": "1d5aad9f5433637418658b2370018f1c60af5a3f",
+        "sourceFrozenDate": "2026-08-05",
+        "publisherHtmlUrl": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01663",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "originalBatchUnmodified": true
+      },
+      "rights": {
+        "fullTextCopied": false,
+        "mediaDownloaded": false,
+        "siDownloaded": false,
+        "pdfDownloaded": false
+      },
+      "reviewedAt": "2026-10-16"
+    }
+  ]
+}
