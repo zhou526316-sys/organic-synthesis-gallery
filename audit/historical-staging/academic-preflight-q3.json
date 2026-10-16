@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "q3",
-  "sourceWorklistProducedAt": "2026-10-16T06:35:01.984Z",
-  "sourceWorklistSha256": "9b96e385e0d3c3e14d351c88d110764a5d1cea6efc4e1b6c82cdbb6292b14785",
+  "sourceWorklistProducedAt": "2026-10-16T07:02:14.338Z",
+  "sourceWorklistSha256": "c88163744d2b45b5b83078b0ab142ee64db1e26f1d6e43f179568c58bc655222",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 11165,
+  "sourceTotalUnreviewed": 11157,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -23,7 +23,7 @@
     "Nature",
     "Science"
   ],
-  "highChemistrySignalCount": 63,
+  "highChemistrySignalCount": 61,
   "interdisciplinaryTitleRiskCount": 5,
   "candidates": [
     {
@@ -365,19 +365,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607340",
+      "doi": "10.31635/ccschem.026.202507128",
       "journal": "CCS Chemistry",
-      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
-      "firstAuthor": "Jin-Pu Zhao",
+      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
+      "firstAuthor": "Yang Yang",
       "originalQueuePriority": "P0",
       "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 16,
+        "score": 9,
         "signals": [
           "stereoselective_synthetic_method",
-          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -394,7 +393,7 @@
           "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607340",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -908,11 +907,11 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202507128",
+      "doi": "10.31635/ccschem.026.202507266",
       "journal": "CCS Chemistry",
-      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
-      "firstAuthor": "Yang Yang",
-      "originalQueuePriority": "P0",
+      "title": "Simultaneous Control of Dual Axial Chirality: Chiral Phosphoric Acid-Catalyzed Atroposelective Synthesis of Diaryl Ethers",
+      "firstAuthor": "Pengyang Wang",
+      "originalQueuePriority": "P1",
       "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
@@ -936,7 +935,7 @@
           "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507266",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1445,18 +1444,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607308",
+      "doi": "10.31635/ccschem.025.202506960",
       "journal": "CCS Chemistry",
-      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
-      "firstAuthor": "Jiahao Zhang",
+      "title": "Copper-Catalyzed Asymmetric Sulfilimination of Diverse Radical Precursors via Nitrogen-Centered Radical-Enabled C–H and C–C Cleavage",
+      "firstAuthor": "Bin Wei",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "originDateCandidate": "2026-08-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -1467,13 +1466,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry"
+          "2026-08-01_2026-08-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
+          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607308",
+      "doiResolver": "https://doi.org/10.31635/ccschem.025.202506960",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1900,11 +1899,11 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc02950g",
+      "doi": "10.1039/d6sc05552d",
       "journal": "Chemical Science",
-      "title": "Photoinduced remote C–N/C bond formation via ring-opening 1,4-difunctionalization of methylenecyclobutanes",
-      "firstAuthor": "Yan Zhang",
-      "originalQueuePriority": "P1",
+      "title": "Engaging Native Carboxylic Acids via Solvent-Gated Proton Relay for Photo(electro)chemical Decarboxylative Functionalization",
+      "firstAuthor": "Luigi Dolcini",
+      "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
@@ -1921,13 +1920,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-22_2026-07-31_chemical-science"
+          "2026-09-22_2026-09-30_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
+          "45519bb52023155566098ca4d707405c45238ace9ac689afed8cd894ef674088"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc02950g",
+      "doiResolver": "https://doi.org/10.1039/d6sc05552d",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1982,18 +1981,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202608043",
+      "doi": "10.31635/ccschem.026.202506756",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Diels–Alder Reaction of Skipped Dienols Enabled by Borrowing Hydrogen/Trienamine Relay Catalysis",
-      "firstAuthor": "Fangyuan Wang",
+      "title": "Engineering Vinylene Linkages in Covalent Metal–Organic Frameworks Enhances Photocatalytic Cross-Coupling Reaction",
+      "firstAuthor": "Jinfang Kou",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-22",
+      "originDateCandidate": "2026-08-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -2004,13 +2003,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_ccs-chemistry"
+          "2026-08-01_2026-08-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd"
+          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202608043",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506756",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2436,18 +2435,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc05552d",
+      "doi": "10.1039/d6sc06439f",
       "journal": "Chemical Science",
-      "title": "Engaging Native Carboxylic Acids via Solvent-Gated Proton Relay for Photo(electro)chemical Decarboxylative Functionalization",
-      "firstAuthor": "Luigi Dolcini",
+      "title": "Photoelectrochemical H 2 O 2 production and organic synthesis: from independent routes to synergistic integration",
+      "firstAuthor": "Wei-Dong Jiang",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 6,
         "signals": [
-          "bond_construction"
+          "synthetic_method_context",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2457,13 +2457,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-22_2026-09-30_chemical-science"
+          "2026-09-08_2026-09-14_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "45519bb52023155566098ca4d707405c45238ace9ac689afed8cd894ef674088"
+          "75df32e529d24f5e14920e0de1fd8c537cdaa9aaa33a97b6b581dce5d202af91"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc05552d",
+      "doiResolver": "https://doi.org/10.1039/d6sc06439f",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2518,10 +2518,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.025.202506960",
+      "doi": "10.31635/ccschem.026.202506809",
       "journal": "CCS Chemistry",
-      "title": "Copper-Catalyzed Asymmetric Sulfilimination of Diverse Radical Precursors via Nitrogen-Centered Radical-Enabled C–H and C–C Cleavage",
-      "firstAuthor": "Bin Wei",
+      "title": "Harnessing C–H⋯π Interactions for Regio- and Enantioselective Ni-Catalyzed Borylalkynylation of Unactivated Alkenes",
+      "firstAuthor": "Rui He",
       "originalQueuePriority": "P0",
       "originDateCandidate": "2026-08-01",
       "truePublisherOnlineDate": null,
@@ -2529,8 +2529,7 @@
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2546,7 +2545,7 @@
           "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.025.202506960",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506809",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2969,19 +2968,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc06439f",
+      "doi": "10.1039/d6sc02479c",
       "journal": "Chemical Science",
-      "title": "Photoelectrochemical H 2 O 2 production and organic synthesis: from independent routes to synergistic integration",
-      "firstAuthor": "Wei-Dong Jiang",
-      "originalQueuePriority": "P0",
+      "title": "Photoinduced interface reconstruction of Cu 2 O sub-nanocluster-oxygen-rich TiO 2+ x heterostructures enabling efficient nitrate-to-ammonia electrosynthesis at industrial current densities",
+      "firstAuthor": "Guohao Jia",
+      "originalQueuePriority": "P1",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 6,
+        "score": 5,
         "signals": [
-          "synthetic_method_context",
-          "broad_chemistry_context"
+          "synthetic_method_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2991,13 +2989,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_chemical-science"
+          "2026-07-01_2026-07-07_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "75df32e529d24f5e14920e0de1fd8c537cdaa9aaa33a97b6b581dce5d202af91"
+          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc06439f",
+      "doiResolver": "https://doi.org/10.1039/d6sc02479c",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3052,19 +3050,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202506756",
+      "doi": "10.31635/ccschem.026.202607808",
       "journal": "CCS Chemistry",
-      "title": "Engineering Vinylene Linkages in Covalent Metal–Organic Frameworks Enhances Photocatalytic Cross-Coupling Reaction",
-      "firstAuthor": "Jinfang Kou",
+      "title": "Cobalt-Catalyzed Asymmetric Hydroboration of Fully Aliphatic Alkenes",
+      "firstAuthor": "Zhihao Guo",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-01",
+      "originDateCandidate": "2026-07-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3074,13 +3071,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_ccs-chemistry"
+          "2026-07-01_2026-07-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
+          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506756",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607808",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4009,11 +4006,11 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc02479c",
+      "doi": "10.1039/d6sc06836g",
       "journal": "Chemical Science",
-      "title": "Photoinduced interface reconstruction of Cu 2 O sub-nanocluster-oxygen-rich TiO 2+ x heterostructures enabling efficient nitrate-to-ammonia electrosynthesis at industrial current densities",
-      "firstAuthor": "Guohao Jia",
-      "originalQueuePriority": "P1",
+      "title": "When less is more: harnessing optimal quencher concentrations to maximize quantum yields in TADF photoredox reactions",
+      "firstAuthor": "Federica Fina",
+      "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
@@ -4030,13 +4027,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_chemical-science"
+          "2026-09-22_2026-09-30_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
+          "45519bb52023155566098ca4d707405c45238ace9ac689afed8cd894ef674088"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc02479c",
+      "doiResolver": "https://doi.org/10.1039/d6sc06836g",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4091,12 +4088,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202506809",
+      "doi": "10.31635/ccschem.026.202607936",
       "journal": "CCS Chemistry",
-      "title": "Harnessing C–H⋯π Interactions for Regio- and Enantioselective Ni-Catalyzed Borylalkynylation of Unactivated Alkenes",
-      "firstAuthor": "Rui He",
+      "title": "Machine Learning-Assisted Optimization of Chiral Catalysts and Reagents for Enantioselective Carbon–Sulfenylation and Carbon–Disulfuration Reactions of Alkynes",
+      "firstAuthor": "Li-Miao Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-01",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -4112,13 +4109,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_ccs-chemistry"
+          "2026-08-15_2026-08-21_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
+          "b00fd51b330a1d13c38d196d2f934f4f84208b8ab0d7968cfd3fd5d2c5a6d803"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506809",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607936",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4539,18 +4536,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc06836g",
+      "doi": "10.1039/d5sc07460f",
       "journal": "Chemical Science",
-      "title": "When less is more: harnessing optimal quencher concentrations to maximize quantum yields in TADF photoredox reactions",
-      "firstAuthor": "Federica Fina",
-      "originalQueuePriority": "P0",
+      "title": "Chalcogenide substitution for the synthesis of dye MSe5: a benzoselenadiazole photosensitizer for high-performance DSSCs",
+      "firstAuthor": "Laia Marín Moncusí",
+      "originalQueuePriority": "P1",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 5,
+        "score": 1,
         "signals": [
-          "synthetic_method_context"
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4560,13 +4557,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-22_2026-09-30_chemical-science"
+          "2026-07-01_2026-07-07_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "45519bb52023155566098ca4d707405c45238ace9ac689afed8cd894ef674088"
+          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc06836g",
+      "doiResolver": "https://doi.org/10.1039/d5sc07460f",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4621,18 +4618,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607664",
+      "doi": "10.31635/ccschem.025.202506260",
       "journal": "CCS Chemistry",
-      "title": "Engineering Cytochrome c to Catalyze Enantioselective C-Ge Bond Formation",
-      "firstAuthor": "Yangliu Feng",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "title": "Ni-Catalyzed Regioselective Hydrometalative Cyclization of Alkynyl Cyclobutanones to Bicyclo[2.1.1]hexanes",
+      "firstAuthor": "Xiao-Lin Li",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-07-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4642,13 +4639,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry"
+          "2026-07-01_2026-07-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
+          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607664",
+      "doiResolver": "https://doi.org/10.31635/ccschem.025.202506260",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5066,10 +5063,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc07460f",
+      "doi": "10.1039/d5sc08413j",
       "journal": "Chemical Science",
-      "title": "Chalcogenide substitution for the synthesis of dye MSe5: a benzoselenadiazole photosensitizer for high-performance DSSCs",
-      "firstAuthor": "Laia Marín Moncusí",
+      "title": "Synthesis and properties of N -(trifluoromethyl)amides",
+      "firstAuthor": "Miriam L. O'Duill",
       "originalQueuePriority": "P1",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -5087,13 +5084,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_chemical-science"
+          "2026-07-22_2026-07-31_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
+          "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc07460f",
+      "doiResolver": "https://doi.org/10.1039/d5sc08413j",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5148,18 +5145,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607709",
+      "doi": "10.31635/ccschem.026.202507090",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Construction of Nonaromatic Pyrrole Isomeric Forms by Ligand-Enabled Intermolecular Desymmetrization of Malononitriles",
-      "firstAuthor": "Wang Wang",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-01",
+      "title": "Late-Stage Cyclization of Natural Products and Drug Molecules Enabled by C–C Bond Cleavage of Aryl Ketones",
+      "firstAuthor": "Xing Wang",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5169,13 +5166,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_ccs-chemistry"
+          "2026-09-01_2026-09-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807"
+          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607709",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507090",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5466,12 +5463,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c00992",
+      "doi": "10.1021/acs.joc.6c00807",
       "journal": "JOC",
-      "title": "I2–DMSO-Mediated In Situ Capture of Ketenimine Cations by Two Molecules of 3-Aminoindazole for the Synthesis of 1-(1 H -Indazol-3-yl)-2,4-Diphenyl-1 H -Pyrrolo[2′,3′:4,5]Pyrimido[1,2- b ]Indazole Derivatives",
-      "firstAuthor": "Xiaoqiong Deng",
+      "title": "Silver(I)-Catalyzed A3-Coupling for the Regioselective Synthesis of 2-Chloro-(Phenylvinyl)imidazo[1,2- a ]pyridines and Late-Stage Drug Functionalization",
+      "firstAuthor": "Abhishek Saini",
       "originalQueuePriority": "P1",
-      "originDateCandidate": "2026-07-30",
+      "originDateCandidate": "2026-07-28",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5493,7 +5490,7 @@
           "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00992",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00807",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5587,10 +5584,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc08413j",
+      "doi": "10.1039/d6sc01888b",
       "journal": "Chemical Science",
-      "title": "Synthesis and properties of N -(trifluoromethyl)amides",
-      "firstAuthor": "Miriam L. O'Duill",
+      "title": "Residual metal single-atom catalysis: enhanced photocatalytic hydrogen production via ligand-modulated d-orbital splitting",
+      "firstAuthor": "Kun Tang",
       "originalQueuePriority": "P1",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -5608,13 +5605,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-22_2026-07-31_chemical-science"
+          "2026-07-01_2026-07-07_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508"
+          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc08413j",
+      "doiResolver": "https://doi.org/10.1039/d6sc01888b",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5669,18 +5666,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607790",
+      "doi": "10.31635/ccschem.026.202607846",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Construction of 1,3-Nonadjacent Stereocenters via 1,2-Difunctionalization of Alkenes Under Visible Light",
-      "firstAuthor": "Xue-Song Zhou",
+      "title": "Ligand-Directed, Palladium-Catalyzed Chemo- and Regiodivergent Ring-Opening/Cross-Coupling Reactions of gem -Difluorocyclopropanes with Enamides",
+      "firstAuthor": "Wenhao Liu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-03",
+      "originDateCandidate": "2026-07-24",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5690,13 +5687,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_ccs-chemistry"
+          "2026-07-22_2026-07-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807"
+          "08d6a8a0911a071d78bee38359fd2c77cb8ee544a73706dfb3183c0b9ba917ae"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607790",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607846",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6108,10 +6105,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d6sc01888b",
+      "doi": "10.1039/d6sc02032a",
       "journal": "Chemical Science",
-      "title": "Residual metal single-atom catalysis: enhanced photocatalytic hydrogen production via ligand-modulated d-orbital splitting",
-      "firstAuthor": "Kun Tang",
+      "title": "Syndirella: Synthesis-directed fragment elaboration enables extensive and cost-effective binding site exploration beyond catalog compounds",
+      "firstAuthor": "Kate K Fieseler",
       "originalQueuePriority": "P1",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -6129,13 +6126,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_chemical-science"
+          "2026-09-22_2026-09-30_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "b412e7efea09c08238035cbbaa448814cdf82efed7dcc7ab19ed4af3c4fe5eb0"
+          "45519bb52023155566098ca4d707405c45238ace9ac689afed8cd894ef674088"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d6sc01888b",
+      "doiResolver": "https://doi.org/10.1039/d6sc02032a",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6190,18 +6187,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607808",
+      "doi": "10.31635/ccschem.026.202506451",
       "journal": "CCS Chemistry",
-      "title": "Cobalt-Catalyzed Asymmetric Hydroboration of Fully Aliphatic Alkenes",
-      "firstAuthor": "Zhihao Guo",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-01",
+      "title": "Chemoenzymatic Synthesis of K29/K48-Branched Ubiquitin Chains Using Lb Pro * and Oa AEP1 Enzymes",
+      "firstAuthor": "Hongyi Cai",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 1,
         "signals": [
-          "stereoselective_synthetic_method"
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6211,13 +6208,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_ccs-chemistry"
+          "2026-09-01_2026-09-07_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807"
+          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607808",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506451",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",

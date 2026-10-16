@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-16T06:35:01.726Z",
-  "sourceWorklistSha256": "ae8682754404438b8e77e08f57be246aabd52cc1708b4dedfaca4092abb36a3d",
+  "sourceWorklistProducedAt": "2026-10-16T07:02:13.983Z",
+  "sourceWorklistSha256": "039d0b668c1c1523b434509b68e2deb7e0dbd00e264677d24cd7a1cd8f067830",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 56272,
+  "sourceTotalUnreviewed": 56264,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -501,19 +501,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607340",
+      "doi": "10.31635/ccschem.025.202506818",
       "journal": "CCS Chemistry",
-      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
-      "firstAuthor": "Jin-Pu Zhao",
+      "title": "3D-Printed Chiral Heterometallic Cluster Monoliths for Integrated Circularly Polarized Luminescent Sensing and Visualized Enantioselective Catalysis",
+      "firstAuthor": "Xin-Ya Cai",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-04-02",
+      "originDateCandidate": "2026-01-18",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 16,
+        "score": 9,
         "signals": [
           "stereoselective_synthetic_method",
-          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -524,15 +523,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry",
-          "2026-04-01_2026-04-30_ccs-chemistry"
+          "2026-01-01_2026-01-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
-          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc"
+          "3e4d6e1bed3a452dc88d1c973042209baac993abdd0e58b736e71750958483c6"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607340",
+      "doiResolver": "https://doi.org/10.31635/ccschem.025.202506818",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3191,18 +3188,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607308",
+      "doi": "10.31635/ccschem.026.202506756",
       "journal": "CCS Chemistry",
-      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
-      "firstAuthor": "Jiahao Zhang",
+      "title": "Engineering Vinylene Linkages in Covalent Metal–Organic Frameworks Enhances Photocatalytic Cross-Coupling Reaction",
+      "firstAuthor": "Jinfang Kou",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-03-03",
+      "originDateCandidate": "2026-01-28",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -3213,15 +3210,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry",
-          "2026-03-01_2026-03-31_ccs-chemistry"
+          "2026-08-01_2026-08-07_ccs-chemistry",
+          "2026-01-01_2026-01-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
-          "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
+          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e",
+          "3e4d6e1bed3a452dc88d1c973042209baac993abdd0e58b736e71750958483c6"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607308",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506756",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3853,19 +3850,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202608043",
+      "doi": "10.31635/ccschem.026.202506809",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Diels–Alder Reaction of Skipped Dienols Enabled by Borrowing Hydrogen/Trienamine Relay Catalysis",
-      "firstAuthor": "Fangyuan Wang",
+      "title": "Harnessing C–H⋯π Interactions for Regio- and Enantioselective Ni-Catalyzed Borylalkynylation of Unactivated Alkenes",
+      "firstAuthor": "Rui He",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-30",
+      "originDateCandidate": "2026-01-28",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3875,15 +3871,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_ccs-chemistry",
-          "2026-06-01_2026-06-30_ccs-chemistry"
+          "2026-08-01_2026-08-07_ccs-chemistry",
+          "2026-01-01_2026-01-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd",
-          "5ca47e150d674ec145b8ca7dca34312a2e5aa7db72b9409969b4321ad64a58d5"
+          "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e",
+          "3e4d6e1bed3a452dc88d1c973042209baac993abdd0e58b736e71750958483c6"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202608043",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506809",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5144,12 +5140,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607664",
+      "doi": "10.31635/ccschem.026.202607808",
       "journal": "CCS Chemistry",
-      "title": "Engineering Cytochrome c to Catalyze Enantioselective C-Ge Bond Formation",
-      "firstAuthor": "Yangliu Feng",
+      "title": "Cobalt-Catalyzed Asymmetric Hydroboration of Fully Aliphatic Alkenes",
+      "firstAuthor": "Zhihao Guo",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-01",
+      "originDateCandidate": "2026-05-07",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5165,15 +5161,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry",
-          "2026-06-01_2026-06-30_ccs-chemistry"
+          "2026-07-01_2026-07-07_ccs-chemistry",
+          "2026-05-01_2026-05-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
-          "5ca47e150d674ec145b8ca7dca34312a2e5aa7db72b9409969b4321ad64a58d5"
+          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
+          "f8f53fdd7da4cf6639e477cad51241c43820fdfaf7f7852581123d4123f71f5b"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607664",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607808",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5807,12 +5803,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607709",
+      "doi": "10.31635/ccschem.026.202607936",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Construction of Nonaromatic Pyrrole Isomeric Forms by Ligand-Enabled Intermolecular Desymmetrization of Malononitriles",
-      "firstAuthor": "Wang Wang",
+      "title": "Machine Learning-Assisted Optimization of Chiral Catalysts and Reagents for Enantioselective Carbon–Sulfenylation and Carbon–Disulfuration Reactions of Alkynes",
+      "firstAuthor": "Li-Miao Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-04-11",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5828,15 +5824,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_ccs-chemistry",
-          "2026-04-01_2026-04-30_ccs-chemistry"
+          "2026-08-15_2026-08-21_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
-          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc"
+          "b00fd51b330a1d13c38d196d2f934f4f84208b8ab0d7968cfd3fd5d2c5a6d803"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607709",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607936",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6466,18 +6460,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607790",
+      "doi": "10.31635/ccschem.026.202506952",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Construction of 1,3-Nonadjacent Stereocenters via 1,2-Difunctionalization of Alkenes Under Visible Light",
-      "firstAuthor": "Xue‐Song Zhou",
+      "title": "Asymmetric [3+2] Dipolar Cycloaddition of Nitrones with Alkynones or Enones Catalyzed by Spiro-Bicyclic Bisborane Catalysts",
+      "firstAuthor": "Zhi-Hao Chen",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-05-26",
+      "originDateCandidate": "2026-03-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6487,15 +6481,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_ccs-chemistry",
-          "2026-05-01_2026-05-31_ccs-chemistry"
+          "2026-04-01_2026-04-30_ccs-chemistry",
+          "2026-03-01_2026-03-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
-          "f8f53fdd7da4cf6639e477cad51241c43820fdfaf7f7852581123d4123f71f5b"
+          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc",
+          "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607790",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506952",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
