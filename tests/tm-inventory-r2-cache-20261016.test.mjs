@@ -83,4 +83,40 @@ test('HEAD/GET generation races never become false-empty authoritative inventory
  assert.equal(result.body.error,'capture_inventory_unavailable');
 });
 
-console.log('TM_INVENTORY_R2_CACHE_SUMMARY '+JSON.stringify({tests:3,productionWrites:0}));
+test('POST body supports a whole validated DOI inventory in one R2 read',async()=>{
+ const env=fixture(),req=new Request('https://api.example.test/api/article-figures/staged/inventory',{method:'POST'});
+ const result=await getStagedArticleFigures(req,env,[doiA,doiB]);
+ assert.equal(result.status,200);
+ assert.equal(result.body.scopeRequestedCount,2);
+ assert.deepEqual(result.body.requestedDois,[doiA,doiB]);
+ assert.deepEqual(result.body.items.map(x=>x.doi),[doiA,doiB]);
+ assert.equal(env.MEDIA.reads.filter(k=>k===stageKey).length,1);
+ const toc=await getLocalCaptureIndex(
+  new Request('https://api.example.test/api/media/local-capture-index/inventory',{method:'POST'}),env,[doiA,doiB]);
+ assert.equal(toc.status,200);assert.equal(toc.body.count,1);
+ assert.equal(toc.body.complete,true);
+});
+
+test('whole DOI scope rejects duplicates, invalid inputs and over-limit arrays',async()=>{
+ const env=fixture(),req=new Request('https://api.example.test/api/article-figures/staged/inventory',{method:'POST'});
+ for(const bad of [[doiA,doiA],['bad-doi'],[],new Array(2001).fill(doiA),'bad']){
+  const result=await getStagedArticleFigures(req,env,bad);
+  assert.equal(result.status,400);
+ }
+ assert.equal(env.MEDIA.reads.length,0,'invalid scope must never read R2 objects');
+});
+
+test('new owner inventory endpoints require explicit readOnly authorization flag',async()=>{
+ const fs=await import('node:fs');
+ const worker=fs.readFileSync('cloudflare/worker/src/index.js','utf8');
+ const controller=fs.readFileSync('public/toc-mainline.user.js','utf8');
+ for(const endpoint of ['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory']){
+  assert.ok(worker.includes("url.pathname === '"+endpoint+"'"),endpoint);
+  assert.ok(worker.includes("'"+endpoint+"'"),'CORS '+endpoint);
+ }
+ assert.ok(worker.includes("if(payload?.readOnly!==true)return json({error:'read_only_required'}"));
+ assert.ok(controller.includes("var bulkEndpoint=layer==='figures'?WORKER+'/api/article-figures/staged/inventory'"));
+ assert.ok(controller.includes("bulk_fallback_to_chunked"));
+});
+
+console.log('TM_INVENTORY_R2_CACHE_SUMMARY '+JSON.stringify({tests:6,productionWrites:0}));
