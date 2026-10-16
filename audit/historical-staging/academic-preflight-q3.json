@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "q3",
-  "sourceWorklistProducedAt": "2026-10-16T00:46:37.610Z",
-  "sourceWorklistSha256": "bc336d5100946b736911c27200e7200640b510985b182bfe520f810848eb0853",
+  "sourceWorklistProducedAt": "2026-10-16T01:11:36.795Z",
+  "sourceWorklistSha256": "9abb57cb4099256a30c4aef33cb244ea2aaa207988280cd280b33b9555edf281",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 11224,
+  "sourceTotalUnreviewed": 11212,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -23,16 +23,16 @@
     "Nature",
     "Science"
   ],
-  "highChemistrySignalCount": 76,
+  "highChemistrySignalCount": 77,
   "interdisciplinaryTitleRiskCount": 5,
   "candidates": [
     {
-      "doi": "10.1021/jacs.6c17136",
+      "doi": "10.1021/jacs.6c14333",
       "journal": "JACS",
-      "title": "Triadic σ–π Coordination Programs Cuδ+ Sites to Drive Sequential Dual-N Species C–N Coupling for Efficient Urea Electrosynthesis",
-      "firstAuthor": "Chao Zhao",
+      "title": "A General Photoredox Platform for the Hydroarylation of Olefins",
+      "firstAuthor": "Yi-Lun Li",
       "originalQueuePriority": "P1",
-      "originDateCandidate": "2026-09-29",
+      "originDateCandidate": "2026-08-31",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -49,13 +49,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-22_2026-09-30_jacs"
+          "2026-08-22_2026-08-31_jacs"
         ],
         "sourceSha256Hashes": [
-          "4f9d0dcfe3627382692d586281a8722035188abfbd82c6c8a7def568a850d693"
+          "30d2b63166c98535093ea89b1bb58f22b14066515513c169ece8801516c92044"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c17136",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c14333",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -155,12 +155,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c00954",
+      "doi": "10.1021/acs.joc.6c01034",
       "journal": "JOC",
-      "title": "Chalcogen-Bond-Assisted Catalytic Asymmetric Synthesis of Eight-Membered Cyclic Hemiacetal Esters",
-      "firstAuthor": "Ruirui Jing",
+      "title": "Asymmetric Synthesis of Chiral δ-Caprolactams: Access to a Key Intermediate of Ubrogepant",
+      "firstAuthor": "Qingyuan Shi",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-03",
+      "originDateCandidate": "2026-08-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -177,13 +177,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_joc"
+          "2026-08-01_2026-08-07_joc"
         ],
         "sourceSha256Hashes": [
-          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00954",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01034",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -574,18 +574,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c04115",
+      "doi": "10.1021/jacs.6c17136",
       "journal": "JACS",
-      "title": "Elucidate the Metal-Catalyzed Decarboxylative Coupling of Carboxylic Acids on Metal Surfaces",
-      "firstAuthor": "Chunlong Wu",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-07",
+      "title": "Triadic σ–π Coordination Programs Cuδ+ Sites to Drive Sequential Dual-N Species C–N Coupling for Efficient Urea Electrosynthesis",
+      "firstAuthor": "Chao Zhao",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-09-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 12,
         "signals": [
-          "bond_construction"
+          "bond_construction",
+          "synthetic_method_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -595,13 +596,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_jacs"
+          "2026-09-22_2026-09-30_jacs"
         ],
         "sourceSha256Hashes": [
-          "efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae"
+          "4f9d0dcfe3627382692d586281a8722035188abfbd82c6c8a7def568a850d693"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c04115",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c17136",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -700,12 +701,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01034",
+      "doi": "10.1021/acs.joc.6c01263",
       "journal": "JOC",
-      "title": "Asymmetric Synthesis of Chiral δ-Caprolactams: Access to a Key Intermediate of Ubrogepant",
-      "firstAuthor": "Qingyuan Shi",
+      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
+      "firstAuthor": "Xing-Pin Wei",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-03",
+      "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -722,13 +723,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_joc"
+          "2026-09-01_2026-09-07_joc"
         ],
         "sourceSha256Hashes": [
-          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
+          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01034",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01263",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1114,12 +1115,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c04323",
+      "doi": "10.1021/jacs.6c04115",
       "journal": "JACS",
-      "title": "Electrochemical Oxidative Carbonylation: Strong CO Binding Suppresses C–C Coupling and Steers Selectivity to Organic Carbonates",
-      "firstAuthor": "Weiyan Ni",
+      "title": "Elucidate the Metal-Catalyzed Decarboxylative Coupling of Carboxylic Acids on Metal Surfaces",
+      "firstAuthor": "Chunlong Wu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-02",
+      "originDateCandidate": "2026-09-07",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1141,7 +1142,7 @@
           "efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c04323",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c04115",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1653,12 +1654,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c09868",
+      "doi": "10.1021/jacs.6c04323",
       "journal": "JACS",
-      "title": "Direct Observation of a Cross-Coupling Catalyst Intermediate via Single-Molecule Spectroscopy",
-      "firstAuthor": "Mackinsey A. Smith",
+      "title": "Electrochemical Oxidative Carbonylation: Strong CO Binding Suppresses C–C Coupling and Steers Selectivity to Organic Carbonates",
+      "firstAuthor": "Weiyan Ni",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-07",
+      "originDateCandidate": "2026-09-02",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1680,7 +1681,7 @@
           "efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c09868",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c04323",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2190,12 +2191,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c09884",
+      "doi": "10.1021/jacs.6c09868",
       "journal": "JACS",
-      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
-      "firstAuthor": "Guo-Feng Li",
+      "title": "Direct Observation of a Cross-Coupling Catalyst Intermediate via Single-Molecule Spectroscopy",
+      "firstAuthor": "Mackinsey A. Smith",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-01",
+      "originDateCandidate": "2026-09-07",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2211,13 +2212,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_jacs"
+          "2026-09-01_2026-09-07_jacs"
         ],
         "sourceSha256Hashes": [
-          "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32"
+          "efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c09884",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c09868",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2273,12 +2274,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02280",
+      "doi": "10.1021/acs.orglett.6c02330",
       "journal": "Organic Letters",
-      "title": "Visible Light-Mediated Enantioselective Alkylation Using a Deaminative Approach: Access to Unnatural Amino Acids and Peptides",
-      "firstAuthor": "Shashank Singh",
+      "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
+      "firstAuthor": "Rongkai Gao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-17",
+      "originDateCandidate": "2026-07-16",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2300,7 +2301,7 @@
           "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02280",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02330",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2314,18 +2315,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01290",
+      "doi": "10.1021/acs.joc.6c01118",
       "journal": "JOC",
-      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
-      "firstAuthor": "Mrinmoy Manash Bharali",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-11",
+      "title": "Radical-Mediated Tandem Functional Group Transfer, Desulfonylation, and Cyclization Reactions: Synthesis of Oxindoles",
+      "firstAuthor": "Syed Anis Ali Shah",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-07-30",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -2336,13 +2337,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_joc"
+          "2026-07-22_2026-07-31_joc"
         ],
         "sourceSha256Hashes": [
-          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+          "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01290",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01118",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2724,18 +2725,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c05962",
+      "doi": "10.1021/jacs.6c09884",
       "journal": "JACS",
-      "title": "Breaking the 50% Efficiency Ceiling: A Tandem Electrochemical Cycle for Efficient Singlet Oxygen Electrosynthesis",
-      "firstAuthor": "Long Zhao",
+      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
+      "firstAuthor": "Guo-Feng Li",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-13",
+      "originDateCandidate": "2026-07-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 5,
+        "score": 7,
         "signals": [
-          "synthetic_method_context"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2745,13 +2746,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_jacs"
+          "2026-07-01_2026-07-07_jacs"
         ],
         "sourceSha256Hashes": [
-          "64d88a9c366b024dbf9d63a05728d8345eb8cd23eb00684bdd41f1ef7efebae9"
+          "4306a694b3869166b4669a4cc47b465fb2c699a79c6d79d16fabd9837a900a32"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c05962",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c09884",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2806,18 +2807,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02330",
+      "doi": "10.1021/acs.orglett.6c02893",
       "journal": "Organic Letters",
-      "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
-      "firstAuthor": "Rongkai Gao",
+      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
+      "firstAuthor": "Zhen Mo",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-16",
+      "originDateCandidate": "2026-07-15",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2833,7 +2835,7 @@
           "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02330",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02893",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2847,18 +2849,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01432",
+      "doi": "10.1021/acs.joc.6c01290",
       "journal": "JOC",
-      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
-      "firstAuthor": "Simon J. Cooper",
+      "title": "Total Synthesis of D -Fuc p 3NAc Containing Conjugation-Ready Pentasaccharide Repeating Unit Related to Acinetobacter baumannii RCH51",
+      "firstAuthor": "Mrinmoy Manash Bharali",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-13",
+      "originDateCandidate": "2026-08-11",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2868,13 +2871,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_joc"
+          "2026-08-08_2026-08-14_joc"
         ],
         "sourceSha256Hashes": [
-          "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
+          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01432",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01290",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3375,12 +3378,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01304",
+      "doi": "10.1021/acs.joc.6c01838",
       "journal": "JOC",
-      "title": "Asymmetric Copper-Catalyzed Propargylation of 5-Aminopyrazoles with Propargylic Acetates",
-      "firstAuthor": "Jiaqi Pu",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-19",
+      "title": "The Convergent Synthetic Efforts toward Knightol and a Simplified Analog",
+      "firstAuthor": "Learnmore Jeremia",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-09-30",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3394,13 +3397,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-15_2026-09-21_joc"
+          "2026-09-22_2026-09-30_joc"
         ],
         "sourceSha256Hashes": [
-          "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648"
+          "83ac3c6a1ebdadd2fb9db09b89dda33789d44ab7f4c1ff650793364dd516ecf3"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01304",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01838",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3767,12 +3770,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c09584",
+      "doi": "10.1021/jacs.6c05962",
       "journal": "JACS",
-      "title": "Mechanistic Insights into KCl-Induced Water Disordering for Efficient Ammonia Electrosynthesis",
-      "firstAuthor": "Bingzhi Qian",
-      "originalQueuePriority": "P1",
-      "originDateCandidate": "2026-07-31",
+      "title": "Breaking the 50% Efficiency Ceiling: A Tandem Electrochemical Cycle for Efficient Singlet Oxygen Electrosynthesis",
+      "firstAuthor": "Long Zhao",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-08-13",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3788,13 +3791,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-22_2026-07-31_jacs"
+          "2026-08-08_2026-08-14_jacs"
         ],
         "sourceSha256Hashes": [
-          "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
+          "64d88a9c366b024dbf9d63a05728d8345eb8cd23eb00684bdd41f1ef7efebae9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c09584",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c05962",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3850,19 +3853,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02715",
+      "doi": "10.1021/acs.orglett.6c02939",
       "journal": "Organic Letters",
-      "title": "Divergent Synthesis of Ketones and Alcohols via Iron-Catalyzed Three-Component Alcohol Cross-Coupling",
-      "firstAuthor": "Dingguo Song",
+      "title": "Enantioselective Reduction of α,β-Dehydro-α-amido Carboxylic Acid Derivatives by Ene-Reductases",
+      "firstAuthor": "Nicolas Marie",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-11",
+      "originDateCandidate": "2026-08-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3872,13 +3874,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_organic-letters"
+          "2026-08-01_2026-08-07_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "1ffe0b602fc8c400392738bdd91747f9f6bd29892cfcdbf28e69a6b31a4c420c"
+          "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02715",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02939",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3892,19 +3894,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01433",
+      "doi": "10.1021/acs.joc.6c01432",
       "journal": "JOC",
-      "title": "Total Synthesis of Hemiketal D2 via a Convergent Coupling Strategy",
-      "firstAuthor": "Tadachika Miyasaka",
+      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
+      "firstAuthor": "Simon J. Cooper",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-08",
+      "originDateCandidate": "2026-09-13",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3914,13 +3915,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-08_2026-08-14_joc"
+          "2026-09-08_2026-09-14_joc"
         ],
         "sourceSha256Hashes": [
-          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
+          "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01433",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01432",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4300,18 +4301,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c07080",
+      "doi": "10.1021/jacs.6c09584",
       "journal": "JACS",
-      "title": "Steric Hindrance of Proton Donors Modulates Heterogeneous Electrochemical Nitrogen Reduction Reaction Selectivity in Nonaqueous Electrolytes",
-      "firstAuthor": "Dongmin Park",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-11",
+      "title": "Mechanistic Insights into KCl-Induced Water Disordering for Efficient Ammonia Electrosynthesis",
+      "firstAuthor": "Bingzhi Qian",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-07-31",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 1,
+        "score": 5,
         "signals": [
-          "broad_chemistry_context"
+          "synthetic_method_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4321,13 +4322,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-08_2026-07-14_jacs"
+          "2026-07-22_2026-07-31_jacs"
         ],
         "sourceSha256Hashes": [
-          "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
+          "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c07080",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c09584",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4382,18 +4383,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02939",
+      "doi": "10.1021/acs.orglett.6c02163",
       "journal": "Organic Letters",
-      "title": "Enantioselective Reduction of α,β-Dehydro-α-amido Carboxylic Acid Derivatives by Ene-Reductases",
-      "firstAuthor": "Nicolas Marie",
+      "title": "Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay",
+      "firstAuthor": "Shu-Jie Chen",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-03",
+      "originDateCandidate": "2026-07-22",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4403,13 +4404,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_organic-letters"
+          "2026-07-22_2026-07-31_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
+          "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02939",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02163",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4423,18 +4424,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01562",
+      "doi": "10.1021/acs.joc.6c01433",
       "journal": "JOC",
-      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
-      "firstAuthor": "Yu Chen",
+      "title": "Total Synthesis of Hemiketal D2 via a Convergent Coupling Strategy",
+      "firstAuthor": "Tadachika Miyasaka",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-04",
+      "originDateCandidate": "2026-08-08",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
+          "target_or_late_stage_synthesis",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -4445,13 +4446,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_joc"
+          "2026-08-08_2026-08-14_joc"
         ],
         "sourceSha256Hashes": [
-          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+          "4529662ecbcb0d0da809eee09c3582219d7a6fbeb83390d547ef1f1efd21f1dd"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01562",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01433",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4828,12 +4829,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c07729",
+      "doi": "10.1021/jacs.6c07080",
       "journal": "JACS",
-      "title": "Cooperative Multimetal Chemistry Enables Precision Synthesis of High-Entropy Oxide Nanocrystal Catalysts",
-      "firstAuthor": "Baixu Zhu",
-      "originalQueuePriority": "P1",
-      "originDateCandidate": "2026-07-31",
+      "title": "Steric Hindrance of Proton Donors Modulates Heterogeneous Electrochemical Nitrogen Reduction Reaction Selectivity in Nonaqueous Electrolytes",
+      "firstAuthor": "Dongmin Park",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-07-11",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -4849,13 +4850,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-22_2026-07-31_jacs"
+          "2026-07-08_2026-07-14_jacs"
         ],
         "sourceSha256Hashes": [
-          "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
+          "1ea2ecdd6e38fa9f8c005b0b61924bb9637989589c326f07002654940818c0b8"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c07729",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c07080",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4910,12 +4911,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02163",
+      "doi": "10.1021/acs.orglett.6c02609",
       "journal": "Organic Letters",
-      "title": "Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay",
-      "firstAuthor": "Shu-Jie Chen",
+      "title": "Cu-Catalyzed Cross-Coupling of Cyclopropanol with Cyclobutanone Oximes To Access Distal Cyano Ketone",
+      "firstAuthor": "Zhouxin Xu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-22",
+      "originDateCandidate": "2026-07-15",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -4931,13 +4932,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-22_2026-07-31_organic-letters"
+          "2026-07-15_2026-07-21_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61"
+          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02163",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02609",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4951,18 +4952,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01602",
+      "doi": "10.1021/acs.joc.6c01515",
       "journal": "JOC",
-      "title": "Concise Total Synthesis of Streptospherin A",
-      "firstAuthor": "Rakuto Ohta",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-04",
+      "title": "Visible-Light-Mediated Aerobic Oxidative Cyclization of 2-Aminobenzenesulfonamides and Alcohols for the Synthesis of Benzothiadiazine-1,1-Dioxides under Ambient Conditions",
+      "firstAuthor": "Yongke Hu",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-08-31",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -4973,13 +4974,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_joc"
+          "2026-08-22_2026-08-31_joc"
         ],
         "sourceSha256Hashes": [
-          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+          "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01602",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01515",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5354,12 +5355,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c10014",
+      "doi": "10.1021/jacs.6c07729",
       "journal": "JACS",
-      "title": "Chemical Synthesis of Asymmetric Nucleosomes Reveals Intramolecular Activation of UHRF1 E3 Ligase by H3K9me3",
-      "firstAuthor": "Ziyu Xu",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-22",
+      "title": "Cooperative Multimetal Chemistry Enables Precision Synthesis of High-Entropy Oxide Nanocrystal Catalysts",
+      "firstAuthor": "Baixu Zhu",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-07-31",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5381,7 +5382,7 @@
           "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c10014",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c07729",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5436,12 +5437,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02609",
+      "doi": "10.1021/acs.orglett.6c02735",
       "journal": "Organic Letters",
-      "title": "Cu-Catalyzed Cross-Coupling of Cyclopropanol with Cyclobutanone Oximes To Access Distal Cyano Ketone",
-      "firstAuthor": "Zhouxin Xu",
+      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
+      "firstAuthor": "Yukun Zhao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-15",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5457,13 +5458,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-15_2026-07-21_organic-letters"
+          "2026-08-15_2026-08-21_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+          "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02609",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02735",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5477,18 +5478,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01663",
+      "doi": "10.1021/acs.joc.6c01562",
       "journal": "JOC",
-      "title": "Correction to “A Second-Generation Approach toward the Total Synthesis of Dodecahedrane Using a Photochemical Stereoisomerization”",
-      "firstAuthor": "Luca McDermott",
+      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "firstAuthor": "Yu Chen",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-05",
+      "originDateCandidate": "2026-09-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
+          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -5499,13 +5500,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_joc"
+          "2026-09-01_2026-09-07_joc"
         ],
         "sourceSha256Hashes": [
-          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
+          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01663",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01562",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5878,12 +5879,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c10386",
+      "doi": "10.1021/jacs.6c10014",
       "journal": "JACS",
-      "title": "Redox Reactions in Molten Indium Halide Salts Enable the Synthesis and Shape Control of In-Pnictide Nanocrystals",
-      "firstAuthor": "Justin C. Ondry",
-      "originalQueuePriority": "P1",
-      "originDateCandidate": "2026-09-29",
+      "title": "Chemical Synthesis of Asymmetric Nucleosomes Reveals Intramolecular Activation of UHRF1 E3 Ligase by H3K9me3",
+      "firstAuthor": "Ziyu Xu",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-07-22",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5899,13 +5900,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-22_2026-09-30_jacs"
+          "2026-07-22_2026-07-31_jacs"
         ],
         "sourceSha256Hashes": [
-          "4f9d0dcfe3627382692d586281a8722035188abfbd82c6c8a7def568a850d693"
+          "3ff85605e58ecbd263c2c4db2cf4d6398dc2b52bbbc56a0bea0bc21e114886ff"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c10386",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c10014",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5960,12 +5961,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02735",
+      "doi": "10.1021/acs.orglett.6c02921",
       "journal": "Organic Letters",
-      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
-      "firstAuthor": "Yukun Zhao",
+      "title": "Substrate-Paired Electron Donor–Acceptor Complexes Enable Photochemical Alkyl–Alkyl Cross-Coupling",
+      "firstAuthor": "Sodai Nishino",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-19",
+      "originDateCandidate": "2026-08-07",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5981,13 +5982,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-15_2026-08-21_organic-letters"
+          "2026-08-01_2026-08-07_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6"
+          "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02735",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02921",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6001,18 +6002,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01757",
+      "doi": "10.1021/acs.joc.6c01602",
       "journal": "JOC",
-      "title": "Iridium-Catalyzed Enantioselective N -Allylation of Aminoquinones with Racemic Allylic Alcohols",
-      "firstAuthor": "Shiliu Chen",
+      "title": "Concise Total Synthesis of Streptospherin A",
+      "firstAuthor": "Rakuto Ohta",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-29",
+      "originDateCandidate": "2026-09-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6022,13 +6024,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_joc"
+          "2026-09-01_2026-09-07_joc"
         ],
         "sourceSha256Hashes": [
-          "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
+          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01757",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01602",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6401,12 +6403,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/jacs.6c12254",
+      "doi": "10.1021/jacs.6c10386",
       "journal": "JACS",
-      "title": "Revealing Excited-State Electrochemical Reaction Pathways at Solid Electrolyte Interphases by Ab Initio Nonadiabatic Molecular Dynamics",
-      "firstAuthor": "Zhan Shi",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-17",
+      "title": "Redox Reactions in Molten Indium Halide Salts Enable the Synthesis and Shape Control of In-Pnictide Nanocrystals",
+      "firstAuthor": "Justin C. Ondry",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-09-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -6422,13 +6424,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-15_2026-08-21_jacs"
+          "2026-09-22_2026-09-30_jacs"
         ],
         "sourceSha256Hashes": [
-          "713e9e89642a78fe1d727b138652eab1c5f68a0d2cbdae762ee9de49f62fc217"
+          "4f9d0dcfe3627382692d586281a8722035188abfbd82c6c8a7def568a850d693"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/jacs.6c12254",
+      "doiResolver": "https://doi.org/10.1021/jacs.6c10386",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6481,12 +6483,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02921",
+      "doi": "10.1021/acs.orglett.6c03223",
       "journal": "Organic Letters",
-      "title": "Substrate-Paired Electron Donor–Acceptor Complexes Enable Photochemical Alkyl–Alkyl Cross-Coupling",
-      "firstAuthor": "Sodai Nishino",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-07",
+      "title": "Nickel-Catalyzed cis -Arylation of Unactivated gem -Difluoroalkenes: A Pathway for the Construction of a Fluorinated Amino Acid Molecular Library",
+      "firstAuthor": "Junrui Wang",
+      "originalQueuePriority": "P1",
+      "originDateCandidate": "2026-08-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -6502,13 +6504,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_organic-letters"
+          "2026-08-22_2026-08-31_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
+          "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02921",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c03223",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6522,18 +6524,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c00852",
+      "doi": "10.1021/acs.joc.6c01663",
       "journal": "JOC",
-      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
-      "firstAuthor": "Liqiao Han",
+      "title": "Correction to “A Second-Generation Approach toward the Total Synthesis of Dodecahedrane Using a Photochemical Stereoisomerization”",
+      "firstAuthor": "Luca McDermott",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-31",
+      "originDateCandidate": "2026-08-05",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 8,
         "signals": [
-          "bond_construction"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6543,13 +6546,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_joc"
+          "2026-08-01_2026-08-07_joc"
         ],
         "sourceSha256Hashes": [
-          "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
+          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00852",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01663",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
