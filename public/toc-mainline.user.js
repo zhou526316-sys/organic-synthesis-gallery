@@ -5944,7 +5944,8 @@ function embeddedJobDois(value) {
   }
   function coveragePending(run) {
     return Array.from(run.coverage.values()).filter(function(r){return r.state==='pending'&&coverageHasNeeds(r.job);})
-      .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
+      .sort(function(a,b){return compareMissingCaptureJobs(a.job,b.job)
+        ||Number(a.attempts>0)-Number(b.attempts>0);});
   }
   function coverageApplyFreshPlan(run,jobs,complete) {
     var fresh=new Set((jobs||[]).map(function(j){return normalizeDoi(j.doi);}));
