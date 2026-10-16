@@ -534,10 +534,10 @@ else throw Error('unexpected historical network request '+options.url);
   }
 
   // A completed pause cannot still display the controller's pausing state.
-  await page.evaluate(()=>window.__historicalDiagTest.batchStatusWrite({
+  await page.evaluate(lastDoi=>window.__historicalDiagTest.batchStatusWrite({
     state:'paused',currentStage:'本轮已暂停',
-    lastDoi:doiOld[0],lastError:'publisher_script_not_confirmed'
-  }));
+    lastDoi,lastError:'publisher_script_not_confirmed'
+  }),doiOld[0]);
   const pausedPanel=await page.locator('#osg-historical-batch').innerText();
   assert.ok(pausedPanel.includes('已暂停'));
   assert.ok(pausedPanel.includes('上次受阻：publisher_script_not_confirmed'));
