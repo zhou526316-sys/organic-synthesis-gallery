@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-16T07:55:25.485Z",
+  "generatedAt": "2026-10-16T09:15:00.000Z",
   "nextEligiblePublicationSlot": "2026-10-17T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 229,
-    "include": 227,
+    "checked": 234,
+    "include": 232,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -17171,6 +17171,409 @@
           "reason": "强反证是研究对象C60能否只是材料器件制样而没有原创有机反应。作者明确展示H-膦酸酯/亲核伙伴导向的非对称1,4-双官能团化与多组产物结构验证，属于有机方法；但阴离子和自由基两条反应路径在不同实验中观察到支持，BHT捕获不能直接证明所有普通亲核加成产物都经完全一致的自由基串联机制。"
         }
       ]
+    },
+    {
+      "doi": "10.1002/anie.2368387",
+      "journal": "Angew",
+      "title": "Nickel/Photoredox‐Catalyzed Dicarbofunctionalization of Alkenes via Ketone C─C Bond Cleavage: Access to an Enantioselective Variant",
+      "titleZh": "镍与光氧化还原协同催化酮衍生前体碳碳键断裂驱动烯烃双碳官能团化及不对称变体",
+      "date": "2026-09-04",
+      "authors": [
+        "Chenglin Peng",
+        "Yahui Jia",
+        "Tu Anh Tran",
+        "Qianqian Zhai",
+        "Shuai Liu",
+        "Craig S. Day",
+        "Liang Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "e2368387",
+        "doi": "10.1002/anie.2368387"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立镍与光氧化还原协同的烯烃三组分1,2-双碳官能团化，通过酮衍生前体碳碳键断裂引入烷基片段，并拓展到不对称合成变体。",
+      "evidenceBasis": "官方Article History/First Published核对在线日期 2026-09-04：https://onlinelibrary.wiley.com/doi/10.1002/anie.2368387；冻结的Crossref+OpenAlex来源根 2026-09-01_2026-09-07_angew，raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，review queue Git blob 19d3fa026b0b4c0714a35be8d7e2303b1bea2a0e，source root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+      "challengeReason": "第二遍反证：这不是简单的酮与烯烃直接三组分偶联，也不能把不对称变体的表现套用给所有外消旋范围。出版记录仅支持预活化酮衍生二氢喹唑啉酮作为烷基自由基来源；作者所提自由基及镍价态过程属于被实验支持的机理解释，不宜称每个中间体均被直接观察。",
+      "scopeAssessment": {
+        "primaryContribution": "建立镍与光氧化还原协同的烯烃三组分1,2-双碳官能团化，通过酮衍生前体碳碳键断裂引入烷基片段，并拓展到不对称合成变体。",
+        "preparativeTransformation": "光照下使用酮衍生二氢喹唑啉酮作为烷基自由基前体，经C(sp³)–C(sp³)键断裂与烯烃和芳基片段发生汇聚偶联，在烯烃相邻两碳建立两个新的C–C键，部分底物经手性催化形成对映富集产物。",
+        "generalityEvidence": "Wiley Research Article公开报道不同烷基和芳基片段、烯烃及生物活性基团的合成适用性，并提供区域、化学选择性和不对称变体。酮须先转为可断裂的二氢喹唑啉酮前体，不能把此步骤称作任意游离酮的直接断裂。",
+        "sourceEvidence": "官方Article History/First Published核对在线日期 2026-09-04：https://onlinelibrary.wiley.com/doi/10.1002/anie.2368387；冻结的Crossref+OpenAlex来源根 2026-09-01_2026-09-07_angew，raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，review queue Git blob 19d3fa026b0b4c0714a35be8d7e2303b1bea2a0e，source root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+        "boundaryChallenge": "第二遍反证：这不是简单的酮与烯烃直接三组分偶联，也不能把不对称变体的表现套用给所有外消旋范围。出版记录仅支持预活化酮衍生二氢喹唑啉酮作为烷基自由基来源；作者所提自由基及镍价态过程属于被实验支持的机理解释，不宜称每个中间体均被直接观察。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2368387",
+        "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2368387",
+        "publisherOnlineDate": "2026-09-04",
+        "publisherOriginalResearchType": "Wiley_Angew_Original_Research_First_Published",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_angew",
+        "stageBatchSha": "20a0ec09ce98e9c81acab658e9fe44086e5b0508",
+        "sourceReviewQueueGitBlobSha": "19d3fa026b0b4c0714a35be8d7e2303b1bea2a0e",
+        "stageSourceSha256": "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-04",
+          "officialPublisherFirstOnline": "2026-09-04",
+          "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2368387",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "Wiley_Angew_Original_Research_First_Published"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立镍与光氧化还原协同的烯烃三组分1,2-双碳官能团化，通过酮衍生前体碳碳键断裂引入烷基片段，并拓展到不对称合成变体。 光照下使用酮衍生二氢喹唑啉酮作为烷基自由基前体，经C(sp³)–C(sp³)键断裂与烯烃和芳基片段发生汇聚偶联，在烯烃相邻两碳建立两个新的C–C键，部分底物经手性催化形成对映富集产物。 Wiley Research Article公开报道不同烷基和芳基片段、烯烃及生物活性基团的合成适用性，并提供区域、化学选择性和不对称变体。酮须先转为可断裂的二氢喹唑啉酮前体，不能把此步骤称作任意游离酮的直接断裂。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：这不是简单的酮与烯烃直接三组分偶联，也不能把不对称变体的表现套用给所有外消旋范围。出版记录仅支持预活化酮衍生二氢喹唑啉酮作为烷基自由基来源；作者所提自由基及镍价态过程属于被实验支持的机理解释，不宜称每个中间体均被直接观察。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02295",
+      "journal": "Organic Letters",
+      "title": "Iron-Catalyzed Direct Synthesis of Amides from Alcohols",
+      "titleZh": "铁与氧化还原活性偶氮菲啰啉配体协同催化醇脱氢酰胺化直接合成酰胺",
+      "date": "2026-07-31",
+      "authors": [
+        "Arijit Singha Mohapatra",
+        "Santana Chakraborty",
+        "Subhankar Khanra",
+        "Nanda D. Paul"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10157-10162",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02295"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展以结构明确的二价铁和氧化还原活性偶氮菲啰啉配体协同催化的一锅脱氢酰胺化制备方法，将醇底物转化成多类可分离酰胺。",
+      "evidenceBasis": "官方Article History/First Published核对在线日期 2026-07-31：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02295；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+      "challengeReason": "第二遍反证：题名中的Direct不意味着直接使用普通胺，也不是无需额外含氮试剂的醇自缩合；原文实际明确使用methoxyamine hydrochloride。铁与配体协同机制有相关实验支持，但不能据此宣称所有底物都遵循被直接证实的同一路径。",
+      "scopeAssessment": {
+        "primaryContribution": "发展以结构明确的二价铁和氧化还原活性偶氮菲啰啉配体协同催化的一锅脱氢酰胺化制备方法，将醇底物转化成多类可分离酰胺。",
+        "preparativeTransformation": "以芳香、杂芳香和脂肪醇为碳源，以盐酸甲氧胺作为含氮试剂，在Fe(II)与非无辜配体协同催化下经脱氢酰胺化转为相应酰胺。",
+        "generalityEvidence": "ACS Original Letter明确给出芳基、杂芳基、脂肪族以及生物活性骨架酰胺的制备范围和分离产物。甲氧胺盐酸盐是必需含氮伙伴，并非任意一级或二级胺与醇在该体系中直接等效偶联。",
+        "sourceEvidence": "官方Article History/First Published核对在线日期 2026-07-31：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02295；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+        "boundaryChallenge": "第二遍反证：题名中的Direct不意味着直接使用普通胺，也不是无需额外含氮试剂的醇自缩合；原文实际明确使用methoxyamine hydrochloride。铁与配体协同机制有相关实验支持，但不能据此宣称所有底物都遵循被直接证实的同一路径。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02295",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02295",
+        "publisherOnlineDate": "2026-07-31",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-31",
+          "officialPublisherFirstOnline": "2026-07-31",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02295",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展以结构明确的二价铁和氧化还原活性偶氮菲啰啉配体协同催化的一锅脱氢酰胺化制备方法，将醇底物转化成多类可分离酰胺。 以芳香、杂芳香和脂肪醇为碳源，以盐酸甲氧胺作为含氮试剂，在Fe(II)与非无辜配体协同催化下经脱氢酰胺化转为相应酰胺。 ACS Original Letter明确给出芳基、杂芳基、脂肪族以及生物活性骨架酰胺的制备范围和分离产物。甲氧胺盐酸盐是必需含氮伙伴，并非任意一级或二级胺与醇在该体系中直接等效偶联。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：题名中的Direct不意味着直接使用普通胺，也不是无需额外含氮试剂的醇自缩合；原文实际明确使用methoxyamine hydrochloride。铁与配体协同机制有相关实验支持，但不能据此宣称所有底物都遵循被直接证实的同一路径。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02476",
+      "journal": "Organic Letters",
+      "title": "Functional Group Migration-Driven Quaternary Carbon Editing via Intramolecular [4+2] Annulation",
+      "titleZh": "光催化氰基迁移与氢原子转移串联实现季碳骨架编辑及苯并萘啶酮环化",
+      "date": "2026-07-31",
+      "authors": [
+        "Yi-Xin Xing",
+        "Bo-Xi Liu",
+        "Feng Zhou",
+        "Syed Anis Ali Shah",
+        "Daopeng Sheng",
+        "WeiDong Rao",
+        "Shu-Su Shen",
+        "Chen Zhu",
+        "Shun-Yi Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10187-10193",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02476"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过光催化自由基串联反应实现未活化含氰烯烃的官能团迁移与季碳骨架编辑，构筑苯并[1,6]萘啶酮稠合含氮杂环。",
+      "evidenceBasis": "官方Article History/First Published核对在线日期 2026-07-31：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02476；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+      "challengeReason": "第二遍反证：题名出现[4+2]，但不能误判为单步周环反应；原文机理包括1,4-氰基迁移、1,6-HAT和6-endo-trig自由基关环。无金属条件不等于无光催化剂，使用有机光催化剂；自由基顺序来自作者提出并以机理实验支持的解释。",
+      "scopeAssessment": {
+        "primaryContribution": "通过光催化自由基串联反应实现未活化含氰烯烃的官能团迁移与季碳骨架编辑，构筑苯并[1,6]萘啶酮稠合含氮杂环。",
+        "preparativeTransformation": "利用有机光催化剂激活含氰烯烃前体，依次发生自由基加成、1,4-氰基迁移、1,6-氢原子转移和分子内6-endo-trig环化，制备结构多样的苯并[1,6]萘啶酮。",
+        "generalityEvidence": "ACS Original Letter展示可获得性较高的前体、温和的反应条件、复杂分子后期官能团化和多种产物。这里的[4+2]是自由基形式串联环化的产物构型描述，作者并非声称单步协同Diels–Alder过程。",
+        "sourceEvidence": "官方Article History/First Published核对在线日期 2026-07-31：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02476；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，review queue Git blob bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+        "boundaryChallenge": "第二遍反证：题名出现[4+2]，但不能误判为单步周环反应；原文机理包括1,4-氰基迁移、1,6-HAT和6-endo-trig自由基关环。无金属条件不等于无光催化剂，使用有机光催化剂；自由基顺序来自作者提出并以机理实验支持的解释。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02476",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02476",
+        "publisherOnlineDate": "2026-07-31",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "bbf27b1c3f4ace9c6393f05a9bba4b9b10b41094",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-31",
+          "officialPublisherFirstOnline": "2026-07-31",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02476",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过光催化自由基串联反应实现未活化含氰烯烃的官能团迁移与季碳骨架编辑，构筑苯并[1,6]萘啶酮稠合含氮杂环。 利用有机光催化剂激活含氰烯烃前体，依次发生自由基加成、1,4-氰基迁移、1,6-氢原子转移和分子内6-endo-trig环化，制备结构多样的苯并[1,6]萘啶酮。 ACS Original Letter展示可获得性较高的前体、温和的反应条件、复杂分子后期官能团化和多种产物。这里的[4+2]是自由基形式串联环化的产物构型描述，作者并非声称单步协同Diels–Alder过程。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：题名出现[4+2]，但不能误判为单步周环反应；原文机理包括1,4-氰基迁移、1,6-HAT和6-endo-trig自由基关环。无金属条件不等于无光催化剂，使用有机光催化剂；自由基顺序来自作者提出并以机理实验支持的解释。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00411",
+      "journal": "JOC",
+      "title": "Mechanochemical Diastereoselective Substrate-Directed Synthesis of Pyrrole-Isoxazolidines via 1,3-Dipolar Cycloaddition of Maleimides with Nitrones",
+      "titleZh": "机械化学条件下硝酮与马来酰亚胺的底物控制非对映选择性环加成构筑吡咯并异噁唑烷",
+      "date": "2026-07-27",
+      "authors": [
+        "Iva S. de Jesus",
+        "Anna Flávia da C. Lédo",
+        "Armando Ferrer",
+        "Mauro A. Bueno",
+        "Silvio Cunha"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10595-10606",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00411"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立硝酮与马来酰亚胺在机械化学条件下经1,3-偶极环加成获得吡咯并异噁唑烷的底物控制非对映选择性制备途径。",
+      "evidenceBasis": "官方Article History/First Published核对在线日期 2026-07-27：https://pubs.acs.org/doi/10.1021/acs.joc.6c00411；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_joc，raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，source root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+      "challengeReason": "第二遍反证：这里是由底物与机械化学环境调控的非对映选择性，不能直接称为手性催化剂诱导的对映选择性合成。研磨液、芳基电子效应影响方向及比率，较快和无需柱层析的优势不可无条件外推到全部底物和规模。",
+      "scopeAssessment": {
+        "primaryContribution": "建立硝酮与马来酰亚胺在机械化学条件下经1,3-偶极环加成获得吡咯并异噁唑烷的底物控制非对映选择性制备途径。",
+        "preparativeTransformation": "通过机械研磨促进硝酮与马来酰亚胺发生[3+2]环加成形成稠合吡咯并异噁唑烷，在反应物芳环电子性质、硝酮取代基与辅助研磨液条件变化下调控收率和非对映比。",
+        "generalityEvidence": "JOC Article报道一系列不同取代底物的分离环加成产物，显示相较常规溶剂反应较短反应时间、较简便的产物分离，并讨论部分底物表现出与溶剂法相反的非对映选择性。",
+        "sourceEvidence": "官方Article History/First Published核对在线日期 2026-07-27：https://pubs.acs.org/doi/10.1021/acs.joc.6c00411；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_joc，raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，source root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+        "boundaryChallenge": "第二遍反证：这里是由底物与机械化学环境调控的非对映选择性，不能直接称为手性催化剂诱导的对映选择性合成。研磨液、芳基电子效应影响方向及比率，较快和无需柱层析的优势不可无条件外推到全部底物和规模。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00411",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00411",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "306e95ddae3a4c0b6d47869a24ec8e88f92770f7",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00411",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立硝酮与马来酰亚胺在机械化学条件下经1,3-偶极环加成获得吡咯并异噁唑烷的底物控制非对映选择性制备途径。 通过机械研磨促进硝酮与马来酰亚胺发生[3+2]环加成形成稠合吡咯并异噁唑烷，在反应物芳环电子性质、硝酮取代基与辅助研磨液条件变化下调控收率和非对映比。 JOC Article报道一系列不同取代底物的分离环加成产物，显示相较常规溶剂反应较短反应时间、较简便的产物分离，并讨论部分底物表现出与溶剂法相反的非对映选择性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：这里是由底物与机械化学环境调控的非对映选择性，不能直接称为手性催化剂诱导的对映选择性合成。研磨液、芳基电子效应影响方向及比率，较快和无需柱层析的优势不可无条件外推到全部底物和规模。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00523",
+      "journal": "JOC",
+      "title": "B(C6F5)3-Catalyzed [4 + 2] Cycloaddition Reaction: Synthesis of Polycyclic N-Heterocycle Fused Naphthoquinones",
+      "titleZh": "三五氟苯基硼催化四加二环加成合成萘醌稠合多环含氮杂环",
+      "date": "2026-07-27",
+      "authors": [
+        "Yu Dong",
+        "Xiangyu Xiao",
+        "Junhui Liu",
+        "Jin Zhou",
+        "Jun Ye",
+        "Zhi-Chuan Shi",
+        "Guo-Wei Deng",
+        "Bing He"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10607-10614",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00523"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以三(五氟苯基)硼Lewis酸催化[4+2]环加成制备萘醌稠合多环含氮杂环，并建立可分离的系列不同取代产物。",
+      "evidenceBasis": "官方Article History/First Published核对在线日期 2026-07-27：https://pubs.acs.org/doi/10.1021/acs.joc.6c00523；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_joc，raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，source root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+      "challengeReason": "第二遍反证：材料荧光和吲哚乙酸识别是后续性质测试，不能因此把论文排除为纯传感器研究；核心确实是B(C6F5)3催化的原创有机环加成。但论文没有声称普适的对映选择性或药物生物活性，亦不可把荧光响应当作化学反应收率。",
+      "scopeAssessment": {
+        "primaryContribution": "以三(五氟苯基)硼Lewis酸催化[4+2]环加成制备萘醌稠合多环含氮杂环，并建立可分离的系列不同取代产物。",
+        "preparativeTransformation": "在B(C6F5)3催化条件下进行形成萘醌稠合含氮多环结构的[4+2]环加成，获得可根据底物组合调节骨架形态的有机产物。",
+        "generalityEvidence": "ACS JOC Original Article明确给出较宽底物适应性、中等至优异分离收率及不同骨架形式，并附有结构表征及X射线晶体数据。荧光性质与吲哚乙酸初步识别属于产物性质拓展，不是替代其原创制备反应的唯一研究结果。",
+        "sourceEvidence": "官方Article History/First Published核对在线日期 2026-07-27：https://pubs.acs.org/doi/10.1021/acs.joc.6c00523；冻结的Crossref+OpenAlex来源根 2026-07-22_2026-07-31_joc，raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，source root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。冻结文献书目信息、作者、卷期页或文章号均按DOI精准对应；不复制受限摘要、全文、PDF和图片。",
+        "boundaryChallenge": "第二遍反证：材料荧光和吲哚乙酸识别是后续性质测试，不能因此把论文排除为纯传感器研究；核心确实是B(C6F5)3催化的原创有机环加成。但论文没有声称普适的对映选择性或药物生物活性，亦不可把荧光响应当作化学反应收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00523",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00523",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "306e95ddae3a4c0b6d47869a24ec8e88f92770f7",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00523",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以三(五氟苯基)硼Lewis酸催化[4+2]环加成制备萘醌稠合多环含氮杂环，并建立可分离的系列不同取代产物。 在B(C6F5)3催化条件下进行形成萘醌稠合含氮多环结构的[4+2]环加成，获得可根据底物组合调节骨架形态的有机产物。 ACS JOC Original Article明确给出较宽底物适应性、中等至优异分离收率及不同骨架形式，并附有结构表征及X射线晶体数据。荧光性质与吲哚乙酸初步识别属于产物性质拓展，不是替代其原创制备反应的唯一研究结果。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：材料荧光和吲哚乙酸识别是后续性质测试，不能因此把论文排除为纯传感器研究；核心确实是B(C6F5)3催化的原创有机环加成。但论文没有声称普适的对映选择性或药物生物活性，亦不可把荧光响应当作化学反应收率。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -17537,6 +17940,20 @@
       "10.1021/acs.orglett.6c03286"
     ],
     "publisherOriginalQ3": 9,
+    "publishedByThisApproval": false,
+    "mediaPolicy": "toc_only"
+  },
+  "newOctober16FiveACSAndWileyOriginals": {
+    "count": 5,
+    "reviewEvidenceFile": "audit/historical-reviewed/2026-10-16-q3-five-acs-wiley-original-preparations-two-pass.json",
+    "approvedDois": [
+      "10.1002/anie.2368387",
+      "10.1021/acs.orglett.6c02295",
+      "10.1021/acs.orglett.6c02476",
+      "10.1021/acs.joc.6c00411",
+      "10.1021/acs.joc.6c00523"
+    ],
+    "publisherOriginalQ3": 5,
     "publishedByThisApproval": false,
     "mediaPolicy": "toc_only"
   }
