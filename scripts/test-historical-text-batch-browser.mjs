@@ -132,6 +132,17 @@ else throw Error('unexpected historical network request '+options.url);
       const submit=async()=>{
         const job=window.__gm['gallery-historical-text-batch-v2:job'];
         if(!job)return;
+        if(job.doi==='10.1002/anie.2026new'){
+          // Real publisher can show manuscript structure before a reusable
+          // article-scoped licence has hydrated. OA source may independently
+          // establish its own verified licence later, without using media/PDF.
+          window.__gm['gallery-historical-text-batch-v2:result']={
+            runId:job.runId,token:job.token,doi:job.doi,
+            status:'license_pending_load',stage:'publisher_wait',
+            pageDoiVerified:true,rightsSignal:'unverified',httpStatus:200
+          };
+          return;
+        }
         const sections=[
           {type:'abstract',heading:'Abstract',text:'An unusual reaction is described with yields, scope and synthesis.'},
           {type:'mechanism',heading:'Mechanistic Studies',text:'Ligand-to-metal charge transfer (LMCT) in electrosynthetic transformations.'}
@@ -163,11 +174,11 @@ else throw Error('unexpected historical network request '+options.url);
     requests:window.__requests,
     remainingJob:window.__gm['gallery-historical-text-batch-v2:job']||null
   }));
-  assert.equal(status.opened.length,2,'all pre-Oct DOI must be processed without explicit per-DOI action');
-  assert.equal(status.closed,2,'only one worker tab active at a time and closed afterward');
+  assert.equal(status.opened.length,3,'entire formal DOI registry includes October publisher attempt');
+  assert.equal(status.closed,2,'saved tabs close; at most two DOI-verified uncertain rights tabs remain for review');
   assert.equal(status.state.saved,2);
-  assert.equal(status.state.attempted,2);
-  assert.equal(status.state.rightsPending,0);
+  assert.equal(status.state.attempted,3);
+  assert.equal(status.state.rightsPending,1);
   assert.equal(status.remainingJob,null);
   assert.ok(status.opened.every(x=>x.active===false));
   assert.ok(status.opened[0].url.startsWith('https://pubs.acs.org/doi/'));
@@ -185,10 +196,10 @@ else throw Error('unexpected historical network request '+options.url);
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
     && window.__gm['gallery-historical-text-batch-v2:state']?.attempted===0,null,{timeout:10000});
   const count=await page.evaluate(()=>window.__opened.length);
-  assert.equal(count,2,'repeated one click should not reopen confirmed indexed DOI');
+  assert.equal(count,3,'repeated one click must not reopen previously verified rights-pending DOI');
   assert.equal(await page.getByRole('button',{name:'抽查 ACS 许可项（最多10篇）'}).count(),1);
   await page.getByRole('button',{name:'抽查 ACS 许可项（最多10篇）'}).click();
-  assert.equal(await page.evaluate(()=>window.__opened.length),2,
+  assert.equal(await page.evaluate(()=>window.__opened.length),3,
     'targeted ACS sample does not revisit saved or never-failed articles');
 
   await page.getByRole('button',{name:'全库正文覆盖'}).click();
@@ -224,7 +235,7 @@ else throw Error('unexpected historical network request '+options.url);
   },sourceRunsBefore);
   assert.equal(oaReport.state.attempted,1,'only the unsaved October DOI is scanned');
   assert.equal(oaReport.state.saved,1);
-  assert.equal(oaReport.publisherTabs,2,'OA path must never open new publisher tabs');
+  assert.equal(oaReport.publisherTabs,3,'OA path must never open new publisher tabs');
   assert.equal(oaReport.attempt.status,'saved_local');
   assert.equal(oaReport.newPacket.doi,'10.1002/anie.2026new');
   assert.equal(oaReport.newPacket.publisher,'europe_pmc_oa');
@@ -299,10 +310,10 @@ else throw Error('unexpected historical network request '+options.url);
   // The browser-side outbox is durable before a token is configured.
   assert.equal(await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).count(),1);
   await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).click();
-  assert.equal(await page.evaluate(()=>window.__opened.length),2,
-    'journal-balanced pilot must not reopen already saved articles');
+  assert.equal(await page.evaluate(()=>window.__opened.length),3,
+    'journal-balanced pilot must not reopen saved or same-revision rights-pending articles');
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
-  assert.equal(pendingBefore,2,'one terminal diagnostic receipt per DOI must be queued');
+  assert.equal(pendingBefore,3,'one terminal diagnostic receipt per publisher DOI must be queued');
   await page.getByRole('button',{name:'配置诊断密钥'}).click();
   const secret=page.getByPlaceholder('本机管理员 Bridge 上报密钥');
   await secret.fill('local-fixture-value-012345');
@@ -314,7 +325,7 @@ else throw Error('unexpected historical network request '+options.url);
   await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:diagnostics-state-v1']?.state==='retry',
     null,{timeout:4000});
   const rejected=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
-  assert.equal(rejected,2,'network failure never discards queued reports');
+  assert.equal(rejected,3,'network failure never discards queued reports');
   await page.evaluate(()=>{window.__diagOnline=true;});
   await page.getByRole('button',{name:'立即上传待发诊断'}).click();
   await page.waitForFunction(()=>window.__historicalDiagTest.batchReportKeys().length===0,
@@ -646,7 +657,7 @@ else throw Error('unexpected historical network request '+options.url);
     'foreground navigation must not remove Gallery controller overlays');
   assert.equal(foregroundCheck.packetCount,1);
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
-    uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
+    uniqueFormal:3,filesSaved:status.state.saved,closed:status.closed,
     automaticPublisherTabsBackground:true,explicitManualForegroundOne:true,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
     fullCoverageLedger:true,bodySearchAllHits:27,reachabilityProbeRoutes:2
   }));
