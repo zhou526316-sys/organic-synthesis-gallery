@@ -1,6 +1,6 @@
 {
-  "version": 18,
-  "purpose": "post_PR716_189_approved_Q3_Q1_date_correct_staging_only_review_refresh",
+  "version": 19,
+  "purpose": "staging_only_reconcile_12_Q3_original_reviewer_approvals_after_PR719",
   "approvedAt": "2026-10-16",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-16T03:44:07.987Z",
-  "reason": "PR #716 merged 4cc9f895194096961d4ce4c716b0a69bcf9f49c6 with four Q3 preparative methods and one Q1-first-online CCS Chemistry DOI appearing under Q3 issue source, plus reviewed SHA-pinned off-quarter exclusion in staging reconciler. Replay staging only, preserve 12286 Q3 DOI, 192/192 source roots, source SHA/DOI and 57266 all-history source candidates; verify actual unfinished, Q3 approved-wait, Q1 publisher-verified-outside-Q3 and global stale reviewer cursor. No D1, copyrighted media or formal admissions.",
+  "requestedAt": "2026-10-16T06:01:42.668Z",
+  "reason": "PR #719 fully CI-green merged f9d5c2f9df9e1ab432cc4dca40e5e0a84781d1ae. Academic approvals 201 (from189), pending 2, formal historic 122, approved not formally released79. Regenerate review queue, Q3 coverage and global reviewer cache from immutable 396 source roots with 320 root bound. Verify Q3 12286 unique sources, 192 source roots, one Q1 CCS online corrected. No D1 queries, website publication, PDF/media, new or Hot, no additional 18 slot.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261016_recheck_13_stale_global_reviewer_shard_statuses",
+  "triggerScope": "20261016_reconcile_twelve_Q3_scope_includes_global_status_fails_closed",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 396,
   "expectedStageCompletedRoots": 396,
-  "expectedAcademicInclude": 189,
+  "expectedAcademicInclude": 201,
   "academicDecisionSource": "Git_main_PR707_merger_151_approved_122_formal_29_formally_missing_of_which_1_owner_excluded",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "4cc9f895194096961d4ce4c716b0a69bcf9f49c6",
+  "lastRelatedMergeCommit": "f9d5c2f9df9e1ab432cc4dca40e5e0a84781d1ae",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -42,7 +42,7 @@
   "lastTriggerReason": "post_eight_more_Q3_ACS_approved_116_include_and_1087_unchanged_Git_formal",
   "exactNextEligibleHistoricalPublicationSlot": "2026-10-17T08:00:00+08:00",
   "previousHistoricalFormallyPresent": 122,
-  "newlyApprovedAwaiting08": 67,
+  "newlyApprovedAwaiting08": 79,
   "originalDateConflictHolds": [
     "10.1021/acs.orglett.6c03028",
     "10.1021/acs.orglett.6c02707",
@@ -63,7 +63,7 @@
     "10.1038/s44160-026-01146-w",
     "10.1038/s41557-026-02226-2"
   ],
-  "expectedReviewedWaitingAt08": 67,
+  "expectedReviewedWaitingAt08": 79,
   "expectedQ3Formal": 851,
   "expectedQ3UniqueSources": 12286,
   "newHistoricalApprovalDoiExact": [
@@ -113,14 +113,21 @@
   "expectedQ3SourceUniqueDoi": 12286,
   "expectedSourceRoots": 192,
   "expectedCurrentMainQ3FormalAtPreflight": 851,
-  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 66,
+  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 78,
   "provisionalUnfinishedIfInputsUnchanged": null,
   "newAcademicDoiExact": [
-    "10.1021/acs.orglett.6c02958",
-    "10.1021/acs.joc.6c01515",
-    "10.1021/acs.joc.6c00729",
-    "10.1002/anie.9818208",
-    "10.31635/ccschem.025.202506810"
+    "10.1021/acs.joc.6c01034",
+    "10.1002/anie.4069826",
+    "10.1021/acs.orglett.6c02370",
+    "10.1021/acs.orglett.6c02444",
+    "10.1021/acs.joc.6c01602",
+    "10.1021/acs.orglett.6c02694",
+    "10.1002/anie.7785903",
+    "10.1021/acs.orglett.6c03223",
+    "10.1021/acs.orglett.6c03210",
+    "10.1021/acs.orglett.6c02939",
+    "10.1021/acs.joc.6c01118",
+    "10.1021/acs.joc.6c01613"
   ],
   "scientificSupplementPendingButNotSourceIntegrated": [
     "10.1038/s41467-026-75484-w"
