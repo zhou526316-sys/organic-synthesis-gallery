@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "gallery-history-20261016-source-route-variance-holds-v1",
+  "generatedAt": "2026-10-16T10:02:07.514Z",
+  "reviewMode": "read_only_unresolved_not_approved_no_veto",
+  "status": "academic_evidence_hold_not_publication",
+  "publisherDayRouteVariance": [
+    {
+      "doi": "10.1021/acs.orglett.6c02163",
+      "frozen": "2026-07-22",
+      "issuePage": "2026-07-22",
+      "landing": "2026-07-23",
+      "urls": [
+        "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02163/5228367/Catalytic-Decarboxylative-Carboamination-of-2",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02163"
+      ],
+      "status": "unresolved_official_page_day_discrepancy",
+      "freezeUnchanged": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02707",
+      "frozen": "2026-07-30",
+      "issuePage": "2026-07-30",
+      "landing": "2026-07-31",
+      "urls": [
+        "https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed",
+        "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02707/5237556/Visible-Light-Driven-Palladium-Catalyzed"
+      ],
+      "status": "unresolved_official_page_day_discrepancy",
+      "freezeUnchanged": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02735",
+      "frozen": "2026-08-19",
+      "issuePage": "2026-08-19",
+      "landing": "2026-08-20",
+      "urls": [
+        "https://pubs.acs.org/orlef7/article/28/35/10912/5277218/Catalytic-Asymmetric-Umpolung-n-1-Cyclization-of",
+        "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02735/5277218/Catalytic-Asymmetric-Umpolung-n-1-Cyclization-of"
+      ],
+      "status": "unresolved_official_page_day_discrepancy",
+      "freezeUnchanged": true
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01242",
+      "frozen": "2026-07-01",
+      "issuePage": "2026-07-01",
+      "landing": "2026-06-30",
+      "urls": [
+        "https://pubs.acs.org/joceah/article/91/27/9658/5172023/Photochemical-Ni-Catalyzed-Cross-Coupling-of-Aryl",
+        "https://pubs.acs.org/doi/abs/10.1021/acs.joc.6c01242"
+      ],
+      "status": "unresolved_official_page_day_discrepancy",
+      "freezeUnchanged": true
+    }
+  ],
+  "scientificScopeEvidencePending": [
+    {
+      "doi": "10.1021/acs.joc.6c01230",
+      "note": "JOC article primarily re-examines previously communicated cage annulation mechanism by calculations and controls; new preparative scope must be proved before admission.",
+      "status": "scope_evidence_hold_not_permanent_exclusion"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01257",
+      "note": "Main article is DFT chemoselectivity analysis on a pre-existing Pd spiroannulation; do not count computational reinterpretation as an independently new preparative method without new synthesis evidence.",
+      "status": "scope_evidence_hold_not_permanent_exclusion"
+    }
+  ],
+  "immutableGuards": {
+    "notAddedToManifest": true,
+    "notMarkedExcluded": true,
+    "notAutomaticallyPublished": true,
+    "noD1Writes": true,
+    "noPublisherMediaAccess": true
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-16T09:15:00.000Z",
+  "generatedAt": "2026-10-16T10:07:28.220Z",
   "nextEligiblePublicationSlot": "2026-10-17T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 234,
-    "include": 232,
+    "checked": 246,
+    "include": 244,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -17574,6 +17574,961 @@
           "reason": "第二遍反证：材料荧光和吲哚乙酸识别是后续性质测试，不能因此把论文排除为纯传感器研究；核心确实是B(C6F5)3催化的原创有机环加成。但论文没有声称普适的对映选择性或药物生物活性，亦不可把荧光响应当作化学反应收率。"
         }
       ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01582",
+      "journal": "JOC",
+      "title": "Divergent Synthesis of Oxazole and Oxazoline Derivatives by Tandem (3+2) Cyclization–Isomerization Reactions between Aldehydes and Vinylogous Isocyano Esters",
+      "titleZh": "DBU碱量与溶剂控制烯基异氰基酯和醛的分歧式环化异构化合成噁唑与噁唑啉",
+      "date": "2026-08-27",
+      "authors": [
+        "Cristian Guzmán-Cedillo",
+        "Mireia Lavilla-Montesinos",
+        "Alicia Monleón-Ventura",
+        "Marc Montesinos-Magraner",
+        "Amparo Sanz-Marco",
+        "Carlos Vila",
+        "Gonzalo Blay"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12389-12400",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01582"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。",
+      "evidenceBasis": "ACS JOC出版社Article History明确标示原始Article Published Online=2026-08-27，https://pubs.acs.org/doi/10.1021/acs.joc.6c01582，与冻结Crossref+OpenAlex双源 2026-08-22_2026-08-31_joc 日期一致；原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae、source SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；书目2026年第91卷36期12389-12400页，作者与DOI精准一致。出版期/纸本Sep11不得替代Aug27电子首发；原始开放文章用于学术审核，不复制受限摘要或PDF、SI和图片。",
+      "challengeReason": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。",
+      "scopeAssessment": {
+        "primaryContribution": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。",
+        "preparativeTransformation": "烯基异氰基酯与多种芳香或脂肪醛经DBU促进[3+2]环化，在MeOH中使用2当量DBU进一步异构化得到4,5-二取代芳香噁唑；在CH2Cl2中用1当量DBU则可截获具有环外烯键的噁唑啉。",
+        "generalityEvidence": "ACS JOC官方全文记录：MeOH与2当量DBU在室温下给出噁唑，最高90%分离收率；CH2Cl2与1当量DBU给出噁唑啉，最高80%。包括芳醛、杂芳醛和脂肪醛；空间拥挤或富电子芳醛可能生成甲醇加合副产物，不能称所有底物定量分歧。",
+        "sourceEvidence": "ACS JOC出版社Article History明确标示原始Article Published Online=2026-08-27，https://pubs.acs.org/doi/10.1021/acs.joc.6c01582，与冻结Crossref+OpenAlex双源 2026-08-22_2026-08-31_joc 日期一致；原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae、source SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；书目2026年第91卷36期12389-12400页，作者与DOI精准一致。出版期/纸本Sep11不得替代Aug27电子首发；原始开放文章用于学术审核，不复制受限摘要或PDF、SI和图片。",
+        "boundaryChallenge": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01582",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01582/5339472/Divergent-Synthesis-of-Oxazole-and-Oxazoline",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01582",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。 烯基异氰基酯与多种芳香或脂肪醛经DBU促进[3+2]环化，在MeOH中使用2当量DBU进一步异构化得到4,5-二取代芳香噁唑；在CH2Cl2中用1当量DBU则可截获具有环外烯键的噁唑啉。 ACS JOC官方全文记录：MeOH与2当量DBU在室温下给出噁唑，最高90%分离收率；CH2Cl2与1当量DBU给出噁唑啉，最高80%。包括芳醛、杂芳醛和脂肪醛；空间拥挤或富电子芳醛可能生成甲醇加合副产物，不能称所有底物定量分歧。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01132",
+      "journal": "JOC",
+      "title": "Intramolecular EDA Complex-Induced Dearomatization/Spirocyclization of Indolyl Propiolamides",
+      "titleZh": "分子内电子给受体复合物光激发驱动吲哚炔酰胺去芳构化及螺环化",
+      "date": "2026-08-26",
+      "authors": [
+        "Yuyu Lv",
+        "Xiaopeng Hai",
+        "Zhijun Zhu",
+        "Junjiao Wang",
+        "Bo-Sheng Zhang",
+        "Ke-Hu Wang",
+        "Danfeng Huang",
+        "Yulai Hu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12159-12164",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01132"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "用分子内EDA相互作用激活吲哚炔酰胺，建立无需额外光敏剂的可见光去芳构化螺环化合成3,3-螺吲哚烯亚胺。",
+      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-26，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01132；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+      "challengeReason": "所谓无外加光催化剂不等于无光或无专门底物设计；自由基捕获等证据支持EDA模型，却不能证明每个瞬态物种都被直接孤立。",
+      "scopeAssessment": {
+        "primaryContribution": "用分子内EDA相互作用激活吲哚炔酰胺，建立无需额外光敏剂的可见光去芳构化螺环化合成3,3-螺吲哚烯亚胺。",
+        "preparativeTransformation": "在特定给受体排布的分子内底物中，通过可见光触发电荷转移和自由基串联环化，将吲哚与炔酰胺重组为分离的螺环产物。",
+        "generalityEvidence": "原始研究报告不同官能团底物、制备放大、产物衍生和自由基控制实验，支持分子内电子转移；机理步骤不全部属于已直接观测。",
+        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-26，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01132；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+        "boundaryChallenge": "所谓无外加光催化剂不等于无光或无专门底物设计；自由基捕获等证据支持EDA模型，却不能证明每个瞬态物种都被直接孤立。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01132",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01132",
+        "publisherOnlineDate": "2026-08-26",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-26",
+          "officialPublisherFirstOnline": "2026-08-26",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01132",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "用分子内EDA相互作用激活吲哚炔酰胺，建立无需额外光敏剂的可见光去芳构化螺环化合成3,3-螺吲哚烯亚胺。 在特定给受体排布的分子内底物中，通过可见光触发电荷转移和自由基串联环化，将吲哚与炔酰胺重组为分离的螺环产物。 原始研究报告不同官能团底物、制备放大、产物衍生和自由基控制实验，支持分子内电子转移；机理步骤不全部属于已直接观测。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "所谓无外加光催化剂不等于无光或无专门底物设计；自由基捕获等证据支持EDA模型，却不能证明每个瞬态物种都被直接孤立。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01019",
+      "journal": "JOC",
+      "title": "Efficient Synthesis of Cyclopropylamine Derivatives via Deoxygenative Cyclopropanation of Aliphatic Aldehydes with Stable Sulfur Ylides",
+      "titleZh": "醛、硫叶立德与腙三组分脱氧环丙烷化合成环丙基胺",
+      "date": "2026-08-27",
+      "authors": [
+        "Yan Wang",
+        "Ying Xu",
+        "Dong Xing",
+        "Quansheng Zhao",
+        "Liang Fu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12451-12456",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01019"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展脂肪醛与稳定硫叶立德及腙三组分反应，制备有立体选择性的环丙基胺衍生物。",
+      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-27，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01019；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+      "challengeReason": "不能把三组分过程误说成仅醛与硫叶立德两组分的普通Corey–Chaykovsky反应；后续二氢哒嗪构建不等同每个底物的主反应。",
+      "scopeAssessment": {
+        "primaryContribution": "发展脂肪醛与稳定硫叶立德及腙三组分反应，制备有立体选择性的环丙基胺衍生物。",
+        "preparativeTransformation": "酰基稳定硫叶立德、脂肪醛和腙共同参与多组分环丙烷化；所得环丙基胺还可在Cs2CO3条件下发生开环关环等后续转化。",
+        "generalityEvidence": "JOC报告温和条件、较宽底物适应性和分离的环丙基胺，并拓展出1,4-二氢哒嗪；后续1,2-氢迁移级联属于可能反应路径。",
+        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-27，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01019；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+        "boundaryChallenge": "不能把三组分过程误说成仅醛与硫叶立德两组分的普通Corey–Chaykovsky反应；后续二氢哒嗪构建不等同每个底物的主反应。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01019",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01019",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01019",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展脂肪醛与稳定硫叶立德及腙三组分反应，制备有立体选择性的环丙基胺衍生物。 酰基稳定硫叶立德、脂肪醛和腙共同参与多组分环丙烷化；所得环丙基胺还可在Cs2CO3条件下发生开环关环等后续转化。 JOC报告温和条件、较宽底物适应性和分离的环丙基胺，并拓展出1,4-二氢哒嗪；后续1,2-氢迁移级联属于可能反应路径。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不能把三组分过程误说成仅醛与硫叶立德两组分的普通Corey–Chaykovsky反应；后续二氢哒嗪构建不等同每个底物的主反应。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01355",
+      "journal": "JOC",
+      "title": "Navigation of Oxidative Catechol Coupling: Total Syntheses of α-DDB and Bicyclol",
+      "titleZh": "铜催化儿茶酚氧化偶联与α-DDB及Bicyclol的全合成",
+      "date": "2026-08-28",
+      "authors": [
+        "Xiao-Dan Shao",
+        "Meng-Fan Xie",
+        "Hua-Xiang Wang",
+        "Pan Wu",
+        "Zu-Hong Sun",
+        "Wen-Jing Wang",
+        "Dashan Li",
+        "Gang Xu",
+        "Li-Dong Shao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01355"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "解决易过度氧化的儿茶酚形成四羟基联苯BPT骨架的选择性难题，完成α-DDB和Bicyclol两种目标的全合成。",
+      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-28，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01355；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+      "challengeReason": "不能把考察过的三条途径都声称为成功普适合成方法；已完成的两个特定目标全合成不能推导所有儿茶酚均高收率偶联。",
+      "scopeAssessment": {
+        "primaryContribution": "解决易过度氧化的儿茶酚形成四羟基联苯BPT骨架的选择性难题，完成α-DDB和Bicyclol两种目标的全合成。",
+        "preparativeTransformation": "原文比较芳烃C–H芳基化、CDC和儿茶酚直接氧化偶联，最终采用铜催化方法克级获得BPT中间体2b并完成两种药物目标的后续全合成。",
+        "generalityEvidence": "公开研究展示三条候选路线的真实比较、关键中间体克级制备、完整产物路线与结构表征；合成贡献超过单一模拟机理。",
+        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-28，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c01355；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+        "boundaryChallenge": "不能把考察过的三条途径都声称为成功普适合成方法；已完成的两个特定目标全合成不能推导所有儿茶酚均高收率偶联。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01355",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01355",
+        "publisherOnlineDate": "2026-08-28",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-28",
+          "officialPublisherFirstOnline": "2026-08-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01355",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "解决易过度氧化的儿茶酚形成四羟基联苯BPT骨架的选择性难题，完成α-DDB和Bicyclol两种目标的全合成。 原文比较芳烃C–H芳基化、CDC和儿茶酚直接氧化偶联，最终采用铜催化方法克级获得BPT中间体2b并完成两种药物目标的后续全合成。 公开研究展示三条候选路线的真实比较、关键中间体克级制备、完整产物路线与结构表征；合成贡献超过单一模拟机理。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不能把考察过的三条途径都声称为成功普适合成方法；已完成的两个特定目标全合成不能推导所有儿茶酚均高收率偶联。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03428",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Reductive Amination of Aldehydes and Nitroarenes",
+      "titleZh": "镍催化醛与硝基芳烃直接还原胺化合成仲胺",
+      "date": "2026-08-29",
+      "authors": [
+        "Dan Qiao",
+        "Jun-Wei Hu",
+        "Changpeng Chen",
+        "Jin-Heng Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11374-11378",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03428"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展利用醛和硝基芳烃作为起始物的镍催化还原胺化反应，制备芳香、脂肪与杂芳基取代仲胺。",
+      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-29，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03428；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_organic-letters；原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+      "challengeReason": "不能把含硝基底物当作预先还原的芳胺，也不能把未展示的脂肪硝基烷或酮类等同于底物范围；机理不因标题出现镍就完全确证。",
+      "scopeAssessment": {
+        "primaryContribution": "发展利用醛和硝基芳烃作为起始物的镍催化还原胺化反应，制备芳香、脂肪与杂芳基取代仲胺。",
+        "preparativeTransformation": "将芳香或脂肪醛和硝基芳烃或硝基杂芳烃共同参与还原C–N键构建，避免先独立分离传统芳胺原料。",
+        "generalityEvidence": "ACS报道不同芳基和杂环含氮产物的可分离制备与官能团兼容性，具有药物或农化中间体的潜在应用。",
+        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-29，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03428；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_organic-letters；原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+        "boundaryChallenge": "不能把含硝基底物当作预先还原的芳胺，也不能把未展示的脂肪硝基烷或酮类等同于底物范围；机理不因标题出现镍就完全确证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03428",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03428",
+        "publisherOnlineDate": "2026-08-29",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-29",
+          "officialPublisherFirstOnline": "2026-08-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03428",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展利用醛和硝基芳烃作为起始物的镍催化还原胺化反应，制备芳香、脂肪与杂芳基取代仲胺。 将芳香或脂肪醛和硝基芳烃或硝基杂芳烃共同参与还原C–N键构建，避免先独立分离传统芳胺原料。 ACS报道不同芳基和杂环含氮产物的可分离制备与官能团兼容性，具有药物或农化中间体的潜在应用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不能把含硝基底物当作预先还原的芳胺，也不能把未展示的脂肪硝基烷或酮类等同于底物范围；机理不因标题出现镍就完全确证。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03400",
+      "journal": "Organic Letters",
+      "title": "Copper(I) Photocatalytic Three-Component Acylative Germylation of Unactivated Olefins with Aroyl Chlorides and CsGeBr3",
+      "titleZh": "铜光催化未活化烯烃、芳酰氯与CsGeBr3三组分酰基锗化",
+      "date": "2026-08-27",
+      "authors": [
+        "Dun-Xu Cao",
+        "Shengting Kuang",
+        "Bin Xiao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11356-11361",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03400"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "使用Cu(I)光催化与无机二价锗源CsGeBr3，实现未活化烯烃的三组分酰基锗化并获得可转化有机锗产物。",
+      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-27，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03400；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_organic-letters；原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+      "challengeReason": "CsGeBr3并非三甲基锗试剂，三甲基锗形式来自MeMgBr后处理，不能将其写成一次直接光催化分离产物；Ge促进铜循环仍是机理证据支持的解释。",
+      "scopeAssessment": {
+        "primaryContribution": "使用Cu(I)光催化与无机二价锗源CsGeBr3，实现未活化烯烃的三组分酰基锗化并获得可转化有机锗产物。",
+        "preparativeTransformation": "将未活化烯烃、芳酰氯和CsGeBr3在Cu(I)光化学条件下反应，所得烷基锗溴化物随后可用MeMgBr制备相应烷基三甲基锗。",
+        "generalityEvidence": "ACS公开论文展示芳酰氯和烯烃兼容复杂分子，机理实验支持Ge(II)兼作锗来源和促进催化相关铜物种形成两种角色。",
+        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-27，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03400；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_organic-letters；原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
+        "boundaryChallenge": "CsGeBr3并非三甲基锗试剂，三甲基锗形式来自MeMgBr后处理，不能将其写成一次直接光催化分离产物；Ge促进铜循环仍是机理证据支持的解释。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03400",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03400",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03400",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "使用Cu(I)光催化与无机二价锗源CsGeBr3，实现未活化烯烃的三组分酰基锗化并获得可转化有机锗产物。 将未活化烯烃、芳酰氯和CsGeBr3在Cu(I)光化学条件下反应，所得烷基锗溴化物随后可用MeMgBr制备相应烷基三甲基锗。 ACS公开论文展示芳酰氯和烯烃兼容复杂分子，机理实验支持Ge(II)兼作锗来源和促进催化相关铜物种形成两种角色。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "CsGeBr3并非三甲基锗试剂，三甲基锗形式来自MeMgBr后处理，不能将其写成一次直接光催化分离产物；Ge促进铜循环仍是机理证据支持的解释。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03498",
+      "journal": "Organic Letters",
+      "title": "Synthesis of Hexafluoroisopropanol-Functionalized Indoles and Anilines from the Copper-Mediated Coupling of a Hexafluoroacetone Hydrate–Bipyridine Adduct",
+      "titleZh": "六氟丙酮水合物联吡啶加合试剂用于铜介导吲哚和苯胺六氟异丙醇官能团化",
+      "date": "2026-08-29",
+      "authors": [
+        "Meshal A. Alghamdi",
+        "Abigail G. Arnett",
+        "Frank R. Fronczek",
+        "Dan Mi Huynh",
+        "David A. Colby"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11394-11397",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03498"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展耐空气、无水且易配制的六氟丙酮水合物–联吡啶加合物，作为化学计量试剂在铜介导反应中制备HFIP基团取代的吲哚和苯胺。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-29，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03498；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "标题为copper-mediated而非证实的低负载铜催化；加合物以化学计量使用，不能误说催化量。引入HFIP结构不等于以HFIP溶剂进行普通亲电取代。",
+      "scopeAssessment": {
+        "primaryContribution": "发展耐空气、无水且易配制的六氟丙酮水合物–联吡啶加合物，作为化学计量试剂在铜介导反应中制备HFIP基团取代的吲哚和苯胺。",
+        "preparativeTransformation": "通过一锅形成可在多种有机溶剂中使用的加合物，再使其与吲哚和苯胺在铜参与下发生芳香骨架官能团化。",
+        "generalityEvidence": "ACS Letter给出多个吲哚和苯胺分离衍生物，不再需要用大量六氟丙酮水合物或HFIP作为溶剂，并提供试剂制备及产物的表征数据。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-29，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03498；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "标题为copper-mediated而非证实的低负载铜催化；加合物以化学计量使用，不能误说催化量。引入HFIP结构不等于以HFIP溶剂进行普通亲电取代。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03498",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03498",
+        "publisherOnlineDate": "2026-08-29",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-29",
+          "officialPublisherFirstOnline": "2026-08-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03498",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展耐空气、无水且易配制的六氟丙酮水合物–联吡啶加合物，作为化学计量试剂在铜介导反应中制备HFIP基团取代的吲哚和苯胺。 通过一锅形成可在多种有机溶剂中使用的加合物，再使其与吲哚和苯胺在铜参与下发生芳香骨架官能团化。 ACS Letter给出多个吲哚和苯胺分离衍生物，不再需要用大量六氟丙酮水合物或HFIP作为溶剂，并提供试剂制备及产物的表征数据。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "标题为copper-mediated而非证实的低负载铜催化；加合物以化学计量使用，不能误说催化量。引入HFIP结构不等于以HFIP溶剂进行普通亲电取代。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03305",
+      "journal": "Organic Letters",
+      "title": "Proton-Coupled Electron Transfer-Driven Fragmentation and Functionalization Strategies for Carbohydrate Diversification",
+      "titleZh": "质子耦合电子转移活化糖基醇实现碎裂加氢和两类碳碳偶联",
+      "date": "2026-08-28",
+      "authors": [
+        "Kumar Bhaskar Pal",
+        "Jakob Öberg",
+        "Yeersen Patehebieke",
+        "Carl-Johan Wallentin"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11315-11321",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03305"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展直接活化糖基醇的PCET平台，分别实现碎裂氢化、自由基共轭加成及镍和光氧化还原协同交叉偶联，制备多类碳糖苷。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-28，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03305；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "三种产物来自不同的后续反应支线，绝非一个三组分步骤；其中交叉偶联额外需要Ni/光协同，不能声称光PCET单独实现所有反应。",
+      "scopeAssessment": {
+        "primaryContribution": "发展直接活化糖基醇的PCET平台，分别实现碎裂氢化、自由基共轭加成及镍和光氧化还原协同交叉偶联，制备多类碳糖苷。",
+        "preparativeTransformation": "从一类糖基醇底物出发经PCET活化，按捕获伙伴选择分别建立糖基C–H、C(sp3)–C(sp3)和C(sp3)–C(sp2)连接。",
+        "generalityEvidence": "ACS Original Letter明确列出三种制备转化、广泛官能团耐受及药物相关C-糖苷应用，属于真实多途径糖化学制备而非仅构建模型。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-28，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03305；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "三种产物来自不同的后续反应支线，绝非一个三组分步骤；其中交叉偶联额外需要Ni/光协同，不能声称光PCET单独实现所有反应。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03305",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03305",
+        "publisherOnlineDate": "2026-08-28",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-28",
+          "officialPublisherFirstOnline": "2026-08-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03305",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展直接活化糖基醇的PCET平台，分别实现碎裂氢化、自由基共轭加成及镍和光氧化还原协同交叉偶联，制备多类碳糖苷。 从一类糖基醇底物出发经PCET活化，按捕获伙伴选择分别建立糖基C–H、C(sp3)–C(sp3)和C(sp3)–C(sp2)连接。 ACS Original Letter明确列出三种制备转化、广泛官能团耐受及药物相关C-糖苷应用，属于真实多途径糖化学制备而非仅构建模型。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "三种产物来自不同的后续反应支线，绝非一个三组分步骤；其中交叉偶联额外需要Ni/光协同，不能声称光PCET单独实现所有反应。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03444",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Regio- and Diastereoselective Ring-Opening Reductive Coupling of Methylenecyclopropanes with Aldehydes",
+      "titleZh": "镍催化亚甲基环丙烷与醛开环还原偶联制备双高烯丙基醇",
+      "date": "2026-08-27",
+      "authors": [
+        "Min Ou",
+        "Zhi-Juan He",
+        "Long Tian",
+        "Zhicheng Yuan",
+        "Hongwei Chu",
+        "Yuanhong Ma"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11386-11393",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03444"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过镍催化的张力小环开环还原偶联，把亚甲基环丙烷与醛转为具有区域和非对映控制的双高烯丙基醇。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-27，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03444；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "高非对映比dr不代表对映体过量ee；底物范围限定亚甲基环丙烷和相容醛，不能推断任意环丙烷或醛均可获得相同区域控制。",
+      "scopeAssessment": {
+        "primaryContribution": "通过镍催化的张力小环开环还原偶联，把亚甲基环丙烷与醛转为具有区域和非对映控制的双高烯丙基醇。",
+        "preparativeTransformation": "亚甲基环丙烷开环生成适合醛捕获的碳骨架，形成新C–C键并保留烯基与羟基官能团，得到bis-homoallylic alcohols。",
+        "generalityEvidence": "ACS报道37个底物实例、较宽官能团兼容以及多数实例较高的非对映选择性，具体产物为双高烯丙基醇而不是高烯丙基醇。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-27，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03444；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "高非对映比dr不代表对映体过量ee；底物范围限定亚甲基环丙烷和相容醛，不能推断任意环丙烷或醛均可获得相同区域控制。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03444",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03444",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03444",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过镍催化的张力小环开环还原偶联，把亚甲基环丙烷与醛转为具有区域和非对映控制的双高烯丙基醇。 亚甲基环丙烷开环生成适合醛捕获的碳骨架，形成新C–C键并保留烯基与羟基官能团，得到bis-homoallylic alcohols。 ACS报道37个底物实例、较宽官能团兼容以及多数实例较高的非对映选择性，具体产物为双高烯丙基醇而不是高烯丙基醇。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "高非对映比dr不代表对映体过量ee；底物范围限定亚甲基环丙烷和相容醛，不能推断任意环丙烷或醛均可获得相同区域控制。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03047",
+      "journal": "Organic Letters",
+      "title": "Palladium-Catalyzed C–H Thiolation of Phenylalanine-Containing Peptides via In Situ Imine Generation",
+      "titleZh": "原位亚胺导向钯催化苯丙氨酸肽段碳氢键硫化",
+      "date": "2026-08-28",
+      "authors": [
+        "Qinyu Lu",
+        "Xinyu Fu",
+        "Xue Li",
+        "Haoran Si",
+        "Jingying Zhang",
+        "Yifan Huang",
+        "Jian Tang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11243-11251",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03047"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用含苯丙氨酸肽段自身N端Boc部分原位形成亚胺导向基，通过钯催化与二芳基二硫化物反应在肽中形成C–S键。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-28，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03047；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "无需外加辅助导向基不等于无需导向基；N端Boc衍生亚胺是作用关键。机理中的C–H活化与自由基C–S形成属于有支持的路径而非所有中间体都被独立捕获。",
+      "scopeAssessment": {
+        "primaryContribution": "利用含苯丙氨酸肽段自身N端Boc部分原位形成亚胺导向基，通过钯催化与二芳基二硫化物反应在肽中形成C–S键。",
+        "preparativeTransformation": "含苯丙氨酸的肽作为底物，在Pd催化下通过原位产生的导向亚胺实现C–H硫化，获得分离的硫醚官能团化肽。",
+        "generalityEvidence": "ACS Original Letter报道肽段底物适应性、较高官能团耐受、制备放大与相关机理控制；主要用于肽分子晚期功能化。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-28，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03047；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "无需外加辅助导向基不等于无需导向基；N端Boc衍生亚胺是作用关键。机理中的C–H活化与自由基C–S形成属于有支持的路径而非所有中间体都被独立捕获。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03047",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03047",
+        "publisherOnlineDate": "2026-08-28",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-28",
+          "officialPublisherFirstOnline": "2026-08-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03047",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用含苯丙氨酸肽段自身N端Boc部分原位形成亚胺导向基，通过钯催化与二芳基二硫化物反应在肽中形成C–S键。 含苯丙氨酸的肽作为底物，在Pd催化下通过原位产生的导向亚胺实现C–H硫化，获得分离的硫醚官能团化肽。 ACS Original Letter报道肽段底物适应性、较高官能团耐受、制备放大与相关机理控制；主要用于肽分子晚期功能化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "无需外加辅助导向基不等于无需导向基；N端Boc衍生亚胺是作用关键。机理中的C–H活化与自由基C–S形成属于有支持的路径而非所有中间体都被独立捕获。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03023",
+      "journal": "Organic Letters",
+      "title": "Enantiodivergent C3-Selective Reduction of Arylvinyl-Substituted 3,5-Dicarbonyl Esters Enabled by Engineered Ketoreductases",
+      "titleZh": "工程化酮还原酶实现芳基烯基二羰基酯C3羰基对映发散性还原",
+      "date": "2026-08-22",
+      "authors": [
+        "Xiaoqiu Wu",
+        "Mingyu Zhang",
+        "Mingyang Yao",
+        "Ning Liu",
+        "Yamin Zhufu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "11013-11018",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03023"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用互补工程化酮还原酶控制3,5-二羰基酯C3羰基的位点和对映选择性，分别得到(S)与(R)手性3-羟基-5-氧代酯。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-22，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03023；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "对映发散来自不同酶变体，不是一个酶凭改变溶剂就可任意换向；不同底物组合的最高转化率和ee不能误称为全部例子最低水平，分子对接是解释而非直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "利用互补工程化酮还原酶控制3,5-二羰基酯C3羰基的位点和对映选择性，分别得到(S)与(R)手性3-羟基-5-氧代酯。",
+        "preparativeTransformation": "半理性改造RasADH-E189D偏向(S)产物，KmCR2及其他酶变体偏向(R)产物，并延伸至匹伐他汀相关中间体。",
+        "generalityEvidence": "代表性(S)实例转化率89–99%、ee 93–99%，部分(R)实例转化率最高97%、ee大于99%，有超过100mg规模的制备和酶底物对接分析。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-22，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03023；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "对映发散来自不同酶变体，不是一个酶凭改变溶剂就可任意换向；不同底物组合的最高转化率和ee不能误称为全部例子最低水平，分子对接是解释而非直接观测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03023",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03023",
+        "publisherOnlineDate": "2026-08-22",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-22",
+          "officialPublisherFirstOnline": "2026-08-22",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03023",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用互补工程化酮还原酶控制3,5-二羰基酯C3羰基的位点和对映选择性，分别得到(S)与(R)手性3-羟基-5-氧代酯。 半理性改造RasADH-E189D偏向(S)产物，KmCR2及其他酶变体偏向(R)产物，并延伸至匹伐他汀相关中间体。 代表性(S)实例转化率89–99%、ee 93–99%，部分(R)实例转化率最高97%、ee大于99%，有超过100mg规模的制备和酶底物对接分析。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "对映发散来自不同酶变体，不是一个酶凭改变溶剂就可任意换向；不同底物组合的最高转化率和ee不能误称为全部例子最低水平，分子对接是解释而非直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02986",
+      "journal": "Organic Letters",
+      "title": "PhSO2CF2I-Enabled Sequential Radical Formation for One-Pot CF2-Linked Molecular Construction",
+      "titleZh": "碘二氟甲基苯基砜顺序活化两种键一锅构筑二氟亚甲基桥连有机分子",
+      "date": "2026-08-25",
+      "authors": [
+        "Yunlong Zhao",
+        "Feng Zhao",
+        "Chuanfa Ni",
+        "Jinbo Hu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "10984-10989",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02986"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以PhSO2CF2I中C–I和C–S键的选择性依次活化为基础，顺序生成CF2相关自由基并一锅装配芳烃与烯烃片段。",
+      "evidenceBasis": "ACS Organic Letters原始研究Publisher Published Online=2026-08-25，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02986；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+      "challengeReason": "文中称diradical synthon指两次顺序的自由基等价反应，不是稳定自由二自由基同时存在；不应将其误说成无选择性单步双加成或完全无光条件。",
+      "scopeAssessment": {
+        "primaryContribution": "以PhSO2CF2I中C–I和C–S键的选择性依次活化为基础，顺序生成CF2相关自由基并一锅装配芳烃与烯烃片段。",
+        "preparativeTransformation": "可见光下利用同一试剂的两种不同可裂解键，分阶段释放并捕获含二氟亚甲基自由基，得到多种CF2连接分子。",
+        "generalityEvidence": "ACS Letter报道温和反应条件、适用芳烃和烯烃类型，以及部分生物活性底物后期功能化，产生可分离的二氟亚甲基桥接产物。",
+        "sourceEvidence": "ACS Organic Letters原始研究Publisher Published Online=2026-08-25，DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02986；冻结Crossref与OpenAlex原始根 2026-08-22_2026-08-31_organic-letters，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob a6de396c86bc1a70910a612ffcb0dafb7049de6e，root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。已核对2026书目信息及论文的真实制备贡献；未复制完整摘要、受限全文、SI、图片或PDF。",
+        "boundaryChallenge": "文中称diradical synthon指两次顺序的自由基等价反应，不是稳定自由二自由基同时存在；不应将其误说成无选择性单步双加成或完全无光条件。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02986",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02986",
+        "publisherOnlineDate": "2026-08-25",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "a6de396c86bc1a70910a612ffcb0dafb7049de6e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-25",
+          "officialPublisherFirstOnline": "2026-08-25",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02986",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以PhSO2CF2I中C–I和C–S键的选择性依次活化为基础，顺序生成CF2相关自由基并一锅装配芳烃与烯烃片段。 可见光下利用同一试剂的两种不同可裂解键，分阶段释放并捕获含二氟亚甲基自由基，得到多种CF2连接分子。 ACS Letter报道温和反应条件、适用芳烃和烯烃类型，以及部分生物活性底物后期功能化，产生可分离的二氟亚甲基桥接产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "文中称diradical synthon指两次顺序的自由基等价反应，不是稳定自由二自由基同时存在；不应将其误说成无选择性单步双加成或完全无光条件。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -17956,5 +18911,33 @@
     "publisherOriginalQ3": 5,
     "publishedByThisApproval": false,
     "mediaPolicy": "toc_only"
+  },
+  "newOctober16Q3TwelveACSAfterTimeout": {
+    "count": 12,
+    "baselineApproved": 232,
+    "reviewEvidenceFiles": [
+      "audit/historical-reviewed/2026-10-16-q3-twelve-acs-part1-source-two-pass.json",
+      "audit/historical-reviewed/2026-10-16-q3-twelve-acs-part2-source-two-pass.json"
+    ],
+    "approvedDois": [
+      "10.1021/acs.joc.6c01582",
+      "10.1021/acs.joc.6c01132",
+      "10.1021/acs.joc.6c01019",
+      "10.1021/acs.joc.6c01355",
+      "10.1021/acs.orglett.6c03428",
+      "10.1021/acs.orglett.6c03400",
+      "10.1021/acs.orglett.6c03498",
+      "10.1021/acs.orglett.6c03305",
+      "10.1021/acs.orglett.6c03444",
+      "10.1021/acs.orglett.6c03047",
+      "10.1021/acs.orglett.6c03023",
+      "10.1021/acs.orglett.6c02986"
+    ],
+    "retainedOriginalDatePending": 2,
+    "publishedByThisApproval": false,
+    "mediaPolicy": "toc_only",
+    "new": false,
+    "addedDate": "",
+    "priorIndependentDateHoldPreserved": "10.1021/acs.joc.6c00852"
   }
 }
