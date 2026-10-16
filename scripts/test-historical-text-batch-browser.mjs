@@ -181,8 +181,10 @@ else throw Error('unexpected historical network request '+options.url);
   assert.equal(status.state.rightsPending,1);
   assert.equal(status.remainingJob,null);
   assert.ok(status.opened.every(x=>x.active===false));
-  assert.ok(status.opened[0].url.startsWith('https://pubs.acs.org/doi/'));
-  assert.ok(status.opened[1].url.startsWith('https://www.nature.com/articles/'));
+  assert.equal(status.opened.filter(x=>x.url.startsWith('https://pubs.acs.org/doi/')).length,1);
+  assert.equal(status.opened.filter(x=>x.url.startsWith('https://www.nature.com/articles/')).length,1);
+  assert.equal(status.opened.filter(x=>x.url.startsWith('https://onlinelibrary.wiley.com/doi/')).length,1,
+    'whole formal corpus includes October Wiley without imposing date cutoff');
   assert.equal(status.requests.length,2,'one full registry + one release, no paging');
   assert.ok(status.requests.every(x=>x.method==='GET'));
   assert.ok(status.requests.some(x=>new URL(x.url).pathname==='/release-delivery.json'));
