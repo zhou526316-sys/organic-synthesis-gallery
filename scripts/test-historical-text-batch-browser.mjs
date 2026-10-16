@@ -521,9 +521,11 @@ else throw Error('unexpected historical network request '+options.url);
   try{
     await slowPublisher.goto('https://pubs.acs.org/doi/'+boundDoi+
       '#gallery-historical-job='+boundToken,{waitUntil:'commit'});
-    await slowPublisher.waitForFunction(()=>
-      window.__publisherGm?.get('gallery-historical-text-batch-v2:publisher-progress-v1')
-        ?.stage==='publisher_dom_wait',null,{timeout:7000});
+    await slowPublisher.waitForFunction(()=>{
+      const progress=window.__publisherGm?.get('gallery-historical-text-batch-v2:publisher-progress-v1');
+      return progress?.token==='cccccccccccccccccccccccc'
+        &&['publisher_dom_wait','publisher_page'].includes(progress.stage);
+    },null,{timeout:7000});
     const premature=await slowPublisher.evaluate(()=>({
       ready:document.readyState,
       progress:window.__publisherGm.get('gallery-historical-text-batch-v2:publisher-progress-v1'),
