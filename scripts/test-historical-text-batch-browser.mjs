@@ -647,7 +647,7 @@ else throw Error('unexpected historical network request '+options.url);
   assert.equal(foregroundCheck.packetCount,1);
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
+    automaticPublisherTabsBackground:true,explicitManualForegroundOne:true,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
     fullCoverageLedger:true,bodySearchAllHits:27,reachabilityProbeRoutes:2
   }));
 }finally{await browser.close();}
