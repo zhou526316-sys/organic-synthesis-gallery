@@ -1,6 +1,6 @@
 {
-  "version": 12,
-  "purpose": "staging_only_wrap_396_root_cursor_resynchronize_seven_global_statuses",
+  "version": 13,
+  "purpose": "staging_only_Q3_recount_after_PR708_163_double_reviewed_approvals",
   "approvedAt": "2026-10-16",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-16T00:46:07.045Z",
-  "reason": "The first staging-only triage run #38831231811 completed all 396 source roots at cursor396 and correctly recalculated Q3 2026 unfinished=11224 (prior11231), approved waiting=29, formal851, distinct source=12286. Global review ledger still reports staleReviewerStatusRecords=7 because the previous bounded 320-root reviewer shard pass predated six new approvals and one changed status. Wrap cursor396 to root0, revisit the remaining stale root shards, keep all 57,266 DOI/396 completed roots, no source acquisition, no D1, no publication. Do not claim consistency until real global stale=0 readback.",
+  "requestedAt": "2026-10-16T01:11:08.083Z",
+  "reason": "Merged PR708 after six successful CI workflows; recalculate frozen reviewer status and 16-journal Q3 actual counts from 163 academic includes, 2 original source-date pending, current 1186 formal cards including 122 historical, 41 approved-but-not-formal with 1 canonical owner policy veto. Ten Q3 publisher-aligned ACS first-online plus two ACS one-day publisher-overriding frozen-source dates; one other June30/July1 ACS official contradictory DOI remains held and must NOT be auto-approved. Do not change 57266 frozen discovery candidate DOI or 396 completed source roots; 27 OpenAlex api_key_missing deferred roots remain incomplete. Staging-only reviewer shard and Q3/global ledgers; zero D1, no media/PDF, no production write, no 18:00 release.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261016_wrap_reviewer_cursor_396_to_0_to_clear_7_stale",
+  "triggerScope": "20261016_recalculate_after_12_new_ACS_two_pass_163_total",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,7 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 396,
   "expectedStageCompletedRoots": 396,
-  "expectedAcademicInclude": 151,
+  "expectedAcademicInclude": 163,
   "academicDecisionSource": "Git_main_PR707_merger_151_approved_122_formal_29_formally_missing_of_which_1_owner_excluded",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 82,
@@ -29,7 +29,7 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "e582024e8ca88cb09daa77b3517a460ebbb78db4",
+  "lastRelatedMergeCommit": "5aadfda18636efdb89865d470e7059e198d665d8",
   "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
   "unresolvedDualOfficialPublisherDates": [
     "10.1021/acs.joc.6c00852",
@@ -42,7 +42,7 @@
   "lastTriggerReason": "post_eight_more_Q3_ACS_approved_116_include_and_1087_unchanged_Git_formal",
   "exactNextEligibleHistoricalPublicationSlot": "2026-10-17T08:00:00+08:00",
   "previousHistoricalFormallyPresent": 122,
-  "newlyApprovedAwaiting08": 29,
+  "newlyApprovedAwaiting08": 41,
   "originalDateConflictHolds": [
     "10.1021/acs.orglett.6c03028",
     "10.1021/acs.orglett.6c02707",
@@ -63,16 +63,22 @@
     "10.1038/s44160-026-01146-w",
     "10.1038/s41557-026-02226-2"
   ],
-  "expectedReviewedWaitingAt08": 29,
+  "expectedReviewedWaitingAt08": 41,
   "expectedQ3Formal": 851,
   "expectedQ3UniqueSources": 12286,
   "newHistoricalApprovalDoiExact": [
-    "10.1021/acs.joc.6c00182",
-    "10.1021/acs.joc.6c01588",
-    "10.1021/acs.orglett.6c02387",
-    "10.1021/acs.orglett.6c02217",
-    "10.1021/acscatal.6c05124",
-    "10.1021/acscatal.6c05113"
+    "10.1021/jacs.6c05261",
+    "10.1021/acs.joc.6c01054",
+    "10.1021/acs.joc.6c01396",
+    "10.1021/acs.joc.6c01509",
+    "10.1021/acs.joc.6c01757",
+    "10.1021/acs.joc.6c00954",
+    "10.1021/acs.orglett.6c02280",
+    "10.1021/acs.orglett.6c02715",
+    "10.1021/acs.orglett.6c02933",
+    "10.1021/acs.orglett.6c03349",
+    "10.1021/acs.joc.6c01064",
+    "10.1021/acs.orglett.6c03015"
   ],
   "priorFailedRunIds": [
     38538114410,
@@ -106,15 +112,21 @@
   "expectedQ3SourceUniqueDoi": 12286,
   "expectedSourceRoots": 192,
   "expectedCurrentMainQ3FormalAtPreflight": 851,
-  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 29,
+  "expectedHistoricApprovedWaitingQ3IfInputsUnchanged": 41,
   "provisionalUnfinishedIfInputsUnchanged": null,
   "newAcademicDoiExact": [
-    "10.1021/acs.joc.6c00182",
-    "10.1021/acs.joc.6c01588",
-    "10.1021/acs.orglett.6c02387",
-    "10.1021/acs.orglett.6c02217",
-    "10.1021/acscatal.6c05124",
-    "10.1021/acscatal.6c05113"
+    "10.1021/jacs.6c05261",
+    "10.1021/acs.joc.6c01054",
+    "10.1021/acs.joc.6c01396",
+    "10.1021/acs.joc.6c01509",
+    "10.1021/acs.joc.6c01757",
+    "10.1021/acs.joc.6c00954",
+    "10.1021/acs.orglett.6c02280",
+    "10.1021/acs.orglett.6c02715",
+    "10.1021/acs.orglett.6c02933",
+    "10.1021/acs.orglett.6c03349",
+    "10.1021/acs.joc.6c01064",
+    "10.1021/acs.orglett.6c03015"
   ],
   "scientificSupplementPendingButNotSourceIntegrated": [
     "10.1038/s41467-026-75484-w"
@@ -141,7 +153,7 @@
     "zeroD1": true,
     "noFormalRelease": true
   },
-  "expectedHistoricalEligibleForNext08IfCatalogUnchanged": 28,
+  "expectedHistoricalEligibleForNext08IfCatalogUnchanged": 40,
   "historicalPolicyExcludedCount": 1,
   "historicalPolicyExcludedDois": [
     "10.1038/s41467-026-77616-8"
@@ -156,5 +168,9 @@
   "actualApprovedWaitingAtFirstRecount": 29,
   "actualQ3FormalAtFirstRecount": 851,
   "actualGlobalDistinctAtFirstRecount": 57266,
-  "previousTriageRunId": 38831231811
+  "previousTriageRunId": 38831231811,
+  "currentFormalDoiCountBeforeRecount": 1186,
+  "existingGlobalStatusStaleCount": 0,
+  "expectedQ3UnfinishedBeforeRecount": 11224,
+  "confirmedQ3UnfinishedAfterRecount": null
 }
