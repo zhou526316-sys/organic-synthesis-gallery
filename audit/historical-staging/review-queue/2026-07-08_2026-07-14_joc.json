@@ -17,9 +17,9 @@
   "stats": {
     "candidateOccurrences": 41,
     "alreadyPublished": 1,
-    "approvedAwaiting08": 3,
+    "approvedAwaiting08": 4,
     "evidencePending": 0,
-    "requiresTwoPassReview": 37,
+    "requiresTwoPassReview": 36,
     "priorityP0": 5,
     "priorityP1": 22,
     "priorityP2": 6,
@@ -200,7 +200,7 @@
       "sourceBatchSha256": "a63d5ccf56d4b29ed830b74122668ce47cdd4de8a445c0f6610daf772541d287",
       "priority": "P0",
       "flags": [],
-      "status": "requires_two_pass_review",
+      "status": "two_pass_approved_awaiting_08",
       "articleEvidenceReview": "not_performed_by_triage",
       "publicationRights": "unverified_no_full_abstract_or_body"
     },
