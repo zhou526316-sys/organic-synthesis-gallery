@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-16T01:40:28.578Z",
-  "sourceWorklistSha256": "97d953f2a98fc2ff15dbaec59c2739a8d050d6d1d914b50886cbd88cd60a5c0a",
+  "sourceWorklistProducedAt": "2026-10-16T03:22:29.434Z",
+  "sourceWorklistSha256": "3e150680e8395e055438a2e8a303cd73a3703904133d0030132f9a4ae5bd9170",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 56306,
+  "sourceTotalUnreviewed": 56298,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -26,7 +26,7 @@
     "Nature",
     "Science"
   ],
-  "highChemistrySignalCount": 125,
+  "highChemistrySignalCount": 123,
   "interdisciplinaryTitleRiskCount": 3,
   "candidates": [
     {
@@ -1183,12 +1183,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202506818",
+      "doi": "10.31635/ccschem.025.202507128",
       "journal": "CCS Chemistry",
-      "title": "Three-Dimensional-Printed Chiral Heterometallic Cluster Monoliths for Integrated Circularly Polarized Luminescent Sensing and Visualized Enantioselective Catalysis",
-      "firstAuthor": "X.-Q. Cai",
+      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
+      "firstAuthor": "Yang Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-02-16",
+      "originDateCandidate": "2026-02-12",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1205,15 +1205,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-04-01_2026-04-30_ccs-chemistry",
           "2026-02-01_2026-02-28_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc",
           "62600cd4d2e8853b81fb584943e60205a146db8db666a3af3b0a31fb479922f0"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506818",
+      "doiResolver": "https://doi.org/10.31635/ccschem.025.202507128",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1435,12 +1433,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.7084396",
+      "doi": "10.1002/anie.7517064",
       "journal": "Angew",
-      "title": "Enantioselective Copper‐Catalyzed Vinyl Boron‐Wittig Reaction to Form Allenes",
-      "firstAuthor": "Ziwen Liu",
+      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
+      "firstAuthor": "Mengyao Yuan",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-08",
+      "originDateCandidate": "2026-09-01",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1457,13 +1455,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_angew"
+          "2026-09-01_2026-09-07_angew"
         ],
         "sourceSha256Hashes": [
-          "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98"
+          "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.7084396",
+      "doiResolver": "https://doi.org/10.1002/anie.7517064",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1854,12 +1852,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202507128",
+      "doi": "10.31635/ccschem.026.202506818",
       "journal": "CCS Chemistry",
-      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
-      "firstAuthor": "Yuting Yang",
+      "title": "Three-Dimensional-Printed Chiral Heterometallic Cluster Monoliths for Integrated Circularly Polarized Luminescent Sensing and Visualized Enantioselective Catalysis",
+      "firstAuthor": "X.-Q. Cai",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-03-09",
+      "originDateCandidate": "2026-02-16",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -1876,15 +1874,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_ccs-chemistry",
-          "2026-03-01_2026-03-31_ccs-chemistry"
+          "2026-04-01_2026-04-30_ccs-chemistry",
+          "2026-02-01_2026-02-28_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
-          "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
+          "52d74b6736d0e84ca4c380b1d2c1390795722b4b836a6f82a0f8551a1382e9cc",
+          "62600cd4d2e8853b81fb584943e60205a146db8db666a3af3b0a31fb479922f0"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202506818",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2105,19 +2103,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.7517064",
+      "doi": "10.1002/anie.1980531",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
-      "firstAuthor": "Mengyao Yuan",
+      "title": "Catalytic Enantioselective Addition of Aryl, Heteroaryl, and Alkenyl Halides to Aliphatic Aldehydes",
+      "firstAuthor": "Lantian Sun",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "originDateCandidate": "2026-09-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2133,7 +2130,7 @@
           "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.7517064",
+      "doiResolver": "https://doi.org/10.1002/anie.1980531",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2398,12 +2395,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c03779",
+      "doi": "10.1021/acscatal.6c02636",
       "journal": "ACS Catalysis",
-      "title": "Palladium-Catalyzed Diastereo- and Enantioselective Allenylation of Imines with Propargyl Nitriles via Cyano-Directed Activation Assisted by Machine-Learning-Guided Condition Screening",
-      "firstAuthor": "Kosei Miyake",
+      "title": "Visible-Light-Induced Enantioselective Three-Component Reactions via Free Carbenes",
+      "firstAuthor": "Xinke Zhang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-26",
+      "originDateCandidate": "2026-06-24",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2425,7 +2422,7 @@
           "a886898de9b9ca930d17d40bfb1121fe8029387f5c6c7e78f94317d5c0a018e9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acscatal.6c03779",
+      "doiResolver": "https://doi.org/10.1021/acscatal.6c02636",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2523,12 +2520,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607308",
+      "doi": "10.31635/ccschem.026.202507128",
       "journal": "CCS Chemistry",
-      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
-      "firstAuthor": "Jiahao Zhang",
+      "title": "Inducing and Fixing Coordination Chirality of Capsules for Biomimetic Asymmetric Catalysis",
+      "firstAuthor": "Yuting Yang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-03-03",
+      "originDateCandidate": "2026-03-09",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2553,7 +2550,7 @@
           "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607308",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202507128",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2774,12 +2771,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.1980531",
+      "doi": "10.1002/anie.2349367",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Addition of Aryl, Heteroaryl, and Alkenyl Halides to Aliphatic Aldehydes",
-      "firstAuthor": "Lantian Sun",
+      "title": "Direct Access to Chiral Piperidines by Enantioselective HAT‐Initiated C( sp 3 )─H Oxidation",
+      "firstAuthor": "Sethuraman Muthuramalingam",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-04",
+      "originDateCandidate": "2026-09-08",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2795,13 +2792,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_angew"
+          "2026-09-08_2026-09-14_angew"
         ],
         "sourceSha256Hashes": [
-          "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
+          "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.1980531",
+      "doiResolver": "https://doi.org/10.1002/anie.2349367",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3068,19 +3065,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c03855",
+      "doi": "10.1021/acscatal.6c03779",
       "journal": "ACS Catalysis",
-      "title": "Emerging N-Heterocyclic Carbene–Nickel Catalysis: Bond Activations, Cross-Coupling Reactions, and Beyond",
-      "firstAuthor": "Shyam Kumar Banjare",
+      "title": "Palladium-Catalyzed Diastereo- and Enantioselective Allenylation of Imines with Propargyl Nitriles via Cyano-Directed Activation Assisted by Machine-Learning-Guided Condition Screening",
+      "firstAuthor": "Kosei Miyake",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-17",
+      "originDateCandidate": "2026-06-26",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "bond_construction",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3090,13 +3086,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-15_2026-09-21_acs-catalysis"
+          "2026-06-01_2026-06-30_acs-catalysis"
         ],
         "sourceSha256Hashes": [
-          "34dd1b37ec733cf4b8931ad9c58bec7d014f04bacd18cfd5162a203049d4c69e"
+          "a886898de9b9ca930d17d40bfb1121fe8029387f5c6c7e78f94317d5c0a018e9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acscatal.6c03855",
+      "doiResolver": "https://doi.org/10.1021/acscatal.6c03779",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3193,12 +3189,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.31635/ccschem.026.202607864",
+      "doi": "10.31635/ccschem.026.202607308",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Reductive Heck and Heck Coupling of Internal Cyclic Alkenes Enabled by Nickel/ N -Heterocyclic Carbene Catalysis",
-      "firstAuthor": "Hai-Yu Wu",
+      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
+      "firstAuthor": "Jiahao Zhang",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-01",
+      "originDateCandidate": "2026-03-03",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3215,15 +3211,15 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-08_2026-07-14_ccs-chemistry",
-          "2026-06-01_2026-06-30_ccs-chemistry"
+          "2026-09-01_2026-09-07_ccs-chemistry",
+          "2026-03-01_2026-03-31_ccs-chemistry"
         ],
         "sourceSha256Hashes": [
-          "a97560f9012dc77f9f78a147d314150c15521656642bc153f706ee9437dcd88d",
-          "5ca47e150d674ec145b8ca7dca34312a2e5aa7db72b9409969b4321ad64a58d5"
+          "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+          "9b3627ab46dde32803e4bf5ec3d45fa6631061d5c92713d87663c8ddd73615b3"
         ]
       },
-      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607864",
+      "doiResolver": "https://doi.org/10.31635/ccschem.026.202607308",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3440,12 +3436,53 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.2349367",
+      "doi": "10.1002/anie.9125401",
       "journal": "Angew",
-      "title": "Direct Access to Chiral Piperidines by Enantioselective HAT‐Initiated C( sp 3 )─H Oxidation",
-      "firstAuthor": "Sethuraman Muthuramalingam",
+      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
+      "firstAuthor": "Yuye Jiao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-08",
+      "originDateCandidate": "2026-08-22",
+      "truePublisherOnlineDate": null,
+      "publisherCategory": null,
+      "evidenceRank": {
+        "score": 7,
+        "signals": [
+          "bond_construction"
+        ],
+        "offTopicTitleRisk": false,
+        "chemistryTitleSignalsOnly": true,
+        "nonOriginalPublisherTypeVerified": false,
+        "publisherFirstOnlineVerified": false,
+        "noAutomaticScopeDecision": true
+      },
+      "sourceProof": {
+        "sourceRootIds": [
+          "2026-08-22_2026-08-31_angew"
+        ],
+        "sourceSha256Hashes": [
+          "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+        ]
+      },
+      "doiResolver": "https://doi.org/10.1002/anie.9125401",
+      "publisherEvidenceRequired": [
+        "DOI-exact official Article versus Review/Comment/Preview classification",
+        "Publisher first available online date versus issue/index-created date",
+        "Specific new substrate-to-product chemistry and product identity",
+        "Generality, yields/structure controls, or completed total synthesis",
+        "Adversarial second-pass: real boundary/contradicting evidence"
+      ],
+      "scienceFirstPass": "not_performed",
+      "scienceAdversarialPass": "not_performed",
+      "decision": "unreviewed",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02340",
+      "journal": "Organic Letters",
+      "title": "CPA-Catalyzed Enantioselective Assembly of Chiral 1,4-Dihydropyridines with Nonadjacent 1,3-Stereocenters",
+      "firstAuthor": "Hao-Wei Peng",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-06-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3461,55 +3498,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_angew"
+          "2026-06-01_2026-06-30_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98"
+          "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.2349367",
-      "publisherEvidenceRequired": [
-        "DOI-exact official Article versus Review/Comment/Preview classification",
-        "Publisher first available online date versus issue/index-created date",
-        "Specific new substrate-to-product chemistry and product identity",
-        "Generality, yields/structure controls, or completed total synthesis",
-        "Adversarial second-pass: real boundary/contradicting evidence"
-      ],
-      "scienceFirstPass": "not_performed",
-      "scienceAdversarialPass": "not_performed",
-      "decision": "unreviewed",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02393",
-      "journal": "Organic Letters",
-      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
-      "firstAuthor": "Yongsheng Hou",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-04",
-      "truePublisherOnlineDate": null,
-      "publisherCategory": null,
-      "evidenceRank": {
-        "score": 8,
-        "signals": [
-          "target_or_late_stage_synthesis",
-          "broad_chemistry_context"
-        ],
-        "offTopicTitleRisk": false,
-        "chemistryTitleSignalsOnly": true,
-        "nonOriginalPublisherTypeVerified": false,
-        "publisherFirstOnlineVerified": false,
-        "noAutomaticScopeDecision": true
-      },
-      "sourceProof": {
-        "sourceRootIds": [
-          "2026-07-01_2026-07-07_organic-letters"
-        ],
-        "sourceSha256Hashes": [
-          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
-        ]
-      },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02393",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02340",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3732,12 +3727,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c04682",
+      "doi": "10.1021/acscatal.6c03855",
       "journal": "ACS Catalysis",
-      "title": "Janus Cu-Based Alloys with Cooperative Asymmetry for Enhanced C–N Coupling in Electrochemical Urea Synthesis",
-      "firstAuthor": "Jinjie Liu",
+      "title": "Emerging N-Heterocyclic Carbene–Nickel Catalysis: Bond Activations, Cross-Coupling Reactions, and Beyond",
+      "firstAuthor": "Shyam Kumar Banjare",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-19",
+      "originDateCandidate": "2026-09-17",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3754,13 +3749,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-15_2026-08-21_acs-catalysis"
+          "2026-09-15_2026-09-21_acs-catalysis"
         ],
         "sourceSha256Hashes": [
-          "ed5f2e5a6734b77a7b7b4365fdacffd73ad68baf3872f3dc6220af764012e54e"
+          "34dd1b37ec733cf4b8931ad9c58bec7d014f04bacd18cfd5162a203049d4c69e"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acscatal.6c04682",
+      "doiResolver": "https://doi.org/10.1021/acscatal.6c03855",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4730,18 +4725,17 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.7251439",
+      "doi": "10.1002/anie.1293701",
       "journal": "Angew",
-      "title": "Photometallobiocatalytic Asymmetric Radical‐Mediated Cross‐Coupling of Organotrifluoroborate Salts and Pyridotriazoles",
-      "firstAuthor": "Huanan Wang",
+      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "firstAuthor": "Jidong Yu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-22",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 1,
         "signals": [
-          "bond_construction",
           "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
@@ -4752,13 +4746,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_angew"
+          "2026-08-15_2026-08-21_angew"
         ],
         "sourceSha256Hashes": [
-          "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+          "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.7251439",
+      "doiResolver": "https://doi.org/10.1002/anie.1293701",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4772,18 +4766,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02414",
+      "doi": "10.1021/acs.orglett.6c02393",
       "journal": "Organic Letters",
-      "title": "Chiral Monodentate Phosphine Ligand for Palladium-Catalyzed Enantioselective Cascade Arylvinylation of Alkenes with N -Tosylhydrazones",
-      "firstAuthor": "Wenrui Zheng",
+      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
+      "firstAuthor": "Yongsheng Hou",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-06",
+      "originDateCandidate": "2026-07-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4799,7 +4794,7 @@
           "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02414",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02393",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4813,12 +4808,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01263",
+      "doi": "10.1021/acs.joc.6c01686",
       "journal": "JOC",
-      "title": "Stereodivergent Construction of Adjacent Tetrasubstituted Stereocenters Enabled by CPA-Catalyzed Enantioselective Desymmetric Friedel–Crafts Reaction of α-Aryl-α-fluoro-1,3-indanediones",
-      "firstAuthor": "Xing-Pin Wei",
+      "title": "Enantioselective Synthesis of Spiropyrrolidines by Synergistic Catalysis",
+      "firstAuthor": "Michael Franc",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "originDateCandidate": "2026-09-17",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -4835,13 +4830,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_joc"
+          "2026-09-15_2026-09-21_joc"
         ],
         "sourceSha256Hashes": [
-          "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329"
+          "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01263",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01686",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5022,18 +5017,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acscatal.6c05012",
+      "doi": "10.1021/acscatal.6c04682",
       "journal": "ACS Catalysis",
-      "title": "Catalytic Asymmetric Coupling of Borylallene and Ketones: Rapid Access to Enantioenriched ( Z )- or ( E )-δ-Boryl-Substituted Tertiary Homoallylic Alcohols",
-      "firstAuthor": "Zhen Wu",
+      "title": "Janus Cu-Based Alloys with Cooperative Asymmetry for Enhanced C–N Coupling in Electrochemical Urea Synthesis",
+      "firstAuthor": "Jinjie Liu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-08",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "bond_construction",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5043,13 +5039,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-08_2026-09-14_acs-catalysis"
+          "2026-08-15_2026-08-21_acs-catalysis"
         ],
         "sourceSha256Hashes": [
-          "5da648e489a1a5a2c6455cfa2dac85aac626338f7e13b1282fe9ef089ebe9c6a"
+          "ed5f2e5a6734b77a7b7b4365fdacffd73ad68baf3872f3dc6220af764012e54e"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acscatal.6c05012",
+      "doiResolver": "https://doi.org/10.1021/acscatal.6c04682",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5394,18 +5390,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.9125401",
+      "doi": "10.1002/anie.8769472",
       "journal": "Angew",
-      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
-      "firstAuthor": "Yuye Jiao",
+      "title": "Regulating Surface Electron Dynamics Enables Selective C─N Coupling in Photoelectrochemical Oxime Synthesis",
+      "firstAuthor": "Zilong Li",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-22",
+      "originDateCandidate": "2026-09-24",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 1,
         "signals": [
-          "bond_construction"
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5415,13 +5411,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_angew"
+          "2026-09-22_2026-09-30_angew"
         ],
         "sourceSha256Hashes": [
-          "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+          "f9732fca63059d620a5b76c17b2d9c09293d3e6b586359016b174ac0e229faa5"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.9125401",
+      "doiResolver": "https://doi.org/10.1002/anie.8769472",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5435,12 +5431,53 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02893",
+      "doi": "10.1021/acs.orglett.6c02414",
       "journal": "Organic Letters",
-      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
-      "firstAuthor": "Zhen Mo",
+      "title": "Chiral Monodentate Phosphine Ligand for Palladium-Catalyzed Enantioselective Cascade Arylvinylation of Alkenes with N -Tosylhydrazones",
+      "firstAuthor": "Wenrui Zheng",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-15",
+      "originDateCandidate": "2026-07-06",
+      "truePublisherOnlineDate": null,
+      "publisherCategory": null,
+      "evidenceRank": {
+        "score": 8,
+        "signals": [
+          "stereoselective_synthetic_method"
+        ],
+        "offTopicTitleRisk": false,
+        "chemistryTitleSignalsOnly": true,
+        "nonOriginalPublisherTypeVerified": false,
+        "publisherFirstOnlineVerified": false,
+        "noAutomaticScopeDecision": true
+      },
+      "sourceProof": {
+        "sourceRootIds": [
+          "2026-07-01_2026-07-07_organic-letters"
+        ],
+        "sourceSha256Hashes": [
+          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
+        ]
+      },
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02414",
+      "publisherEvidenceRequired": [
+        "DOI-exact official Article versus Review/Comment/Preview classification",
+        "Publisher first available online date versus issue/index-created date",
+        "Specific new substrate-to-product chemistry and product identity",
+        "Generality, yields/structure controls, or completed total synthesis",
+        "Adversarial second-pass: real boundary/contradicting evidence"
+      ],
+      "scienceFirstPass": "not_performed",
+      "scienceAdversarialPass": "not_performed",
+      "decision": "unreviewed",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00749",
+      "journal": "JOC",
+      "title": "Total Synthesis and Antimycobacterial Activity of Ascidiathiazones A and B and Analogues",
+      "firstAuthor": "Kristiana T. Santoso",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-06-26",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5457,55 +5494,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-15_2026-07-21_organic-letters"
+          "2026-06-01_2026-06-30_joc"
         ],
         "sourceSha256Hashes": [
-          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+          "43d815c2c8383d9b604e3395b1ebcf59b25c633e1753747c5902ecd43fb021f2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02893",
-      "publisherEvidenceRequired": [
-        "DOI-exact official Article versus Review/Comment/Preview classification",
-        "Publisher first available online date versus issue/index-created date",
-        "Specific new substrate-to-product chemistry and product identity",
-        "Generality, yields/structure controls, or completed total synthesis",
-        "Adversarial second-pass: real boundary/contradicting evidence"
-      ],
-      "scienceFirstPass": "not_performed",
-      "scienceAdversarialPass": "not_performed",
-      "decision": "unreviewed",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01686",
-      "journal": "JOC",
-      "title": "Enantioselective Synthesis of Spiropyrrolidines by Synergistic Catalysis",
-      "firstAuthor": "Michael Franc",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-17",
-      "truePublisherOnlineDate": null,
-      "publisherCategory": null,
-      "evidenceRank": {
-        "score": 9,
-        "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
-        ],
-        "offTopicTitleRisk": false,
-        "chemistryTitleSignalsOnly": true,
-        "nonOriginalPublisherTypeVerified": false,
-        "publisherFirstOnlineVerified": false,
-        "noAutomaticScopeDecision": true
-      },
-      "sourceProof": {
-        "sourceRootIds": [
-          "2026-09-15_2026-09-21_joc"
-        ],
-        "sourceSha256Hashes": [
-          "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648"
-        ]
-      },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01686",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00749",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6056,19 +6051,17 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.8769472",
+      "doi": "10.1002/anie.1894063",
       "journal": "Angew",
-      "title": "Regulating Surface Electron Dynamics Enables Selective C─N Coupling in Photoelectrochemical Oxime Synthesis",
-      "firstAuthor": "Zilong Li",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-24",
+      "title": "Dynamic Phosphate Hydrogen‐Bonded Networks Enable Biomedical‐Ready Stabilization of Black Phosphorus",
+      "firstAuthor": "Junhao Chen",
+      "originalQueuePriority": "P3",
+      "originDateCandidate": "2026-09-30",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 1,
-        "signals": [
-          "broad_chemistry_context"
-        ],
+        "score": 0,
+        "signals": [],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
         "nonOriginalPublisherTypeVerified": false,
@@ -6083,7 +6076,7 @@
           "f9732fca63059d620a5b76c17b2d9c09293d3e6b586359016b174ac0e229faa5"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.8769472",
+      "doiResolver": "https://doi.org/10.1002/anie.1894063",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6097,18 +6090,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02939",
+      "doi": "10.1021/acs.orglett.6c02893",
       "journal": "Organic Letters",
-      "title": "Enantioselective Reduction of α,β-Dehydro-α-amido Carboxylic Acid Derivatives by Ene-Reductases",
-      "firstAuthor": "Nicolas Marie",
+      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
+      "firstAuthor": "Zhen Mo",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-03",
+      "originDateCandidate": "2026-07-15",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6118,13 +6112,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_organic-letters"
+          "2026-07-15_2026-07-21_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "438a99f3cb5fe58a19eddb09e076bceecf05066742346ba34afe7189c08a406b"
+          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02939",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02893",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6138,12 +6132,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c00749",
+      "doi": "10.1021/acs.joc.6c00781",
       "journal": "JOC",
-      "title": "Total Synthesis and Antimycobacterial Activity of Ascidiathiazones A and B and Analogues",
-      "firstAuthor": "Kristiana T. Santoso",
+      "title": "First Total Synthesis of Cryptolaevilactones, Unique Spiromeroterpenoids",
+      "firstAuthor": "Tomoya Nishida",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-26",
+      "originDateCandidate": "2026-06-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -6166,7 +6160,7 @@
           "43d815c2c8383d9b604e3395b1ebcf59b25c633e1753747c5902ecd43fb021f2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00749",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00781",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
