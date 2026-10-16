@@ -5885,19 +5885,30 @@ function embeddedJobDois(value) {
       renewManualLease(run);await sleep(Math.min(1000,Math.max(1,until-Date.now())));
     }
   }
-  function manualHeartbeatCircuitBreaker(run,result) {
-    // A sequence of uninitialized publisher tabs is an extension/session
-    // failure, not evidence that each DOI is missing media. Preserve the
-    // remaining queue instead of spending minutes on 100 more empty tabs.
-    if(!run)return false;
-    if(String(result&&result.reason||'')==='bound_publisher_heartbeat_missing')
-      run.consecutiveHeartbeatFailures=Number(run.consecutiveHeartbeatFailures||0)+1;
-    else run.consecutiveHeartbeatFailures=0;
-    return run.consecutiveHeartbeatFailures>=3;
+  function manualHeartbeatCircuitBreaker(run,job,result) {
+    // Count independent publisher/DOI failures, never retries or failures
+    // from other publishers. An uninitialized page is not a global outage.
+    if(!run||!job)return false;
+    var publisher=String(job.publisher||publisherForDoi(job.doi)||'unknown');
+    var doi=normalizeDoi(job.doi),failures=run.publisherHeartbeatFailures||(run.publisherHeartbeatFailures={});
+    var isolated=run.publisherHeartbeatQuarantine||(run.publisherHeartbeatQuarantine={});
+    if(String(result&&result.reason||'')!=='bound_publisher_heartbeat_missing'){
+      delete failures[publisher];
+      return false;
+    }
+    var group=failures[publisher]||(failures[publisher]={dois:[]});
+    if(doi&&group.dois.indexOf(doi)<0)group.dois.push(doi);
+    if(group.dois.length<3||isolated[publisher])return false;
+    isolated[publisher]={reason:'publisher_script_missing_3_distinct_dois',dois:group.dois.slice(),at:Date.now()};
+    if(run.coverage)run.coverage.forEach(function(row){
+      if(row.state!=='pending'||String(row.job&&row.job.publisher||publisherForDoi(row.job&&row.job.doi))!==publisher)return;
+      row.state='blocked';row.retryAt=0;row.lastReason='publisher_script_quarantined_distinct_dois';
+    });
+    return true;
   }
 
   async function runManualFromHead(run) {
-    var s=run.summary;run.coverage=new Map();run.consecutiveHeartbeatFailures=0;s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
+    var s=run.summary;run.coverage=new Map();run.publisherHeartbeatFailures={};run.publisherHeartbeatQuarantine={};s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
     run.renewTimer=setInterval(function(){renewManualLease(run);},15000);
     try{
       var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
@@ -5950,6 +5961,8 @@ function embeddedJobDois(value) {
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
+          var quarantined=(run.publisherHeartbeatQuarantine||{})[String(job.publisher||publisherForDoi(job.doi))];
+          if(quarantined){candidate.lastReason='publisher_script_quarantined_distinct_dois';candidate.state='blocked';candidate.retryAt=0;continue;}
           var sourceChecked=natureOfficialRecheckDeferred(job);
           if(sourceChecked){
             // Preserve official-TOC obligation but avoid revisiting a verified
@@ -6015,12 +6028,11 @@ function embeddedJobDois(value) {
           // ACS background tabs can remain uninitialized through document-idle.
           // Only a repeat visit after an actual failed attempt is foregrounded;
           // healthy first-pass captures stay in the background.
-          // After an uninitialized background tab, give the next DOI one
-          // foreground chance to initialize Tampermonkey. Healthy sessions
-          // revert to background; three consecutive misses still stop safely.
+          // After an uninitialized background tab, foreground the next DOI
+          // from this same publisher. Different publishers continue normally.
           var foregroundRetry=job.publisher==='wiley'
             ||(job.publisher==='acs'&&Number(job.retryCount||0)>1)
-            ||Number(run.consecutiveHeartbeatFailures||0)>0;
+            ||Boolean(((run.publisherHeartbeatFailures||{})[job.publisher]||{}).dois?.length);
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:foregroundRetry,insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
@@ -6042,12 +6054,12 @@ function embeddedJobDois(value) {
         if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
-        if(manualHeartbeatCircuitBreaker(run,result)){
-          s.stopReason='publisher_script_missing_3_consecutive';
-          s.phase='capture_environment_blocked';
+        if(manualHeartbeatCircuitBreaker(run,job,result)){
+          s.publisherHeartbeatIsolations=Object.keys(run.publisherHeartbeatQuarantine).map(function(p){
+            return {publisher:p,reason:run.publisherHeartbeatQuarantine[p].reason,distinctDois:run.publisherHeartbeatQuarantine[p].dois.slice()};
+          });
           coverageStats(run);manualSummary(run);
-          badge('连续3篇出版社页面未启动抓取脚本，已停止开新页面并保留剩余队列；请检查 Tampermonkey 扩展和出版社验证后再继续','#991b1b');
-          break;
+          badge('当前出版社3篇不同论文未启动采集脚本，已仅隔离该出版社，继续抓取其他出版社','#b45309');
         }
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
@@ -6058,14 +6070,11 @@ function embeddedJobDois(value) {
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();
-        s.phase=s.stopReason==='publisher_script_missing_3_consecutive'?'capture_environment_blocked'
-          :controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
+        s.phase=controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
           :s.inventoryUnknown||Number(s.ownerPdfInventory&&s.ownerPdfInventory.unknown||0)?'inventory_partial':'all_resolved';
         manualSummary(run);
         var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
-        var finishedMessage=s.stopReason==='publisher_script_missing_3_consecutive'
-          ?'出版社脚本连续3次未启动；已保留未访问队列，请先检查浏览器扩展和页面验证'
-          :controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
+        var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
           :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
           :'实际尝试 '+s.attemptCount+' 次；本轮确认补齐 '+s.fullyResolved+' 篇；库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇；未补齐 '+s.unresolvedCount+' 篇';
         badge(finishedMessage,'#374151');
@@ -7239,7 +7248,7 @@ function embeddedJobDois(value) {
     var httpStatus=Number(error&&error.httpStatus||0);
     if(httpStatus>0&&![500,502,503,504].includes(httpStatus))return false;
     var reason=String(error&&error.message||error||'');
-    if(!/timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50(?:0|[234])|stage_storage_/i.test(reason)
+    if(!/deferred|timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50(?:0|[234])|stage_storage_/i.test(reason)
       ||/cancelled|unbound|stale|permission|user_aborted|mismatch/i.test(reason))return false;
     var doi=normalizeDoi(job.doi),buffer=pdf.buffer,bytes=Number(buffer.byteLength||0);
     if(!doi||bytes<1024||bytes>8*1024*1024)return false;
@@ -7260,7 +7269,8 @@ function embeddedJobDois(value) {
     }catch(_){return false;}
   }
   async function replayOneOwnerPdf(){
-    if(!isGalleryPage()||ownerPdfReplayBusy||GM_getValue(ACTIVE_JOB_KEY,null))return false;
+    // Replay from the Gallery owner session is independent of the active publisher tab.
+    if(!isGalleryPage()||ownerPdfReplayBusy)return false;
     var lease=privatePdfLease();if(!lease)return false;
     var keys=pendingOwnerPdfKeys();if(!keys.length)return false;
     ownerPdfReplayBusy=true;
@@ -7360,8 +7370,8 @@ function embeddedJobDois(value) {
   function startOwnerPdfReplaySender(){
     if(!isGalleryPage()||globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__)return;
     globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__=true;
-    setTimeout(function(){replayOneOwnerPdf().catch(function(){});},23000);
-    setInterval(function(){replayOneOwnerPdf().catch(function(){});},60000);
+    setTimeout(function(){replayOneOwnerPdf().catch(function(){});},5000);
+    setInterval(function(){replayOneOwnerPdf().catch(function(){});},20000);
   }
 
   async function maybeCapturePrivatePdf(job,trace) {
@@ -7374,6 +7384,10 @@ function embeddedJobDois(value) {
     if(serverStatus!=='missing'||job.capturePrivatePdf!==true){
       return {status:'skipped',reason:serverStatus==='pending'||serverStatus==='failed'?'owner_pdf_verification_pending':'owner_pdf_inventory_unknown'};
     }
+    // A previously downloaded, verified PDF remains an outstanding upload,
+    // not a reason to download the same publisher bytes twice.
+    if(pendingOwnerPdfKeys().indexOf(OWNER_PDF_REPLAY_PREFIX+encodeURIComponent(normalizeDoi(job.doi)))>=0)
+      return {status:'deferred_upload',reason:'owner_pdf_local_replay_pending',localReplayReady:true};
     var lease=privatePdfLease();
     if(!lease){
       captureLiveUpdate(job,'private_pdf_no_lease',{pdfStatus:'skipped',pdfStage:'未获得 owner PDF 授权'});
@@ -7423,6 +7437,19 @@ function embeddedJobDois(value) {
     // A valid PDF is independent of the upload route. Retry its same bytes in
     // the upload helper; an API failure must not restart publisher downloads.
     if(pdf){
+      // Durable local bytes are handed to the separately authorized Gallery
+      // sender. A verified PDF download no longer waits for an owner upload
+      // (which can take 50-90s) before advancing the publisher DOI queue.
+      var deferred=await retainOwnerPdfAfterUploadFailure(job,pdf,new Error('private_pdf_upload_deferred'));
+      if(deferred){
+        var pending={status:'deferred_upload',reason:'owner_pdf_local_replay_pending',localReplayReady:true,byteLength:pdf.byteLength};
+        GM_setValue(key,{status:pending.status,reason:pending.reason,at:Date.now(),byteLength:pdf.byteLength,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        captureLiveUpdate(job,'private_pdf_deferred',{pdfStatus:'deferred_upload',pdfStage:'PDF 已保存在本机，等待 Gallery 安全补传',pdfBytes:pdf.byteLength});
+        pushTrace(trace,{stage:'private_pdf_gallery_retry',event:'queued',status:'deferred',byteLength:pdf.byteLength,message:'owner_only=1;content_verified=1;nonblocking_upload=1'});
+        return pending;
+      }
+      // Bounded local storage can be full. Keep the existing direct upload
+      // fallback rather than discard already downloaded publisher PDF bytes.
       try{
         var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
         assertBoundCaptureJob(job);
