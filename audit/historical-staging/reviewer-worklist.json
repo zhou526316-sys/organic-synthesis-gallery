@@ -1,20 +1,20 @@
 {
   "schemaVersion": "gallery-history-review-worklist-v1",
   "mode": "scientific_review_worklist_only_not_scope_decision",
-  "producedAt": "2026-10-16T07:03:20.088Z",
+  "producedAt": "2026-10-16T08:04:46.358Z",
   "sourceCompletedRoots": 396,
   "uniqueCandidateDois": 57266,
   "statusCounts": {
     "alreadyPublished": 898,
-    "approvedAwaiting08": 96,
+    "approvedAwaiting08": 105,
     "sourcePending": 2,
     "explicitlyExcluded": 6,
-    "needsReview": 56264
+    "needsReview": 56255
   },
   "maximumRows": 320,
   "selected": 320,
   "distinctReviewDois": 320,
-  "remainingUnselectedRequiresReview": 55944,
+  "remainingUnselectedRequiresReview": 55935,
   "byJournal": {
     "JACS": 20,
     "Angew": 20,
@@ -2286,12 +2286,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02584",
+      "doi": "10.1021/acs.orglett.6c02417",
       "journal": "Organic Letters",
-      "title": "O -Alkylisourea-Enabled Nickel/Photoredox-Catalyzed Giese Reaction",
-      "date": "2026-07-06",
+      "title": "Cobalt-Stabilized Propargylic Oxocarbenium Ions Enable Direct and Asymmetric Nickel(II) Catalyzed Aldol-Like Reactions",
+      "date": "2026-07-03",
       "year": "2026",
-      "firstAuthor": "Weikang Xiong",
+      "firstAuthor": "Xènia Tarrach",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-07-01_2026-07-07_organic-letters"
@@ -2465,12 +2465,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.1980531",
+      "doi": "10.1002/anie.2368387",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Addition of Aryl, Heteroaryl, and Alkenyl Halides to Aliphatic Aldehydes",
+      "title": "Nickel/Photoredox‐Catalyzed Dicarbofunctionalization of Alkenes via Ketone C─C Bond Cleavage: Access to an Enantioselective Variant",
       "date": "2026-09-04",
       "year": "2026",
-      "firstAuthor": "Lantian Sun",
+      "firstAuthor": "Chenglin Peng",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_angew"
@@ -2637,12 +2637,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02393",
+      "doi": "10.1021/acs.orglett.6c02232",
       "journal": "Organic Letters",
-      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
-      "date": "2026-07-04",
+      "title": "Asymmetric Hydrophosphination of Quinolinones and Chromones Catalyzed by Chiral Phosphoric Acid",
+      "date": "2026-07-02",
       "year": "2026",
-      "firstAuthor": "Yongsheng Hou",
+      "firstAuthor": "Guiyong Wang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-07-01_2026-07-07_organic-letters"
@@ -3152,12 +3152,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.2368387",
+      "doi": "10.1002/anie.7517064",
       "journal": "Angew",
-      "title": "Nickel/Photoredox‐Catalyzed Dicarbofunctionalization of Alkenes via Ketone C─C Bond Cleavage: Access to an Enantioselective Variant",
-      "date": "2026-09-04",
+      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
+      "date": "2026-09-01",
       "year": "2026",
-      "firstAuthor": "Chenglin Peng",
+      "firstAuthor": "Mengyao Yuan",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-09-01_2026-09-07_angew"
@@ -3320,18 +3320,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02417",
+      "doi": "10.1021/acs.orglett.6c02340",
       "journal": "Organic Letters",
-      "title": "Cobalt-Stabilized Propargylic Oxocarbenium Ions Enable Direct and Asymmetric Nickel(II) Catalyzed Aldol-Like Reactions",
-      "date": "2026-07-03",
+      "title": "CPA-Catalyzed Enantioselective Assembly of Chiral 1,4-Dihydropyridines with Nonadjacent 1,3-Stereocenters",
+      "date": "2026-06-29",
       "year": "2026",
-      "firstAuthor": "Xènia Tarrach",
+      "firstAuthor": "Hao-Wei Peng",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-01_2026-07-07_organic-letters"
+        "2026-06-01_2026-06-30_organic-letters"
       ],
       "sourceFingerprints": [
-        "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
+        "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -3499,18 +3499,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7517064",
+      "doi": "10.1002/anie.7149031",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
-      "date": "2026-09-01",
+      "title": "Photo‐Driven Asymmetric Nanopore Electrode Enables Endogenous ROS Monitoring in Single Neuroimmune Cells",
+      "date": "2026-08-31",
       "year": "2026",
-      "firstAuthor": "Mengyao Yuan",
+      "firstAuthor": "Hui‐Jun Wei",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-09-01_2026-09-07_angew"
+        "2026-08-22_2026-08-31_angew"
       ],
       "sourceFingerprints": [
-        "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
+        "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -3667,18 +3667,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02232",
+      "doi": "10.1021/acs.orglett.6c02353",
       "journal": "Organic Letters",
-      "title": "Asymmetric Hydrophosphination of Quinolinones and Chromones Catalyzed by Chiral Phosphoric Acid",
-      "date": "2026-07-02",
+      "title": "Development of Immobilized 5,5′-Bitetralone-Derived Phosphoric Acids for Asymmetric Transfer Hydrogenation of 2-Arylquinolines",
+      "date": "2026-06-26",
       "year": "2026",
-      "firstAuthor": "Guiyong Wang",
+      "firstAuthor": "Yili Fu",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-07-01_2026-07-07_organic-letters"
+        "2026-06-01_2026-06-30_organic-letters"
       ],
       "sourceFingerprints": [
-        "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
+        "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -3846,12 +3846,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7149031",
+      "doi": "10.1002/anie.5047569",
       "journal": "Angew",
-      "title": "Photo‐Driven Asymmetric Nanopore Electrode Enables Endogenous ROS Monitoring in Single Neuroimmune Cells",
-      "date": "2026-08-31",
+      "title": "Ligand Steric Hindrance‐Engineered Spatially Asymmetric Single‐Atom Catalysts: A New Platform for Electrochemical Oxygen Reduction",
+      "date": "2026-08-30",
       "year": "2026",
-      "firstAuthor": "Hui‐Jun Wei",
+      "firstAuthor": "Kai Cui",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -4014,12 +4014,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02340",
+      "doi": "10.1021/acs.orglett.6c02130",
       "journal": "Organic Letters",
-      "title": "CPA-Catalyzed Enantioselective Assembly of Chiral 1,4-Dihydropyridines with Nonadjacent 1,3-Stereocenters",
-      "date": "2026-06-29",
+      "title": "Catalytic Asymmetric Nucleophilic Amination and Kinetic Resolution of α-Bromo-acylpyrazoles",
+      "date": "2026-06-25",
       "year": "2026",
-      "firstAuthor": "Hao-Wei Peng",
+      "firstAuthor": "Xin-Yi Chen",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -4189,12 +4189,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.5047569",
+      "doi": "10.1002/anie.9685756",
       "journal": "Angew",
-      "title": "Ligand Steric Hindrance‐Engineered Spatially Asymmetric Single‐Atom Catalysts: A New Platform for Electrochemical Oxygen Reduction",
-      "date": "2026-08-30",
+      "title": "Asymmetric Dipole‐Field Engineering in Chiral Mesostructures for Efficient Photocatalytic N 2 Reduction",
+      "date": "2026-08-26",
       "year": "2026",
-      "firstAuthor": "Kai Cui",
+      "firstAuthor": "Xin Huang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -4357,12 +4357,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02353",
+      "doi": "10.1021/acs.orglett.6c02475",
       "journal": "Organic Letters",
-      "title": "Development of Immobilized 5,5′-Bitetralone-Derived Phosphoric Acids for Asymmetric Transfer Hydrogenation of 2-Arylquinolines",
-      "date": "2026-06-26",
+      "title": "Pd-Catalyzed Enantioselective Annulative Naphthylcarbamoylation of Internal Alkynes for Accessing Axially Chiral Exocyclic Alkenes",
+      "date": "2026-06-25",
       "year": "2026",
-      "firstAuthor": "Yili Fu",
+      "firstAuthor": "Zhi-Jie Diao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -4530,12 +4530,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.9685756",
+      "doi": "10.1002/anie.7034615",
       "journal": "Angew",
-      "title": "Asymmetric Dipole‐Field Engineering in Chiral Mesostructures for Efficient Photocatalytic N 2 Reduction",
-      "date": "2026-08-26",
+      "title": "Hierarchical Flux Competition Governs Electrochemical‐Chemical Coupling in Redox‐Mediated Batteries",
+      "date": "2026-08-23",
       "year": "2026",
-      "firstAuthor": "Xin Huang",
+      "firstAuthor": "Shiqiang Huang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -4698,12 +4698,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02130",
+      "doi": "10.1021/acs.orglett.6c01690",
       "journal": "Organic Letters",
-      "title": "Catalytic Asymmetric Nucleophilic Amination and Kinetic Resolution of α-Bromo-acylpyrazoles",
-      "date": "2026-06-25",
+      "title": "Organocatalytic Enantioselective Desymmetrization Cascade for the Construction of Functionalized Oxabicyclo[3.3.1]nonanes",
+      "date": "2026-06-23",
       "year": "2026",
-      "firstAuthor": "Xin-Yi Chen",
+      "firstAuthor": "Vikas S. Chavan",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -4875,12 +4875,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7034615",
+      "doi": "10.1002/anie.9125401",
       "journal": "Angew",
-      "title": "Hierarchical Flux Competition Governs Electrochemical‐Chemical Coupling in Redox‐Mediated Batteries",
-      "date": "2026-08-23",
+      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
+      "date": "2026-08-22",
       "year": "2026",
-      "firstAuthor": "Shiqiang Huang",
+      "firstAuthor": "Yuye Jiao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -5047,12 +5047,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02475",
+      "doi": "10.1021/acs.orglett.6c02179",
       "journal": "Organic Letters",
-      "title": "Pd-Catalyzed Enantioselective Annulative Naphthylcarbamoylation of Internal Alkynes for Accessing Axially Chiral Exocyclic Alkenes",
-      "date": "2026-06-25",
+      "title": "Asymmetric Synthesis of α-Aryl α-Amino Acids via NHC-Catalyzed Dynamic Kinetic Resolution",
+      "date": "2026-06-23",
       "year": "2026",
-      "firstAuthor": "Zhi-Jie Diao",
+      "firstAuthor": "Huai-Gui Li",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -5224,18 +5224,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.9125401",
+      "doi": "10.1002/anie.2026-m1308073600",
       "journal": "Angew",
-      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
-      "date": "2026-08-22",
+      "title": "Inside Front Cover: Multi‐Level Asymmetric Mesoporous Nanochannels for Photothermal‐Regulated Dopamine Sensing (Angew. Chem. Int. Ed. 41/2026)",
+      "date": "2026-08-20",
       "year": "2026",
-      "firstAuthor": "Yuye Jiao",
+      "firstAuthor": "Abuduheiremu Awati",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_angew"
+        "2026-08-15_2026-08-21_angew"
       ],
       "sourceFingerprints": [
-        "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+        "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -5396,12 +5396,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c01690",
+      "doi": "10.1021/acs.orglett.6c02074",
       "journal": "Organic Letters",
-      "title": "Organocatalytic Enantioselective Desymmetrization Cascade for the Construction of Functionalized Oxabicyclo[3.3.1]nonanes",
-      "date": "2026-06-23",
+      "title": "Dual Co/Photoredox-Catalyzed Regio- and Stereoselective Allyl Homocoupling Providing Functionalized 1,5-Dienes",
+      "date": "2026-06-22",
       "year": "2026",
-      "firstAuthor": "Vikas S. Chavan",
+      "firstAuthor": "Fengyun Gao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -5573,12 +5573,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.2026-m1308073600",
+      "doi": "10.1002/anie.1293701",
       "journal": "Angew",
-      "title": "Inside Front Cover: Multi‐Level Asymmetric Mesoporous Nanochannels for Photothermal‐Regulated Dopamine Sensing (Angew. Chem. Int. Ed. 41/2026)",
-      "date": "2026-08-20",
+      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "date": "2026-08-19",
       "year": "2026",
-      "firstAuthor": "Abuduheiremu Awati",
+      "firstAuthor": "Jidong Yu",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -5745,12 +5745,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02179",
+      "doi": "10.1021/acs.orglett.6c02169",
       "journal": "Organic Letters",
-      "title": "Asymmetric Synthesis of α-Aryl α-Amino Acids via NHC-Catalyzed Dynamic Kinetic Resolution",
-      "date": "2026-06-23",
+      "title": "Divergent Asymmetric Total Synthesis of (+)-Panduratin I, (+)-Nicolaioidesin B, (+)-Isopanduratin A1, and (+)-2-Hydroxyisopanduratin A via Enantioselective Radical Cation (4 + 2) Cycloaddition",
+      "date": "2026-06-22",
       "year": "2026",
-      "firstAuthor": "Huai-Gui Li",
+      "firstAuthor": "Hayato Akao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -6258,12 +6258,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.1293701",
+      "doi": "10.1002/anie.8680687",
       "journal": "Angew",
-      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
       "date": "2026-08-19",
       "year": "2026",
-      "firstAuthor": "Jidong Yu",
+      "firstAuthor": "Mingyang Liu",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -6426,12 +6426,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02074",
+      "doi": "10.1021/acs.orglett.6c02252",
       "journal": "Organic Letters",
-      "title": "Dual Co/Photoredox-Catalyzed Regio- and Stereoselective Allyl Homocoupling Providing Functionalized 1,5-Dienes",
-      "date": "2026-06-22",
+      "title": "Protodesilylation as a Stereochemical Switch: Divergent Asymmetric Synthesis from Chiral Skipped Dienes",
+      "date": "2026-06-20",
       "year": "2026",
-      "firstAuthor": "Fengyun Gao",
+      "firstAuthor": "Hayato Tanikawa",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"
@@ -6603,12 +6603,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.8680687",
+      "doi": "10.1002/anie.2026-m2607093700",
       "journal": "Angew",
-      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
-      "date": "2026-08-19",
+      "title": "Frontispiece: Probing Into Asymmetric Dearomatizing Photocycloadditions of 2‐Naphthalene Derivatives With Alkenes: [2 + 2] and [4 + 2] Pathways",
+      "date": "2026-08-17",
       "year": "2026",
-      "firstAuthor": "Mingyang Liu",
+      "firstAuthor": "Shi Tang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -6771,12 +6771,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02169",
+      "doi": "10.1021/acs.orglett.6c02200",
       "journal": "Organic Letters",
-      "title": "Divergent Asymmetric Total Synthesis of (+)-Panduratin I, (+)-Nicolaioidesin B, (+)-Isopanduratin A1, and (+)-2-Hydroxyisopanduratin A via Enantioselective Radical Cation (4 + 2) Cycloaddition",
-      "date": "2026-06-22",
+      "title": "Enantioselective Synthesis of Benzazepine Bearing a Diaryl Quaternary Carbon Center by Aryl Iodide-Catalyzed Asymmetric Desymmetrization",
+      "date": "2026-06-19",
       "year": "2026",
-      "firstAuthor": "Hayato Akao",
+      "firstAuthor": "Lei Chen",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-06-01_2026-06-30_organic-letters"

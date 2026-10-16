@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-global-coverage-v1",
   "mode": "candidate_discovery_and_review_coverage_only",
-  "generatedAt": "2026-10-16T07:03:19.205Z",
+  "generatedAt": "2026-10-16T08:04:45.495Z",
   "sourceCompletedAt": "2026-10-15T15:46:40.943Z",
   "currentCursor": {
     "range": {
@@ -20,13 +20,13 @@
     "candidateOccurrences": 60580,
     "distinctCandidateDois": 57266,
     "alreadyPublished": 898,
-    "approvedAwaiting08": 96,
+    "approvedAwaiting08": 105,
     "evidencePending": 2,
-    "requiresTwoPassReview": 56270,
+    "requiresTwoPassReview": 56261,
     "ambiguousStatus": 0,
     "unverifiedPublicationDate": 5589,
     "suspectedNonresearch": 944,
-    "staleReviewerStatusRecords": 0,
+    "staleReviewerStatusRecords": 9,
     "duplicateDoiOccurrences": 3314,
     "sourcePlannedRoots": 3600,
     "sourceCompletedRoots": 396,
@@ -11832,6 +11832,6 @@
     "liveStatusReconciledAgainstPublishedAndApproved": true
   },
   "currentFormalDoiMembershipSnapshot": 1186,
-  "currentDoubleReviewedInputCount": 218,
+  "currentDoubleReviewedInputCount": 227,
   "currentPendingSourceConflicts": 2
 }
