@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.10
+// @version      0.2.11
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -344,7 +344,8 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.10';
+  const BATCH_SCRIPT_VERSION='0.2.11';
+  const BATCH_BINDING_REVISION='historic-body-early-bound-v031';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v030';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -1021,7 +1022,7 @@
     if(['timeout','publisher_no_response','publisher_script_not_confirmed'].includes(prior.status)
       &&prior.pageDoiVerified!==true){
       // Exactly one automatic replay after the publisher binding revision.
-      return manualBlocked===true||(prior.captureRevision!==BATCH_CAPTURE_REVISION
+      return manualBlocked===true||(prior.bindingRevision!==BATCH_BINDING_REVISION
         &&![403,429].includes(Number(prior.httpStatus||0)));
     }
     if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
@@ -1790,7 +1791,8 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:job.token,captureRevision:BATCH_CAPTURE_REVISION,navigationMode,
+          runId,jobId:job.token,captureRevision:BATCH_CAPTURE_REVISION,
+          bindingRevision:BATCH_BINDING_REVISION,navigationMode,
           rightsSignal,bodyEvidence,bodyCompleteness:
             status==='saved_local'?String(result.packet?.bodyCompleteness||'partial'):'not_saved',
           reportEventId:''};
@@ -2010,6 +2012,35 @@
     storeResult({status:'ok',stage:'local_store',packet,sourceSha256});
   }
 
+  // The controller requires evidence that Tampermonkey actually entered the
+  // publisher tab. DOMContentLoaded can be delayed by a publisher shell, so
+  // report *only script activation* at document-start, not a verified DOI,
+  // licence or reusable manuscript. A random/open publisher tab is not a job.
+  function batchEarlyPublisherHeartbeat(){
+    if(!publisher(location.hostname)||typeof GM_getValue!=='function'
+      ||typeof GM_setValue!=='function')return false;
+    const job=GM_getValue(BATCH_JOB,null);
+    if(!job||!normalizeDoi(job.doi)||!job.runId
+      ||!/^[a-f0-9]{24}$/.test(String(job.token||''))
+      ||Number(job.expiresAt||0)<=Date.now())return false;
+    const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
+    if(fragment&&fragment[1]!==job.token)return false;
+    let remembered='';
+    try{remembered=sessionStorage.getItem(BATCH_TAB_BIND_KEY)||'';}catch(_){}
+    if(fragment?.[1]!==job.token&&remembered!==job.token)return false;
+    let observedDoi='';
+    try{observedDoi=pageDoi();}catch(_){}
+    if(observedDoi&&observedDoi!==job.doi)return false;
+    const prior=GM_getValue(BATCH_PROGRESS,null);
+    if(prior?.runId===job.runId&&prior?.token===job.token)return true;
+    GM_setValue(BATCH_PROGRESS,{
+      runId:job.runId,token:job.token,doi:job.doi,
+      stage:'publisher_dom_wait',failed:false,reasonCode:'',
+      at:Date.now(),pageDoiVerified:false,sectionCount:0,
+      evidenceChars:0,httpStatus:null,bindingRevision:BATCH_BINDING_REVISION
+    });
+    return true;
+  }
   function batchBoot(){
     if(location.hostname==='gallery.gczhouwld.com'){
       if(location.pathname==='/'||location.pathname==='/index.html'){
@@ -2023,8 +2054,18 @@
       void batchWorker().catch(()=>{});
     }
   }
-  // Capture fragment binding at document-start, but defer DOM work until ready.
-  if(document.readyState==='loading'&&typeof document.addEventListener==='function')
-    document.addEventListener('DOMContentLoaded',batchBoot,{once:true});
-  else batchBoot();
+  // Run the DOI-bound startup receipt synchronously before the document is
+  // ready. Only DOM extraction waits; interactive fires before delayed DCL.
+  if(publisher(location.hostname))batchEarlyPublisherHeartbeat();
+  let batchBooted=false;
+  function batchBootOnce(){
+    if(batchBooted)return;
+    batchBooted=true;batchBoot();
+  }
+  if(document.readyState==='loading'&&typeof document.addEventListener==='function'){
+    document.addEventListener('readystatechange',()=>{
+      if(document.readyState!=='loading')batchBootOnce();
+    });
+    document.addEventListener('DOMContentLoaded',batchBootOnce,{once:true});
+  }else batchBootOnce();
 })();
