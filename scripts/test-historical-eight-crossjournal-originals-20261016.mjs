@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
-import {validateHistoricalApproval,selectHistoricalAdmissions}
+import {validateHistoricalApproval,selectHistoricalAdmissions,historicalPublisherPageMatchesDoi}
   from './lib/historical-admission.mjs';
 import {isExcludedDoi} from '../shared/literature-policy.js';
 import {validChineseTitle} from '../shared/chinese-title-overrides.js';
@@ -121,4 +121,14 @@ test('the eight stay off-slot and owner-excluded DOI gets veto receipt',()=>{
    assert.equal(entries.has(id),false);
    assert.equal(manifest.pending.some(x=>x.doi===id),false);
  }
+});
+
+test('official RSC canonical articlelanding URL matches only exact DOI and publisher',()=>{
+ const id='10.1039/d6sc02950g';
+ const original='https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g';
+ assert.equal(historicalPublisherPageMatchesDoi(id,original),true);
+ assert.equal(historicalPublisherPageMatchesDoi(id,original.replace('/sc/','/gc/')),false);
+ assert.equal(historicalPublisherPageMatchesDoi(id,original.replace('d6sc02950g','d6sc02950x')),false);
+ assert.equal(historicalPublisherPageMatchesDoi(id,original.replace('pubs.rsc.org','forged.rsc.example')),false);
+ assert.equal(historicalPublisherPageMatchesDoi(id,'http://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g'),false);
 });
