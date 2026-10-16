@@ -240,7 +240,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(peak,2);assert.equal(calls,Math.ceil(177/12));
+ assert.equal(peak,2);assert.equal(calls,Math.ceil(177/40));
  assert.equal(result.complete,true);assert.equal(result.items.length,177);
  assert.equal(result.unknown,0);
 });
@@ -287,7 +287,7 @@ test('owner PDF transient timeout splits only the failed small batch and preserv
    sleep:async()=>{},
    inventoryReadMetadataJson:async options=>{
      const items=JSON.parse(options.data).dois;calls++;
-     if(items.length===12&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
+     if(items.length===40&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
      return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:items.length,
        items:items.map(doi=>({doi,status:'ready'}))};
    }
@@ -297,7 +297,7 @@ test('owner PDF transient timeout splits only the failed small batch and preserv
  assert.equal(result.complete,true);
  assert.equal(result.unknown,0);
  assert.equal(result.items.length,53);
- assert.equal(calls,7,'first 12 split 6+6; other four bounded DOI batches remain');
+ assert.equal(calls,4,'one failed 40 DOI batch splits into 20+20; remaining 13 DOIs complete');
 });
 test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',async()=>{
  const papers=Array.from({length:25},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
@@ -311,9 +311,9 @@ test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',as
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(calls,Math.ceil(papers.length/12),'no per-DOI auth-denial retry');
+ assert.equal(calls,Math.ceil(papers.length/40),'no per-DOI auth-denial retry');
  assert.equal(result.complete,false);
  assert.equal(result.items.length,0);
  assert.equal(result.unknown,25);
- assert.equal(result.errors.length,Math.ceil(papers.length/12));
+ assert.equal(result.errors.length,Math.ceil(papers.length/40));
 });
