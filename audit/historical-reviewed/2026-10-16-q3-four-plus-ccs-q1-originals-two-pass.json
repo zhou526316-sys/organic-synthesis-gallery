@@ -1,0 +1,507 @@
+{
+  "schemaVersion": "gallery-historical-q3-four-plus-ccs-q1-20261016-v1",
+  "reviewedAt": "2026-10-16T03:28:25.385Z",
+  "mode": "doi_specific_original_synthetic_method_two_pass_academic_review_only",
+  "baselineApproved": 184,
+  "newApprovals": 5,
+  "q3Originals": 4,
+  "publisherCorrectedQ1Originals": 1,
+  "sourceBranch": "staging/historical-archive-nightly",
+  "reviewMethod": "one_assistant_separately_wrote_first_and_adversarial_second_passes_not_independent_human_reviewers",
+  "approved": [
+    {
+      "doi": "10.1021/acs.orglett.6c02958",
+      "journal": "Organic Letters",
+      "title": "Carbene-Catalyzed Divergent Synthesis of Cyclic Imidic Acid Derivatives via Dehydrogenative Coupling",
+      "titleZh": "卡宾催化环状醛亚胺与胺、醇和硫醇脱氢偶联发散合成亚胺酸衍生物",
+      "date": "2026-08-31",
+      "authors": [
+        "Xin Zhao",
+        "Wenjun Ye",
+        "Fangying Yuan",
+        "Fachang Yang",
+        "Jianbo Liu",
+        "Tinglei Zhang",
+        "Tingting Li",
+        "Shi-Chao Ren"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11211-11217",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02958"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发卡宾催化的环状醛亚胺C–H与不同X–H亲核伙伴交叉脱氢偶联，一套平台同时获得三种不同亚胺酸衍生物，而非单纯先前醛亚胺胺化的重复。",
+      "evidenceBasis": "DOI 10.1021/acs.orglett.6c02958，原刊 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02958，权威摘要/日期核查 https://pubs.acs.org/orlef7/article/28/36/11211/5383696/Carbene-Catalyzed-Divergent-Synthesis-of-Cyclic；ACS Letter明确首次在线2026-08-31，2026-09-11仅为卷期日期。。冻结来源窗口2026-08-22_2026-08-31_organic-letters、原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827、审核队列Git blob 9b64dc00ec8df2cfd5891abcb34961a86a538e1f、来源SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+      "challengeReason": "反向检验：如果只是既知胺与醛亚胺氧化酰胺化或仅制作单一杂环，不足以证明发散方法学。本文明确扩至三类X–H伙伴与三类不同键型，且已应用药物和农药衍生化；但不把所设卡宾中间体的瞬态路径当作实验逐步直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "开发卡宾催化的环状醛亚胺C–H与不同X–H亲核伙伴交叉脱氢偶联，一套平台同时获得三种不同亚胺酸衍生物，而非单纯先前醛亚胺胺化的重复。",
+        "preparativeTransformation": "环状醛亚胺分别与胺、醇和硫醇发生C–H/X–H脱氢偶联，合成环状脒、亚胺酸酯及亚胺硫代酯，实际形成不同C–N、C–O、C–S键的含氮杂环衍生物。",
+        "generalityEvidence": "ACS原始Letter摘要明确胺、醇、硫醇三类亲核伙伴的不同产物系列、官能团耐受性、天然产物和药物修饰，以及市售农药probenazole与dichlobentiazox多种取代衍生物；未擅报统一最大产率。",
+        "sourceEvidence": "DOI 10.1021/acs.orglett.6c02958，原刊 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02958，权威摘要/日期核查 https://pubs.acs.org/orlef7/article/28/36/11211/5383696/Carbene-Catalyzed-Divergent-Synthesis-of-Cyclic；ACS Letter明确首次在线2026-08-31，2026-09-11仅为卷期日期。。冻结来源窗口2026-08-22_2026-08-31_organic-letters、原始Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827、审核队列Git blob 9b64dc00ec8df2cfd5891abcb34961a86a538e1f、来源SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+        "boundaryChallenge": "反向检验：如果只是既知胺与醛亚胺氧化酰胺化或仅制作单一杂环，不足以证明发散方法学。本文明确扩至三类X–H伙伴与三类不同键型，且已应用药物和农药衍生化；但不把所设卡宾中间体的瞬态路径当作实验逐步直接观测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02958",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/36/11211/5383696/Carbene-Catalyzed-Divergent-Synthesis-of-Cyclic",
+        "publisherOnlineDate": "2026-08-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "9b64dc00ec8df2cfd5891abcb34961a86a538e1f",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-31",
+          "stageApiDate": "2026-08-31",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/36/11211/5383696/Carbene-Catalyzed-Divergent-Synthesis-of-Cyclic",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online_not_Sept11_issue",
+          "stageDateIsIssueNotPublication": false
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发卡宾催化的环状醛亚胺C–H与不同X–H亲核伙伴交叉脱氢偶联，一套平台同时获得三种不同亚胺酸衍生物，而非单纯先前醛亚胺胺化的重复。 环状醛亚胺分别与胺、醇和硫醇发生C–H/X–H脱氢偶联，合成环状脒、亚胺酸酯及亚胺硫代酯，实际形成不同C–N、C–O、C–S键的含氮杂环衍生物。 ACS原始Letter摘要明确胺、醇、硫醇三类亲核伙伴的不同产物系列、官能团耐受性、天然产物和药物修饰，以及市售农药probenazole与dichlobentiazox多种取代衍生物；未擅报统一最大产率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：如果只是既知胺与醛亚胺氧化酰胺化或仅制作单一杂环，不足以证明发散方法学。本文明确扩至三类X–H伙伴与三类不同键型，且已应用药物和农药衍生化；但不把所设卡宾中间体的瞬态路径当作实验逐步直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01515",
+      "journal": "JOC",
+      "title": "Visible-Light-Mediated Aerobic Oxidative Cyclization of 2-Aminobenzenesulfonamides and Alcohols for the Synthesis of Benzothiadiazine-1,1-Dioxides under Ambient Conditions",
+      "titleZh": "可见光与空气氧化条件下氨基苯磺酰胺和醇环化合成苯并噻二嗪二氧化物",
+      "date": "2026-08-31",
+      "authors": [
+        "Yongke Hu",
+        "Haijie Wang",
+        "Yanqi Zhang",
+        "Meng Luo",
+        "Gulou Shen",
+        "Shaozhong Li",
+        "Yanxing Li",
+        "Jin Li",
+        "Huaju Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12313-12320",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01515"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过无需金属的9-芴酮光催化剂和氧气在室温下把普通醇作为环化碳片段，制备苯并噻二嗪-1,1-二氧化物药物相关骨架，具有实际分离制备的底物拓展。",
+      "evidenceBasis": "DOI 10.1021/acs.joc.6c01515，原刊 https://pubs.acs.org/doi/10.1021/acs.joc.6c01515，权威摘要/日期核查 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01515/5382900/Visible-Light-Mediated-Aerobic-Oxidative；ACS JOC原始Article页面标记首次在线2026-08-31。。冻结来源窗口2026-08-22_2026-08-31_joc、原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、审核队列Git blob ee9ff04c84b94bee366e1cdedcd1caf05348e82a、来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+      "challengeReason": "反向检验：反应是否只是醇的光氧化及检测所得醛，而缺少有机杂环产品？原论文报告分离的多种苯并噻二嗪二氧化物以及3a克级实验，属于原创制备路线。自由基机制仅由作者机理研究提出，不能把自由基中间体和每个氧转移步骤写作已经直接鉴定。",
+      "scopeAssessment": {
+        "primaryContribution": "通过无需金属的9-芴酮光催化剂和氧气在室温下把普通醇作为环化碳片段，制备苯并噻二嗪-1,1-二氧化物药物相关骨架，具有实际分离制备的底物拓展。",
+        "preparativeTransformation": "2-氨基苯磺酰胺和多种醇在9-芴酮可见光催化、氧气参与下氧化缩合/环化，构筑含N–C键的苯并噻二嗪-1,1-二氧化物。",
+        "generalityEvidence": "ACS公开摘要记录多种取代底物获得良至优收率，代表化合物3a已克级合成；该实验验证了规模化可能，但未据此宣称所有化合物均可克级或统一无副产物。",
+        "sourceEvidence": "DOI 10.1021/acs.joc.6c01515，原刊 https://pubs.acs.org/doi/10.1021/acs.joc.6c01515，权威摘要/日期核查 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01515/5382900/Visible-Light-Mediated-Aerobic-Oxidative；ACS JOC原始Article页面标记首次在线2026-08-31。。冻结来源窗口2026-08-22_2026-08-31_joc、原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、审核队列Git blob ee9ff04c84b94bee366e1cdedcd1caf05348e82a、来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+        "boundaryChallenge": "反向检验：反应是否只是醇的光氧化及检测所得醛，而缺少有机杂环产品？原论文报告分离的多种苯并噻二嗪二氧化物以及3a克级实验，属于原创制备路线。自由基机制仅由作者机理研究提出，不能把自由基中间体和每个氧转移步骤写作已经直接鉴定。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01515",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01515/5382900/Visible-Light-Mediated-Aerobic-Oxidative",
+        "publisherOnlineDate": "2026-08-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "ee9ff04c84b94bee366e1cdedcd1caf05348e82a",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-31",
+          "stageApiDate": "2026-08-31",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01515/5382900/Visible-Light-Mediated-Aerobic-Oxidative",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Article_Published_Online_not_issue",
+          "stageDateIsIssueNotPublication": false
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过无需金属的9-芴酮光催化剂和氧气在室温下把普通醇作为环化碳片段，制备苯并噻二嗪-1,1-二氧化物药物相关骨架，具有实际分离制备的底物拓展。 2-氨基苯磺酰胺和多种醇在9-芴酮可见光催化、氧气参与下氧化缩合/环化，构筑含N–C键的苯并噻二嗪-1,1-二氧化物。 ACS公开摘要记录多种取代底物获得良至优收率，代表化合物3a已克级合成；该实验验证了规模化可能，但未据此宣称所有化合物均可克级或统一无副产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：反应是否只是醇的光氧化及检测所得醛，而缺少有机杂环产品？原论文报告分离的多种苯并噻二嗪二氧化物以及3a克级实验，属于原创制备路线。自由基机制仅由作者机理研究提出，不能把自由基中间体和每个氧转移步骤写作已经直接鉴定。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00729",
+      "journal": "JOC",
+      "title": "Rh-Catalyzed C–H Activation/Cyclization for the Synthesis of Functionalized Indolizino[2,3-b]quinolinone Derivatives",
+      "titleZh": "铑催化烯胺酮与吡啶并三唑碳氢活化和串联环化构筑稠合喹啉酮",
+      "date": "2026-07-30",
+      "authors": [
+        "Long-Kun Chen",
+        "Mei-Yan Zhou",
+        "Yi-Ran Xia",
+        "Lin-Yan Li",
+        "Sheng-Jiao Yan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10836-10849",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00729"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出Rh(III)催化的烯胺酮与吡啶并三唑多键构筑级联反应，利用可改变的环化顺序发散制备两种稠合喹啉酮杂环系列，不是单纯结构表征论文。",
+      "evidenceBasis": "DOI 10.1021/acs.joc.6c00729，原刊 https://pubs.acs.org/doi/10.1021/acs.joc.6c00729，权威摘要/日期核查 https://pubmed.ncbi.nlm.nih.gov/42599465/；冻结ACS首次在线候选2026-07-30与ACS论文日期一致；PubMed所列2026-08-14为正式卷期日，不得覆盖在线日。。冻结来源窗口2026-07-22_2026-07-31_joc、原始Git blob 9181de94c2f59b0fb77a470f802a143699524037、审核队列Git blob c6b6227f38d496f1cad17214c17dee487f93d308、来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+      "challengeReason": "反向检验：两套骨架是否仅为计算路径、或两种环化先后顺序只是猜想？真实产物分支3/4均已制备，条件差异及SNAr调控明确；但作者对瞬态的无痕导向基活化、氧化N–C成键先后存在机理推断，不可仅凭最终产物证明唯一路径。",
+      "scopeAssessment": {
+        "primaryContribution": "提出Rh(III)催化的烯胺酮与吡啶并三唑多键构筑级联反应，利用可改变的环化顺序发散制备两种稠合喹啉酮杂环系列，不是单纯结构表征论文。",
+        "preparativeTransformation": "N-吡啶-2-基烯胺酮与吡啶并三唑在铑催化、1-AdCO2H及DCE 120°C等条件下经C–H活化形成一条C–C及两条C–N键，另以邻卤烯胺酮/NaOAc/100°C启动分子内SNAr路线生成另一系列稠合喹啉酮。",
+        "generalityEvidence": "PubMed正式原始Article摘要明确一锅三键构筑和另一条件导向的SNAr分支，分别获得结构不同的多环IZQLO类底物产品，报告基于两类伙伴的组合合成空间。温度100–120°C，不得误称温和室温。",
+        "sourceEvidence": "DOI 10.1021/acs.joc.6c00729，原刊 https://pubs.acs.org/doi/10.1021/acs.joc.6c00729，权威摘要/日期核查 https://pubmed.ncbi.nlm.nih.gov/42599465/；冻结ACS首次在线候选2026-07-30与ACS论文日期一致；PubMed所列2026-08-14为正式卷期日，不得覆盖在线日。。冻结来源窗口2026-07-22_2026-07-31_joc、原始Git blob 9181de94c2f59b0fb77a470f802a143699524037、审核队列Git blob c6b6227f38d496f1cad17214c17dee487f93d308、来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+        "boundaryChallenge": "反向检验：两套骨架是否仅为计算路径、或两种环化先后顺序只是猜想？真实产物分支3/4均已制备，条件差异及SNAr调控明确；但作者对瞬态的无痕导向基活化、氧化N–C成键先后存在机理推断，不可仅凭最终产物证明唯一路径。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00729",
+        "publisherArticlePage": "https://pubmed.ncbi.nlm.nih.gov/42599465/",
+        "publisherOnlineDate": "2026-07-30",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "c6b6227f38d496f1cad17214c17dee487f93d308",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "stageApiDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubmed.ncbi.nlm.nih.gov/42599465/",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Article_Published_Online_not_NLM_issue",
+          "stageDateIsIssueNotPublication": false
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "提出Rh(III)催化的烯胺酮与吡啶并三唑多键构筑级联反应，利用可改变的环化顺序发散制备两种稠合喹啉酮杂环系列，不是单纯结构表征论文。 N-吡啶-2-基烯胺酮与吡啶并三唑在铑催化、1-AdCO2H及DCE 120°C等条件下经C–H活化形成一条C–C及两条C–N键，另以邻卤烯胺酮/NaOAc/100°C启动分子内SNAr路线生成另一系列稠合喹啉酮。 PubMed正式原始Article摘要明确一锅三键构筑和另一条件导向的SNAr分支，分别获得结构不同的多环IZQLO类底物产品，报告基于两类伙伴的组合合成空间。温度100–120°C，不得误称温和室温。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：两套骨架是否仅为计算路径、或两种环化先后顺序只是猜想？真实产物分支3/4均已制备，条件差异及SNAr调控明确；但作者对瞬态的无痕导向基活化、氧化N–C成键先后存在机理推断，不可仅凭最终产物证明唯一路径。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1002/anie.9818208",
+      "journal": "Angew",
+      "title": "Catalytic C–F Bond Activation at Room Temperature: Enolate Cross-Couplings Enabled by [Pd(1-MeNAP)TFA]2 and LiHMDS",
+      "titleZh": "钯催化室温活化芳基碳氟键与烯醇负离子交叉偶联实现α-芳基化",
+      "date": "2026-07-26",
+      "authors": [
+        "Nele Krüger",
+        "Jie Shen",
+        "Sourav Manna",
+        "Lamphiza O. Najiar",
+        "Lukas J. Gooßen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "65",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "e9818208",
+        "doi": "10.1002/anie.9818208"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "首次在室温以非活化芳基氟化物与多种原位生成的烯醇负离子进行催化C–F裂解α-芳基化，提供替代强亲核有机金属试剂的温和C(sp2)–C(sp3)成键能力。",
+      "evidenceBasis": "DOI 10.1002/anie.9818208，原刊 https://onlinelibrary.wiley.com/doi/10.1002/anie.9818208，权威摘要/日期核查 https://pubmed.ncbi.nlm.nih.gov/42503218/；Wiley Early View Version of Record online和PubMed Epub均为2026-07-26；正式卷期2026-09-14。。冻结来源窗口2026-07-22_2026-07-31_angew、原始Git blob 2dd00891cd0531695a8742fac9d34583cfd7ff8c、审核队列Git blob 7335222792da178caaf95f02a5296a503107214e、来源SHA256 712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+      "challengeReason": "反向检验：是否只是芳基氟化物在强碱条件的亲核芳香取代SNAr，被误称Pd催化C–F活化？作者用钯预催化剂及配体的实验催化体系，并以计算研究支持Li对氧化加成的作用；但DFT仍属解释性模型，不能断言氧化加成路径已排他实验证明。",
+      "scopeAssessment": {
+        "primaryContribution": "首次在室温以非活化芳基氟化物与多种原位生成的烯醇负离子进行催化C–F裂解α-芳基化，提供替代强亲核有机金属试剂的温和C(sp2)–C(sp3)成键能力。",
+        "preparativeTransformation": "[Pd(1-MeNAP)TFA]2、tBuBrettPhos和LiHMDS协同使氟代芳烃的芳基C–F键与酮、酯、腈及酰胺前体的α-碳负离子交叉偶联得到α-芳基化产物。",
+        "generalityEvidence": "Wiley Early View及PubMed原始Communication摘要明确对酮、酯、腈乃至酰胺四类可去质子化底物的应用；DFT模型提出锂离子协调氟促进Pd氧化加成，未将计算能垒当作观察到的过渡态。",
+        "sourceEvidence": "DOI 10.1002/anie.9818208，原刊 https://onlinelibrary.wiley.com/doi/10.1002/anie.9818208，权威摘要/日期核查 https://pubmed.ncbi.nlm.nih.gov/42503218/；Wiley Early View Version of Record online和PubMed Epub均为2026-07-26；正式卷期2026-09-14。。冻结来源窗口2026-07-22_2026-07-31_angew、原始Git blob 2dd00891cd0531695a8742fac9d34583cfd7ff8c、审核队列Git blob 7335222792da178caaf95f02a5296a503107214e、来源SHA256 712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95，来源家族 crossref+openalex。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+        "boundaryChallenge": "反向检验：是否只是芳基氟化物在强碱条件的亲核芳香取代SNAr，被误称Pd催化C–F活化？作者用钯预催化剂及配体的实验催化体系，并以计算研究支持Li对氧化加成的作用；但DFT仍属解释性模型，不能断言氧化加成路径已排他实验证明。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.9818208",
+        "publisherArticlePage": "https://pubmed.ncbi.nlm.nih.gov/42503218/",
+        "publisherOnlineDate": "2026-07-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_angew",
+        "stageBatchSha": "2dd00891cd0531695a8742fac9d34583cfd7ff8c",
+        "sourceReviewQueueGitBlobSha": "7335222792da178caaf95f02a5296a503107214e",
+        "stageSourceSha256": "712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-26",
+          "stageApiDate": "2026-07-26",
+          "officialPublisherFirstOnline": "2026-07-26",
+          "publisherArticlePage": "https://pubmed.ncbi.nlm.nih.gov/42503218/",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "Wiley_Early_View_First_Published_and_NLM_Epub",
+          "stageDateIsIssueNotPublication": false
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次在室温以非活化芳基氟化物与多种原位生成的烯醇负离子进行催化C–F裂解α-芳基化，提供替代强亲核有机金属试剂的温和C(sp2)–C(sp3)成键能力。 [Pd(1-MeNAP)TFA]2、tBuBrettPhos和LiHMDS协同使氟代芳烃的芳基C–F键与酮、酯、腈及酰胺前体的α-碳负离子交叉偶联得到α-芳基化产物。 Wiley Early View及PubMed原始Communication摘要明确对酮、酯、腈乃至酰胺四类可去质子化底物的应用；DFT模型提出锂离子协调氟促进Pd氧化加成，未将计算能垒当作观察到的过渡态。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：是否只是芳基氟化物在强碱条件的亲核芳香取代SNAr，被误称Pd催化C–F活化？作者用钯预催化剂及配体的实验催化体系，并以计算研究支持Li对氧化加成的作用；但DFT仍属解释性模型，不能断言氧化加成路径已排他实验证明。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506810",
+      "journal": "CCS Chemistry",
+      "title": "Unlocking Aliphatic Tertiary Amides as Versatile Substrates for Photocatalytic Reductive Cross-Coupling Reactions",
+      "titleZh": "铱光催化还原活化脂肪族叔酰胺实现自由基交叉偶联",
+      "date": "2026-01-11",
+      "authors": [
+        "Zheng-Yun Weng",
+        "Yu-Qing Li",
+        "Wen-Xin He",
+        "Zi-Yi Chen",
+        "Pei-Qiang Huang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3932-3945",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506810"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者发展铱光串联还原催化使通常惰性的脂肪族叔酰胺直接参与自由基交叉偶联，构筑多样α-取代胺及杂芳基修饰产物，具有真正有机制备底物范围。",
+      "evidenceBasis": "DOI 10.31635/ccschem.025.202506810，原刊 https://www.chinesechemsoc.org/doi/10.31635/ccschem.025.202506810，权威摘要/日期核查 https://huangpeiqiang.xmu.edu.cn/info/1021/1063.htm；厦门大学作者课题组2026发表目录准确区分2025-12-09 IOA Posting Date和2026-01-11 Online Publication Date；后者为首次正式在线，冻结Crossref Q3源把2026-08-01期次月误当出版日。。冻结来源窗口2026-08-01_2026-08-07_ccs-chemistry、原始Git blob 1e66685c4581facf08b536ba897d1bf1d51be00d、审核队列Git blob 0c6b749c21bf68c24e627c9935f99571f59c661d、来源SHA256 6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e，来源家族 crossref。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+      "challengeReason": "反向检验：若仅为2026年8月CCS卷期页的Q3上线文献，则按错误日期纳入会污染季度统计。作者课题组明示2026-01-11正式在线、2025-12-09 IOA仅刊前上线；真实合成方法可历史纳入但必须metadata_only，不能Q3 toc_only或Today。跨源只有Crossref，必须保留缺少OpenAlex逐DOI记录的事实，不能虚称双来源。",
+      "scopeAssessment": {
+        "primaryContribution": "作者发展铱光串联还原催化使通常惰性的脂肪族叔酰胺直接参与自由基交叉偶联，构筑多样α-取代胺及杂芳基修饰产物，具有真正有机制备底物范围。",
+        "preparativeTransformation": "脂肪族叔酰胺经Ir光催化还原形成α-含氮相关自由基中间体，与含氮杂芳烃如吡啶类接受伙伴形成新C–C键，得到可再氢化为部分或全饱和α-含氮产物的衍生胺。",
+        "generalityEvidence": "厦门大学课题组论文目录和CCS Chemistry研究新闻给出多种官能团（烯基、卤素、CF3、氰基、酮）兼容，若干生物活性化合物酰胺衍生物后期吡啶基化、克级反应及后续产物转换；蛋白/材料性能非该论文主要研究对象。",
+        "sourceEvidence": "DOI 10.31635/ccschem.025.202506810，原刊 https://www.chinesechemsoc.org/doi/10.31635/ccschem.025.202506810，权威摘要/日期核查 https://huangpeiqiang.xmu.edu.cn/info/1021/1063.htm；厦门大学作者课题组2026发表目录准确区分2025-12-09 IOA Posting Date和2026-01-11 Online Publication Date；后者为首次正式在线，冻结Crossref Q3源把2026-08-01期次月误当出版日。。冻结来源窗口2026-08-01_2026-08-07_ccs-chemistry、原始Git blob 1e66685c4581facf08b536ba897d1bf1d51be00d、审核队列Git blob 0c6b749c21bf68c24e627c9935f99571f59c661d、来源SHA256 6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e，来源家族 crossref。本审核未下载、复制或发布全文/SI/PDF/正文图或受版权限制摘要。",
+        "boundaryChallenge": "反向检验：若仅为2026年8月CCS卷期页的Q3上线文献，则按错误日期纳入会污染季度统计。作者课题组明示2026-01-11正式在线、2025-12-09 IOA仅刊前上线；真实合成方法可历史纳入但必须metadata_only，不能Q3 toc_only或Today。跨源只有Crossref，必须保留缺少OpenAlex逐DOI记录的事实，不能虚称双来源。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.025.202506810",
+        "publisherArticlePage": "https://huangpeiqiang.xmu.edu.cn/info/1021/1063.htm",
+        "publisherOnlineDate": "2026-01-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_ccs-chemistry",
+        "stageBatchSha": "1e66685c4581facf08b536ba897d1bf1d51be00d",
+        "sourceReviewQueueGitBlobSha": "0c6b749c21bf68c24e627c9935f99571f59c661d",
+        "stageSourceSha256": "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-01",
+          "stageApiDate": "2026-08-01",
+          "officialPublisherFirstOnline": "2026-01-11",
+          "publisherArticlePage": "https://huangpeiqiang.xmu.edu.cn/info/1021/1063.htm",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_Chemistry_Original_Article_Date_from_Author_lab_and_press_not_Q3_issue",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "作者发展铱光串联还原催化使通常惰性的脂肪族叔酰胺直接参与自由基交叉偶联，构筑多样α-取代胺及杂芳基修饰产物，具有真正有机制备底物范围。 脂肪族叔酰胺经Ir光催化还原形成α-含氮相关自由基中间体，与含氮杂芳烃如吡啶类接受伙伴形成新C–C键，得到可再氢化为部分或全饱和α-含氮产物的衍生胺。 厦门大学课题组论文目录和CCS Chemistry研究新闻给出多种官能团（烯基、卤素、CF3、氰基、酮）兼容，若干生物活性化合物酰胺衍生物后期吡啶基化、克级反应及后续产物转换；蛋白/材料性能非该论文主要研究对象。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向检验：若仅为2026年8月CCS卷期页的Q3上线文献，则按错误日期纳入会污染季度统计。作者课题组明示2026-01-11正式在线、2025-12-09 IOA仅刊前上线；真实合成方法可历史纳入但必须metadata_only，不能Q3 toc_only或Today。跨源只有Crossref，必须保留缺少OpenAlex逐DOI记录的事实，不能虚称双来源。"
+        }
+      ]
+    }
+  ],
+  "publisherLinks": [
+    {
+      "doi": "10.1021/acs.orglett.6c02958",
+      "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02958",
+      "evidencePage": "https://pubs.acs.org/orlef7/article/28/36/11211/5383696/Carbene-Catalyzed-Divergent-Synthesis-of-Cyclic",
+      "publisherFirstOnline": "2026-08-31",
+      "stageSourceDay": "2026-08-31",
+      "rawGitBlob": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+      "reviewQueueGitBlob": "9b64dc00ec8df2cfd5891abcb34961a86a538e1f",
+      "sourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01515",
+      "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01515",
+      "evidencePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01515/5382900/Visible-Light-Mediated-Aerobic-Oxidative",
+      "publisherFirstOnline": "2026-08-31",
+      "stageSourceDay": "2026-08-31",
+      "rawGitBlob": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+      "reviewQueueGitBlob": "ee9ff04c84b94bee366e1cdedcd1caf05348e82a",
+      "sourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00729",
+      "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00729",
+      "evidencePage": "https://pubmed.ncbi.nlm.nih.gov/42599465/",
+      "publisherFirstOnline": "2026-07-30",
+      "stageSourceDay": "2026-07-30",
+      "rawGitBlob": "9181de94c2f59b0fb77a470f802a143699524037",
+      "reviewQueueGitBlob": "c6b6227f38d496f1cad17214c17dee487f93d308",
+      "sourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f"
+    },
+    {
+      "doi": "10.1002/anie.9818208",
+      "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.9818208",
+      "evidencePage": "https://pubmed.ncbi.nlm.nih.gov/42503218/",
+      "publisherFirstOnline": "2026-07-26",
+      "stageSourceDay": "2026-07-26",
+      "rawGitBlob": "2dd00891cd0531695a8742fac9d34583cfd7ff8c",
+      "reviewQueueGitBlob": "7335222792da178caaf95f02a5296a503107214e",
+      "sourceSha256": "712ee609819438d7039f5cdee9439257abf266678694010444fc597bf0d83b95"
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506810",
+      "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.025.202506810",
+      "evidencePage": "https://huangpeiqiang.xmu.edu.cn/info/1021/1063.htm",
+      "publisherFirstOnline": "2026-01-11",
+      "stageSourceDay": "2026-08-01",
+      "rawGitBlob": "1e66685c4581facf08b536ba897d1bf1d51be00d",
+      "reviewQueueGitBlob": "0c6b749c21bf68c24e627c9935f99571f59c661d",
+      "sourceSha256": "6680f856488fe27ed47a951ace862cbc2aa1161d920669e8cbc207ce32b9c96e"
+    }
+  ],
+  "holds": [
+    {
+      "doi": "10.1021/acs.orglett.6c02707",
+      "issue": "ACS_publication_online_Jul30_and_Jul31_disagree_across_legal_official_views",
+      "nextAction": "request_DOI_publisher_date_receipt_or_resolve_direct_history_conflict_not_auto_approve"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00852",
+      "issue": "ACS_publication_online_Aug31_and_Sep01_disagree_across_legal_official_views",
+      "nextAction": "check_Article_History_first_Version_of_Record_precisely"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01242",
+      "issue": "previous_Jun30_vs_Jul01_allegations_still_require_source_recconciliation",
+      "nextAction": "compare_article_history_receipts_then_decide"
+    },
+    {
+      "doi": "10.1021/jacs.6c08814",
+      "issue": "novel_polyketone_synthetic_catalyst_vs_main_material_adhesion_contribution_scope",
+      "nextAction": "review_primary_synthesis_novelty_and_polymer_scope_before_include"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03772",
+      "issue": "one_norcorrole_template_regioselective_diarylation_vs_primary_property_performance",
+      "nextAction": "seek_diverse_synthetic_scope_and_original_methodology_beyond_one_backbone"
+    }
+  ],
+  "guards": {
+    "noD1": true,
+    "noFormalPublication": true,
+    "noPublisherMediaOrPdf": true,
+    "noNewOrHot": true,
+    "no08SlotChange": true,
+    "ownerExclusionIntact": true,
+    "explicitQ1MetadataOnly": true
+  }
+}

@@ -489,3 +489,44 @@ test('two Chem Preview papers cite distinct Nature publisher original DOIs, not 
     publisherNonResearch:broken(1,{publisherPage:'https://fake.example/abs/pii/S2451929426002858'})}),
     /q3_nonresearch_publisher_evidence_invalid/);
 });
+
+
+test('archived Q1-first-online paper in a Q3 issue root is never counted as a Q3 approval',()=>{
+  const formerQuarterDoi='10.1021/acs.joc.6c00007';
+  const sourceDay='2026-07-04';
+  const addedRecord={doi:formerQuarterDoi,title:'Original photochemical amide synthesis, issue misdated',
+    date:sourceDay};
+  const expanded=shard(j1,'JOC',[...a.records,addedRecord]);
+  // Read-only reconciliation: do NOT rewrite the original source day.
+  const archiveApproval={
+    doi:formerQuarterDoi,date:'2026-01-11',
+    ingestionChannel:'historical_backfill',mediaPolicy:'metadata_only',
+    reviewEvidence:{
+      stageBatchId:j1,stageSourceSha256:sha(j1),
+      publisherOnlineDate:'2026-01-11',
+      firstOnlineDateEvidence:{
+        officialPublisherFirstOnline:'2026-01-11',
+        stageApiDate:sourceDay,
+        stageDateIsIssueNotPublication:true
+      }
+    }
+  };
+  const next={...input,shards:[expanded,b,c],
+    manifest:{accepted:[...manifest.accepted,archiveApproval],pending:[]}};
+  const {coverage,worklist}=reconcileQ3(next);
+  assert.equal(coverage.counters.sourceApprovedWaiting08,1);
+  assert.equal(coverage.counters.reviewedQ3Waiting08,1);
+  assert.equal(coverage.counters.sourcePublisherVerifiedOutsideQ3,1);
+  assert.equal(coverage.counters.sourcePublisherDateDiscrepancies,1);
+  assert.equal(coverage.counters.unfinishedQ3OrDateVerification,3);
+  assert.ok(!worklist.rows.some(x=>x.doi===formerQuarterDoi));
+  const withBadReceipt=(changes)=>({...next,
+    manifest:{accepted:[...manifest.accepted,{
+      ...archiveApproval,
+      reviewEvidence:{...archiveApproval.reviewEvidence,...changes}
+    }],pending:[]}});
+  assert.throws(()=>reconcileQ3(withBadReceipt({stageSourceSha256:'0'.repeat(64)})),
+    /q3_historical_offquarter_source_evidence_invalid/);
+  assert.throws(()=>reconcileQ3(withBadReceipt({publisherOnlineDate:'2026-08-01'})),
+    /q3_historical_offquarter_source_evidence_invalid/);
+});
