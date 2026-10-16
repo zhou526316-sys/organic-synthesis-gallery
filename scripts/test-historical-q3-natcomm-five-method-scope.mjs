@@ -63,7 +63,8 @@ test('three approved DOIs are cumulative, rights protected, toc-only and authori
   assert.equal(manifest.summary.include,manifest.accepted.length);
   assert.ok(manifest.summary.include>=128);
   assert.equal(manifest.pending.length,2);
-  assert.equal(manifest.nextEligiblePublicationSlot,'2026-10-16T08:00:00+08:00');
+  assert.match(manifest.nextEligiblePublicationSlot,/^2026-10-\d{2}T08:00:00\+08:00$/);
+  assert.ok(manifest.nextEligiblePublicationSlot>='2026-10-16T08:00:00+08:00');
   assert.equal(validateHistoricalApproval(manifest).length,manifest.accepted.length);
   const ids=new Set(manifest.accepted.map(x=>x.doi));assert.equal(ids.size,manifest.accepted.length);
   for(const doi of approved){

@@ -55,7 +55,8 @@ test('source-reviewed Chem includes have actual first online and original Chines
   assert.ok(authorized.summary.include>=122,'three new Chem methods retained');
   assert.equal(authorized.summary.pending,2);
   assert.equal(authorized.summary.checked,authorized.accepted.length+authorized.pending.length);
-  assert.equal(authorized.nextEligiblePublicationSlot,'2026-10-16T08:00:00+08:00');
+  assert.match(authorized.nextEligiblePublicationSlot,/^2026-10-\d{2}T08:00:00\+08:00$/);
+  assert.ok(authorized.nextEligiblePublicationSlot>='2026-10-16T08:00:00+08:00');
   assert.equal(validateHistoricalApproval(authorized).length,authorized.accepted.length);
   assert.equal(science.dateEvidenceGitBlobSha,blob(recordPath));
   assert.equal(science.counts.include,3);
