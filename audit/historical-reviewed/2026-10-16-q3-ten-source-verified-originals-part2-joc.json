@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "gallery-historical-20261016-ten-cross-source-originals-v1",
+  "reviewedAt": "2026-10-16T14:39:29.746Z",
+  "mode": "doi_exact_official_first_online_and_real_preparative_scope",
+  "reviewMethod": "one_model_two_separately_written_passes_with_adversarial_second_not_two_human_reviewers",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "baselineApproved": 244,
+  "part": 2,
+  "partCount": 2,
+  "newApprovals": 5,
+  "approved": [
+    {
+      "doi": "10.1021/acs.joc.6c01268",
+      "journal": "JOC",
+      "title": "Synthesis of Iodomethyl Benzosultams via an Electrochemical Intramolecular Iodoamination/Cyclization of Olefinic Benzenesulfonamides",
+      "titleZh": "恒电流电化学分子内碘胺化烯基苯磺酰胺合成碘甲基苯并磺内酰胺",
+      "date": "2026-07-25",
+      "authors": [
+        "Yingliang Yu",
+        "Dongping Xu",
+        "Lizhen Jin",
+        "Denglin Feng",
+        "Mei Cao",
+        "Wu Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10728-10737",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01268"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展非隔膜电解池中恒电流驱动的烯基苯磺酰胺氧化碘胺化，经分子内5-exo-trig环化制备具有碘甲基取代的五元苯并磺内酰胺。",
+      "evidenceBasis": "ACS JOC DOI精确研究 Article History 首次在线 2026-07-25，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01268；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-07-22_2026-07-31_joc，原始raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+      "challengeReason": "第二遍反证：实际电解采用恒电流非隔膜体系，并非频率可编程交流电；5-exo-trig环化的C–N键与碘引入有先后过程，不应描写成所有步骤同步电极成键。异吲哚酮是邻近底物拓展，不表示任意烯烃或外部胺都能按同一规则碘胺化。",
+      "scopeAssessment": {
+        "primaryContribution": "发展非隔膜电解池中恒电流驱动的烯基苯磺酰胺氧化碘胺化，经分子内5-exo-trig环化制备具有碘甲基取代的五元苯并磺内酰胺。",
+        "preparativeTransformation": "烯基苯磺酰胺在电化学氧化条件下形成C–N和C–I键，实现分子内碘胺化/五元环化，生成保留可转化碘甲基基团的苯并磺内酰胺；另以烯基苯甲酰胺拓展至碘甲基异吲哚酮。",
+        "generalityEvidence": "ACS JOC原创Article报告较宽的取代烯基苯磺酰胺范围、碘甲基异吲哚酮拓展、克级制备和后续结构转化；研究的价值是可获得分离的杂环，而不是仅电化学伏安曲线。",
+        "sourceEvidence": "ACS JOC DOI精确研究 Article History 首次在线 2026-07-25，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01268；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-07-22_2026-07-31_joc，原始raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "第二遍反证：实际电解采用恒电流非隔膜体系，并非频率可编程交流电；5-exo-trig环化的C–N键与碘引入有先后过程，不应描写成所有步骤同步电极成键。异吲哚酮是邻近底物拓展，不表示任意烯烃或外部胺都能按同一规则碘胺化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01268",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01268",
+        "publisherOnlineDate": "2026-07-25",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "306e95ddae3a4c0b6d47869a24ec8e88f92770f7",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-25",
+          "officialPublisherFirstOnline": "2026-07-25",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01268",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展非隔膜电解池中恒电流驱动的烯基苯磺酰胺氧化碘胺化，经分子内5-exo-trig环化制备具有碘甲基取代的五元苯并磺内酰胺。 烯基苯磺酰胺在电化学氧化条件下形成C–N和C–I键，实现分子内碘胺化/五元环化，生成保留可转化碘甲基基团的苯并磺内酰胺；另以烯基苯甲酰胺拓展至碘甲基异吲哚酮。 ACS JOC原创Article报告较宽的取代烯基苯磺酰胺范围、碘甲基异吲哚酮拓展、克级制备和后续结构转化；研究的价值是可获得分离的杂环，而不是仅电化学伏安曲线。",
+          "reason": "发展非隔膜电解池中恒电流驱动的烯基苯磺酰胺氧化碘胺化，经分子内5-exo-trig环化制备具有碘甲基取代的五元苯并磺内酰胺。 烯基苯磺酰胺在电化学氧化条件下形成C–N和C–I键，实现分子内碘胺化/五元环化，生成保留可转化碘甲基基团的苯并磺内酰胺；另以烯基苯甲酰胺拓展至碘甲基异吲哚酮。 ACS JOC原创Article报告较宽的取代烯基苯磺酰胺范围、碘甲基异吲哚酮拓展、克级制备和后续结构转化；研究的价值是可获得分离的杂环，而不是仅电化学伏安曲线。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：实际电解采用恒电流非隔膜体系，并非频率可编程交流电；5-exo-trig环化的C–N键与碘引入有先后过程，不应描写成所有步骤同步电极成键。异吲哚酮是邻近底物拓展，不表示任意烯烃或外部胺都能按同一规则碘胺化。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01384",
+      "journal": "JOC",
+      "title": "Formal [3 + 3]-Cyclization of β-Trifluoromethyl Enones and Amidines: Synthesis of 1,4-Dihydropyrimidines Featuring a CF3-Tetrasubstituted Carbon Center",
+      "titleZh": "碱促进三氟甲基烯酮与脒的形式三加三环化构筑四取代碳三氟甲基二氢嘧啶",
+      "date": "2026-07-27",
+      "authors": [
+        "Xiao-Xiao Sun",
+        "Ya-Fei Hu",
+        "Yu-Jie Zhou",
+        "Danhua Ge",
+        "Mengtao Ma",
+        "Hao Xu",
+        "Zhi-Liang Shen",
+        "Xue-Qiang Chu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10753-10760",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01384"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "使用β-三氟甲基烯酮与易得脒进行碱促进形式[3+3]环化，在一步中形成1,4-二氢嘧啶骨架并构筑含CF3的四取代碳中心。",
+      "evidenceBasis": "ACS JOC DOI精确研究 Article History 首次在线 2026-07-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01384；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-07-22_2026-07-31_joc，原始raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+      "challengeReason": "第二遍反证：不能将形式[3+3]称作已经证明协同同步的六电子环加成，作者主张碱促进分步杂环构建；该研究没有手性催化剂或对映选择性数据，不可因季碳中心存在而自动冠以不对称合成或高ee。",
+      "scopeAssessment": {
+        "primaryContribution": "使用β-三氟甲基烯酮与易得脒进行碱促进形式[3+3]环化，在一步中形成1,4-二氢嘧啶骨架并构筑含CF3的四取代碳中心。",
+        "preparativeTransformation": "β-CF3烯酮与脒在碱性条件下发生区域可控的串联关环，得到具有1,4-二氢嘧啶六元环和三氟甲基季碳的新产物，区别于普通三氟甲基芳基替代。",
+        "generalityEvidence": "ACS JOC原始Article报道多种烯酮/脒底物的官能团兼容性、放大和复杂分子修饰，具有分离结构明确产物及单晶表征；题名强调的是含CF3四取代碳，不应把CF3说成经过任意自由基后期引入。",
+        "sourceEvidence": "ACS JOC DOI精确研究 Article History 首次在线 2026-07-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01384；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-07-22_2026-07-31_joc，原始raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，review queue Git blob 306e95ddae3a4c0b6d47869a24ec8e88f92770f7，来源SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "第二遍反证：不能将形式[3+3]称作已经证明协同同步的六电子环加成，作者主张碱促进分步杂环构建；该研究没有手性催化剂或对映选择性数据，不可因季碳中心存在而自动冠以不对称合成或高ee。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01384",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01384",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "306e95ddae3a4c0b6d47869a24ec8e88f92770f7",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01384",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "使用β-三氟甲基烯酮与易得脒进行碱促进形式[3+3]环化，在一步中形成1,4-二氢嘧啶骨架并构筑含CF3的四取代碳中心。 β-CF3烯酮与脒在碱性条件下发生区域可控的串联关环，得到具有1,4-二氢嘧啶六元环和三氟甲基季碳的新产物，区别于普通三氟甲基芳基替代。 ACS JOC原始Article报道多种烯酮/脒底物的官能团兼容性、放大和复杂分子修饰，具有分离结构明确产物及单晶表征；题名强调的是含CF3四取代碳，不应把CF3说成经过任意自由基后期引入。",
+          "reason": "使用β-三氟甲基烯酮与易得脒进行碱促进形式[3+3]环化，在一步中形成1,4-二氢嘧啶骨架并构筑含CF3的四取代碳中心。 β-CF3烯酮与脒在碱性条件下发生区域可控的串联关环，得到具有1,4-二氢嘧啶六元环和三氟甲基季碳的新产物，区别于普通三氟甲基芳基替代。 ACS JOC原始Article报道多种烯酮/脒底物的官能团兼容性、放大和复杂分子修饰，具有分离结构明确产物及单晶表征；题名强调的是含CF3四取代碳，不应把CF3说成经过任意自由基后期引入。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：不能将形式[3+3]称作已经证明协同同步的六电子环加成，作者主张碱促进分步杂环构建；该研究没有手性催化剂或对映选择性数据，不可因季碳中心存在而自动冠以不对称合成或高ee。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01526",
+      "journal": "JOC",
+      "title": "Skeletal Editing of Azofurans Enabling the Synthesis of Alkoxylated and Aminated γ-Lactams",
+      "titleZh": "布朗斯特酸切换醇与胺亲核体实现偶氮呋喃骨架编辑制备烷氧基及胺基γ-内酰胺",
+      "date": "2026-08-27",
+      "authors": [
+        "Yu-Xuan Li",
+        "Yin Zhang",
+        "Jing-Wen Li",
+        "Xin Shen",
+        "Ke Chen",
+        "Wen-Juan Hao",
+        "Bo Jiang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12354-12365",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01526"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发布朗斯特酸诱导的偶氮呋喃去芳构化骨架编辑，分别利用醇或胺亲核伙伴合成烷氧基和胺基取代γ-内酰胺。",
+      "evidenceBasis": "ACS JOC DOI精确研究 Article History 首次在线 2026-08-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01526；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-08-22_2026-08-31_joc，原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+      "challengeReason": "第二遍质疑：醇和胺虽都可作为亲核体，但作者强调须有意切换布朗斯特酸催化剂才可成功，不能写成统一酸对所有醇胺同等适用。这里是呋喃向γ-内酰胺的骨架编辑，不是简单外部胺对双键进行取代，也无数据证明对映选择性。",
+      "scopeAssessment": {
+        "primaryContribution": "开发布朗斯特酸诱导的偶氮呋喃去芳构化骨架编辑，分别利用醇或胺亲核伙伴合成烷氧基和胺基取代γ-内酰胺。",
+        "preparativeTransformation": "以平面二维偶氮呋喃为前体，选择匹配的Brønsted酸催化条件，使醇或胺亲核体分别参与区域选择性的呋喃骨架重排及γ-内酰胺形成，建立三维杂环。",
+        "generalityEvidence": "ACS JOC Article给出两组亲核伙伴的真实分离γ-内酰胺产品、良好的官能团适应性以及完全的区域选择性论述，并附单晶结构确认；体现的是两个反应分支所共同支持的骨架编辑方法。",
+        "sourceEvidence": "ACS JOC DOI精确研究 Article History 首次在线 2026-08-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01526；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-08-22_2026-08-31_joc，原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "第二遍质疑：醇和胺虽都可作为亲核体，但作者强调须有意切换布朗斯特酸催化剂才可成功，不能写成统一酸对所有醇胺同等适用。这里是呋喃向γ-内酰胺的骨架编辑，不是简单外部胺对双键进行取代，也无数据证明对映选择性。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01526",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01526",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01526",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发布朗斯特酸诱导的偶氮呋喃去芳构化骨架编辑，分别利用醇或胺亲核伙伴合成烷氧基和胺基取代γ-内酰胺。 以平面二维偶氮呋喃为前体，选择匹配的Brønsted酸催化条件，使醇或胺亲核体分别参与区域选择性的呋喃骨架重排及γ-内酰胺形成，建立三维杂环。 ACS JOC Article给出两组亲核伙伴的真实分离γ-内酰胺产品、良好的官能团适应性以及完全的区域选择性论述，并附单晶结构确认；体现的是两个反应分支所共同支持的骨架编辑方法。",
+          "reason": "开发布朗斯特酸诱导的偶氮呋喃去芳构化骨架编辑，分别利用醇或胺亲核伙伴合成烷氧基和胺基取代γ-内酰胺。 以平面二维偶氮呋喃为前体，选择匹配的Brønsted酸催化条件，使醇或胺亲核体分别参与区域选择性的呋喃骨架重排及γ-内酰胺形成，建立三维杂环。 ACS JOC Article给出两组亲核伙伴的真实分离γ-内酰胺产品、良好的官能团适应性以及完全的区域选择性论述，并附单晶结构确认；体现的是两个反应分支所共同支持的骨架编辑方法。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍质疑：醇和胺虽都可作为亲核体，但作者强调须有意切换布朗斯特酸催化剂才可成功，不能写成统一酸对所有醇胺同等适用。这里是呋喃向γ-内酰胺的骨架编辑，不是简单外部胺对双键进行取代，也无数据证明对映选择性。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01408",
+      "journal": "JOC",
+      "title": "Divergent [3 + 2] and [4 + 2] Annulation of O -Tosylhydroxylamines: Assembly of Amino-Substituted Tetrahydrofuran and Oxazinane Spirooxindoles",
+      "titleZh": "碳酸铯促进O-对甲苯磺酰羟胺与3-羟基吲哚酮分歧三加二和四加二螺环化",
+      "date": "2026-08-27",
+      "authors": [
+        "Jiaxu Feng",
+        "Lulu Xu",
+        "Zichen Zhang",
+        "Yingying Wu",
+        "Qinpeng Li",
+        "Zhi Fan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12282-12289",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01408"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过Cs2CO3介导O-对甲苯磺酰羟胺与3-羟基吲哚酮的分歧式环加成，制备含氨基取代四氢呋喃或噁嗪烷的两类螺吲哚酮。",
+      "evidenceBasis": "ACS JOC DOI精确研究 Article History 首次在线 2026-08-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01408；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-08-22_2026-08-31_joc，原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+      "challengeReason": "第二遍反证：[3+2]与[4+2]是同类底物在条件改变下的分歧环化，不是一次反应必然同时形成两个环；所报道的立体选择性主要属于非对映选择性，而非手性配体诱导的对映选择性。Cs2CO3介导也不能直接写作不对称有机催化。",
+      "scopeAssessment": {
+        "primaryContribution": "通过Cs2CO3介导O-对甲苯磺酰羟胺与3-羟基吲哚酮的分歧式环加成，制备含氨基取代四氢呋喃或噁嗪烷的两类螺吲哚酮。",
+        "preparativeTransformation": "以O-磺酰羟胺衍生物与3-羟基氧化吲哚为基本组合，调整反应条件导向形式[3+2]环化形成氨基取代四氢呋喃螺环或[4+2]形成噁嗪烷螺环。",
+        "generalityEvidence": "ACS JOC原创Article报告两类可分离螺吲哚酮产物、中等至良好收率以及[3+2]支线较好的非对映选择性，并给出产物单晶和衍生化、克级实验；仅[3+2]数据不能自动泛化为[4+2]。",
+        "sourceEvidence": "ACS JOC DOI精确研究 Article History 首次在线 2026-08-27，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01408；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-08-22_2026-08-31_joc，原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，来源SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "第二遍反证：[3+2]与[4+2]是同类底物在条件改变下的分歧环化，不是一次反应必然同时形成两个环；所报道的立体选择性主要属于非对映选择性，而非手性配体诱导的对映选择性。Cs2CO3介导也不能直接写作不对称有机催化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01408",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01408",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "18c8ba29a9c195239a67330632807ca982a69eae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01408",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过Cs2CO3介导O-对甲苯磺酰羟胺与3-羟基吲哚酮的分歧式环加成，制备含氨基取代四氢呋喃或噁嗪烷的两类螺吲哚酮。 以O-磺酰羟胺衍生物与3-羟基氧化吲哚为基本组合，调整反应条件导向形式[3+2]环化形成氨基取代四氢呋喃螺环或[4+2]形成噁嗪烷螺环。 ACS JOC原创Article报告两类可分离螺吲哚酮产物、中等至良好收率以及[3+2]支线较好的非对映选择性，并给出产物单晶和衍生化、克级实验；仅[3+2]数据不能自动泛化为[4+2]。",
+          "reason": "通过Cs2CO3介导O-对甲苯磺酰羟胺与3-羟基吲哚酮的分歧式环加成，制备含氨基取代四氢呋喃或噁嗪烷的两类螺吲哚酮。 以O-磺酰羟胺衍生物与3-羟基氧化吲哚为基本组合，调整反应条件导向形式[3+2]环化形成氨基取代四氢呋喃螺环或[4+2]形成噁嗪烷螺环。 ACS JOC原创Article报告两类可分离螺吲哚酮产物、中等至良好收率以及[3+2]支线较好的非对映选择性，并给出产物单晶和衍生化、克级实验；仅[3+2]数据不能自动泛化为[4+2]。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：[3+2]与[4+2]是同类底物在条件改变下的分歧环化，不是一次反应必然同时形成两个环；所报道的立体选择性主要属于非对映选择性，而非手性配体诱导的对映选择性。Cs2CO3介导也不能直接写作不对称有机催化。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01759",
+      "journal": "JOC",
+      "title": "Intramolecular Dearomative [2 + 2] Cycloadditions of (Hetero)arenes Utilizing an Energy-Transfer Organic Photocatalyst",
+      "titleZh": "吩噻嗪有机光催化剂经能量转移驱动芳烃与杂芳烃分子内去芳构化二加二环化",
+      "date": "2026-09-21",
+      "authors": [
+        "Xuning Li",
+        "Tian-Yu Sun",
+        "Xiao-Feng Xia"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "39",
+        "pages": "13280-13287",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01759"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "将易制备的吩噻嗪衍生有机光催化剂用于能量转移驱动的分子内去芳构化[2+2]环加成，直接构筑结构复杂的稠合与桥环多环分子。",
+      "evidenceBasis": "ACS JOC DOI精确研究 Article History 首次在线 2026-09-21，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01759；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-09-15_2026-09-21_joc，原始raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob 5a57ac4fb9d661c1eb400a6879e414d9e9e24e17，来源SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+      "challengeReason": "第二遍反证：作者提出triplet exciplex由DFT支持，不可将其写为所有中间体已实验直接观测。主要路径是能量转移EnT而非必然的外层单电子SET光氧化还原；反应要求分子内合适的芳烃–烯烃几何关系，不能推广为任意游离芳烃与烯烃的高收率分子间环加成。",
+      "scopeAssessment": {
+        "primaryContribution": "将易制备的吩噻嗪衍生有机光催化剂用于能量转移驱动的分子内去芳构化[2+2]环加成，直接构筑结构复杂的稠合与桥环多环分子。",
+        "preparativeTransformation": "N-取代N-(2-芳基烯丙基)-2-萘甲酰胺、N-丙烯酰基取代α/β萘甲酰胺及相关苯并杂芳烃，在吩噻嗪型有机光催化剂激发能量转移条件下进行分子内芳香环去芳构化与[2+2]关环。",
+        "generalityEvidence": "ACS JOC原始Article报道几类带有内置烯烃的芳烃和杂芳烃原料在温和条件下制备复杂三维多环产物，并提供结构表征和DFT机理计算支持。该工作在于EnT策略扩展有机光催化剂用途，非纯量子计算报告。",
+        "sourceEvidence": "ACS JOC DOI精确研究 Article History 首次在线 2026-09-21，官方页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01759；与冻结 Crossref+OpenAlex双源日期一致。冻结数据根 2026-09-15_2026-09-21_joc，原始raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob 5a57ac4fb9d661c1eb400a6879e414d9e9e24e17，来源SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。作者和JOC 2026年卷期页按 DOI 来源核实；不复制原文完整摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "第二遍反证：作者提出triplet exciplex由DFT支持，不可将其写为所有中间体已实验直接观测。主要路径是能量转移EnT而非必然的外层单电子SET光氧化还原；反应要求分子内合适的芳烃–烯烃几何关系，不能推广为任意游离芳烃与烯烃的高收率分子间环加成。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01759",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01759",
+        "publisherOnlineDate": "2026-09-21",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceReviewQueueGitBlobSha": "5a57ac4fb9d661c1eb400a6879e414d9e9e24e17",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-21",
+          "officialPublisherFirstOnline": "2026-09-21",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01759",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "将易制备的吩噻嗪衍生有机光催化剂用于能量转移驱动的分子内去芳构化[2+2]环加成，直接构筑结构复杂的稠合与桥环多环分子。 N-取代N-(2-芳基烯丙基)-2-萘甲酰胺、N-丙烯酰基取代α/β萘甲酰胺及相关苯并杂芳烃，在吩噻嗪型有机光催化剂激发能量转移条件下进行分子内芳香环去芳构化与[2+2]关环。 ACS JOC原始Article报道几类带有内置烯烃的芳烃和杂芳烃原料在温和条件下制备复杂三维多环产物，并提供结构表征和DFT机理计算支持。该工作在于EnT策略扩展有机光催化剂用途，非纯量子计算报告。",
+          "reason": "将易制备的吩噻嗪衍生有机光催化剂用于能量转移驱动的分子内去芳构化[2+2]环加成，直接构筑结构复杂的稠合与桥环多环分子。 N-取代N-(2-芳基烯丙基)-2-萘甲酰胺、N-丙烯酰基取代α/β萘甲酰胺及相关苯并杂芳烃，在吩噻嗪型有机光催化剂激发能量转移条件下进行分子内芳香环去芳构化与[2+2]关环。 ACS JOC原始Article报道几类带有内置烯烃的芳烃和杂芳烃原料在温和条件下制备复杂三维多环产物，并提供结构表征和DFT机理计算支持。该工作在于EnT策略扩展有机光催化剂用途，非纯量子计算报告。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：作者提出triplet exciplex由DFT支持，不可将其写为所有中间体已实验直接观测。主要路径是能量转移EnT而非必然的外层单电子SET光氧化还原；反应要求分子内合适的芳烃–烯烃几何关系，不能推广为任意游离芳烃与烯烃的高收率分子间环加成。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "notReleased": true,
+    "noD1": true,
+    "noMediaOrPDF": true,
+    "notTodayHot": true,
+    "noEveningRelease": true,
+    "originalTwoPendingPreserved": true
+  }
+}
