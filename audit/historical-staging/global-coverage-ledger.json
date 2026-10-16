@@ -1,14 +1,14 @@
 {
   "schemaVersion": "gallery-historical-global-coverage-v1",
   "mode": "candidate_discovery_and_review_coverage_only",
-  "generatedAt": "2026-10-16T08:06:01.881Z",
-  "sourceCompletedAt": "2026-10-15T15:46:40.943Z",
+  "generatedAt": "2026-10-16T18:36:29.684Z",
+  "sourceCompletedAt": "2026-10-16T18:35:56.320Z",
   "currentCursor": {
     "range": {
-      "from": "2025-04-01",
-      "to": "2025-04-30"
+      "from": "2025-03-01",
+      "to": "2025-03-31"
     },
-    "journalIndex": 7
+    "journalIndex": 15
   },
   "scannedPeriodStart": {
     "from": "2026-09-22",
@@ -17,20 +17,20 @@
   "stageSchema": "gallery-historical-nightly-staging-v1",
   "triageSchema": "gallery-history-review-triage-v1",
   "counters": {
-    "candidateOccurrences": 60580,
-    "distinctCandidateDois": 57266,
+    "candidateOccurrences": 61519,
+    "distinctCandidateDois": 58088,
     "alreadyPublished": 898,
-    "approvedAwaiting08": 105,
+    "approvedAwaiting08": 132,
     "evidencePending": 2,
-    "requiresTwoPassReview": 56261,
+    "requiresTwoPassReview": 57056,
     "ambiguousStatus": 0,
-    "unverifiedPublicationDate": 5589,
-    "suspectedNonresearch": 944,
-    "staleReviewerStatusRecords": 0,
-    "duplicateDoiOccurrences": 3314,
+    "unverifiedPublicationDate": 6335,
+    "suspectedNonresearch": 954,
+    "staleReviewerStatusRecords": 27,
+    "duplicateDoiOccurrences": 3431,
     "sourcePlannedRoots": 3600,
-    "sourceCompletedRoots": 396,
-    "reviewQueueRoots": 396,
+    "sourceCompletedRoots": 407,
+    "reviewQueueRoots": 407,
     "completedRootsWithoutQueue": 0,
     "publisherIssueMatchedRoots": 0,
     "noDoiArchiveSourceComplete": false,
@@ -55,22 +55,22 @@
       "journal": "Nature Catalysis",
       "foundedYear": 2018,
       "plannedRoots": 114,
-      "sourceCompleteRoots": 27,
-      "queuedRoots": 27
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "Nature Synthesis": {
       "journal": "Nature Synthesis",
       "foundedYear": 2022,
       "plannedRoots": 66,
-      "sourceCompleteRoots": 27,
-      "queuedRoots": 27
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "Nature Chemistry": {
       "journal": "Nature Chemistry",
       "foundedYear": 2009,
       "plannedRoots": 174,
-      "sourceCompleteRoots": 27,
-      "queuedRoots": 27
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "Nature Communications": {
       "journal": "Nature Communications",
@@ -111,22 +111,22 @@
       "journal": "Chem",
       "foundedYear": 2016,
       "plannedRoots": 138,
-      "sourceCompleteRoots": 26,
-      "queuedRoots": 26
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "Chemical Science": {
       "journal": "Chemical Science",
       "foundedYear": 2010,
       "plannedRoots": 170,
-      "sourceCompleteRoots": 26,
-      "queuedRoots": 26
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "CCS Chemistry": {
       "journal": "CCS Chemistry",
       "foundedYear": 2019,
       "plannedRoots": 102,
-      "sourceCompleteRoots": 26,
-      "queuedRoots": 26
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "Science Advances": {
       "journal": "Science Advances",
@@ -139,8 +139,8 @@
       "journal": "Green Chemistry",
       "foundedYear": 1999,
       "plannedRoots": 212,
-      "sourceCompleteRoots": 26,
-      "queuedRoots": 26
+      "sourceCompleteRoots": 28,
+      "queuedRoots": 28
     },
     "JOC": {
       "journal": "JOC",
@@ -4746,13 +4746,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2018,
       "plannedRoots": 12,
-      "completedRoots": 9,
-      "queuedRoots": 9,
-      "sourceCandidateOccurrences": 148,
-      "distinctCandidateDois": 148,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 158,
+      "distinctCandidateDois": 158,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 3,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -4881,13 +4881,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2022,
       "plannedRoots": 12,
-      "completedRoots": 9,
-      "queuedRoots": 9,
-      "sourceCandidateOccurrences": 175,
-      "distinctCandidateDois": 175,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 198,
+      "distinctCandidateDois": 198,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 3,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -4956,13 +4956,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2009,
       "plannedRoots": 12,
-      "completedRoots": 9,
-      "queuedRoots": 9,
-      "sourceCandidateOccurrences": 233,
-      "distinctCandidateDois": 233,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 264,
+      "distinctCandidateDois": 264,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 3,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -9336,13 +9336,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2016,
       "plannedRoots": 12,
-      "completedRoots": 8,
-      "queuedRoots": 8,
-      "sourceCandidateOccurrences": 320,
-      "distinctCandidateDois": 245,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 423,
+      "distinctCandidateDois": 295,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 4,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -9501,13 +9501,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2010,
       "plannedRoots": 12,
-      "completedRoots": 8,
-      "queuedRoots": 8,
-      "sourceCandidateOccurrences": 1648,
-      "distinctCandidateDois": 1648,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 2057,
+      "distinctCandidateDois": 2057,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 4,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -9756,13 +9756,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2019,
       "plannedRoots": 12,
-      "completedRoots": 8,
-      "queuedRoots": 8,
-      "sourceCandidateOccurrences": 477,
-      "distinctCandidateDois": 416,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 595,
+      "distinctCandidateDois": 508,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 4,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -10056,13 +10056,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 1999,
       "plannedRoots": 12,
-      "completedRoots": 8,
-      "queuedRoots": 8,
-      "sourceCandidateOccurrences": 1011,
-      "distinctCandidateDois": 1011,
+      "completedRoots": 10,
+      "queuedRoots": 10,
+      "sourceCandidateOccurrences": 1256,
+      "distinctCandidateDois": 1256,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 4,
+      "outstandingRoots": 2,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -11832,6 +11832,6 @@
     "liveStatusReconciledAgainstPublishedAndApproved": true
   },
   "currentFormalDoiMembershipSnapshot": 1186,
-  "currentDoubleReviewedInputCount": 227,
+  "currentDoubleReviewedInputCount": 254,
   "currentPendingSourceConflicts": 2
 }

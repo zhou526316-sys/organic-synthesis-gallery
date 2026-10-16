@@ -1,0 +1,1899 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2025-03-01_2025-03-31_chem",
+  "journal": "Chem",
+  "range": {
+    "from": "2025-03-01",
+    "to": "2025-03-31"
+  },
+  "sourceSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+  "sourceCheckedAt": "2026-10-16T18:35:51.447Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 50,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 50,
+    "priorityP0": 3,
+    "priorityP1": 8,
+    "priorityP2": 15,
+    "priorityP3": 24,
+    "unverifiedDate": 20,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1016/j.chempr.2025.102441",
+      "title": "Effective N2 activation strategies for electrochemical ammonia synthesis",
+      "journal": "Chem",
+      "date": "2025-03-03",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102441-102441",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102441"
+      },
+      "authors": [
+        "Minghang Jiang",
+        "Xi Chen",
+        "Fasheng Chen",
+        "Mengjun Wang",
+        "Xiaojun Luo",
+        "Yi He",
+        "Caijun Wu",
+        "Liyun Zhang",
+        "Xuemei Liao",
+        "Xuemei Liao",
+        "Zhenju Jiang",
+        "Zhong Jin"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102495",
+      "title": "Manipulating alkoxy radicals for site- and enantioselective C–H oxidation",
+      "journal": "Chem",
+      "date": "2025-03-01",
+      "createdDate": "2025-03-13",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102495",
+        "articleNumber": "102495",
+        "doi": "10.1016/j.chempr.2025.102495"
+      },
+      "authors": [
+        "Jian He",
+        "Chi-Ming Che"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102498",
+      "title": "Precisely constructing asymmetric triple atoms for highly efficient electrocatalysis",
+      "journal": "Chem",
+      "date": "2025-03-27",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "9",
+        "pages": "102498-102498",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102498"
+      },
+      "authors": [
+        "Jingyan Zhang",
+        "Zhongxin Song",
+        "Xiaozhang Yao",
+        "Yi Guan",
+        "Ziwei Huo",
+        "Ning Chen",
+        "Lei Zhang",
+        "Xueliang Andy Sun"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.003",
+      "title": "Synthesis of securingine B enables photoresponsive materials design",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-31",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102336",
+        "articleNumber": "102336",
+        "doi": "10.1016/j.chempr.2024.10.003"
+      },
+      "authors": [
+        "Sangbin Park",
+        "Gyumin Kang",
+        "Wantae Kim",
+        "Sieun Jeon",
+        "Myung-Kun Chung",
+        "Hee-Seung Lee",
+        "Dong Ki Yoon",
+        "Sunkyu Han"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.102391",
+      "title": "Oxygen-tolerant photocatalytic conversion of simulated flue gas to ethylene",
+      "journal": "Chem",
+      "date": "2025-03-05",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "5",
+        "pages": "102391-102391",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2024.102391"
+      },
+      "authors": [
+        "Qiong Liu",
+        "Hui Cheng",
+        "Ching Kit Tommy Wun",
+        "Tianxiang Chen",
+        "Tsz Woon Benedict Lo",
+        "Fuxian Wang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.102399",
+      "title": "A roadmap toward the synthesis of life",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-06",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102399",
+        "articleNumber": "102399",
+        "doi": "10.1016/j.chempr.2024.102399"
+      },
+      "authors": [
+        "Christine M.E. Kriebisch",
+        "Olga Bantysh",
+        "Lorena Baranda Pellejero",
+        "Andrea Belluati",
+        "Eva Bertosin",
+        "Kun Dai",
+        "Maria de Roy",
+        "Hailin Fu",
+        "Nicola Galvanetto",
+        "Julianne M. Gibbs",
+        "Samuel Santhosh Gomez",
+        "Gaetano Granatelli",
+        "Alessandra Griffo",
+        "Maria Guix",
+        "Cenk Onur Gurdap",
+        "Johannes Harth-Kitzerow",
+        "Ivar S. Haugerud",
+        "Gregor Häfner",
+        "Pranay Jaiswal",
+        "Sadaf Javed",
+        "Ashkan Karimi",
+        "Shuzo Kato",
+        "Brigitte A.K. Kriebisch",
+        "Sudarshana Laha",
+        "Pao-Wan Lee",
+        "Wojciech P. Lipinski",
+        "Thomas Matreux",
+        "Thomas C.T. Michaels",
+        "Erik Poppleton",
+        "Alexander Ruf",
+        "Annemiek D. Slootbeek",
+        "Iris B.A. Smokers",
+        "Héctor Soria-Carrera",
+        "Alessandro Sorrenti",
+        "Michele Stasi",
+        "Alisdair Stevenson",
+        "Advait Thatte",
+        "Mai Tran",
+        "Merlijn H.I. van Haren",
+        "Hidde D. Vuijk",
+        "Shelley F.J. Wickham",
+        "Pablo Zambrano",
+        "Katarzyna P. Adamala",
+        "Karen Alim",
+        "Ebbe Sloth Andersen",
+        "Claudia Bonfio",
+        "Dieter Braun",
+        "Erwin Frey",
+        "Ulrich Gerland",
+        "Wilhelm T.S. Huck",
+        "Frank Jülicher",
+        "Nadanai Laohakunakorn",
+        "L. Mahadavan",
+        "Sijbren Otto",
+        "James Saenz",
+        "Petra Schwille",
+        "Kerstin Göpfrich",
+        "Christoph A. Weber",
+        "Job Boekhoven"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102487",
+      "title": "Nanoporous synthetic metal: A nickel MOF with an amino-functionalized macrocyclic ligand",
+      "journal": "Chem",
+      "date": "2025-03-06",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102487-102487",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102487"
+      },
+      "authors": [
+        "Hoai T. B. Pham",
+        "Xiaoyu Fang",
+        "Ji Yong Choi",
+        "Shaofeng Huang",
+        "Jihye Park"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102488",
+      "title": "An unconventional photochemical tetrahydroisoquinoline synthesis from sulfonylimines and alkenes",
+      "journal": "Chem",
+      "date": "2025-03-06",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102488-102488",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102488"
+      },
+      "authors": [
+        "Wang Wang",
+        "Bei Zhao",
+        "Xiaotian Qi",
+        "M. Kevin Brown"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102490",
+      "title": "Versatile selective-absorber-based photothermocatalytic reactor for solar fuel synthesis",
+      "journal": "Chem",
+      "date": "2025-03-01",
+      "createdDate": "2025-03-13",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102490",
+        "articleNumber": "102490",
+        "doi": "10.1016/j.chempr.2025.102490"
+      },
+      "authors": [
+        "Fernando Fresno",
+        "Nicolas Keller"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102496",
+      "title": "Chlorine-free synthesis of axially chiral organophosphorus compounds from white phosphorus",
+      "journal": "Chem",
+      "date": "2025-03-29",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102496-102496",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102496"
+      },
+      "authors": [
+        "Xinlei Huangfu",
+        "Wei Liu",
+        "Zhiyi Song",
+        "Junnian Wei",
+        "Wen‐Xiong Zhang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102536",
+      "title": "Electrolyte: The cornerstone of commercializing the electrosynthesis of H2O2",
+      "journal": "Chem",
+      "date": "2025-03-26",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102536-102536",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102536"
+      },
+      "authors": [
+        "Chang Long",
+        "Zhiyong Tang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.09.031",
+      "title": "Remote optical chirality transfer via helical polyaromatic capsules upon encapsulation",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-29",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102332",
+        "articleNumber": "102332",
+        "doi": "10.1016/j.chempr.2024.09.031"
+      },
+      "authors": [
+        "Hayate Sasafuchi",
+        "Mayuko Ueda",
+        "Natsuki Kishida",
+        "Tomohisa Sawada",
+        "Seika Suzuki",
+        "Yoshitane Imai",
+        "Michito Yoshizawa"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.001",
+      "title": "Modulating hetero-multimetallic atoms in covalent organic frameworks for efficient oxidization of olefin compounds",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-29",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102334",
+        "articleNumber": "102334",
+        "doi": "10.1016/j.chempr.2024.10.001"
+      },
+      "authors": [
+        "Qinghao Meng",
+        "Panzhe Qiao",
+        "Dan Deng",
+        "Cheng Zhang",
+        "Fengchao Cui",
+        "Xianghui Ruan",
+        "Yajie Yang",
+        "Jiarui Cao",
+        "Zeyu Wang",
+        "Xujiao Ma",
+        "Ye Yuan",
+        "Guangshan Zhu"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.004",
+      "title": "Strong uranium-phosphorus antiferromagnetic exchange coupling in a crystalline diphosphorus radical trianion actinide complex",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-11-01",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102337",
+        "articleNumber": "102337",
+        "doi": "10.1016/j.chempr.2024.10.004"
+      },
+      "authors": [
+        "Jingzhen Du",
+        "Benjamin E. Atkinson",
+        "John A. Seed",
+        "Rebecca F. Sheppard",
+        "Floriana Tuna",
+        "Ashley J. Wooles",
+        "Nicholas F. Chilton",
+        "Stephen T. Liddle"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.006",
+      "title": "Direct production of o-xylene from six-component BTEXs using a channel-pore interconnected metal-organic framework",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-11-01",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102339",
+        "articleNumber": "102339",
+        "doi": "10.1016/j.chempr.2024.10.006"
+      },
+      "authors": [
+        "Xiao-Jing Xie",
+        "Heng Zeng",
+        "Yong-Liang Huang",
+        "Ying Wang",
+        "Qi-Yun Cao",
+        "Weigang Lu",
+        "Dan Li"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.029",
+      "title": "Amorphous CuSbOx composite-catalyzed electrocatalytic reduction of CO2 to CO: CO2 demand-supply-regulated performance",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-12-02",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102362",
+        "articleNumber": "102362",
+        "doi": "10.1016/j.chempr.2024.10.029"
+      },
+      "authors": [
+        "Huai Qin Fu",
+        "Tingting Yu",
+        "Jessica White",
+        "Ji Wei Sun",
+        "Yuming Wu",
+        "Wen Jing Li",
+        "Nicholas M. Bedford",
+        "Yun Wang",
+        "Thomas E. Rufford",
+        "Cheng Lian",
+        "Porun Liu",
+        "Hua Gui Yang",
+        "Huijun Zhao"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.102406",
+      "title": "Recycling homocarbon backbone polymers toward a circular materials economy",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-10",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102406",
+        "articleNumber": "102406",
+        "doi": "10.1016/j.chempr.2024.102406"
+      },
+      "authors": [
+        "Jie Zheng",
+        "Zhuang Mao Png",
+        "Xin Yi Oh",
+        "Huanning Zuo",
+        "Zibiao Li"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102457",
+      "title": "Encapsulation of metal nanoclusters into hydrogen-bonded organic frameworks for double-response-reverse ammonia fluorescence sensing",
+      "journal": "Chem",
+      "date": "2025-03-04",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102457-102457",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102457"
+      },
+      "authors": [
+        "Yuxin Wang",
+        "Jia Yao",
+        "Shitao Wu",
+        "Chao Zhi",
+        "Lifei Yin",
+        "Zhengxuan Song",
+        "Jing Wang",
+        "Lixia Ling",
+        "Yanhang Ma",
+        "Daliang Zhang",
+        "Jin‐Ping Li",
+        "Libo Li",
+        "Banglin Chen"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102458",
+      "title": "Interfacial solvation-structure effects of molecularly dispersed CoPc catalysts on CO2 electrochemical conversion",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-20",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102458",
+        "articleNumber": "102458",
+        "doi": "10.1016/j.chempr.2025.102458"
+      },
+      "authors": [
+        "Ning Han",
+        "Xianqiang Xiong",
+        "Mohamed Noufal",
+        "Bo Weng",
+        "Alain R. Puente-Santiago"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102460",
+      "title": "Efficient electrochemical conversion of nitric oxide to ammonia using a porous nickel catalyst in a membrane electrode assembly electrolyzer",
+      "journal": "Chem",
+      "date": "2025-03-05",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102460-102460",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102460"
+      },
+      "authors": [
+        "Amrita Singh‐Morgan",
+        "Kim Trösch",
+        "Anna Weinfurter",
+        "Michael Inniger",
+        "Yuan‐Zi Xu",
+        "Victor Mougel"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102461",
+      "title": "Strong cation concentration effect of Ni–N–C electrocatalysts in accelerating acidic CO2 reduction reaction",
+      "journal": "Chem",
+      "date": "2025-03-05",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102461-102461",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102461"
+      },
+      "authors": [
+        "Hyewon Yun",
+        "Suhwan Yoo",
+        "Jihoon Son",
+        "Jae Hyung Kim",
+        "Jingwen Wu",
+        "Kun Peng Jiang",
+        "Hyeyoung Shin",
+        "Yun Jeong Hwang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102462",
+      "title": "Photoelectrocatalytic reduction of CO2 to formate using immobilized molecular manganese catalysts on oxidized porous silicon",
+      "journal": "Chem",
+      "date": "2025-03-07",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102462-102462",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102462"
+      },
+      "authors": [
+        "Young Hyun Hong",
+        "Xiaofan Jia",
+        "Eleanor Stewart-Jones",
+        "Abhishek Kumar",
+        "Justin C. Wedal",
+        "Jose L. Alvarez-Hernandez",
+        "Carrie L. Donley",
+        "Albert Gang",
+        "Noah J. Gibson",
+        "Nilay Hazari",
+        "Madison N. Houck",
+        "Seil Jeon",
+        "Jongbeom Kim",
+        "Hyeongjun Koh",
+        "James M. Mayer",
+        "Brandon Q. Mercado",
+        "Hannah S. Nedzbala",
+        "Nicole Piekut",
+        "Christine Quist",
+        "Eric A. Stach",
+        "Yihui Zhang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102497",
+      "title": "Directional self-assembly of organic semi-type core-shell microwires for programmable visible-to-near-infrared waveguiding conversion",
+      "journal": "Chem",
+      "date": "2025-03-24",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102497-102497",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102497"
+      },
+      "authors": [
+        "Bin Wu",
+        "Ming‐Peng Zhuo",
+        "Ying‐Li Shi",
+        "Lin-Feng Gu",
+        "Yu‐Dong Zhao",
+        "Yang Su",
+        "Yuan-Yuan Li",
+        "Hang Lu",
+        "Weifeng Li",
+        "Zuoshan Wang",
+        "Xuedong Wang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102500",
+      "title": "Conventional versus singlet-triplet Kondo effect in Blatter radical molecular junctions: Zero-bias anomalies and magnetoresistance",
+      "journal": "Chem",
+      "date": "2025-03-29",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "9",
+        "pages": "102500-102500",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102500"
+      },
+      "authors": [
+        "Gautam Mitra",
+        "Jueting Zheng",
+        "Karen Schaefer",
+        "Michael Deffner",
+        "Jonathan Z. Low",
+        "Luis M. Campos",
+        "Carmen Herrmann",
+        "Theo A. Costi",
+        "Elke Scheer"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102524",
+      "title": "Strained diradicaloids for σ-bond-insertion reactions: A breakthrough in drug discovery",
+      "journal": "Chem",
+      "date": "2025-03-19",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102524-102524",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102524"
+      },
+      "authors": [
+        "Yoshio Barrera",
+        "Florian F. Mulks"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102525",
+      "title": "Pilot-scale reductive catalytic depolymerization of lignin: Challenges and guidelines",
+      "journal": "Chem",
+      "date": "2025-03-24",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102525-102525",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102525"
+      },
+      "authors": [
+        "Brent Daelemans",
+        "Paul Jusner",
+        "Balaji Sridharan",
+        "Miet Van Dael",
+        "Kelly Servaes",
+        "Karolien Vanbroekhoven",
+        "Elias Féghali"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.09.024",
+      "title": "Boosting narrow-band near-infrared-emitting efficiency of thulium by lattice modulation for reflective absorption bioimaging",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102325",
+        "articleNumber": "102325",
+        "doi": "10.1016/j.chempr.2024.09.024"
+      },
+      "authors": [
+        "Kaina Wang",
+        "Jipeng Fu",
+        "Sibo Zhan",
+        "Hongliang Dong",
+        "Chenjie Lou",
+        "Tianyi Sun",
+        "Jinru Liu",
+        "Bingyu Huang",
+        "Long Tian",
+        "Lihong Jiang",
+        "Ran Pang",
+        "Su Zhang",
+        "Huajie Luo",
+        "Mathieu Allix",
+        "Xiaojun Kuang",
+        "Shiqing Xu",
+        "Hongjie Zhang",
+        "Mingxue Tang"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.09.029",
+      "title": "Cluster-based redox-responsive super-atomic MRI contrast agents",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102330",
+        "articleNumber": "102330",
+        "doi": "10.1016/j.chempr.2024.09.029"
+      },
+      "authors": [
+        "Alexandros A. Kitos",
+        "Raúl Castañeda",
+        "Zachary J. Comeau",
+        "Niki Mavragani",
+        "Nicholas D. Calvert",
+        "Alexia Kirby",
+        "Francisco M. Martinez-Santiesteban",
+        "Peter J. Pallister",
+        "Timothy J. Scholl",
+        "Muralee Murugesu",
+        "Adam J. Shuhendler",
+        "Jaclyn L. Brusso"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.09.030",
+      "title": "Borohydride oxidation-water reduction fuel cells advanced by local hydroxyl enrichment-inhibited borohydride hydrolysis on Cu(0) sites",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-10-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102331",
+        "articleNumber": "102331",
+        "doi": "10.1016/j.chempr.2024.09.030"
+      },
+      "authors": [
+        "Libo Zhu",
+        "Chang Chen",
+        "Tiantian Wu",
+        "Xu Yu",
+        "Han Tian",
+        "Fantao Kong",
+        "Ziwei Chang",
+        "Wenshu Luo",
+        "Xiangzhi Cui",
+        "Jianlin Shi"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.005",
+      "title": "Structural stability of a bent tetra(amino)tetraborane ring across four charge states",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-11-08",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102338",
+        "articleNumber": "102338",
+        "doi": "10.1016/j.chempr.2024.10.005"
+      },
+      "authors": [
+        "Eva Beck",
+        "Ivo Krummenacher",
+        "Thomas Kupfer",
+        "Maximilian Dietz",
+        "Maximilian Michel",
+        "Kai Hammond",
+        "Holger Braunschweig"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.009",
+      "title": "Excited-state protonation and reduction enable the umpolung Birch reduction of naphthalenes",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-11-22",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102342",
+        "articleNumber": "102342",
+        "doi": "10.1016/j.chempr.2024.10.009"
+      },
+      "authors": [
+        "Javier Corpas",
+        "Eva Rivera-Chao",
+        "Enrique M. Arpa",
+        "Miguel Gomez-Mendoza",
+        "Yuri Katayama",
+        "Victor A. de la Peña O’Shea",
+        "Céline Bouchel",
+        "Clément Jacob",
+        "Pierre-Georges Echeverria",
+        "Alessandro Ruffoni",
+        "Daniele Leonori"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.10.013",
+      "title": "De novo luciferases enable multiplexed bioluminescence imaging",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2024-11-12",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102346",
+        "articleNumber": "102346",
+        "doi": "10.1016/j.chempr.2024.10.013"
+      },
+      "authors": [
+        "Julie Yi-Hsuan Chen",
+        "Qing Shi",
+        "Xue Peng",
+        "Jean de Dieu Habimana",
+        "James Wang",
+        "William Sobolewski",
+        "Andy Hsien-Wei Yeh"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.102396",
+      "title": "Integrating hydroformylations with methanol-to-syngas reforming",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-04",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102396",
+        "articleNumber": "102396",
+        "doi": "10.1016/j.chempr.2024.102396"
+      },
+      "authors": [
+        "Andreas Bonde",
+        "Joakim Bøgelund Jakobsen",
+        "Alexander Ahrens",
+        "Weiheng Huang",
+        "Ralf Jackstell",
+        "Matthias Beller",
+        "Troels Skrydstrup"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2024.11.015",
+      "title": "Intramolecular through-space heavy-atom effect in π-stacked MR-TADF emitters",
+      "journal": "Chem",
+      "date": "2025-03-13",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102377-102377",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2024.11.015"
+      },
+      "authors": [
+        "Shengyi Yang",
+        "Cheng Liu",
+        "Fei Wang",
+        "Ben Zhong Tang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102433",
+      "title": "Redox chemistry of cyclotetraborane",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-18",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102433",
+        "articleNumber": "102433",
+        "doi": "10.1016/j.chempr.2025.102433"
+      },
+      "authors": [
+        "Zhongtao Feng",
+        "Rei Kinjo"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102442",
+      "title": "Site-selective C(sp3)–H oxidation of alkyl substrates devoid of functional handles",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-25",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102442",
+        "articleNumber": "102442",
+        "doi": "10.1016/j.chempr.2025.102442"
+      },
+      "authors": [
+        "Yiheng Lu",
+        "Melina Knezevic",
+        "Alessandro Prescimone",
+        "Bernd Goldfuss",
+        "Konrad Tiefenbacher"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102456",
+      "title": "Two (AgI3I)4L4 cages elucidate the rules for silver-cluster vertex design",
+      "journal": "Chem",
+      "date": "2025-03-07",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102456-102456",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102456"
+      },
+      "authors": [
+        "Andrew W. Heard",
+        "Samuel E. Clark",
+        "Charlie T. McTernan",
+        "Tanya K. Ronson",
+        "Petr Rozhin",
+        "Barbara Rossi",
+        "Silvia Marchesan",
+        "Jonathan R. Nitschke"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102479",
+      "title": "Dynamic crosslinking of thermoplastics via perfluorophenyl nitrene C–H insertion to form recyclable thermosets",
+      "journal": "Chem",
+      "date": "2025-03-05",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102479-102479",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102479"
+      },
+      "authors": [
+        "Zhi Yuan Lee",
+        "Sirin Kamarulzaman",
+        "Rizqullah Rasyiddin",
+        "Sheila Y.X. Sim",
+        "Georgina E. K. K. Seah",
+        "Ai Wei Gan",
+        "Zibiao Li",
+        "Zhuang Mao Png",
+        "Shermin Simin Goh"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102480",
+      "title": "Why sulfur is important in lincosamide antibiotics",
+      "journal": "Chem",
+      "date": "2025-03-07",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102480-102480",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102480"
+      },
+      "authors": [
+        "Kelvin J. Y. Wu",
+        "Elena V. Aleksandrova",
+        "Paul J. Robinson",
+        "Amy E. Benedetto",
+        "Meiyi Yu",
+        "Ben I. C. Tresco",
+        "Dominic N. Y. See",
+        "Tong Jiang",
+        "Antonio Ramkissoon",
+        "Clémence F. Dunand",
+        "Maxim S. Svetlov",
+        "Joonho Lee",
+        "Yury S. Polikanov",
+        "Andrew G. Myers"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102485",
+      "title": "Harnessing plastic depolymerization products to upcycle mixed waste into high-value chemicals",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102485",
+        "articleNumber": "102485",
+        "doi": "10.1016/j.chempr.2025.102485"
+      },
+      "authors": [
+        "Jason S. DesVeaux",
+        "Katrina M. Knauer"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102486",
+      "title": "Electrochemical 6Li isotope enrichment based on selective insertion in 1D tunnel-structured V2O5",
+      "journal": "Chem",
+      "date": "2025-03-20",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "8",
+        "pages": "102486-102486",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102486"
+      },
+      "authors": [
+        "Luis J. Carrillo",
+        "Andrew A. Ezazi",
+        "Saul Perez-Beltran",
+        "Carlos A. Larriuz",
+        "Harris E. Kohl",
+        "Jaime A. Ayala",
+        "Arnab Maji",
+        "Stanislav V. Verkhoturov",
+        "Mohammed Al‐Hashimi",
+        "Hassan Said Bazzi",
+        "Conan R. Weiland",
+        "Cherno Jaye",
+        "Daniel A. Fischer",
+        "Lucia Zuin",
+        "Jian Wang",
+        "Sarbajit Banerjee"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102489",
+      "title": "Indocyanine polymethine fluorophores with extended π-conjugation emitting beyond 1,200 nm for enhanced NIR-II imaging",
+      "journal": "Chem",
+      "date": "2025-03-10",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "7",
+        "pages": "102489-102489",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102489"
+      },
+      "authors": [
+        "Rui-Tian Ge",
+        "Feng Xiong",
+        "Zhen‐Bang Chen",
+        "Yuanjie Wang",
+        "Lin Zheng",
+        "Jia Zhou",
+        "Di Wu",
+        "Shu‐Yu Zhang"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102491",
+      "title": "Next-generation de novo luciferases: How artificial intelligence is improving its own designs at light speed",
+      "journal": "Chem",
+      "date": "",
+      "createdDate": "2025-02-27",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102491",
+        "articleNumber": "102491",
+        "doi": "10.1016/j.chempr.2025.102491"
+      },
+      "authors": [
+        "Yosta de Stigter",
+        "Maarten Merkx"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [
+        "publisher_first_online_date_unverified",
+        "discovered_window_date_mismatch"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102492",
+      "title": "Soft microrobots for long-span precise stem cell delivery and restoration of neural connections",
+      "journal": "Chem",
+      "date": "2025-03-01",
+      "createdDate": "2025-03-06",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102492",
+        "articleNumber": "102492",
+        "doi": "10.1016/j.chempr.2025.102492"
+      },
+      "authors": [
+        "Engui Zhao",
+        "Ting Ma"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102493",
+      "title": "Selenium nanomedicine: From basic science to clinical applications",
+      "journal": "Chem",
+      "date": "2025-03-01",
+      "createdDate": "2025-03-06",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102493",
+        "articleNumber": "102493",
+        "doi": "10.1016/j.chempr.2025.102493"
+      },
+      "authors": [
+        "Lizhen He",
+        "Zushuang Xiong",
+        "Tianfeng Chen"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102494",
+      "title": "In this issue",
+      "journal": "Chem",
+      "date": "2025-03-01",
+      "createdDate": "2025-03-13",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "3",
+        "pages": "102494",
+        "articleNumber": "102494",
+        "doi": "10.1016/j.chempr.2025.102494"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102499",
+      "title": "Electrophilic selenium drives electron leakage",
+      "journal": "Chem",
+      "date": "2025-03-17",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102499-102499",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102499"
+      },
+      "authors": [
+        "Ruyi Zhou",
+        "Zhen Nan Gu",
+        "Zhen Nan Gu"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102535",
+      "title": "Flipping the script: Predicting chemical composition in metal-halide perovskites from optical spectroscopy",
+      "journal": "Chem",
+      "date": "2025-03-27",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102535-102535",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102535"
+      },
+      "authors": [
+        "Alexander J. Norquist"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102539",
+      "title": "Alkane recognition enhanced by solvophobic interactions enables site-selective aliphatic C–H oxidation",
+      "journal": "Chem",
+      "date": "2025-03-27",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102539-102539",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102539"
+      },
+      "authors": [
+        "Marco Galeotti",
+        "Laia Vicens",
+        "Miguel Costas"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2025.102540",
+      "title": "Depolymerizing off-the-shelf polymethacrylates with visible light",
+      "journal": "Chem",
+      "date": "2025-03-27",
+      "createdDate": "",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "11",
+        "issue": "4",
+        "pages": "102540-102540",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2025.102540"
+      },
+      "authors": [
+        "Nicholas Ballard",
+        "Haritz Sardón"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2025-03-01_2025-03-31_chem",
+      "sourceBatchSha256": "a5fd9cb91575f717c04c6532d05d31a07394c8fb98c66c3cd4b45ff8b4ba6036",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}
