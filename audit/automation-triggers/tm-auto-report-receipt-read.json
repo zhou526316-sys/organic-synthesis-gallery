@@ -1,14 +1,14 @@
 {
-  "requestedAt": "2026-10-16T03:30:39.851Z",
-  "reason": "Follow new Oct16 uploaded Tampermonkey 2.2.89/6.2.70 owner diagnostic; read latest R2 automatic report receipts to corroborate actual publisher visits, DOI-layer successes and failure traces; read-only sanitized, no publishing or media writes.",
+  "requestedAt": "2026-10-16T06:42:30.219Z",
+  "reason": "After 2.2.90 / 6.2.71 deploy, read current rolling server DOI final reports; distinguish live 6.2.71 from earlier 6.2.70 and verify image outbox drain and PDF cloud confirmations via DOI receipts. Read-only, no publisher requests.",
   "targetDois": [
     "10.1039/d6sc06879k",
     "10.1016/j.chempr.2026.103008",
     "10.1126/science.aeh6251",
     "10.1038/s41467-026-78287-1"
   ],
-  "expectedBridgeVersion": "2.2.89",
-  "expectedInstallRevision": "6.2.70",
+  "expectedBridgeVersion": "2.2.90",
+  "expectedInstallRevision": "6.2.71",
   "readOnly": true,
   "mediaWrites": 0,
   "publisherRequests": 0,
