@@ -77,6 +77,7 @@ const beforeProductionDois = await loadProductionDois();
 // annex can only be written by the already-authorized fixed 08:00 writer.
 // On invalid history, fail closed for histories and preserve the daily batch.
 let historicalAdmitted=[],historicalReviewBlobSha=null,historicalHold=null;
+let historicalPolicyVetoes=[];
 try{
   const history=await readJson(HISTORICAL_APPROVED_PATH);
   const fileSha=git(['hash-object','--',HISTORICAL_APPROVED_PATH]);
@@ -91,11 +92,17 @@ try{
   const forbiddenDaily=new Set([
     ...(bundle.markerFields.rejectedDois||[]),...(bundle.markerFields.deferredDois||[])
   ].map(normalizeDoi));
+  const vetoes=[];
   historicalAdmitted=selectHistoricalAdmissions(history,{
     published:publishedAndDaily,
     excluded:new Set(scopeCorrections.map(row=>normalizeDoi(row.doi))),
-    dailyDois:forbiddenDaily
+    policyExcluded:new Set(history.accepted.filter(row=>isExcludedDoi(row.doi))
+      .map(row=>normalizeDoi(row.doi))),
+    dailyDois:forbiddenDaily,
+    onPolicyVeto:entry=>vetoes.push(entry)
   });
+  historicalPolicyVetoes=vetoes;
+  if(vetoes.length)console.error('HISTORICAL_POLICY_VETO_RECEIPTS '+JSON.stringify(vetoes));
   for(const row of historicalAdmitted){
     assert(validChineseTitle(row.titleZh),'historical_review_invalid_chinese_title:'+row.doi);
     assert(!isExcludedDoi(row.doi),'historical_review_excluded_by_policy:'+row.doi);
@@ -105,6 +112,7 @@ try{
   historicalHold=String(error?.message||error).slice(0,400);
   historicalAdmitted=[];
   historicalReviewBlobSha=null;
+  historicalPolicyVetoes=[];
   console.error('HISTORICAL_ADMISSION_HELD '+historicalHold);
 }
 for (const correction of scopeCorrections) {
@@ -216,6 +224,7 @@ const marker = {
   auditFile: bundle.markerFields.auditFile, auditBlobSha: bundle.markerFields.auditBlobSha,
   publishableDois: allPublishableDois,
   dailyPublishableDois:bundle.markerFields.publishableDois,
+  historicalPolicyVetoes,
   ...(historicalAdmitted.length?{
     historicalReviewFile:HISTORICAL_APPROVED_PATH,
     historicalReviewBlobSha,
@@ -233,7 +242,8 @@ const result = {
   reviewed: bundle.formalReview.summary.reviewed, accepted: bundle.formalReview.summary.accepted,
   rejected: bundle.formalReview.summary.rejected, pending: bundle.formalReview.summary.pending,
   productionCards: productionDois.size,publishableDois:allPublishableDois,
-  historicalAdmittedDois:historicalAdmitted.map(row=>normalizeDoi(row.doi)),historicalHold,
+  historicalAdmittedDois:historicalAdmitted.map(row=>normalizeDoi(row.doi)),
+  historicalPolicyVetoes,historicalHold,
   approvedPublicationDateCorrections: dateCorrectionResult,
   deferredDois: bundle.markerFields.deferredDois, formalReviewFile: formalPath,
   formalReviewBlobSha: bundle.markerFields.reviewBlobSha, pendingQueueFile: queuePath,

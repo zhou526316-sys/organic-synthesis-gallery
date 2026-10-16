@@ -6,6 +6,7 @@ import {validateHistoricalApproval,selectHistoricalAdmissions,historicCard,HISTO
   from './lib/historical-admission.mjs';
 const root=JSON.parse(readFileSync(HISTORICAL_APPROVED_PATH,'utf8'));
 const clone=()=>structuredClone(root);
+const policy=await import('../shared/literature-policy.js');
 test('all source-fingerprinted historic scope approvals are valid and cumulatively extensible',()=>{
   assert.equal(validateHistoricalApproval(root).length,root.summary.include);
   assert.ok(root.summary.include>=10);
@@ -1016,4 +1017,47 @@ test('eight new Q3 ACS originals have independent source-date and preparative sc
  assert.match(root.accepted.find(x=>x.doi==='10.1021/jacs.6c11377').challengeReason,/手性磷酸配体/);
  assert.match(root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c00672').challengeReason,/氧化剂/);
  for(const doi of audit.continuedDateHolds)assert.ok(!root.accepted.some(x=>x.doi===doi));
+});
+
+test('one explicit owner exclusion receives a DOI-specific receipt and does not zero the eligible historical batch',()=>{
+  const {isExcludedDoi}=policy;
+  const vetoDoi='10.1038/s41467-026-77616-8';
+  assert.ok(root.accepted.some(row=>row.doi===vetoDoi));
+  assert.equal(isExcludedDoi(vetoDoi),true);
+  const formal=JSON.parse(readFileSync('public/toc-demand-live.json','utf8'));
+  const published=new Set(formal.articles.map(row=>row.doi.toLowerCase()));
+  const policyExcluded=new Set(root.accepted.filter(row=>isExcludedDoi(row.doi)).map(row=>row.doi));
+  const vetoes=[];
+  const selected=selectHistoricalAdmissions(root,{
+    published,policyExcluded,onPolicyVeto:row=>vetoes.push(row)
+  });
+  assert.deepEqual(vetoes,[{doi:vetoDoi,sources:['literature_policy']}]);
+  const eligible=root.accepted.filter(row=>!published.has(row.doi)&&!policyExcluded.has(row.doi));
+  assert.deepEqual(new Set(selected.map(row=>row.doi)),new Set(eligible.map(row=>row.doi)));
+  assert.ok(selected.length>0);
+  assert.ok(selected.every(row=>!isExcludedDoi(row.doi)));
+  assert.equal(selected.some(row=>row.doi===vetoDoi),false);
+  assert.throws(()=>selectHistoricalAdmissions(root,{published,policyExcluded}),
+    /historical_review_excluded_doi/);
+});
+test('documented veto cannot bypass rejected/pending daily overlap or invalid original approval',()=>{
+  const vetoDoi='10.1038/s41467-026-77616-8';
+  const policyExcluded=new Set([vetoDoi]);
+  const onPolicyVeto=()=>{};
+  assert.throws(()=>selectHistoricalAdmissions(root,{
+    policyExcluded,onPolicyVeto,dailyDois:new Set([vetoDoi])
+  }),/historical_review_daily_overlap/);
+  const corrupt=clone();
+  corrupt.accepted.find(x=>x.doi===vetoDoi).reviewPasses=1;
+  assert.throws(()=>selectHistoricalAdmissions(corrupt,{
+    policyExcluded,onPolicyVeto
+  }),/historical_review_two_pass_missing/);
+  const normal=root.accepted.find(x=>x.doi!==vetoDoi).doi;
+  const vetoes=[];
+  const selected=selectHistoricalAdmissions(root,{
+    policyExcluded,excluded:new Set([normal]),
+    onPolicyVeto:row=>vetoes.push(row)
+  });
+  assert.equal(selected.some(row=>row.doi===normal),false);
+  assert.ok(vetoes.some(v=>v.doi===normal&&v.sources.includes('scope_corrections')));
 });

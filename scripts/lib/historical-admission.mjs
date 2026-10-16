@@ -101,13 +101,26 @@ export function validateHistoricalApproval(artifact){
   }
   return artifact.accepted;
 }
-export function selectHistoricalAdmissions(artifact,{published=new Set(),excluded=new Set(),dailyDois=new Set()}={}){
+export function selectHistoricalAdmissions(artifact,{
+  published=new Set(),excluded=new Set(),dailyDois=new Set(),
+  policyExcluded=new Set(),onPolicyVeto=null
+}={}){
+  // Always verify the ENTIRE frozen manifest before applying any publication veto.
+  // A veto must be independently observable; without its receipt, fail closed.
   const approved=validateHistoricalApproval(artifact);
   const selected=[];
   for(const row of approved){
     const id=doi(row.doi);
-    requireValid(!excluded.has(id),'historical_review_excluded_doi:'+id);
     requireValid(!dailyDois.has(id),'historical_review_daily_overlap:'+id);
+    const sources=[
+      ...(excluded.has(id)?['scope_corrections']:[]),
+      ...(policyExcluded.has(id)?['literature_policy']:[])
+    ];
+    if(sources.length){
+      requireValid(typeof onPolicyVeto==='function','historical_review_excluded_doi:'+id);
+      onPolicyVeto({doi:id,sources});
+      continue;
+    }
     if(!published.has(id))selected.push(row);
   }
   return selected;
