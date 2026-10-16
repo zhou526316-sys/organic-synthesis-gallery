@@ -39,12 +39,9 @@
 (() => {
   'use strict';
   const BATCH_TAB_BIND_KEY='gallery-historical-text-batch-v2:tab-binding-v030';
-  // TOC-inspired early binding survives publisher SPA hash cleanup.
-  try{
-    const early=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
-    if(early&&publisher(location.hostname)&&typeof sessionStorage!=='undefined')
-      sessionStorage.setItem(BATCH_TAB_BIND_KEY,early[1]);
-  }catch(_){}
+  // The tab binding is established only after checking the active job at
+  // document-start below. Calling publisher() here would access KNOWN_HOSTS
+  // before its const declaration and silently lose the old fragment binding.
   const CUTOFF='2026-10-01';
   const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Complete 1-shot TOC-aligned DOI registry
   const CANONICAL_RELEASE_URL='https://gallery.gczhouwld.com/release-delivery.json';
@@ -2040,6 +2037,12 @@
     let observedDoi='';
     try{observedDoi=pageDoi();}catch(_){}
     if(observedDoi&&observedDoi!==job.doi)return false;
+    // Bind this tab only after the active job's run, token, expiration and
+    // any DOI already present have been verified. Survives same-tab SPA hash
+    // rewrites without granting an unrelated publisher tab a capture lease.
+    if(fragment?.[1]===job.token){
+      try{sessionStorage.setItem(BATCH_TAB_BIND_KEY,job.token);}catch(_){}
+    }
     const prior=GM_getValue(BATCH_PROGRESS,null);
     if(prior?.runId===job.runId&&prior?.token===job.token)return true;
     GM_setValue(BATCH_PROGRESS,{
