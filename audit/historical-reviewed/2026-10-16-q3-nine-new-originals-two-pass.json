@@ -168,7 +168,7 @@
       "doi": "10.1021/acs.orglett.6c02330",
       "journal": "Organic Letters",
       "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
-      "titleZh": "导向基辅助铜催化亚磺酰胺不对称S-苄基化制备手性亚磺酰亚胺",
+      "titleZh": "导向基辅助铜催化次磺酰胺不对称S-苄基化制备手性硫亚胺",
       "date": "2026-07-16",
       "authors": [
         "Rongkai Gao",
@@ -193,13 +193,13 @@
       "firstPassDecision": "include",
       "challengeDecision": "include",
       "reviewPasses": 2,
-      "reason": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。",
+      "reason": "通过喹啉导向基与铜催化自由基接力实现次磺酰胺的对映选择性S-苄基化，为手性S-苄基硫亚胺提供制备方法，属于有机硫立体选择性合成。",
       "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330（2026-07-16，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
       "challengeReason": "可能误把S-苄基化称为苄位C–H官能化，或把配体控制与喹啉导向功能混淆。原料是苄胺来源的Katritzky盐而非直接苄基C–H；喹啉基团对效率和选择性重要，尚不能外推至完全不需导向基的所有硫亚胺底物。",
       "scopeAssessment": {
-        "primaryContribution": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。",
-        "preparativeTransformation": "以亚磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性亚磺酰亚胺。",
-        "generalityEvidence": "ACS Letter摘要明确报道不同手性S-苄基亚磺酰亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。",
+        "primaryContribution": "通过喹啉导向基与铜催化自由基接力实现次磺酰胺的对映选择性S-苄基化，为手性S-苄基硫亚胺提供制备方法，属于有机硫立体选择性合成。",
+        "preparativeTransformation": "以次磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性硫亚胺。",
+        "generalityEvidence": "ACS Letter摘要明确报道不同手性S-苄基硫亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。",
         "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330（2026-07-16，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
         "boundaryChallenge": "可能误把S-苄基化称为苄位C–H官能化，或把配体控制与喹啉导向功能混淆。原料是苄胺来源的Katritzky盐而非直接苄基C–H；喹啉基团对效率和选择性重要，尚不能外推至完全不需导向基的所有硫亚胺底物。"
       },
@@ -233,7 +233,7 @@
         {
           "pass": 1,
           "decision": "include",
-          "assessment": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。 以亚磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性亚磺酰亚胺。 ACS Letter摘要明确报道不同手性S-苄基亚磺酰亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。"
+          "assessment": "通过喹啉导向基与铜催化自由基接力实现次磺酰胺的对映选择性S-苄基化，为手性S-苄基硫亚胺提供制备方法，属于有机硫立体选择性合成。 以次磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性硫亚胺。 ACS Letter摘要明确报道不同手性S-苄基硫亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。"
         },
         {
           "pass": 2,
@@ -488,7 +488,7 @@
       "doi": "10.1021/acs.joc.6c00158",
       "journal": "JOC",
       "title": "Divergent Synthesis of Acylated Sulfoximines via Tunable Silver/Rhodium Relay Catalysis with Cyclopropenones",
-      "titleZh": "银铑接力催化环丙烯酮参与亚磺酰亚胺N-酰基化与碳氢环化的发散合成",
+      "titleZh": "银铑接力催化环丙烯酮参与亚砜亚胺N-酰基化与碳氢环化的发散合成",
       "date": "2026-07-30",
       "authors": [
         "Yi Luo",
@@ -515,13 +515,13 @@
       "firstPassDecision": "include",
       "challengeDecision": "include",
       "reviewPasses": 2,
-      "reason": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。",
+      "reason": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚砜亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚砜亚胺骨架提供多样化制备路径。",
       "evidenceBasis": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00158（2026-07-30，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
       "challengeReason": "核心挑战是所谓Ag/Rh relay是否被错写为单一金属一步催化、是否只报道普通酰胺形成。文章实际区分Ag(I) N-酰基化与后续Rh(III)氧化环化；若省略第二步就不能称完成环化，多样化仅限本文展示的底物和构架。",
       "scopeAssessment": {
-        "primaryContribution": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。",
-        "preparativeTransformation": "亚磺酰亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚磺酰亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。",
-        "generalityEvidence": "ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚磺酰亚胺结构。两种产物类型由反应序列控制。",
+        "primaryContribution": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚砜亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚砜亚胺骨架提供多样化制备路径。",
+        "preparativeTransformation": "亚砜亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚砜亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。",
+        "generalityEvidence": "ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚砜亚胺结构。两种产物类型由反应序列控制。",
         "sourceEvidence": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00158（2026-07-30，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
         "boundaryChallenge": "核心挑战是所谓Ag/Rh relay是否被错写为单一金属一步催化、是否只报道普通酰胺形成。文章实际区分Ag(I) N-酰基化与后续Rh(III)氧化环化；若省略第二步就不能称完成环化，多样化仅限本文展示的底物和构架。"
       },
@@ -555,7 +555,7 @@
         {
           "pass": 1,
           "decision": "include",
-          "assessment": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。 亚磺酰亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚磺酰亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。 ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚磺酰亚胺结构。两种产物类型由反应序列控制。"
+          "assessment": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚砜亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚砜亚胺骨架提供多样化制备路径。 亚砜亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚砜亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。 ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚砜亚胺结构。两种产物类型由反应序列控制。"
         },
         {
           "pass": 2,
@@ -568,7 +568,7 @@
       "doi": "10.1021/acs.joc.6c00634",
       "journal": "JOC",
       "title": "HFIP-Promoted Nenitzescu Indole Synthesis: An Application toward the Synthesis of Umifenovir",
-      "titleZh": "六氟异丙醇促进Nenitzescu反应一步合成多取代五羟基吲哚及阿比多尔关键中间体",
+      "titleZh": "六氟异丙醇促进Nenitzescu反应一步合成多取代5-羟基吲哚及阿比多尔关键中间体",
       "date": "2026-08-29",
       "authors": [
         "Rani Bandela",
