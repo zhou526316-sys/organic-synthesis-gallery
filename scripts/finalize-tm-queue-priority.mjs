@@ -22,7 +22,7 @@ const source=fs.readFileSync(sourcePath,'utf8');
 assert.ok(source.includes(newSort));
 function between(a,b){const start=source.indexOf(a),end=source.indexOf(b,start);assert.ok(start>=0&&end>start);return source.slice(start,end);}
 const ctx=vm.createContext({console,Map,String,Number,Boolean,
-  recentFullCaptureEligible:job=>Boolean(job&&job.mediaPolicy!=='toc_only')});
+  RECENT_FULL_CAPTURE_CUTOFF:'2026-10-01'});
 vm.runInContext(between('  function journalPriority(','  function isNatureScienceFamilyJob(')+between('  function captureBatchDate(','  function validCapturedFigure(')+between('  function coverageHasNeeds(','  function coverageNeedKey(')+between('  function coveragePending(','  function coverageStats(')+';globalThis.select=coveragePending;',ctx);
 const row=(doi,addedDate,journal,attempts=0)=>({job:{doi,addedDate,journal,captureFigures:true},state:'pending',attempts});
 const newestRetry=row('newest','2026-10-03','Chem',1),oldNew=row('older','2026-10-02','Nature');
