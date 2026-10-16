@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-15T23:10:00Z",
-  "requestedBy": "prepublish-primary-20261016-0800",
-  "publicationSlot": "2026-10-16T08:00:00+08:00",
-  "expectedProductionCards": 1151,
-  "reason": "No same-day 06:55 audit is present in current Actions and persisted pair ends yesterday. Request one existing runner for endDate=2026-10-16 using latest stable main discovery, all 16 active journals, three-calendar-day window, seven-day source safety tail, created/deposit rescue and verifiedThrough catch-up. Reuse any active healthy same-slot run; no production, media, Pages or schedule mutation."
+  "requestedAt": "2026-10-16T23:06:20Z",
+  "requestedBy": "prepublish-primary-20261017-0800",
+  "publicationSlot": "2026-10-17T08:00:00+08:00",
+  "expectedProductionCards": 1186,
+  "reason": "Current main paired snapshot ends 2026-10-16; no 06:55 or active same-day literature audit in current Actions. Request the existing runner once for endDate=2026-10-17, stable capability, all 16 journals, three-calendar-day primary + seven-day machine tail and created/deposit rescue with verifiedThrough catch-up. No production, media, Pages or schedule mutation; do not restart any healthy current audit."
 }
