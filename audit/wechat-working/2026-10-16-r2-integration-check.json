@@ -1,0 +1,35 @@
+{
+  "status": "actual_main_catalogue_and_reviewed_renderer_pass",
+  "date": "2026-10-16",
+  "papers": 35,
+  "journals": {
+    "Science": 1,
+    "Nature Communications": 3,
+    "JACS": 6,
+    "Angew": 6,
+    "ACS Catalysis": 2,
+    "JOC": 7,
+    "Organic Letters": 10
+  },
+  "sources": 21,
+  "assets": 41,
+  "bodyFigures": [
+    20,
+    18
+  ],
+  "noWeChatMutation": true,
+  "previousGreenRunWasNotApproval": true,
+  "pipelineFailurePropagationFixed": true,
+  "metadataRepair": [
+    {
+      "path": "public/rolling-supplement.json",
+      "beforeSha256": "eda570e3a6a900c5aaa42b11b0c4794120269accda48402d783d27547b943bfd",
+      "afterSha256": "befd4aecd5bfbef877aff2ee263385feb734c01f7c2a7e237cb807429255cb69",
+      "fieldsChanged": [
+        "authors"
+      ]
+    }
+  ],
+  "draftWritePerformed": false,
+  "publicSendAuthorized": false
+}
