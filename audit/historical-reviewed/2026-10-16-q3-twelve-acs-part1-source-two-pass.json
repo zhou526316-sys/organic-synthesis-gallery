@@ -9,26 +9,27 @@
   "sourceBranch": "staging/historical-archive-nightly",
   "approved": [
     {
-      "doi": "10.1021/acs.joc.6c00852",
+      "doi": "10.1021/acs.joc.6c01582",
       "journal": "JOC",
-      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
-      "titleZh": "亲电膦化环化与镍催化碳磷偶联模块化合成非对称二氢BINAP衍生物",
-      "date": "2026-08-31",
+      "title": "Divergent Synthesis of Oxazole and Oxazoline Derivatives by Tandem (3+2) Cyclization–Isomerization Reactions between Aldehydes and Vinylogous Isocyano Esters",
+      "titleZh": "DBU碱量与溶剂控制烯基异氰基酯和醛的分歧式环化异构化合成噁唑与噁唑啉",
+      "date": "2026-08-27",
       "authors": [
-        "Liqiao Han",
-        "Zhe Tang",
-        "Dawei Wang",
-        "Xixi Song",
-        "Zhongxian Li",
-        "Junliang Wu"
+        "Cristian Guzmán-Cedillo",
+        "Mireia Lavilla-Montesinos",
+        "Alicia Monleón-Ventura",
+        "Marc Montesinos-Magraner",
+        "Amparo Sanz-Marco",
+        "Carlos Vila",
+        "Gonzalo Blay"
       ],
       "citation": {
         "year": 2026,
         "volume": "91",
         "issue": "36",
-        "pages": "12435-12444",
+        "pages": "12389-12400",
         "articleNumber": "",
-        "doi": "10.1021/acs.joc.6c00852"
+        "doi": "10.1021/acs.joc.6c01582"
       },
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "toc_only",
@@ -39,20 +40,20 @@
       "firstPassDecision": "include",
       "challengeDecision": "include",
       "reviewPasses": 2,
-      "reason": "通过亲电膦化环化和随后镍催化C–P交叉偶联，模块化组装非对称3,4-二氢BINAP型有机膦结构。",
-      "evidenceBasis": "ACS原始Article/Letter Published Online=2026-08-31，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c00852；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
-      "challengeReason": "不能将两步反应都称为镍催化，也不能将结构新颖的二氢BINAP等同于已证明普适高效的不对称催化剂；原文仅有两项催化应用初筛。",
+      "reason": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。",
+      "evidenceBasis": "ACS JOC出版社Article History明确标示原始Article Published Online=2026-08-27，https://pubs.acs.org/doi/10.1021/acs.joc.6c01582，与冻结Crossref+OpenAlex双源 2026-08-22_2026-08-31_joc 日期一致；原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae、source SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；书目2026年第91卷36期12389-12400页，作者与DOI精准一致。出版期/纸本Sep11不得替代Aug27电子首发；原始开放文章用于学术审核，不复制受限摘要或PDF、SI和图片。",
+      "challengeReason": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。",
       "scopeAssessment": {
-        "primaryContribution": "通过亲电膦化环化和随后镍催化C–P交叉偶联，模块化组装非对称3,4-二氢BINAP型有机膦结构。",
-        "preparativeTransformation": "萘基取代炔烃先与二芳基氧化膦在Tf2O促进下进行膦化环化，再经镍催化芳基三氟甲磺酸酯与膦伙伴的C–P偶联安装第二磷模块。",
-        "generalityEvidence": "论文展示不同芳基及磷模块的分离产物和磷基后续修饰；仅在两项初步催化对比中发现二氢BINAP性能优于常规BINAP，不代表普适的高ee配体。",
-        "sourceEvidence": "ACS原始Article/Letter Published Online=2026-08-31，DOI出版社记录 https://pubs.acs.org/doi/10.1021/acs.joc.6c00852；冻结双源Crossref+OpenAlex根 2026-08-22_2026-08-31_joc；原始Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae，根SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。核对作者、题目、期卷页；不复制受限摘要、正文、PDF、SI或图片。",
-        "boundaryChallenge": "不能将两步反应都称为镍催化，也不能将结构新颖的二氢BINAP等同于已证明普适高效的不对称催化剂；原文仅有两项催化应用初筛。"
+        "primaryContribution": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。",
+        "preparativeTransformation": "烯基异氰基酯与多种芳香或脂肪醛经DBU促进[3+2]环化，在MeOH中使用2当量DBU进一步异构化得到4,5-二取代芳香噁唑；在CH2Cl2中用1当量DBU则可截获具有环外烯键的噁唑啉。",
+        "generalityEvidence": "ACS JOC官方全文记录：MeOH与2当量DBU在室温下给出噁唑，最高90%分离收率；CH2Cl2与1当量DBU给出噁唑啉，最高80%。包括芳醛、杂芳醛和脂肪醛；空间拥挤或富电子芳醛可能生成甲醇加合副产物，不能称所有底物定量分歧。",
+        "sourceEvidence": "ACS JOC出版社Article History明确标示原始Article Published Online=2026-08-27，https://pubs.acs.org/doi/10.1021/acs.joc.6c01582，与冻结Crossref+OpenAlex双源 2026-08-22_2026-08-31_joc 日期一致；原始raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review queue Git blob 18c8ba29a9c195239a67330632807ca982a69eae、source SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2；书目2026年第91卷36期12389-12400页，作者与DOI精准一致。出版期/纸本Sep11不得替代Aug27电子首发；原始开放文章用于学术审核，不复制受限摘要或PDF、SI和图片。",
+        "boundaryChallenge": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。"
       },
       "reviewEvidence": {
-        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00852",
-        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00852",
-        "publisherOnlineDate": "2026-08-31",
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01582",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01582/5339472/Divergent-Synthesis-of-Oxazole-and-Oxazoline",
+        "publisherOnlineDate": "2026-08-27",
         "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
         "stageBranch": "staging/historical-archive-nightly",
         "stageBatchId": "2026-08-22_2026-08-31_joc",
@@ -64,9 +65,9 @@
           "openalex"
         ],
         "firstOnlineDateEvidence": {
-          "sourceFrozenDate": "2026-08-31",
-          "officialPublisherFirstOnline": "2026-08-31",
-          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00852",
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01582",
           "sourceFrozenAndUnchanged": true,
           "dateKind": "ACS_official_Published_Online"
         },
@@ -79,12 +80,12 @@
         {
           "pass": 1,
           "decision": "include",
-          "assessment": "通过亲电膦化环化和随后镍催化C–P交叉偶联，模块化组装非对称3,4-二氢BINAP型有机膦结构。 萘基取代炔烃先与二芳基氧化膦在Tf2O促进下进行膦化环化，再经镍催化芳基三氟甲磺酸酯与膦伙伴的C–P偶联安装第二磷模块。 论文展示不同芳基及磷模块的分离产物和磷基后续修饰；仅在两项初步催化对比中发现二氢BINAP性能优于常规BINAP，不代表普适的高ee配体。"
+          "assessment": "利用此前较少开发的烯基异氰基酯与醛，通过碱促进的[3+2]成环及后续异构化，凭借DBU用量和溶剂的改变从相同反应物分歧制备噁唑和噁唑啉两类含氮含氧杂环。 烯基异氰基酯与多种芳香或脂肪醛经DBU促进[3+2]环化，在MeOH中使用2当量DBU进一步异构化得到4,5-二取代芳香噁唑；在CH2Cl2中用1当量DBU则可截获具有环外烯键的噁唑啉。 ACS JOC官方全文记录：MeOH与2当量DBU在室温下给出噁唑，最高90%分离收率；CH2Cl2与1当量DBU给出噁唑啉，最高80%。包括芳醛、杂芳醛和脂肪醛；空间拥挤或富电子芳醛可能生成甲醇加合副产物，不能称所有底物定量分歧。"
         },
         {
           "pass": 2,
           "decision": "include",
-          "reason": "不能将两步反应都称为镍催化，也不能将结构新颖的二氢BINAP等同于已证明普适高效的不对称催化剂；原文仅有两项催化应用初筛。"
+          "reason": "第二遍反向审核：不能将两种产物称作两个完全不同起始底物或不同金属催化，分歧来自同一烯基异氰基酯/醛组合的溶剂和DBU当量变化。所谓[3+2]并非独立于异构化的所有噁唑一步协同生成；DFT给出机理解释且有控制实验，不等同每一中间体都直接观测。烯基异氰基酯更早已有不对称噁唑啉方法，本文的新意在可调分歧路线而非宣称首次使用该类底物。"
         }
       ]
     },
@@ -494,5 +495,6 @@
     "noMedia": true,
     "noDailyNew": true,
     "no08Change": true
-  }
+  },
+  "auditCorrection": "Previously held DOI 10.1021/acs.joc.6c00852 is still under independent publisher-date hold and was removed; replacement 10.1021/acs.joc.6c01582 has publisher Aug 27 first-online, matching frozen Crossref+OpenAlex, standalone chemical challenge, and primary separated oxazoles/oxazolines."
 }
