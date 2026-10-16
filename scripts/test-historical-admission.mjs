@@ -968,7 +968,20 @@ test('four independent verified 2026-Q3 original methods retain source fingerpri
  const hold=JSON.parse(readFileSync('audit/historical-reviewed/2026-10-14-q3-four-acs-original-methods-two-pass.json','utf8'));
  assert.equal(hold.reviewed.length,4);
  assert.equal(hold.newUnadmittedSourceDateConcern[0].status,'unfinished_require_official_CCS_article_history_before_academic_approval');
- assert.equal(root.accepted.some(x=>x.doi==='10.31635/ccschem.026.202608043'),false);
+ // Historical 2026-10-14 evidence correctly held this CCS DOI. A later
+ // DOI-pinned publisher First Online + two scientific passes may resolve it.
+ const verifiedLater=root.accepted.find(x=>x.doi==='10.31635/ccschem.026.202608043');
+ if(verifiedLater){
+   assert.equal(verifiedLater.date,'2026-08-22');
+   assert.equal(verifiedLater.reviewEvidence.publisherOnlineDate,'2026-08-22');
+   assert.equal(verifiedLater.reviewEvidence.stageSourceSha256,
+     '8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd');
+   assert.equal(verifiedLater.reviewPasses,2);
+   assert.equal(verifiedLater.mediaPolicy,'toc_only');
+   assert.equal(verifiedLater.addedDate,'');
+   assert.equal(verifiedLater.new,false);
+   assert.match(verifiedLater.scopeAssessment.preparativeTransformation,/Diels/);
+ }else assert.equal(verifiedLater,undefined);
  for(const doi of hold.continuedHolds)assert.equal(root.accepted.some(x=>x.doi===doi),false);
 });
 
