@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.70
+// @version      6.2.71
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -22,7 +22,7 @@
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
 // @match        https://doi.org/*
-// @run-at       document-idle
+// @run-at       document-end
 // @noframes
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -57,13 +57,14 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.70';
+  var INSTALL_REVISION = '6.2.71';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var IMAGE_UPLOAD_MAX_BUDGET_MS = 48000;
   var IMAGE_OUTBOX_PREFIX = 'osg-toc-v6:pending-image-transfer-v1:';
   var IMAGE_OUTBOX_CAP_BYTES = 18 * 1024 * 1024;
+  var IMAGE_OUTBOX_THROUGHPUT_REVISION = '20261016-nonblocking-gallery-figure-v1';
   var imageOutboxBusy = false;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
@@ -1988,7 +1989,9 @@ function embeddedJobDois(value) {
     }catch(_){return false;}
   }
   async function replayOneDeferredImage() {
-    if(!isGalleryPage()||imageOutboxBusy||GM_getValue(ACTIVE_JOB_KEY,null)||!writeToken())return false;
+    // The authenticated Gallery uploader is independent of the publisher-tab
+    // controller. Do not starve it for the duration of a 226-DOI run.
+    if(!isGalleryPage()||imageOutboxBusy||!writeToken())return false;
     var keys=pendingImageTransferKeys();if(!keys.length)return false;
     imageOutboxBusy=true;
     var lockKey=P+'image-outbox-lock-v1',owner=CONTROLLER_ID+':image-replay',key='',row=null;
@@ -2035,8 +2038,8 @@ function embeddedJobDois(value) {
   function startImageOutboxSender(){
     if(!isGalleryPage()||globalThis.__OSG_IMAGE_OUTBOX_SENDER__)return;
     globalThis.__OSG_IMAGE_OUTBOX_SENDER__=true;
-    setTimeout(function(){replayOneDeferredImage().catch(function(){});},16000);
-    setInterval(function(){replayOneDeferredImage().catch(function(){});},45000);
+    setTimeout(function(){replayOneDeferredImage().catch(function(){});},5000);
+    setInterval(function(){replayOneDeferredImage().catch(function(){});},20000);
   }
 
   async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
@@ -7310,6 +7313,14 @@ function embeddedJobDois(value) {
       .filter(function(k){return String(k).indexOf(OWNER_PDF_REPLAY_PREFIX)===0;}).slice(0,20);}
     catch(_){return [];}
   }
+  function ownerPdfReplayBackpressure(){
+    var keys=pendingOwnerPdfKeys(),total=0;
+    for(var i=0;i<keys.length;i++){
+      var row=GM_getValue(keys[i],null);
+      total+=Number(row&&row.base64&&row.base64.length||0);
+    }
+    return keys.length>=8||total>=20*1024*1024;
+  }
   function privatePdfBufferBase64(buffer){
     var bytes=new Uint8Array(buffer),parts=[];
     for(var i=0;i<bytes.length;i+=8192)parts.push(String.fromCharCode.apply(null,bytes.subarray(i,i+8192)));
@@ -7485,6 +7496,14 @@ function embeddedJobDois(value) {
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000&&!job.missingOnly&&!job.manualRunId){
       captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found_cached',pdfStage:'沿用自动冷却记录'});
       return {status:'not_found_cached'};
+    }
+    if(ownerPdfReplayBackpressure()){
+      // A saturated authorized local spool is not a missing publisher PDF.
+      // Preserve the obligation and skip this DOI's PDF download rather than
+      // incur another blocking 90s upload attempt with nowhere to store it.
+      pushTrace(trace,{stage:'private_pdf_gallery_retry',event:'queue_backpressure',
+        status:'deferred',message:'owner_pdf_local_capacity;cloud_stored=0'});
+      return {status:'deferred_capacity',reason:'owner_pdf_replay_capacity_full'};
     }
     var candidates=await waitForPrivatePdfCandidates(job,trace);
     assertBoundCaptureJob(job);
