@@ -1,0 +1,54 @@
+name: WeChat Oct16 actual cloud draft QA
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-oct16-cloud-readback.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct16-cloud-readonly
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install Chromium for GET-only real cloud review
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/oct16-browser-install.log 2>&1 || { tail -60 /tmp/oct16-browser-install.log; exit 1; }
+      - name: Check exact two articles, 35 daily papers, 41 original scientific images and complete prose
+        run: node scripts/wechat-oct16-cloud-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct16-actual-cloud-qa
+          path: audit/wechat-working/2026-10-16-r1-cloud-readback/
+          retention-days: 30
+      - name: Preserve actual cloud evidence without another draft write
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/oct16-qa
+          cp -a audit/wechat-working/2026-10-16-r1-cloud-readback/. /tmp/oct16-qa/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for i in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p audit/wechat-working/2026-10-16-r1-cloud-readback
+            cp -a /tmp/oct16-qa/. audit/wechat-working/2026-10-16-r1-cloud-readback/
+            git add audit/wechat-working/2026-10-16-r1-cloud-readback/
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: actual Oct16 WeChat two-paper draft full prose and original-source-image readback QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
