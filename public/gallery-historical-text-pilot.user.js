@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.12
+// @version      0.2.13
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -341,8 +341,8 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.12';
-  const BATCH_BINDING_REVISION='historic-body-early-bound-v031';
+  const BATCH_SCRIPT_VERSION='0.2.13';
+  const BATCH_BINDING_REVISION='historic-body-docstart-worker-v032';
   // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
   const BATCH_CAPTURE_REVISION='historic-body-evidence-v030';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
@@ -729,7 +729,7 @@
     }
   }
 
-  function batchHistoricalPapers(catalog){
+  function batchHistoricalPapers(catalog,includeAllFormal=false){
     if(!catalog||catalog.pairedCaptureRegistry!==true
       ||!Array.isArray(catalog.articles)||catalog.articles.length>BATCH_DOI_LIMIT
       ||Number(catalog.webpageDoiCount)!==catalog.articles.length)
@@ -738,7 +738,8 @@
     for(const raw of catalog.articles){
       const doi=normalizeDoi(raw?.doi);
       const date=String(raw?.date||'');
-      if(!doi||seen.has(doi)||!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>=CUTOFF)continue;
+      if(!doi||seen.has(doi)||(date&&!/^\d{4}-\d{2}-\d{2}$/.test(date))
+        ||(!includeAllFormal&&(!date||date>=CUTOFF)))continue;
       const journal=String(raw.journal||'').trim();
       if(!journal)continue;
       seen.add(doi);
@@ -1293,9 +1294,9 @@
         const first=c.neverAttempted,post=c.parserRecheckEligible;
         coverageDetails.textContent=[
           '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
-          '其余正式 DOI（含10月以来和日期待核实）：'+c.historicalWithoutVerifiedDate+' 篇',
+          '10月以来正式 DOI '+c.recentWithVerifiedDate+' 篇；日期待核实正式 DOI '+c.formalUndated+' 篇',
           '全库本机已存科学正文 '+savedFormal+' 篇（含官方OA和出版社来源，未联网共享）；官方OA来源记录 '+oaAttempts.length+' 篇',
-          '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
+          '正式全库本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
           '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
           '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
           '其他待核查 '+c.otherFailure+'；新版解析可复查一次 '+post,
@@ -1573,12 +1574,16 @@
     return batchUnconfirmedPublisherResult(sawHandlerProgress);
   }
   function batchCoverageSummary(catalog,existingKeys,attemptRows){
-    const papers=batchHistoricalPapers(catalog);
+    const papers=batchHistoricalPapers(catalog,true);
+    const historicalWithVerifiedDate=papers.filter(p=>p.publication&&p.publication<CUTOFF).length;
+    const formalUndated=papers.filter(p=>!p.publication).length;
+    const recentWithVerifiedDate=papers.length-historicalWithVerifiedDate-formalUndated;
     const saved=new Set(existingKeys||[]);
     const previous=new Map((attemptRows||[]).map(row=>[row.doi,row]));
     const coverage={formalDois:Number(catalog?.formalCount||0),
-      historicalWithVerifiedDate:papers.length,
-      historicalWithoutVerifiedDate:Math.max(0,Number(catalog?.articles?.length||0)-papers.length),
+      historicalWithVerifiedDate,
+      historicalWithoutVerifiedDate:papers.length-historicalWithVerifiedDate,
+      recentWithVerifiedDate,formalUndated,
       savedLocal:0,neverAttempted:0,licensePending:0,bodyMissing:0,
       accessBlocked:0,temporaryFailure:0,otherFailure:0,
       scheduledByNormalBatch:0,parserRecheckEligible:0};
@@ -1663,9 +1668,9 @@
       window.alert('已有一个历史正文批次在当前浏览器运行；请在原页面暂停后操作。');
       return;
     }
-    const catalog=await batchLoadCanonicalCatalog();
-    const papers=batchHistoricalPapers(catalog);
-    if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
+    const catalog=await batchLoadCanonicalCatalog(true);
+    const papers=batchHistoricalPapers(catalog,true);
+    if(!papers.length){window.alert('正式目录中暂无可处理的正式 DOI');return;}
     const db=await batchOpenDb();
     let existing,attempts,selected,alreadySavedCount=0;
     try{
@@ -1888,8 +1893,10 @@
     return /access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in|challenge required|sign in to continue|automated requests blocked/i.test(sample);
   }
   function batchArticlePageReady(root,evidence=null){
-    if(!root||document.readyState==='loading')return false;
-    // Static heading count is not a hydration or scientific-content signal.
+    if(!root)return false;
+    // Scientific text itself, not an unrelated resource keeping document in
+    // "loading", proves article DOM readiness. The DOI and reuse licence
+    // remain independent, mandatory gates before any local packet is saved.
     const body=evidence||batchBodyStructure(root);
     return ['scientific_sections','partial_science','abstract_only'].includes(body.presence);
   }
@@ -2070,6 +2077,15 @@
     });
     return true;
   }
+  let batchPublisherWorkerStarted=false;
+  function batchLaunchPublisherWorker(){
+    if(batchPublisherWorkerStarted)return;
+    batchPublisherWorkerStarted=true;
+    // A DOI/token-bound document-start heartbeat may already prove that
+    // Tampermonkey entered the correct publisher tab. Do not wait for slow
+    // analytics/resources to finish before starting DOM-driven extraction.
+    void batchWorker().catch(()=>{});
+  }
   function batchBoot(){
     if(location.hostname==='gallery.gczhouwld.com'){
       if(location.pathname==='/'||location.pathname==='/index.html'){
@@ -2080,12 +2096,13 @@
       }
     }else if(publisher(location.hostname)){
       GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
-      void batchWorker().catch(()=>{});
+      batchLaunchPublisherWorker();
     }
   }
   // Run the DOI-bound startup receipt synchronously before the document is
   // ready. Only DOM extraction waits; interactive fires before delayed DCL.
-  if(publisher(location.hostname))batchEarlyPublisherHeartbeat();
+  if(publisher(location.hostname)&&batchEarlyPublisherHeartbeat())
+    batchLaunchPublisherWorker();
   let batchBooted=false;
   function batchBootOnce(){
     if(batchBooted)return;
