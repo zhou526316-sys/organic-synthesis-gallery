@@ -7390,7 +7390,9 @@ function embeddedJobDois(value) {
         addedDate:String(job.addedDate||''),publisher:String(job.publisher||publisherForDoi(doi)),
         articleUrl:String(location.href||''),sourceUrl:String(pdf.sourceUrl||''),
         byteLength:bytes,sha256:sha,base64:raw,createdAt:Date.now(),attempts:0,nextAt:Date.now()+15000});
-      return true;
+      var confirmed=GM_getValue(key,null);
+      return Boolean(confirmed&&confirmed.doi===doi&&confirmed.sha256===sha
+        &&confirmed.byteLength===bytes&&confirmed.base64===raw);
     }catch(_){return false;}
   }
   async function replayOneOwnerPdf(){
