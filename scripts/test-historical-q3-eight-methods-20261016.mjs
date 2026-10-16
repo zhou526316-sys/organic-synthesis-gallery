@@ -74,7 +74,7 @@ test('science-specific skeptical checks remain distinct from titles and unsuppor
  assert.match(byDoi.get('10.1002/anie.7251439').scopeAssessment.boundaryChallenge,/蛋白/);
  assert.match(byDoi.get('10.1021/acs.orglett.6c02963').scopeAssessment.generalityEvidence,/克级/);
  assert.match(byDoi.get('10.1021/acs.orglett.6c02609').scopeAssessment.generalityEvidence,/后期/);
- assert.match(byDoi.get('10.31635/ccschem.026.202607864').scopeAssessment.generalityEvidence,/桥环/);
+ assert.match(byDoi.get('10.31635/ccschem.026.202607864').scopeAssessment.preparativeTransformation,/桥环/);
 });
 
 test('three conflicting publisher dates are held without silently appending to include or pending',()=>{
