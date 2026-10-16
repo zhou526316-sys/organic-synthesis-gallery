@@ -1,0 +1,71 @@
+name: WeChat Oct16 reviewed source staging
+on:
+  push:
+    branches: [wechat-oct16-autoreview-r2]
+    paths: ['audit/automation-triggers/wechat-oct16-reviewed-stage.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct16-reviewed-stage
+  cancel-in-progress: false
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download only the exact reviewed archive and verify every source byte
+        env:
+          REVIEWED_ARCHIVE_URL: https://at.adobe.com/8EX6K7znsE51bdow
+        run: |
+          python3 - <<'PY'
+          import os, io, json, pathlib, hashlib, urllib.request, zipfile, subprocess
+          root=pathlib.Path.cwd()
+          expected='9dd6d83a86e7addd7eb80e627ca6611ac96701d402a7d6b525ad12ee6cd4d6bd'
+          request=urllib.request.Request(os.environ['REVIEWED_ARCHIVE_URL'],headers={'User-Agent':'Mozilla/5.0','Accept':'application/zip'})
+          with urllib.request.urlopen(request,timeout=45) as r: data=r.read(12000000)
+          assert hashlib.sha256(data).hexdigest()==expected,'reviewed archive fingerprint mismatch'
+          z=zipfile.ZipFile(io.BytesIO(data));m=json.loads(z.read('TRANSFER_MANIFEST.json'))
+          assert m['date']=='2026-10-16' and m['revision']=='2026-10-16-r2'
+          assert len(m['files'])==63
+          assert set(z.namelist())=={'TRANSFER_MANIFEST.json'}|{'production/'+x['path'] for x in m['files']}
+          allowed=['public/wechat-assets/reviewed/2026-10-16-r2/','audit/wechat-working/2026-10-16-r2-review/']
+          singles={'public/wechat-featured/2026-10-16.json','public/wechat-retrospective/levin-isoxazole-pyrrole-edit-20261016.json','public/wechat-editions/2026-10-16.json','audit/wechat-working/2026-10-16-review-gate.json','ops/wechat-publisher/create-draft.py','ops/wechat-publisher/reviewed_gallery_entry.py','scripts/verify-wechat-oct16-review.py'}
+          old=root/'ops/wechat-publisher/create-draft.py'
+          current=subprocess.check_output(['git','hash-object',str(old)]).decode().strip()
+          next_sha=next(x['sha256'] for x in m['files'] if x['path']=='ops/wechat-publisher/create-draft.py')
+          assert current==m['basePublisherBlob'] or hashlib.sha256(old.read_bytes()).hexdigest()==next_sha,'publisher changed; do not overwrite unrelated fixes'
+          for row in m['files']:
+            rel=row['path'];p=(root/rel).resolve();p.relative_to(root)
+            assert rel in singles or any(rel.startswith(a) for a in allowed),rel
+            payload=z.read('production/'+rel)
+            assert len(payload)==row['bytes'] and hashlib.sha256(payload).hexdigest()==row['sha256'],rel
+            p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(payload)
+          pathlib.Path('/tmp/wechat-oct16-stage-files.json').write_text(json.dumps(m['files']))
+          print(json.dumps({'files':len(m['files']),'originalAndCoverPngs':sum(x['path'].endswith('.png') for x in m['files']),'sha256':expected,'wechatMutation':False}))
+          PY
+      - name: Install image decoder for source verification
+        run: python3 -m pip install --quiet Pillow
+      - name: Verify latest real catalogue, editorial fingerprints and native render output
+        run: |
+          python3 -m py_compile ops/wechat-publisher/create-draft.py ops/wechat-publisher/reviewed_gallery_entry.py scripts/verify-wechat-oct16-review.py
+          python3 scripts/verify-wechat-oct16-review.py | tee /tmp/wechat-oct16-actual-source-check.json
+      - name: Commit only the reviewed source set
+        run: |
+          python3 - <<'PY'
+          import json,subprocess
+          rows=json.load(open('/tmp/wechat-oct16-stage-files.json'))
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add','--']+[x['path'] for x in rows],check=True)
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          if subprocess.run(['git','diff','--cached','--quiet']).returncode:
+            subprocess.run(['git','commit','-m','editorial: Oct16 reviewed JACS and Levin pair, 38 authentic science figures and precise original covers'],check=True)
+            subprocess.run(['git','push','origin','HEAD:wechat-oct16-autoreview-r2'],check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-oct16-real-source-check
+          path: /tmp/wechat-oct16-actual-source-check.json
+          retention-days: 7
