@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-16T05:51:07.869Z",
+  "generatedAt": "2026-10-16T06:18:13.521Z",
   "nextEligiblePublicationSlot": "2026-10-17T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 203,
-    "include": 201,
+    "checked": 212,
+    "include": 210,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -15084,6 +15084,723 @@
           "reason": "反证：题目Iridium(III)-Catalyzed会否误导把后续aza-Wacker也写作Ir单催化一步完成？正文摘要明确Pd(II)催化第二环化并伴随烯烃迁移，属分步两金属催化；也不能把产物后衍生示例错误计作反应本身底物范围。"
         }
       ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02334",
+      "journal": "Organic Letters",
+      "title": "Light-Driven Iron-Catalyzed Decarboxylative Fluorosulfonylation of Aliphatic Carboxylic Acids",
+      "titleZh": "光驱动铁配体到金属电荷转移催化脂肪族羧酸脱羧氟磺酰化",
+      "date": "2026-07-06",
+      "authors": [
+        "Huan-Huan Zhao",
+        "Xu-Gang Zhang",
+        "Peng-Fei Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "8923-8927",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02334"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发光驱动Fe配体到金属电荷转移（LMCT）催化脱羧氟磺酰化，利用易得的脂肪族羧酸制备有机磺酰氟，核心贡献是新的C–SO₂F制备转化。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02334（2026-07-06，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-01_2026-07-07_organic-letters、raw Git blob 5f176484549fa29bfac94192614c0d694d413c74、review队列 Git blob f0ec30520ab35d4f91e3ac7aa87593330a8efb7a、root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "主要反证是把作者提出的Fe(III)/Fe(II)及LMCT自由基过程当成每一步都被直接观察，或把官能团化误认为只有一例。原文有多类复杂分子后期合成用途，但具体Fe循环属机理论证，不应夸大为各短寿命中间体均直接确证。",
+      "scopeAssessment": {
+        "primaryContribution": "开发光驱动Fe配体到金属电荷转移（LMCT）催化脱羧氟磺酰化，利用易得的脂肪族羧酸制备有机磺酰氟，核心贡献是新的C–SO₂F制备转化。",
+        "preparativeTransformation": "以脂肪族羧酸、DABSO提供的SO₂以及NFSI氟源为反应组分，通过铁参与的可见光脱羧及后续氟磺酰基形成，使原羧基位置转换为脂肪族磺酰氟。",
+        "generalityEvidence": "ACS正式Letter摘要明确列出温和条件下脂肪族磺酰氟制备，并验证药物、天然产物及肽类的后期官能化；DABSO是二氧化硫来源，NFSI是氟来源，不是直接的羧酸氟化。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02334（2026-07-06，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-01_2026-07-07_organic-letters、raw Git blob 5f176484549fa29bfac94192614c0d694d413c74、review队列 Git blob f0ec30520ab35d4f91e3ac7aa87593330a8efb7a、root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "主要反证是把作者提出的Fe(III)/Fe(II)及LMCT自由基过程当成每一步都被直接观察，或把官能团化误认为只有一例。原文有多类复杂分子后期合成用途，但具体Fe循环属机理论证，不应夸大为各短寿命中间体均直接确证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02334",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02334",
+        "publisherOnlineDate": "2026-07-06",
+        "publisherOriginalResearchType": "ACS_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_organic-letters",
+        "stageBatchSha": "5f176484549fa29bfac94192614c0d694d413c74",
+        "sourceReviewQueueGitBlobSha": "f0ec30520ab35d4f91e3ac7aa87593330a8efb7a",
+        "stageSourceSha256": "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-06",
+          "officialPublisherFirstOnline": "2026-07-06",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02334",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发光驱动Fe配体到金属电荷转移（LMCT）催化脱羧氟磺酰化，利用易得的脂肪族羧酸制备有机磺酰氟，核心贡献是新的C–SO₂F制备转化。 以脂肪族羧酸、DABSO提供的SO₂以及NFSI氟源为反应组分，通过铁参与的可见光脱羧及后续氟磺酰基形成，使原羧基位置转换为脂肪族磺酰氟。 ACS正式Letter摘要明确列出温和条件下脂肪族磺酰氟制备，并验证药物、天然产物及肽类的后期官能化；DABSO是二氧化硫来源，NFSI是氟来源，不是直接的羧酸氟化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "主要反证是把作者提出的Fe(III)/Fe(II)及LMCT自由基过程当成每一步都被直接观察，或把官能团化误认为只有一例。原文有多类复杂分子后期合成用途，但具体Fe循环属机理论证，不应夸大为各短寿命中间体均直接确证。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02414",
+      "journal": "Organic Letters",
+      "title": "Chiral Monodentate Phosphine Ligand for Palladium-Catalyzed Enantioselective Cascade Arylvinylation of Alkenes with N -Tosylhydrazones",
+      "titleZh": "手性单齿膦配体促进钯催化烯烃与对甲苯磺酰腙不对称芳基乙烯基化级联反应",
+      "date": "2026-07-06",
+      "authors": [
+        "Wenrui Zheng",
+        "Tao-Yan Lin",
+        "Mingyue Wu",
+        "Fen Mi",
+        "Yixin Lu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "8976-8981",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02414"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "将新设计的C₂对称SPINOL衍生单齿膦NUSIOC-Phos用于钯催化不对称级联，构筑带有全碳季手性中心的3,4-二氢异喹啉酮，属于原创不对称合成方法。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02414（2026-07-06，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-01_2026-07-07_organic-letters、raw Git blob 5f176484549fa29bfac94192614c0d694d413c74、review队列 Git blob f0ec30520ab35d4f91e3ac7aa87593330a8efb7a、root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "反向核查应确认是否只是配体合成论文而未实现真正不对称键形成。论文实际报告了多底物Pd催化级联，生成全碳季手性中心。不能把N-对甲苯磺酰腙笼统写成游离烯烃，也不能把衍生反应计为原始串联反应收率。",
+      "scopeAssessment": {
+        "primaryContribution": "将新设计的C₂对称SPINOL衍生单齿膦NUSIOC-Phos用于钯催化不对称级联，构筑带有全碳季手性中心的3,4-二氢异喹啉酮，属于原创不对称合成方法。",
+        "preparativeTransformation": "N-烯丙基邻碘苯甲酰胺与N-对甲苯磺酰腙在Pd/手性单齿膦体系中发生芳基化和乙烯基化级联，形成C–C键并关环生成手性3,4-二氢异喹啉酮。",
+        "generalityEvidence": "ACS Letter公开摘要确认两类原料易得、底物适用范围较广、收率与对映选择性优良，且展示天然产物片段后期官能化及产物C=C双键的衍生转化；手性配体是NUSIOC-Phos而非普通双齿膦。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02414（2026-07-06，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-01_2026-07-07_organic-letters、raw Git blob 5f176484549fa29bfac94192614c0d694d413c74、review队列 Git blob f0ec30520ab35d4f91e3ac7aa87593330a8efb7a、root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "反向核查应确认是否只是配体合成论文而未实现真正不对称键形成。论文实际报告了多底物Pd催化级联，生成全碳季手性中心。不能把N-对甲苯磺酰腙笼统写成游离烯烃，也不能把衍生反应计为原始串联反应收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02414",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02414",
+        "publisherOnlineDate": "2026-07-06",
+        "publisherOriginalResearchType": "ACS_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_organic-letters",
+        "stageBatchSha": "5f176484549fa29bfac94192614c0d694d413c74",
+        "sourceReviewQueueGitBlobSha": "f0ec30520ab35d4f91e3ac7aa87593330a8efb7a",
+        "stageSourceSha256": "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-06",
+          "officialPublisherFirstOnline": "2026-07-06",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02414",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "将新设计的C₂对称SPINOL衍生单齿膦NUSIOC-Phos用于钯催化不对称级联，构筑带有全碳季手性中心的3,4-二氢异喹啉酮，属于原创不对称合成方法。 N-烯丙基邻碘苯甲酰胺与N-对甲苯磺酰腙在Pd/手性单齿膦体系中发生芳基化和乙烯基化级联，形成C–C键并关环生成手性3,4-二氢异喹啉酮。 ACS Letter公开摘要确认两类原料易得、底物适用范围较广、收率与对映选择性优良，且展示天然产物片段后期官能化及产物C=C双键的衍生转化；手性配体是NUSIOC-Phos而非普通双齿膦。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向核查应确认是否只是配体合成论文而未实现真正不对称键形成。论文实际报告了多底物Pd催化级联，生成全碳季手性中心。不能把N-对甲苯磺酰腙笼统写成游离烯烃，也不能把衍生反应计为原始串联反应收率。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02330",
+      "journal": "Organic Letters",
+      "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
+      "titleZh": "导向基辅助铜催化亚磺酰胺不对称S-苄基化制备手性亚磺酰亚胺",
+      "date": "2026-07-16",
+      "authors": [
+        "Rongkai Gao",
+        "Ke Wang",
+        "Ying He",
+        "Xiaohan Ye"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "9628-9633",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02330"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330（2026-07-16，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "可能误把S-苄基化称为苄位C–H官能化，或把配体控制与喹啉导向功能混淆。原料是苄胺来源的Katritzky盐而非直接苄基C–H；喹啉基团对效率和选择性重要，尚不能外推至完全不需导向基的所有硫亚胺底物。",
+      "scopeAssessment": {
+        "primaryContribution": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。",
+        "preparativeTransformation": "以亚磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性亚磺酰亚胺。",
+        "generalityEvidence": "ACS Letter摘要明确报道不同手性S-苄基亚磺酰亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330（2026-07-16，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "可能误把S-苄基化称为苄位C–H官能化，或把配体控制与喹啉导向功能混淆。原料是苄胺来源的Katritzky盐而非直接苄基C–H；喹啉基团对效率和选择性重要，尚不能外推至完全不需导向基的所有硫亚胺底物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330",
+        "publisherOnlineDate": "2026-07-16",
+        "publisherOriginalResearchType": "ACS_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_organic-letters",
+        "stageBatchSha": "191472933f6e4097799a5642b86061b865421825",
+        "sourceReviewQueueGitBlobSha": "b8eab2e1881ddfd3baac91331b4b66a753fb138f",
+        "stageSourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-16",
+          "officialPublisherFirstOnline": "2026-07-16",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02330",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过喹啉导向基与铜催化自由基接力实现亚磺酰胺的对映选择性S-苄基化，为手性S-苄基亚磺酰亚胺提供制备方法，属于有机硫立体选择性合成。 以亚磺酰胺和由苄胺衍生的Katritzky吡啶鎓盐为底物，产生苄基自由基并在铜/喹啉导向环境中构筑新的S–C(苄基)键，获得手性亚磺酰亚胺。 ACS Letter摘要明确报道不同手性S-苄基亚磺酰亚胺，单项最高90%分离收率及99% ee，并展示放大和后续衍生；最高收率与最高ee为两个独立指标。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "可能误把S-苄基化称为苄位C–H官能化，或把配体控制与喹啉导向功能混淆。原料是苄胺来源的Katritzky盐而非直接苄基C–H；喹啉基团对效率和选择性重要，尚不能外推至完全不需导向基的所有硫亚胺底物。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02710",
+      "journal": "Organic Letters",
+      "title": "Electrochemically Chloride Anion-Mediated Dialkoxylation of Diazo Compounds with Alcohols Enabling Synthesis of Ketals",
+      "titleZh": "电化学氯离子介导重氮化合物与醇的双烷氧基化合成缩酮",
+      "date": "2026-07-17",
+      "authors": [
+        "Qian Wang",
+        "Jierui Deng",
+        "Haibo Mei",
+        "Ata Makarem",
+        "Jianlin Han"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "9794-9799",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02710"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过氯离子参与的阳极氧化及碳烯自由基阳离子路径实现重氮化合物双烷氧基化，以电化学方式制备多取代缩酮，具有明确的合成底物适用性。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02710（2026-07-17，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "强反证在于标题是否暗示以氯自由基直接双氯化或仅为简单电解醇氧化。论文实际产物为缩酮，氯离子充当中间反应参与者；提出的碳烯自由基阳离子与氯化中间体通路受机理实验支持，不等于每一中间体已直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "通过氯离子参与的阳极氧化及碳烯自由基阳离子路径实现重氮化合物双烷氧基化，以电化学方式制备多取代缩酮，具有明确的合成底物适用性。",
+        "preparativeTransformation": "重氮底物在电化学条件下与氯阴离子及醇依次作用，经氧化、醇捕获和取代生成带两个烷氧基的缩酮产物；无需把氯盐误写为最终保留的氯代产品。",
+        "generalityEvidence": "ACS原始Letter摘要显示缩酮最高98%收率，报道较广底物范围、温和条件与放大实验；机理数据支持重氮阳极氧化后经含氯中间体、两次醇参与形成缩酮。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02710（2026-07-17，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-15_2026-07-21_organic-letters、raw Git blob 191472933f6e4097799a5642b86061b865421825、review队列 Git blob b8eab2e1881ddfd3baac91331b4b66a753fb138f、root SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "强反证在于标题是否暗示以氯自由基直接双氯化或仅为简单电解醇氧化。论文实际产物为缩酮，氯离子充当中间反应参与者；提出的碳烯自由基阳离子与氯化中间体通路受机理实验支持，不等于每一中间体已直接观测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02710",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02710",
+        "publisherOnlineDate": "2026-07-17",
+        "publisherOriginalResearchType": "ACS_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_organic-letters",
+        "stageBatchSha": "191472933f6e4097799a5642b86061b865421825",
+        "sourceReviewQueueGitBlobSha": "b8eab2e1881ddfd3baac91331b4b66a753fb138f",
+        "stageSourceSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-17",
+          "officialPublisherFirstOnline": "2026-07-17",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02710",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过氯离子参与的阳极氧化及碳烯自由基阳离子路径实现重氮化合物双烷氧基化，以电化学方式制备多取代缩酮，具有明确的合成底物适用性。 重氮底物在电化学条件下与氯阴离子及醇依次作用，经氧化、醇捕获和取代生成带两个烷氧基的缩酮产物；无需把氯盐误写为最终保留的氯代产品。 ACS原始Letter摘要显示缩酮最高98%收率，报道较广底物范围、温和条件与放大实验；机理数据支持重氮阳极氧化后经含氯中间体、两次醇参与形成缩酮。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "强反证在于标题是否暗示以氯自由基直接双氯化或仅为简单电解醇氧化。论文实际产物为缩酮，氯离子充当中间反应参与者；提出的碳烯自由基阳离子与氯化中间体通路受机理实验支持，不等于每一中间体已直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03033",
+      "journal": "Organic Letters",
+      "title": "Regioselective Palladium-Catalyzed Direct C3–H Arylation of Triazolopyridazines with Aryl Thianthrenium Salts",
+      "titleZh": "钯催化三唑并哒嗪与芳基噻蒽鎓盐的区域选择性C3位碳氢芳基化",
+      "date": "2026-08-27",
+      "authors": [
+        "Na Wang",
+        "Peifeng Li",
+        "Liwen Xia",
+        "Dongcheng Wang",
+        "Jinhua Yang",
+        "Chunyu Han"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11231-11236",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03033"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发钯催化1,2,4-三唑并[4,3-b]哒嗪C3位直接芳基化，为稠合含氮杂环提供高区域选择性的C–C键构筑方法。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03033（2026-08-27，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-08-22_2026-08-31_organic-letters、raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827、review队列 Git blob dddad7ab8463070b42865c3c1c56f3a8503e493d、root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "边界是把芳基噻蒽鎓盐描述成普适亲电芳基化或错误推断自由基机理。原文机理实验主要支持特定底物体系的Pd(0)/Pd(II)非自由基通路；需区分芳基盐的制备及后续克级反应，并不证明所有芳基源可直接替代。",
+      "scopeAssessment": {
+        "primaryContribution": "开发钯催化1,2,4-三唑并[4,3-b]哒嗪C3位直接芳基化，为稠合含氮杂环提供高区域选择性的C–C键构筑方法。",
+        "preparativeTransformation": "以三唑并哒嗪杂环C3–H键与芳基噻蒽鎓盐为耦合伙伴，经Pd催化直接芳基化生成C3-芳基取代的三唑并哒嗪衍生物。",
+        "generalityEvidence": "ACS Letter摘要确认两种耦合伙伴均有较宽底物范围、官能团兼容性好、产品收率中等至优良，并展示克级制备。竞争及自由基捕获实验支持Pd(0)/Pd(II)路径。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Letter_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03033（2026-08-27，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-08-22_2026-08-31_organic-letters、raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827、review队列 Git blob dddad7ab8463070b42865c3c1c56f3a8503e493d、root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "边界是把芳基噻蒽鎓盐描述成普适亲电芳基化或错误推断自由基机理。原文机理实验主要支持特定底物体系的Pd(0)/Pd(II)非自由基通路；需区分芳基盐的制备及后续克级反应，并不证明所有芳基源可直接替代。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03033",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03033",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "dddad7ab8463070b42865c3c1c56f3a8503e493d",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03033",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发钯催化1,2,4-三唑并[4,3-b]哒嗪C3位直接芳基化，为稠合含氮杂环提供高区域选择性的C–C键构筑方法。 以三唑并哒嗪杂环C3–H键与芳基噻蒽鎓盐为耦合伙伴，经Pd催化直接芳基化生成C3-芳基取代的三唑并哒嗪衍生物。 ACS Letter摘要确认两种耦合伙伴均有较宽底物范围、官能团兼容性好、产品收率中等至优良，并展示克级制备。竞争及自由基捕获实验支持Pd(0)/Pd(II)路径。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "边界是把芳基噻蒽鎓盐描述成普适亲电芳基化或错误推断自由基机理。原文机理实验主要支持特定底物体系的Pd(0)/Pd(II)非自由基通路；需区分芳基盐的制备及后续克级反应，并不证明所有芳基源可直接替代。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00990",
+      "journal": "JOC",
+      "title": "Weakening Bidentate Coordination Enables Pd-Catalyzed Annulation of 2-Iodobiphenyls with Methyl 3-Chloropyridine-2-carboxylates",
+      "titleZh": "弱化双齿配位实现钯催化联苯与氯代吡啶甲酸酯环化制备氮杂稠环芳烃",
+      "date": "2026-07-29",
+      "authors": [
+        "Cheng-Rong Cui",
+        "Cui Liu",
+        "Peng-Yu Wang",
+        "Bi-Qin Wang",
+        "Chun Feng",
+        "Yingbo Shi",
+        "Xiao-Yan Bai",
+        "Shilin Zhang",
+        "Shi-Kai Xiang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10865-10875",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00990"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过将强双齿配位的吡啶羧酸改为甲酯，降低钯催化剂失活，恢复联苯与吡啶组分的高效环化，构筑1-氮杂三亚苯及扩环多环骨架。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00990（2026-07-29，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "可能被误判为只改变保护基的旧反应优化而没有新合成贡献。出版社确实报告改善Pd中毒后的高收率多环杂芳烃制备及后续扩环；但不能把强酸双齿配位所致失活直接泛化为所有吡啶羧酸催化反应的共同原因。",
+      "scopeAssessment": {
+        "primaryContribution": "通过将强双齿配位的吡啶羧酸改为甲酯，降低钯催化剂失活，恢复联苯与吡啶组分的高效环化，构筑1-氮杂三亚苯及扩环多环骨架。",
+        "preparativeTransformation": "2-碘联苯与3-氯吡啶-2-甲酸甲酯在Pd催化条件下发生分子间偶联及环化，形成1-氮杂三亚苯；所得湾区氯取代产物还能再与邻氯苯甲酸环化合成4-氮杂二苯并四苯。",
+        "generalityEvidence": "ACS JOC Article摘要明确比较吡啶-2-羧酸导致的配位抑制和对应甲酯提升环化产率，并提供可进一步扩环的氯代多环芳烃产品；不是纯理论配位模型。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00990（2026-07-29，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "可能被误判为只改变保护基的旧反应优化而没有新合成贡献。出版社确实报告改善Pd中毒后的高收率多环杂芳烃制备及后续扩环；但不能把强酸双齿配位所致失活直接泛化为所有吡啶羧酸催化反应的共同原因。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00990",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00990",
+        "publisherOnlineDate": "2026-07-29",
+        "publisherOriginalResearchType": "ACS_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "e20fed3bf8032c727a62435204f109f50b376435",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-29",
+          "officialPublisherFirstOnline": "2026-07-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00990",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过将强双齿配位的吡啶羧酸改为甲酯，降低钯催化剂失活，恢复联苯与吡啶组分的高效环化，构筑1-氮杂三亚苯及扩环多环骨架。 2-碘联苯与3-氯吡啶-2-甲酸甲酯在Pd催化条件下发生分子间偶联及环化，形成1-氮杂三亚苯；所得湾区氯取代产物还能再与邻氯苯甲酸环化合成4-氮杂二苯并四苯。 ACS JOC Article摘要明确比较吡啶-2-羧酸导致的配位抑制和对应甲酯提升环化产率，并提供可进一步扩环的氯代多环芳烃产品；不是纯理论配位模型。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "可能被误判为只改变保护基的旧反应优化而没有新合成贡献。出版社确实报告改善Pd中毒后的高收率多环杂芳烃制备及后续扩环；但不能把强酸双齿配位所致失活直接泛化为所有吡啶羧酸催化反应的共同原因。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00158",
+      "journal": "JOC",
+      "title": "Divergent Synthesis of Acylated Sulfoximines via Tunable Silver/Rhodium Relay Catalysis with Cyclopropenones",
+      "titleZh": "银铑接力催化环丙烯酮参与亚磺酰亚胺N-酰基化与碳氢环化的发散合成",
+      "date": "2026-07-30",
+      "authors": [
+        "Yi Luo",
+        "Xin-Yi Wang",
+        "Ya-Li Xu",
+        "Yi Chen",
+        "Lin Dong",
+        "Yan-Jun Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10787-10797",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00158"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00158（2026-07-30，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "核心挑战是所谓Ag/Rh relay是否被错写为单一金属一步催化、是否只报道普通酰胺形成。文章实际区分Ag(I) N-酰基化与后续Rh(III)氧化环化；若省略第二步就不能称完成环化，多样化仅限本文展示的底物和构架。",
+      "scopeAssessment": {
+        "primaryContribution": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。",
+        "preparativeTransformation": "亚磺酰亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚磺酰亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。",
+        "generalityEvidence": "ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚磺酰亚胺结构。两种产物类型由反应序列控制。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00158（2026-07-30，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review队列 Git blob e20fed3bf8032c727a62435204f109f50b376435、root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "核心挑战是所谓Ag/Rh relay是否被错写为单一金属一步催化、是否只报道普通酰胺形成。文章实际区分Ag(I) N-酰基化与后续Rh(III)氧化环化；若省略第二步就不能称完成环化，多样化仅限本文展示的底物和构架。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00158",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00158",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "e20fed3bf8032c727a62435204f109f50b376435",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00158",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过可调控的银/铑接力催化，利用环丙烯酮先对亚磺酰亚胺N-酰基化，再实现铑催化氧化性C–H环化，为多类酰基化亚磺酰亚胺骨架提供多样化制备路径。 亚磺酰亚胺和环丙烯酮经Ag(I)催化N-酰基化制备N-(α,β-不饱和酰基)亚磺酰亚胺；中间体可作为导向底物在Rh(III)催化下发生氧化性碳氢环化构筑稠合骨架。 ACS JOC Article摘要说明N-酰基化高收率、中间体可在Rh(III)步骤作为导向基发生环化，一锅策略可制备不同亚磺酰亚胺结构。两种产物类型由反应序列控制。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "核心挑战是所谓Ag/Rh relay是否被错写为单一金属一步催化、是否只报道普通酰胺形成。文章实际区分Ag(I) N-酰基化与后续Rh(III)氧化环化；若省略第二步就不能称完成环化，多样化仅限本文展示的底物和构架。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00634",
+      "journal": "JOC",
+      "title": "HFIP-Promoted Nenitzescu Indole Synthesis: An Application toward the Synthesis of Umifenovir",
+      "titleZh": "六氟异丙醇促进Nenitzescu反应一步合成多取代五羟基吲哚及阿比多尔关键中间体",
+      "date": "2026-08-29",
+      "authors": [
+        "Rani Bandela",
+        "Anuradha Singampalli",
+        "Sri Mounika Bellapukonda",
+        "Lina S. Mahajan",
+        "Apurba Mandal",
+        "Srinivas Nanduri",
+        "Venkata Madhavi Yaddanapudi"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12138-12147",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00634"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立HFIP溶剂兼促进剂条件下无额外金属或催化剂的Nenitzescu吲哚合成，构筑多取代5-羟基吲哚并用于阿比多尔关键中间体的形式合成。",
+      "evidenceBasis": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00634（2026-08-29，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-08-22_2026-08-31_joc、raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review队列 Git blob 476b894844ea1e38c32bc515428c03fad30975ae、root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "反向挑战是‘应用于Umifenovir合成’是否被误认作全合成，以及HFIP无金属是否表示不需任何反应促进。文中HFIP兼具溶剂和反应促进功能，且只完成已知关键中间体的形式路线；这不抹去其真实广泛取代吲哚构筑。",
+      "scopeAssessment": {
+        "primaryContribution": "建立HFIP溶剂兼促进剂条件下无额外金属或催化剂的Nenitzescu吲哚合成，构筑多取代5-羟基吲哚并用于阿比多尔关键中间体的形式合成。",
+        "preparativeTransformation": "由胺衍生组分与苯醌在六氟异丙醇介导的一锅Nenitzescu缩合环化中形成新的C–C、C–N键，制备多取代5-羟基吲哚类产物。",
+        "generalityEvidence": "ACS JOC原始Article报道4a–k、5a–o、6a–c系列产物，官能团兼容性、克级实验，及Umifenovir（Arbidol）关键中间体的形式合成应用；并未完成Umifenovir整药全合成。",
+        "sourceEvidence": "出版社 DOI 原始ACS_Article_Published_Online首次在线日期：https://pubs.acs.org/doi/10.1021/acs.joc.6c00634（2026-08-29，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-08-22_2026-08-31_joc、raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a、review队列 Git blob 476b894844ea1e38c32bc515428c03fad30975ae、root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "反向挑战是‘应用于Umifenovir合成’是否被误认作全合成，以及HFIP无金属是否表示不需任何反应促进。文中HFIP兼具溶剂和反应促进功能，且只完成已知关键中间体的形式路线；这不抹去其真实广泛取代吲哚构筑。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00634",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00634",
+        "publisherOnlineDate": "2026-08-29",
+        "publisherOriginalResearchType": "ACS_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "476b894844ea1e38c32bc515428c03fad30975ae",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-29",
+          "officialPublisherFirstOnline": "2026-08-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00634",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立HFIP溶剂兼促进剂条件下无额外金属或催化剂的Nenitzescu吲哚合成，构筑多取代5-羟基吲哚并用于阿比多尔关键中间体的形式合成。 由胺衍生组分与苯醌在六氟异丙醇介导的一锅Nenitzescu缩合环化中形成新的C–C、C–N键，制备多取代5-羟基吲哚类产物。 ACS JOC原始Article报道4a–k、5a–o、6a–c系列产物，官能团兼容性、克级实验，及Umifenovir（Arbidol）关键中间体的形式合成应用；并未完成Umifenovir整药全合成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向挑战是‘应用于Umifenovir合成’是否被误认作全合成，以及HFIP无金属是否表示不需任何反应促进。文中HFIP兼具溶剂和反应促进功能，且只完成已知关键中间体的形式路线；这不抹去其真实广泛取代吲哚构筑。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1002/anie.2349367",
+      "journal": "Angew",
+      "title": "Direct Access to Chiral Piperidines by Enantioselective HAT‐Initiated C( sp 3 )─H Oxidation",
+      "titleZh": "锰催化对映选择性氢原子转移引发哌啶碳氢氧化制备手性哌啶",
+      "date": "2026-09-08",
+      "authors": [
+        "Sethuraman Muthuramalingam",
+        "Josep M. Luis",
+        "Arnau Call",
+        "Quentin Lefebvre",
+        "Matthew S. Sigman",
+        "Miquel Costas"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "e2349367",
+        "doi": "10.1002/anie.2349367"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以手性锰催化的α-C(sp³)–H氧化直接去对称化非手性哌啶，得到能进一步官能化的手性N,O-缩醛，是原始立体选择性氧化合成方法学。",
+      "evidenceBasis": "出版社 DOI 原始Wiley_Angew_Research_First_Published首次在线日期：https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367（2026-09-08，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-09-08_2026-09-14_angew、raw Git blob 162e2cc6724fd2e87dd5ca5300bcbdbea06edc37、review队列 Git blob 78c3ea4ef5405ef92adf70866d2c4271259c57b6、root SHA256 1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+      "challengeReason": "关键反证是是否把对映控制强行归于晚期亲核进攻而忽略首个HAT步骤。作者的机理研究及模型支持高度对映选择性的HAT先行，再电子转移和快速羟基化；但这仍是证据支持的路径，不能声称已在每一底物中直接观测单独的手性Mn=O过渡态。",
+      "scopeAssessment": {
+        "primaryContribution": "以手性锰催化的α-C(sp³)–H氧化直接去对称化非手性哌啶，得到能进一步官能化的手性N,O-缩醛，是原始立体选择性氧化合成方法学。",
+        "preparativeTransformation": "非手性取代哌啶在手性Mn催化剂、H₂O₂和2,2,2-三氟乙醇条件下进行N邻位C(sp³)–H选择性氧化，形成可分离的手性N,O-缩醛，后续可转化为多种手性哌啶。",
+        "generalityEvidence": "Wiley Angew 2026年9月8日正式Research全文和图文证明多个哌啶底物以良好产率和高ee、dr获得产物，后续N,O-缩醛衍生并保留构型；作者给出HAT→电子转移→亚胺鎓离子捕获的机理证据和统计模型。",
+        "sourceEvidence": "出版社 DOI 原始Wiley_Angew_Research_First_Published首次在线日期：https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367（2026-09-08，不是卷期日期）；冻结Crossref+OpenAlex源root 2026-09-08_2026-09-14_angew、raw Git blob 162e2cc6724fd2e87dd5ca5300bcbdbea06edc37、review队列 Git blob 78c3ea4ef5405ef92adf70866d2c4271259c57b6、root SHA256 1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98。作者与书目引文均与官方出处/冻结来源逐篇核对；未复制受限摘要、全文、SI、PDF或图片。",
+        "boundaryChallenge": "关键反证是是否把对映控制强行归于晚期亲核进攻而忽略首个HAT步骤。作者的机理研究及模型支持高度对映选择性的HAT先行，再电子转移和快速羟基化；但这仍是证据支持的路径，不能声称已在每一底物中直接观测单独的手性Mn=O过渡态。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367",
+        "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367",
+        "publisherOnlineDate": "2026-09-08",
+        "publisherOriginalResearchType": "Wiley_Angew_Research_First_Published",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_angew",
+        "stageBatchSha": "162e2cc6724fd2e87dd5ca5300bcbdbea06edc37",
+        "sourceReviewQueueGitBlobSha": "78c3ea4ef5405ef92adf70866d2c4271259c57b6",
+        "stageSourceSha256": "1e1e989e6fad87118c87f662151e4f6b1596e856f863bf32b4ca202a87fc9d98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-08",
+          "officialPublisherFirstOnline": "2026-09-08",
+          "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.2349367",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "Wiley_Angew_Research_First_Published"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以手性锰催化的α-C(sp³)–H氧化直接去对称化非手性哌啶，得到能进一步官能化的手性N,O-缩醛，是原始立体选择性氧化合成方法学。 非手性取代哌啶在手性Mn催化剂、H₂O₂和2,2,2-三氟乙醇条件下进行N邻位C(sp³)–H选择性氧化，形成可分离的手性N,O-缩醛，后续可转化为多种手性哌啶。 Wiley Angew 2026年9月8日正式Research全文和图文证明多个哌啶底物以良好产率和高ee、dr获得产物，后续N,O-缩醛衍生并保留构型；作者给出HAT→电子转移→亚胺鎓离子捕获的机理证据和统计模型。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "关键反证是是否把对映控制强行归于晚期亲核进攻而忽略首个HAT步骤。作者的机理研究及模型支持高度对映选择性的HAT先行，再电子转移和快速羟基化；但这仍是证据支持的路径，不能声称已在每一底物中直接观测单独的手性Mn=O过渡态。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -15126,7 +15843,7 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-15 new source-proven Nature Communications three original synthetic methods (reversible cysteine caging/site-specific protein reactions; albumin-palladacycle endogenous CO phenanthridinone carbonylation; SFM4-6 site-specific modified RNA synthesis) approved after two article-specific scientific passes for sole Beijing Oct16 08:00 publication only. Separate one acrylic acid enzyme-cascade evidence hold and one HMS paired-electrolysis scope exclude are not inserted as permanent owner exclusions or academic approvals. No production release, no media, no daily new; existing 125 approvals and original two date disputes intact. Previous narrative: Additional three DOI-exact Chem original Q3 methods with publisher-confirmed first-online dates, independent contribution/challenge passes, stage raw and review blob SHA and accurate article-number citations admitted for sole next Beijing 08:00 release. Two 2026 Q1 and one 2026 Q2 original articles are date-corrected but not miscounted as 2026-Q3 methods. This authorization publishes no production card, media, body/SI or PDF. Prior note: 2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish. | 2026-10-16 independent next eight source-proven original method scientific challenges; approved 176→184, two original date pending unchanged, 3 additional source date conflicts held outside manifest, no direct formal admission or media. | 2026-10-16 Q3 four true original synthesis DOI + one 2026-Jan CCS photoreductive amide coupling corrected from Q3 issue date into metadata_only, cumulative 184->189; existing two date pending unchanged, offslot release disabled. | Oct16 2026 Q3 publisher DOI 12 paper-specific preparative originals 189->201, original narrow pending2 unchanged, no off-slot 08 publication, strictly TOC only.",
+  "note": "2026-10-15 new source-proven Nature Communications three original synthetic methods (reversible cysteine caging/site-specific protein reactions; albumin-palladacycle endogenous CO phenanthridinone carbonylation; SFM4-6 site-specific modified RNA synthesis) approved after two article-specific scientific passes for sole Beijing Oct16 08:00 publication only. Separate one acrylic acid enzyme-cascade evidence hold and one HMS paired-electrolysis scope exclude are not inserted as permanent owner exclusions or academic approvals. No production release, no media, no daily new; existing 125 approvals and original two date disputes intact. Previous narrative: Additional three DOI-exact Chem original Q3 methods with publisher-confirmed first-online dates, independent contribution/challenge passes, stage raw and review blob SHA and accurate article-number citations admitted for sole next Beijing 08:00 release. Two 2026 Q1 and one 2026 Q2 original articles are date-corrected but not miscounted as 2026-Q3 methods. This authorization publishes no production card, media, body/SI or PDF. Prior note: 2026-10-15 resumed history after 2026-10-15 08:00 missed without off-slot publication. Three genuine Chem Q3 methods evidence-reviewed with official ScienceDirect online dates (source issue dates preserved), approved for 2026-10-16 08:00 only; Q1 source-date anomalies for chempr.2026.102968 and chempr.2026.102990 remain Q1 not Q3. Original 2 disputed-date pending and previous 119 accepted unchanged. Prior note: 2026-10-14: three additional DOI-exact original Nature Chemistry Q3 synthesis methods with separate scientific evidence and adversarial second-pass, verified original Crossref/OpenAlex raw batch SHA, author/citation, publisher Article page/first-online date; cannot appear on Today/Hot/WeChat, release only at sole 2026-10-15 Beijing 08:00. Includes multicolour fluorogenic amino-acid/peptide synthesis, electrochemical cyclopropanol protein bioconjugation, and N-hydroxyphthalimide-triggered commercial polymethacrylate depolymerization. Prior entries and original two date-disputed pending untouched. Prior narrative: Additional eight ACS original Q3 methods independently science-reviewed, including one official publisher day superseding staged API day on a frozen-source identity-correct DOI. Cumulative 116 approved, 2 original pending, 25 waiting next Beijing 08:00. Current independent publisher DOI two-pass Q3 originals added +4. Historical include 108 (formerly 104), unresolved original pending 2, 17 reviewed waiting sole 2026-10-15 Beijing 08:00, not directly released. PreJuly metadata_only/Q3 toc_only. 2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing. | 2026-10-14 latest corrections SHA reconciled with no approved historical collision; added three individually verified original syntheses. next eligible at sole Beijing 08:00; no offslot publish. | 2026-10-16 independent next eight source-proven original method scientific challenges; approved 176→184, two original date pending unchanged, 3 additional source date conflicts held outside manifest, no direct formal admission or media. | 2026-10-16 Q3 four true original synthesis DOI + one 2026-Jan CCS photoreductive amide coupling corrected from Q3 issue date into metadata_only, cumulative 184->189; existing two date pending unchanged, offslot release disabled. | Oct16 2026 Q3 publisher DOI 12 paper-specific preparative originals 189->201, original narrow pending2 unchanged, no off-slot 08 publication, strictly TOC only. | 2026-10-16 further nine publisher-original Q3 two-pass synthesis approvals 201→210, theoretical JOC mechanistic-only case screened but not automatically excluded/pending; immutable source and original two pending retained, no off-slot publication.",
   "currentCatalogReadback": {
     "sha": "eb74a75508e4cb48ac13d84ba707466f02a2c331",
     "recordCount": 1151,
@@ -15390,5 +16107,23 @@
       "10.1021/acs.joc.6c01890",
       "10.1021/acs.orglett.6c03028"
     ]
+  },
+  "newOctober16NinePublisherOriginals": {
+    "count": 9,
+    "reviewEvidenceFile": "audit/historical-reviewed/2026-10-16-q3-nine-new-originals-two-pass.json",
+    "approvedDois": [
+      "10.1021/acs.orglett.6c02334",
+      "10.1021/acs.orglett.6c02414",
+      "10.1021/acs.orglett.6c02330",
+      "10.1021/acs.orglett.6c02710",
+      "10.1021/acs.orglett.6c03033",
+      "10.1021/acs.joc.6c00990",
+      "10.1021/acs.joc.6c00158",
+      "10.1021/acs.joc.6c00634",
+      "10.1002/anie.2349367"
+    ],
+    "publishedByThisApproval": false,
+    "mediaPolicy": "toc_only",
+    "screenedMechanismOnlyNotAdmitted": "10.1021/acs.joc.6c01623"
   }
 }
