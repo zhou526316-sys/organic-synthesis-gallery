@@ -256,6 +256,8 @@
       batchFailed: Math.max(0, Number(summary.failed || 0)),
       batchSkipped: Math.max(0, Number(summary.skipped || 0)),
       batchPartial: Math.max(0, Number(summary.partial || 0)),
+      layerOutcomes:summary.layerOutcomes||null,
+      publisherHeartbeatIsolations:summary.publisherHeartbeatIsolations||[],
       lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
       // Summary is committed after each paper. The active row is displayed separately, never added twice.
       publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
@@ -301,10 +303,10 @@
       reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', finished:'本篇处理结束',
       private_pdf_wait:'PDF：等待页面与动态控件', private_pdf_discovery:'PDF：查找入口', private_pdf_browser:'PDF：浏览器会话下载',
       private_pdf_gm:'PDF：备用下载', private_pdf_validation:'PDF：校验文件', private_pdf_upload:'PDF：上传私有存储',
-      private_pdf_saved:'PDF：已存储', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
+      private_pdf_saved:'PDF：已存储', private_pdf_deferred:'PDF：已在本机持久暂存', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
     };
     var tocNames = {pending:'待处理',already_available:'保留已有 TOC',stored:'已保存',not_found:'未找到可用主图',not_requested:'本次无需补抓',failed:'失败'};
-    var pdfNames = {waiting_page:'等待页面/动态控件',searching:'查找 PDF 入口',browser_download:'浏览器会话下载',gm_download:'备用下载',validating:'校验 PDF',uploading:'上传私有存储',stored:'已存储',already_stored:'已存储（复用回执）',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却记录）',failed:'失败',skipped:'未授权'};
+    var pdfNames = {waiting_page:'等待页面/动态控件',searching:'查找 PDF 入口',browser_download:'浏览器会话下载',gm_download:'备用下载',validating:'校验 PDF',uploading:'上传私有存储',stored:'已存储',already_stored:'已存储（复用回执）',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却记录）',deferred_upload:'本机待补传（云端尚未完成）',failed:'失败',skipped:'未授权'};
     var r = s.row;
     var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
     var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
@@ -320,6 +322,16 @@
       read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
       checking:'云端 PDF 库存尚未核验'
     })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
+    var lo=s.layerOutcomes||{},layerSummary=lo.measurement
+      ?'TOC 本轮回执 '+Number(lo.toc&&lo.toc.distinctStoredDois||0)
+        +'／正文图回执 '+Number(lo.figures&&lo.figures.distinctStoredDois||0)
+        +'／全文回执 '+Number(lo.fulltext&&lo.fulltext.distinctStoredDois||0)
+        +'／PDF云端确认 '+Number(lo.privatePdf&&lo.privatePdf.cloudStoredDois||0)
+        +'／PDF本机待传 '+Number(lo.privatePdf&&lo.privatePdf.locallyQueuedDois||0)
+        +'；前台显示尚待浏览器验证':'';
+    var isolatedText=(s.publisherHeartbeatIsolations||[]).length
+      ?'；隔离出版社 '+s.publisherHeartbeatIsolations.map(function(r){return r.publisher;}).join('、')
+        +'（其他出版社继续抓取）':'';
     var captureScopeLabel=s.scopeRecentCount||s.scopeHistoricalCount
       ?'目录 '+s.scopeCount+' 篇（10月起常规 '+s.scopeRecentCount+'／7—9月历史仅补官方TOC '+s.scopeHistoricalCount
         +(s.scopeExcludedCount?'／其他不派发 '+s.scopeExcludedCount:'')+'）'
@@ -342,7 +354,7 @@
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: s.coverageRevision&&s.phase!=='starting'?'本轮缺项 '+s.total+' 篇 · 实际访问 '+s.completed+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇 · 冷却等待 '+s.deferredCount+' · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      batch: s.coverageRevision&&s.phase!=='starting'?'本轮缺项 '+s.total+' 篇 · 实际访问 '+s.completed+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇 · 冷却等待 '+s.deferredCount+' · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged+(layerSummary?' · '+layerSummary:'')+isolatedText:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
