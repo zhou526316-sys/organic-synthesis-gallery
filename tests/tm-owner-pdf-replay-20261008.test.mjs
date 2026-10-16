@@ -56,7 +56,7 @@ function fixture(){
     }
   };
   vm.createContext(ctx);
-  vm.runInContext(body+'\n globalThis.O={pendingOwnerPdfKeys,retainOwnerPdfAfterUploadFailure,replayOneOwnerPdf};',ctx);
+  vm.runInContext(body+'\n globalThis.O={pendingOwnerPdfKeys,ownerPdfReplayBackpressure,retainOwnerPdfAfterUploadFailure,replayOneOwnerPdf};',ctx);
   function makeReady(){const key=ctx.O.pendingOwnerPdfKeys()[0],row=store.get(key);row.nextAt=0;store.set(key,row);return key;}
   return {ctx,store,network,doi,job,pdf,makeReady,setInventory:s=>{inventoryStatus=s;},setLease:l=>{lease=l;}};
 }
@@ -259,4 +259,24 @@ test('owner manual PDF menu waits for a real retry result before reporting succe
   assert.match(match[1],/success=await replayOneOwnerPdf\(\)/);
   assert.match(match[1],/if\(success\)/);
   assert.doesNotMatch(match[1],/window\.alert\('已检查/);
+});
+
+test('PDF spool uses bounded backpressure rather than starting another 90s upload',()=>{
+ const h=fixture();
+ assert.equal(h.ctx.O.ownerPdfReplayBackpressure(),false);
+ for(let i=0;i<8;i++)h.store.set('osg-toc-v6:owner-private-pdf-upload-replay-v1:dummy'+i,
+   {base64:'x'.repeat(300)});
+ assert.equal(h.ctx.O.ownerPdfReplayBackpressure(),true);
+ assert.match(source,/if\(ownerPdfReplayBackpressure\(\)\)\{/);
+ assert.match(source,/status:'deferred_capacity',reason:'owner_pdf_replay_capacity_full'/);
+ assert.match(source,/var candidates=await waitForPrivatePdfCandidates/);
+ const capIndex=source.indexOf('if(ownerPdfReplayBackpressure())');
+ const fetchIndex=source.indexOf('var candidates=await waitForPrivatePdfCandidates');
+ assert.ok(capIndex>0&&fetchIndex>capIndex,'capacity must be checked before publisher bytes are fetched');
+});
+
+test('PDF queue validates extension storage readback before describing saved bytes',async()=>{
+ const h=fixture();
+ h.ctx.GM_setValue=(key,row)=>h.store.set(key,{...row,sha256:'f'.repeat(64)});
+ assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('private_pdf_upload_deferred')),false);
 });
