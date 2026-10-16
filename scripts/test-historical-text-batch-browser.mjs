@@ -547,9 +547,107 @@ else throw Error('unexpected historical network request '+options.url);
   assert.equal(await pausedButton.count(),1);
   assert.equal(await pausedButton.isDisabled(),true);
 
+  // The original report showed both Gallery overlays "disappear" because
+  // a background no-heartbeat task silently opened an active publisher tab.
+  // Reproduce that *exact* branch: no ordinary run may activate publisher UI.
+  const focusDoi='10.1021/jacs.focus-guard';
+  await page.evaluate(async doi=>{
+    window.__registry.articles.push({
+      doi,date:'2026-09-09',title:'Foreground focus regression',journal:'JACS'
+    });
+    const db=await new Promise((resolve,reject)=>{
+      const req=indexedDB.open('gallery-historical-text-local-v2',2);
+      req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+    });
+    await window.__historicalDiagTest.batchDbOp(db,'attempts','put',{
+      doi,status:'publisher_script_not_confirmed',stage:'publisher_wait',
+      pageDoiVerified:false,checkedAt:Date.now()-10000
+    });
+    db.close();
+    const tocPanel=document.createElement('section');
+    tocPanel.id='osg-capture-live-panel';
+    tocPanel.textContent='TOC controller overlay';
+    document.body.appendChild(tocPanel);
+    window.__focusBefore=window.__opened.length;
+    window.__manualForegroundApproved=false;window.__manualConfirmations=[];
+    window.confirm=message=>{
+      const prompt=String(message);
+      window.__manualConfirmations.push(prompt);
+      return !prompt.startsWith('确认单篇前台重试')||window.__manualForegroundApproved;
+    };
+    const openBefore=window.GM_openInTab;
+    window.GM_openInTab=(url,options)=>{
+      if(url.includes(doi)&&options.active===false){
+        window.__opened.push({url,active:false});
+        const job=window.__gm['gallery-historical-text-batch-v2:job'];
+        setTimeout(()=>{window.__gm['gallery-historical-text-batch-v2:result']={
+          runId:job.runId,token:job.token,doi:job.doi,
+          status:'publisher_script_not_confirmed',stage:'publisher_wait',
+          pageDoiVerified:false
+        };},30);
+        return {close(){window.__closeCount++;}};
+      }
+      return openBefore(url,options);
+    };
+  },focusDoi);
+  await start.click();
+  await page.waitForFunction(()=>
+    window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.attempted===1,
+    null,{timeout:14000});
+  const focusCheck=await page.evaluate(()=>({
+    opened:window.__opened.slice(window.__focusBefore),
+    mainUrl:location.href,
+    tocPanel:!!document.getElementById('osg-capture-live-panel'),
+    bodyPanel:!!document.getElementById('osg-historical-batch')
+  }));
+  assert.equal(focusCheck.opened.length,1,'one no-handler DOI in ordinary sweep');
+  assert.equal(focusCheck.opened[0].active,false,'normal capture cannot steal focus');
+  assert.ok(focusCheck.mainUrl.startsWith('https://gallery.gczhouwld.com/'));
+  assert.equal(focusCheck.tocPanel,true);
+  assert.equal(focusCheck.bodyPanel,true);
+
+  const manualForegroundButton=page.getByRole('button',{name:'单篇前台重试（手动）'});
+  assert.equal(await manualForegroundButton.count(),1);
+  await manualForegroundButton.click(); // Confirmation is declined first.
+  await page.waitForFunction(()=>window.__manualConfirmations.some(
+    x=>x.startsWith('确认单篇前台重试')),null,{timeout:5000});
+  const cancelled=await page.evaluate(()=>({
+    attempts:window.__opened.length,
+    state:window.__gm['gallery-historical-text-batch-v2:state']
+  }));
+  assert.equal(cancelled.attempts,focusCheck.opened.length+await page.evaluate(()=>window.__focusBefore),
+    'declining consent must not open a tab');
+  assert.equal(cancelled.state.state,'paused','cancel should not leave startup stuck loading');
+  assert.equal(await manualForegroundButton.isEnabled(),true);
+
+  await page.evaluate(()=>{window.__manualForegroundApproved=true;});
+  await manualForegroundButton.click(); // Exact DOI and focus change explicitly approved.
+  await page.waitForFunction(()=>window.__gm['gallery-historical-text-batch-v2:state']?.state==='finished'
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.attempted===1
+    &&window.__gm['gallery-historical-text-batch-v2:state']?.saved===1,
+    null,{timeout:13000});
+  const foregroundCheck=await page.evaluate(()=>({
+    opened:window.__opened.slice(window.__focusBefore),
+    confirmed:window.__manualConfirmations,
+    panels:[
+      !!document.getElementById('osg-historical-batch'),
+      !!document.getElementById('osg-capture-live-panel')
+    ],
+    keys:Object.keys(window.__gm).filter(k=>k.includes('batch-v2:')),
+    packetCount:window.__gm['gallery-historical-text-batch-v2:state']?.saved
+  }));
+  assert.equal(foregroundCheck.opened.length,2,'one background failed and one manually approved foreground');
+  assert.equal(foregroundCheck.opened[0].active,false);
+  assert.equal(foregroundCheck.opened[1].active,true);
+  assert.ok(foregroundCheck.opened[1].url.includes(focusDoi));
+  assert.ok(foregroundCheck.confirmed.some(x=>x.includes(focusDoi)&&x.includes('会主动切换')));
+  assert.deepEqual(foregroundCheck.panels,[true,true],
+    'foreground navigation must not remove Gallery controller overlays');
+  assert.equal(foregroundCheck.packetCount,1);
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
+    automaticPublisherTabsBackground:true,explicitManualForegroundOne:true,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2,persistentAdminToken:true,oneClickReupload:true,
     fullCoverageLedger:true,bodySearchAllHits:27,reachabilityProbeRoutes:2
   }));
 }finally{await browser.close();}

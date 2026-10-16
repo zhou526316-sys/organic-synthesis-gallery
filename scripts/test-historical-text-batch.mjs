@@ -5,8 +5,8 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.11/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.11'/);
+assert.match(original,/\/\/ @version\s+0\.2\.12/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.12'/);
 assert.match(original,/const BATCH_BINDING_REVISION='historic-body-early-bound-v031'/);
 assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v030'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
@@ -152,6 +152,46 @@ test('v0.2.11 early-handshake retry is once-only and never overrides observed HT
   assert.equal(api.batchRetryAllowed({...prior,status:'license_not_verified',
     pageDoiVerified:true},false),false,
     'same scientific parser must not reclassify a rights block during binding-only upgrade');
+});
+
+test('automatic publisher modes cannot activate a foreground article tab',()=>{
+  assert.ok(original.includes("mode==='foreground_one'&&selected.length===1"));
+  assert.ok(original.includes("{active:manualForeground,insert:true,setParent:true}"));
+  assert.equal((original.match(/GM_openInTab\(/g)||[]).length,1,
+    'single publisher tab opener must own both manual and automatic activation');
+  assert.ok(!original.includes('{active:true,insert:true,setParent:true}'),
+    'cannot have any unguarded automatic foreground reopen');
+  assert.ok(!original.includes('publisher_foreground_retry'),
+    'old missing-heartbeat auto-foreground branch must be removed');
+  assert.ok(original.includes("foregroundOne.addEventListener('click'"));
+  assert.ok(original.includes("window.confirm(confirmation)"));
+});
+
+test('manual foreground selection is one recent unconfirmed DOI, never a published HTTP denial',()=>{
+  const api=fixture().context.__batchTest;
+  const papers=[
+    {doi:'10.1021/jacs.old-failure',journal:'JACS'},
+    {doi:'10.1021/jacs.new-failure',journal:'JACS'},
+    {doi:'10.1021/jacs.denied-403',journal:'JACS'},
+    {doi:'10.1038/s41557-026-saved',journal:'Nature Chemistry'},
+    {doi:'10.1038/s41557-026-license',journal:'Nature Chemistry'},
+    {doi:'10.1021/jacs.valid-body',journal:'JACS'}
+  ];
+  const attempts=[
+    {doi:papers[0].doi,status:'publisher_script_not_confirmed',pageDoiVerified:false,checkedAt:10},
+    {doi:papers[1].doi,status:'publisher_no_response',pageDoiVerified:false,checkedAt:20},
+    {doi:papers[2].doi,status:'publisher_script_not_confirmed',httpStatus:403,checkedAt:40},
+    {doi:papers[3].doi,status:'saved_local',checkedAt:45},
+    {doi:papers[4].doi,status:'license_not_verified',pageDoiVerified:true,checkedAt:50},
+    {doi:papers[5].doi,status:'publisher_script_not_confirmed',pageDoiVerified:true,checkedAt:90}
+  ];
+  const manual=api.batchSelectCandidates(papers,new Set([papers[3].doi]),attempts,true,'foreground_one');
+  assert.equal(manual.length,1);
+  assert.equal(manual[0].doi,papers[1].doi,'most recently retriable missing handler only');
+  assert.equal(api.batchSelectCandidates(papers,new Set([papers[3].doi]),attempts,true,'all').length>=2,true,
+    'normal corpus visit must retain its unbounded candidate traversal');
+  assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'foreground_one').length,0,
+    'manual foreground must never visit an unattempted DOI');
 });
 
 test('DOI-bound article structure remains metadata only when no reusable licence exists',async()=>{
