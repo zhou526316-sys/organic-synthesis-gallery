@@ -5536,6 +5536,33 @@ function embeddedJobDois(value) {
         chunks.push(dois.slice(k,k+INVENTORY_SCOPED_BATCH_SIZE));
       var all=[],validCount=0,layerStart=Date.now();
       updateInventoryProgress(run,layer,'loading',layerStart,'doi-scope='+dois.length+';chunks='+chunks.length);
+      // One complete DOI-scoped snapshot replaces many cold R2 full-index
+      // reads even when successive requests reach different Worker isolates.
+      // Strict validation and the existing 80-DOI GET fallback stay intact.
+      var bulkEndpoint=layer==='figures'?WORKER+'/api/article-figures/staged/inventory'
+        :layer==='toc'?WORKER+'/api/media/local-capture-index/inventory':'';
+      if(bulkEndpoint&&dois.length<=2000){
+        try{
+          var bulk=await inventoryReadMetadataJson({method:'POST',url:bulkEndpoint,
+            timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},
+            data:JSON.stringify({dois:dois,readOnly:true})},'queue');
+          if(!bulk||bulk.scopeRevision!=='doi-scoped-inventory-v1'||bulk.complete!==true
+            ||Number(bulk.scopeRequestedCount)!==dois.length
+            ||!Array.isArray(bulk.requestedDois)||bulk.requestedDois.length!==dois.length
+            ||dois.some(function(doi,i){return normalizeDoi(bulk.requestedDois[i])!==doi;})
+            ||!Array.isArray(bulk.items)||Number(bulk.count)!==bulk.items.length
+            ||bulk.items.some(function(item){return dois.indexOf(normalizeDoi(item.doi))<0;})
+            ||!validate(bulk))throw new Error('bulk_inventory_scope_incomplete');
+          cache.set(layer+':bulk:'+String(queue.generatedAt||''),bulk);
+          updateInventoryProgress(run,layer,'done',layerStart,'bulk=1;rows='+bulk.items.length
+            +';readMs='+Number(bulk.inventoryReadMs||0)+';cacheHits='+Number(bulk.inventoryCacheHits||0));
+          return {complete:true,count:bulk.items.length,items:bulk.items};
+        }catch(error){
+          errors.push(layer+'全 DOI 快照失败:'+captureLiveError(error.message||error)
+            +'；正在回退至 80 DOI 分片（不把失败判定为空库存）');
+          updateInventoryProgress(run,layer,'loading',layerStart,'bulk_fallback_to_chunked');
+        }
+      }
       for(var offset=0;offset<chunks.length;offset+=2){
         if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
         var portions=await Promise.all(chunks.slice(offset,offset+2).map(async function(part,partIndex){
