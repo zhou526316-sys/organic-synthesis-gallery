@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.69
+// @version      6.2.70
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.69';
+  var INSTALL_REVISION = '6.2.70';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -256,6 +256,8 @@
       batchFailed: Math.max(0, Number(summary.failed || 0)),
       batchSkipped: Math.max(0, Number(summary.skipped || 0)),
       batchPartial: Math.max(0, Number(summary.partial || 0)),
+      layerOutcomes:summary.layerOutcomes||null,
+      publisherHeartbeatIsolations:summary.publisherHeartbeatIsolations||[],
       lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
       // Summary is committed after each paper. The active row is displayed separately, never added twice.
       publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
@@ -301,10 +303,10 @@
       reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', finished:'本篇处理结束',
       private_pdf_wait:'PDF：等待页面与动态控件', private_pdf_discovery:'PDF：查找入口', private_pdf_browser:'PDF：浏览器会话下载',
       private_pdf_gm:'PDF：备用下载', private_pdf_validation:'PDF：校验文件', private_pdf_upload:'PDF：上传私有存储',
-      private_pdf_saved:'PDF：已存储', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
+      private_pdf_saved:'PDF：已存储', private_pdf_deferred:'PDF：已在本机持久暂存', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
     };
     var tocNames = {pending:'待处理',already_available:'保留已有 TOC',stored:'已保存',not_found:'未找到可用主图',not_requested:'本次无需补抓',failed:'失败'};
-    var pdfNames = {waiting_page:'等待页面/动态控件',searching:'查找 PDF 入口',browser_download:'浏览器会话下载',gm_download:'备用下载',validating:'校验 PDF',uploading:'上传私有存储',stored:'已存储',already_stored:'已存储（复用回执）',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却记录）',failed:'失败',skipped:'未授权'};
+    var pdfNames = {waiting_page:'等待页面/动态控件',searching:'查找 PDF 入口',browser_download:'浏览器会话下载',gm_download:'备用下载',validating:'校验 PDF',uploading:'上传私有存储',stored:'已存储',already_stored:'已存储（复用回执）',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却记录）',deferred_upload:'本机待补传（云端尚未完成）',failed:'失败',skipped:'未授权'};
     var r = s.row;
     var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
     var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
@@ -320,6 +322,16 @@
       read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
       checking:'云端 PDF 库存尚未核验'
     })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
+    var lo=s.layerOutcomes||{},layerSummary=lo.measurement
+      ?'TOC 本轮回执 '+Number(lo.toc&&lo.toc.distinctStoredDois||0)
+        +'／正文图回执 '+Number(lo.figures&&lo.figures.distinctStoredDois||0)
+        +'／全文回执 '+Number(lo.fulltext&&lo.fulltext.distinctStoredDois||0)
+        +'／PDF云端确认 '+Number(lo.privatePdf&&lo.privatePdf.cloudStoredDois||0)
+        +'／PDF本机待传 '+Number(lo.privatePdf&&lo.privatePdf.locallyQueuedDois||0)
+        +'；前台显示尚待浏览器验证':'';
+    var isolatedText=(s.publisherHeartbeatIsolations||[]).length
+      ?'；隔离出版社 '+s.publisherHeartbeatIsolations.map(function(r){return r.publisher;}).join('、')
+        +'（其他出版社继续抓取）':'';
     var captureScopeLabel=s.scopeRecentCount||s.scopeHistoricalCount
       ?'目录 '+s.scopeCount+' 篇（10月起常规 '+s.scopeRecentCount+'／7—9月历史仅补官方TOC '+s.scopeHistoricalCount
         +(s.scopeExcludedCount?'／其他不派发 '+s.scopeExcludedCount:'')+'）'
@@ -342,7 +354,7 @@
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: s.coverageRevision&&s.phase!=='starting'?'本轮缺项 '+s.total+' 篇 · 实际访问 '+s.completed+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇 · 冷却等待 '+s.deferredCount+' · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      batch: s.coverageRevision&&s.phase!=='starting'?'本轮缺项 '+s.total+' 篇 · 实际访问 '+s.completed+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇 · 冷却等待 '+s.deferredCount+' · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged+(layerSummary?' · '+layerSummary:'')+isolatedText:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
@@ -5536,6 +5548,43 @@ function embeddedJobDois(value) {
         chunks.push(dois.slice(k,k+INVENTORY_SCOPED_BATCH_SIZE));
       var all=[],validCount=0,layerStart=Date.now();
       updateInventoryProgress(run,layer,'loading',layerStart,'doi-scope='+dois.length+';chunks='+chunks.length);
+      // One complete DOI-scoped snapshot replaces many cold R2 full-index
+      // reads even when successive requests reach different Worker isolates.
+      // Strict validation and the existing 80-DOI GET fallback stay intact.
+      var bulkEndpoint=layer==='figures'?WORKER+'/api/article-figures/staged/inventory'
+        :layer==='toc'?WORKER+'/api/media/local-capture-index/inventory':'';
+      if(bulkEndpoint&&dois.length>INVENTORY_SCOPED_BATCH_SIZE&&dois.length<=2000){
+        try{
+          var bulk=await inventoryReadMetadataJson({method:'POST',url:bulkEndpoint,
+            timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},
+            data:JSON.stringify({dois:dois,readOnly:true})},'queue');
+          if(!bulk||bulk.scopeRevision!=='doi-scoped-inventory-v1'||bulk.complete!==true
+            ||Number(bulk.scopeRequestedCount)!==dois.length
+            ||!Array.isArray(bulk.requestedDois)||bulk.requestedDois.length!==dois.length
+            ||dois.some(function(doi,i){return normalizeDoi(bulk.requestedDois[i])!==doi;})
+            ||!Array.isArray(bulk.items)||Number(bulk.count)!==bulk.items.length
+            ||bulk.items.some(function(item){return dois.indexOf(normalizeDoi(item.doi))<0;})
+            ||!validate(bulk))throw new Error('bulk_inventory_scope_incomplete');
+          cache.set(layer+':bulk:'+String(queue.generatedAt||''),bulk);
+          updateInventoryProgress(run,layer,'done',layerStart,'bulk=1;rows='+bulk.items.length
+            +';readMs='+Number(bulk.inventoryReadMs||0)+';cacheHits='+Number(bulk.inventoryCacheHits||0));
+          return {complete:true,count:bulk.items.length,items:bulk.items};
+        }catch(error){
+          var bulkReason=String(error&&error.message||error||'');
+          // A browser+GM timeout is an exhausted transport budget, not a
+          // version-capability miss. A second full hedge would make startup
+          // even slower and violate the existing no-repeat inventory guard.
+          if(/(?:inventory_deadline|inventory_transport_failed|gm_request_timeout|controller_native_timeout|network_timeout|fetch_timeout)/i.test(bulkReason)){
+            errors.push(layer+'库存快照超时:'+captureLiveError(bulkReason));
+            updateInventoryProgress(run,layer,'error',layerStart,'bulk_exhausted_no_hedge');
+            return {complete:false,count:0,items:[]};
+          }
+          // A failed fast endpoint can fall back to old fully verified chunks,
+          // and a recovered fallback must not poison inventoryComplete().
+          updateInventoryProgress(run,layer,'loading',layerStart,
+            'bulk_fallback_to_chunked:'+captureLiveError(bulkReason));
+        }
+      }
       for(var offset=0;offset<chunks.length;offset+=2){
         if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
         var portions=await Promise.all(chunks.slice(offset,offset+2).map(async function(part,partIndex){
@@ -5876,6 +5925,33 @@ function embeddedJobDois(value) {
       reason:String(r.deferCause||'access_check').slice(0,80)};});
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
+    // Distinct capture layers must never be represented by a single
+    // 'complete' counter. Local PDF deferral is an outstanding obligation.
+    var attempts=s.results||[],unique=function(rows){return new Set(rows.map(function(r){return normalizeDoi(r.doi);})).size;};
+    var tocSaved=attempts.filter(function(r){return r.toc&&r.toc.status==='stored';});
+    var figureSaved=attempts.filter(function(r){return Number(r.figures&&r.figures.stored||0)>0;});
+    var textSaved=attempts.filter(function(r){return r.fulltext&&r.fulltext.status==='stored';});
+    var pdfSaved=attempts.filter(function(r){return privatePdfCompletedStatus(r.privatePdf&&r.privatePdf.status);});
+    var pdfDeferred=attempts.filter(function(r){return String(r.privatePdf&&r.privatePdf.status||'')==='deferred_upload';});
+    var mediaSnapshot=run.inventory&&run.inventory.media,mediaVerified=Boolean(mediaSnapshot&&mediaSnapshot.complete===true);
+    var mediaItems=mediaVerified?mediaSnapshot.items||[]:[];
+    s.layerOutcomes={
+      measurement:'per-layer-receipts-not-article-completion',
+      distinctPublisherDois:s.visitedCount,captureAttempts:attempts.length,
+      toc:{storedAttempts:tocSaved.length,distinctStoredDois:unique(tocSaved),
+        productionConfirmedDois:unique(tocSaved.filter(function(r){return r.toc.productionTocStored===true||r.toc.productionFallbackStored===true;}))},
+      figures:{storedAttempts:figureSaved.length,distinctStoredDois:unique(figureSaved),
+        storedFigureReceipts:attempts.reduce(function(n,r){return n+Math.max(0,Number(r.figures&&r.figures.stored||0));},0),
+        fullyCapturedAttempts:attempts.filter(function(r){return Number(r.figures&&r.figures.discovered||0)>0
+          &&Number(r.figures.stored||0)>=Number(r.figures.discovered)&&Number(r.figures.failed||0)===0;}).length},
+      fulltext:{storedAttempts:textSaved.length,distinctStoredDois:unique(textSaved),
+        completeEvidenceDois:unique(textSaved.filter(function(r){return r.fulltext.evidenceLevel==='complete';}))},
+      privatePdf:{cloudStoredDois:unique(pdfSaved),locallyQueuedDois:unique(pdfDeferred),
+        failedAttempts:attempts.filter(function(r){return String(r.privatePdf&&r.privatePdf.status||'')==='failed';}).length},
+      productionVisualInventory:{verified:mediaVerified,scope:mediaItems.length,
+        withPrimaryVisual:mediaVerified?mediaItems.filter(function(r){return Boolean(r.tocStored||r.figureOneStored||r.primaryKind==='official_visual'||r.primaryKind==='figure1');}).length:null},
+      actualFrontendRendered:'not_browser_verified'
+    };
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
     s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展'),category:captureBlockCategory(r.lastReason)};});
     return s;
@@ -5885,19 +5961,30 @@ function embeddedJobDois(value) {
       renewManualLease(run);await sleep(Math.min(1000,Math.max(1,until-Date.now())));
     }
   }
-  function manualHeartbeatCircuitBreaker(run,result) {
-    // A sequence of uninitialized publisher tabs is an extension/session
-    // failure, not evidence that each DOI is missing media. Preserve the
-    // remaining queue instead of spending minutes on 100 more empty tabs.
-    if(!run)return false;
-    if(String(result&&result.reason||'')==='bound_publisher_heartbeat_missing')
-      run.consecutiveHeartbeatFailures=Number(run.consecutiveHeartbeatFailures||0)+1;
-    else run.consecutiveHeartbeatFailures=0;
-    return run.consecutiveHeartbeatFailures>=3;
+  function manualHeartbeatCircuitBreaker(run,job,result) {
+    // Count independent publisher/DOI failures, never retries or failures
+    // from other publishers. An uninitialized page is not a global outage.
+    if(!run||!job)return false;
+    var publisher=String(job.publisher||publisherForDoi(job.doi)||'unknown');
+    var doi=normalizeDoi(job.doi),failures=run.publisherHeartbeatFailures||(run.publisherHeartbeatFailures={});
+    var isolated=run.publisherHeartbeatQuarantine||(run.publisherHeartbeatQuarantine={});
+    if(String(result&&result.reason||'')!=='bound_publisher_heartbeat_missing'){
+      delete failures[publisher];
+      return false;
+    }
+    var group=failures[publisher]||(failures[publisher]={dois:[]});
+    if(doi&&group.dois.indexOf(doi)<0)group.dois.push(doi);
+    if(group.dois.length<3||isolated[publisher])return false;
+    isolated[publisher]={reason:'publisher_script_missing_3_distinct_dois',dois:group.dois.slice(),at:Date.now()};
+    if(run.coverage)run.coverage.forEach(function(row){
+      if(row.state!=='pending'||String(row.job&&row.job.publisher||publisherForDoi(row.job&&row.job.doi))!==publisher)return;
+      row.state='blocked';row.retryAt=0;row.lastReason='publisher_script_quarantined_distinct_dois';
+    });
+    return true;
   }
 
   async function runManualFromHead(run) {
-    var s=run.summary;run.coverage=new Map();run.consecutiveHeartbeatFailures=0;s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
+    var s=run.summary;run.coverage=new Map();run.publisherHeartbeatFailures={};run.publisherHeartbeatQuarantine={};s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
     run.renewTimer=setInterval(function(){renewManualLease(run);},15000);
     try{
       var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
@@ -5950,6 +6037,8 @@ function embeddedJobDois(value) {
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
+          var quarantined=(run.publisherHeartbeatQuarantine||{})[String(job.publisher||publisherForDoi(job.doi))];
+          if(quarantined){candidate.lastReason='publisher_script_quarantined_distinct_dois';candidate.state='blocked';candidate.retryAt=0;continue;}
           var sourceChecked=natureOfficialRecheckDeferred(job);
           if(sourceChecked){
             // Preserve official-TOC obligation but avoid revisiting a verified
@@ -6015,12 +6104,11 @@ function embeddedJobDois(value) {
           // ACS background tabs can remain uninitialized through document-idle.
           // Only a repeat visit after an actual failed attempt is foregrounded;
           // healthy first-pass captures stay in the background.
-          // After an uninitialized background tab, give the next DOI one
-          // foreground chance to initialize Tampermonkey. Healthy sessions
-          // revert to background; three consecutive misses still stop safely.
+          // After an uninitialized background tab, foreground the next DOI
+          // from this same publisher. Different publishers continue normally.
           var foregroundRetry=job.publisher==='wiley'
             ||(job.publisher==='acs'&&Number(job.retryCount||0)>1)
-            ||Number(run.consecutiveHeartbeatFailures||0)>0;
+            ||Boolean(((run.publisherHeartbeatFailures||{})[job.publisher]||{}).dois?.length);
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:foregroundRetry,insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
@@ -6042,12 +6130,12 @@ function embeddedJobDois(value) {
         if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
-        if(manualHeartbeatCircuitBreaker(run,result)){
-          s.stopReason='publisher_script_missing_3_consecutive';
-          s.phase='capture_environment_blocked';
+        if(manualHeartbeatCircuitBreaker(run,job,result)){
+          s.publisherHeartbeatIsolations=Object.keys(run.publisherHeartbeatQuarantine).map(function(p){
+            return {publisher:p,reason:run.publisherHeartbeatQuarantine[p].reason,distinctDois:run.publisherHeartbeatQuarantine[p].dois.slice()};
+          });
           coverageStats(run);manualSummary(run);
-          badge('连续3篇出版社页面未启动抓取脚本，已停止开新页面并保留剩余队列；请检查 Tampermonkey 扩展和出版社验证后再继续','#991b1b');
-          break;
+          badge('当前出版社3篇不同论文未启动采集脚本，已仅隔离该出版社，继续抓取其他出版社','#b45309');
         }
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
@@ -6058,14 +6146,11 @@ function embeddedJobDois(value) {
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();
-        s.phase=s.stopReason==='publisher_script_missing_3_consecutive'?'capture_environment_blocked'
-          :controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
+        s.phase=controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
           :s.inventoryUnknown||Number(s.ownerPdfInventory&&s.ownerPdfInventory.unknown||0)?'inventory_partial':'all_resolved';
         manualSummary(run);
         var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
-        var finishedMessage=s.stopReason==='publisher_script_missing_3_consecutive'
-          ?'出版社脚本连续3次未启动；已保留未访问队列，请先检查浏览器扩展和页面验证'
-          :controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
+        var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
           :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
           :'实际尝试 '+s.attemptCount+' 次；本轮确认补齐 '+s.fullyResolved+' 篇；库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇；未补齐 '+s.unresolvedCount+' 篇';
         badge(finishedMessage,'#374151');
@@ -7239,7 +7324,7 @@ function embeddedJobDois(value) {
     var httpStatus=Number(error&&error.httpStatus||0);
     if(httpStatus>0&&![500,502,503,504].includes(httpStatus))return false;
     var reason=String(error&&error.message||error||'');
-    if(!/timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50(?:0|[234])|stage_storage_/i.test(reason)
+    if(!/deferred|timeout|deadline|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted|private_pdf_upload_http_50(?:0|[234])|stage_storage_/i.test(reason)
       ||/cancelled|unbound|stale|permission|user_aborted|mismatch/i.test(reason))return false;
     var doi=normalizeDoi(job.doi),buffer=pdf.buffer,bytes=Number(buffer.byteLength||0);
     if(!doi||bytes<1024||bytes>8*1024*1024)return false;
@@ -7260,7 +7345,8 @@ function embeddedJobDois(value) {
     }catch(_){return false;}
   }
   async function replayOneOwnerPdf(){
-    if(!isGalleryPage()||ownerPdfReplayBusy||GM_getValue(ACTIVE_JOB_KEY,null))return false;
+    // Replay from the Gallery owner session is independent of the active publisher tab.
+    if(!isGalleryPage()||ownerPdfReplayBusy)return false;
     var lease=privatePdfLease();if(!lease)return false;
     var keys=pendingOwnerPdfKeys();if(!keys.length)return false;
     ownerPdfReplayBusy=true;
@@ -7360,8 +7446,8 @@ function embeddedJobDois(value) {
   function startOwnerPdfReplaySender(){
     if(!isGalleryPage()||globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__)return;
     globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__=true;
-    setTimeout(function(){replayOneOwnerPdf().catch(function(){});},23000);
-    setInterval(function(){replayOneOwnerPdf().catch(function(){});},60000);
+    setTimeout(function(){replayOneOwnerPdf().catch(function(){});},5000);
+    setInterval(function(){replayOneOwnerPdf().catch(function(){});},20000);
   }
 
   async function maybeCapturePrivatePdf(job,trace) {
@@ -7374,6 +7460,10 @@ function embeddedJobDois(value) {
     if(serverStatus!=='missing'||job.capturePrivatePdf!==true){
       return {status:'skipped',reason:serverStatus==='pending'||serverStatus==='failed'?'owner_pdf_verification_pending':'owner_pdf_inventory_unknown'};
     }
+    // A previously downloaded, verified PDF remains an outstanding upload,
+    // not a reason to download the same publisher bytes twice.
+    if(pendingOwnerPdfKeys().indexOf(OWNER_PDF_REPLAY_PREFIX+encodeURIComponent(normalizeDoi(job.doi)))>=0)
+      return {status:'deferred_upload',reason:'owner_pdf_local_replay_pending',localReplayReady:true};
     var lease=privatePdfLease();
     if(!lease){
       captureLiveUpdate(job,'private_pdf_no_lease',{pdfStatus:'skipped',pdfStage:'未获得 owner PDF 授权'});
@@ -7423,6 +7513,19 @@ function embeddedJobDois(value) {
     // A valid PDF is independent of the upload route. Retry its same bytes in
     // the upload helper; an API failure must not restart publisher downloads.
     if(pdf){
+      // Durable local bytes are handed to the separately authorized Gallery
+      // sender. A verified PDF download no longer waits for an owner upload
+      // (which can take 50-90s) before advancing the publisher DOI queue.
+      var deferred=await retainOwnerPdfAfterUploadFailure(job,pdf,new Error('private_pdf_upload_deferred'));
+      if(deferred){
+        var pending={status:'deferred_upload',reason:'owner_pdf_local_replay_pending',localReplayReady:true,byteLength:pdf.byteLength};
+        GM_setValue(key,{status:pending.status,reason:pending.reason,at:Date.now(),byteLength:pdf.byteLength,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        captureLiveUpdate(job,'private_pdf_deferred',{pdfStatus:'deferred_upload',pdfStage:'PDF 已保存在本机，等待 Gallery 安全补传',pdfBytes:pdf.byteLength});
+        pushTrace(trace,{stage:'private_pdf_gallery_retry',event:'queued',status:'deferred',byteLength:pdf.byteLength,message:'owner_only=1;content_verified=1;nonblocking_upload=1'});
+        return pending;
+      }
+      // Bounded local storage can be full. Keep the existing direct upload
+      // fallback rather than discard already downloaded publisher PDF bytes.
       try{
         var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
         assertBoundCaptureJob(job);

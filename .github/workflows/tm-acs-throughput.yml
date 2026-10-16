@@ -68,7 +68,7 @@ jobs:
           node --test tests/tm-owner-lease-handshake-20261015.test.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.88
+      - name: Build Bridge 2.2.89
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -79,8 +79,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.88' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.69';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.89' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.70';" public/gallery-vpn-bridge.user.js
           grep -F "ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
