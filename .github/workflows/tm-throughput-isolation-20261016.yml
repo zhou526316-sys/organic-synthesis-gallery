@@ -49,7 +49,7 @@ jobs:
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.90' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.70';" public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.71';" public/gallery-vpn-bridge.user.js
       - name: Preserve immutable build proof
         uses: actions/upload-artifact@v4
         if: always()
