@@ -5558,9 +5558,10 @@ function embeddedJobDois(value) {
             +';readMs='+Number(bulk.inventoryReadMs||0)+';cacheHits='+Number(bulk.inventoryCacheHits||0));
           return {complete:true,count:bulk.items.length,items:bulk.items};
         }catch(error){
-          errors.push(layer+'全 DOI 快照失败:'+captureLiveError(error.message||error)
-            +'；正在回退至 80 DOI 分片（不把失败判定为空库存）');
-          updateInventoryProgress(run,layer,'loading',layerStart,'bulk_fallback_to_chunked');
+          // The fallback is authoritative if every 80-DOI chunk succeeds.
+          // Do not poison inventoryComplete() with a recovered optimization miss.
+          updateInventoryProgress(run,layer,'loading',layerStart,
+            'bulk_fallback_to_chunked:'+captureLiveError(error.message||error));
         }
       }
       for(var offset=0;offset<chunks.length;offset+=2){
