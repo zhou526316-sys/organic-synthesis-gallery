@@ -471,3 +471,10 @@ runs and returns verified same-generation coverage+worklist.
 No new body media/SI/PDF/paid-text collection, no D1, no owner permanent
 corrections, no second publication slot. Original 16-journal
 publisher Research/online-first full closure remains false.
+
+## 2026-10-16: historical policy veto must be per DOI, not all-or-nothing
+
+The 08:00 production execution reported `historical_review_excluded_by_policy:10.1038/s41467-026-77616-8` and admitted zero historical papers, even though the frozen two-pass manifest had 23 formally absent approved records. The explicitly excluded DOI **must not** be released or have its exclusion silently removed. The historical annex now validates the **entire** frozen source manifest and checks daily DOI overlap, then skips only rows vetoed by either the owner scope-correction file or the canonical `shared/literature-policy.js`. Each skip emits a DOI-specific `historicalPolicyVetoes` receipt with its veto source in the release marker, release execution result and runner logs.
+
+Any malformed science review, stale scope SHA, daily rejected/deferred DOI collision, or invalid non-vetoed title still blocks the entire historical annex; the normal daily release is unaffected. Previously published DOI are deduplicated. The remaining independently approved histories can enter **only** the subsequent legal Beijing 08:00 fixed slot, without Today/Hot/WeChat or new body/PDF acquisition. Do not represent this code change as an actual publication until post-slot production and Pages verification explicitly report admitted DOI.
+

@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Asia/Shanghai",
+  "status": "both_owner_selections_confirmed_editorial_preparation",
+  "selectionAuthority": "owner_selected_retrospective_on_Oct15_and_featured_on_Oct16_with_source_PDFs",
+  "articles": [
+    {
+      "order": 1,
+      "role": "featured",
+      "doi": "10.1021/jacs.6c17168",
+      "journal": "JACS",
+      "title": "Construction of Divergent Enantioenriched 3D-Fluoro Scaffolds via Ni(0) π-Lewis Base-Mediated Umpolung of Fluorodienes",
+      "headlineDraft": "有机合成文献日报｜10.16｜今日精选｜JACS：氟代二烯极性反转驱动的手性含氟三维骨架多样化合成",
+      "correspondingAuthors": ["Qin Ouyang", "Wei Du", "Ying-Chun Chen"],
+      "mainPdf": {"filename": "jacs.6c17168.pdf", "pages": 11, "sha256": "f08e4c039c06dac13071254a813f85822b4d824966b0970c7e0bb5e6b783d99b"},
+      "siPdf": {"filename": "ja6c17168_si_001.pdf", "pages": 423, "sha256": "acaf22919aa9a0900da9f27d58a5fd78e0d79439a732881e84093ed7402a50ed"},
+      "peerReviewSourceStatus": "not_supplied; do_not_invent_referee_comments_or_attribute_SI_controls_to_reviewers",
+      "editorialPlan": "audit/wechat-working/2026-10-16-jacs-fluorodiene-selection-and-plan.md",
+      "sourceUrl": "https://gallery.gczhouwld.com/?edition=2026-10-16&doi=10.1021%2Fjacs.6c17168&summary=0"
+    },
+    {
+      "order": 2,
+      "role": "retrospective",
+      "doi": "10.1038/s41586-026-10933-6",
+      "journal": "Nature",
+      "title": "Synthesis of pyrroles from isoxazoles by an O-to-C skeletal edit",
+      "headlineDraft": "往期精选｜Nature｜Levin：通过氧—碳骨架编辑将异噁唑转化为吡咯",
+      "correspondingAuthors": ["Mark D. Levin"],
+      "mainPdf": {"filename": "s41586-026-10933-6.pdf", "pages": 8, "sha256": "6b6a8749f4b9bb223cc17f358c9b108a5904f56c5421dcc868b73b5848ec6543"},
+      "siPdf": {"filename": "41586_2026_10933_MOESM1_ESM.pdf", "pages": 328, "sha256": "e5be34efd68fd9aa3c85e3389de0112e0dd8ae4ba0e04753208025694f3f5bcf"},
+      "peerReviewPdf": {"filename": "41586_2026_10933_MOESM2_ESM.pdf", "pages": 17, "sha256": "df7d0bcc3dc441a6109f5c597e586f9bf1c8dd4485311fcafbdf2df45c257006"},
+      "editorialPlan": "audit/wechat-working/2026-10-16-levin-isoxazole-selection-and-plan.md",
+      "sourceUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41586-026-10933-6&summary=0"
+    }
+  ],
+  "dailyReleaseVerification": {
+    "source": "audit/literature-update-state.json:lastWebsiteSync.verification",
+    "sourceBlobSha": "589627fc68b8069ea5c47c149fe4e71805cc85b3",
+    "publicationSlot": "2026-10-16T08:00:00+08:00",
+    "featuredDoiPresent": true,
+    "newlyAcceptedCountAtRead": 35,
+    "refreshBeforeDraftComposition": true,
+    "doNotReusePreviousDatesCounts": true
+  },
+  "editorialRequirements": {
+    "openingStatesConcreteStudyValue": true,
+    "endingIncludesEvidenceGroundedResearchLessons": true,
+    "peerReviewIntegratedWhereSourceExists": true,
+    "sourceMainAndSIReadBeforeComposition": true,
+    "preserveOriginalChemicalImagePixels": true,
+    "mainFiguresAndDiscriminatingSIPlacedByMeaning": true,
+    "keepTwoIndependentArticles": true,
+    "naturalChineseAndEvidenceHierarchyReview": true,
+    "noActualCostTemplateCoda": true,
+    "noUnrelatedQuestionHeadings": true,
+    "coverAfterBodyReview": true,
+    "textOnlyAndImagesOnlyIndependentReview": true,
+    "officialDraftGetAndRealPreviewRequired": true
+  },
+  "deliveryState": {
+    "textReview": "pending",
+    "imageReview": "pending",
+    "oct16DraftWritePerformed": false,
+    "oct16CloudMediaId": null,
+    "oct15DraftModified": false,
+    "existingOct15MediaIdPreserved": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+    "publicSendAuthorized": false,
+    "newOrRescheduledAutomation": false
+  }
+}
