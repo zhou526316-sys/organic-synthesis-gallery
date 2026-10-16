@@ -656,16 +656,22 @@ export async function importStagedArticleFigure(request, env, payload) {
 // The legacy whole-index endpoint remains intact. Controller metadata may
 // request at most 80 exact DOIs per response to avoid multi-megabyte payloads.
 // No filtering may convert an omitted/unreadable row into a negative receipt.
-function requestedInventoryDoiScope(request) {
+function requestedInventoryDoiScope(request,bodyDois=undefined) {
   const url = new URL(request.url);
-  if (!url.searchParams.has('dois')) return null;
-  const raw = url.searchParams.get('dois') || '';
-  if (!raw || raw.length > 6500) throw new Error('invalid_inventory_doi_scope');
-  const parts = raw.split(',');
-  if (!parts.length || parts.length > 80) throw new Error('inventory_doi_scope_limit');
-  const dois = parts.map(normalizeDoi);
-  if (dois.some(doi => !/^10\.\d{4,9}\/[^\s/]{4,180}$/i.test(doi)) ||
-      new Set(dois).size !== dois.length) throw new Error('invalid_inventory_doi_scope');
+  const bodyScope=bodyDois!==undefined;
+  if(!bodyScope&&!url.searchParams.has('dois'))return null;
+  // Body-scoped read-only inventories avoid fifteen repeated cold-index
+  // requests without relaxing the legacy GET 80-DOI URL contract.
+  if(bodyScope&&(!Array.isArray(bodyDois)||bodyDois.length<1||bodyDois.length>2000))
+    throw new Error('invalid_inventory_doi_scope');
+  const raw=bodyScope?'':String(url.searchParams.get('dois')||'');
+  if(!bodyScope&&(!raw||raw.length>6500))throw new Error('invalid_inventory_doi_scope');
+  const parts=bodyScope?bodyDois:raw.split(',');
+  if(!parts.length||parts.length>(bodyScope?2000:80))throw new Error('inventory_doi_scope_limit');
+  if(parts.some(x=>typeof x!=='string'||x.length>200))throw new Error('invalid_inventory_doi_scope');
+  const dois=parts.map(normalizeDoi);
+  if(dois.some(doi=>!/^10\.\d{4,9}\/[^\s/]{4,180}$/i.test(doi))||
+     new Set(dois).size!==dois.length)throw new Error('invalid_inventory_doi_scope');
   return dois;
 }
 
@@ -758,7 +764,7 @@ function inventoryEntriesForDois(snapshot,dois){
   return {items};
 }
 
-export async function getStagedArticleFigures(request, env) {
+export async function getStagedArticleFigures(request, env, bodyDois=undefined) {
   if(new URL(request.url).searchParams.get('publication')==='1')
     return publicationPage(request,env,ARTICLE_FIGURE_STAGE_INDEX_KEY,'stage',index=>Object.values(index.items||{})
       .filter(item=>{const doi=normalizeDoi(item?.doi);return doi&&Number(item.updatedAt)>=MEDIA_REBUILD_EPOCH&&captureBelongsToDoi(item,doi);})
@@ -766,7 +772,7 @@ export async function getStagedArticleFigures(request, env) {
   if(new URL(request.url).searchParams.get('inventory')==='1'){
     if(!env?.MEDIA)return {status:503,body:{error:'capture_inventory_unavailable'}};
     let scope;
-    try{scope=requestedInventoryDoiScope(request);}
+    try{scope=requestedInventoryDoiScope(request,bodyDois);}
     catch(error){return {status:400,body:{error:String(error.message||error)}};}
     try{
       const started=Date.now();
@@ -1347,9 +1353,9 @@ export async function purgeRejectedRscPreviewLocalMedia(env, payload = {}) {
   };
 }
 
-export async function getLocalCaptureIndex(request, env) {
+export async function getLocalCaptureIndex(request, env, bodyDois=undefined) {
   let scope;
-  try{scope=requestedInventoryDoiScope(request);}
+  try{scope=requestedInventoryDoiScope(request,bodyDois);}
   catch(error){return {status:400,body:{error:String(error.message||error)}};}
   const started=Date.now();
   let snapshot;
