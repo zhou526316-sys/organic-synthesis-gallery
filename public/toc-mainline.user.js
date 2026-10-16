@@ -5876,6 +5876,33 @@ function embeddedJobDois(value) {
       reason:String(r.deferCause||'access_check').slice(0,80)};});
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
+    // Distinct capture layers must never be represented by a single
+    // 'complete' counter. Local PDF deferral is an outstanding obligation.
+    var attempts=s.results||[],unique=function(rows){return new Set(rows.map(function(r){return normalizeDoi(r.doi);})).size;};
+    var tocSaved=attempts.filter(function(r){return r.toc&&r.toc.status==='stored';});
+    var figureSaved=attempts.filter(function(r){return Number(r.figures&&r.figures.stored||0)>0;});
+    var textSaved=attempts.filter(function(r){return r.fulltext&&r.fulltext.status==='stored';});
+    var pdfSaved=attempts.filter(function(r){return privatePdfCompletedStatus(r.privatePdf&&r.privatePdf.status);});
+    var pdfDeferred=attempts.filter(function(r){return String(r.privatePdf&&r.privatePdf.status||'')==='deferred_upload';});
+    var mediaSnapshot=run.inventory&&run.inventory.media,mediaVerified=Boolean(mediaSnapshot&&mediaSnapshot.complete===true);
+    var mediaItems=mediaVerified?mediaSnapshot.items||[]:[];
+    s.layerOutcomes={
+      measurement:'per-layer-receipts-not-article-completion',
+      distinctPublisherDois:s.visitedCount,captureAttempts:attempts.length,
+      toc:{storedAttempts:tocSaved.length,distinctStoredDois:unique(tocSaved),
+        productionConfirmedDois:unique(tocSaved.filter(function(r){return r.toc.productionTocStored===true||r.toc.productionFallbackStored===true;}))},
+      figures:{storedAttempts:figureSaved.length,distinctStoredDois:unique(figureSaved),
+        storedFigureReceipts:attempts.reduce(function(n,r){return n+Math.max(0,Number(r.figures&&r.figures.stored||0));},0),
+        fullyCapturedAttempts:attempts.filter(function(r){return Number(r.figures&&r.figures.discovered||0)>0
+          &&Number(r.figures.stored||0)>=Number(r.figures.discovered)&&Number(r.figures.failed||0)===0;}).length},
+      fulltext:{storedAttempts:textSaved.length,distinctStoredDois:unique(textSaved),
+        completeEvidenceDois:unique(textSaved.filter(function(r){return r.fulltext.evidenceLevel==='complete';}))},
+      privatePdf:{cloudStoredDois:unique(pdfSaved),locallyQueuedDois:unique(pdfDeferred),
+        failedAttempts:attempts.filter(function(r){return String(r.privatePdf&&r.privatePdf.status||'')==='failed';}).length},
+      productionVisualInventory:{verified:mediaVerified,scope:mediaItems.length,
+        withPrimaryVisual:mediaVerified?mediaItems.filter(function(r){return Boolean(r.tocStored||r.figureOneStored||r.primaryKind==='official_visual'||r.primaryKind==='figure1');}).length:null},
+      actualFrontendRendered:'not_browser_verified'
+    };
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
     s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展'),category:captureBlockCategory(r.lastReason)};});
     return s;
