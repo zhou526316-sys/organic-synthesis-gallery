@@ -5,9 +5,9 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.12/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.12'/);
-assert.match(original,/const BATCH_BINDING_REVISION='historic-body-early-bound-v031'/);
+assert.match(original,/\/\/ @version\s+0\.2\.13/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.13'/);
+assert.match(original,/const BATCH_BINDING_REVISION='historic-body-docstart-worker-v032'/);
 assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-evidence-v030'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  function batchBoot(){";
@@ -112,7 +112,7 @@ test('document-start DOI-bound heartbeat arrives before delayed publisher DOM wi
   assert.equal(progress?.runId,RUN);
   assert.equal(progress?.pageDoiVerified,false);
   assert.equal(progress?.sectionCount,0);
-  assert.equal(progress?.bindingRevision,'historic-body-early-bound-v031');
+  assert.equal(progress?.bindingRevision,'historic-body-docstart-worker-v032');
   assert.equal(f.values.has('gallery-historical-text-batch-v2:result'),false,
     'script activation may not claim scientific text or licence before the page is ready');
   // A publisher SPA may erase its hash before DOM readiness, but a binding
@@ -124,6 +124,27 @@ test('document-start DOI-bound heartbeat arrives before delayed publisher DOM wi
     await new Promise(resolve=>setTimeout(resolve,5));
   assert.equal(f.values.get('gallery-historical-text-batch-v2:result')?.status,'ok');
   assert.equal(f.values.get('gallery-historical-text-batch-v2:result')?.packet?.publicUploadAllowed,false);
+});
+
+test('document-start science DOM is captured without waiting for page load completion',async()=>{
+  const f=fixture({deferDocument:true});
+  // The article has its DOI, own CC-BY notice and scientific paragraphs,
+  // although unrelated resources keep readyState at "loading".
+  for(let n=0;n<100&&!f.values.has('gallery-historical-text-batch-v2:result');n++)
+    await new Promise(resolve=>setTimeout(resolve,5));
+  const result=f.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(result?.status,'ok');
+  assert.equal(result?.pageDoiVerified,true);
+  assert.equal(result?.packet?.publicUploadAllowed,false);
+  assert.equal(result?.packet?.pdfDownloaded,false);
+  assert.equal(result?.packet?.mediaDownloaded,false);
+});
+
+test('publisher full-corpus sweep loads entire formal registry including October and undated',()=>{
+  assert.ok(original.includes("const catalog=await batchLoadCanonicalCatalog(true);\n    const papers=batchHistoricalPapers(catalog,true);"),
+    'publisher sweep must load complete formal DOI manifest rather than pre-October subset');
+  assert.ok(original.includes('if(publisher(location.hostname)&&batchEarlyPublisherHeartbeat())'));
+  assert.ok(original.includes('batchLaunchPublisherWorker()'));
 });
 
 test('early heartbeat cannot claim a different token, unrelated tab, expired job or wrong DOI',()=>{
@@ -146,7 +167,7 @@ test('v0.2.11 early-handshake retry is once-only and never overrides observed HT
     captureRevision:'historic-body-evidence-v030'};
   assert.equal(api.batchRetryAllowed(prior,false),true);
   assert.equal(api.batchRetryAllowed({...prior,
-    bindingRevision:'historic-body-early-bound-v031'},false),false);
+    bindingRevision:'historic-body-docstart-worker-v032'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
   assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
   assert.equal(api.batchRetryAllowed({...prior,status:'license_not_verified',
@@ -236,6 +257,9 @@ test('batch only selects unique formal historical DOI',()=>{
   assert.equal(rows.length,3);
   assert.equal(new Set(rows.map(x=>x.doi)).size,3);
   assert.ok(rows.every(x=>x.publication<'2026-10-01'));
+  const formal=context.__batchTest.batchHistoricalPapers(registry,true);
+  assert.equal(formal.length,4,'publisher corpus includes newer dates without duplicate DOI');
+  assert.ok(formal.some(x=>x.publication==='2026-10-04'));
   assert.throws(()=>context.__batchTest.batchHistoricalPapers({...registry,webpageDoiCount:100}),/目录不一致/);
 });
 test('TOC complete manifest loads entire publisher registry in two requests, without pagination',async()=>{
@@ -259,6 +283,7 @@ test('TOC complete manifest loads entire publisher registry in two requests, wit
   assert.equal(catalog.formalCount,4);
   assert.equal(catalog.articles.length,2);
   assert.equal(context.__batchTest.batchHistoricalPapers(catalog).length,2);
+  assert.equal(context.__batchTest.batchHistoricalPapers(catalog,true).length,4);
   assert.equal(calls.length,2);
   assert.equal(new URL(calls[1]).pathname,'/toc-demand-live.json');
   assert.ok(calls.every(x=>!x.includes('catalog-view')));
@@ -287,6 +312,7 @@ test('entire formal OA registry includes October and undated without per-DOI API
   assert.ok(queries.every(x=>!x.includes('/api/literature/catalog-view')));
   assert.equal(queries.length,2);
   assert.equal(context.__batchTest.batchHistoricalPapers(result).length,1);
+  assert.equal(context.__batchTest.batchHistoricalPapers(result,true).length,3);
 });
 
 test('one-shot registry fails closed on missing, duplicated or unpublished DOI',async()=>{
@@ -331,6 +357,8 @@ test('a 1151 DOI manifest needs no pagination and preserves metadata_only member
   assert.equal(catalog.formalCount,1151);
   assert.equal(catalog.articles.length,1151);
   assert.ok(catalog.articles.some(x=>x.date===''));
+  assert.equal(context.__batchTest.batchHistoricalPapers(catalog,true).length,1151,
+    'publisher collection has no 20-paper or pre-October cap');
 });
 test('explicit article license gate allows BY/CC0 and excludes NC-ND or unlicensed',()=>{
   assert.equal(fixture().context.__batchTest.batchLicenseEvidence(fixture().root)?.kind,'cc-by');
@@ -460,7 +488,7 @@ test('retry policy separates temporary errors from license and access blocks',()
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:true},false),true);
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false},false),true);
   assert.equal(api.batchRetryAllowed({status:'timeout',pageDoiVerified:false,
-    bindingRevision:'historic-body-early-bound-v031'},false),false);
+    bindingRevision:'historic-body-docstart-worker-v032'},false),false);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},false),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_script_not_confirmed'},true),true);
   assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
@@ -516,9 +544,11 @@ test('full inventory reports actual formal DOI, saved science, unresolved rights
   assert.equal(c.historicalWithoutVerifiedDate,1);
   assert.equal(c.savedLocal,1);
   assert.equal(c.licensePending,1);
-  assert.equal(c.neverAttempted,1);
+  assert.equal(c.neverAttempted,2);
   assert.equal(c.parserRecheckEligible,1);
-  assert.equal(c.scheduledByNormalBatch,2);
+  assert.equal(c.scheduledByNormalBatch,3);
+  assert.equal(c.formalUndated,1);
+  assert.equal(c.recentWithVerifiedDate,0);
 });
 test('local body search includes core chapters captions and tables, not only first 20',()=>{
   const api=fixture().context.__batchTest;
