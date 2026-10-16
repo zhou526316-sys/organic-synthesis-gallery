@@ -301,7 +301,7 @@
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
-      reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', finished:'本篇处理结束',
+      reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', image_deferred:'已保存在本机，等待云端暂存回执', finished:'本篇处理结束',
       private_pdf_wait:'PDF：等待页面与动态控件', private_pdf_discovery:'PDF：查找入口', private_pdf_browser:'PDF：浏览器会话下载',
       private_pdf_gm:'PDF：备用下载', private_pdf_validation:'PDF：校验文件', private_pdf_upload:'PDF：上传私有存储',
       private_pdf_saved:'PDF：已存储', private_pdf_deferred:'PDF：已在本机持久暂存', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
@@ -1947,7 +1947,7 @@ function embeddedJobDois(value) {
     if([CAPTURE_ENDPOINT,FIGURE_STAGE_ENDPOINT].indexOf(endpoint)<0||['r2_upload','figure_stage'].indexOf(stage)<0)return false;
     if(Number(error&&error.httpStatus||0)>0||Number(error&&error.retryAfterMs||0)>0)return false;
     var reason=String(error&&error.message||error||'');
-    if(!/gm_request_timeout|gm_request_error|gm_request_exception|failed to fetch|networkerror|timeout|budget_exhausted|transport_failed/i.test(reason)
+    if(!/deferred_to_gallery|gm_request_timeout|gm_request_error|gm_request_exception|failed to fetch|networkerror|timeout|budget_exhausted|transport_failed/i.test(reason)
       ||/user_aborted|cancelled|stale|unbound|mismatch|blocked by the user|Refused to connect/i.test(reason))return false;
     var doi=normalizeDoi(job.doi),identity=stage==='figure_stage'?String(payload.id||''):String(payload.kind||'');
     if(!doi||!identity||normalizeDoi(payload.doi)!==doi||normalizeDoi(payload.pageDoi)!==doi
@@ -1962,8 +1962,20 @@ function embeddedJobDois(value) {
       if((!prev&&keys.length>=20)||occupied-Number(prev&&prev.bytes||0)+bytes>IMAGE_OUTBOX_CAP_BYTES)return false;
       GM_setValue(key,{revision:'20261008-image-outbox-v1',doi:doi,addedDate:String(job.addedDate||''),
         endpoint:endpoint,stage:stage,payload:payload,bytes:bytes,createdAt:Date.now(),attempts:0,nextAt:Date.now()+15000});
-      return true;
+      var confirmed=GM_getValue(key,null);
+      return Boolean(confirmed&&confirmed.doi===doi&&confirmed.stage===stage
+        &&confirmed.bytes===bytes&&confirmed.payload
+        &&confirmed.payload.imageData===payload.imageData);
     }catch(_){return false;}
+  }
+  function queuedBodyFigure(job,label){
+    if(!job||!recentFullCaptureEligible(job))return null;
+    var doi=normalizeDoi(job.doi),id=String(label||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    if(!doi||!id)return null;
+    var row=GM_getValue(IMAGE_OUTBOX_PREFIX+encodeURIComponent(doi)+'|figure_stage|'+encodeURIComponent(id),null);
+    return row&&row.stage==='figure_stage'&&row.doi===doi
+      &&row.payload&&row.payload.id===id&&normalizeDoi(row.payload.pageDoi)===doi
+      &&typeof row.payload.imageData==='string'&&row.payload.imageData.length===row.bytes?row:null;
   }
   function imageReplayReceiptMatches(row,receipt) {
     if(!receipt||receipt.stored!==true||normalizeDoi(receipt.doi)!==row.doi)return false;
@@ -2068,6 +2080,7 @@ function embeddedJobDois(value) {
         // Do not launch a second concurrent write without a receipt.
         if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
           var retained=retainImageForGalleryUpload(job,endpoint,payload,stage,error);
+          if(retained&&stage==='figure_stage')job._imageOutboxDeferFigures=true;
           pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
             message:'budgetMs='+allowedBudget+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;galleryReplayQueued='+Number(retained)+';retryAfterMs='+Number(error&&error.retryAfterMs||0)});
           throw error;
@@ -4518,6 +4531,16 @@ function embeddedJobDois(value) {
       byteLength: image.byteLength
     });
     try {
+      // After a real figure-stage transport timeout, persist subsequent
+      // verified figures to the Gallery outbox without another 24s wait.
+      // Local-only figures are NOT counted as staged or published.
+      if(job._imageOutboxDeferFigures===true
+        &&retainImageForGalleryUpload(job,FIGURE_STAGE_ENDPOINT,payload,'figure_stage',
+          new Error('image_upload_deferred_to_gallery'))){
+        pushTrace(trace,{stage:'figure_stage',event:'persisted_for_gallery',status:'deferred',
+          byteLength:image.byteLength,message:'label='+payload.label+';cloud_stored=0'});
+        throw new Error('figure_upload_locally_deferred');
+      }
       var result = await postAcquiredImage(job, candidate, image, trace, FIGURE_STAGE_ENDPOINT, payload, token, 'figure_stage');
       if (!result || result.stored !== true || result.staged !== true ||
           normalizeDoi(result.doi) !== normalizeDoi(job.doi) ||
@@ -4799,6 +4822,13 @@ function embeddedJobDois(value) {
         if(!job.recaptureFromHead&&saved&&(!job.missingOnly||validReceiptForDoi(saved,normalizeDoi(job.doi)))&&saved.contentHash&&saved.sourceUrl&&groups.get(label).some(function(c){return mediaUrlIdentity(c.url)===mediaUrlIdentity(saved.sourceUrl);})) {
           result.figures.items.push(Object.assign({},saved,{status:'already_staged'}));result.figures.stored+=1;captureLiveUpdate(job,'reused',{label:label});continue;
         }
+        if(queuedBodyFigure(job,label)){
+          result.figures.deferred=Number(result.figures.deferred||0)+1;
+          result.figures.items.push({label:label,status:'deferred',reason:'figure_gallery_replay_pending'});
+          pushTrace(trace,{stage:'figure_stage',event:'reuse_local_pending',status:'deferred',
+            message:'label='+label+';publisher_redownload=0;cloud_stored=0'});
+          continue;
+        }
         if(downloadedThisVisit>=20){result.figures.limitReached=true;break;}
         downloadedThisVisit+=1;
         try {
@@ -4811,14 +4841,22 @@ function embeddedJobDois(value) {
           captureLiveUpdate(job,'saved',{label:label,quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height});
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
+          if(String(error.message)==='figure_upload_locally_deferred'){
+            result.figures.deferred=Number(result.figures.deferred||0)+1;
+            result.figures.items.push({label:label,status:'deferred',reason:'figure_gallery_replay_pending'});
+            captureLiveUpdate(job,'image_deferred',{label:label});
+            continue;
+          }
           result.figures.failed+=1;
           result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number(error.retryAfterMs||0));
           result.figures.items.push({label:label,status:'failed',reason:String(error.message)});
           captureLiveUpdate(job,'image_failed',{label:label,error:error.message});
         }
       }
-      if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
-      result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
+      if (result.figures.stored+result.figures.failed+Number(result.figures.deferred||0)<labels.length)
+        result.figures.limitReached=true;
+      result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found'
+        :result.figures.failed||Number(result.figures.deferred||0)||result.figures.limitReached?'partial':'staged';
       var tocOk=!wantsToc||result.toc.status==='stored'||result.toc.status==='already_available';
       var figuresRequired=job.captureFigures===true;
       var figuresOk=!figuresRequired||result.figures.status==='staged';
