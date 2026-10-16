@@ -14,7 +14,7 @@ const existing=new Set(pub.articles.map(x=>x.doi.toLowerCase()));
 const rows=[...p1.approved,...p2.approved];
 const byId=new Map(manifest.accepted.map(x=>[x.doi,x]));
 const dates=new Map([
- ['10.1021/acs.joc.6c00852','2026-08-31'],
+ ['10.1021/acs.joc.6c01582','2026-08-27'],
  ['10.1021/acs.joc.6c01132','2026-08-26'],
  ['10.1021/acs.joc.6c01019','2026-08-27'],
  ['10.1021/acs.joc.6c01355','2026-08-28'],
@@ -82,7 +82,7 @@ test('twelve new frozen original syntheses have independent article-specific sec
 });
 test('scientific challenge verifies chemistry not just paper titles',()=>{
  const c=doi=>byId.get(doi).challengeReason;
- assert.match(c('10.1021/acs.joc.6c00852'),/镍催化/);
+ assert.match(c('10.1021/acs.joc.6c01582'),/异构化/);
  assert.match(c('10.1021/acs.joc.6c01132'),/光/);
  assert.match(c('10.1021/acs.joc.6c01019'),/三组分/);
  assert.match(c('10.1021/acs.joc.6c01355'),/三条/);
@@ -105,6 +105,7 @@ test('one-day ACS route variants and mechanism-only papers stay unapproved, not 
    assert.ok(!byId.has(h.doi),h.doi);
  }
  assert.equal(holds.scientificScopeEvidencePending.length,2);
+ assert.ok(!byId.has('10.1021/acs.joc.6c00852'),'prior independent publisher-date hold must remain unapproved');
  assert.ok(holds.scientificScopeEvidencePending.every(x=>!byId.has(x.doi)));
  assert.deepEqual(new Set(manifest.pending.map(x=>x.doi)),new Set([
   '10.1021/acs.joc.6c01483','10.1021/acs.orglett.6c02374']));
