@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261016-1445-2271-postdeploy-quickcheck",
-  "requestedAt": "2026-10-16T06:41:20.780Z",
+  "requestId": "tm-20261016-2237-new-owner-log-v6271",
+  "requestedAt": "2026-10-16T14:38:31.603Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "Urgent postdeployment 2.2.90/6.2.71 acceptance: read existing latest uploaded owner log and media/figure indexes only; inspect uploadedAt, installRevision, per-layer receipts, queue/visits/errors/stop and PDF/image backlog if present; compare before-and-after 11:32 owner snapshot. No publisher requests, no media writes or PDF bytes.",
+  "context": "URGENT user reports new Tampermonkey log uploaded at Beijing 2026-10-16 around 22:37. Read latest EXISTING owner R2 diagnostics/latest.json and article figures/local capture/report indices READ-ONLY. Verify uploadedAt and owner installRevision 6.2.71, startedAt/finishedAt, phase, stopReason, queue total, visitedCount, attempts, 4-layer outcomes, inventory errors, PDF/image outbox backlog and publisher missing heartbeat causes. Compare Oct16 11:32 6.2.70: 226 queued,7 visited,1 controller resolved,225 unresolved, 4 heartbeat missing. No publisher contact and no media/PDF writes.",
   "expectedBridgeVersion": "2.2.90",
   "expectedInstallRevision": "6.2.71",
   "readOnly": true,
