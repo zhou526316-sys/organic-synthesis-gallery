@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "gallery-historical-q3-six-acs-20261016-v1",
+  "createdAt": "2026-10-16T00:34:02.531Z",
+  "mode": "science_and_source_review_only",
+  "scope": "2026 Q3; JOC 2, Organic Letters 2, ACS Catalysis 2",
+  "guards": {
+    "noFormalPublication": true,
+    "noMediaWrites": true,
+    "noPdfOrSI": true,
+    "noAbstractCopy": true,
+    "notDailyNew": true,
+    "notPublisherIssueCoverageComplete": true
+  },
+  "batchDois": [
+    {
+      "doi": "10.1021/acs.joc.6c00182",
+      "officialPublishedOnline": "2026-07-02",
+      "publisherArticle": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00182",
+      "publisherIssue": "https://pubs.acs.org/joceah/issue/91/28",
+      "stageRootId": "2026-07-01_2026-07-07_joc",
+      "stageRootSha256": "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7",
+      "rawGitBlob": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+      "reviewQueueGitBlob": "e9329cb8a744736f9ad34288c1d3d0d6c54aef61",
+      "scientificFirstPass": "手性苯并咪唑配体配位锰催化剂对3-取代2H-1,4-苯并噁嗪进行不对称转移氢化，提供贵金属之外的手性3,4-二氢苯并噁嗪制备体系。",
+      "adversarialSecondPass": "第二遍质疑：是否只报道锰催化剂合成与表征？作者确实展示多种手性苯并噁嗪及克级有机转化，构成原创制备方法，但最大82% ee仍有优化空间，不应夸大其手性控制。",
+      "boundaries": "ACS官方JOC Article报告产物最高99%收率、82% ee，克级反应仍有立体选择性。两个上限并不代表同一底物数据；不能声称高于82% ee或任意杂环通用。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01588",
+      "officialPublishedOnline": "2026-08-24",
+      "publisherArticle": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01588/5326366/Asymmetric-Mannich-Reactions-Promoted-by-a",
+      "publisherIssue": "https://pubs.acs.org/joceah/issue/91/35",
+      "stageRootId": "2026-08-22_2026-08-31_joc",
+      "stageRootSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+      "rawGitBlob": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+      "reviewQueueGitBlob": "177ce47f670497b4972af032a9644a7a2c3c415b",
+      "scientificFirstPass": "引入吡啶鎓正电荷的双功能硫脲有机催化剂促进保护芳香醛亚胺与不同碳亲核试剂发生不对称Mannich反应，着眼于离子催化活性调节。",
+      "adversarialSecondPass": "第二遍质疑：二十倍活性提升是否只是分子物理效应？实验证明多种亲核体实际参与新C–C键制备，符合有机合成方法学；但受保护芳香醛亚胺的范围不支持声称脂肪族亚胺和所有底物都高ee。",
+      "boundaries": "ACS官方摘要显示相较中性类似催化剂，电荷活化催化剂同条件下反应活性约20倍，并可以减少用量和缩短反应时间；若干前手性β-酮酯产物有对映与非对映选择性证据。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02387",
+      "officialPublishedOnline": "2026-07-28",
+      "publisherArticle": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02387/5235343/Ni-II-Catalyzed-Enantioselective-Addition-of",
+      "publisherIssue": "https://pubs.acs.org/orlef7/issue/28/31",
+      "stageRootId": "2026-07-22_2026-07-31_organic-letters",
+      "stageRootSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+      "rawGitBlob": "67f6960bccfa31a1d2477390309426061dc65563",
+      "reviewQueueGitBlob": "45c411bb7519f5d80e4fd04071712c17d7a24af9",
+      "scientificFirstPass": "Ni(II)与联萘—脯氨酸—咪唑啉结构的手性三齿配体协同实现硫醇和硫酚对吡唑啉酮来源酮亚胺的不对称加成。",
+      "adversarialSecondPass": "第二遍质疑：是否只存在配体络合物和单一硫酚实例？原文包括硫醇及硫酚不同亲核体、克级实验和独立单晶数据，有足够的合成与立体结构证据。峰值收率与ee不等于所有底物水平。",
+      "boundaries": "ACS Organic Letters Letter官方摘要给出最高99%收率和99% ee，低催化剂用量、温和条件、不同底物、克级制备，并用X射线单晶衍射支持亚胺构型和产物绝对构型。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02217",
+      "officialPublishedOnline": "2026-08-18",
+      "publisherArticle": "https://pubs.acs.org/orlef7/article/28/34/10659/5272955/Palladium-Catalyzed-Difluorocarbene-Transfer",
+      "publisherIssue": "https://pubs.acs.org/orlef7/issue/28/34",
+      "stageRootId": "2026-08-15_2026-08-21_organic-letters",
+      "stageRootSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+      "rawGitBlob": "9b28580b6638049b3007fea208c8d489c769ed79",
+      "reviewQueueGitBlob": "5ff040b285c4168e2a317ffd6af3f0ed9c107e0c",
+      "scientificFirstPass": "用溴二氟乙酸钾作为无需直接使用一氧化碳气瓶的CO替代物，实现芳基噻蒽盐的钯催化羰基化酯化，建立安全便捷的芳香酯合成方法。",
+      "adversarialSecondPass": "第二遍质疑：论文前言涉及晚期C–H羰基化，是否误以为本反应可直接从未官能化芳烃生成芳香酯？底物实为预制芳基噻蒽盐，须保留前期噻蒽化步骤；该Pd催化的新羰基源仍构成明确制备贡献。",
+      "boundaries": "ACS Organic Letters摘要确认溴二氟乙酸钾商业可得、条件温和并具有官能团耐受性；官方Publisher Online为2026-08-18，期刊第28卷第34期10659–10664页。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05124",
+      "officialPublishedOnline": "2026-08-05",
+      "publisherArticle": "https://pubs.acs.org/accacs/article/doi/10.1021/acscatal.6c05124/5246569/Reprogramming-Transaminase-for-Enantioselective",
+      "publisherIssue": "https://pubs.acs.org/accacs/issue/16/16",
+      "stageRootId": "2026-08-01_2026-08-07_acs-catalysis",
+      "stageRootSha256": "037efd0e9bfd958b1a7dc9cd9bd07598bea808f7187d844bce038a1d97362919",
+      "rawGitBlob": "8170ee7aca54bb199f18c0d0e91bfff4527e0874",
+      "reviewQueueGitBlob": "b49a4de7ea6a7a5db35510431b14d6ed2714db0f",
+      "scientificFirstPass": "以来源于Arthrobacter的ω-转氨酶为基础，通过半理性突变获得ArTA-M2(G136M/S223P)，实现位阻明显的2,6-双取代螺[3.3]庚酮直接不对称转氨。",
+      "adversarialSecondPass": "第二遍质疑：若只有蛋白优化而缺乏普适反应，是否出界？文中实际有多种酮的立体选择性转胺、药物构件和克级制备，合成贡献成立；结合口袋突变的因果机理仍需谨慎，不把计算模型当直接观测。",
+      "boundaries": "ACS Catalysis官方Letter摘要描述较广2,6-取代螺庚酮范围，最高91%转化率、99% ee和克级全细胞制备；91%指转化率不是分离收率。分子对接与动力学是结合口袋机制的计算支持。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05113",
+      "officialPublishedOnline": "2026-09-26",
+      "publisherArticle": "https://pubs.acs.org/accacs/article/doi/10.1021/acscatal.6c05113/5439257/Bench-Stable-Rh-Chiraphos-Catalyzed-Asymmetric",
+      "publisherIssue": "",
+      "stageRootId": "2026-09-22_2026-09-30_acs-catalysis",
+      "stageRootSha256": "9c7a0340d23b2a880cca27c4b79b96253a37d56806969a763b34ccda39613ce3",
+      "rawGitBlob": "744c512a24b0c00c68b0d1b6895c3b3c351e88fa",
+      "reviewQueueGitBlob": "5ad5a7c291a5a5aafd08cd2fc932dc1df7da684f",
+      "scientificFirstPass": "构建空气稳定的[Rh(chiraphos)2]Cl催化体系，实现柠檬醛的不对称氢化与可循环工艺，解决传统体系对催化剂稳定性和底物构型敏感的局限。",
+      "adversarialSecondPass": "第二遍质疑：该工业转化早已有先例，论文会不会只是机理文章？其新的空气稳定Rh配合物可复用且有实证循环数据，属于具有方法改良价值的有机制备；研究主要限于柠檬醛，不能扩展到任意烯烃，也不能把DFT解释写为已直接证明。",
+      "boundaries": "原出版记录证实ACS Catalysis 2026-09-26 Published Online；可见公开摘要报道催化剂循环超过10次仍保持活性/对映选择性、总TON可达10,000，化学选择性与立体识别解释来自实验和DFT结合。"
+    }
+  ],
+  "uniqueApprovalsBefore": 145,
+  "uniqueApprovalsAfter": 151,
+  "pendingStill": 2
+}
