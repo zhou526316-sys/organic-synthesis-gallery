@@ -10,7 +10,7 @@
     "from": "2025-05-01",
     "to": "2025-05-31"
   },
-  "checkedAt": "2026-10-15T15:46:10.412Z",
+  "checkedAt": "2026-10-16T18:35:06.501Z",
   "status": "incomplete_sources",
   "sourceStatus": {
     "crossref": [
@@ -50,9 +50,9 @@
       "openalex": 100
     }
   },
-  "candidateCount": 553,
+  "candidateCount": 552,
   "alreadyPublished": 0,
-  "unreviewed": 553,
+  "unreviewed": 552,
   "records": [
     {
       "doi": "10.1002/anie.202418683",
@@ -12572,14 +12572,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1002/anie.202505509",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -24902,54 +24904,6 @@
       "url": "https://doi.org/10.1002/anie.202509300",
       "sources": [
         "crossref"
-      ],
-      "ingestionChannel": "historical_backfill",
-      "mediaPolicy": "metadata_only",
-      "discoveredIn": {
-        "from": "2025-05-01",
-        "to": "2025-05-31"
-      },
-      "existingGalleryRecord": false,
-      "reviewStatus": "unfinished",
-      "needsArticleEvidence": true,
-      "publicationDateMayDiffer": false
-    },
-    {
-      "doi": "10.1002/anie.202509322",
-      "title": "Deciphering the N─N Coupling Mechanism Over Iron–Copper Alloy Catalysts During Ammonia Decomposition",
-      "authors": [
-        "Xun Qi",
-        "Yu Zhang",
-        "Cai Chen",
-        "Jiarui Yang",
-        "Jie Wen",
-        "Zechao Zhuang",
-        "Zhicheng Zhang",
-        "Dingsheng S. Wang",
-        "Hui Zhang"
-      ],
-      "date": "2025-05-30",
-      "datePrecision": "day",
-      "needsPublisherDateVerification": false,
-      "journal": "Angewandte Chemie International Edition",
-      "citation": {
-        "year": 2025,
-        "volume": "64",
-        "issue": "31",
-        "pages": "e202509322-e202509322",
-        "articleNumber": "",
-        "doi": "10.1002/anie.202509322"
-      },
-      "abstract": {
-        "available": true,
-        "displayPermission": "not_verified",
-        "source": "openalex",
-        "storedText": false
-      },
-      "source": "openalex",
-      "url": "https://doi.org/10.1002/anie.202509322",
-      "sources": [
-        "openalex"
       ],
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",

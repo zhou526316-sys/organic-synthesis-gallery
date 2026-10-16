@@ -10,7 +10,7 @@
     "from": "2025-05-01",
     "to": "2025-05-31"
   },
-  "checkedAt": "2026-10-15T15:46:07.925Z",
+  "checkedAt": "2026-10-16T18:35:00.346Z",
   "status": "incomplete_sources",
   "sourceStatus": {
     "crossref": [
@@ -2398,16 +2398,18 @@
         "doi": "10.1021/jacs.4c18522"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1021/jacs.4c18522",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -7038,18 +7040,16 @@
         "doi": "10.1021/jacs.5c02818"
       },
       "abstract": {
-        "available": true,
+        "available": false,
         "displayPermission": "not_verified",
-        "source": "crossref+openalex",
+        "source": "crossref",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1021/jacs.5c02818",
       "sources": [
-        "crossref",
-        "openalex"
+        "crossref"
       ],
-      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {

@@ -9,7 +9,7 @@
     "from": "2025-07-01",
     "to": "2025-07-31"
   },
-  "checkedAt": "2026-10-15T15:45:43.208Z",
+  "checkedAt": "2026-10-16T18:34:39.852Z",
   "status": "incomplete_sources",
   "sourceStatus": {
     "crossref": [
@@ -81,14 +81,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/sciadv.adg3481",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -7113,14 +7115,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/sciadv.adv4636",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -9323,16 +9327,14 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref+openalex",
+        "source": "crossref",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/sciadv.adw1701",
       "sources": [
-        "crossref",
-        "openalex"
+        "crossref"
       ],
-      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -11014,16 +11016,14 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref+openalex",
+        "source": "crossref",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/sciadv.adw5701",
       "sources": [
-        "crossref",
-        "openalex"
+        "crossref"
       ],
-      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {

@@ -10,7 +10,7 @@
     "from": "2025-06-01",
     "to": "2025-06-30"
   },
-  "checkedAt": "2026-10-15T15:45:53.292Z",
+  "checkedAt": "2026-10-16T18:34:51.654Z",
   "status": "incomplete_sources",
   "sourceStatus": {
     "crossref": [
@@ -5807,16 +5807,14 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref+openalex",
+        "source": "crossref",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/science.ady9507",
       "sources": [
-        "crossref",
-        "openalex"
+        "crossref"
       ],
-      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -6746,14 +6744,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1126/science.adz6477",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {

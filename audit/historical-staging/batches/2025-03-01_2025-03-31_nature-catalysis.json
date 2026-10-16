@@ -1,0 +1,503 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-03-01",
+    "to": "2025-03-31"
+  },
+  "checkedAt": "2026-10-16T18:35:41.019Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 10,
+        "count": 10,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 10,
+      "count": 10,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 10,
+      "openalex": 10
+    }
+  },
+  "candidateCount": 10,
+  "alreadyPublished": 0,
+  "unreviewed": 10,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01306-9",
+      "title": "Enantioselective C–H annulations enabled by either nickel- or cobalt-electrocatalysed C–H activation for catalyst-controlled chemodivergence",
+      "authors": [
+        "Tristan von Münchow",
+        "Neeraj Kumar Pandit",
+        "Suman Dana",
+        "Philipp Boos",
+        "Sven Erik Peters",
+        "Josselin Boucat",
+        "Yi-Ru Liu",
+        "Alexej Scheremetjew",
+        "Lutz Ackermann"
+      ],
+      "date": "2025-03-07",
+      "datePrecision": "day",
+      "createdDate": "2025-03-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "257-269",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01306-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01306-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01307-8",
+      "title": "Proximity-independent acid–base synergy in a solid ZrOxHy catalyst for amine regeneration in post-combustion CO2 capture",
+      "authors": [
+        "Cheng Zhou",
+        "Mostafa Torka Beydokhti",
+        "Fatima Rammal",
+        "Parveen Kumar",
+        "Maxime Lacroix",
+        "Walter Vermeiren",
+        "Michiel Dusselier",
+        "Yuhe Liao",
+        "Bert F. Sels"
+      ],
+      "date": "2025-03-19",
+      "datePrecision": "day",
+      "createdDate": "2025-03-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "270-281",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01307-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01307-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01310-z",
+      "title": "Lighten the holes",
+      "authors": [
+        "Giulia Tagliabue"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "204-206",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01310-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01310-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01311-y",
+      "title": "Chemical capacitors for ammonia synthesis",
+      "authors": [
+        "A. Daisley",
+        "J. S. J. Hargreaves"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "200-201",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01311-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01311-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01312-x",
+      "title": "Iminium catalysis meets Diels–Alderase",
+      "authors": [
+        "Naoki Kato",
+        "Shingo Nagano"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "202-203",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01312-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01312-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01313-w",
+      "title": "Critical insights into the steam electrolysis electrode in protonic ceramic cells for hydrogen production",
+      "authors": [
+        "Meng Li",
+        "Fan Liu",
+        "Dong Ding"
+      ],
+      "date": "2025-03-28",
+      "datePrecision": "day",
+      "createdDate": "2025-03-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "293-300",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01313-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01313-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01317-6",
+      "title": "From polystyrene to phenol",
+      "authors": [
+        "Francesco Zamberlan"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "197-197",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01317-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01317-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01318-5",
+      "title": "Enzymological insights from ensembles",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "198-198",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01318-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01318-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01319-4",
+      "title": "Photoinduced nickel-catalysed enantioconvergent sp3–sp3 coupling of unactivated olefins and aziridines",
+      "authors": [
+        "Liangliang Zhang",
+        "Hao Wang",
+        "Tomás G. Santiago",
+        "Wen-Jun Yue",
+        "Ruben Martin"
+      ],
+      "date": "2025-03-28",
+      "datePrecision": "day",
+      "createdDate": "2025-03-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "348-356",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01319-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01319-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01321-w",
+      "title": "Recirculate to accumulate",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "199-199",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01321-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01321-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

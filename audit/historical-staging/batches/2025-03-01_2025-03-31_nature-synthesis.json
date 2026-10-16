@@ -1,0 +1,1207 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-03-01",
+    "to": "2025-03-31"
+  },
+  "checkedAt": "2026-10-16T18:35:41.722Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 23,
+        "count": 23,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 23,
+      "count": 23,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 23,
+      "openalex": 23
+    }
+  },
+  "candidateCount": 23,
+  "alreadyPublished": 0,
+  "unreviewed": 23,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00751-5",
+      "title": "Intracellular assembly of supramolecular peptide nanostructures controlled by visible light",
+      "authors": [
+        "Yong Ren",
+        "Zhixuan Zhou",
+        "Iain Harley",
+        "Özlem Aydin",
+        "Leon Driehaus-Ortiz",
+        "Anke Kaltbeitzel",
+        "Jiaqi Xing",
+        "Konrad Maxeiner",
+        "Ingo Lieberwirth",
+        "Katharina Landfester",
+        "David Y. W. Ng",
+        "Tanja Weil"
+      ],
+      "date": "2025-03-12",
+      "datePrecision": "day",
+      "createdDate": "2025-03-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "673-683",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00751-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00751-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00752-4",
+      "title": "Electrocatalytic CO2 hydrogenation to C2+ alcohols catalysed by Pr–Cu oxide heterointerfaces",
+      "authors": [
+        "Jiyuan Liu",
+        "Pengsong Li",
+        "Shuaiqiang Jia",
+        "Yong Wang",
+        "Lihong Jing",
+        "Zhimin Liu",
+        "Jianling Zhang",
+        "Qingli Qian",
+        "Xinchen Kang",
+        "Xiaofu Sun",
+        "Qinggong Zhu",
+        "Buxing Han"
+      ],
+      "date": "2025-03-13",
+      "datePrecision": "day",
+      "createdDate": "2025-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "730-743",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00752-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00752-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00756-0",
+      "title": "Compressive-strained rutile TiO2 enables O2 mono-hydrogenation for singlet oxygen electrosynthesis",
+      "authors": [
+        "Ruizhao Wang",
+        "Jie Dai",
+        "Long Zhao",
+        "Zhiwei Hu",
+        "Chien-Te Chen",
+        "Chang-Yang Kuo",
+        "Guangming Zhan",
+        "Yanbiao Shi",
+        "Jiaxian Wang",
+        "Yunjie Zou",
+        "Mingkai Xu",
+        "Xingyue Zou",
+        "Qian Zheng",
+        "Bing Zhou",
+        "Kaiyuan Wang",
+        "Rui Zhao",
+        "Yan Zhang",
+        "Yunhao Shen",
+        "Yancai Yao",
+        "Lizhi Zhang"
+      ],
+      "date": "2025-03-04",
+      "datePrecision": "day",
+      "createdDate": "2025-03-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "754-764",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00756-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00756-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00758-y",
+      "title": "Roll-to-roll synthesis of multielement heterostructured catalysts",
+      "authors": [
+        "Wenhui Shi",
+        "Hanwen Liu",
+        "Jianwei Zhang",
+        "Shenyu Shen",
+        "Yuhan Wang",
+        "Yaqing Guo",
+        "Kaihang Yue",
+        "Zihui Liang",
+        "Hao Zhang",
+        "Lei Zhang",
+        "Fatang Tan",
+        "Zhiqiang Liang",
+        "Yingjun Liu",
+        "Yaqiong Su",
+        "Dong Su",
+        "Yunhui Huang",
+        "Bao Yu Xia",
+        "Yonggang Yao"
+      ],
+      "date": "2025-03-13",
+      "datePrecision": "day",
+      "createdDate": "2025-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "836-847",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00758-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00758-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00759-x",
+      "title": "A three-step strategy for the conversion of pyridines into benzonitriles",
+      "authors": [
+        "Reyhan Güdük",
+        "Niklas Kehl",
+        "Chiara Stavagna",
+        "Michael J. Tilby",
+        "Oliver Turner",
+        "Alessandro Ruffoni",
+        "Henry P. Caldora",
+        "Daniele Leonori"
+      ],
+      "date": "2025-03-07",
+      "datePrecision": "day",
+      "createdDate": "2025-03-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "848-858",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00759-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00759-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00760-4",
+      "title": "Chain-growth synthesis of extensively cross-conjugated polyenes",
+      "authors": [
+        "Zi-Yuan Wang",
+        "Yi-Ze Xu",
+        "Zhanpeng Cui",
+        "Luo Zhang",
+        "Jia-Yu Lu",
+        "Yu-Qing Zheng",
+        "Rong Zhu"
+      ],
+      "date": "2025-03-10",
+      "datePrecision": "day",
+      "createdDate": "2025-03-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "702-709",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00760-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00760-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00761-3",
+      "title": "Extended dendralenes through cumulene polymerization",
+      "authors": [],
+      "date": "2025-03-10",
+      "datePrecision": "day",
+      "createdDate": "2025-03-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "671-672",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00761-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00761-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00762-2",
+      "title": "The combination of synthesis and ultra-high-resolution NMR spectroscopy reveals the correct structure of caylobolide A",
+      "authors": [
+        "Malcolm R. P. George",
+        "Max Deering",
+        "Daniele Fiorito",
+        "Keren Solomon",
+        "Kevin Tidgewell",
+        "Adam Noble",
+        "Craig P. Butts",
+        "Varinder K. Aggarwal"
+      ],
+      "date": "2025-03-13",
+      "datePrecision": "day",
+      "createdDate": "2025-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "859-868",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00762-2"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00762-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00763-1",
+      "title": "The synthesis of a neutral boryne",
+      "authors": [
+        "Maximilian Michel",
+        "Sourav Kar",
+        "Lukas Endres",
+        "Rian D. Dewhurst",
+        "Bernd Engels",
+        "Holger Braunschweig"
+      ],
+      "date": "2025-03-04",
+      "datePrecision": "day",
+      "createdDate": "2025-03-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "869-876",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00763-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00763-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00764-0",
+      "title": "Nanocrystal synthesis with alkoxy reagents for dispersion in polar and non-polar solvents",
+      "authors": [
+        "Suresh Sarkar",
+        "Opeyemi H. Arogundade",
+        "Yuxiao Cui",
+        "Erick I. Hernandez Alvarez",
+        "André Schleife",
+        "Andrew M. Smith"
+      ],
+      "date": "2025-03-20",
+      "datePrecision": "day",
+      "createdDate": "2025-03-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "826-835",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00764-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00764-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00765-z",
+      "title": "Sintering protonic zirconate cells with enhanced electrolysis stability and Faradaic efficiency",
+      "authors": [
+        "Wei Tang",
+        "Wenjuan Bian",
+        "Hanping Ding",
+        "Yong Ding",
+        "Zeyu Zhao",
+        "Quanwen Sun",
+        "Samuel Koomson",
+        "You Wang",
+        "Boshen Xu",
+        "Pei Dong",
+        "Dongchang Chen",
+        "Joshua Y. Gomez",
+        "Wuxiang Feng",
+        "Wei Wu",
+        "Meng Zhou",
+        "Yanhao Dong",
+        "Hongmei Luo",
+        "Ju Li",
+        "Dong Ding"
+      ],
+      "date": "2025-03-14",
+      "datePrecision": "day",
+      "createdDate": "2025-03-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "592-602",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00765-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00765-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00767-x",
+      "title": "Direct preparation of two-dimensional platelets from polymers enabled by accelerated seed formation",
+      "authors": [
+        "Laihui Xiao",
+        "Tianlai Xia",
+        "Jian Zhang",
+        "Sam J. Parkinson",
+        "Julia Y. Rho",
+        "Andrew P. Dove",
+        "Rachel K. O’ Reilly"
+      ],
+      "date": "2025-03-14",
+      "datePrecision": "day",
+      "createdDate": "2025-03-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "808-815",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00767-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00767-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00768-w",
+      "title": "Water-stable nanocrystals in a single step",
+      "authors": [],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "785-786",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00768-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00768-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00769-9",
+      "title": "Industrial-level CO2 to formate conversion on Turing-structured electrocatalysts",
+      "authors": [
+        "Na Ye",
+        "Kai Wang",
+        "Yingjun Tan",
+        "Zhengyi Qian",
+        "Hongyu Guo",
+        "Changshuai Shang",
+        "Zheng Lin",
+        "Qizheng Huang",
+        "Youxing Liu",
+        "Lu Li",
+        "Yu Gu",
+        "Ying Han",
+        "Chenhui Zhou",
+        "Mingchuan Luo",
+        "Shaojun Guo"
+      ],
+      "date": "2025-03-20",
+      "datePrecision": "day",
+      "createdDate": "2025-03-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "799-807",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00769-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00769-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00771-1",
+      "title": "Iron-catalysed direct coupling of organosodium compounds",
+      "authors": [
+        "Ikko Takahashi",
+        "Andreu Tortajada",
+        "David E. Anderson",
+        "Laurean Ilies",
+        "Eva Hevia",
+        "Sobi Asako"
+      ],
+      "date": "2025-03-25",
+      "datePrecision": "day",
+      "createdDate": "2025-03-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "816-825",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00771-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00771-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00773-z",
+      "title": "Synthesis of a 2D tungsten MXene for electrocatalysis",
+      "authors": [
+        "Anupma Thakur",
+        "Wyatt J. Highland",
+        "Brian C. Wyatt",
+        "Jiayi Xu",
+        "Nithin Chandran B. S",
+        "Bowen Zhang",
+        "Zachary D. Hood",
+        "Shiba P. Adhikari",
+        "Emad Oveisi",
+        "Barbara Pacakova",
+        "Fernando Vega",
+        "Jeffrey Simon",
+        "Colton Fruhling",
+        "Benjamin Reigle",
+        "Mohammad Asadi",
+        "Pawel P. Michałowski",
+        "Vladimir M. Shalaev",
+        "Alexandra Boltasseva",
+        "Thomas E. Beechem",
+        "Cong Liu",
+        "Babak Anasori"
+      ],
+      "date": "2025-03-28",
+      "datePrecision": "day",
+      "createdDate": "2025-03-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "888-900",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00773-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00773-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00774-y",
+      "title": "Unassisted electrochemical H2O2 production coupled to glycerol oxidation",
+      "authors": [
+        "Dongrak Oh",
+        "Seon Woo Hwang",
+        "Dong Yeon Kim",
+        "Jesse E. Matthews",
+        "Jinyoung Lee",
+        "Jaime E. Avilés Acosta",
+        "Sang-Won Lee",
+        "Yi Xu",
+        "Ara Cho",
+        "Dong Un Lee",
+        "Thomas F. Jaramillo",
+        "Dong-Hwa Seo",
+        "Ji-Wook Jang"
+      ],
+      "date": "2025-03-20",
+      "datePrecision": "day",
+      "createdDate": "2025-03-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "931-939",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00774-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00774-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00775-x",
+      "title": "Spirocycles by transfer",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2025-03-05",
+      "datePrecision": "day",
+      "createdDate": "2025-03-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "275-275",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00775-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00775-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00777-9",
+      "title": "CO2 hydrogenation",
+      "authors": [],
+      "date": "2025-03-13",
+      "datePrecision": "day",
+      "createdDate": "2025-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "273-273",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00777-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00777-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00778-8",
+      "title": "Scalable and precise synthesis of polymer nanoparticles",
+      "authors": [
+        "Chun Feng"
+      ],
+      "date": "2025-03-24",
+      "datePrecision": "day",
+      "createdDate": "2025-03-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "781-782",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00778-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00778-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00779-7",
+      "title": "Coupling reactions using iron–sodium pairs",
+      "authors": [
+        "Jos Briggs-Pritchard",
+        "Michael L. Neidig"
+      ],
+      "date": "2025-03-26",
+      "datePrecision": "day",
+      "createdDate": "2025-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "783-784",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00779-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00779-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00780-0",
+      "title": "Ligand-induced self-assembly of twisted two-dimensional halide perovskites",
+      "authors": [
+        "Jonghee Yang",
+        "Addis S. Fuhr",
+        "Subeom Shin",
+        "Kevin M. Roccapriore",
+        "Bogdan Dryzhakov",
+        "Bin Hu",
+        "Byeongjoo Kang",
+        "Hyungju Ahn",
+        "Woojae Kim",
+        "Bobby G. Sumpter",
+        "Sergei V. Kalinin",
+        "Mahshid Ahmadi"
+      ],
+      "date": "2025-03-28",
+      "datePrecision": "day",
+      "createdDate": "2025-03-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "9",
+        "pages": "1068-1077",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00780-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00780-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00794-8",
+      "title": "Intermolecular 1,2,4-thiadiazole synthesis",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-03-31",
+      "datePrecision": "day",
+      "createdDate": "2025-03-31",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "411-411",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00794-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00794-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-03-01",
+        "to": "2025-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
