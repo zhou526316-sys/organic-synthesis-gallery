@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261015-0859-historical-text-v029-owner-diagnostic-confirm",
-  "requestedAt": "2026-10-15T00:59:00Z",
+  "requestId": "20261016012001-historical-text-v0210-user-paused-14of573-diagnostic",
+  "requestedAt": "2026-10-16T01:20:01.845Z",
   "mode": "read_only",
   "scope": "recent_200_metadata_events_only",
-  "purpose": "Read latest 200 private metadata-only historical-text publisher capture diagnostics after canonical v0.2.9 deployment; separate actual v0.2.9 terminal attempts, licence hydration pending/verified, HTTP 403/429 and publisher-script no-confirmation. Never infer the fix was browser-validated if no v0.2.9 attempts. No text or publisher access.",
+  "purpose": "Investigate real v0.2.10 historical body run showing 14 of 573 publisher DOI attempts, zero new saved, 3 licence uncertainty, 11 other failures and publisher_script_not_confirmed on doi 10.1126/sciadv.aeh2073. Aggregate by version, publisher and reason without releasing DOI, article content, URLs or credentials. Read only; no publisher visits, updates to media, or FTS.",
   "noSourceContent": true,
   "noPublisherAccess": true,
   "noWrites": true
