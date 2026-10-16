@@ -1,0 +1,35 @@
+name: WeChat Oct16 source preflight
+on:
+  push:
+    branches: [wechat-oct16-jacs-levin-r1]
+    paths: ['audit/automation-triggers/wechat-oct16-source-preflight.json']
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bundle only source code and reviewed editorial context; no credentials
+        run: |
+          python3 - <<'PY'
+          import pathlib, zipfile, json, subprocess
+          r=pathlib.Path('.')
+          paths={'PROJECT_RULES.md','audit/literature-update-state.json','audit/wechat-publisher/latest.json','audit/automation-triggers/wechat-publisher-request.json','audit/wechat-working/2026-10-15-review-gate.json','audit/wechat-working/2026-10-16-owner-selected-pair.json'}
+          for pat in ['ops/wechat-publisher/*.py','docs/wechat*.md','.github/workflows/wechat*.yml','scripts/*wechat*oct15*','public/wechat-editions/2026-10-15.json','public/wechat-editions/2026-10-16.json','public/wechat-featured/2026-10-15.json','public/wechat-retrospective/*20261015.json','audit/wechat-working/2026-10-16*','audit/*2026-10-16-0800*.json','*.json','shared/literature-journals.js']:
+            paths.update(str(p) for p in r.glob(pat) if p.is_file())
+          safe=[]
+          for x in sorted(paths):
+            p=r/x
+            if p.is_file() and p.stat().st_size<10000000 and not any(v in x.lower() for v in ['secret','token','credential','.env']):safe.append(x)
+          with zipfile.ZipFile('/tmp/oct16-source-preflight.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for x in safe:z.write(x,x)
+            z.writestr('SOURCE_SHA.txt',subprocess.check_output(['git','rev-parse','HEAD']).decode())
+          print(json.dumps({'sourceFiles':len(safe),'archiveBytes':pathlib.Path('/tmp/oct16-source-preflight.zip').stat().st_size,'noWeChatWrite':True}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oct16-source-preflight
+          path: /tmp/oct16-source-preflight.zip
+          retention-days: 7
