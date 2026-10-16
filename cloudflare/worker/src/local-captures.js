@@ -705,6 +705,59 @@ async function readStrictCaptureIndex(env,key) {
   return data;
 }
 
+// DOI inventory fast path: R2 object metadata is checked on every request;
+// only a matching immutable ETag may reuse parsed bytes. In one Worker isolate
+// 15 DOI chunks must not each re-download/parse the same multi-MB index.
+// No stale cache may manufacture an absent-media receipt.
+const captureInventoryReadCache=new Map();
+const captureInventoryReadInflight=new Map();
+async function readCaptureIndexByEtag(env,key){
+  if(typeof env?.MEDIA?.head!=='function')
+    return {index:await readStrictCaptureIndex(env,key),byDoi:null,hit:false,legacy:true};
+  const head=await env.MEDIA.head(key);
+  if(!head){
+    captureInventoryReadCache.delete(key);
+    return {index:{items:{}},byDoi:new Map(),hit:false};
+  }
+  const etag=String(head.etag||'');
+  if(!etag)return {index:await readStrictCaptureIndex(env,key),byDoi:null,hit:false,legacy:true};
+  const cached=captureInventoryReadCache.get(key);
+  if(cached&&cached.etag===etag)return {index:cached.index,byDoi:cached.byDoi,hit:true};
+  const flight=captureInventoryReadInflight.get(key);
+  if(flight&&flight.etag===etag)return flight.promise;
+  const promise=(async()=>{
+    const object=await env.MEDIA.get(key);
+    // An index changed between HEAD and GET: retry via the next inventory
+    // request rather than using an incoherent positive/negative snapshot.
+    if(!object||String(object.etag||'')!==etag)throw new Error('inventory_index_generation_changed');
+    const raw=await object.text();
+    const index=JSON.parse(raw);
+    if(!index||!index.items||typeof index.items!=='object'||Array.isArray(index.items))
+      throw new Error('invalid_capture_inventory_index');
+    const byDoi=new Map();
+    for(const [identity,item] of Object.entries(index.items)){
+      const doi=normalizeDoi(item?.doi);
+      if(!doi)continue;
+      if(!byDoi.has(doi))byDoi.set(doi,{});
+      byDoi.get(doi)[identity]=item;
+    }
+    captureInventoryReadCache.set(key,{etag,index,byDoi});
+    return {index,byDoi,hit:false};
+  })();
+  captureInventoryReadInflight.set(key,{etag,promise});
+  try{return await promise;}
+  finally{if(captureInventoryReadInflight.get(key)?.promise===promise)captureInventoryReadInflight.delete(key);}
+}
+function inventoryEntriesForDois(snapshot,dois){
+  if(!snapshot.byDoi)return snapshot.index;
+  const items={};
+  for(const doi of dois){
+    const group=snapshot.byDoi.get(doi);
+    if(group)Object.assign(items,group);
+  }
+  return {items};
+}
+
 export async function getStagedArticleFigures(request, env) {
   if(new URL(request.url).searchParams.get('publication')==='1')
     return publicationPage(request,env,ARTICLE_FIGURE_STAGE_INDEX_KEY,'stage',index=>Object.values(index.items||{})
@@ -716,8 +769,14 @@ export async function getStagedArticleFigures(request, env) {
     try{scope=requestedInventoryDoiScope(request);}
     catch(error){return {status:400,body:{error:String(error.message||error)}};}
     try{
-      const [stage,reports]=await Promise.all([readStrictCaptureIndex(env,ARTICLE_FIGURE_STAGE_INDEX_KEY),readStrictCaptureIndex(env,TAMPERMONKEY_REPORT_INDEX_KEY)]);
-      return {status:200,body:compactStageCaptureInventory(stage,reports,scope)};
+      const started=Date.now();
+      const [stage,reports]=await Promise.all([readCaptureIndexByEtag(env,ARTICLE_FIGURE_STAGE_INDEX_KEY),readCaptureIndexByEtag(env,TAMPERMONKEY_REPORT_INDEX_KEY)]);
+      const result=compactStageCaptureInventory(scope?inventoryEntriesForDois(stage,scope):stage.index,
+        scope?inventoryEntriesForDois(reports,scope):reports.index,scope);
+      result.inventoryReadMs=Date.now()-started;
+      result.inventoryCacheHits=Number(stage.hit)+Number(reports.hit);
+      result.inventoryIndexMode='etag-verified-doi-projection-v1';
+      return {status:200,body:result};
     }catch{return {status:503,body:{error:'capture_inventory_unavailable'}};}
   }
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
@@ -1292,7 +1351,11 @@ export async function getLocalCaptureIndex(request, env) {
   let scope;
   try{scope=requestedInventoryDoiScope(request);}
   catch(error){return {status:400,body:{error:String(error.message||error)}};}
-  const index = await readIndex(env);
+  const started=Date.now();
+  let snapshot;
+  try{snapshot=scope?await readCaptureIndexByEtag(env,INDEX_KEY):{index:await readIndex(env),hit:false,byDoi:null};}
+  catch{return {status:503,body:{error:'capture_inventory_unavailable'}};}
+  const index=scope?inventoryEntriesForDois(snapshot,scope):snapshot.index;
   const rawItems = Object.values(index.items || {});
   const scopeSet=scope?new Set(scope):null;
   const validItems = rawItems.filter(item => {
@@ -1314,7 +1377,8 @@ export async function getLocalCaptureIndex(request, env) {
       invalidFiltered: rawItems.length - validItems.length,
       items,
       ...(scope?{scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:scope.length,
-        requestedDois:scope,complete:true}: {}),
+        requestedDois:scope,complete:true,inventoryIndexMode:'etag-verified-doi-projection-v1',
+        inventoryCacheHits:Number(snapshot.hit),inventoryReadMs:Date.now()-started}: {}),
     },
   };
 }
