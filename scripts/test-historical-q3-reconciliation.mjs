@@ -506,6 +506,7 @@ test('archived Q1-first-online paper in a Q3 issue root is never counted as a Q3
       publisherOnlineDate:'2026-01-11',
       firstOnlineDateEvidence:{
         officialPublisherFirstOnline:'2026-01-11',
+        sourceFrozenDate:sourceDay,
         stageApiDate:sourceDay,
         stageDateIsIssueNotPublication:true
       }
@@ -529,4 +530,40 @@ test('archived Q1-first-online paper in a Q3 issue root is never counted as a Q3
     /q3_historical_offquarter_source_evidence_invalid/);
   assert.throws(()=>reconcileQ3(withBadReceipt({publisherOnlineDate:'2026-08-01'})),
     /q3_historical_offquarter_source_evidence_invalid/);
+});
+
+test('in-Q3 issue dates must also be corrected by DOI and exact frozen root SHA',()=>{
+  const id='10.1021/acs.joc.6c00007',issueDay='2026-07-04',onlineDay='2026-07-02';
+  const source={doi:id,title:'Original asymmetric annulation issue-dated in July',
+    date:issueDay};
+  const expanded=shard(j1,'JOC',[...a.records,source]);
+  const corrected={
+    doi:id,date:onlineDay,ingestionChannel:'historical_backfill',
+    mediaPolicy:'toc_only',
+    reviewEvidence:{
+      stageBatchId:j1,stageSourceSha256:sha(j1),
+      publisherOnlineDate:onlineDay,
+      firstOnlineDateEvidence:{
+        sourceFrozenDate:issueDay,stageApiDate:issueDay,
+        officialPublisherFirstOnline:onlineDay,stageDateIsIssueNotPublication:true
+      }
+    }
+  };
+  const next={...input,shards:[expanded,b,c],
+    manifest:{accepted:[...manifest.accepted,corrected],pending:[]}};
+  const {coverage,worklist}=reconcileQ3(next);
+  assert.equal(coverage.counters.sourcePublisherDateDiscrepancies,1);
+  assert.equal(coverage.counters.sourcePublisherVerifiedOutsideQ3,0);
+  assert.equal(coverage.counters.sourceApprovedWaiting08,2);
+  assert.equal(coverage.counters.reviewedQ3Waiting08,2);
+  assert.equal(coverage.counters.unfinishedQ3OrDateVerification,3);
+  assert.equal(worklist.rows.some(x=>x.doi===id),false);
+  const broken=(changes)=>({...next,
+    manifest:{accepted:[...manifest.accepted,{
+      ...corrected,reviewEvidence:{...corrected.reviewEvidence,...changes}
+    }],pending:[]}});
+  assert.throws(()=>reconcileQ3(broken({stageSourceSha256:'0'.repeat(64)})),
+    /q3_historical_inquarter_issue_date_evidence_invalid/);
+  assert.throws(()=>reconcileQ3(broken({publisherOnlineDate:'2026-09-01'})),
+    /q3_historical_inquarter_issue_date_evidence_invalid/);
 });
