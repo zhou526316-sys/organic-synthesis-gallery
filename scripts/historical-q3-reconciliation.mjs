@@ -515,24 +515,30 @@ export function reconcileQ3({
     if(officialChem){
       counters.sourcePublisherDateDiscrepancies++;c.publisherDateDiscrepancies++;
     }
-    // A source root may be an issue-month bucket, not the first public online
-    // month. Use only DOI-specific previously approved publisher-date evidence
-    // pinned to this exact immutable root+SHA to classify Q1 papers in a Q3
-    // source census. Preserve the wrong source row; never fabricate a Q3 paper.
+    // A frozen Q3 source bucket may use an ISSUE day, not first public
+    // online publication. Respect only DOI-exact, source-SHA-pinned publisher
+    // evidence already approved academically. This applies both to Q1/Q2
+    // records falsely occurring in Q3 source and Q3-to-Q3 month corrections.
+    // Never rewrite the immutable Crossref/OpenAlex source shard.
     const archivedApproval=acceptedByDoi.get(row.doi);
     const archivedProof=archivedApproval?.reviewEvidence;
     const markedAsIssueDate=archivedProof?.firstOnlineDateEvidence?.stageDateIsIssueNotPublication===true;
     const archiveOutOfQuarter=Boolean(markedAsIssueDate && archivedApproval?.date
       && !publishedQ3(archivedApproval.date));
-    if(archiveOutOfQuarter){
-      ensure(archivedProof?.publisherOnlineDate===archivedApproval.date
-        && archivedProof?.firstOnlineDateEvidence?.officialPublisherFirstOnline===archivedApproval.date
+    if(markedAsIssueDate){
+      const authoritativeDate=archivedApproval?.date;
+      const expectedMedia=publishedQ3(authoritativeDate)?'toc_only':'metadata_only';
+      ensure(Boolean(authoritativeDate)&&authoritativeDate!==row.date
+        && archivedProof?.publisherOnlineDate===authoritativeDate
+        && archivedProof?.firstOnlineDateEvidence?.officialPublisherFirstOnline===authoritativeDate
+        && archivedProof?.firstOnlineDateEvidence?.sourceFrozenDate===row.date
         && archivedProof?.firstOnlineDateEvidence?.stageApiDate===row.date
         && row.sourceRoots.includes(archivedProof.stageBatchId)
         && row.sourceHashes.includes(archivedProof.stageSourceSha256)
         && archivedApproval.ingestionChannel==='historical_backfill'
-        && archivedApproval.mediaPolicy==='metadata_only',
-        'q3_historical_offquarter_source_evidence_invalid:'+row.doi);
+        && archivedApproval.mediaPolicy===expectedMedia,
+        (archiveOutOfQuarter?'q3_historical_offquarter_source_evidence_invalid:'
+          :'q3_historical_inquarter_issue_date_evidence_invalid:')+row.doi);
       counters.sourcePublisherDateDiscrepancies++;
       c.publisherDateDiscrepancies++;
     }
