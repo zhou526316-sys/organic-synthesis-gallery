@@ -223,6 +223,8 @@ def load_latest_release():
     for doi in dois:
         paper = dict(index.get(doi) or {})
         paper["doi"] = doi
+        from reviewed_daily_metadata import complete_authors
+        paper = complete_authors(ROOT, slot, paper)
         if not paper.get("titleZh") and translations.get(doi):
             paper["titleZh"] = translations[doi]
         paper["authors"] = [

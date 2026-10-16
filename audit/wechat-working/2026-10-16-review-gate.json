@@ -35,7 +35,7 @@
     },
     {
       "path": "ops/wechat-publisher/create-draft.py",
-      "blobSha": "2d35de029b4c24c40e299de29a28236e43f2a6f9"
+      "blobSha": "1280c0ddcb0d567ff492838f325ec1d101935ff5"
     },
     {
       "path": "audit/wechat-working/2026-10-16-r2-review/retro-text-only.md",
@@ -96,6 +96,18 @@
     {
       "path": "audit/wechat-working/2026-10-16-r2-review/mobile-layout-qa.json",
       "blobSha": "85512f5552da85c09040c6c943a28a1913165d62"
+    },
+    {
+      "path": "ops/wechat-publisher/reviewed_daily_metadata.py",
+      "blobSha": "6b2113d414bf5a1bde1d607b09bf544b5a548bb1"
+    },
+    {
+      "path": "scripts/test-wechat-reviewed-daily-metadata.py",
+      "blobSha": "3e3131fd8b1231caadd14f1bdad40ec350870dcd"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-16-integration-author-evidence.json",
+      "blobSha": "6491588600eb5afd44ab703f668d57fa5b5060d1"
     }
   ],
   "assets": [
@@ -330,5 +342,12 @@
   "sourceUncertaintiesDocumented": true,
   "nativeWechatClientInspected": false,
   "newOct16DraftAuthorized": true,
-  "priorOct15MediaToPreserve": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63"
+  "priorOct15MediaToPreserve": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
+  "integrationAdjustment": {
+    "reason": "Frozen Gallery records must not be rewritten for a draft. Complete one verified missing author field in memory only.",
+    "scientificNarrativeChanged": false,
+    "imagesChanged": false,
+    "frozenPublicationChanged": false,
+    "requiresActualIntegrationPass": true
+  }
 }
