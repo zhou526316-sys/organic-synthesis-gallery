@@ -724,9 +724,11 @@
       clearInterval(leaseTimer);
       if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
       db.close();batchActive=false;
-      batchStatusWrite({state:batchPaused||rateLimited?'paused':'finished',
+      const requestedPause=batchPaused;
+      batchPaused=false; // Reset before the UI renders its terminal state.
+      batchStatusWrite({state:requestedPause||rateLimited?'paused':'finished',
+        currentStage:requestedPause?'本轮已暂停':rateLimited?'官方 OA 接口限流，剩余待续':'本轮已结束',
         attempted,saved,failed,rightsPending,finishedAt:Date.now()});
-      batchPaused=false;
     }
   }
 
@@ -1245,14 +1247,14 @@
     });
     const refresh=()=>{
       const s=GM_getValue(BATCH_STATE,{})||{};
-      const progress=[s.state==='loading'?'读取全库注册表中':s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
+      const progress=[s.state==='loading'?'读取全库注册表中':s.state==='running'?'运行中':s.state==='pausing'?'准备暂停…':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
         '留供检查的出版社页 '+Number(s.reviewTabs||0)+' / '+BATCH_MAX_REVIEW_TABS,
-        s.currentStage?'当前阶段：'+s.currentStage:'',
-        s.lastDoi?'当前/最近：'+s.lastDoi:'',
-        s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
+        s.currentStage?(batchActive?'当前阶段：':'最终状态：')+s.currentStage:'',
+        s.lastDoi?(batchActive?'当前 DOI：':'最后处理 DOI：')+s.lastDoi:'',
+        s.lastError?(batchActive?'本地错误：':'上次受阻：')+String(s.lastError).slice(0,85):''].filter(Boolean);
       const diag=GM_getValue(BATCH_DIAG_STATE,{})||{};
       const tokenConfigured=Boolean(batchReportToken());
       configure.textContent=tokenConfigured?'更换诊断密钥':'配置诊断密钥';
@@ -1268,8 +1270,9 @@
       start.disabled=batchActive||s.state==='loading';
       openOa.disabled=batchActive||s.state==='loading';
       coverageButton.disabled=false;
-      pause.disabled=!batchActive;
-      pause.textContent=batchPaused?'准备暂停…':'暂停';
+      pause.disabled=!batchActive||batchPaused;
+      pause.textContent=batchActive&&batchPaused?'准备暂停…'
+        :!batchActive&&s.state==='paused'?'已暂停':'暂停';
     };
     coverageButton.addEventListener('click',()=>{
       coverageDetails.style.display='block';
@@ -1308,7 +1311,11 @@
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
-    pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
+    pause.addEventListener('click',()=>{
+      if(!batchActive||batchPaused)return;
+      batchPaused=true;
+      batchStatusWrite({state:'pausing',currentStage:'等待当前 DOI 结束后暂停'});
+    });
     recheck.addEventListener('click',()=>void batchStart(true,'blocked').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
@@ -1823,9 +1830,11 @@
       if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
       GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
       db.close();batchActive=false;
-      batchStatusWrite({state:batchPaused?'paused':'finished',attempted,saved,
-        rightsPending,failed,skipped,finishedAt:Date.now()});
-      batchPaused=false;
+      const requestedPause=batchPaused;
+      batchPaused=false; // A final render must never say both paused and pausing.
+      batchStatusWrite({state:requestedPause?'paused':'finished',
+        currentStage:requestedPause?'本轮已暂停':'本轮已结束',
+        attempted,saved,rightsPending,failed,skipped,finishedAt:Date.now()});
     }
   }
   // Wait for relevant DOM hydration, not a long fixed sleep or blind 24s timeout.
