@@ -89,9 +89,9 @@ test('separate chemistry and mechanism boundaries not conflated',()=>{
  assert.match(s('10.1021/acs.orglett.6c02330').generalityEvidence,/99% ee/);
  assert.match(s('10.1021/acs.orglett.6c02710').boundaryChallenge,/缩酮/);
  assert.match(s('10.1021/acs.orglett.6c02414').generalityEvidence,/NUSIOC-Phos/);
- assert.match(s('10.1021/acs.orglett.6c03033').generalityEvidence,/Pd\\(0\\)\\/Pd\\(II\\)/);
+ assert.ok(s('10.1021/acs.orglett.6c03033').generalityEvidence.includes('Pd(0)/Pd(II)'));
  assert.match(s('10.1021/acs.joc.6c00990').boundaryChallenge,/吡啶羧酸/);
- assert.match(s('10.1021/acs.joc.6c00158').preparativeTransformation,/Rh\\(III\\)/);
+ assert.ok(s('10.1021/acs.joc.6c00158').preparativeTransformation.includes('Rh(III)'));
  assert.match(s('10.1021/acs.joc.6c00634').boundaryChallenge,/全合成/);
  assert.match(s('10.1002/anie.2349367').boundaryChallenge,/HAT/);
  assert.equal(accepted.has('10.1021/acs.joc.6c01623'),false);
