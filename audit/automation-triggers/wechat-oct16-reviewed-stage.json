@@ -1,13 +1,14 @@
 {
   "date":"2026-10-16",
   "revision":"2026-10-16-r1",
-  "requestId":"oct16-reviewed-two-paper-original-raster-stage-once",
+  "requestId":"oct16-reviewed-source-stage-author-metadata-repaired",
   "selectedDois":["10.1021/jacs.6c17168","10.1038/s41586-026-10933-6"],
   "archiveSha256":"fbf33d3d7e52802c548cb52d29d130b04aed6d0277502a4b04cc991f29a6d921",
   "scienceImages":41,
   "covers":2,
   "sourceFiles":54,
   "expectedDailyCount":35,
+  "retryReason":"Strict publisher metadata gate correctly refused one already-published daily paper with missing authors. Restore its seven authors from Nature's DOI-bound author list; no counts or selected article prose changed.",
   "draftWritePerformed":false,
   "publicSendAuthorized":false
 }
