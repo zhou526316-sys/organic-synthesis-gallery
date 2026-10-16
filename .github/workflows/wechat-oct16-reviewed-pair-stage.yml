@@ -1,0 +1,28 @@
+name: WeChat Oct16 reviewed pair staging
+on:
+  push:
+    branches: [wechat-oct16-jacs-levin-r1]
+    paths: ['audit/automation-triggers/wechat-oct16-reviewed-stage.json']
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import original rasters and source-hashed editorial gate
+        env:
+          REVIEWED_ARCHIVE_URL: https://at.adobe.com/RxR23Iu8LiWBNe4e
+        run: python3 scripts/wechat-oct16-stage-reviewed-pair.py
+      - name: Commit only reviewed Oct16 editorial data, remove temporary staging machinery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/wechat-oct16-source-preflight.yml audit/automation-triggers/wechat-oct16-source-preflight.json .github/workflows/wechat-oct16-reviewed-pair-stage.yml audit/automation-triggers/wechat-oct16-reviewed-stage.json scripts/wechat-oct16-stage-reviewed-pair.py
+          git add public/wechat-assets/reviewed/2026-10-16-r1/ public/wechat-featured/2026-10-16.json public/wechat-retrospective/levin-isoxazole-to-pyrrole-20261016.json public/wechat-editions/2026-10-16.json audit/wechat-working/2026-10-16-r1/ audit/wechat-working/2026-10-16-review-gate.json
+          git diff --cached --check
+          git commit -m 'editorial(wechat): Oct16 complete JACS and Levin deep reads, authentic 41 figures and two source covers'
+          git push origin HEAD:wechat-oct16-jacs-levin-r1
