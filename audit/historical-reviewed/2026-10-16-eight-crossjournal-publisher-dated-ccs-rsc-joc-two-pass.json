@@ -1,0 +1,1028 @@
+{
+  "schemaVersion": "gallery-historical-eight-ccs-rsc-joc-20261016-v1",
+  "reviewedAt": "2026-10-16T06:48:14.954Z",
+  "mode": "doi_exclusive_official_publisher_first_online_two_pass_science_only",
+  "reviewMethod": "same_ai_assistant_first_pass_and_independent_adversarial_second_challenge_not_two_separate_human_reviewers",
+  "baselineAccepted": 210,
+  "newApprovals": 8,
+  "sourceBranch": "staging/historical-archive-nightly",
+  "approved": [
+    {
+      "doi": "10.31635/ccschem.026.202607790",
+      "journal": "CCS Chemistry",
+      "title": "Enantioselective Construction of 1,3-Nonadjacent Stereocenters via 1,2-Difunctionalization of Alkenes Under Visible Light",
+      "titleZh": "光氧化还原、镍和铜三重催化烯烃不对称双官能团化构筑1,3-非相邻立体中心",
+      "date": "2026-07-03",
+      "authors": [
+        "Xue-Song Zhou",
+        "Wen-Yuan Qu",
+        "Wen-Jing Xiao",
+        "Ying Cheng",
+        "Jia-Rong Chen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-11",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607790"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过光氧化还原、手性镍路易斯酸和手性铜协同三重催化，完成烯烃的对映选择性1,2-双官能团化，并在产物上依次建立1,3-非相邻立体中心。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607790，正式首次公开 2026-07-03，对应 CCS_original_research。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-03，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "第一遍易把两次立体控制合并误说成一个Ni催化手性自由基捕获。文章明确镍配合物控制首步α-羰基自由基对烯烃加成，随后Cu介导苄基自由基不对称氰化；对于部分底物d.r.偏低、降温到−20℃未能改善。提出的Ni/Cu氧化还原路径和Cu(III)中间体属于机理实验所支持的模型，而非每个中间体独立原位确证。",
+      "scopeAssessment": {
+        "primaryContribution": "通过光氧化还原、手性镍路易斯酸和手性铜协同三重催化，完成烯烃的对映选择性1,2-双官能团化，并在产物上依次建立1,3-非相邻立体中心。",
+        "preparativeTransformation": "以β-酮羰基底物、芳基烯烃和三甲基硅基氰TMSCN为三组分，镍配位烯醇盐经历光诱导SET形成α-羰基自由基，加成烯烃后形成苄基自由基，随后铜催化不对称氰化形成第二个C–C键。",
+        "generalityEvidence": "CCS Chemistry原创Research全文提供β-酮酯/酰胺及多取代苯乙烯范围，分别控制ee和dr；不同β-酮羰基伙伴表现不同，苯并呋喃酮及吲哚酮相关底物仅约56%、46%分离收率且立体选择性降低。全称为光/Ni/Cu三种协同催化，不是单一铜催化的一个立体中心。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607790，正式首次公开 2026-07-03，对应 CCS_original_research。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-03，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "第一遍易把两次立体控制合并误说成一个Ni催化手性自由基捕获。文章明确镍配合物控制首步α-羰基自由基对烯烃加成，随后Cu介导苄基自由基不对称氰化；对于部分底物d.r.偏低、降温到−20℃未能改善。提出的Ni/Cu氧化还原路径和Cu(III)中间体属于机理实验所支持的模型，而非每个中间体独立原位确证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607790",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607790",
+        "publisherOnlineDate": "2026-07-03",
+        "publisherOriginalResearchType": "CCS_original_research",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_ccs-chemistry",
+        "stageBatchSha": "d8ebbb1156accd460abcd9d3a301c2a34ad46dba",
+        "sourceReviewQueueGitBlobSha": "a6ab343abf58536f1f158b42c6e3e6ca307515d6",
+        "stageSourceSha256": "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-03",
+          "officialPublisherFirstOnline": "2026-07-03",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607790",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_research"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过光氧化还原、手性镍路易斯酸和手性铜协同三重催化，完成烯烃的对映选择性1,2-双官能团化，并在产物上依次建立1,3-非相邻立体中心。 以β-酮羰基底物、芳基烯烃和三甲基硅基氰TMSCN为三组分，镍配位烯醇盐经历光诱导SET形成α-羰基自由基，加成烯烃后形成苄基自由基，随后铜催化不对称氰化形成第二个C–C键。 CCS Chemistry原创Research全文提供β-酮酯/酰胺及多取代苯乙烯范围，分别控制ee和dr；不同β-酮羰基伙伴表现不同，苯并呋喃酮及吲哚酮相关底物仅约56%、46%分离收率且立体选择性降低。全称为光/Ni/Cu三种协同催化，不是单一铜催化的一个立体中心。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第一遍易把两次立体控制合并误说成一个Ni催化手性自由基捕获。文章明确镍配合物控制首步α-羰基自由基对烯烃加成，随后Cu介导苄基自由基不对称氰化；对于部分底物d.r.偏低、降温到−20℃未能改善。提出的Ni/Cu氧化还原路径和Cu(III)中间体属于机理实验所支持的模型，而非每个中间体独立原位确证。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608043",
+      "journal": "CCS Chemistry",
+      "title": "Enantioselective Diels–Alder Reaction of Skipped Dienols Enabled by Borrowing Hydrogen/Trienamine Relay Catalysis",
+      "titleZh": "借氢与三烯胺接力催化跳跃式二烯醇的不对称狄尔斯–阿尔德反应",
+      "date": "2026-08-22",
+      "authors": [
+        "Fangyuan Wang",
+        "Chia Hui Yeh",
+        "Ming Wai Liaw",
+        "Huanlin Diao",
+        "Yu Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-10",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608043"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "将借氢催化和三烯胺有机催化串联，利用通常不直接充当共轭二烯的跳跃式二烯醇，实现具有对映选择性的Diels–Alder环加成合成。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608043，正式首次公开 2026-08-22，对应 CCS_original_research。Crossref 冻结来源 root 2026-08-22_2026-08-31_ccs-chemistry、raw Git blob 7af8675e210af6a5b5f4dde2514158618e2743a6、review queue Git blob 06e8e9136da1bfadd891a165e426e82d72d21500、root 64位 SHA256 8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd；冻结source日期 2026-08-22，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "反向质疑是把普通未活化二烯醇直接进行经典Diels–Alder或把两个催化循环误写成单一步骤。论文的主张依赖借氢生成可参与三烯胺控制的中间体及随后成环；没有逐一核实的亲双烯体类别、收率上限和绝对构型不写成已证实广谱数值，也不将机理假说冒充直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "将借氢催化和三烯胺有机催化串联，利用通常不直接充当共轭二烯的跳跃式二烯醇，实现具有对映选择性的Diels–Alder环加成合成。",
+        "preparativeTransformation": "跳跃式二烯醇先经借氢过程形成可进入手性三烯胺催化循环的活性二烯组分，随后与亲双烯体发生不对称Diels–Alder成环，构筑新的环状碳骨架和立体中心。",
+        "generalityEvidence": "CCS Chemistry官方Research文章将借氢和三烯胺接力作为方法学核心，报道跳跃式二烯醇参与的直接不对称环加成；反应的合成贡献是将非预先共轭的原料转化为可反应的手性共轭二烯等效体，而不是单纯对环加成能垒作计算。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608043，正式首次公开 2026-08-22，对应 CCS_original_research。Crossref 冻结来源 root 2026-08-22_2026-08-31_ccs-chemistry、raw Git blob 7af8675e210af6a5b5f4dde2514158618e2743a6、review queue Git blob 06e8e9136da1bfadd891a165e426e82d72d21500、root 64位 SHA256 8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd；冻结source日期 2026-08-22，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "反向质疑是把普通未活化二烯醇直接进行经典Diels–Alder或把两个催化循环误写成单一步骤。论文的主张依赖借氢生成可参与三烯胺控制的中间体及随后成环；没有逐一核实的亲双烯体类别、收率上限和绝对构型不写成已证实广谱数值，也不将机理假说冒充直接观测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608043",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608043",
+        "publisherOnlineDate": "2026-08-22",
+        "publisherOriginalResearchType": "CCS_original_research",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_ccs-chemistry",
+        "stageBatchSha": "7af8675e210af6a5b5f4dde2514158618e2743a6",
+        "sourceReviewQueueGitBlobSha": "06e8e9136da1bfadd891a165e426e82d72d21500",
+        "stageSourceSha256": "8c74f132ba1b65cdc3ffe88066a518e66eb6415c5ebe9e7d3b9eda080924cbdd",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-22",
+          "officialPublisherFirstOnline": "2026-08-22",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608043",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_research"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "将借氢催化和三烯胺有机催化串联，利用通常不直接充当共轭二烯的跳跃式二烯醇，实现具有对映选择性的Diels–Alder环加成合成。 跳跃式二烯醇先经借氢过程形成可进入手性三烯胺催化循环的活性二烯组分，随后与亲双烯体发生不对称Diels–Alder成环，构筑新的环状碳骨架和立体中心。 CCS Chemistry官方Research文章将借氢和三烯胺接力作为方法学核心，报道跳跃式二烯醇参与的直接不对称环加成；反应的合成贡献是将非预先共轭的原料转化为可反应的手性共轭二烯等效体，而不是单纯对环加成能垒作计算。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向质疑是把普通未活化二烯醇直接进行经典Diels–Alder或把两个催化循环误写成单一步骤。论文的主张依赖借氢生成可参与三烯胺控制的中间体及随后成环；没有逐一核实的亲双烯体类别、收率上限和绝对构型不写成已证实广谱数值，也不将机理假说冒充直接观测。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1039/d6sc02950g",
+      "journal": "Chemical Science",
+      "title": "Photoinduced remote C–N/C bond formation via ring-opening 1,4-difunctionalization of methylenecyclobutanes",
+      "titleZh": "光诱导亚甲基环丁烷开环1,4-双官能团化实现远程碳氮和碳碳键构筑",
+      "date": "2026-07-31",
+      "authors": [
+        "Yan Zhang",
+        "Yahong Chen",
+        "Yecai Liu",
+        "Na Wu",
+        "Wei Wei",
+        "Chen Zhu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "37",
+        "pages": "17926-17931",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc02950g"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用光诱导磺酰自由基加成和环丁烷张力驱动的碳碳键断裂，克服烯烃近端官能团化趋势，实现亚甲基环丁烷的远程1,4-双官能团化构筑C–N及C–C键。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g，正式首次公开 2026-07-31，对应 RSC_Chemical_Science_Edge_Article_first_published。Crossref 冻结来源 root 2026-07-22_2026-07-31_chemical-science、raw Git blob 5c16ab17e0054ae3f93690c089e3b8e87355c9b3、review queue Git blob 611484e291cf85473584f1f130bc9f694526d3a1、root 64位 SHA256 c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508；冻结source日期 未提供（仅创建日期2026-07-31），不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "主要反证是文章结论中提到E构型会被误读成初始开环产品高度E选择性；实际3a的Z/E约3:2，只有后续去磺酰基转化得到E-烯烃。另一边界是C–N与C–C在不同亲核伙伴分支实现，不能把碳亲核体系误写为同一步吡唑/乙腈氮化条件下自动发生。RSC最初Crossref只有year及createdDate，出版社2026-07-31 First published才是发表日期权威。",
+      "scopeAssessment": {
+        "primaryContribution": "利用光诱导磺酰自由基加成和环丁烷张力驱动的碳碳键断裂，克服烯烃近端官能团化趋势，实现亚甲基环丁烷的远程1,4-双官能团化构筑C–N及C–C键。",
+        "preparativeTransformation": "亚甲基环丁烷与磺酰氯在fac-Ir(ppy)3光催化下发生加成与开环，再由吡唑或乙腈作氮源捕获形成双高烯丙基胺/酰胺；吲哚、吡咯、萘酚等碳亲核试剂还可提供远程C–C键产物。",
+        "generalityEvidence": "RSC Chemical Science 2026-07-31官方开放获取Edge Article报告亚甲基环丁烷上多类芳基取代例子，3a典型分离收率74%，另有腈参与的Ritter型酰胺和吡咯、吲哚等碳亲核捕获。部分原始产物是Z/E混合物（如3a约3:2），需另行光脱磺酰基才能获得专一E-构型烯烃，不能把E选择性归于直接1,4-双官能团化。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g，正式首次公开 2026-07-31，对应 RSC_Chemical_Science_Edge_Article_first_published。Crossref 冻结来源 root 2026-07-22_2026-07-31_chemical-science、raw Git blob 5c16ab17e0054ae3f93690c089e3b8e87355c9b3、review queue Git blob 611484e291cf85473584f1f130bc9f694526d3a1、root 64位 SHA256 c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508；冻结source日期 未提供（仅创建日期2026-07-31），不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "主要反证是文章结论中提到E构型会被误读成初始开环产品高度E选择性；实际3a的Z/E约3:2，只有后续去磺酰基转化得到E-烯烃。另一边界是C–N与C–C在不同亲核伙伴分支实现，不能把碳亲核体系误写为同一步吡唑/乙腈氮化条件下自动发生。RSC最初Crossref只有year及createdDate，出版社2026-07-31 First published才是发表日期权威。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g",
+        "publisherArticlePage": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g",
+        "publisherOnlineDate": "2026-07-31",
+        "publisherOriginalResearchType": "RSC_Chemical_Science_Edge_Article_first_published",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_chemical-science",
+        "stageBatchSha": "5c16ab17e0054ae3f93690c089e3b8e87355c9b3",
+        "sourceReviewQueueGitBlobSha": "611484e291cf85473584f1f130bc9f694526d3a1",
+        "stageSourceSha256": "c4242ce2bcc64c6a17a15067c4b4a819cdb772e467bae13373cf5a295a274508",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "",
+          "officialPublisherFirstOnline": "2026-07-31",
+          "publisherArticlePage": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc02950g",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "RSC_Chemical_Science_Edge_Article_first_published",
+          "stageApiDate": "",
+          "sourceHasYearOnlyCreatedDate": true,
+          "sourceCreatedDate": "2026-07-31"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用光诱导磺酰自由基加成和环丁烷张力驱动的碳碳键断裂，克服烯烃近端官能团化趋势，实现亚甲基环丁烷的远程1,4-双官能团化构筑C–N及C–C键。 亚甲基环丁烷与磺酰氯在fac-Ir(ppy)3光催化下发生加成与开环，再由吡唑或乙腈作氮源捕获形成双高烯丙基胺/酰胺；吲哚、吡咯、萘酚等碳亲核试剂还可提供远程C–C键产物。 RSC Chemical Science 2026-07-31官方开放获取Edge Article报告亚甲基环丁烷上多类芳基取代例子，3a典型分离收率74%，另有腈参与的Ritter型酰胺和吡咯、吲哚等碳亲核捕获。部分原始产物是Z/E混合物（如3a约3:2），需另行光脱磺酰基才能获得专一E-构型烯烃，不能把E选择性归于直接1,4-双官能团化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "主要反证是文章结论中提到E构型会被误读成初始开环产品高度E选择性；实际3a的Z/E约3:2，只有后续去磺酰基转化得到E-烯烃。另一边界是C–N与C–C在不同亲核伙伴分支实现，不能把碳亲核体系误写为同一步吡唑/乙腈氮化条件下自动发生。RSC最初Crossref只有year及createdDate，出版社2026-07-31 First published才是发表日期权威。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00992",
+      "journal": "JOC",
+      "title": "I2–DMSO-Mediated In Situ Capture of Ketenimine Cations by Two Molecules of 3-Aminoindazole for the Synthesis of 1-(1 H -Indazol-3-yl)-2,4-Diphenyl-1 H -Pyrrolo[2′,3′:4,5]Pyrimido[1,2- b ]Indazole Derivatives",
+      "titleZh": "碘–二甲基亚砜促进烯酮亚胺正离子双重捕获串联合成吲唑稠合含氮多环",
+      "date": "2026-07-30",
+      "authors": [
+        "Xiaoqiong Deng",
+        "Mengyi Guo",
+        "Xinxin Jia",
+        "Qian Guo",
+        "Yifan Song",
+        "Luoteng Cheng",
+        "Kezhi Chen",
+        "Jianyong Yuan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10876-10889",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00992"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用碘/DMSO介导三氨基吲唑等原料一锅多组分环化，关键在原位烯酮亚胺正离子遭两个3-氨基吲唑分子连续捕获，构筑新的吲唑稠合多氮杂环。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://pubs.acs.org/doi/10.1021/acs.joc.6c00992，正式首次公开 2026-07-30，对应 ACS_JOC_original_Article_Published_Online。Crossref+OpenAlex 冻结来源 root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review queue Git blob ffad810d39098703ea05ab844041cbb4980d4677、root 64位 SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；冻结source日期 2026-07-30，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "最强反证是把这篇有光物理表征的杂环论文误判为仅荧光材料研究，或把单晶确证等同于已直接观测烯酮亚胺正离子中间体。原文制备40例并有新的多组分杂环成环策略；中间体捕获是机理模型，单晶证明终产物结构，不证明全部瞬态中间体。",
+      "scopeAssessment": {
+        "primaryContribution": "利用碘/DMSO介导三氨基吲唑等原料一锅多组分环化，关键在原位烯酮亚胺正离子遭两个3-氨基吲唑分子连续捕获，构筑新的吲唑稠合多氮杂环。",
+        "preparativeTransformation": "3-氨基吲唑、苯乙酮与烯胺酮在I2–DMSO条件下经原位烯酮亚胺正离子和两次3-氨基吲唑捕获形成高度稠合的吡咯并嘧啶并吲唑骨架。",
+        "generalityEvidence": "ACS JOC正式Article摘要报告40个不同化合物并有单晶X射线结构确认，吸收波长443–490 nm、发射543–574 nm及量子产率0.07–0.24为产品光谱表征，不是反应收率。以多底物制备和杂环骨架构建为主体，不能因测定发光性能就当成纯材料论文。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://pubs.acs.org/doi/10.1021/acs.joc.6c00992，正式首次公开 2026-07-30，对应 ACS_JOC_original_Article_Published_Online。Crossref+OpenAlex 冻结来源 root 2026-07-22_2026-07-31_joc、raw Git blob 9181de94c2f59b0fb77a470f802a143699524037、review queue Git blob ffad810d39098703ea05ab844041cbb4980d4677、root 64位 SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；冻结source日期 2026-07-30，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "最强反证是把这篇有光物理表征的杂环论文误判为仅荧光材料研究，或把单晶确证等同于已直接观测烯酮亚胺正离子中间体。原文制备40例并有新的多组分杂环成环策略；中间体捕获是机理模型，单晶证明终产物结构，不证明全部瞬态中间体。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00992",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00992",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_JOC_original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "ffad810d39098703ea05ab844041cbb4980d4677",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00992",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用碘/DMSO介导三氨基吲唑等原料一锅多组分环化，关键在原位烯酮亚胺正离子遭两个3-氨基吲唑分子连续捕获，构筑新的吲唑稠合多氮杂环。 3-氨基吲唑、苯乙酮与烯胺酮在I2–DMSO条件下经原位烯酮亚胺正离子和两次3-氨基吲唑捕获形成高度稠合的吡咯并嘧啶并吲唑骨架。 ACS JOC正式Article摘要报告40个不同化合物并有单晶X射线结构确认，吸收波长443–490 nm、发射543–574 nm及量子产率0.07–0.24为产品光谱表征，不是反应收率。以多底物制备和杂环骨架构建为主体，不能因测定发光性能就当成纯材料论文。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "最强反证是把这篇有光物理表征的杂环论文误判为仅荧光材料研究，或把单晶确证等同于已直接观测烯酮亚胺正离子中间体。原文制备40例并有新的多组分杂环成环策略；中间体捕获是机理模型，单晶证明终产物结构，不证明全部瞬态中间体。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607664",
+      "journal": "CCS Chemistry",
+      "title": "Engineering Cytochrome c to Catalyze Enantioselective C-Ge Bond Formation",
+      "titleZh": "工程化细胞色素c催化高对映选择性碳锗键形成",
+      "date": "2026-07-13",
+      "authors": [
+        "Yangliu Feng",
+        "Shao-Wu Liu",
+        "Zhicong He",
+        "Xiao Han",
+        "Li-Qing Ren",
+        "Liu Yang",
+        "Wei Peng",
+        "Chuan He",
+        "Xingwang Zhang",
+        "Shengying Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4365-4373",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607664"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664，正式首次公开 2026-07-13，对应 CCS_original_Communication_Online_13_July。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。",
+      "scopeAssessment": {
+        "primaryContribution": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。",
+        "preparativeTransformation": "工程化Rma细胞色素c利用重氮羧酸酯作为金属卡宾前体，在锗烷Ge–H键处完成高对映选择性卡宾插入/C–Ge键构筑，得到α-锗基羧酸酯类碳手性有机锗分子。",
+        "generalityEvidence": "CCS Chem 2026,8,4365–4373的Communication报告RccGe在多种芳基/萘基锗烷及不同烷基取代重氮酯上实现制备，最优化全细胞体系TTN可达36,717、约99% ee；另制备了双Ge相关相邻立体中心但其非对映/对映分离和构型判定尚不完善。原始Crossref标2026-09-01属于卷期日，官方Online Publication Date为2026-07-13。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664，正式首次公开 2026-07-13，对应 CCS_original_Communication_Online_13_July。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+        "publisherOnlineDate": "2026-07-13",
+        "publisherOriginalResearchType": "CCS_original_Communication_Online_13_July",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-07-13",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Communication_Online_13_July",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。 工程化Rma细胞色素c利用重氮羧酸酯作为金属卡宾前体，在锗烷Ge–H键处完成高对映选择性卡宾插入/C–Ge键构筑，得到α-锗基羧酸酯类碳手性有机锗分子。 CCS Chem 2026,8,4365–4373的Communication报告RccGe在多种芳基/萘基锗烷及不同烷基取代重氮酯上实现制备，最优化全细胞体系TTN可达36,717、约99% ee；另制备了双Ge相关相邻立体中心但其非对映/对映分离和构型判定尚不完善。原始Crossref标2026-09-01属于卷期日，官方Online Publication Date为2026-07-13。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607709",
+      "journal": "CCS Chemistry",
+      "title": "Enantioselective Construction of Nonaromatic Pyrrole Isomeric Forms by Ligand-Enabled Intermolecular Desymmetrization of Malononitriles",
+      "titleZh": "手性配体诱导丙二腈分子间去对称化构筑非芳香性吡咯异构骨架",
+      "date": "2026-05-07",
+      "authors": [
+        "Wang Wang",
+        "Yu-Qing Zheng",
+        "Katarzyna J. Zator",
+        "Hong-Gui Huang",
+        "Zhong-Jie Ji",
+        "Hai-Yan Zhang",
+        "Julia Contreras-García",
+        "Min Gao",
+        "Wen-Bo Liu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3329-3340",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607709"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709，正式首次公开 2026-05-07，对应 CCS_original_Research_online_07_May。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。",
+      "scopeAssessment": {
+        "primaryContribution": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。",
+        "preparativeTransformation": "经手性配体控制的分子间去对称化使具有等价氰基位点的丙二腈衍生底物选择性反应，构筑含氮非芳香性吡咯异构环状骨架并引入对映选择性。",
+        "generalityEvidence": "CCS Chemistry正式原创文章记录多种丙二腈类底物、手性配体筛选及温度/浓度优化；降低温度与浓度后报道特定配体L19达到94:6 er。作者与北海道大学ICReDD公开论文目录均记录2026年5月7日发表，并非冻结Crossref所填的7月1日期次。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709，正式首次公开 2026-05-07，对应 CCS_original_Research_online_07_May。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+        "publisherOnlineDate": "2026-05-07",
+        "publisherOriginalResearchType": "CCS_original_Research_online_07_May",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_ccs-chemistry",
+        "stageBatchSha": "d8ebbb1156accd460abcd9d3a301c2a34ad46dba",
+        "sourceReviewQueueGitBlobSha": "a6ab343abf58536f1f158b42c6e3e6ca307515d6",
+        "stageSourceSha256": "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-05-07",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_07_May",
+          "stageApiDate": "2026-07-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。 经手性配体控制的分子间去对称化使具有等价氰基位点的丙二腈衍生底物选择性反应，构筑含氮非芳香性吡咯异构环状骨架并引入对映选择性。 CCS Chemistry正式原创文章记录多种丙二腈类底物、手性配体筛选及温度/浓度优化；降低温度与浓度后报道特定配体L19达到94:6 er。作者与北海道大学ICReDD公开论文目录均记录2026年5月7日发表，并非冻结Crossref所填的7月1日期次。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607340",
+      "journal": "CCS Chemistry",
+      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
+      "titleZh": "钯催化反式选择性高阶环加成构筑手性张力环烯烃及骨架异构化",
+      "date": "2026-05-14",
+      "authors": [
+        "Jin-Pu Zhao",
+        "Fang Hu",
+        "Jun-Wei Shi",
+        "Meng Xiao",
+        "Bin Shi",
+        "Xue-Rui Wang",
+        "Ying Tan",
+        "Li-Yan Chen",
+        "Zhihan Zhang",
+        "Wen-Jing Xiao",
+        "Liang-Qiu Lu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4668-4679",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607340"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340，正式首次公开 2026-05-14，对应 CCS_original_Research_online_14_May。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。",
+      "scopeAssessment": {
+        "primaryContribution": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。",
+        "preparativeTransformation": "经Pd/手性配体控制的[7+4]高阶环加成由有机亲双烯及相应七原子偶极等效前体构筑11元环烯烃，再通过后续骨架重排获得其他张力环骨架。",
+        "generalityEvidence": "CCS Chemistry原创研究详细报告trans选择性[7+4]构环，直接合成手性11元张力环烯烃及后续骨架异构化；该研究还见于2026年中国有机化学界研究亮点评述，而非只有理论模型。出版社首发2026-05-14，冻结2026-09-01为卷期日期，必须按Q2 metadata_only收录。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340，正式首次公开 2026-05-14，对应 CCS_original_Research_online_14_May。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+        "publisherOnlineDate": "2026-05-14",
+        "publisherOriginalResearchType": "CCS_original_Research_online_14_May",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-05-14",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_14_May",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。 经Pd/手性配体控制的[7+4]高阶环加成由有机亲双烯及相应七原子偶极等效前体构筑11元环烯烃，再通过后续骨架重排获得其他张力环骨架。 CCS Chemistry原创研究详细报告trans选择性[7+4]构环，直接合成手性11元张力环烯烃及后续骨架异构化；该研究还见于2026年中国有机化学界研究亮点评述，而非只有理论模型。出版社首发2026-05-14，冻结2026-09-01为卷期日期，必须按Q2 metadata_only收录。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607308",
+      "journal": "CCS Chemistry",
+      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
+      "titleZh": "α,β-双取代γ-酮酯经动态动力学拆分的不对称氢化环化合成三取代γ-丁内酯",
+      "date": "2026-04-04",
+      "authors": [
+        "Jiahao Zhang",
+        "Yizhuo Zhao",
+        "Menglong Zhao",
+        "Qian Chen",
+        "Zhaobin Han",
+        "Kuiling Ding"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4643-4654",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607308"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308，正式首次公开 2026-04-04，对应 CCS_original_Research_online_04_April。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。",
+      "scopeAssessment": {
+        "primaryContribution": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。",
+        "preparativeTransformation": "从外消旋非环状α,β-二取代γ-酮酯出发，在不对称氢化中动态动力学拆分形成手性γ-羟基酯中间体，继而内酯化生成具有连续多取代中心的γ-丁内酯。",
+        "generalityEvidence": "CCS Chemistry原创文章描述底物γ-酮酯氢化并接续成环的一锅或连续制备应用；β-苄基底物1ai可获得2ai，分离收率86%、ee约90%，支持至少特定非对称底物可迁移适用性。Publisher Online Publication Date为2026-04-04，冻结2026-09-01仅期次日期。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308，正式首次公开 2026-04-04，对应 CCS_original_Research_online_04_April。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+        "publisherOnlineDate": "2026-04-04",
+        "publisherOriginalResearchType": "CCS_original_Research_online_04_April",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-04-04",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_04_April",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。 从外消旋非环状α,β-二取代γ-酮酯出发，在不对称氢化中动态动力学拆分形成手性γ-羟基酯中间体，继而内酯化生成具有连续多取代中心的γ-丁内酯。 CCS Chemistry原创文章描述底物γ-酮酯氢化并接续成环的一锅或连续制备应用；β-苄基底物1ai可获得2ai，分离收率86%、ee约90%，支持至少特定非对称底物可迁移适用性。Publisher Online Publication Date为2026-04-04，冻结2026-09-01仅期次日期。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。"
+        }
+      ]
+    }
+  ],
+  "q3OriginalPublisherDateCorrections": [
+    {
+      "doi": "10.31635/ccschem.026.202607664",
+      "journal": "CCS Chemistry",
+      "title": "Engineering Cytochrome c to Catalyze Enantioselective C-Ge Bond Formation",
+      "titleZh": "工程化细胞色素c催化高对映选择性碳锗键形成",
+      "date": "2026-07-13",
+      "authors": [
+        "Yangliu Feng",
+        "Shao-Wu Liu",
+        "Zhicong He",
+        "Xiao Han",
+        "Li-Qing Ren",
+        "Liu Yang",
+        "Wei Peng",
+        "Chuan He",
+        "Xingwang Zhang",
+        "Shengying Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4365-4373",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607664"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664，正式首次公开 2026-07-13，对应 CCS_original_Communication_Online_13_July。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。",
+      "scopeAssessment": {
+        "primaryContribution": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。",
+        "preparativeTransformation": "工程化Rma细胞色素c利用重氮羧酸酯作为金属卡宾前体，在锗烷Ge–H键处完成高对映选择性卡宾插入/C–Ge键构筑，得到α-锗基羧酸酯类碳手性有机锗分子。",
+        "generalityEvidence": "CCS Chem 2026,8,4365–4373的Communication报告RccGe在多种芳基/萘基锗烷及不同烷基取代重氮酯上实现制备，最优化全细胞体系TTN可达36,717、约99% ee；另制备了双Ge相关相邻立体中心但其非对映/对映分离和构型判定尚不完善。原始Crossref标2026-09-01属于卷期日，官方Online Publication Date为2026-07-13。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664，正式首次公开 2026-07-13，对应 CCS_original_Communication_Online_13_July。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+        "publisherOnlineDate": "2026-07-13",
+        "publisherOriginalResearchType": "CCS_original_Communication_Online_13_July",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-07-13",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607664",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Communication_Online_13_July",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "通过两轮细胞色素c定点饱和突变获得RccGe酶，能在体外和活细胞体系催化重氮化合物与氢锗烷形成手性C–Ge键，既是酶工程也是实质性的可迁移有机锗制备方法。 工程化Rma细胞色素c利用重氮羧酸酯作为金属卡宾前体，在锗烷Ge–H键处完成高对映选择性卡宾插入/C–Ge键构筑，得到α-锗基羧酸酯类碳手性有机锗分子。 CCS Chem 2026,8,4365–4373的Communication报告RccGe在多种芳基/萘基锗烷及不同烷基取代重氮酯上实现制备，最优化全细胞体系TTN可达36,717、约99% ee；另制备了双Ge相关相邻立体中心但其非对映/对映分离和构型判定尚不完善。原始Crossref标2026-09-01属于卷期日，官方Online Publication Date为2026-07-13。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反证是简单把酶突变体筛选数量算作有机底物范围，或把QM/MM计算闭壳层通路当成已直接观察。该文对多类锗烷/重氮酯进行了合成、色谱分离和NMR鉴定，因此可按合成方法纳入；但相邻双锗/碳立体中心的异构体未完全分离、绝对构型不明，QM/MM反应通路只能写理论支持。原始9月期次绝非首发。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607709",
+      "journal": "CCS Chemistry",
+      "title": "Enantioselective Construction of Nonaromatic Pyrrole Isomeric Forms by Ligand-Enabled Intermolecular Desymmetrization of Malononitriles",
+      "titleZh": "手性配体诱导丙二腈分子间去对称化构筑非芳香性吡咯异构骨架",
+      "date": "2026-05-07",
+      "authors": [
+        "Wang Wang",
+        "Yu-Qing Zheng",
+        "Katarzyna J. Zator",
+        "Hong-Gui Huang",
+        "Zhong-Jie Ji",
+        "Hai-Yan Zhang",
+        "Julia Contreras-García",
+        "Min Gao",
+        "Wen-Bo Liu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3329-3340",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607709"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709，正式首次公开 2026-05-07，对应 CCS_original_Research_online_07_May。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。",
+      "scopeAssessment": {
+        "primaryContribution": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。",
+        "preparativeTransformation": "经手性配体控制的分子间去对称化使具有等价氰基位点的丙二腈衍生底物选择性反应，构筑含氮非芳香性吡咯异构环状骨架并引入对映选择性。",
+        "generalityEvidence": "CCS Chemistry正式原创文章记录多种丙二腈类底物、手性配体筛选及温度/浓度优化；降低温度与浓度后报道特定配体L19达到94:6 er。作者与北海道大学ICReDD公开论文目录均记录2026年5月7日发表，并非冻结Crossref所填的7月1日期次。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709，正式首次公开 2026-05-07，对应 CCS_original_Research_online_07_May。Crossref 冻结来源 root 2026-07-01_2026-07-07_ccs-chemistry、raw Git blob d8ebbb1156accd460abcd9d3a301c2a34ad46dba、review queue Git blob a6ab343abf58536f1f158b42c6e3e6ca307515d6、root 64位 SHA256 70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807；冻结source日期 2026-07-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+        "publisherOnlineDate": "2026-05-07",
+        "publisherOriginalResearchType": "CCS_original_Research_online_07_May",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_ccs-chemistry",
+        "stageBatchSha": "d8ebbb1156accd460abcd9d3a301c2a34ad46dba",
+        "sourceReviewQueueGitBlobSha": "a6ab343abf58536f1f158b42c6e3e6ca307515d6",
+        "stageSourceSha256": "70dde33d6dc1615ac591f2301223fefb59a4d417c4374fa41a2beb8a21508807",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-01",
+          "officialPublisherFirstOnline": "2026-05-07",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607709",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_07_May",
+          "stageApiDate": "2026-07-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "借助手性配体促进丙二腈类底物分子间去对称化，开发获取非芳香性吡咯异构骨架的新不对称制备路径，主要贡献是立体选择性杂环合成而非计算识别。 经手性配体控制的分子间去对称化使具有等价氰基位点的丙二腈衍生底物选择性反应，构筑含氮非芳香性吡咯异构环状骨架并引入对映选择性。 CCS Chemistry正式原创文章记录多种丙二腈类底物、手性配体筛选及温度/浓度优化；降低温度与浓度后报道特定配体L19达到94:6 er。作者与北海道大学ICReDD公开论文目录均记录2026年5月7日发表，并非冻结Crossref所填的7月1日期次。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "边界是这项工作是否只是计算反应网络或配体筛选、完全没有制备应用。出版社内容显示实际手性杂环生成及配体实验优化，所以不是单纯机理文章；但94:6 er仅为指明的条件而不是全底物均达水平。首发5月7日使其只能metadata_only，不应作为Q3新文献或TOC补抓。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607340",
+      "journal": "CCS Chemistry",
+      "title": "Asymmetric Synthesis and Skeletal Isomerization of Strained Cycloalkenes via trans -Selective Higher-Order Cycloaddition",
+      "titleZh": "钯催化反式选择性高阶环加成构筑手性张力环烯烃及骨架异构化",
+      "date": "2026-05-14",
+      "authors": [
+        "Jin-Pu Zhao",
+        "Fang Hu",
+        "Jun-Wei Shi",
+        "Meng Xiao",
+        "Bin Shi",
+        "Xue-Rui Wang",
+        "Ying Tan",
+        "Li-Yan Chen",
+        "Zhihan Zhang",
+        "Wen-Jing Xiao",
+        "Liang-Qiu Lu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4668-4679",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607340"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340，正式首次公开 2026-05-14，对应 CCS_original_Research_online_14_May。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。",
+      "scopeAssessment": {
+        "primaryContribution": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。",
+        "preparativeTransformation": "经Pd/手性配体控制的[7+4]高阶环加成由有机亲双烯及相应七原子偶极等效前体构筑11元环烯烃，再通过后续骨架重排获得其他张力环骨架。",
+        "generalityEvidence": "CCS Chemistry原创研究详细报告trans选择性[7+4]构环，直接合成手性11元张力环烯烃及后续骨架异构化；该研究还见于2026年中国有机化学界研究亮点评述，而非只有理论模型。出版社首发2026-05-14，冻结2026-09-01为卷期日期，必须按Q2 metadata_only收录。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340，正式首次公开 2026-05-14，对应 CCS_original_Research_online_14_May。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+        "publisherOnlineDate": "2026-05-14",
+        "publisherOriginalResearchType": "CCS_original_Research_online_14_May",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-05-14",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607340",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_14_May",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以钯催化不对称高阶[7+4]环加成构筑反式选择性11元手性张力环烯烃，并研究其后续骨架异构化，属于创新性构环和骨架编辑合成。 经Pd/手性配体控制的[7+4]高阶环加成由有机亲双烯及相应七原子偶极等效前体构筑11元环烯烃，再通过后续骨架重排获得其他张力环骨架。 CCS Chemistry原创研究详细报告trans选择性[7+4]构环，直接合成手性11元张力环烯烃及后续骨架异构化；该研究还见于2026年中国有机化学界研究亮点评述，而非只有理论模型。出版社首发2026-05-14，冻结2026-09-01为卷期日期，必须按Q2 metadata_only收录。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立反证是标题里的骨架异构化是否意味着所有底物在原始环加成条件下都自动重排，或它实际仅为综述亮点。出版社DOI是原创Research，研究的Pd不对称[7+4]成环与独立的骨架异构化必须区分；另有中文评论文章是不同DOI，不应错将其作为原始实验记录。"
+        }
+      ]
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607308",
+      "journal": "CCS Chemistry",
+      "title": "Catalytic Enantioselective Synthesis of α,β,γ-Trisubstituted γ-Butyrolactones via Dynamic Kinetic Resolution of Racemic Acyclic α,β-Disubstituted γ-Keto Esters",
+      "titleZh": "α,β-双取代γ-酮酯经动态动力学拆分的不对称氢化环化合成三取代γ-丁内酯",
+      "date": "2026-04-04",
+      "authors": [
+        "Jiahao Zhang",
+        "Yizhuo Zhao",
+        "Menglong Zhao",
+        "Qian Chen",
+        "Zhaobin Han",
+        "Kuiling Ding"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "9",
+        "pages": "4643-4654",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607308"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。",
+      "evidenceBasis": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308，正式首次公开 2026-04-04，对应 CCS_original_Research_online_04_April。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+      "challengeReason": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。",
+      "scopeAssessment": {
+        "primaryContribution": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。",
+        "preparativeTransformation": "从外消旋非环状α,β-二取代γ-酮酯出发，在不对称氢化中动态动力学拆分形成手性γ-羟基酯中间体，继而内酯化生成具有连续多取代中心的γ-丁内酯。",
+        "generalityEvidence": "CCS Chemistry原创文章描述底物γ-酮酯氢化并接续成环的一锅或连续制备应用；β-苄基底物1ai可获得2ai，分离收率86%、ee约90%，支持至少特定非对称底物可迁移适用性。Publisher Online Publication Date为2026-04-04，冻结2026-09-01仅期次日期。",
+        "sourceEvidence": "出版社首次在线日/原创文章证据：https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308，正式首次公开 2026-04-04，对应 CCS_original_Research_online_04_April。Crossref 冻结来源 root 2026-09-01_2026-09-07_ccs-chemistry、raw Git blob bee5e0435f8977993b318922ede19e268e26a6df、review queue Git blob c2366a981f6ec5f6ac142e16e34f9c58bd962a0c、root 64位 SHA256 78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f；冻结source日期 2026-09-01，不修改原始记录；作者与卷期页依 DOI 来源核对。未下载、复制或公开原始全文、摘要、图、SI、PDF。",
+        "boundaryChallenge": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+        "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+        "publisherOnlineDate": "2026-04-04",
+        "publisherOriginalResearchType": "CCS_original_Research_online_04_April",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_ccs-chemistry",
+        "stageBatchSha": "bee5e0435f8977993b318922ede19e268e26a6df",
+        "sourceReviewQueueGitBlobSha": "c2366a981f6ec5f6ac142e16e34f9c58bd962a0c",
+        "stageSourceSha256": "78de3863b66b089fae404036c2dcbaa05ff497ce5c4299fdfe61c4498227b21f",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-04-04",
+          "publisherArticlePage": "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607308",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "CCS_original_Research_online_04_April",
+          "stageApiDate": "2026-09-01",
+          "stageDateIsIssueNotPublication": true
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用α,β-双取代γ-酮酯的催化不对称氢化与后续内酯化，借助动态动力学拆分建立多个立体中心，提供α,β,γ-三取代γ-丁内酯制备路线。 从外消旋非环状α,β-二取代γ-酮酯出发，在不对称氢化中动态动力学拆分形成手性γ-羟基酯中间体，继而内酯化生成具有连续多取代中心的γ-丁内酯。 CCS Chemistry原创文章描述底物γ-酮酯氢化并接续成环的一锅或连续制备应用；β-苄基底物1ai可获得2ai，分离收率86%、ee约90%，支持至少特定非对称底物可迁移适用性。Publisher Online Publication Date为2026-04-04，冻结2026-09-01仅期次日期。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向挑战是把初始β-苄基代表例误写为所有底物达到86%收率/90%ee，或把γ-丁内酯三立体中心都假定由同一步直接控制。原文以动态动力学拆分、不对称氢化和后续内酯化多步骤建立结构；个别例子数字只按原例写。Q2首发意味着只能metadata_only，不应把其Q3卷期页当Q3首发。"
+        }
+      ]
+    }
+  ],
+  "sourceYearOnlyPublisherDateResolved": [
+    "10.1039/d6sc02950g"
+  ],
+  "preJulyMetadataOnly": [
+    "10.31635/ccschem.026.202607709",
+    "10.31635/ccschem.026.202607340",
+    "10.31635/ccschem.026.202607308"
+  ],
+  "notApprovedBecauseDateOrOriginalityStillUnverified": [
+    "10.1039/d6gc03246j",
+    "10.1021/acs.orglett.6c03772",
+    "10.1021/acs.joc.6c01838"
+  ],
+  "guards": {
+    "noD1": true,
+    "noFormalPublication": true,
+    "noPublisherMediaOrPdf": true,
+    "noNewOrHot": true,
+    "no08SlotChange": true,
+    "ownerExclusionIntact": true,
+    "sourceFrozenUnchanged": true,
+    "reviewedArticleDoesNotProveFullPublisherIssueClosure": true
+  }
+}
