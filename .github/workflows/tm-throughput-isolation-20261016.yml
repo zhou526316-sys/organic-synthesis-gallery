@@ -1,0 +1,59 @@
+name: Tampermonkey DOI-isolated throughput and inventory regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - public/toc-mainline.user.js
+      - cloudflare/worker/src/local-captures.js
+      - cloudflare/scripts/build-bridge-loader.mjs
+      - scripts/validate-tm220-artifacts.mjs
+      - tests/tm-heartbeat-circuit-20261015.test.mjs
+      - tests/tm-owner-pdf-replay-20261008.test.mjs
+      - tests/tm-inventory-r2-cache-20261016.test.mjs
+      - .github/workflows/tm-throughput-isolation-20261016.yml
+  push:
+    branches: [main]
+    paths:
+      - public/toc-mainline.user.js
+      - cloudflare/worker/src/local-captures.js
+      - .github/workflows/tm-throughput-isolation-20261016.yml
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Strict syntax, layer and retry regressions (no publisher writes)
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --test tests/tm-heartbeat-circuit-20261015.test.mjs tests/tm-owner-pdf-replay-20261008.test.mjs tests/tm-inventory-r2-cache-20261016.test.mjs
+          node --test tests/tm-inventory-startup.test.mjs tests/tm-gap-recovery.test.mjs
+          node scripts/test-stage-storage.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+      - name: Build both installer artifacts from source
+        env:
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.89' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.70';" public/gallery-vpn-bridge.user.js
+      - name: Preserve immutable build proof
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-throughput-20261016-proof
+          path: public/gallery-vpn-bridge.user.js
+          retention-days: 7
