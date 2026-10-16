@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261016-new-upload-2270-throughput-read",
-  "requestedAt": "2026-10-16T03:29:58.148Z",
+  "requestId": "tm-20261016-1132-owner-local-log-confirmed",
+  "requestedAt": "2026-10-16T03:39:30.505Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User states new owner Tampermonkey log uploaded; read R2 latest browser diagnostics and staged/report/captured indices. Verify genuine installed Bridge 2.2.89/engine 6.2.70, completed run timestamp, queue size, distinct DOI visits, attempts, layer outcomes (production official TOC / body figures / fulltext / cloud or local deferred PDF), inventory latency/cache failure, per-publisher heartbeat isolation and final stop reason; compare Oct14 101 visited/111 attempts/43 completed versus Oct15 9 visited/10 attempts/1 completed. Output per DOI and stage fail detail without secrets or private PDF bytes. Do not contact publishers or mutate media.",
+  "context": "Read newly confirmed manual owner log uploaded at 2026-10-16 03:32 UTC (~11:32 Beijing): full 6.2.70 install revision, startAt 03:05Z, actual visit/attempt and stopReason, per-DOI results, publisher quarantine, recent PDF deferred statuses and R2/index deltas. Do not confuse manual 11:32 snapshot with earlier stale 08:30 snapshot or latest auto receipts after 11:32. No publisher contacts, no writes.",
   "expectedBridgeVersion": "2.2.89",
   "expectedInstallRevision": "6.2.70",
   "readOnly": true,
