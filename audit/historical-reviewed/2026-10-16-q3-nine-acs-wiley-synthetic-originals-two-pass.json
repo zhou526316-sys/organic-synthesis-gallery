@@ -1,0 +1,742 @@
+{
+  "schemaVersion": "gallery-historical-20261016-nine-acs-wiley-originals-v1",
+  "reviewedAt": "2026-10-16T07:55:25.485Z",
+  "mode": "publisher_DOI_original_first_online_synthesis_scope_two_pass_only",
+  "baselineApproved": 218,
+  "newApprovals": 9,
+  "period": "2026-07-01..2026-09-30",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "reviewMethod": "one_assistant_first_scientific_pass_and_separately_written_adversarial_second_pass_not_two_independent_human_scientists",
+  "approved": [
+    {
+      "doi": "10.1021/acs.joc.6c01212",
+      "journal": "JOC",
+      "title": "Stereoselective Synthesis of 2,6- trans -Tetrahydropyrans via Tandem Horner–Wadsworth–Emmons Olefination of Lactols/Intramolecular Oxa-Conjugate Cyclization",
+      "titleZh": "内酯醇的Horner–Wadsworth–Emmons烯化与分子内氧杂共轭环化串联合成2,6-反式四氢吡喃",
+      "date": "2026-07-29",
+      "authors": [
+        "Katsiaryna A. Nekrasava",
+        "Vitaly Syakhovich",
+        "Uladzimir S. Masiuk"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "11019-11035",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01212"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立以动力学控制代替常见热力学顺式优势的2,6-反式四氢吡喃立体选择性合成路径，解决已有分子内氧杂共轭环化多偏向2,6-顺式构型的问题。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01212；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-29，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "最强反证是作者是否只优化已有顺式氧杂环化条件且未提供新制备范围；实际上通过控制HWE烯化/后续环化的动力学成功形成2,6-反式骨架，并报道50–84%收率和具体天然产物合成。95:5为部分底物最高dr，不能写成所有例子或将天然产物合成收率套给通用环化。",
+      "scopeAssessment": {
+        "primaryContribution": "建立以动力学控制代替常见热力学顺式优势的2,6-反式四氢吡喃立体选择性合成路径，解决已有分子内氧杂共轭环化多偏向2,6-顺式构型的问题。",
+        "preparativeTransformation": "环状半缩醛（lactol）与膦酸酯经Horner–Wadsworth–Emmons烯化先生成含羟基的α,β-不饱和羰基中间体，继而发生分子内oxa-Michael环化构筑4-亚甲基-2,6-反式二取代四氢吡喃。",
+        "generalityEvidence": "ACS原始Article报告官能化取代底物产物分离收率50–84%、最高非对映比95:5 dr，产物进一步衍生；还用于天然产物Diospongin A和B的不对称合成，显示实质制备路线而非仅理论立体选择性预测。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01212；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-29，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "最强反证是作者是否只优化已有顺式氧杂环化条件且未提供新制备范围；实际上通过控制HWE烯化/后续环化的动力学成功形成2,6-反式骨架，并报道50–84%收率和具体天然产物合成。95:5为部分底物最高dr，不能写成所有例子或将天然产物合成收率套给通用环化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01212",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01212",
+        "publisherOnlineDate": "2026-07-29",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "8eec421b64548606a5a768d223f681670c18c8b6",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-29",
+          "officialPublisherFirstOnline": "2026-07-29",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01212",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立以动力学控制代替常见热力学顺式优势的2,6-反式四氢吡喃立体选择性合成路径，解决已有分子内氧杂共轭环化多偏向2,6-顺式构型的问题。 环状半缩醛（lactol）与膦酸酯经Horner–Wadsworth–Emmons烯化先生成含羟基的α,β-不饱和羰基中间体，继而发生分子内oxa-Michael环化构筑4-亚甲基-2,6-反式二取代四氢吡喃。 ACS原始Article报告官能化取代底物产物分离收率50–84%、最高非对映比95:5 dr，产物进一步衍生；还用于天然产物Diospongin A和B的不对称合成，显示实质制备路线而非仅理论立体选择性预测。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "最强反证是作者是否只优化已有顺式氧杂环化条件且未提供新制备范围；实际上通过控制HWE烯化/后续环化的动力学成功形成2,6-反式骨架，并报道50–84%收率和具体天然产物合成。95:5为部分底物最高dr，不能写成所有例子或将天然产物合成收率套给通用环化。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02393",
+      "journal": "Organic Letters",
+      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
+      "titleZh": "BTHL催化不对称远程Mukaiyama羟醛反应实现Notopterol与Notoptol及天然类似物全合成",
+      "date": "2026-07-04",
+      "authors": [
+        "Yongsheng Hou",
+        "Jiaqi Liu",
+        "Xingrong Wang",
+        "Tian Chai",
+        "Tharcisse Gatera",
+        "Xingsheng Bu",
+        "Fanfan Li",
+        "Zifan Cheng",
+        "Lei Zhang",
+        "Jun-Li Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "8964-8969",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02393"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "首次完成生物活性呋喃香豆素Notopterol、Notoptol以及九种天然类似物的不对称全合成，主要科学贡献是可放大立体选择性合成与真实天然产物路线，不是简单药理活性评价。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02393；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-07-04，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-01_2026-07-07_organic-letters raw Git blob 5f176484549fa29bfac94192614c0d694d413c74，reviewer queue Git blob 2a5580bdc069d157ba8a2139be52d9074d38215f，source-root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "逆向挑战是论文题目包含生物活性评价是否仅做天然产物提取或药理筛选；官方摘要明言首次不对称全合成并有克级关键VMAR制备，所以属于合成。后续1,3-重排仅提示可能的生物合成关系，并未证明天然生物体内必然经由该过程；>98% ee属于关键不对称步骤，不等于全路线每一步收率。",
+      "scopeAssessment": {
+        "primaryContribution": "首次完成生物活性呋喃香豆素Notopterol、Notoptol以及九种天然类似物的不对称全合成，主要科学贡献是可放大立体选择性合成与真实天然产物路线，不是简单药理活性评价。",
+        "preparativeTransformation": "以BTHL催化的非Brassard二烯底物不对称vinylogous Mukaiyama–aldol反应建立关键手性侧链，经后续成环和官能团转化制得Notopterol，再通过1,3-重排转化为Notoptol。",
+        "generalityEvidence": "ACS Original Letter报告BTHL催化关键不对称羟醛反应可达克级，ee超过98%；真实完成Notopterol、Notoptol和九种天然类似物制备。后续抗缺氧神经炎症评价属于合成产物应用，不改变其完整全合成的实质。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02393；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-07-04，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-01_2026-07-07_organic-letters raw Git blob 5f176484549fa29bfac94192614c0d694d413c74，reviewer queue Git blob 2a5580bdc069d157ba8a2139be52d9074d38215f，source-root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "逆向挑战是论文题目包含生物活性评价是否仅做天然产物提取或药理筛选；官方摘要明言首次不对称全合成并有克级关键VMAR制备，所以属于合成。后续1,3-重排仅提示可能的生物合成关系，并未证明天然生物体内必然经由该过程；>98% ee属于关键不对称步骤，不等于全路线每一步收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02393",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02393",
+        "publisherOnlineDate": "2026-07-04",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_organic-letters",
+        "stageBatchSha": "5f176484549fa29bfac94192614c0d694d413c74",
+        "sourceReviewQueueGitBlobSha": "2a5580bdc069d157ba8a2139be52d9074d38215f",
+        "stageSourceSha256": "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-04",
+          "officialPublisherFirstOnline": "2026-07-04",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02393",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "首次完成生物活性呋喃香豆素Notopterol、Notoptol以及九种天然类似物的不对称全合成，主要科学贡献是可放大立体选择性合成与真实天然产物路线，不是简单药理活性评价。 以BTHL催化的非Brassard二烯底物不对称vinylogous Mukaiyama–aldol反应建立关键手性侧链，经后续成环和官能团转化制得Notopterol，再通过1,3-重排转化为Notoptol。 ACS Original Letter报告BTHL催化关键不对称羟醛反应可达克级，ee超过98%；真实完成Notopterol、Notoptol和九种天然类似物制备。后续抗缺氧神经炎症评价属于合成产物应用，不改变其完整全合成的实质。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "逆向挑战是论文题目包含生物活性评价是否仅做天然产物提取或药理筛选；官方摘要明言首次不对称全合成并有克级关键VMAR制备，所以属于合成。后续1,3-重排仅提示可能的生物合成关系，并未证明天然生物体内必然经由该过程；>98% ee属于关键不对称步骤，不等于全路线每一步收率。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02584",
+      "journal": "Organic Letters",
+      "title": "O -Alkylisourea-Enabled Nickel/Photoredox-Catalyzed Giese Reaction",
+      "titleZh": "醇衍生O-烷基异脲参与镍与光氧化还原协同催化的Giese碳碳偶联",
+      "date": "2026-07-06",
+      "authors": [
+        "Weikang Xiong",
+        "Fangxuan Ba",
+        "Tengfei Kang",
+        "Dong Xue"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "9083-9088",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02584"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展以醇为原料的O-烷基异脲活化策略，使Ni与廉价二芳基酮光催化协同实现Giese自由基加成，尤其拓展难活化的伯醇来源烷基自由基用于C–C键构筑。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02584；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-07-06，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-01_2026-07-07_organic-letters raw Git blob 5f176484549fa29bfac94192614c0d694d413c74，reviewer queue Git blob 2a5580bdc069d157ba8a2139be52d9074d38215f，source-root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "反向挑战：标题写‘醇的Giese反应’可能误导为自由醇直接被Ni LMCT裂解C–O键。真正底物是预先制备的O-烷基异脲，作者提出Ni参与亲核取代后形成烷基卤化物再被激活的路径，因此属于前活化醇的脱氧偶联，不应称未经活化游离醇一锅直接脱氧。",
+      "scopeAssessment": {
+        "primaryContribution": "发展以醇为原料的O-烷基异脲活化策略，使Ni与廉价二芳基酮光催化协同实现Giese自由基加成，尤其拓展难活化的伯醇来源烷基自由基用于C–C键构筑。",
+        "preparativeTransformation": "伯、仲、叔醇首先转化成相应O-烷基异脲活化衍生物，在镍/二芳基酮光催化下与α,β-不饱和羰基等Michael受体加成，形成新的烷基–碳键及Giese产物。",
+        "generalityEvidence": "ACS官方Letter摘要明确展示伯、仲、叔醇衍生物与多类Michael受体，产物以中等至良好收率得到；使用低价二芳基酮光催化剂而非必须昂贵铱/钌。实验支持形成烷基卤化物中间体的假说，但并不意味着自由基所有阶段被直接检测。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02584；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-07-06，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-01_2026-07-07_organic-letters raw Git blob 5f176484549fa29bfac94192614c0d694d413c74，reviewer queue Git blob 2a5580bdc069d157ba8a2139be52d9074d38215f，source-root SHA256 ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "反向挑战：标题写‘醇的Giese反应’可能误导为自由醇直接被Ni LMCT裂解C–O键。真正底物是预先制备的O-烷基异脲，作者提出Ni参与亲核取代后形成烷基卤化物再被激活的路径，因此属于前活化醇的脱氧偶联，不应称未经活化游离醇一锅直接脱氧。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02584",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02584",
+        "publisherOnlineDate": "2026-07-06",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_organic-letters",
+        "stageBatchSha": "5f176484549fa29bfac94192614c0d694d413c74",
+        "sourceReviewQueueGitBlobSha": "2a5580bdc069d157ba8a2139be52d9074d38215f",
+        "stageSourceSha256": "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-06",
+          "officialPublisherFirstOnline": "2026-07-06",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02584",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展以醇为原料的O-烷基异脲活化策略，使Ni与廉价二芳基酮光催化协同实现Giese自由基加成，尤其拓展难活化的伯醇来源烷基自由基用于C–C键构筑。 伯、仲、叔醇首先转化成相应O-烷基异脲活化衍生物，在镍/二芳基酮光催化下与α,β-不饱和羰基等Michael受体加成，形成新的烷基–碳键及Giese产物。 ACS官方Letter摘要明确展示伯、仲、叔醇衍生物与多类Michael受体，产物以中等至良好收率得到；使用低价二芳基酮光催化剂而非必须昂贵铱/钌。实验支持形成烷基卤化物中间体的假说，但并不意味着自由基所有阶段被直接检测。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向挑战：标题写‘醇的Giese反应’可能误导为自由醇直接被Ni LMCT裂解C–O键。真正底物是预先制备的O-烷基异脲，作者提出Ni参与亲核取代后形成烷基卤化物再被激活的路径，因此属于前活化醇的脱氧偶联，不应称未经活化游离醇一锅直接脱氧。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00807",
+      "journal": "JOC",
+      "title": "Silver(I)-Catalyzed A3-Coupling for the Regioselective Synthesis of 2-Chloro-(Phenylvinyl)imidazo[1,2- a ]pyridines and Late-Stage Drug Functionalization",
+      "titleZh": "银催化三组分A³偶联区域选择性合成保留乙烯基氯的咪唑并吡啶",
+      "date": "2026-07-28",
+      "authors": [
+        "Abhishek Saini",
+        "Rishu Mehta",
+        "Kamaldeep Kaur",
+        "Virender Singh",
+        "Manpreet Singh"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10664-10671",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00807"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以Ag(I)催化多组分A³偶联直接构筑2-氯代苯基乙烯基取代咪唑并[1,2-a]吡啶，突出区域选择性、C–Cl乙烯基键保留及药物片段后期衍生，属于新杂环制备方法。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c00807；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-28，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "潜在误判是把‘A³’简化成通常醛–胺–炔三组分炔丙胺合成，或者认为氯代乙烯基在Ag催化下发生还原去氯。实际产物是保留乙烯基氯的稠合N杂环；底物为2-氨基吡啶、末端炔和β-氯代烯基醛，多样性与位点选择性来自文章特定合成证据。",
+      "scopeAssessment": {
+        "primaryContribution": "以Ag(I)催化多组分A³偶联直接构筑2-氯代苯基乙烯基取代咪唑并[1,2-a]吡啶，突出区域选择性、C–Cl乙烯基键保留及药物片段后期衍生，属于新杂环制备方法。",
+        "preparativeTransformation": "以2-氨基吡啶、末端炔烃和β-氯代烯基醛为三组分，经银催化偶联和环化生成2-氯-(苯基乙烯基)咪唑并[1,2-a]吡啶骨架，产物保留乙烯基C–Cl键。",
+        "generalityEvidence": "ACS JOC Article报告较广的2-氨基吡啶/末端炔/氯烯醛组分范围，高区域选择性与官能团兼容性，并展示药物相关底物后期修饰。保留C–Cl可供后续化学操作，不能误报为本步发生了乙烯氯脱氯。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c00807；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-28，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "潜在误判是把‘A³’简化成通常醛–胺–炔三组分炔丙胺合成，或者认为氯代乙烯基在Ag催化下发生还原去氯。实际产物是保留乙烯基氯的稠合N杂环；底物为2-氨基吡啶、末端炔和β-氯代烯基醛，多样性与位点选择性来自文章特定合成证据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00807",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00807",
+        "publisherOnlineDate": "2026-07-28",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "8eec421b64548606a5a768d223f681670c18c8b6",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-28",
+          "officialPublisherFirstOnline": "2026-07-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00807",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "以Ag(I)催化多组分A³偶联直接构筑2-氯代苯基乙烯基取代咪唑并[1,2-a]吡啶，突出区域选择性、C–Cl乙烯基键保留及药物片段后期衍生，属于新杂环制备方法。 以2-氨基吡啶、末端炔烃和β-氯代烯基醛为三组分，经银催化偶联和环化生成2-氯-(苯基乙烯基)咪唑并[1,2-a]吡啶骨架，产物保留乙烯基C–Cl键。 ACS JOC Article报告较广的2-氨基吡啶/末端炔/氯烯醛组分范围，高区域选择性与官能团兼容性，并展示药物相关底物后期修饰。保留C–Cl可供后续化学操作，不能误报为本步发生了乙烯氯脱氯。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "潜在误判是把‘A³’简化成通常醛–胺–炔三组分炔丙胺合成，或者认为氯代乙烯基在Ag催化下发生还原去氯。实际产物是保留乙烯基氯的稠合N杂环；底物为2-氨基吡啶、末端炔和β-氯代烯基醛，多样性与位点选择性来自文章特定合成证据。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01109",
+      "journal": "JOC",
+      "title": "Arylamine-Mediated Construction of 1,2- cis C -Vinyl Furanosides and Application in the Synthesis of Jaspine B",
+      "titleZh": "芳胺介导Petasis反应与酸催化脱胺环化制备1,2-顺式碳乙烯基呋喃糖及Jaspine B",
+      "date": "2026-07-30",
+      "authors": [
+        "Jiaxin Tong",
+        "Dongyang Sun",
+        "Gang He"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "11209-11213",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01109"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出不保护糖原料参与的两步立体选择性Petasis反应与脱胺环化，构筑1,2-顺式C-乙烯基呋喃糖，同时展示Jaspine B全顺式四氢呋喃核心的实用合成。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01109；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-30，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "强反证是题目‘Application in the Synthesis of Jaspine B’是否代表仅合成片段，或将全部天然产物路线当作一个直接Petasis环化。原文给出从不保护糖出发的普适立体选择性C-糖苷方法，并应用于Jaspine B简洁合成；仅把作者明确写出的Jaspine B合成用途作为制备依据，绝不声称Petasis一锅直接形成末端含氨基天然产物。",
+      "scopeAssessment": {
+        "primaryContribution": "提出不保护糖原料参与的两步立体选择性Petasis反应与脱胺环化，构筑1,2-顺式C-乙烯基呋喃糖，同时展示Jaspine B全顺式四氢呋喃核心的实用合成。",
+        "preparativeTransformation": "从未保护糖出发，经芳胺介导Petasis多组分偶联得到含烯基与胺基的糖衍生中间体，再经Brønsted酸催化脱胺环化生成1,2-cis C-乙烯基呋喃糖；在Jaspine B路线中进一步通过自由基C–H酰胺化进行后期胺基安装。",
+        "generalityEvidence": "ACS JOC原始Article报道不保护糖直接应用、产物范围较广且具高立体选择性；用此方法快速构筑Jaspine B所需all-cis THF核心并完成后续关键氨基引入。Petasis/脱胺环化为两步，后期C–H胺化是不同阶段，不应写成全部一锅完成。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01109；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-30，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "强反证是题目‘Application in the Synthesis of Jaspine B’是否代表仅合成片段，或将全部天然产物路线当作一个直接Petasis环化。原文给出从不保护糖出发的普适立体选择性C-糖苷方法，并应用于Jaspine B简洁合成；仅把作者明确写出的Jaspine B合成用途作为制备依据，绝不声称Petasis一锅直接形成末端含氨基天然产物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01109",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01109",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "8eec421b64548606a5a768d223f681670c18c8b6",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01109",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "提出不保护糖原料参与的两步立体选择性Petasis反应与脱胺环化，构筑1,2-顺式C-乙烯基呋喃糖，同时展示Jaspine B全顺式四氢呋喃核心的实用合成。 从未保护糖出发，经芳胺介导Petasis多组分偶联得到含烯基与胺基的糖衍生中间体，再经Brønsted酸催化脱胺环化生成1,2-cis C-乙烯基呋喃糖；在Jaspine B路线中进一步通过自由基C–H酰胺化进行后期胺基安装。 ACS JOC原始Article报道不保护糖直接应用、产物范围较广且具高立体选择性；用此方法快速构筑Jaspine B所需all-cis THF核心并完成后续关键氨基引入。Petasis/脱胺环化为两步，后期C–H胺化是不同阶段，不应写成全部一锅完成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "强反证是题目‘Application in the Synthesis of Jaspine B’是否代表仅合成片段，或将全部天然产物路线当作一个直接Petasis环化。原文给出从不保护糖出发的普适立体选择性C-糖苷方法，并应用于Jaspine B简洁合成；仅把作者明确写出的Jaspine B合成用途作为制备依据，绝不声称Petasis一锅直接形成末端含氨基天然产物。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01186",
+      "journal": "JOC",
+      "title": "Navigating Competing Retro-Aldol and Retro-Mannich Reaction Pathways in Realizing Syntheses of 2,5-Dihydrofuran, 2,5-Dihydropyrrole, and 2,3-Pyrrole Architectures",
+      "titleZh": "控制逆羟醛与逆Mannich竞争路径两步制备二氢呋喃、二氢吡咯及吡咯骨架",
+      "date": "2026-07-30",
+      "authors": [
+        "Aleksey S. Lanin",
+        "Rachel A. Allen",
+        "Sophia H. Lieu",
+        "Shuming Chen",
+        "Jon T. Njardarson"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10999-11008",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01186"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发从廉价醛或亚胺出发的可放大两步合成，解决此前因逆羟醛或逆Mannich而难以构筑2,5-二氢呋喃、2,5-二氢吡咯和2,3-吡咯的问题，属于原始制备反应而非纯机理讨论。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01186；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-30，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "逆向挑战是文章名称强调逆反应竞争，会否只有机理而无通用制备；实际上作者给出了可放大两步构环、底物类型与Evans不对称合成延伸。DBU和TBD并非可无条件交换：TBD使某些Mannich加成物形成另一吡咯骨架，且不同syn/anti aldol对环化差异显著，不能将所有前体笼统标为高收率同一产物。",
+      "scopeAssessment": {
+        "primaryContribution": "开发从廉价醛或亚胺出发的可放大两步合成，解决此前因逆羟醛或逆Mannich而难以构筑2,5-二氢呋喃、2,5-二氢吡咯和2,3-吡咯的问题，属于原始制备反应而非纯机理讨论。",
+        "preparativeTransformation": "溴代丁烯酸乙酯先以Ti二烯醇盐与醛/亚胺分别发生aldol/Mannich形成加成物；DBU等强碱促进烯烃异构与分子内环化生成二氢呋喃/二氢吡咯，另一强碱TBD可使Mannich加成物导向2,3-二取代吡咯。",
+        "generalityEvidence": "ACS JOC Article报告多种醛/亚胺来源及两步合成，可放大操作和良好收率；证实普通碱与DBU/TBD在复古断裂或目标环化之间有决定性区别，并比较syn/anti、烷基/芳基aldol底物对成环的差别。Evans aldol结合Yb(OTf)3可获得手性二氢呋喃。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.joc.6c01186；原刊类型 ACS_JOC_Original_Article_Published_Online，官方 Published Online / First Published 2026-07-30，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-07-22_2026-07-31_joc raw Git blob 9181de94c2f59b0fb77a470f802a143699524037，reviewer queue Git blob 8eec421b64548606a5a768d223f681670c18c8b6，source-root SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "逆向挑战是文章名称强调逆反应竞争，会否只有机理而无通用制备；实际上作者给出了可放大两步构环、底物类型与Evans不对称合成延伸。DBU和TBD并非可无条件交换：TBD使某些Mannich加成物形成另一吡咯骨架，且不同syn/anti aldol对环化差异显著，不能将所有前体笼统标为高收率同一产物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01186",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01186",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceReviewQueueGitBlobSha": "8eec421b64548606a5a768d223f681670c18c8b6",
+        "stageSourceSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01186",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发从廉价醛或亚胺出发的可放大两步合成，解决此前因逆羟醛或逆Mannich而难以构筑2,5-二氢呋喃、2,5-二氢吡咯和2,3-吡咯的问题，属于原始制备反应而非纯机理讨论。 溴代丁烯酸乙酯先以Ti二烯醇盐与醛/亚胺分别发生aldol/Mannich形成加成物；DBU等强碱促进烯烃异构与分子内环化生成二氢呋喃/二氢吡咯，另一强碱TBD可使Mannich加成物导向2,3-二取代吡咯。 ACS JOC Article报告多种醛/亚胺来源及两步合成，可放大操作和良好收率；证实普通碱与DBU/TBD在复古断裂或目标环化之间有决定性区别，并比较syn/anti、烷基/芳基aldol底物对成环的差别。Evans aldol结合Yb(OTf)3可获得手性二氢呋喃。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "逆向挑战是文章名称强调逆反应竞争，会否只有机理而无通用制备；实际上作者给出了可放大两步构环、底物类型与Evans不对称合成延伸。DBU和TBD并非可无条件交换：TBD使某些Mannich加成物形成另一吡咯骨架，且不同syn/anti aldol对环化差异显著，不能将所有前体笼统标为高收率同一产物。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1002/anie.1980531",
+      "journal": "Angew",
+      "title": "Catalytic Enantioselective Addition of Aryl, Heteroaryl, and Alkenyl Halides to Aliphatic Aldehydes",
+      "titleZh": "手性Josiphos钴催化芳基、杂芳基和烯基卤化物对脂肪醛的不对称加成",
+      "date": "2026-09-04",
+      "authors": [
+        "Lantian Sun",
+        "Bo Xiao",
+        "Shuai Huang",
+        "Chi‐Sing Lee",
+        "Jianrong Steve Zhou"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "e1980531",
+        "doi": "10.1002/anie.1980531"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发无需定向基的钴/手性Josiphos催化有机卤化物对脂肪醛不对称加成，突破脂肪醛对芳基等有机金属化试剂的高对映选择性加成限制，直接制备手性仲醇。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://onlinelibrary.wiley.com/doi/10.1002/anie.1980531；原刊类型 Wiley_Angew_Research_First_Published，官方 Published Online / First Published 2026-09-04，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-09-01_2026-09-07_angew raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，reviewer queue Git blob ff049bff017145eed6b7b37a3d466c81f5aac716，source-root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "反证是该反应是否实际使用镍或由Ti醇盐直接完成不对称亲核加成。出版社明确主要手性源为Co/Josiphos，Ti醇盐作为Lewis酸协助Ar–Co卤化物离解；离子性Ar–Co(II)及Josiphos P-芳基π–π过渡态作用来自机理研究/计算，而不能冒充直接晶体捕捉到整个插入过渡态。",
+      "scopeAssessment": {
+        "primaryContribution": "开发无需定向基的钴/手性Josiphos催化有机卤化物对脂肪醛不对称加成，突破脂肪醛对芳基等有机金属化试剂的高对映选择性加成限制，直接制备手性仲醇。",
+        "preparativeTransformation": "芳基、杂芳基或烯基卤化物在Co–Josiphos配合物和辅助钛醇盐条件下与链状或支链脂肪醛反应，形成新的C(sp²)–C(carbinol)键并生成对映富集的二级醇；手性氨基醛还可获得高非对映选择性加成。",
+        "generalityEvidence": "Wiley官方Angew Research Article确认对线性与支链脂肪醛、多类Ar/heteroAr/alkenyl halides的官能团及底物覆盖，钴负载量较低、易放大，并可用于药物核心手性醇的简洁合成。钛醇盐有助阳离子Ar–Co(II)形成是机理支持模型而非直接定量观测所有步骤。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://onlinelibrary.wiley.com/doi/10.1002/anie.1980531；原刊类型 Wiley_Angew_Research_First_Published，官方 Published Online / First Published 2026-09-04，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-09-01_2026-09-07_angew raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，reviewer queue Git blob ff049bff017145eed6b7b37a3d466c81f5aac716，source-root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "反证是该反应是否实际使用镍或由Ti醇盐直接完成不对称亲核加成。出版社明确主要手性源为Co/Josiphos，Ti醇盐作为Lewis酸协助Ar–Co卤化物离解；离子性Ar–Co(II)及Josiphos P-芳基π–π过渡态作用来自机理研究/计算，而不能冒充直接晶体捕捉到整个插入过渡态。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.1980531",
+        "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.1980531",
+        "publisherOnlineDate": "2026-09-04",
+        "publisherOriginalResearchType": "Wiley_Angew_Research_First_Published",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_angew",
+        "stageBatchSha": "20a0ec09ce98e9c81acab658e9fe44086e5b0508",
+        "sourceReviewQueueGitBlobSha": "ff049bff017145eed6b7b37a3d466c81f5aac716",
+        "stageSourceSha256": "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-04",
+          "officialPublisherFirstOnline": "2026-09-04",
+          "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.1980531",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "Wiley_Angew_Research_First_Published"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发无需定向基的钴/手性Josiphos催化有机卤化物对脂肪醛不对称加成，突破脂肪醛对芳基等有机金属化试剂的高对映选择性加成限制，直接制备手性仲醇。 芳基、杂芳基或烯基卤化物在Co–Josiphos配合物和辅助钛醇盐条件下与链状或支链脂肪醛反应，形成新的C(sp²)–C(carbinol)键并生成对映富集的二级醇；手性氨基醛还可获得高非对映选择性加成。 Wiley官方Angew Research Article确认对线性与支链脂肪醛、多类Ar/heteroAr/alkenyl halides的官能团及底物覆盖，钴负载量较低、易放大，并可用于药物核心手性醇的简洁合成。钛醇盐有助阳离子Ar–Co(II)形成是机理支持模型而非直接定量观测所有步骤。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反证是该反应是否实际使用镍或由Ti醇盐直接完成不对称亲核加成。出版社明确主要手性源为Co/Josiphos，Ti醇盐作为Lewis酸协助Ar–Co卤化物离解；离子性Ar–Co(II)及Josiphos P-芳基π–π过渡态作用来自机理研究/计算，而不能冒充直接晶体捕捉到整个插入过渡态。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02970",
+      "journal": "Organic Letters",
+      "title": "Photocatalyst-Free Four-Component Synthesis of 1,3,2-Diazaboroles through the Dual Reactivity of Diarylboryl Radicals",
+      "titleZh": "光催化剂自由四组分串联反应通过二芳基硼自由基双重反应性构筑1,3,2-二氮杂硼杂环",
+      "date": "2026-08-27",
+      "authors": [
+        "Hao-Ni Qin",
+        "Hao-Wen Jiang",
+        "Xu-Gang Zhang",
+        "Xiang-Chuang Tan",
+        "Peng-Fei Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11218-11224",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02970"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发现喹喔啉酮自猝灭产生二芳基硼自由基的可见光反应过程，无需额外光催化剂即可多组分串联制备1,3,2-二氮杂硼杂环，为B–N杂环骨架提供不同于亲电有机硼试剂的自由基合成方法。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02970；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-08-27，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-08-22_2026-08-31_organic-letters raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，reviewer queue Git blob e45cd8b57d54a7e784b4a6cf02381b0f956568aa，source-root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "反向质疑是所谓photocatalyst-free是否意味着完全不需要光、或者所有烷基氯和氟代烷烃在任意条件均能反应。官方明确需要可见光且借助底物喹喔啉酮自猝灭过程，只报道部分难活化氯代及选定含氟底物；四组分收敛合成与二芳基硼自由基机理应分别列为实证转化和作者支持的模型。",
+      "scopeAssessment": {
+        "primaryContribution": "发现喹喔啉酮自猝灭产生二芳基硼自由基的可见光反应过程，无需额外光催化剂即可多组分串联制备1,3,2-二氮杂硼杂环，为B–N杂环骨架提供不同于亲电有机硼试剂的自由基合成方法。",
+        "preparativeTransformation": "以喹喔啉酮、二芳基硼相关底物、卤代烃等作为串联反应伙伴，可见光诱导二芳基硼自由基生成并参与有机卤化物活化与B,N杂环成环，形成1,3,2-二氮杂硼产物；部分不活泼烷基氯及特定氟化底物也可转化。",
+        "generalityEvidence": "ACS Original Letter摘要明确说明无外加photocatalyst的四组分汇聚合成、较宽的底物范围和有机卤化物兼容；特别将此前分散的有机卤化物自由基活化与B–N杂环构建合并。作者称二芳基硼自由基由光诱导喹喔啉酮自猝灭产生，属于机理证据支持而非无需光。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02970；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-08-27，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-08-22_2026-08-31_organic-letters raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，reviewer queue Git blob e45cd8b57d54a7e784b4a6cf02381b0f956568aa，source-root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "反向质疑是所谓photocatalyst-free是否意味着完全不需要光、或者所有烷基氯和氟代烷烃在任意条件均能反应。官方明确需要可见光且借助底物喹喔啉酮自猝灭过程，只报道部分难活化氯代及选定含氟底物；四组分收敛合成与二芳基硼自由基机理应分别列为实证转化和作者支持的模型。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02970",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02970",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "e45cd8b57d54a7e784b4a6cf02381b0f956568aa",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02970",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发现喹喔啉酮自猝灭产生二芳基硼自由基的可见光反应过程，无需额外光催化剂即可多组分串联制备1,3,2-二氮杂硼杂环，为B–N杂环骨架提供不同于亲电有机硼试剂的自由基合成方法。 以喹喔啉酮、二芳基硼相关底物、卤代烃等作为串联反应伙伴，可见光诱导二芳基硼自由基生成并参与有机卤化物活化与B,N杂环成环，形成1,3,2-二氮杂硼产物；部分不活泼烷基氯及特定氟化底物也可转化。 ACS Original Letter摘要明确说明无外加photocatalyst的四组分汇聚合成、较宽的底物范围和有机卤化物兼容；特别将此前分散的有机卤化物自由基活化与B–N杂环构建合并。作者称二芳基硼自由基由光诱导喹喔啉酮自猝灭产生，属于机理证据支持而非无需光。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向质疑是所谓photocatalyst-free是否意味着完全不需要光、或者所有烷基氯和氟代烷烃在任意条件均能反应。官方明确需要可见光且借助底物喹喔啉酮自猝灭过程，只报道部分难活化氯代及选定含氟底物；四组分收敛合成与二芳基硼自由基机理应分别列为实证转化和作者支持的模型。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03286",
+      "journal": "Organic Letters",
+      "title": "One-Pot 1,4-Difunctionalization of C60 with H-Phosphonates and Nucleophiles via Anion/Radical Cascade",
+      "titleZh": "亚磷酸氢酯与亲核试剂经阴离子自由基级联实现富勒烯C60的1,4-双官能团化",
+      "date": "2026-08-28",
+      "authors": [
+        "Yi Wang",
+        "Wei Liu",
+        "Yu Yang",
+        "Ya-Nan Zhang",
+        "Yu-yue Zheng",
+        "Jun Xuan",
+        "Hong-Ping Zhou",
+        "Fei Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11296-11302",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03286"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展C60球笼一锅非对称1,4-双官能团化方法，从H-膦酸酯和亲核伙伴构筑不同取代1,4-(膦酰基)(有机基)-C60产物，核心贡献是可扩展有机官能团化而非太阳能电池性能。",
+      "evidenceBasis": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03286；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-08-28，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-08-22_2026-08-31_organic-letters raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，reviewer queue Git blob e45cd8b57d54a7e784b4a6cf02381b0f956568aa，source-root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+      "challengeReason": "强反证是研究对象C60能否只是材料器件制样而没有原创有机反应。作者明确展示H-膦酸酯/亲核伙伴导向的非对称1,4-双官能团化与多组产物结构验证，属于有机方法；但阴离子和自由基两条反应路径在不同实验中观察到支持，BHT捕获不能直接证明所有普通亲核加成产物都经完全一致的自由基串联机制。",
+      "scopeAssessment": {
+        "primaryContribution": "发展C60球笼一锅非对称1,4-双官能团化方法，从H-膦酸酯和亲核伙伴构筑不同取代1,4-(膦酰基)(有机基)-C60产物，核心贡献是可扩展有机官能团化而非太阳能电池性能。",
+        "preparativeTransformation": "C60与H-膦酸酯和亲核试剂经历亲核加成、质子化和氧化偶联的顺序过程形成一个膦酰基和一个有机基的1,4-双取代[60]富勒烯；使用BHT捕获相关磷酸酯修饰富勒烯自由基可得到1,4-二有机取代系列。",
+        "generalityEvidence": "ACS Original Letter摘要明确报告多种1,4-不对称官能团化C60产物，SI收有多个系列（3aa–3da、5aa–5de、7aa–7ef、9aa–9ec、11a–11e、12a–12g）光谱及部分X射线结构。文章具有真实底物–产物制备、可分离表征，不应因C60也作为材料而自动排除。",
+        "sourceEvidence": "原创出版社 DOI 正文/Article History：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03286；原刊类型 ACS_OrgLett_Original_Letter_Published_Online，官方 Published Online / First Published 2026-08-28，核对并非卷期印刷日。冻结 Crossref+OpenAlex 2026-08-22_2026-08-31_organic-letters raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，reviewer queue Git blob e45cd8b57d54a7e784b4a6cf02381b0f956568aa，source-root SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98；原始作者、2026卷期页/文章号均以DOI一致性核实。仅记录文章特定公开制备与机理事实，不复制受限完整摘要、正文、SI、PDF或图片。",
+        "boundaryChallenge": "强反证是研究对象C60能否只是材料器件制样而没有原创有机反应。作者明确展示H-膦酸酯/亲核伙伴导向的非对称1,4-双官能团化与多组产物结构验证，属于有机方法；但阴离子和自由基两条反应路径在不同实验中观察到支持，BHT捕获不能直接证明所有普通亲核加成产物都经完全一致的自由基串联机制。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03286",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03286",
+        "publisherOnlineDate": "2026-08-28",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "e45cd8b57d54a7e784b4a6cf02381b0f956568aa",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-28",
+          "officialPublisherFirstOnline": "2026-08-28",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03286",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展C60球笼一锅非对称1,4-双官能团化方法，从H-膦酸酯和亲核伙伴构筑不同取代1,4-(膦酰基)(有机基)-C60产物，核心贡献是可扩展有机官能团化而非太阳能电池性能。 C60与H-膦酸酯和亲核试剂经历亲核加成、质子化和氧化偶联的顺序过程形成一个膦酰基和一个有机基的1,4-双取代[60]富勒烯；使用BHT捕获相关磷酸酯修饰富勒烯自由基可得到1,4-二有机取代系列。 ACS Original Letter摘要明确报告多种1,4-不对称官能团化C60产物，SI收有多个系列（3aa–3da、5aa–5de、7aa–7ef、9aa–9ec、11a–11e、12a–12g）光谱及部分X射线结构。文章具有真实底物–产物制备、可分离表征，不应因C60也作为材料而自动排除。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "强反证是研究对象C60能否只是材料器件制样而没有原创有机反应。作者明确展示H-膦酸酯/亲核伙伴导向的非对称1,4-双官能团化与多组产物结构验证，属于有机方法；但阴离子和自由基两条反应路径在不同实验中观察到支持，BHT捕获不能直接证明所有普通亲核加成产物都经完全一致的自由基串联机制。"
+        }
+      ]
+    }
+  ],
+  "notableBoundaryFacts": [
+    "Notopterol/Notoptol truly completed natural-product total syntheses, not mere analog fragment studies",
+    "Giese proceeds from preactivated alcohol-derived O-alkylisoureas not free alcohols",
+    "Angew aryl-halide addition catalyst is cobalt/Josiphos, not nickel",
+    "Retro-Mannich/aldol suppression creates separable synthetic scope, not just a kinetics study",
+    "BHT-associated fullerene 1,4-diorgano branch is not identical mechanistic proof for all product families"
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "noD1": true,
+    "noPublisherMediaOrPdf": true,
+    "noNewOrHot": true,
+    "no08SlotChange": true,
+    "ownerExclusionIntact": true,
+    "allSourceRootsImmutable": true
+  }
+}
