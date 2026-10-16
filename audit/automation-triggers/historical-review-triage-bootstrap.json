@@ -1,6 +1,6 @@
 {
-  "version": 11,
-  "purpose": "staging_only_regenerate_historical_Q3_reviewer_status_after_151_approved",
+  "version": 12,
+  "purpose": "staging_only_wrap_396_root_cursor_resynchronize_seven_global_statuses",
   "approvedAt": "2026-10-16",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-16T00:44:45.457Z",
-  "reason": "After merged PR707, fully recalculate all 16 journals 2026 Q3 reviewer state from 151 independently double-reviewed approved DOI, current 1186 formally published (122 historical), 1 historic owner-policy veto (never publish), and 2 source-date pending. Run staging-only main+historical branch rebase and bounded reviewer sharding; preserve all 57266 sources/396 completed roots/27 OpenAlex API-key-missing deferred roots; refresh canonical Q3/global ledger from actual data without invented counts or any D1/media/publication.",
+  "requestedAt": "2026-10-16T00:46:07.045Z",
+  "reason": "The first staging-only triage run #38831231811 completed all 396 source roots at cursor396 and correctly recalculated Q3 2026 unfinished=11224 (prior11231), approved waiting=29, formal851, distinct source=12286. Global review ledger still reports staleReviewerStatusRecords=7 because the previous bounded 320-root reviewer shard pass predated six new approvals and one changed status. Wrap cursor396 to root0, revisit the remaining stale root shards, keep all 57,266 DOI/396 completed roots, no source acquisition, no D1, no publication. Do not claim consistency until real global stale=0 readback.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261016_recalculate_after_151_historical_double_approved_six_acs_new",
+  "triggerScope": "20261016_wrap_reviewer_cursor_396_to_0_to_clear_7_stale",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 1087,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -149,5 +149,12 @@
   "fullQ3RecountOnlyOnSuccessfulStaging": true,
   "preserveOpenAlexKeyMissingAsIncomplete": true,
   "expectedIncompleteOpenAlexWindows": 27,
-  "expectedGlobalSourceUniqueDois": 57266
+  "expectedGlobalSourceUniqueDois": 57266,
+  "expectedGlobalStaleReviewerStatusRecordsBefore": 7,
+  "expectedGlobalStaleReviewerStatusRecordsAfterRecheck": 0,
+  "actualQ3UnfinishedAtFirstRecount": 11224,
+  "actualApprovedWaitingAtFirstRecount": 29,
+  "actualQ3FormalAtFirstRecount": 851,
+  "actualGlobalDistinctAtFirstRecount": 57266,
+  "previousTriageRunId": 38831231811
 }
