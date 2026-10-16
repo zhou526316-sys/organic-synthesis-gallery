@@ -21,8 +21,15 @@ export function historicalPublisherPageMatchesDoi(id,page) {
   const key=doi(id);
   if(u.href.toLowerCase().includes('/'+key))return true;
   const articleSlug=key.startsWith('10.1038/')?key.slice('10.1038/'.length):'';
-  return Boolean(articleSlug && (u.hostname==='www.nature.com'||u.hostname==='nature.com')
-    &&u.pathname.toLowerCase()==='/articles/'+articleSlug);
+  if(articleSlug && (u.hostname==='www.nature.com'||u.hostname==='nature.com')
+    &&u.pathname.toLowerCase()==='/articles/'+articleSlug)return true;
+  // RSC canonical publisher articlelanding URL omits the 10.1039 prefix,
+  // unlike the DOI resolver. Bind full suffix + journal code to an RSC host.
+  const rscSlug=key.startsWith('10.1039/')?key.slice('10.1039/'.length):'';
+  const rscParts=/^\/(?:en\/)?content\/article(?:landing|html)\/20\d{2}\/([a-z]{2})\/([a-z0-9]+)$/
+    .exec(u.pathname.toLowerCase());
+  return Boolean(rscSlug && u.hostname==='pubs.rsc.org' && rscParts
+    &&rscParts[1]===rscSlug.slice(2,4)&&rscParts[2]===rscSlug);
 }
 
 export function validateHistoricalApproval(artifact){
