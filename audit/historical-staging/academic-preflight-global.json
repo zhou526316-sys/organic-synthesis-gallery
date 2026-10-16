@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-16T03:44:46.099Z",
-  "sourceWorklistSha256": "6605c407fbc25871d7da651d43206434c957e0d888b969692d84af925830c158",
+  "sourceWorklistProducedAt": "2026-10-16T06:02:23.520Z",
+  "sourceWorklistSha256": "fa4220b95ed8ae839d1bb904a26910d4b03df634ffba7354fdfd6842857ccb69",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 56293,
+  "sourceTotalUnreviewed": 56281,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -1475,19 +1475,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02370",
+      "doi": "10.1021/acs.orglett.6c02330",
       "journal": "Organic Letters",
-      "title": "Visible-Light-Driven Enantioselective Free Radical Addition to Aldimines via Direct C–H Functionalization",
-      "firstAuthor": "Tatsuhiro Uchikura",
+      "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
+      "firstAuthor": "Rongkai Gao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-14",
+      "originDateCandidate": "2026-07-16",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -1497,13 +1496,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-08_2026-07-14_organic-letters"
+          "2026-07-15_2026-07-21_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "6fe0dfed0c80fa076a06b8838da0fb9c12ee459ea6a4d5482c509b9c147ac460"
+          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02370",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02330",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2144,19 +2143,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02444",
+      "doi": "10.1021/acs.orglett.6c02340",
       "journal": "Organic Letters",
-      "title": "Regio- and Enantioselective Functionalization of Quinone Imine Ketals Enabled by Gold and CPA Relay Catalysis",
-      "firstAuthor": "Xiaolan Xin",
+      "title": "CPA-Catalyzed Enantioselective Assembly of Chiral 1,4-Dihydropyridines with Nonadjacent 1,3-Stereocenters",
+      "firstAuthor": "Hao-Wei Peng",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-13",
+      "originDateCandidate": "2026-06-29",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 8,
         "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2166,13 +2164,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-08_2026-07-14_organic-letters"
+          "2026-06-01_2026-06-30_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "6fe0dfed0c80fa076a06b8838da0fb9c12ee459ea6a4d5482c509b9c147ac460"
+          "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02444",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02340",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2812,18 +2810,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02330",
+      "doi": "10.1021/acs.orglett.6c02393",
       "journal": "Organic Letters",
-      "title": "Directing Group Enabled Copper-Catalyzed Enantioselective S-Benzylation of Sulfenamides",
-      "firstAuthor": "Rongkai Gao",
+      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
+      "firstAuthor": "Yongsheng Hou",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-16",
+      "originDateCandidate": "2026-07-04",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -2833,13 +2832,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-15_2026-07-21_organic-letters"
+          "2026-07-01_2026-07-07_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02330",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02393",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3477,12 +3476,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02340",
+      "doi": "10.1021/acs.orglett.6c02414",
       "journal": "Organic Letters",
-      "title": "CPA-Catalyzed Enantioselective Assembly of Chiral 1,4-Dihydropyridines with Nonadjacent 1,3-Stereocenters",
-      "firstAuthor": "Hao-Wei Peng",
+      "title": "Chiral Monodentate Phosphine Ligand for Palladium-Catalyzed Enantioselective Cascade Arylvinylation of Alkenes with N -Tosylhydrazones",
+      "firstAuthor": "Wenrui Zheng",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-29",
+      "originDateCandidate": "2026-07-06",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3498,13 +3497,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-06-01_2026-06-30_organic-letters"
+          "2026-07-01_2026-07-07_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
+          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02340",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02414",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3518,12 +3517,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c01034",
+      "doi": "10.1021/acs.joc.6c00960",
       "journal": "JOC",
-      "title": "Asymmetric Synthesis of Chiral δ-Caprolactams: Access to a Key Intermediate of Ubrogepant",
-      "firstAuthor": "Qingyuan Shi",
+      "title": "Asymmetric Synthesis of Allylamines by Regio- and Diastereoselective 1,2-Addition of Organolithium Reagents to Conjugated Sulfinimines",
+      "firstAuthor": "Anaïs Loison",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-03",
+      "originDateCandidate": "2026-06-22",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3540,13 +3539,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-01_2026-08-07_joc"
+          "2026-06-01_2026-06-30_joc"
         ],
         "sourceSha256Hashes": [
-          "fe70d5223d5e405770b32e237f10852cf2eb5f68a805f283b916d20f3026f95b"
+          "43d815c2c8383d9b604e3395b1ebcf59b25c633e1753747c5902ecd43fb021f2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c01034",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00960",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4766,19 +4765,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02393",
+      "doi": "10.1021/acs.orglett.6c02475",
       "journal": "Organic Letters",
-      "title": "Asymmetric Total Synthesis and Antihypoxic Neuroinflammatory Evaluation of Notopterol, Notoptol, and Their Natural Analogues",
-      "firstAuthor": "Yongsheng Hou",
+      "title": "Pd-Catalyzed Enantioselective Annulative Naphthylcarbamoylation of Internal Alkynes for Accessing Axially Chiral Exocyclic Alkenes",
+      "firstAuthor": "Zhi-Jie Diao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-04",
+      "originDateCandidate": "2026-06-25",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "target_or_late_stage_synthesis",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -4788,13 +4786,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-01_2026-07-07_organic-letters"
+          "2026-06-01_2026-06-30_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
+          "60a01162cfaf9f484bd770abcf223b1df799b204ec1a8daed8abc3b69706e148"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02393",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02475",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5431,53 +5429,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02414",
+      "doi": "10.1021/acs.orglett.6c02893",
       "journal": "Organic Letters",
-      "title": "Chiral Monodentate Phosphine Ligand for Palladium-Catalyzed Enantioselective Cascade Arylvinylation of Alkenes with N -Tosylhydrazones",
-      "firstAuthor": "Wenrui Zheng",
+      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
+      "firstAuthor": "Zhen Mo",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-06",
-      "truePublisherOnlineDate": null,
-      "publisherCategory": null,
-      "evidenceRank": {
-        "score": 8,
-        "signals": [
-          "stereoselective_synthetic_method"
-        ],
-        "offTopicTitleRisk": false,
-        "chemistryTitleSignalsOnly": true,
-        "nonOriginalPublisherTypeVerified": false,
-        "publisherFirstOnlineVerified": false,
-        "noAutomaticScopeDecision": true
-      },
-      "sourceProof": {
-        "sourceRootIds": [
-          "2026-07-01_2026-07-07_organic-letters"
-        ],
-        "sourceSha256Hashes": [
-          "ddb2170e765d050587d8ac65e8ec437b5d4609e4505c6f07db7793d51b71b744"
-        ]
-      },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02414",
-      "publisherEvidenceRequired": [
-        "DOI-exact official Article versus Review/Comment/Preview classification",
-        "Publisher first available online date versus issue/index-created date",
-        "Specific new substrate-to-product chemistry and product identity",
-        "Generality, yields/structure controls, or completed total synthesis",
-        "Adversarial second-pass: real boundary/contradicting evidence"
-      ],
-      "scienceFirstPass": "not_performed",
-      "scienceAdversarialPass": "not_performed",
-      "decision": "unreviewed",
-      "publicationAuthority": false
-    },
-    {
-      "doi": "10.1021/acs.joc.6c00749",
-      "journal": "JOC",
-      "title": "Total Synthesis and Antimycobacterial Activity of Ascidiathiazones A and B and Analogues",
-      "firstAuthor": "Kristiana T. Santoso",
-      "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-26",
+      "originDateCandidate": "2026-07-15",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -5494,13 +5451,55 @@
       },
       "sourceProof": {
         "sourceRootIds": [
+          "2026-07-15_2026-07-21_organic-letters"
+        ],
+        "sourceSha256Hashes": [
+          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+        ]
+      },
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02893",
+      "publisherEvidenceRequired": [
+        "DOI-exact official Article versus Review/Comment/Preview classification",
+        "Publisher first available online date versus issue/index-created date",
+        "Specific new substrate-to-product chemistry and product identity",
+        "Generality, yields/structure controls, or completed total synthesis",
+        "Adversarial second-pass: real boundary/contradicting evidence"
+      ],
+      "scienceFirstPass": "not_performed",
+      "scienceAdversarialPass": "not_performed",
+      "decision": "unreviewed",
+      "publicationAuthority": false
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00586",
+      "journal": "JOC",
+      "title": "Highly Active cis -Diphosphinoalkenyl-Nickel Catalysts for Suzuki–Miyaura Cross-Coupling Reaction of Aryl Chlorides and Aryl Boronic Acids",
+      "firstAuthor": "Xiaoli Li",
+      "originalQueuePriority": "P0",
+      "originDateCandidate": "2026-06-22",
+      "truePublisherOnlineDate": null,
+      "publisherCategory": null,
+      "evidenceRank": {
+        "score": 8,
+        "signals": [
+          "bond_construction",
+          "broad_chemistry_context"
+        ],
+        "offTopicTitleRisk": false,
+        "chemistryTitleSignalsOnly": true,
+        "nonOriginalPublisherTypeVerified": false,
+        "publisherFirstOnlineVerified": false,
+        "noAutomaticScopeDecision": true
+      },
+      "sourceProof": {
+        "sourceRootIds": [
           "2026-06-01_2026-06-30_joc"
         ],
         "sourceSha256Hashes": [
           "43d815c2c8383d9b604e3395b1ebcf59b25c633e1753747c5902ecd43fb021f2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00749",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00586",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6090,19 +6089,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.orglett.6c02893",
+      "doi": "10.1021/acs.orglett.6c02163",
       "journal": "Organic Letters",
-      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
-      "firstAuthor": "Zhen Mo",
+      "title": "Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay",
+      "firstAuthor": "Shu-Jie Chen",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-07-15",
+      "originDateCandidate": "2026-07-22",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 8,
+        "score": 7,
         "signals": [
-          "target_or_late_stage_synthesis",
-          "broad_chemistry_context"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6112,13 +6110,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-07-15_2026-07-21_organic-letters"
+          "2026-07-22_2026-07-31_organic-letters"
         ],
         "sourceSha256Hashes": [
-          "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1"
+          "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02893",
+      "doiResolver": "https://doi.org/10.1021/acs.orglett.6c02163",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6132,12 +6130,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1021/acs.joc.6c00781",
+      "doi": "10.1021/acs.joc.6c00749",
       "journal": "JOC",
-      "title": "First Total Synthesis of Cryptolaevilactones, Unique Spiromeroterpenoids",
-      "firstAuthor": "Tomoya Nishida",
+      "title": "Total Synthesis and Antimycobacterial Activity of Ascidiathiazones A and B and Analogues",
+      "firstAuthor": "Kristiana T. Santoso",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-06-29",
+      "originDateCandidate": "2026-06-26",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -6160,7 +6158,7 @@
           "43d815c2c8383d9b604e3395b1ebcf59b25c633e1753747c5902ecd43fb021f2"
         ]
       },
-      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00781",
+      "doiResolver": "https://doi.org/10.1021/acs.joc.6c00749",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
