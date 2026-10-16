@@ -138,12 +138,14 @@ const BROWSER_READ_PATHS = new Set([
   '/api/toc',
   '/api/article-figures',
   '/api/article-figures/staged',
+  '/api/article-figures/staged/inventory',
   '/api/media/batch',
   '/api/media/inventory',
   '/api/media/bridge-queue',
   '/api/media/repair-status',
   '/api/media/jobs/status',
   '/api/media/local-capture-index',
+  '/api/media/local-capture-index/inventory',
   '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
@@ -948,6 +950,11 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);
   }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/staged/inventory') {
+    const payload=await readJson(request);
+    if(payload?.readOnly!==true)return json({error:'read_only_required'},{status:400,headers:cors});
+    return resultResponse(await getStagedArticleFigures(request,env,payload.dois),cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/media/batch') {
     return resultResponse(await mediaBatch(request, env, await readJson(request)), cors);
   }
@@ -970,6 +977,11 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'GET' && url.pathname === '/api/media/local-capture-index') {
     return resultResponse(await getLocalCaptureIndex(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/local-capture-index/inventory') {
+    const payload=await readJson(request);
+    if(payload?.readOnly!==true)return json({error:'read_only_required'},{status:400,headers:cors});
+    return resultResponse(await getLocalCaptureIndex(request,env,payload.dois),cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/local-diagnostics') {
     return resultResponse(await getLocalDiagnostics(env), cors);
