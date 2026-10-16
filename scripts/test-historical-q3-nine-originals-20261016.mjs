@@ -99,7 +99,10 @@ test('separate chemistry and mechanism boundaries not conflated',()=>{
 });
 test('no formal or media release before authorized 08:00 admission',()=>{
  const published=new Map(formal.articles.map(x=>[x.doi,x]));
- const selection=selectHistoricalAdmissions(m,{published:new Set(published.keys()),policyExcluded:new Set(m.accepted.filter(x=>isExcludedDoi(x.doi)).map(x=>x.doi))});
+ const vetoes=[];
+ const selection=selectHistoricalAdmissions(m,{published:new Set(published.keys()),policyExcluded:new Set(m.accepted.filter(x=>isExcludedDoi(x.doi)).map(x=>x.doi)),onPolicyVeto:x=>vetoes.push(x)});
+ assert.ok(vetoes.some(x=>x.doi==='10.1038/s41467-026-77616-8'));
+
  const ids=new Set(selection.map(x=>x.doi));
  for(const id of publisherDates.keys()){
   if(published.has(id)){const x=published.get(id);assert.equal(x.ingestionChannel,'historical_backfill');assert.equal(x.mediaPolicy,'toc_only');assert.equal(x.new,false);}
