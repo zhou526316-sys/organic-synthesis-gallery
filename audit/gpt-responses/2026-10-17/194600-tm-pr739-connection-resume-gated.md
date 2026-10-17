@@ -31,3 +31,8 @@
 
 ## User-visible continuation summary
 The connection-resume work confirmed that the latest tightened fix is committed to draft PR #739 and has undergone a broad new regression suite. It retains DOI- and job-bound startup + terminal receipt before restoring publisher queue. At the latest checkpoint 26/27 CI workflow groups passed, with the site quality gate still running and no failed group. No production changes have been made. Genuine production capture improvement is not yet established and requires separate actual owner-browser canary acceptance.
+
+## Final CI result — Beijing 2026-10-17 19:46
+- The remaining site quality gate completed successfully: https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/39029444359
+- All 27/27 distinct PR CI workflow groups passed for exact PR head e1f56ca5d70bfb23071a7a62bfcc26c4c373af75.
+- Draft PR #739 is still unmerged and has not changed the production installer. This qualifies code-level regression evidence only. Real capture improvement and deployment remain gated on an isolated authorized owner browser canary.
