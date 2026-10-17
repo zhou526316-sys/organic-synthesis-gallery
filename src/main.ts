@@ -1058,6 +1058,7 @@ function refreshCorpusResultsInPlace(): void {
       const notice = document.createElement('div');
       notice.className = 'architecture-read-limited';
       notice.setAttribute('role', 'status');
+      notice.textContent = noticeText;
       document.querySelector('.resultline')?.after(notice);
     }
   } else existing?.remove();
