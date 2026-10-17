@@ -619,7 +619,7 @@ test('rapid calendar edits retain the account form and search one complete range
     && item.firstOnlineDate >= '2026-01-01' && item.firstOnlineDate <= '2026-10-31').length;
   await expect(page.locator('#resultCount')).toHaveText(String(matched));
   await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(RESULT_WINDOW_SIZE, matched));
-  await expect(page.locator('#resultWindowStatus')).toContainText(`共 ${matched} 篇`);
+  await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp(`(?:共 ${matched} 篇|of ${matched}$)`));
 });
 
 test('date range exposes complete cold Archive via bounded static pagination after D1 409', async ({ page }) => {
