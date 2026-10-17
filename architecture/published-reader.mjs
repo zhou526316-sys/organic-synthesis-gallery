@@ -399,7 +399,7 @@ export class PublishedCatalogClient {
   } = {}) {
     const reader = this.requireOpen();
     const catalog = await reader.open(signal);
-    const validDate = value => typeof value === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(value);
+    const validDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
     const from = validDate(fromDate) ? fromDate : '';
     const to = validDate(toDate) ? toDate : this.asOfDate;
     assert(!from || from <= to, 'invalid_date_range');
