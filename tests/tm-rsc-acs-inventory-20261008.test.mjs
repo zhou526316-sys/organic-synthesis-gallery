@@ -288,7 +288,7 @@ test('owner PDF exhausted timeout does not multiply API requests or invent missi
      throw Error('owner_pdf_inventory_deadline;browser:controller_native_timeout_16000ms');
    }
  };
- vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\\n globalThis.load=readOwnerPdfInventory;',ctx);
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
  assert.equal(result.complete,false);
  assert.equal(result.unknown,53);
@@ -315,7 +315,7 @@ test('owner PDF responsive incomplete batches may split once without losing DOI 
        items:items.map(doi=>({doi,status:'ready'}))};
    }
  };
- vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\\n globalThis.load=readOwnerPdfInventory;',ctx);
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
  assert.equal(result.complete,true);assert.equal(result.unknown,0);
  assert.equal(result.items.length,53);
