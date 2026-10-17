@@ -1008,6 +1008,39 @@ function currentSearchNotice(): string {
           ? t('readersSortReset') : '';
 }
 
+function clearSearchScope(): void {
+  selectedJournals.clear();
+  excludedJournals.clear();
+  dateFrom = '';
+  dateTo = '';
+  onlyNew = false;
+  sort = 'newest';
+  readersSortAdjustedForSearch = false;
+  indexedViewDegraded = false;
+  resetResultWindow();
+  indexedSearchPending = Boolean(indexedViewRequest(''));
+  persistFilterPreferences();
+  mount();
+  scheduleArchitectureCorpusRefresh(0);
+}
+
+function syncClearSearchScopeButton(): void {
+  const shouldShow = Boolean(query.trim())
+    && (onlyNew || selectedJournals.size > 0 || excludedJournals.size > 0 || Boolean(dateFrom || dateTo));
+  const existing = document.querySelector<HTMLButtonElement>('#clearSearchScope');
+  if (!shouldShow) { existing?.remove(); return; }
+  if (existing) return;
+  const resultLine = document.querySelector('.resultline');
+  if (!resultLine) return;
+  const button = document.createElement('button');
+  button.id = 'clearSearchScope';
+  button.className = 'clear-custom-filters';
+  button.type = 'button';
+  button.textContent = t('clearSearchScope');
+  button.addEventListener('click', clearSearchScope);
+  resultLine.append(button);
+}
+
 function refreshCorpusResultsInPlace(): void {
   // Search responses update only the result window. Recreating the toolbar and
   // user center on each keystroke can trigger Chrome's password-save heuristic.
@@ -1023,6 +1056,7 @@ function refreshCorpusResultsInPlace(): void {
       document.querySelector('.resultline')?.after(notice);
     }
   } else existing?.remove();
+  syncClearSearchScopeButton();
   renderCards();
 }
 
@@ -1162,21 +1196,7 @@ function mount(): void {
     scheduleArchitectureCorpusRefresh(0);
   });
 
-  document.querySelector<HTMLButtonElement>('#clearSearchScope')?.addEventListener('click', () => {
-    selectedJournals.clear();
-    excludedJournals.clear();
-    dateFrom = '';
-    dateTo = '';
-    onlyNew = false;
-    sort = 'newest';
-    readersSortAdjustedForSearch = false;
-    indexedViewDegraded = false;
-    resetResultWindow();
-    indexedSearchPending = Boolean(indexedViewRequest(''));
-    persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
-  });
+  document.querySelector<HTMLButtonElement>('#clearSearchScope')?.addEventListener('click', clearSearchScope);
 
   const goToResultPage = async (targetPage: number): Promise<void> => {
     if (!Number.isSafeInteger(targetPage) || targetPage < 1) return;
