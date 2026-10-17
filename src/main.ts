@@ -301,6 +301,7 @@ let indexedSearchPending = false;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
 let searchPreviewTimer: number | null = null;
+let searchPreviewActive = false;
 let readersSortAdjustedForSearch = false;
 let indexedViewDegraded = false;
 let indexedViewRetryKey = '';
@@ -798,6 +799,7 @@ function resetResultWindow(): void {
   if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
   indexedSearchPending = false;
+  searchPreviewActive = false;
   document.documentElement.dataset.catalogQueryRead = 'local';
   delete document.documentElement.dataset.catalogIndexedQuery;
 }
@@ -835,7 +837,7 @@ function armSearchPreviewFallback(): void {
   searchPreviewTimer = window.setTimeout(() => {
     searchPreviewTimer = null;
     if (!indexedSearchPending || query !== expectedQuery) return;
-    architectureReadLimited = true;
+    searchPreviewActive = true;
     indexedSearchPending = false;
     refreshCorpusResultsInPlace();
   }, 1400);
@@ -998,6 +1000,9 @@ function filterSummary(): string {
 }
 
 function currentSearchNotice(): string {
+  if (searchPreviewActive) return language === 'zh'
+    ? '全库检索仍在后台进行；当前仅展示已加载文献的临时匹配，不能视为完整检索结果。'
+    : 'Full-library search is still running; these provisional local matches are not a complete answer.';
   return architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent())
     ? t('limitedRead')
     : indexedViewDegraded && Boolean(query.trim() || dateFrom || dateTo)
@@ -2051,6 +2056,7 @@ async function loadIndexedViewPage(
   architectureReadLimited = false;
   indexedViewDegraded = false;
   indexedSearchPending = false;
+  searchPreviewActive = false;
   indexedViewRetryKey = '';
   indexedViewRetryCount = 0;
   setArchitectureCorpus(indexedPapers);
@@ -2191,7 +2197,7 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
   document.documentElement.dataset.catalogQueryRead = 'static-segments';
   // Show truthful bounded metadata while slower static shard search runs.
   if (query.trim() || dateFrom || dateTo) {
-    architectureReadLimited = true;
+    searchPreviewActive = true;
     refreshCorpusResultsInPlace();
   }
   try {
@@ -2203,12 +2209,14 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
     }
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     architectureReadLimited = false;
+    searchPreviewActive = false;
     setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
     refreshCorpusResultsInPlace();
   } catch (error) {
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     console.warn('architecture-v1 on-demand read unavailable; retaining bounded Hot landing set', error);
     architectureReadLimited = true;
+    searchPreviewActive = false;
     setArchitectureCorpus(architectureLandingPapers);
     refreshCorpusResultsInPlace();
   }
