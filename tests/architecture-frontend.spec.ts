@@ -570,6 +570,58 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   }
 });
 
+test('rapid calendar edits retain the account form and search one complete range', async ({ page }) => {
+  const data = fixture();
+  const queries: Array<{ from: string; to: string }> = [];
+  await page.route('**/api/literature/catalog-view**', async route => {
+    const url = new URL(route.request().url());
+    const body = route.request().method() === 'GET'
+      ? { dateFrom: url.searchParams.get('dateFrom'), dateTo: url.searchParams.get('dateTo') }
+      : route.request().postDataJSON() as { dateFrom?: string; dateTo?: string };
+    queries.push({ from: body.dateFrom || '', to: body.dateTo || '' });
+    await route.fulfill({ status: 409, contentType: 'application/json',
+      body: JSON.stringify({ error: 'literature_catalog_generation_not_ready' }) });
+  });
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  const shell = page.locator('gallery-user-shell');
+  await shell.locator('.trigger').click();
+  await shell.locator('[data-tab="login"]').click();
+  await expect(shell.locator('[data-local-password]')).toBeVisible();
+  await page.evaluate(() => {
+    (window as any).__stableDateLogin = document.querySelector('gallery-user-shell');
+    (window as any).__stableDatePassword = (window as any).__stableDateLogin.shadowRoot?.querySelector('[data-local-password]');
+    (window as any).__stableDateSearch = document.querySelector('#search');
+    (window as any).__stableDateFrom = document.querySelector('#dateFrom');
+  });
+  await page.evaluate(() => {
+    const from = document.querySelector<HTMLInputElement>('#dateFrom')!;
+    from.value = '2026-01-01';
+    from.dispatchEvent(new Event('change', { bubbles: true }));
+    const to = document.querySelector<HTMLInputElement>('#dateTo')!;
+    to.value = '2026-10-31';
+    to.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  expect(await page.evaluate(() => {
+    const shell = document.querySelector('gallery-user-shell')!;
+    return shell === (window as any).__stableDateLogin
+      && shell.shadowRoot?.querySelector('[data-local-password]') === (window as any).__stableDatePassword
+      && document.querySelector('#search') === (window as any).__stableDateSearch
+      && document.querySelector('#dateFrom') === (window as any).__stableDateFrom;
+  })).toBe(true);
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    { timeout: 30000 }).toBe('static-date-page');
+  expect(queries).toEqual([{ from: '2026-01-01', to: '2026-10-31' }]);
+  const matched = data.indexedItems.filter(item => item.firstOnlineDate
+    && item.firstOnlineDate >= '2026-01-01' && item.firstOnlineDate <= '2026-10-31').length;
+  await expect(page.locator('#resultCount')).toHaveText(String(matched));
+  await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(RESULT_WINDOW_SIZE, matched));
+  await expect(page.locator('#resultWindowStatus')).toContainText(`共 ${matched} 篇`);
+});
+
 test('date range exposes complete cold Archive via bounded static pagination after D1 409', async ({ page }) => {
   const data = fixture();
   let indexRequests = 0;
