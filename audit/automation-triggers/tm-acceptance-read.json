@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261017-current-owner-bridge2292-after-route-fix",
-  "requestedAt": "2026-10-17T02:31:08.908Z",
+  "requestId": "tm-20261017-new-owner-log-readonly-1912",
+  "requestedAt": "2026-10-17T11:14:00Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "2026-10-17 after 10:20 BJT. Read the very latest local owner Tampermonkey upload in R2, verify uploadedAt and actual installRevision relative to CURRENT installed Bridge 2.2.92 / 6.2.73. Extract run completeness and reasons (especially actual visited DOI, attemptCount, claimed resolved, official TOC yield for historical Nature/ACS, Elsevier verified PII preflight failure vs heartbeat, stage inventory timeouts, PDF upload confirmation, local queued images). Do not treat rolled older 6.2.71 report as confirmation for 6.2.73. Strict read-only; no publisher visits or media/PDF writes.",
+  "context": "User confirms a new Tampermonkey browser log upload on 2026-10-17 evening Beijing. Read latest R2 diagnostic snapshot and existing media indexes read-only. Compare upload timestamp/version to previous 2026-10-16 22:38 Bridge 2.2.90 engine 6.2.71 running snapshot; assess visit coverage, stop reason, per-DOI output, official TOC and historical yield, inventory deadlines, publisher route/heartbeat, staged figures, evidence, private-PDF stored receipts vs deferred. Never start an owner capture or modify publisher/media/PDF/publication.",
   "expectedBridgeVersion": "2.2.92",
   "expectedInstallRevision": "6.2.73",
   "readOnly": true,
