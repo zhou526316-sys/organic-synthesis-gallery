@@ -1,0 +1,24 @@
+# Tampermonkey follow-up: historical official-TOC yield & Chem/Elsevier route integrity
+
+Beijing Oct 17, 2026 after 09:40; user explicitly authorized continuing Tampermonkey repair following uploaded logs and previous PR #720.
+
+## Read-only owner evidence
+- R2 latest owner snapshot read through workflow [38991921796](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38991921796). Last **manual owner upload** was 2026-10-16 22:38 Beijing and ran engine **6.2.71**, *not* latest main engine 6.2.72. It was still `phase=running`. 213 queued, 124 actually visited DOI, 147 attempts, 18 controller-resolved, 195 unresolved, 113 failed attempts, 27 partial, 7 success; 19 TOC receipts, 69 body-stage receipts, 20 text receipts.
+- R2 stage index 6,381,719 bytes and 4,029 entries, valid but live 6.2.71 showed repeated 16s TOC/media inventory-shard timeouts.
+- Correlating the last 100 DOI result rows from that snapshot to the official `public/toc-demand-live.json` repository catalog (2026-10-17 00:00Z): 55/55 Nature `toc=not_found` rows were July–September `mediaPolicy=toc_only`; also 4 Science TOC-only and 10 RSC historical `toc=not_found` rows; ACS historical produced verified TOC saves. These 55 are observations of no official TOC on inspected publisher sources, **not a claim that Nature has no official graphics in all cases**. Old-policy July–September may not use unapproved Figure 1 or body/PDF.
+- Eight rolling Elsevier/Chem failures in that 100-row sample were `bound_publisher_heartbeat_missing`, from only a few DOI, including Oct-1+ and historical. Source inspection identified `articleUrl(job)` falling through to `https://doi.org/<doi>` for Elsevier; controller `publisherBoot()` returns immediately on doi.org, so an unresolved DOI redirect can manufacture a missing-heartbeat result without attempting an actual publisher page.
+- Since PR #729 and PR #731 were merged, `main` additionally protects official TOC conflicts via hash/CAS and shifts full-corpus inventory refresh from every 60 seconds to every 10 minutes. Dual-domain CI passed, but no owner-authenticated 6.2.72 run had been observed as of the audit read.
+
+## This scoped repair
+1. For October-standard media, preserve original date/journal priority. For historical Jul–Sep TOC-only, prioritize publisher-issued graphical-TOC routes ACS/Wiley/CCS, then RSC/Elsevier, then Nature/Science, with date and journal order preserved within tier. This changes **order only**, does not drop, resolve, exclude or republish any DOI. Nature/Science with publisher-unobserved official TOC remain unresolved and eligible for later official recheck.
+2. For Elsevier/Chem article URL, take exact previously reviewed DOI→PII routes directly without a 30s DOI-redirect probe. If the normal DOI redirect yields no trustworthy publisher URL, read public Crossref/OpenAlex metadata using the *same DOI*, strictly verify metadata DOI equality and accept only exact article PII page on the real ScienceDirect/Cell domain (HTTPS). No PII is guessed from DOI suffix and no CDN/foreign link accepted.
+3. If no verified Elsevier article route exists, return `publisher_article_route_unverified` **before** `GM_openInTab`, without counting it as a visited publisher DOI and without mislabelling it `bound_publisher_heartbeat_missing`. It remains an unresolved, reportable DOI, with no access-control bypass. Also bound the duplicate generic Elsevier redirect probe to 12 seconds and RSC prefetched article probe to 9 seconds, preserving actual authenticated publisher visit for discovery.
+4. Bundle Bridge **2.2.92**, engine **6.2.73**, retain capture protocol **6.2.20** and controller **2.2.41**. Keep owner-private PDF controls, 401/403/429 handling, July–September TOC-only and single 08:00 Beijing literature publication.
+
+## Gate
+- Unit/behavioral fixtures for both historical priority sort paths, new-vs-old scope, Crossref/OpenAlex verified DOI, mismatched DOI and malicious URL denial, metadata 429, known PII direct route and unresolved DOI preflight. No live publisher/owner PDF/API media writes during CI.
+- Real domain readback after merge must show exact Bridge 2.2.92 + install 6.2.73 on Gallery/API.
+- Real authorized owner browser full-pass comparison of **distinct successfully opened publisher DOI**, controller visited vs preflight blocked, TOC producer, main-text figures, complete evidence, verified cloud PDF, pending local outbox, first-pass historical yield and actual frontend render. Improving order can raise useful throughput; it cannot prove missing publisher graphics exist.
+- If RSC and Nature false-negatives remain high under first-party authenticated pages, diagnose separate source adapters without inventing TOCs or weakening provenance.
+
+Status: code branch and test fixtures committed; no runtime/production success yet verified. Do not report finished full-pass or PDF storage solely from PR CI.
