@@ -188,6 +188,57 @@ test('static Archive fallback refuses silent result truncation', async () => {
   await assert.rejects(client.range('2026-07-01','2026-07-31'), /date_range_result_window_required/);
 });
 
+test('verified static date pagination supports 1,337 records and cold Archive without fetching every DOI', async () => {
+  const sourcePapers = Array.from({ length: 1337 }, (_, index) => {
+    const date = index < 100 ? '2026-01-10' : '2026-10-03';
+    const suffix = String(index).padStart(4,'0');
+    return {
+      doi: '10.1234/dated-' + suffix, title:'Verified chemistry ' + suffix,
+      titleZh:'正式合成文献', journal:index%2 ? 'JACS':'Angew',
+      authors:['A'], date, addedDate:date, new:false,
+      url:'https://doi.org/10.1234/dated-' + suffix,
+    };
+  });
+  const source=fixture({ sourcePapers });
+  const reads=[];
+  const fetcher=async (url, init) => { reads.push(new URL(url).pathname); return source.fetcher(url,init); };
+  const client=await new PublishedCatalogClient('https://example.invalid/',{fetcher}).open();
+  const before=reads.length;
+  const first=await client.rangePage('2026-01-01','2026-10-31',{page:1,limit:24});
+  assert.equal(first.matched,1337);
+  assert.equal(first.papers.length,24);
+  assert.equal(first.page,1);
+  assert.equal(first.hasMore,true);
+  assert.ok(first.papers.every(p=>p.date==='2026-10-03'));
+  // Content-addressed metadata/shard reads are bounded by month and page,
+  // never 1,337 DOI locator requests.
+  const browseReads=reads.slice(before);
+  assert.equal(browseReads.filter(p=>p.includes('/locator/')).length,0);
+  assert.ok(browseReads.filter(p=>p.includes('/shards/')).length<=2);
+  assert.ok(browseReads.length<=5,'unbounded publication browse network fanout');
+
+  const cold=await client.rangePage('2026-01-01','2026-01-31',{page:1,limit:24});
+  assert.equal(cold.matched,100);
+  assert.equal(cold.papers.length,24);
+  assert.ok(cold.papers.every(p=>p.date==='2026-01-10'));
+  const last=await client.rangePage('2026-01-01','2026-10-31',{page:56,limit:24});
+  assert.equal(last.matched,1337);
+  assert.equal(last.page,56);
+  assert.equal(last.papers.length,17);
+  assert.equal(last.hasMore,false);
+  assert.ok(last.papers.every(p=>p.date==='2026-01-10'));
+
+  const filtered=await client.rangePage('2026-01-01','2026-10-31',{
+    page:1,limit:24,selectedJournals:['JACS'],
+  });
+  assert.equal(filtered.matched,668);
+  assert.ok(filtered.papers.every(p=>p.journal==='JACS'));
+
+  await assert.rejects(
+    client.rangePage('2026-11-01','2026-01-01'),/invalid_date_range/
+  );
+});
+
 test('static Archive fallback refuses corpus-wide fanout after 36 monthly segments', async () => {
   const sourcePapers = Array.from({ length: 37 }, (_, index) => {
     const date = new Date(Date.UTC(2023, 9 + index, 1)).toISOString().slice(0,10);
