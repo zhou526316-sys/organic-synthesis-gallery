@@ -6096,22 +6096,52 @@ function embeddedJobDois(value) {
     }
   }
   function manualHeartbeatCircuitBreaker(run,job,result) {
-    // Count independent publisher/DOI failures, never retries or failures
-    // from other publishers. An uninitialized page is not a global outage.
+    // Three independent missing-heartbeat DOIs isolate only their publisher.
+    // One *different* eligible DOI may make a bounded recovery probe after the
+    // rest of the queue proceeds; there is no infinite re-probe or global stop.
     if(!run||!job)return false;
     var publisher=String(job.publisher||publisherForDoi(job.doi)||'unknown');
     var doi=normalizeDoi(job.doi),failures=run.publisherHeartbeatFailures||(run.publisherHeartbeatFailures={});
     var isolated=run.publisherHeartbeatQuarantine||(run.publisherHeartbeatQuarantine={});
-    if(String(result&&result.reason||'')!=='bound_publisher_heartbeat_missing'){
-      delete failures[publisher];
-      return false;
+    var quarantine=isolated[publisher];
+    if(quarantine&&quarantine.probeDoi===doi){
+      var hb=currentPublisherHeartbeat(),bound=Boolean(hb&&hb.jobId===job.jobId
+        &&normalizeDoi(hb.doi)===doi
+        &&/^(?:active_job_seen|publisher_script_started)$/.test(String(hb.state||'')));
+      quarantine.probeDoi='';
+      quarantine.probeOutcome=bound?'bound_publisher_started':'publisher_start_not_verified';
+      if(bound){
+        delete isolated[publisher];delete failures[publisher];
+        if(run.coverage)run.coverage.forEach(function(row){
+          if(row.state!=='blocked'||row.lastReason!=='publisher_script_quarantined_distinct_dois'
+            ||String(row.job&&row.job.publisher||publisherForDoi(row.job&&row.job.doi))!==publisher)return;
+          row.state='pending';row.retryAt=Date.now()+3500;row.lastReason='publisher_script_recovery_verified';
+        });
+      }else if(run.coverage){
+        run.coverage.forEach(function(row){
+          if(row.state!=='pending'||String(row.job&&row.job.publisher||publisherForDoi(row.job&&row.job.doi))!==publisher)return;
+          row.state='blocked';row.retryAt=0;row.lastReason='publisher_script_quarantined_distinct_dois';
+        });
+      }
+      return true;
     }
+    if(String(result&&result.reason||'')!=='bound_publisher_heartbeat_missing'){
+      delete failures[publisher];return false;
+    }
+    if(quarantine)return false;
     var group=failures[publisher]||(failures[publisher]={dois:[]});
     if(doi&&group.dois.indexOf(doi)<0)group.dois.push(doi);
-    if(group.dois.length<3||isolated[publisher])return false;
-    isolated[publisher]={reason:'publisher_script_missing_3_distinct_dois',dois:group.dois.slice(),at:Date.now()};
+    if(group.dois.length<3)return false;
+    quarantine=isolated[publisher]={reason:'publisher_script_missing_3_distinct_dois',
+      dois:group.dois.slice(),at:Date.now(),probeDoi:'',probeOutcome:'pending'};
     if(run.coverage)run.coverage.forEach(function(row){
       if(row.state!=='pending'||String(row.job&&row.job.publisher||publisherForDoi(row.job&&row.job.doi))!==publisher)return;
+      var candidate=normalizeDoi(row.job&&row.job.doi);
+      if(!quarantine.probeDoi&&candidate&&group.dois.indexOf(candidate)<0){
+        quarantine.probeDoi=candidate;
+        row.retryAt=Math.max(Number(row.retryAt||0),Date.now()+15000);
+        return;
+      }
       row.state='blocked';row.retryAt=0;row.lastReason='publisher_script_quarantined_distinct_dois';
     });
     return true;
@@ -6172,7 +6202,7 @@ function embeddedJobDois(value) {
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
           var quarantined=(run.publisherHeartbeatQuarantine||{})[String(job.publisher||publisherForDoi(job.doi))];
-          if(quarantined){candidate.lastReason='publisher_script_quarantined_distinct_dois';candidate.state='blocked';candidate.retryAt=0;continue;}
+          if(quarantined&&quarantined.probeDoi!==normalizeDoi(job.doi)){candidate.lastReason='publisher_script_quarantined_distinct_dois';candidate.state='blocked';candidate.retryAt=0;continue;}
           var sourceChecked=natureOfficialRecheckDeferred(job);
           if(sourceChecked){
             // Preserve official-TOC obligation but avoid revisiting a verified
@@ -6269,10 +6299,10 @@ function embeddedJobDois(value) {
         coverageStats(run);manualSummary(run);
         if(manualHeartbeatCircuitBreaker(run,job,result)){
           s.publisherHeartbeatIsolations=Object.keys(run.publisherHeartbeatQuarantine).map(function(p){
-            return {publisher:p,reason:run.publisherHeartbeatQuarantine[p].reason,distinctDois:run.publisherHeartbeatQuarantine[p].dois.slice()};
+            return {publisher:p,reason:run.publisherHeartbeatQuarantine[p].reason,distinctDois:run.publisherHeartbeatQuarantine[p].dois.slice(),recoveryProbeDoi:run.publisherHeartbeatQuarantine[p].probeDoi||'',recoveryProbeOutcome:run.publisherHeartbeatQuarantine[p].probeOutcome};
           });
           coverageStats(run);manualSummary(run);
-          badge('当前出版社3篇不同论文未启动采集脚本，已仅隔离该出版社，继续抓取其他出版社','#b45309');
+          badge((run.publisherHeartbeatQuarantine[job.publisher]?'出版社心跳异常：本轮已隔离该来源，预留一次受控恢复探测':'出版社脚本启动已核实：恢复此前误隔离的待办')+'；其他出版社照常继续','#b45309');
         }
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
