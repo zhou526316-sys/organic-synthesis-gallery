@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-17T01:02:12.478Z",
+  "generatedAt": "2026-10-17T01:20:30.679Z",
   "nextEligiblePublicationSlot": "2026-10-17T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -20003,29 +20003,27 @@
       ]
     },
     {
-      "doi": "10.1021/acs.joc.6c01890",
+      "doi": "10.1021/acs.joc.6c01784",
       "journal": "JOC",
-      "title": "Synthesis of 1,4-Benzoxazepines via [4 + 3] Annulation of ortho -Vinylphenols and Azaoxyallyl Cations",
-      "titleZh": "邻乙烯基苯酚与α-卤代异羟肟酸酯原位氮氧烯丙基阳离子四加三环化合成苯并噁氮卓",
-      "date": "2026-09-21",
+      "title": "Photocatalytic Synthesis of Thioesters from Thianthrenium Salts with Sodium Hydrosulfide",
+      "titleZh": "光催化有机硫蒽鎓盐与硫氢化钠构筑有机硫酯",
+      "date": "2026-09-18",
       "authors": [
-        "Zhan-Yong Wang",
-        "Can Zhang",
-        "Xiao-Tian Wang",
-        "Xiao-Jin Sun",
-        "Yi-Lin Wang",
-        "Xue-Kai Li",
-        "Rong-Hao Zhang",
-        "Ran Xia",
-        "Hongxin Liu"
+        "Bin Zhao",
+        "Xin-Yu Liu",
+        "Yan Li",
+        "Jia-Yi Shang",
+        "Dan He",
+        "Guo-Qin Hu",
+        "Jing-Hui Liu"
       ],
       "citation": {
         "year": 2026,
         "volume": "91",
         "issue": "39",
-        "pages": "13314-13321",
+        "pages": "13288-13294",
         "articleNumber": "",
-        "doi": "10.1021/acs.joc.6c01890"
+        "doi": "10.1021/acs.joc.6c01784"
       },
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "toc_only",
@@ -20036,20 +20034,20 @@
       "firstPassDecision": "include",
       "challengeDecision": "include",
       "reviewPasses": 2,
-      "reason": "发展邻乙烯基苯酚和原位形成的azaoxyallyl阳离子之间的形式[4+3]环化路线，直接构筑药物化学相关的1,4-苯并噁氮卓七元含氮含氧杂环。",
-      "evidenceBasis": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01890/5434365/Synthesis-of-1-4-Benzoxazepines-via-4-3-Annulation，ACS原始电子发表记录/同日官方平台索引 2026-09-21；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
-      "challengeReason": "独立第二遍质疑：这是邻乙烯基苯酚与原位阳离子发生的形式[4+3]七元环构建，不能写成两个现成四碳/三碳自由基的一步自由基偶联。研究未证明高ee不对称反应；所用α-卤代异羟肟酸酯是必要前体，而非任意硝基化合物；相关较早苯并噁氮卓路线的存在不妨碍本反应形成新的可迁移底物/反应组合。",
+      "reason": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。",
+      "evidenceBasis": "ACS官方JOC Article线上日=2026-09-18，https://pubs.acs.org/doi/10.1021/acs.joc.6c01784，官方论文页面 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from，ACS开放支持信息于2026-09-18上传 https://acs.figshare.com/articles/journal_contribution/Photocatalytic_Synthesis_of_Thioesters_from_Thianthrenium_Salts_with_Sodium_Hydrosulfide/33921223 。与冻结Crossref+OpenAlex来源日期一致，来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。刊物为2026年第91卷39期13288–13294页，作者和文章题目按DOI精确匹配；未复制完整受限摘要或全文，不进行PDF/SI抓取。",
+      "challengeReason": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。",
       "scopeAssessment": {
-        "primaryContribution": "发展邻乙烯基苯酚和原位形成的azaoxyallyl阳离子之间的形式[4+3]环化路线，直接构筑药物化学相关的1,4-苯并噁氮卓七元含氮含氧杂环。",
-        "preparativeTransformation": "α-卤代异羟肟酸酯原位产生可参与环化的氮氧烯丙基阳离子等价体，与邻乙烯基苯酚经形式[4+3]环化生成七元苯并噁氮卓衍生物，形成新的碳氮/碳氧键连通关系。",
-        "generalityEvidence": "ACS JOC DOI精确原创Article及ACS Figshare对应的2026年9月21日支持信息提供一组分离1,4-苯并噁氮卓的制备证据与作者和卷期页资料。确切的一般性以原文底物范围为准，不因药物骨架重要就宣称已完成药物全合成或其体内活性。",
-        "sourceEvidence": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01890/5434365/Synthesis-of-1-4-Benzoxazepines-via-4-3-Annulation，ACS原始电子发表记录/同日官方平台索引 2026-09-21；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
-        "boundaryChallenge": "独立第二遍质疑：这是邻乙烯基苯酚与原位阳离子发生的形式[4+3]七元环构建，不能写成两个现成四碳/三碳自由基的一步自由基偶联。研究未证明高ee不对称反应；所用α-卤代异羟肟酸酯是必要前体，而非任意硝基化合物；相关较早苯并噁氮卓路线的存在不妨碍本反应形成新的可迁移底物/反应组合。"
+        "primaryContribution": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。",
+        "preparativeTransformation": "美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。",
+        "generalityEvidence": "ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。",
+        "sourceEvidence": "ACS官方JOC Article线上日=2026-09-18，https://pubs.acs.org/doi/10.1021/acs.joc.6c01784，官方论文页面 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from，ACS开放支持信息于2026-09-18上传 https://acs.figshare.com/articles/journal_contribution/Photocatalytic_Synthesis_of_Thioesters_from_Thianthrenium_Salts_with_Sodium_Hydrosulfide/33921223 。与冻结Crossref+OpenAlex来源日期一致，来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。刊物为2026年第91卷39期13288–13294页，作者和文章题目按DOI精确匹配；未复制完整受限摘要或全文，不进行PDF/SI抓取。",
+        "boundaryChallenge": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。"
       },
       "reviewEvidence": {
-        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01890",
-        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01890/5434365/Synthesis-of-1-4-Benzoxazepines-via-4-3-Annulation",
-        "publisherOnlineDate": "2026-09-21",
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01784",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from",
+        "publisherOnlineDate": "2026-09-18",
         "publisherOriginalResearchType": "ACS_JOC_Original_Article_Publisher_Record_Online",
         "stageBranch": "staging/historical-archive-nightly",
         "stageBatchId": "2026-09-15_2026-09-21_joc",
@@ -20061,9 +20059,9 @@
           "openalex"
         ],
         "firstOnlineDateEvidence": {
-          "sourceFrozenDate": "2026-09-21",
-          "officialPublisherFirstOnline": "2026-09-21",
-          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01890/5434365/Synthesis-of-1-4-Benzoxazepines-via-4-3-Annulation",
+          "sourceFrozenDate": "2026-09-18",
+          "officialPublisherFirstOnline": "2026-09-18",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from",
           "sourceFrozenAndUnchanged": true,
           "dateKind": "ACS_JOC_Original_Article_Publisher_Record_Online"
         },
@@ -20076,13 +20074,13 @@
         {
           "pass": 1,
           "decision": "include",
-          "assessment": "发展邻乙烯基苯酚和原位形成的azaoxyallyl阳离子之间的形式[4+3]环化路线，直接构筑药物化学相关的1,4-苯并噁氮卓七元含氮含氧杂环。 α-卤代异羟肟酸酯原位产生可参与环化的氮氧烯丙基阳离子等价体，与邻乙烯基苯酚经形式[4+3]环化生成七元苯并噁氮卓衍生物，形成新的碳氮/碳氧键连通关系。 ACS JOC DOI精确原创Article及ACS Figshare对应的2026年9月21日支持信息提供一组分离1,4-苯并噁氮卓的制备证据与作者和卷期页资料。确切的一般性以原文底物范围为准，不因药物骨架重要就宣称已完成药物全合成或其体内活性。",
-          "reason": "发展邻乙烯基苯酚和原位形成的azaoxyallyl阳离子之间的形式[4+3]环化路线，直接构筑药物化学相关的1,4-苯并噁氮卓七元含氮含氧杂环。 α-卤代异羟肟酸酯原位产生可参与环化的氮氧烯丙基阳离子等价体，与邻乙烯基苯酚经形式[4+3]环化生成七元苯并噁氮卓衍生物，形成新的碳氮/碳氧键连通关系。 ACS JOC DOI精确原创Article及ACS Figshare对应的2026年9月21日支持信息提供一组分离1,4-苯并噁氮卓的制备证据与作者和卷期页资料。确切的一般性以原文底物范围为准，不因药物骨架重要就宣称已完成药物全合成或其体内活性。"
+          "assessment": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。 美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。 ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。",
+          "reason": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。 美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。 ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。"
         },
         {
           "pass": 2,
           "decision": "include",
-          "reason": "独立第二遍质疑：这是邻乙烯基苯酚与原位阳离子发生的形式[4+3]七元环构建，不能写成两个现成四碳/三碳自由基的一步自由基偶联。研究未证明高ee不对称反应；所用α-卤代异羟肟酸酯是必要前体，而非任意硝基化合物；相关较早苯并噁氮卓路线的存在不妨碍本反应形成新的可迁移底物/反应组合。"
+          "reason": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。"
         }
       ]
     }
@@ -20540,12 +20538,13 @@
       "10.1021/acs.orglett.6c02714",
       "10.1021/acs.orglett.6c02586",
       "10.1021/acs.joc.6c01733",
-      "10.1021/acs.joc.6c01890"
+      "10.1021/acs.joc.6c01784"
     ],
     "originalTwoPendingPreserved": true,
     "formalPublicationByApproval": false,
     "mediaPolicy": "toc_only",
     "addedDate": "",
-    "new": false
+    "new": false,
+    "priorHeldDoiPreserved": "10.1021/acs.joc.6c01890"
   }
 }
