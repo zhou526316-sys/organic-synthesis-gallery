@@ -1,0 +1,799 @@
+{
+  "date": "2026-10-17",
+  "editorialRevision": "2026-10-17-r1",
+  "slug": "xu-phosphine-orthogonal-hydrogenation-20261017",
+  "paper": {
+    "doi": "10.1038/s44160-026-01140-2",
+    "journal": "Nature Synthesis",
+    "title": "Orthogonal hydrogenation of alkenes enabled by multifunctional phosphine",
+    "authors": "Dong Wang, Zijiang Yang, Zihao Hu, Huiyuan Wang, Fancong Meng, Shanya Lu, Tao Xu"
+  },
+  "headline": "多功能膦实现烯烃的正交选择性氢化",
+  "kicker": "往期精选｜Nature Synthesis｜Tao Xu",
+  "lead_figure_id": "retro_toc",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "保留通常先被还原的双键，改变合成路线的选择",
+      "text": "同一分子中有两个双键，怎样保留较容易被还原的那个，先处理另一个？Tao Xu团队的价值在于改变了选位依据：不靠增强通常的氢化能力，而是先用可调质子转移选出反应位点，再完成还原。这使若干原本需要绕行的合成路线变短。真正值得学习的是如何把“选哪个位置”与“怎样得到最终产物”分开设计。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "难点不是氢化不够强，而是增强活性后更难选位",
+      "eyebrow": "研究问题与设计",
+      "paragraphs": [
+        "常规方法常优先还原较少取代或更活泼的烯烃。要处理另一处更拥挤的双键，单纯提高反应能力可能同时损失原本想保留的位点。图1a–b提出另一判断依据：让不同烯烃经历质子转移，其形成碳正离子的倾向不同，因而可能建立与金属配位偏好互补的选择性。",
+        "但“三级碳正离子更稳定”本身还不是方法。过强的酸使多种烯烃都容易加成，差别不足以转化为单一选位。作者选择HPPh₂及其与I₂的相互作用来调节供质子能力：目标烯烃仍能反应，其他烯烃则受到抑制。图1c是这一思路的理论比较，不是实测pKa或已完成的普适酸度标尺。"
+      ],
+      "figures": [
+        "retro_fig1ab",
+        "retro_fig1c"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig1ab"
+        ],
+        "2": [
+          "retro_fig1c"
+        ]
+      },
+      "source_evidence": [
+        "Main p1–2/Fig1a–c; computational descriptor not pKa"
+      ]
+    },
+    {
+      "heading": "用同一竞争底物，检验选择性是否真的反转",
+      "eyebrow": "条件与基准比较",
+      "paragraphs": [
+        "含两种烯烃及苄基保护基的模型1，将反应效率、双键选位与保护基保留放进同一次检验。HPPh₂、I₂、Cs₂CO₃各3当量，在乙酸乙酯和蓝光下给目标2以91%核磁收率、>99:1的区域比例；改变膦的芳环取代、改用NIS或缺失关键组分，产率或选择性均明显变化。",
+        "图2b的比较比单独一个高收率更有意义：Pd/C–H₂条件同时还原双键并脱去苄基；图中另两类方法分别缺乏双键选位或遵循常规偏好；本文得到相反的单一选位结果。这一优势成立于所比较的底物和条件，不应扩大为所有金属氢化都无法达到类似选择性。"
+      ],
+      "figures": [
+        "retro_fig2"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig2"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig2a NMR yields and Fig2b named comparison/ref7,13"
+      ]
+    },
+    {
+      "heading": "选择哪类烯烃，由底物范围检验而非凭取代数猜测",
+      "eyebrow": "适用范围",
+      "paragraphs": [
+        "图3a的成功对象主要包括能经质子化形成三级碳正离子的1,1-二取代和三取代烯烃，另一处单取代或1,2-二取代双键得以保留。部分环状、多烯与活化烯烃共存的底物也显示>99:1的区域比例；其中个别实例需二次处理，部分分离收率仅约四成，因此“选择得准”与“物料利用充分”要分开评价。",
+        "苄位或烯丙位二级碳正离子同样能够稳定电荷，却没有让相应烯烃优先还原。作者据此强调所调节的是具体质子转移路径及能垒，而不只是用一个静态稳定性排序解释全部结果（图3b）。底物结果支持该解释，但未直接分离这些碳正离子；也不能据此推出“取代最多的双键一定先反应”。"
+      ],
+      "figures": [
+        "retro_fig3a",
+        "retro_fig3b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig3a"
+        ],
+        "2": [
+          "retro_fig3b"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig3a/b and p3–4; moderate yields and double-treatment footnote"
+      ]
+    },
+    {
+      "heading": "实际优势落在保留官能团和减少路线绕行",
+      "eyebrow": "合成用途",
+      "paragraphs": [
+        "图4a进一步检验炔键、苄基、Cbz、芳基卤素、硼酸酯、酮与含氮杂环等基团，并扩展至天然产物及药物衍生骨架。代表性5 mmol实验得到1.04 g产物、80%收率，说明该选择性可以在更大尺度实现；但并未同时证明所有复杂底物都可放大，也没有药效结果。",
+        "路线比较中需要分清起点。51、52分别由容易获得的香叶酸乙酯、紫苏酸甲酯进入目标，提供不同于既有路线的入口；53还需要氢化后水解，两步总收率40%。最直接的对照是54：从同一β-香茅烯出发，本文一步61%，所引路线为四步、总收率35%。选择性真正改变的是能否保留后续仍需使用的双键，从而减少保护或重建操作。"
+      ],
+      "figures": [
+        "retro_fig4a",
+        "retro_fig4b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig4a"
+        ],
+        "2": [
+          "retro_fig4b"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig4a/b; SI3.1–3.4 S9–S11; 53 two steps; 44/46 source label discrepancy audited"
+      ]
+    },
+    {
+      "heading": "先追踪膦与碘的相互作用，再定位选位发生的阶段",
+      "eyebrow": "机制：质子转移",
+      "paragraphs": [
+        "HPPh₂与I₂混合后出现新的³¹P核磁信号，预制加合物还能替代二者参与反应；加入另一种二芳基膦后，交叉交换比例随用量改变（图5a）。这些结果支持作者提出的[Ph₂P(H)I]I物种及动态相互作用。其结构指认来自谱学、类比和反应行为，不能写成已由单晶直接确证。",
+        "关键对照在暗处完成：加入Cs₂CO₃时主要在目标位点形成碘代物55；不加碱，或改用HCl/NaI，则得到双位点反应的56（图5b）。作者提出碱抑制加合物分解产生HI所带来的非选择性反应。计算给出的三取代烯烃较低质子转移能垒与此一致，但“HI积累”仍是解释，不是被直接连续测得的过程。",
+        "SI再将碘代物独立取出检验：它在HPPh₂、Cs₂CO₃和光照下能脱碘，缺少碱或光则不能顺利形成相应还原产物；一级、二级碘代物也能经历这一后续反应。这是定位选择性的重要逻辑：终点还原并不只接受三级碘代物，主要的选位已经在前面的碘化阶段完成。"
+      ],
+      "figures": [
+        "retro_fig5a",
+        "retro_fig5b",
+        "retro_si_iodide"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig5a"
+        ],
+        "2": [
+          "retro_fig5b"
+        ],
+        "3": [
+          "retro_si_iodide"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig5a/b,p6; SI4.1–4.3 S12–16, independent primary/secondary iodides"
+      ]
+    },
+    {
+      "heading": "碱既影响选位，也影响碘代物能否继续转化",
+      "eyebrow": "条件表中的机制线索",
+      "paragraphs": [
+        "SI表S2采用另一模型S1，而不是图2的双烯模型1。Cs₂CO₃给还原产物61以98%的核磁收率；KHCO₃和NaHCO₃条件则主要停在碘代物60，分别达到98%和96%。底物已转化却没有目标产物，意味着“某种碱无效”不能简单归因于第一步没发生。",
+        "这张表的启发是把串联反应逐段评价。碱一方面帮助避免非选择性的强酸反应，另一方面与膦共同建立后续脱碘条件。仅用总转化率筛选碱，可能把高效生成中间体误判为高效完成整条路线；反过来，也会错过一个可单独利用的中间体制备条件。"
+      ],
+      "figures": [
+        "retro_si_base"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_si_base"
+        ]
+      },
+      "source_evidence": [
+        "SI TableS2 S4; editorial implications bounded to actual intermediates"
+      ]
+    },
+    {
+      "heading": "光诱导电子转移与氢原子转移，完成形式氢化",
+      "eyebrow": "机制：后续还原",
+      "paragraphs": [
+        "碘代物57在光照条件下既给直接还原产物58，也给环化产物59；TEMPO使相应还原受抑，并由HRMS检测到含磷捕获物62（图5c）。这组结果支持碳自由基与磷中心自由基参与后续步骤，但检测到捕获物不等于所有中间体均已分离或确定了完整动力学顺序。",
+        "光由谁吸收？单组分和多数二元混合物没有明显可见光吸收；碘代物、HPPh₂与Cs₂CO₃三者混合后吸收向长波延伸。作者据此提出，原位形成的Ph₂P⁻与烷基碘构成电子给体–受体复合物，经光激发触发电子转移。下图采用图例正确的SI图S7；主文图5c对应图例存在误写，未在原图上重画更正。",
+        "计算将这条解释连接到产物：激发后形成烷基自由基，再从HPPh₂取得氢原子，并形成含P–P键的副产物。图中的61.0 kcal mol⁻¹是激发能ΔE，11.5 kcal mol⁻¹则是所算氢原子转移能垒，二者不能当作同一种热反应能垒比较。",
+        "至此，图1d的“多功能”才有具体含义：膦/碘加合物参与质子转移，膦负离子参与电子转移，P–H键参与供氢，磷自由基进入终止过程。反应没有使用氢气，净结果是形式氢化；HPPh₂以化学计量消耗，不能因为它承担多种角色就称其为可循环的膦催化剂。"
+      ],
+      "figures": [
+        "retro_fig5c_trap",
+        "retro_uv_s7",
+        "retro_fig5c_dft",
+        "retro_fig1d"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_fig5c_trap"
+        ],
+        "2": [
+          "retro_uv_s7"
+        ],
+        "3": [
+          "retro_fig5c_dft"
+        ],
+        "4": [
+          "retro_fig1d"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig5c/Fig1d; SI4.4/4.7 and DFT; 62 HRMS only; phosphanide complex as supported proposal"
+      ]
+    },
+    {
+      "heading": "持续需要光，不等于已经排除所有自由基链贡献",
+      "eyebrow": "对机制证据的再审视",
+      "paragraphs": [
+        "作者依据明暗实验及SI报告的量子产率Φ=0.17，认为可排除自由基链传播。图S6确实显示，暗期产物增长明显减弱，支持光持续推动反应。但这一观察与“完全没有链贡献”不是同一个结论；SI的实验投料与计算式还存在0.2/0.1 mmol不一致，因此这里保留报告值，不另行假定并修正。",
+        "作为外部方法学参照，Cismesia与Yoon已展示：存在链传播的光反应，也可以只在照光期间明显推进；非生产性激发和低效引发还会降低量子产率（Chem. Sci. 2015，DOI：10.1039/C5SC02185E）。据此，本文更稳妥的编辑判断是“光诱导自由基过程得到支持，链贡献尚不能仅凭这两项实验彻底排除”，而不是声称已经证明另一套链机理。"
+      ],
+      "figures": [
+        "retro_si_light"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_si_light"
+        ]
+      },
+      "source_evidence": [
+        "Main p6 claim; SI4.5/4.6 S18–19; external primary Cismesia/Yoon10.1039/C5SC02185E, distinct editorial assessment"
+      ]
+    },
+    {
+      "heading": "区域选择性很高，仍须面对副反应与试剂消耗",
+      "eyebrow": "真实局限及已做的改进",
+      "paragraphs": [
+        "最容易被>99:1掩盖的是其他副反应。SI第S7页的一例中，目标还原产物只有23%，而膦加成后经氧化分离的副产物达到38%；同页还列出失败底物。部分活化烯烃虽未被形式氢化，仍可能被膦相关物种消耗；醛和一般四取代烯烃也构成边界。高区域比例并不等于整个分子完全不发生其他反应。",
+        "作者没有回避化学计量膦的限制。SI第S8页改用1.5当量预制[Ph₂P(H)I]I，结合10 mol%三乙基硼和2当量硅烷，展示六个例子。这说明第一步选位可以与另一种后续脱碘方式相配合；同时新增了试剂，仍不是膦催化循环，不能只宣传“膦用量减半”而忽略条件整体变化。"
+      ],
+      "figures": [
+        "retro_si_limits",
+        "retro_si_lowerphos"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "retro_si_limits"
+        ],
+        "2": [
+          "retro_si_lowerphos"
+        ]
+      },
+      "source_evidence": [
+        "SI2.5–2.7 S7–8; main limitations on aldehydes/tetrasubstituted alkenes"
+      ]
+    },
+    {
+      "heading": "值得学习的是先改变选位依据，再组合后续转化",
+      "eyebrow": "研究启示",
+      "paragraphs": [
+        "这篇文献提供的第一条思路，是在既有选择性不合目标时，更换决定选位的基元过程，而不是只寻找“更强”的试剂。第二条是利用独立中间体实验，把选择性来自哪一步与产物在哪一步形成分开；这样才有依据更换后续反应，而不损失前一步建立的选择性。",
+        "进一步的发展可以沿着已经暴露的问题推进：降低膦与碘的整体用量，减少对活化烯烃的膦加成，并以更完整的光物理和动力学测量检验电子转移及链贡献。把选择性、物料平衡和机制证据同时纳入评价，才是从“一个漂亮结果”走向更可迁移方法的路径。这些是基于本文提出的研究方向，尚不是已被验证的拓展结果。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {},
+      "source_evidence": [
+        "Editorial research lessons grounded in Fig2–5 and SI2.7/4.1/4.6; not established future results"
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "id": "retro_toc",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_toc.png",
+      "filename": "retro_toc.png",
+      "source_url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs44160-026-01140-2/MediaObjects/44160_2026_1140_Figa_HTML.png",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_figure": "Official graphical abstract",
+      "source_kind": "doi_bound_publisher_graphical_abstract",
+      "source_sha256": "a8a11228afc498f84a91ba6879bd13f708ee29afebf39624777a0285cd2adf6a",
+      "width": 685,
+      "height": 198,
+      "sha256": "ee4ecda0a25f83aaeb666b4497b21c3ebf314cb4ddc11547f174c864d1bb6848",
+      "bytes": 39605,
+      "caption": "期刊图形摘要（设计见Fig. 1）｜优先还原通常不占优的烯烃位点；这里的氢化为膦试剂介导的形式氢化。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "retro_fig1ab",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig1ab.png",
+      "filename": "retro_fig1ab.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1a–b",
+      "crop_pdf_points": [
+        [
+          38,
+          47,
+          565,
+          361
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 942,
+      "sha256": "b62b52f104e27234ab658d56535b43e8f8241e9f8b19650098458b40b993e3c5",
+      "bytes": 178256,
+      "caption": "Fig. 1a–b｜常规选择性与目标正交选择性，以及作者以可调质子转移区分烯烃的设计。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig1c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig1c.png",
+      "filename": "retro_fig1c.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1c",
+      "crop_pdf_points": [
+        [
+          38,
+          368,
+          565,
+          478
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 330,
+      "sha256": "e3606bca0664ee724ce647a310a04605500816f2f0c822de3b0e6868209ed2c1",
+      "bytes": 78590,
+      "caption": "Fig. 1c｜膦及其与碘相互作用后的理论比较；图中数值不能当作实测酸度或pKa。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "retro_fig1d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig1d.png",
+      "filename": "retro_fig1d.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1d",
+      "crop_pdf_points": [
+        [
+          38,
+          483,
+          565,
+          619
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 408,
+      "sha256": "49920f3ed73c981013e1fd1efff9008b92c357832f89cdfb4799a87e9e7dad21",
+      "bytes": 64668,
+      "caption": "Fig. 1d｜作者提出的多角色膦接力：质子转移、电子转移与氢原子转移分属不同阶段。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig2",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig2.png",
+      "filename": "retro_fig2.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 3,
+      "source_figure": "Fig. 2",
+      "crop_pdf_points": [
+        [
+          38,
+          47,
+          565,
+          415
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 1104,
+      "sha256": "ba844bb9ec464ad301ef914e645a4b9b83d7d7a3c13115a60c052ad6acb9a4a3",
+      "bytes": 209393,
+      "caption": "Fig. 2｜模型1的优化与既有氢化方法比较；91%为核磁收率，2/3/4分别表示不同还原结果。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig3a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig3a.png",
+      "filename": "retro_fig3a.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 3a + original footnote",
+      "crop_pdf_points": [
+        [
+          38,
+          47,
+          565,
+          553
+        ],
+        [
+          38,
+          659,
+          565,
+          690
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 1581,
+      "height": 1629,
+      "sha256": "b9f028ef05f6176598153f216ee963f45c347a355dae90aa31c9e84d15290361",
+      "bytes": 329635,
+      "caption": "Fig. 3a｜非活化、活化及多烯底物的选择性；>99:1并不代表所有底物均高收率或无其他副反应。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig3b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig3b.png",
+      "filename": "retro_fig3b.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 3b",
+      "crop_pdf_points": [
+        [
+          38,
+          554,
+          565,
+          650
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 288,
+      "sha256": "166be31fde6fff38b696b6ed9547b83a54a616d94a0c283e5ab9f884340ecf8f",
+      "bytes": 64724,
+      "caption": "Fig. 3b｜作者用不同碳正离子形成倾向解释底物选择性，是对结果的机制解释而非孤立中间体的直接观测。",
+      "display_width_pct": 94,
+      "body": true
+    },
+    {
+      "id": "retro_fig4a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig4a.png",
+      "filename": "retro_fig4a.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 5,
+      "source_figure": "Fig. 4a + original full footnote",
+      "crop_pdf_points": [
+        [
+          38,
+          47,
+          565,
+          418
+        ],
+        [
+          38,
+          699,
+          565,
+          722
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 1581,
+      "height": 1200,
+      "sha256": "3154753a877899b1ccc19299aba3e599e784314660a1532415ada0661421c17e",
+      "bytes": 250462,
+      "caption": "Fig. 4a｜官能团与复杂骨架兼容性；放大例44为5 mmol、80%、1.04 g，原脚注保留。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig4b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig4b.png",
+      "filename": "retro_fig4b.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 5,
+      "source_figure": "Fig. 4b",
+      "crop_pdf_points": [
+        [
+          38,
+          421,
+          565,
+          698
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 831,
+      "sha256": "56bb2a2016710c6dfe087bff758936e466a26b7265ab59867d74db7d2bda106d",
+      "bytes": 171068,
+      "caption": "Fig. 4b｜合成路线比较。51和52的既有路线起点不同，53需氢化后水解，54为同一起点的直接对照。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig5a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig5a.png",
+      "filename": "retro_fig5a.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5a",
+      "crop_pdf_points": [
+        [
+          38,
+          45,
+          565,
+          177
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 396,
+      "sha256": "d4d7b290d3c9b2ec13d4faebaeb4a01bea581f1d4db6180f0b27af40184a5924",
+      "bytes": 69631,
+      "caption": "Fig. 5a｜膦/碘相互作用与交叉交换实验；谱学与反应行为支持活性物种指认，未取得该物种单晶结构。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_fig5b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig5b.png",
+      "filename": "retro_fig5b.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5b",
+      "crop_pdf_points": [
+        [
+          38,
+          181,
+          565,
+          347
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 498,
+      "sha256": "91aa726a3d76b4f9fd5cd6e448db95f795345c2c23cac390550bef51499ab40a",
+      "bytes": 147264,
+      "caption": "Fig. 5b｜暗处碘化对照与计算：有碱时选择性碘化，无碱或强酸条件则失去相同选位特征。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_si_iodide",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_si_iodide.png",
+      "filename": "retro_si_iodide.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 13,
+      "source_figure": "SI Section 4.1, original iodination/deiodination controls",
+      "crop_pdf_points": [
+        [
+          89,
+          242,
+          514,
+          309
+        ],
+        [
+          88,
+          617,
+          514,
+          680
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 1278,
+      "height": 408,
+      "sha256": "e0eedce9f942f0d7042fba204d729bc568c603670c4fdc96a68aa0adb1fbe36e",
+      "bytes": 75528,
+      "caption": "SI Scheme（4.1节，中间体对照）｜先形成碘代物，再在膦/碱/蓝光条件下脱碘；两段对光与碱的需求不同。",
+      "display_width_pct": 96,
+      "body": true
+    },
+    {
+      "id": "retro_fig5c_trap",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig5c_trap.png",
+      "filename": "retro_fig5c_trap.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5c, radical-clock and trap experiments",
+      "crop_pdf_points": [
+        [
+          38,
+          348,
+          340,
+          368
+        ],
+        [
+          38,
+          369,
+          354,
+          552
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 948,
+      "height": 627,
+      "sha256": "449298f16f6a65bb6c80a5543cf4d3e20de3251cbd59721032d4a40ae53ebad9",
+      "bytes": 73558,
+      "caption": "Fig. 5c｜碘代物的自由基钟及TEMPO实验；含磷捕获物62由HRMS检测，未写成分离确证。",
+      "display_width_pct": 96,
+      "body": true
+    },
+    {
+      "id": "retro_uv_s7",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_uv_s7.png",
+      "filename": "retro_uv_s7.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 20,
+      "source_figure": "SI Fig. S7 (same experiment as Main Fig. 5c UV panel)",
+      "crop_pdf_points": [
+        [
+          166,
+          410,
+          440,
+          630
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 822,
+      "height": 660,
+      "sha256": "c5ea20ea27f1422ed7c0e0264a17586673799ca78c650784b53527b70c7add64",
+      "bytes": 100925,
+      "caption": "SI Fig. S7｜各单组分、二元及三元混合物的紫外—可见吸收。采用SI原图，以保留正确的Cs₂CO₃图例；主文图5c讨论同组实验。",
+      "display_width_pct": 88,
+      "body": true
+    },
+    {
+      "id": "retro_fig5c_dft",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_fig5c_dft.png",
+      "filename": "retro_fig5c_dft.png",
+      "source_file": "s44160-026-01140-2.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "af0da1a6a6a13f4062fda97fb442587f870c77c9ede74dab42cc1f849ab13814",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5c, DFT pathway",
+      "crop_pdf_points": [
+        [
+          38,
+          554,
+          565,
+          647
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1581,
+      "height": 279,
+      "sha256": "a03751364fe241b6d79cc1297b862b516cc5c40a0c8503bf1ce960f3e6a092f0",
+      "bytes": 57955,
+      "caption": "Fig. 5c｜作者计算的光诱导电子转移及后续氢原子转移；激发能ΔE与活化自由能ΔG‡含义不同。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_si_base",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_si_base.png",
+      "filename": "retro_si_base.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 5,
+      "source_figure": "SI Table S2",
+      "crop_pdf_points": [
+        [
+          87,
+          456,
+          520,
+          763
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1299,
+      "height": 921,
+      "sha256": "8847459cd1ea7441ab9c72556f8b79a1d7c8584f0207b863ebc441f9d7ce765b",
+      "bytes": 101858,
+      "caption": "SI Table S2｜另一模型S1的碱筛选：若干弱碱条件主要停在碘代物60；不能与主文模型1的91%直接合并。",
+      "display_width_pct": 96,
+      "body": true
+    },
+    {
+      "id": "retro_si_light",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_si_light.png",
+      "filename": "retro_si_light.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 19,
+      "source_figure": "SI Fig. S6, light on/off",
+      "crop_pdf_points": [
+        [
+          87,
+          175,
+          520,
+          478
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1299,
+      "height": 909,
+      "sha256": "c4addb1cca81d06fe412c1fa92703083f732b3814bb5212c807c52b7c4fe4777",
+      "bytes": 87306,
+      "caption": "SI Fig. S6｜碘代物还原的明暗实验。SI报告Φ=0.17，但明暗变化与低量子效率并不单独构成排除所有链贡献的证明。",
+      "display_width_pct": 84,
+      "body": true
+    },
+    {
+      "id": "retro_si_limits",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_si_limits.png",
+      "filename": "retro_si_limits.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 8,
+      "source_figure": "SI Sections 2.5–2.6 / Fig. S3",
+      "crop_pdf_points": [
+        [
+          87,
+          64,
+          520,
+          558
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1299,
+      "height": 1482,
+      "sha256": "a538cf4f141b24268a0b3c638b0fe7a0f1beaa26ed16358646e87fd42f8c5e71",
+      "bytes": 193616,
+      "caption": "SI Fig. S3与2.5节原图｜代表性膦加成副反应及失败底物。副产物经氧化便于分离，结构按原图保留。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "retro_si_lowerphos",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/retro_si_lowerphos.png",
+      "filename": "retro_si_lowerphos.png",
+      "source_file": "44160_2026_1140_MOESM1_ESM.pdf",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_file_sha256": "9d684156a3b736a83492715797d225bd0ab233703a89f6bd9469a33ad5b1ecc7",
+      "source_pdf_page": 9,
+      "source_figure": "SI Section 2.7",
+      "crop_pdf_points": [
+        [
+          88,
+          323,
+          520,
+          556
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1296,
+      "height": 699,
+      "sha256": "e273d97cebf54d55c17374ad14d47287a62b76fdc7b5613444ebacc03f21fee6",
+      "bytes": 88388,
+      "caption": "SI Scheme（2.7节，降低膦用量）｜预制膦/碘加合物降至1.5当量，配合10 mol%三乙基硼与2当量硅烷的替代方案；仍非膦催化。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "cover_retrospective",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/cover_retrospective.png",
+      "filename": "cover_retrospective.png",
+      "source_doi": "10.1038/s44160-026-01140-2",
+      "source_figure": "retro_toc",
+      "source_kind": "original_TOC_proportional_resize_white_padding_only",
+      "source_asset_sha256": "ee4ecda0a25f83aaeb666b4497b21c3ebf314cb4ddc11547f174c864d1bb6848",
+      "width": 800,
+      "height": 800,
+      "sha256": "0561d37aa85ab442d6efb85ef29004133cef51579d39e2e82b1f791c5846dac6",
+      "bytes": 43674,
+      "caption": "原始TOC等比例缩放和补白；无新增文字、无蓝条、无结构重绘。",
+      "display_width_pct": 100,
+      "body": false,
+      "placement_xy": [
+        57,
+        301
+      ],
+      "resized_size": [
+        685,
+        198
+      ]
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_retrospective",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "0561d37aa85ab442d6efb85ef29004133cef51579d39e2e82b1f791c5846dac6",
+    "canvas": {
+      "width": 800,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "crop_1_1": "0_0_1_1",
+    "description": "仅对本篇真实TOC等比例缩放和补白。今日原图靠上、补白在底部；往期上下左右居中。无新增文字、蓝条或化学重绘。"
+  },
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01140-2&summary=0",
+  "digest": "从可调质子转移到光诱导脱碘：解释正交选位如何建立、证据支持到哪一步，以及怎样把选择性用于路线设计。",
+  "ai_notice": "资料与审稿范围：依据本篇正文与317页SI。期刊网页只列出Rui Shang及匿名审稿人的致谢信息，未取得审稿报告或作者逐条答复，不能据此编写审稿意见。正文明确区分作者解释与编辑评议；唯一补充的外部机制方法学来源为Cismesia、Yoon，Chem. Sci. 2015，10.1039/C5SC02185E。本文首次在线为2026年8月11日，不属于10月17日新发表论文。",
+  "title": "往期精选｜Nature Synthesis｜Tao Xu：多功能膦实现烯烃的正交选择性氢化"
+}

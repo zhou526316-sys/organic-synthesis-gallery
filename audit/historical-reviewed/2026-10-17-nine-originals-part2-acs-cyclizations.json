@@ -1,0 +1,359 @@
+{
+  "schemaVersion": "gallery-historical-20261017-nine-originals-two-pass-v1",
+  "reviewedAt": "2026-10-17T01:01:17.670Z",
+  "baselineApproved": 254,
+  "sourceBranch": "staging/historical-archive-nightly",
+  "mode": "DOI_official_first_online_original_preparative_scope_two_pass",
+  "reviewMethod": "one_assistant_two_separate_scientific_passes_not_two_human_reviewers",
+  "part": 2,
+  "partsTotal": 2,
+  "additions": 4,
+  "approved": [
+    {
+      "doi": "10.1021/acs.orglett.6c02714",
+      "journal": "Organic Letters",
+      "title": "Copper-Catalyzed Cyclization of Alkynes with Cyclic Iodine(III) Sulfoximines: Access to Benzo[ d ]isothiazole-1-oxides",
+      "titleZh": "铜催化环状高价碘亚砜亚胺与末端炔烃环化并将试剂骨架整体嵌入苯并异噻唑氧化物",
+      "date": "2026-07-30",
+      "authors": [
+        "Jian-Xing Xu",
+        "Huiqing Zhong",
+        "Jingyan Wang",
+        "Caiyi Wang",
+        "Wei-Yuan Ma",
+        "Zenghui Ye",
+        "Xi Zhang",
+        "Fengzhi Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10271-10276",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02714"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用环状含亚砜亚胺高价碘(III)三氟甲磺酸盐与末端炔烃在铜催化下环化，将原本通常被丢弃的高价碘试剂骨架直接转为可分离的苯并[d]异噻唑-1-氧化物。",
+      "evidenceBasis": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/orlef7/article/28/32/10271/5237274/Copper-Catalyzed-Cyclization-of-Alkynes-with，ACS原始电子发表记录/同日官方平台索引 2026-07-30；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+      "challengeReason": "独立第二遍挑战：常规高价碘试剂多充当易离去的官能团转移剂，不能把本文错误描述为同样简单的亚砜亚胺转移；核心是环状碘试剂骨架被用于产品构建。铜催化的确有真实杂环制备范围，但代表产物微摩尔水平的细胞铁死亡抑制不证明整类产物具有临床药效，不能将生物筛选当作反应收率。",
+      "scopeAssessment": {
+        "primaryContribution": "利用环状含亚砜亚胺高价碘(III)三氟甲磺酸盐与末端炔烃在铜催化下环化，将原本通常被丢弃的高价碘试剂骨架直接转为可分离的苯并[d]异噻唑-1-氧化物。",
+        "preparativeTransformation": "以带环状磺酰亚胺片段的碘(III)盐及末端炔烃作为两种搭配组分，经铜催化关环形成含硫含氮苯并稠合异噻唑氧化物，而非仅从试剂转移一段简单官能团再排出整个环骨架。",
+        "generalityEvidence": "ACS原始Letter报道多种末端炔烃和高价碘(III)底物具有官能团耐受并成功分离系列杂环产物；其中某一产物还作了铁死亡抑制活性细胞实验，这属于下游活性展示，不替代其核心的新环合成方法。",
+        "sourceEvidence": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/orlef7/article/28/32/10271/5237274/Copper-Catalyzed-Cyclization-of-Alkynes-with，ACS原始电子发表记录/同日官方平台索引 2026-07-30；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+        "boundaryChallenge": "独立第二遍挑战：常规高价碘试剂多充当易离去的官能团转移剂，不能把本文错误描述为同样简单的亚砜亚胺转移；核心是环状碘试剂骨架被用于产品构建。铜催化的确有真实杂环制备范围，但代表产物微摩尔水平的细胞铁死亡抑制不证明整类产物具有临床药效，不能将生物筛选当作反应收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02714",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/32/10271/5237274/Copper-Catalyzed-Cyclization-of-Alkynes-with",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/32/10271/5237274/Copper-Catalyzed-Cyclization-of-Alkynes-with",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "利用环状含亚砜亚胺高价碘(III)三氟甲磺酸盐与末端炔烃在铜催化下环化，将原本通常被丢弃的高价碘试剂骨架直接转为可分离的苯并[d]异噻唑-1-氧化物。 以带环状磺酰亚胺片段的碘(III)盐及末端炔烃作为两种搭配组分，经铜催化关环形成含硫含氮苯并稠合异噻唑氧化物，而非仅从试剂转移一段简单官能团再排出整个环骨架。 ACS原始Letter报道多种末端炔烃和高价碘(III)底物具有官能团耐受并成功分离系列杂环产物；其中某一产物还作了铁死亡抑制活性细胞实验，这属于下游活性展示，不替代其核心的新环合成方法。",
+          "reason": "利用环状含亚砜亚胺高价碘(III)三氟甲磺酸盐与末端炔烃在铜催化下环化，将原本通常被丢弃的高价碘试剂骨架直接转为可分离的苯并[d]异噻唑-1-氧化物。 以带环状磺酰亚胺片段的碘(III)盐及末端炔烃作为两种搭配组分，经铜催化关环形成含硫含氮苯并稠合异噻唑氧化物，而非仅从试剂转移一段简单官能团再排出整个环骨架。 ACS原始Letter报道多种末端炔烃和高价碘(III)底物具有官能团耐受并成功分离系列杂环产物；其中某一产物还作了铁死亡抑制活性细胞实验，这属于下游活性展示，不替代其核心的新环合成方法。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍挑战：常规高价碘试剂多充当易离去的官能团转移剂，不能把本文错误描述为同样简单的亚砜亚胺转移；核心是环状碘试剂骨架被用于产品构建。铜催化的确有真实杂环制备范围，但代表产物微摩尔水平的细胞铁死亡抑制不证明整类产物具有临床药效，不能将生物筛选当作反应收率。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02586",
+      "journal": "Organic Letters",
+      "title": "Fe(III)-Catalyzed Cascade C–H Functionalization/cycloaddition of ortho -Alkynyl Arylhydrazides: Facial Access to 3,4-Disubstituted Cinnolines",
+      "titleZh": "三价铁催化邻炔基芳基酰肼串联碳氢官能团化与环加成合成三四位双取代噌啉",
+      "date": "2026-07-30",
+      "authors": [
+        "Tao Zhu",
+        "Lechi Zhang",
+        "Tao Song",
+        "Jinhua Wan",
+        "Xiang-Zhao Chen",
+        "Yiwen Wang",
+        "Zishuo Li",
+        "Kai Yang",
+        "Jiuzhong Huang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10219-10224",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02586"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展Fe(III)催化邻炔基芳基酰肼经C–H官能团化与分子内环加成的串联杂环构建方法，直接提供多种3,4-二取代噌啉的可分离制备路线。",
+      "evidenceBasis": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02586/5237330/Fe-III-Catalyzed-Cascade-C-H-Functionalization，ACS原始电子发表记录/同日官方平台索引 2026-07-30；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+      "challengeReason": "独立第二遍反证：论文题名中C–H functionalization和cycloaddition相邻，不意味着已经证实所有底物经过单一步协同周环过程。Fe(III)促进的真实制备贡献是噌啉骨架构筑，不能将铁盐的活性解释升级为实验直接证明的特定Fe(IV)价态中间体，也不应把没有披露的收率或电化学数据臆写进摘要。",
+      "scopeAssessment": {
+        "primaryContribution": "发展Fe(III)催化邻炔基芳基酰肼经C–H官能团化与分子内环加成的串联杂环构建方法，直接提供多种3,4-二取代噌啉的可分离制备路线。",
+        "preparativeTransformation": "以邻炔基芳基酰肼作为预组织底物，通过铁(III)催化的C–H功能化和与炔基相关的成环串联反应，形成具有两个相邻氮原子的六元噌啉环并在3、4位携带可调取代基。",
+        "generalityEvidence": "ACS Original Letter清楚报告由邻炔基芳基酰肼转化为3,4-双取代噌啉的具体制备路线，而不是仅报道N–N杂环的紫外吸收或Fe催化活性表征；不同底物兼容的表述以原刊公开范围为限，暂无依据写成所有邻炔基酰肼定量可得。",
+        "sourceEvidence": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02586/5237330/Fe-III-Catalyzed-Cascade-C-H-Functionalization，ACS原始电子发表记录/同日官方平台索引 2026-07-30；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-07-22_2026-07-31_organic-letters，raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+        "boundaryChallenge": "独立第二遍反证：论文题名中C–H functionalization和cycloaddition相邻，不意味着已经证实所有底物经过单一步协同周环过程。Fe(III)促进的真实制备贡献是噌啉骨架构筑，不能将铁盐的活性解释升级为实验直接证明的特定Fe(IV)价态中间体，也不应把没有披露的收率或电化学数据臆写进摘要。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02586",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02586/5237330/Fe-III-Catalyzed-Cascade-C-H-Functionalization",
+        "publisherOnlineDate": "2026-07-30",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-30",
+          "officialPublisherFirstOnline": "2026-07-30",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02586/5237330/Fe-III-Catalyzed-Cascade-C-H-Functionalization",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展Fe(III)催化邻炔基芳基酰肼经C–H官能团化与分子内环加成的串联杂环构建方法，直接提供多种3,4-二取代噌啉的可分离制备路线。 以邻炔基芳基酰肼作为预组织底物，通过铁(III)催化的C–H功能化和与炔基相关的成环串联反应，形成具有两个相邻氮原子的六元噌啉环并在3、4位携带可调取代基。 ACS Original Letter清楚报告由邻炔基芳基酰肼转化为3,4-双取代噌啉的具体制备路线，而不是仅报道N–N杂环的紫外吸收或Fe催化活性表征；不同底物兼容的表述以原刊公开范围为限，暂无依据写成所有邻炔基酰肼定量可得。",
+          "reason": "发展Fe(III)催化邻炔基芳基酰肼经C–H官能团化与分子内环加成的串联杂环构建方法，直接提供多种3,4-二取代噌啉的可分离制备路线。 以邻炔基芳基酰肼作为预组织底物，通过铁(III)催化的C–H功能化和与炔基相关的成环串联反应，形成具有两个相邻氮原子的六元噌啉环并在3、4位携带可调取代基。 ACS Original Letter清楚报告由邻炔基芳基酰肼转化为3,4-双取代噌啉的具体制备路线，而不是仅报道N–N杂环的紫外吸收或Fe催化活性表征；不同底物兼容的表述以原刊公开范围为限，暂无依据写成所有邻炔基酰肼定量可得。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍反证：论文题名中C–H functionalization和cycloaddition相邻，不意味着已经证实所有底物经过单一步协同周环过程。Fe(III)促进的真实制备贡献是噌啉骨架构筑，不能将铁盐的活性解释升级为实验直接证明的特定Fe(IV)价态中间体，也不应把没有披露的收率或电化学数据臆写进摘要。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01733",
+      "journal": "JOC",
+      "title": "Electrosynthesis of Functionalized Chromenes via Selenylation-Induced Alkynes Cyclization",
+      "titleZh": "恒电流电氧化生成亲电硒物种驱动炔烃分子内环化合成硒取代色烯",
+      "date": "2026-09-19",
+      "authors": [
+        "Guilherme M. Martins",
+        "Felipe de Lucca",
+        "João P. R. S. Ribeiro",
+        "Pedro P. de Castro",
+        "Manoella de Lima",
+        "Samuel R. Mendes",
+        "Roberto G. S. Berlinck",
+        "Kleber T. de Oliveira"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "39",
+        "pages": "13260-13269",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01733"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出无需外加化学计量氧化剂的恒电流有机电合成方法，借阳极产生的亲电硒物种诱导含炔基底物分子内环化，构筑含有可继续官能团化硒基的色烯骨架。",
+      "evidenceBasis": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01733，ACS原始电子发表记录/同日官方平台索引 2026-09-19；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+      "challengeReason": "独立第二遍反证：该方法依赖恒电流下亲电硒物种引发的电氧化关环，不是交替极性交流电，也不是外加过量氧化剂的热化学硒化。作者机理实验支持阳极生成亲电硒，但不能将所有硒阳离子中间体表述成直接观察的确定物种。96%是最高产率，不是任何含炔环化底物的固定收率。",
+      "scopeAssessment": {
+        "primaryContribution": "提出无需外加化学计量氧化剂的恒电流有机电合成方法，借阳极产生的亲电硒物种诱导含炔基底物分子内环化，构筑含有可继续官能团化硒基的色烯骨架。",
+        "preparativeTransformation": "在非隔膜电解池及碳电极、恒电流模式下通过阳极氧化产生活性硒亲电物种，诱导炔键发生分子内关环，形成硒取代的苯并吡喃即chromene衍生物。",
+        "generalityEvidence": "ACS JOC官方稿件及出版商SI索引给出多种色烯产物，分离收率最高96%，并报告克级制备和连续流扩展；动力学与DFT支持阳极电生成亲电硒中间体。这里的连续流用于扩展合成，不能把它等同没有验证的任意规模工业生产。",
+        "sourceEvidence": "出版社2026 Article/Letter搜索页及文章准确DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01733，ACS原始电子发表记录/同日官方平台索引 2026-09-19；该日期同冻结Crossref+OpenAlex来源一致。原始来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；实际作者和卷期页取自冻结来源，按文章原始制备贡献完成双遍科学核验。ACS部分全文页面限制访问，不臆称取得受限全文/SI/PDF或逐步机理原始谱图，也不复制版权受限图片或摘要。",
+        "boundaryChallenge": "独立第二遍反证：该方法依赖恒电流下亲电硒物种引发的电氧化关环，不是交替极性交流电，也不是外加过量氧化剂的热化学硒化。作者机理实验支持阳极生成亲电硒，但不能将所有硒阳离子中间体表述成直接观察的确定物种。96%是最高产率，不是任何含炔环化底物的固定收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01733",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01733",
+        "publisherOnlineDate": "2026-09-19",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Publisher_Record_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceReviewQueueGitBlobSha": "d88e4ec51eac980d6f2b59618a6409fc44a87fa3",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-19",
+          "officialPublisherFirstOnline": "2026-09-19",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01733",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Publisher_Record_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "提出无需外加化学计量氧化剂的恒电流有机电合成方法，借阳极产生的亲电硒物种诱导含炔基底物分子内环化，构筑含有可继续官能团化硒基的色烯骨架。 在非隔膜电解池及碳电极、恒电流模式下通过阳极氧化产生活性硒亲电物种，诱导炔键发生分子内关环，形成硒取代的苯并吡喃即chromene衍生物。 ACS JOC官方稿件及出版商SI索引给出多种色烯产物，分离收率最高96%，并报告克级制备和连续流扩展；动力学与DFT支持阳极电生成亲电硒中间体。这里的连续流用于扩展合成，不能把它等同没有验证的任意规模工业生产。",
+          "reason": "提出无需外加化学计量氧化剂的恒电流有机电合成方法，借阳极产生的亲电硒物种诱导含炔基底物分子内环化，构筑含有可继续官能团化硒基的色烯骨架。 在非隔膜电解池及碳电极、恒电流模式下通过阳极氧化产生活性硒亲电物种，诱导炔键发生分子内关环，形成硒取代的苯并吡喃即chromene衍生物。 ACS JOC官方稿件及出版商SI索引给出多种色烯产物，分离收率最高96%，并报告克级制备和连续流扩展；动力学与DFT支持阳极电生成亲电硒中间体。这里的连续流用于扩展合成，不能把它等同没有验证的任意规模工业生产。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍反证：该方法依赖恒电流下亲电硒物种引发的电氧化关环，不是交替极性交流电，也不是外加过量氧化剂的热化学硒化。作者机理实验支持阳极生成亲电硒，但不能将所有硒阳离子中间体表述成直接观察的确定物种。96%是最高产率，不是任何含炔环化底物的固定收率。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01784",
+      "journal": "JOC",
+      "title": "Photocatalytic Synthesis of Thioesters from Thianthrenium Salts with Sodium Hydrosulfide",
+      "titleZh": "光催化有机硫蒽鎓盐与硫氢化钠构筑有机硫酯",
+      "date": "2026-09-18",
+      "authors": [
+        "Bin Zhao",
+        "Xin-Yu Liu",
+        "Yan Li",
+        "Jia-Yi Shang",
+        "Dan He",
+        "Guo-Qin Hu",
+        "Jing-Hui Liu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "39",
+        "pages": "13288-13294",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01784"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。",
+      "evidenceBasis": "ACS官方JOC Article线上日=2026-09-18，https://pubs.acs.org/doi/10.1021/acs.joc.6c01784，官方论文页面 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from，ACS开放支持信息于2026-09-18上传 https://acs.figshare.com/articles/journal_contribution/Photocatalytic_Synthesis_of_Thioesters_from_Thianthrenium_Salts_with_Sodium_Hydrosulfide/33921223 。与冻结Crossref+OpenAlex来源日期一致，来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。刊物为2026年第91卷39期13288–13294页，作者和文章题目按DOI精确匹配；未复制完整受限摘要或全文，不进行PDF/SI抓取。",
+      "challengeReason": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。",
+      "scopeAssessment": {
+        "primaryContribution": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。",
+        "preparativeTransformation": "美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。",
+        "generalityEvidence": "ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。",
+        "sourceEvidence": "ACS官方JOC Article线上日=2026-09-18，https://pubs.acs.org/doi/10.1021/acs.joc.6c01784，官方论文页面 https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from，ACS开放支持信息于2026-09-18上传 https://acs.figshare.com/articles/journal_contribution/Photocatalytic_Synthesis_of_Thioesters_from_Thianthrenium_Salts_with_Sodium_Hydrosulfide/33921223 。与冻结Crossref+OpenAlex来源日期一致，来源根 2026-09-15_2026-09-21_joc，raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541，review queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3，source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648。刊物为2026年第91卷39期13288–13294页，作者和文章题目按DOI精确匹配；未复制完整受限摘要或全文，不进行PDF/SI抓取。",
+        "boundaryChallenge": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01784",
+        "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from",
+        "publisherOnlineDate": "2026-09-18",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Publisher_Record_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceReviewQueueGitBlobSha": "d88e4ec51eac980d6f2b59618a6409fc44a87fa3",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-18",
+          "officialPublisherFirstOnline": "2026-09-18",
+          "publisherArticlePage": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01784/5432386/Photocatalytic-Synthesis-of-Thioesters-from",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_JOC_Original_Article_Publisher_Record_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。 美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。 ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。",
+          "reason": "发展以有机硫蒽鎓盐和硫氢化钠为反应伙伴的光催化硫酯制备方法，形成具有可分离与表征的有机硫酯结构，而非仅研究光催化剂光谱、离子对或硫蒽鎓盐物性。 美国化学会JOC原始研究展示将硫蒽鎓盐相关有机片段与无机NaSH硫源在光照催化条件下转化为硫酯R–C(O)–S–R′类产物，重点在硫酯C–S成键及羰基与硫的连接；目前公开索引无法独立解析所用羰基供体或所有瞬态中间体，因此不臆造CO气氛、溶剂作酰基来源或具体自由基断裂顺序。 ACS JOC 2026年第91卷第39期13288–13294页原始开放获取Article，DOI与全部作者、期刊Online日期及2026年9月18日发布的原始支持信息吻合，文献明确报告光催化硫酯制备和实验支持材料。现有公开摘要索引不足以准确复述底物拓展数目、收率极值或酰基来源，因此不把这些未核实数值写入全范围结论。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍科学反证：硫蒽鎓盐是合成底物类型而非一般意义催化剂，NaSH承担含硫试剂作用；不能从题名直接推断采用CO、CO2或DMF充当酰基源，也不能虚构普适高产率。论文的实质制备贡献是硫酯产物，不代表已经直接观测每个光催化自由基和硫基中间体，且本工作未宣称光学纯手性产物。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "onlyAcademicApproval": true,
+    "noPublication": true,
+    "noD1": true,
+    "noTOCorFigureOrPdf": true,
+    "noTodayOrHotOrWechat": true,
+    "requiresSoleBeijing08": true
+  },
+  "retractionOfPriorHeldDoi": {
+    "doi": "10.1021/acs.joc.6c01890",
+    "reason": "Prior Oct16 twelve-publisher audit pinned a publisher date hold; no override or date-rescue receipt exists, so new approval was withdrawn and replaced with DOI-exact ACS official Sep18 6c01784.",
+    "replacement": "10.1021/acs.joc.6c01784",
+    "oldApprovalNotPublished": true
+  }
+}

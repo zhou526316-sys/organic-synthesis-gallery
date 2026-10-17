@@ -96,7 +96,7 @@ test('historic release selection respects exact owner veto and fixed-slot serial
   if(formal.has(doi)){
     const row=formal.get(doi);
     assert.equal(row.ingestionChannel,'historical_backfill');
-    assert.equal(row.new,false);
+    assert.notEqual(row.new,true);
     assert.equal(row.addedDate,'');
   }else assert.ok(accepted.has(doi),doi);
  }

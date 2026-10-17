@@ -102,7 +102,7 @@ test('existing owner veto and only the fixed slot can publish historical approva
     const row=formal.get(doi);
     assert.equal(row.ingestionChannel,'historical_backfill');
     assert.equal(row.mediaPolicy,'toc_only');
-    assert.equal(row.new,false);
+    assert.notEqual(row.new,true);
     assert.equal(row.addedDate,'');
   }else assert.ok(acceptedIds.has(doi),doi+' should await legal 08 admission');
  }

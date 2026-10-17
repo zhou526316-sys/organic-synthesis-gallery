@@ -61,7 +61,18 @@ test('publisher first-online evidence alone admits nothing; two later science-re
     '10.1016/j.chempr.2026.103241'
   ]));
   for(const x of proof.rows){
-    assert.equal(cat.has(x.doi),false);
+    // Date-only proof cannot admit. A separately two-pass-approved DOI
+    // may legitimately have been published later by the fixed 08:00 writer.
+    if(cat.has(x.doi)){
+      assert.ok(independentlyReviewed.has(x.doi),'date-only DOI must not enter formal catalog: '+x.doi);
+      assert.ok(acc.has(x.doi),'formal DOI requires science-reviewed manifest: '+x.doi);
+      const card=catalog.articles.find(v=>v.doi===x.doi);
+      assert.equal(card?.ingestionChannel,'historical_backfill',x.doi);
+      assert.equal(card?.mediaPolicy,x.publisherFirstOnlineDate<'2026-07-01'?'metadata_only':'toc_only',x.doi);
+      assert.equal(card?.addedDate,'',x.doi);
+      assert.notEqual(card?.new,true,x.doi);
+      assert.equal(card?.date,x.publisherFirstOnlineDate,x.doi);
+    }
     assert.equal(acc.has(x.doi),independentlyReviewed.has(x.doi));
     assert.equal(x.academicScopeDecision,'not_made_by_publication_date_evidence');
   }
