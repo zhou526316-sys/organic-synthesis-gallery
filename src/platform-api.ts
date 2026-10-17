@@ -300,7 +300,9 @@ async function rawRequest<T>(method: string, path: string, body?: unknown, signa
     const detail = typeof data === 'object' && data && 'error' in data
       ? String((data as { error?: unknown }).error || response.statusText)
       : response.statusText || `HTTP ${response.status}`;
-    throw new Error(detail);
+    const requestError = new Error(detail) as Error & { status?: number };
+    requestError.status = response.status;
+    throw requestError;
   }
 
   return {
@@ -310,25 +312,47 @@ async function rawRequest<T>(method: string, path: string, body?: unknown, signa
   };
 }
 
-function workerRequest<T>(method: string, path: string, body?: unknown, signal?: AbortSignal): Promise<ApiResponse<T>> {
-  return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body, signal);
+// A failed host must not stall every live search indefinitely. Keep the
+// caller's cancellation separate from a per-host transport deadline so one
+// timeout can still fall back to the other public API origin.
+async function timedLiteratureRead<T>(
+  method: 'GET' | 'POST', url: string, body: unknown, callerSignal?: AbortSignal,
+): Promise<ApiResponse<T>> {
+  if (callerSignal?.aborted) throw new DOMException('Search superseded', 'AbortError');
+  const controller = new AbortController();
+  let timedOut = false;
+  const onAbort = (): void => controller.abort();
+  callerSignal?.addEventListener('abort', onAbort, { once: true });
+  const timeout = url.includes('/api/_healthcheck') ? 1500 : 2800;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeout);
+  try {
+    return await rawRequest<T>(method, url, body, controller.signal);
+  } catch (error) {
+    if (callerSignal?.aborted) throw new DOMException('Search superseded', 'AbortError');
+    if (timedOut) throw new Error('literature_search_transport_timeout');
+    throw error;
+  } finally {
+    clearTimeout(timer);
+    callerSignal?.removeEventListener('abort', onAbort);
+  }
 }
 
 // For China-first Gallery literature search, the first-party custom domain is
-// the canonical cross-origin API. workers.dev is only a transport fallback:
-// a temporary CDN/DNS/CORS failure must not permanently suppress abstract FTS.
+// the canonical cross-origin API. workers.dev is only a bounded fallback.
+// Cancelling an older query must not launch its fallback.
 async function literatureReadWithFailover<T>(
   method: 'GET' | 'POST', path: string, body?: unknown, signal?: AbortSignal,
 ): Promise<ApiResponse<T>> {
   if (signal?.aborted) throw new DOMException('Search superseded', 'AbortError');
   try {
-    return await rawRequest<T>(method, `${MEDIA_API_ORIGIN}${path}`, body, signal);
+    return await timedLiteratureRead<T>(method, `${MEDIA_API_ORIGIN}${path}`, body, signal);
   } catch (primaryError) {
-    // A superseded query is not a network failure: do not retry its fallback
-    // requests after the user has typed a new term.
     if (signal?.aborted || (primaryError instanceof Error && primaryError.name === 'AbortError')) throw primaryError;
     try {
-      return await workerRequest<T>(method, path, body, signal);
+      return await timedLiteratureRead<T>(method, `${WORKER_ORIGIN}${path}`, body, signal);
     } catch (backupError) {
       if (!signal?.aborted) console.warn('[Gallery search] Both public literature API transports unavailable', primaryError, backupError);
       throw backupError;
@@ -371,7 +395,12 @@ async function publicCatalogView<T>(body?: unknown, signal?: AbortSignal): Promi
       return await literatureReadWithFailover<T>('GET', readPath, undefined, signal);
     } catch (error) {
       if (signal?.aborted || (error instanceof Error && error.name === 'AbortError')) throw error;
-      console.warn('[Gallery search] GET transport unavailable; trying compatible POST', error);
+      // POST can recover an older deployment without GET; it cannot repair
+      // a network timeout, D1 error or disabled index. Avoid 4 serial waits.
+      const status = error && typeof error === 'object' && 'status' in error
+        ? Number((error as { status?: unknown }).status) : 0;
+      if (![400, 404, 405, 415, 501].includes(status)) throw error;
+      console.warn('[Gallery search] GET route lacks catalog compatibility; trying POST', error);
     }
   }
   return literatureReadWithFailover<T>('POST', '/api/literature/catalog-view', body, signal);
