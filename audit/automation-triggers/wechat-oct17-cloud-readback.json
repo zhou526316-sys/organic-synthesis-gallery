@@ -1,0 +1,31 @@
+{
+  "requestId": "wechat-oct17-r1-official-cloud-readback-20261017-v1",
+  "date": "2026-10-17",
+  "revision": "2026-10-17-r1",
+  "action": "verify_oct17_saved_draft_preview",
+  "expectedMediaId": "KhELYUzvwADwB_l1xH1SWM9lcWMJkXjdQ8jgSYkBtO4wkklAJMAqN6zlpsKJMHnu",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/259f93a6dd006880b0a6d836.html",
+  "approvedSourceCommit": "9a58287a7700457d5c720aa4fe8e1f7a56640cf5",
+  "expectPublicationSlot": "2026-10-17T08:00:00+08:00",
+  "expectedArticleCount": 2,
+  "expectedDois": [
+    "10.1021/jacs.6c17862",
+    "10.1038/s44160-026-01140-2"
+  ],
+  "expectedDailyPaperCount": 20,
+  "expectedScienceFigures": [
+    20,
+    19
+  ],
+  "expectedAssets": 42,
+  "expectedBodyImages": [
+    22,
+    19
+  ],
+  "draftWriteAuthorized": false,
+  "draftOnly": true,
+  "readbackOnly": true,
+  "publicSendAuthorized": false,
+  "preservePreviousDrafts": true,
+  "checks": "Read saved preview built only from official draft/get; validate all prose, 41 inline image positions/decodes, two covers, source URLs, article order, mobile and desktop overflow; never modify official draft."
+}
