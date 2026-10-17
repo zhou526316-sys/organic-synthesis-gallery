@@ -23,7 +23,7 @@ const expected=new Map([
  ['10.1021/acs.orglett.6c02714',['2026-07-30','Organic Letters']],
  ['10.1021/acs.orglett.6c02586',['2026-07-30','Organic Letters']],
  ['10.1021/acs.joc.6c01733',['2026-09-19','JOC']],
- ['10.1021/acs.joc.6c01890',['2026-09-21','JOC']]
+ ['10.1021/acs.joc.6c01784',['2026-09-18','JOC']]
 ]);
 const sourceRoots=new Map([
  ['2026-09-01_2026-09-07_angew','32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744'],
@@ -104,10 +104,11 @@ test('scientific challenges distinguish chirality origin, radical identity, reag
  assert.match(c('10.1021/acs.orglett.6c02714'),/高价碘/);
  assert.match(c('10.1021/acs.orglett.6c02586'),/Fe\(IV\)/);
  assert.match(c('10.1021/acs.joc.6c01733'),/交流电/);
- assert.match(c('10.1021/acs.joc.6c01890'),/高ee/);
+ assert.match(c('10.1021/acs.joc.6c01784'),/NaSH/);
 });
 test('prior date-conflicts and already-published DOI never pass academic intake',()=>{
  const stagedHolds=['10.1021/acs.orglett.6c02869','10.1021/acs.joc.6c01686'];
+ assert.equal(accepted.has('10.1021/acs.joc.6c01890'),false,'previous independent publisher-date hold must stay unapproved');
  assert.deepEqual(new Set(holds.records.map(x=>x.doi)),new Set(stagedHolds));
  for(const id of stagedHolds){
    assert.equal(accepted.has(id),false);
