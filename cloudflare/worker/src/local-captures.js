@@ -893,6 +893,42 @@ export async function promoteStagedArticleFigures(request, env, payload = {}) {
   };
 }
 
+// The local TOC index is shared by the publisher controller, its independent
+// Gallery image outbox and the deployment reconciler. A plain R2 GET+PUT
+// overwrites another DOI's concurrent change. Commit by R2 ETag CAS and
+// preserve all existing records; corrupted indexes are never replaced by {}.
+export async function commitVerifiedLocalTocIndex(env,identity,record){
+  const limit=32*1024*1024;
+  for(let attempt=0;attempt<4;attempt++){
+    const object=await env.MEDIA.get(INDEX_KEY);
+    if(object&&(!object.etag||Number(object.size||0)>limit))
+      throw new Error('local_toc_index_etag_or_size_invalid');
+    let index;
+    if(object){
+      const raw=await object.text();
+      if(raw.length>limit)throw new Error('local_toc_index_size_limit');
+      try{index=JSON.parse(raw);}
+      catch{throw new Error('local_toc_index_invalid_json');}
+      if(!index||!index.items||typeof index.items!=='object'||Array.isArray(index.items))
+        throw new Error('local_toc_index_invalid_schema');
+    }else index={version:1,updatedAt:0,items:{}};
+    const prior=index.items[identity];
+    if(prior&&prior.r2Key===record.r2Key&&prior.contentHash===record.contentHash
+      &&Number(prior.mediaGeneration)===MEDIA_REBUILD_EPOCH)
+      return {committed:true,reused:true,attempts:attempt+1};
+    index.items[identity]=record;
+    index.version=1;index.updatedAt=record.updatedAt;
+    const saved=await env.MEDIA.put(INDEX_KEY,JSON.stringify(index),{
+      onlyIf:object?{etagMatches:object.etag}:{etagDoesNotMatch:'*'},
+      httpMetadata:{contentType:'application/json; charset=utf-8',cacheControl:'no-store'}
+    });
+    if(saved)return {committed:true,reused:false,attempts:attempt+1};
+    // A mismatch is a retriable concurrent index writer, never permission to
+    // discard the newer index or claim a stored receipt.
+  }
+  throw new Error('local_toc_index_cas_conflict');
+}
+
 export async function importLocalCapture(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
@@ -952,10 +988,9 @@ export async function importLocalCapture(request, env, payload) {
     customMetadata: { doi, kind, contentHash: hash.slice(0, 32), source: safeText(payload?.source || 'windows-toc-collector', 80) },
   });
 
-  const index = await readIndex(env);
   const now = Date.now();
   const identity = `${doi}|${kind}`;
-  index.items[identity] = {
+  const row = {
     doi,
     jobId: payload.jobId,
     captureVersion: payload.captureVersion,
@@ -975,11 +1010,16 @@ export async function importLocalCapture(request, env, payload) {
     capturedAt: typeof payload?.capturedAt === 'string' ? payload.capturedAt.slice(0, 80) : '',
     updatedAt: now,
   };
-  index.version = 1;
-  index.updatedAt = now;
-  await env.MEDIA.put(INDEX_KEY, JSON.stringify(index), {
-    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
-  });
+  try{
+    await commitVerifiedLocalTocIndex(env,identity,row);
+  }catch(error){
+    const detail=String(error?.message||'local_toc_index_commit_failed');
+    const code=/^local_toc_index_[a-z_]+$/.test(detail)?detail:'local_toc_index_commit_failed';
+    return {status:503,body:{doi,kind,stored:false,localStored:false,
+      productionTocStored:false,productionFallbackStored:false,
+      objectStored:true,contentHash:hash.slice(0,32),code,
+      error:'local_toc_index_commit_failed',retryAfterMs:5000}};
+  }
 
   let productionToc = null;
   let productionFallback = null;
