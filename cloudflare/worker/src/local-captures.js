@@ -913,6 +913,38 @@ export async function importLocalCapture(request, env, payload) {
     return {status:409,body:{doi,kind,stored:false,productionTocStored:false,
       code:'angew_verified_substrate_scope_bytes_not_toc'}};
   }
+  // Validate the existing authoritative TOC before creating an R2 capture
+  // object or mutating the local capture index. Previously an HTTP 409
+  // conflict still overwrote the local-index row, leading to repeated uploads.
+  if(kind==='official'){
+    if(!env?.DB)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+      code:'official_toc_db_unavailable'}};
+    const existing=await env.DB.prepare(
+      'SELECT available,r2_key,content_hash FROM toc_assets WHERE doi = ? LIMIT 1'
+    ).bind(doi).first();
+    if(existing&&Number(existing.available)===1&&existing.r2_key){
+      const previousHash=String(existing.content_hash||'').toLowerCase();
+      if(previousHash!==hash.slice(0,32)){
+        return {status:409,body:{doi,kind,stored:false,localStored:false,
+          productionTocStored:false,code:'official_toc_conflict_review_required',
+          contentHash:hash.slice(0,32),existingHash:previousHash,
+          existingProduction:true,reviewRequired:true}};
+      }
+      // D1 'available' alone is not proof that the R2 object is readable
+      // with the claimed SHA. Never close a gap from metadata alone.
+      const prior=await env.MEDIA.get(existing.r2_key);
+      if(!prior)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+        code:'official_toc_production_object_unavailable'}};
+      const priorHash=(await sha256Hex(new Uint8Array(await prior.arrayBuffer()))).slice(0,32);
+      if(priorHash!==previousHash)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+        code:'official_toc_production_hash_mismatch'}};
+      const url=publicMediaUrl(request,existing.r2_key);
+      return {status:200,body:{doi,kind,stored:true,localStored:false,
+        productionTocStored:true,productionFallbackStored:false,
+        importState:'already_verified_production_bytes',contentHash:previousHash,
+        imageUrl:url,productionToc:{available:true,imageUrl:url,reason:'already_cached'}}};
+    }
+  }
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const key = `${IMAGE_PREFIX}${doiHash.slice(0, 24)}-${kind}-${hash.slice(0, 16)}.${extensionFor(image.contentType)}`;
   await env.MEDIA.put(key, image.bytes, {
@@ -969,19 +1001,25 @@ export async function importLocalCapture(request, env, payload) {
     });
     if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true
       || String(promoted?.body?.contentHash || '').toLowerCase() !== hash.slice(0, 32)) {
+      const promoStatus=Number(promoted?.status||0);
+      const currentHash=String(promoted?.body?.contentHash||'').toLowerCase();
+      // A concurrent writer may have populated production after preflight.
+      // This is a review conflict, not a transient 503 or a successful save.
+      const hashConflict=promoStatus===200&&promoted?.body?.available===true
+        &&currentHash&&currentHash!==hash.slice(0,32);
+      const reason=hashConflict?'official_toc_conflict_review_required'
+        :'official_toc_production_promotion_failed';
+      const nestedCode=String(promoted?.body?.code||promoted?.body?.error||'')
+        .replace(/[^a-z0-9_]/gi,'_').slice(0,80);
       return {
-        status: 503,
-        body: {
-          stored: true,
-          localStored: true,
-          productionTocStored: false,
-          doi,
-          kind,
-          contentHash: hash.slice(0, 32),
-          error: 'official_toc_production_promotion_failed',
-          promotionStatus: Number(promoted?.status || 0),
-          updatedAt: now,
-        },
+        status:hashConflict?409:503,
+        body:{
+          stored:true,localStored:true,productionTocStored:false,
+          doi,kind,contentHash:hash.slice(0,32),code:reason,error:reason,
+          promotionStatus:promoStatus,promotionCode:nestedCode||'none',
+          ...hashConflict?{existingHash:currentHash,reviewRequired:true}:{},
+          updatedAt:now
+        }
       };
     }
     productionToc = promoted.body;
