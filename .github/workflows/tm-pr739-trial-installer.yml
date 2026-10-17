@@ -8,7 +8,7 @@ on:
       - .github/workflows/tm-pr739-trial-installer.yml
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   package-pr739-trial:
     runs-on: ubuntu-latest
@@ -47,6 +47,49 @@ jobs:
           fi
           sha256sum public/gallery-vpn-bridge-pr739-canary.user.js | tee pr739-canary.sha256
           git diff --check
+      - name: Publish only to an isolated preview branch (never main)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF}" = "refs/heads/fix/tm-heartbeat-recovery-20261017"
+          temp="$(mktemp -d)"
+          cp public/gallery-vpn-bridge-pr739-canary.user.js "$temp/preview.user.js"
+          cp pr739-canary.sha256 "$temp/preview.sha256"
+          git fetch --no-tags origin refs/heads/preview/tm-pr739-20261017:refs/remotes/origin/preview/tm-pr739-20261017
+          git switch --force-create pr739-preview refs/remotes/origin/preview/tm-pr739-20261017
+          dir="audit/tampermonkey/previews/pr739"
+          mkdir -p "$dir"
+          cp "$temp/preview.user.js" "$dir/gallery-vpn-bridge.user.js"
+          cp "$temp/preview.sha256" "$dir/gallery-vpn-bridge.sha256"
+          cat > "$dir/README.md" <<'DOC'
+          # PR739 temporary, owner-only Tampermonkey trial
+
+          This is **not** the production installer. It preserves the existing
+          userscript @name and @namespace so it REPLACES the installed Bridge.
+
+          * Bridge version: 2.2.93 (trial).
+          * Installed capture engine: 6.2.74 (trial).
+          * Capture wire protocol remains 6.2.20 / controller 2.2.41.
+          * The @updateURL and @downloadURL metadata are deliberately removed.
+          * Before installation, pause collection and export the installed
+            2.2.92 script. Install the trial as an UPDATE, never enable both.
+          * A normal user browser must remain VPN/owner authorized. Do not
+            bypass publisher authentication, PDF lease or 403/429 controls.
+          * Only run a bounded publisher trial. The pre-PR failure baseline
+            is 320 queued / 33 actually visited / 3 resolved / 2 official TOCs.
+          * After the trial, use "upload local diagnostic" and let the agent
+            check sanitized read-only receipts. Deferred PDF != stored.
+          * To revert, use the existing official 2.2.92 installer at:
+            https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js
+          * Do not merge this preview binary into the production branch.
+          DOC
+          sha256sum "$dir/gallery-vpn-bridge.user.js" | awk '{print $1}' > "$dir/sha256-digest.txt"
+          test "$(cat "$dir/sha256-digest.txt")" = "$(awk '{print $1}' "$temp/preview.sha256")"
+          git add -f "$dir/gallery-vpn-bridge.user.js" "$dir/gallery-vpn-bridge.sha256" "$dir/sha256-digest.txt" "$dir/README.md"
+          if ! git diff --cached --quiet; then
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "preview(tm): publish hashed owner-only PR739 2.2.93 trial"
+            git push origin HEAD:refs/heads/preview/tm-pr739-20261017
+          fi
       - name: Preserve owner-test installer for seven days
         uses: actions/upload-artifact@v4
         with:
