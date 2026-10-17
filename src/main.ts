@@ -1063,6 +1063,8 @@ function refreshCorpusResultsInPlace(): void {
   } else existing?.remove();
   syncClearSearchScopeButton();
   renderCards();
+  // Keep the delayed TOC/inventory bridge update from the old full mount.
+  scheduleInventory();
 }
 
 function mount(): void {
