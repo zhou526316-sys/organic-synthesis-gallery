@@ -297,6 +297,7 @@ function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): v
 let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
+let indexedGenerationUnavailableUntil = 0;
 let indexedSearchPending = false;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
@@ -315,6 +316,15 @@ let indexedViewState: {
   cursors: string[];
   hasMore: boolean;
   nextCursor: string | null;
+  papers: Paper[];
+  loading: boolean;
+} | null = null;
+let staticDateViewState: {
+  requestKey: string;
+  matched: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
   papers: Paper[];
   loading: boolean;
 } | null = null;
@@ -798,6 +808,7 @@ function resetResultWindow(): void {
   indexedSearchRequest = null;
   if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
+  staticDateViewState = null;
   indexedSearchPending = false;
   searchPreviewActive = false;
   document.documentElement.dataset.catalogQueryRead = 'local';
@@ -882,7 +893,7 @@ function renderCards(): void {
   gallery.classList.remove('search-stale');
   gallery.removeAttribute('aria-busy');
   syncLiteratureDoiRegistry();
-  const indexed = indexedViewState;
+  const indexed = indexedViewState || staticDateViewState;
   const list = indexed ? indexed.papers : filteredPapers();
   const windowSize = indexed?.limit || resultWindowSize();
   const localTotal = !indexed && resultScopeIsDefaultRecent() && hotBootstrapTotal > list.length
@@ -1000,6 +1011,9 @@ function filterSummary(): string {
 }
 
 function currentSearchNotice(): string {
+  if (staticDateViewState && !staticDateViewState.loading) return language === 'zh'
+    ? '日期范围采用正式文献档案的完整分页检索；已核验冷区与热区，搜索结果按发表日期排序。'
+    : 'Full date-filtered archive pagination is active, including verified Hot and Archive records.';
   if (searchPreviewActive) return language === 'zh'
     ? '全库检索仍在后台进行；当前仅展示已加载文献的临时匹配，不能视为完整检索结果。'
     : 'Full-library search is still running; these provisional local matches are not a complete answer.';
@@ -1210,6 +1224,10 @@ function mount(): void {
     if (!Number.isSafeInteger(targetPage) || targetPage < 1) return;
     if (indexedViewState) {
       await goToIndexedResultPage(targetPage);
+      return;
+    }
+    if (staticDateViewState) {
+      await goToStaticDateResultPage(targetPage);
       return;
     }
     if (targetPage > 1 && hotBootstrapTotal > papers.length && resultScopeIsDefaultRecent()) {
@@ -2061,6 +2079,8 @@ async function loadIndexedViewPage(
   indexedViewDegraded = false;
   indexedSearchPending = false;
   searchPreviewActive = false;
+  staticDateViewState = null;
+  indexedGenerationUnavailableUntil = 0;
   indexedViewRetryKey = '';
   indexedViewRetryCount = 0;
   setArchitectureCorpus(indexedPapers);
