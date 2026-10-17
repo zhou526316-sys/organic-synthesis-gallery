@@ -32,3 +32,11 @@ E. Verify signed artifact and actual update/downloadURL returns new metadata ver
 
 - Read-only workflow .github/workflows/tm-local-acceptance-read.yml, commit trigger 672f57ac387a1eda4c3af70b599ff2c02a5277e9.
 - No R2 objects were written or private PDF downloaded by this acceptance.
+
+## Final PR CI result — 2026-10-17 20:50:49 Beijing
+- Exact tested PR SHA: `5a9cca9cf78f95e2afd9a3f3b7488ab20d1935cc`.
+- GitHub pull-request workflow enumeration returned **27/27 completed success**, 0 failures.
+- Site quality gate https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/39033585173 completed `success`, including Worker dry-run, Production API smoke, frontend build/typecheck, complete Playwright interaction regression and required quality gate.
+- One extra serial-queue protection in this SHA ensures current ordinary publisher tasks outrank the optional quarantined-publisher recovery probe. Its behavior is exercised in `tests/tm-heartbeat-circuit-20261015.test.mjs` and CI.
+- PR remains draft/unmerged and changes only capture controller source and its test file. There was NO authenticated owner capture on this candidate, and existing installed/packaged metadata versions are unchanged.
+- **Final disposition:** code regression gate PASS; genuine owner publisher-capture efficacy gate NOT TESTED/BLOCKED; versioned test-installer/update link gate NOT MET; overall owner acceptance NOT COMPLETE; production merge/release PROHIBITED until both remaining gates pass.
