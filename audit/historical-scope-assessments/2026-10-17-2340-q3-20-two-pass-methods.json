@@ -1,0 +1,1032 @@
+{
+  "schemaVersion": "gallery-historical-science-two-pass-q3-audit-20261017-v1",
+  "generatedAt": "2026-10-17T15:55:00Z",
+  "sourceStagingGeneratedAt": "2026-10-16T18:46:08.795Z",
+  "sourcePreflightBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+  "scopeReviewMethod": "original publisher article history and abstract or legitimate open PMC HTML, DOI-specific first pass plus adversarial second pass",
+  "summary": {
+    "twoPassReviewed": 20,
+    "scienceInclude": 12,
+    "includeEligible": 8,
+    "scienceExclude": 7,
+    "sciencePending": 1,
+    "publisherDateHold": 4,
+    "selectedDistinctSourceRoots": 14
+  },
+  "rights": {
+    "historicalQ3": "toc_only",
+    "earlier": "metadata_only",
+    "pdfSiFigureFetches": 0,
+    "productionD1Queries": 0,
+    "productionD1Writes": 0,
+    "noFormalPublication": true
+  },
+  "records": [
+    {
+      "sequence": 1,
+      "doi": "10.1021/acs.orglett.6c02163",
+      "journal": "Organic Letters",
+      "title": "Catalytic Decarboxylative Carboamination of 2-(Trifluoromethyl)acrylic Acid Using Oxime Esters via Photo/Thermal Relay",
+      "sourceDateCandidate": "2026-07-22",
+      "publisherFirstOnlineDate": "2026-07-23",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：2-(三氟甲基)丙烯酸与烷基/芳基/烯基肟酯经光热协同脱羧碳胺化，生成α-三氟甲基亚胺，可转为胺。",
+        "preparativeTransformation": "2-(三氟甲基)丙烯酸与烷基/芳基/烯基肟酯经光热协同脱羧碳胺化，生成α-三氟甲基亚胺，可转为胺。",
+        "generalityEvidence": "公开ACS摘要给出不同肟酯类别与产物后续多样化，属原创可迁移C–C/C–N键制备。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02163；冻结来源根2026-07-22_2026-07-31_organic-letters；Git raw blob 67f6960bccfa31a1d2477390309426061dc65563；根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-23",
+        "boundaryChallenge": "单一受体类别限制了总体范围；不能把初级产物亚胺误写成直接制得胺。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "2-(三氟甲基)丙烯酸与烷基/芳基/烯基肟酯经光热协同脱羧碳胺化，生成α-三氟甲基亚胺，可转为胺。 公开ACS摘要给出不同肟酯类别与产物后续多样化，属原创可迁移C–C/C–N键制备。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "单一受体类别限制了总体范围；不能把初级产物亚胺误写成直接制得胺。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02163",
+        "sourceRootId": "2026-07-22_2026-07-31_organic-letters",
+        "sourceRawGitBlobSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceRootSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 2,
+      "doi": "10.1021/acs.orglett.6c02174",
+      "journal": "Organic Letters",
+      "title": "Ruthenium Catalyzed Formal [4 + 2] C–H Annulation to Pyranone via Chemoselective Ester Demethylation/O–C Cleavage",
+      "sourceDateCandidate": "2026-07-30",
+      "publisherFirstOnlineDate": "2026-07-30",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：Ru(II)催化丙烯酸酯与内炔C–H形式[4+2]成环，并伴随酯甲基/乙基O–C断裂，得吡喃酮。",
+        "preparativeTransformation": "Ru(II)催化丙烯酸酯与内炔C–H形式[4+2]成环，并伴随酯甲基/乙基O–C断裂，得吡喃酮。",
+        "generalityEvidence": "ACS摘要明确报道实际实验制备与较宽底物适应性及晶体结构表征。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02174；冻结来源根2026-07-22_2026-07-31_organic-letters；Git raw blob 67f6960bccfa31a1d2477390309426061dc65563；根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-30",
+        "boundaryChallenge": "推测的Ru(0)金属中间体不可当作实验分离事实；即使机制有待核实，新环化制备贡献仍成立。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "Ru(II)催化丙烯酸酯与内炔C–H形式[4+2]成环，并伴随酯甲基/乙基O–C断裂，得吡喃酮。 ACS摘要明确报道实际实验制备与较宽底物适应性及晶体结构表征。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "推测的Ru(0)金属中间体不可当作实验分离事实；即使机制有待核实，新环化制备贡献仍成立。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02174",
+        "sourceRootId": "2026-07-22_2026-07-31_organic-letters",
+        "sourceRawGitBlobSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceRootSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 3,
+      "doi": "10.1021/acs.orglett.6c02735",
+      "journal": "Organic Letters",
+      "title": "Catalytic Asymmetric Umpolung (n+1) Cyclization of Bifunctional Hydroxylamines: Entry to Chiral Spirooxindole-Fused Azacycles",
+      "sourceDateCandidate": "2026-08-19",
+      "publisherFirstOnlineDate": "2026-08-20",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：相转移催化双官能羟胺的(n+1)不对称反极性环化，构筑五/六元氮杂螺氧吲哚。",
+        "preparativeTransformation": "相转移催化双官能羟胺的(n+1)不对称反极性环化，构筑五/六元氮杂螺氧吲哚。",
+        "generalityEvidence": "ACS原始Letter确认良好产率及最高98% ee，两种环尺寸构成实质性底物拓展。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02735；冻结来源根2026-08-15_2026-08-21_organic-letters；Git raw blob 9b28580b6638049b3007fea208c8d489c769ed79；根SHA256 4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-08-20",
+        "boundaryChallenge": "卤键/离子对共同立体诱导属机制研究解释，不应写成全部过渡态已直接观测。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "相转移催化双官能羟胺的(n+1)不对称反极性环化，构筑五/六元氮杂螺氧吲哚。 ACS原始Letter确认良好产率及最高98% ee，两种环尺寸构成实质性底物拓展。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "卤键/离子对共同立体诱导属机制研究解释，不应写成全部过渡态已直接观测。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02735",
+        "sourceRootId": "2026-08-15_2026-08-21_organic-letters",
+        "sourceRawGitBlobSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "sourceRootSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 4,
+      "doi": "10.1021/acs.orglett.6c02959",
+      "journal": "Organic Letters",
+      "title": "Fluorinated Isoxazoles as Potential Fungicides: Tf2O-Induced Electrophilic Cyclization of O -Methyl Oximes",
+      "sourceDateCandidate": "2026-08-21",
+      "publisherFirstOnlineDate": "2026-08-21",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：Tf2O促进2-炔酮O-甲基肟与含氟亚砜环异构化，制备含氟异噁唑。",
+        "preparativeTransformation": "Tf2O促进2-炔酮O-甲基肟与含氟亚砜环异构化，制备含氟异噁唑。",
+        "generalityEvidence": "论文报道有机底物到可分离含氟杂环并研究杀菌活性；制备反应而非单纯药筛。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02959；冻结来源根2026-08-15_2026-08-21_organic-letters；Git raw blob 9b28580b6638049b3007fea208c8d489c769ed79；根SHA256 4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-08-21",
+        "boundaryChallenge": "不能依标题potential fungicides推断能产生通用杀菌剂；纳入依据仅原创杂环合成。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "Tf2O促进2-炔酮O-甲基肟与含氟亚砜环异构化，制备含氟异噁唑。 论文报道有机底物到可分离含氟杂环并研究杀菌活性；制备反应而非单纯药筛。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不能依标题potential fungicides推断能产生通用杀菌剂；纳入依据仅原创杂环合成。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02959",
+        "sourceRootId": "2026-08-15_2026-08-21_organic-letters",
+        "sourceRawGitBlobSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "sourceRootSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 5,
+      "doi": "10.1021/acs.orglett.6c02821",
+      "journal": "Organic Letters",
+      "title": "Base-Controlled Regioselective Synthesis of α-Fluoro-Allylnitriles and -Acrylonitriles from Alkenylsulfonium Salts and Cyanofluoromethyl Phosphonate",
+      "sourceDateCandidate": "2026-07-31",
+      "publisherFirstOnlineDate": "2026-07-31",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：不同碱调控烯基锍盐与氰氟甲基膦酸酯C–C偶联，分歧制备α-氟代烯丙基腈或丙烯腈。",
+        "preparativeTransformation": "不同碱调控烯基锍盐与氰氟甲基膦酸酯C–C偶联，分歧制备α-氟代烯丙基腈或丙烯腈。",
+        "generalityEvidence": "ACS摘要记载碱调区域/立体选择、一锅醇酯交换、复杂分子后期衍生。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02821；冻结来源根2026-07-22_2026-07-31_organic-letters；Git raw blob 67f6960bccfa31a1d2477390309426061dc65563；根SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-31",
+        "boundaryChallenge": "两条产物路线需要不同碱，不能误报为同条件同时形成两类产物。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "不同碱调控烯基锍盐与氰氟甲基膦酸酯C–C偶联，分歧制备α-氟代烯丙基腈或丙烯腈。 ACS摘要记载碱调区域/立体选择、一锅醇酯交换、复杂分子后期衍生。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "两条产物路线需要不同碱，不能误报为同条件同时形成两类产物。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02821",
+        "sourceRootId": "2026-07-22_2026-07-31_organic-letters",
+        "sourceRawGitBlobSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceRootSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 6,
+      "doi": "10.1021/acs.joc.6c01562",
+      "journal": "JOC",
+      "title": "Synthesis of Bioactive Fluorinated 2-Heterocyclic Pyrrolidines via Copper(I)-Catalyzed Asymmetric 1,3-Dipolar Cycloaddition of Azomethine Ylides",
+      "sourceDateCandidate": "2026-09-04",
+      "publisherFirstOnlineDate": "2026-09-04",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Article",
+      "scopeAssessment": {
+        "primaryContribution": "Article研究：Cu(I)/Segphos催化亚胺与偕二氟烯烃的不对称1,3-偶极环加成，制得手性氟代杂芳基吡咯烷。",
+        "preparativeTransformation": "Cu(I)/Segphos催化亚胺与偕二氟烯烃的不对称1,3-偶极环加成，制得手性氟代杂芳基吡咯烷。",
+        "generalityEvidence": "JOC公开摘要给出最高99%收率、98% ee和>20:1 dr，兼容多杂芳基及天然产物片段。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01562；冻结来源根2026-09-01_2026-09-07_joc；Git raw blob 0511ff2e2a122b1c5ee6784e1c2953698b8d6dea；根SHA256 f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-04",
+        "boundaryChallenge": "抗真菌活性不能替代有机合成证据；但底物范围和立体制备贡献直接成立。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "Cu(I)/Segphos催化亚胺与偕二氟烯烃的不对称1,3-偶极环加成，制得手性氟代杂芳基吡咯烷。 JOC公开摘要给出最高99%收率、98% ee和>20:1 dr，兼容多杂芳基及天然产物片段。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "抗真菌活性不能替代有机合成证据；但底物范围和立体制备贡献直接成立。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01562",
+        "sourceRootId": "2026-09-01_2026-09-07_joc",
+        "sourceRawGitBlobSha": "0511ff2e2a122b1c5ee6784e1c2953698b8d6dea",
+        "sourceRootSha256": "f3d11f45ba42e9c756ce88a11640cb7b7e2a35e7273e3fe6d28d50f42ed12329",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 7,
+      "doi": "10.1021/acs.joc.6c01432",
+      "journal": "JOC",
+      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
+      "sourceDateCandidate": "2026-09-13",
+      "publisherFirstOnlineDate": "2026-09-13",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Article",
+      "scopeAssessment": {
+        "primaryContribution": "Article研究：笼状羟酮的分子内氢迁移消旋与脂肪酶动力学拆分循环耦合，合成对映富集笼状产物。",
+        "preparativeTransformation": "笼状羟酮的分子内氢迁移消旋与脂肪酶动力学拆分循环耦合，合成对映富集笼状产物。",
+        "generalityEvidence": "JOC明确展示消旋—生物催化拆分的制备工作及产物手性控制，不只是蛋白表征。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01432；冻结来源根2026-09-08_2026-09-14_joc；Git raw blob c5604566a1a9763ce4fbbd2233b424db5c960517；根SHA256 f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-13",
+        "boundaryChallenge": "不得误写为同一步一锅动态动力学拆分；实际是消旋和酶分离配合并反复循环。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "笼状羟酮的分子内氢迁移消旋与脂肪酶动力学拆分循环耦合，合成对映富集笼状产物。 JOC明确展示消旋—生物催化拆分的制备工作及产物手性控制，不只是蛋白表征。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不得误写为同一步一锅动态动力学拆分；实际是消旋和酶分离配合并反复循环。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01432",
+        "sourceRootId": "2026-09-08_2026-09-14_joc",
+        "sourceRawGitBlobSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "sourceRootSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 8,
+      "doi": "10.1021/acs.joc.6c00922",
+      "journal": "JOC",
+      "title": "Synthesis of ACT-007 and Its Analogues with Antiproliferative Activity",
+      "sourceDateCandidate": "2026-07-27",
+      "publisherFirstOnlineDate": "2026-07-27",
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": true,
+      "decision": "include",
+      "articleType": "Article",
+      "scopeAssessment": {
+        "primaryContribution": "Article研究：由星形孢菌素一锅制得克级ACT-007及六个类似物；另用三至五步序列获得更多衍生物。",
+        "preparativeTransformation": "由星形孢菌素一锅制得克级ACT-007及六个类似物；另用三至五步序列获得更多衍生物。",
+        "generalityEvidence": "JOC公告2–9产率25–99%、克级合成和10–15衍生物，确有可重复路线与实物。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00922；冻结来源根2026-07-22_2026-07-31_joc；Git raw blob 9181de94c2f59b0fb77a470f802a143699524037；根SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-27",
+        "boundaryChallenge": "尽管药物SAR占大量篇幅，克级新合成流程和十余个分离产物具制备贡献；不是ACT-007全合成。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "由星形孢菌素一锅制得克级ACT-007及六个类似物；另用三至五步序列获得更多衍生物。 JOC公告2–9产率25–99%、克级合成和10–15衍生物，确有可重复路线与实物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "尽管药物SAR占大量篇幅，克级新合成流程和十余个分离产物具制备贡献；不是ACT-007全合成。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00922",
+        "sourceRootId": "2026-07-22_2026-07-31_joc",
+        "sourceRawGitBlobSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceRootSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 9,
+      "doi": "10.1021/acs.orglett.6c02893",
+      "journal": "Organic Letters",
+      "title": "Correction to “Bioinspired Total Synthesis of Penisuloxazin A”",
+      "sourceDateCandidate": "2026-07-15",
+      "publisherFirstOnlineDate": "2026-07-15",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Addition/Correction",
+      "scopeAssessment": {
+        "primaryContribution": "Addition/Correction研究：对已发表Penisuloxazin A全合成的结构式与消旋标注进行更正。",
+        "preparativeTransformation": "对已发表Penisuloxazin A全合成的结构式与消旋标注进行更正。",
+        "generalityEvidence": "官方标识为Correction，仅修正Scheme和SI，没有作为新DOI创造独立反应。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02893；冻结来源根2026-07-15_2026-07-21_organic-letters；Git raw blob 191472933f6e4097799a5642b86061b865421825；根SHA256 50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-15",
+        "boundaryChallenge": "原始全合成若符合范围应以原DOI检索，不能把更正重复计为原创论文。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "对已发表Penisuloxazin A全合成的结构式与消旋标注进行更正。 官方标识为Correction，仅修正Scheme和SI，没有作为新DOI创造独立反应。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "原始全合成若符合范围应以原DOI检索，不能把更正重复计为原创论文。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02893",
+        "sourceRootId": "2026-07-15_2026-07-21_organic-letters",
+        "sourceRawGitBlobSha": "191472933f6e4097799a5642b86061b865421825",
+        "sourceRootSha256": "50e197a76bb606a8d6fb8177ce793b675ac433dafbdf4310224ed4895a3ee7d1",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Addition/Correction",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 10,
+      "doi": "10.1021/acs.orglett.6c03423",
+      "journal": "Organic Letters",
+      "title": "Correction to “Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals”",
+      "sourceDateCandidate": "2026-09-23",
+      "publisherFirstOnlineDate": "2026-09-23",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Addition/Correction",
+      "scopeAssessment": {
+        "primaryContribution": "Addition/Correction研究：补回原NHC [5+1]反应中排版遗漏的底物范围图，删除SI空白页。",
+        "preparativeTransformation": "补回原NHC [5+1]反应中排版遗漏的底物范围图，删除SI空白页。",
+        "generalityEvidence": "官方明确更正内容在原稿已存在，不是更正当日新完成合成研究。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03423；冻结来源根2026-09-22_2026-09-30_organic-letters；Git raw blob ada2fd35a7176b65f23c362850e02d788795610d；根SHA256 2f1d3d58471ff53dfda8f29d31a175f99d8e00118912067e9c368d11489b20ca；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-23",
+        "boundaryChallenge": "图中有收率和er，但它是原文数据而非本Correction DOI的新实验成果。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "补回原NHC [5+1]反应中排版遗漏的底物范围图，删除SI空白页。 官方明确更正内容在原稿已存在，不是更正当日新完成合成研究。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "图中有收率和er，但它是原文数据而非本Correction DOI的新实验成果。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03423",
+        "sourceRootId": "2026-09-22_2026-09-30_organic-letters",
+        "sourceRawGitBlobSha": "ada2fd35a7176b65f23c362850e02d788795610d",
+        "sourceRootSha256": "2f1d3d58471ff53dfda8f29d31a175f99d8e00118912067e9c368d11489b20ca",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Addition/Correction",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 11,
+      "doi": "10.1021/acs.joc.6c01230",
+      "journal": "JOC",
+      "title": "Strain-Release-Driven Annulation of Quinazoline-Derived Azomethine Imines with Crotonate Sulfonium Salts for the Synthesis of Nitrogen-Rich Three-Dimensional Cage-like Molecules: Insights from Experiment and Theoretical Calculations",
+      "sourceDateCandidate": "2026-07-28",
+      "publisherFirstOnlineDate": "2026-07-28",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Article_mechanism",
+      "scopeAssessment": {
+        "primaryContribution": "Article_mechanism研究：通过实验和DFT重新解释已发表喹唑啉来源偶氮亚甲基亚胺/锍盐串联成笼路线。",
+        "preparativeTransformation": "通过实验和DFT重新解释已发表喹唑啉来源偶氮亚甲基亚胺/锍盐串联成笼路线。",
+        "generalityEvidence": "JOC摘要称previously communicated，本文集中在应变释放/氮丙啶/苯并二氮䓬路径解释。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01230；冻结来源根2026-07-22_2026-07-31_joc；Git raw blob 9181de94c2f59b0fb77a470f802a143699524037；根SHA256 f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-07-28",
+        "boundaryChallenge": "不能因为已有合成实验就断言这是新的独立通用合成方法；若发现首次发表的新底物范围可再复审。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "通过实验和DFT重新解释已发表喹唑啉来源偶氮亚甲基亚胺/锍盐串联成笼路线。 JOC摘要称previously communicated，本文集中在应变释放/氮丙啶/苯并二氮䓬路径解释。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "不能因为已有合成实验就断言这是新的独立通用合成方法；若发现首次发表的新底物范围可再复审。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01230",
+        "sourceRootId": "2026-07-22_2026-07-31_joc",
+        "sourceRawGitBlobSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "sourceRootSha256": "f989ee16faa4b3915d1d61984cba4111eb43fe73b8a61976b0a1d3ff556cd76f",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article_mechanism",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 12,
+      "doi": "10.1021/acs.joc.6c01623",
+      "journal": "JOC",
+      "title": "Unveiling the Critical Roles of Amine Additives and Water for Half-Sandwich Sc Catalysts in Annulation Reactions",
+      "sourceDateCandidate": "2026-09-19",
+      "publisherFirstOnlineDate": "2026-09-19",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Article_theoretical",
+      "scopeAssessment": {
+        "primaryContribution": "Article_theoretical研究：理论分析Sc半三明治催化亚胺与烯烃[3+2]环加成中胺和水助剂作用。",
+        "preparativeTransformation": "理论分析Sc半三明治催化亚胺与烯烃[3+2]环加成中胺和水助剂作用。",
+        "generalityEvidence": "官方摘要明确theoretically investigates，仅解释既有反应而非新制备化学。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01623；冻结来源根2026-09-15_2026-09-21_joc；Git raw blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541；根SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-19",
+        "boundaryChallenge": "催化机理有科学价值，但未能提供作为本DOI新制备路线所需分离产物/底物范围。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "理论分析Sc半三明治催化亚胺与烯烃[3+2]环加成中胺和水助剂作用。 官方摘要明确theoretically investigates，仅解释既有反应而非新制备化学。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "催化机理有科学价值，但未能提供作为本DOI新制备路线所需分离产物/底物范围。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01623",
+        "sourceRootId": "2026-09-15_2026-09-21_joc",
+        "sourceRawGitBlobSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceRootSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article_theoretical",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 13,
+      "doi": "10.1021/acscatal.6c03855",
+      "journal": "ACS Catalysis",
+      "title": "Emerging N-Heterocyclic Carbene–Nickel Catalysis: Bond Activations, Cross-Coupling Reactions, and Beyond",
+      "sourceDateCandidate": "2026-09-17",
+      "publisherFirstOnlineDate": "2026-09-17",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Review",
+      "scopeAssessment": {
+        "primaryContribution": "Review研究：汇总NHC-Ni催化多种键活化和偶联的近十年文献。",
+        "preparativeTransformation": "汇总NHC-Ni催化多种键活化和偶联的近十年文献。",
+        "generalityEvidence": "ACS正式文章类型Review，属于综述而非原创方法报告。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acscatal.6c03855；冻结来源根2026-09-15_2026-09-21_acs-catalysis；Git raw blob 8ee4dfc1c32f6eed1764632be3d490ecc891ed3c；根SHA256 34dd1b37ec733cf4b8931ad9c58bec7d014f04bacd18cfd5162a203049d4c69e；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-17",
+        "boundaryChallenge": "不能误排除被综述引用的原创镍催化论文，后者须独立按DOI审核。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "汇总NHC-Ni催化多种键活化和偶联的近十年文献。 ACS正式文章类型Review，属于综述而非原创方法报告。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "不能误排除被综述引用的原创镍催化论文，后者须独立按DOI审核。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c03855",
+        "sourceRootId": "2026-09-15_2026-09-21_acs-catalysis",
+        "sourceRawGitBlobSha": "8ee4dfc1c32f6eed1764632be3d490ecc891ed3c",
+        "sourceRootSha256": "34dd1b37ec733cf4b8931ad9c58bec7d014f04bacd18cfd5162a203049d4c69e",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Review",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 14,
+      "doi": "10.1021/jacs.6c09868",
+      "journal": "JACS",
+      "title": "Direct Observation of a Cross-Coupling Catalyst Intermediate via Single-Molecule Spectroscopy",
+      "sourceDateCandidate": "2026-09-07",
+      "publisherFirstOnlineDate": "2026-09-07",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Article_mechanism",
+      "scopeAssessment": {
+        "primaryContribution": "Article_mechanism研究：零模波导单分子荧光表征Pd-PEPPSI催化剂配体反复结合和解离的瞬态动力学。",
+        "preparativeTransformation": "零模波导单分子荧光表征Pd-PEPPSI催化剂配体反复结合和解离的瞬态动力学。",
+        "generalityEvidence": "JACS研究证据为单分子光谱/动力学、不是新有机底物-产物制备方案。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/jacs.6c09868；冻结来源根2026-09-01_2026-09-07_jacs；Git raw blob c6f01b2cac5c0d80a7057a94ce4447843613c304；根SHA256 efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-07",
+        "boundaryChallenge": "虽使用真实交叉偶联试剂和标记催化剂，但不能因为标题Cross-Coupling就纳入方法学。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "零模波导单分子荧光表征Pd-PEPPSI催化剂配体反复结合和解离的瞬态动力学。 JACS研究证据为单分子光谱/动力学、不是新有机底物-产物制备方案。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "虽使用真实交叉偶联试剂和标记催化剂，但不能因为标题Cross-Coupling就纳入方法学。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c09868",
+        "sourceRootId": "2026-09-01_2026-09-07_jacs",
+        "sourceRawGitBlobSha": "c6f01b2cac5c0d80a7057a94ce4447843613c304",
+        "sourceRootSha256": "efbec7b0e80f59011f46ba3ea0c9a5b9362e61da4c0a3b4b622428a376653eae",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article_mechanism",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 15,
+      "doi": "10.1021/acs.orglett.6c03772",
+      "journal": "Organic Letters",
+      "title": "Rhodium-Catalyzed Regioselective Diarylation of Antiaromatic Ni(II) Norcorroles",
+      "sourceDateCandidate": "2026-09-25",
+      "publisherFirstOnlineDate": "2026-09-25",
+      "academicScopeDecision": "exclude",
+      "releaseGate": "publisher_date_and_science_checked",
+      "admissionEligible": false,
+      "decision": "exclude",
+      "articleType": "Letter_narrow",
+      "scopeAssessment": {
+        "primaryContribution": "Letter_narrow研究：Rh/BINAP催化Ni(II)二均三甲苯基norcorrole与苯硼酸的C3/C13双芳基化，得cis/trans异构体。",
+        "preparativeTransformation": "Rh/BINAP催化Ni(II)二均三甲苯基norcorrole与苯硼酸的C3/C13双芳基化，得cis/trans异构体。",
+        "generalityEvidence": "官方期刊DOI、第三方摘要均指单一norcorrole基架/苯硼酸及其光电和反芳香性变化，暂无跨底物泛化证据。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03772；冻结来源根2026-09-22_2026-09-30_organic-letters；Git raw blob ada2fd35a7176b65f23c362850e02d788795610d；根SHA256 2f1d3d58471ff53dfda8f29d31a175f99d8e00118912067e9c368d11489b20ca；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-25",
+        "boundaryChallenge": "虽有新C–C键及实物，但现有主要贡献集中单一特殊材料的性质调控；若有广泛可迁移分子制备则可重新评估。"
+      },
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "exclude",
+          "reason": "Rh/BINAP催化Ni(II)二均三甲苯基norcorrole与苯硼酸的C3/C13双芳基化，得cis/trans异构体。 官方期刊DOI、第三方摘要均指单一norcorrole基架/苯硼酸及其光电和反芳香性变化，暂无跨底物泛化证据。"
+        },
+        {
+          "pass": 2,
+          "decision": "exclude",
+          "reason": "虽有新C–C键及实物，但现有主要贡献集中单一特殊材料的性质调控；若有广泛可迁移分子制备则可重新评估。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03772",
+        "sourceRootId": "2026-09-22_2026-09-30_organic-letters",
+        "sourceRawGitBlobSha": "ada2fd35a7176b65f23c362850e02d788795610d",
+        "sourceRootSha256": "2f1d3d58471ff53dfda8f29d31a175f99d8e00118912067e9c368d11489b20ca",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter_narrow",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": null
+    },
+    {
+      "sequence": 16,
+      "doi": "10.1021/acs.orglett.6c03630",
+      "journal": "Organic Letters",
+      "title": "Identification and Cyclization Mechanism of Fungal (+)-β-Chamigrene Synthase",
+      "sourceDateCandidate": "2026-09-15",
+      "publisherFirstOnlineDate": "2026-09-15",
+      "academicScopeDecision": "science_pending",
+      "releaseGate": "missing_preparative_scope_evidence",
+      "admissionEligible": false,
+      "decision": "science_pending",
+      "articleType": "Letter_biosynthesis",
+      "scopeAssessment": {
+        "primaryContribution": "Letter_biosynthesis研究：从真菌鉴定ChamTS倍半萜合酶，使萜前体成环为(+)-β-chamigrene，并用同位素验证机理。",
+        "preparativeTransformation": "从真菌鉴定ChamTS倍半萜合酶，使萜前体成环为(+)-β-chamigrene，并用同位素验证机理。",
+        "generalityEvidence": "公开摘要确证体外特定萜环化与产物鉴定，尚不能确定可分离制备规模或非天然底物范围。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03630；冻结来源根2026-09-15_2026-09-21_organic-letters；Git raw blob e1356f09b7531dc808c7d24f35e270f3f9f38b0c；根SHA256 93a45dc3dbfc0e31632dfc491de78bd7097d2abb2aa5e78cc941551134ef9c0f；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 2026-09-15",
+        "boundaryChallenge": "如果可以分离有意义数量天然产物，可算实质生物催化制备；若仅解析生物合成途径则不足。"
+      },
+      "firstPassDecision": "science_pending",
+      "challengeDecision": "science_pending",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "science_pending",
+          "reason": "从真菌鉴定ChamTS倍半萜合酶，使萜前体成环为(+)-β-chamigrene，并用同位素验证机理。 公开摘要确证体外特定萜环化与产物鉴定，尚不能确定可分离制备规模或非天然底物范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "science_pending",
+          "reason": "如果可以分离有意义数量天然产物，可算实质生物催化制备；若仅解析生物合成途径则不足。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03630",
+        "sourceRootId": "2026-09-15_2026-09-21_organic-letters",
+        "sourceRawGitBlobSha": "e1356f09b7531dc808c7d24f35e270f3f9f38b0c",
+        "sourceRootSha256": "93a45dc3dbfc0e31632dfc491de78bd7097d2abb2aa5e78cc941551134ef9c0f",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter_biosynthesis",
+        "onlineDateEvidence": "publisher_Article_History",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": "查证可分离制备量、非天然底物适用性及生物催化制备贡献"
+    },
+    {
+      "sequence": 17,
+      "doi": "10.1021/acs.orglett.6c03004",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic Styrene [4 + 2] Cycloaddition/Decyanative Pyridylation Cascade for the Synthesis of 4-(Tetralyn-1-yl)pyridines",
+      "sourceDateCandidate": "2026-08-24",
+      "publisherFirstOnlineDate": null,
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_first_online_disputed_or_unverified",
+      "admissionEligible": false,
+      "decision": "evidence_pending",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：可见光多组分[4+2]成环/脱氰吡啶基化，制备多种稠环氰基吡啶。",
+        "preparativeTransformation": "可见光多组分[4+2]成环/脱氰吡啶基化，制备多种稠环氰基吡啶。",
+        "generalityEvidence": "ACS摘要确认多结构产物、较宽官能团耐受、克级制备，科学上宜纳入。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03004；冻结来源根2026-08-22_2026-08-31_organic-letters；Git raw blob 3eb3448b8f413701aed67f8e3f29d518400d7827；根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 待独立消歧",
+        "boundaryChallenge": "ACS同DOI两个入口Published Online分别显示8月24日和25日；科学认可不意味着日期门禁完成。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "可见光多组分[4+2]成环/脱氰吡啶基化，制备多种稠环氰基吡啶。 ACS摘要确认多结构产物、较宽官能团耐受、克级制备，科学上宜纳入。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "ACS同DOI两个入口Published Online分别显示8月24日和25日；科学认可不意味着日期门禁完成。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03004",
+        "sourceRootId": "2026-08-22_2026-08-31_organic-letters",
+        "sourceRawGitBlobSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceRootSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_date_unresolved",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": "核对同DOI出版社准确最早上线时间，并证明所属Q3；科学判断暂保留"
+    },
+    {
+      "sequence": 18,
+      "doi": "10.1021/acs.orglett.6c02980",
+      "journal": "Organic Letters",
+      "title": "Rhodium-Catalyzed Selective Amination of 1-Pyridyl- o -carboranes with N -Boc- O -tosylhydroxylamine: Synthesis of Primary Carboranyl Amines",
+      "sourceDateCandidate": "2026-08-20",
+      "publisherFirstOnlineDate": null,
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_first_online_disputed_or_unverified",
+      "admissionEligible": false,
+      "decision": "evidence_pending",
+      "articleType": "Letter",
+      "scopeAssessment": {
+        "primaryContribution": "Letter研究：Rh催化1-吡啶基邻碳硼烷B–H位胺化，TsONHBoc为氮源，形成伯碳硼烷胺。",
+        "preparativeTransformation": "Rh催化1-吡啶基邻碳硼烷B–H位胺化，TsONHBoc为氮源，形成伯碳硼烷胺。",
+        "generalityEvidence": "ACS披露不同活性基团和中等分离收率，具分子硼化学制备意义。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02980；冻结来源根2026-08-15_2026-08-21_organic-letters；Git raw blob 9b28580b6638049b3007fea208c8d489c769ed79；根SHA256 4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 待独立消歧",
+        "boundaryChallenge": "不得将B–H键胺化扩大为一般芳香C–H胺化；ACS历史入口出现8月20/21两种日期表述，暂不准入。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "Rh催化1-吡啶基邻碳硼烷B–H位胺化，TsONHBoc为氮源，形成伯碳硼烷胺。 ACS披露不同活性基团和中等分离收率，具分子硼化学制备意义。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "不得将B–H键胺化扩大为一般芳香C–H胺化；ACS历史入口出现8月20/21两种日期表述，暂不准入。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02980",
+        "sourceRootId": "2026-08-15_2026-08-21_organic-letters",
+        "sourceRawGitBlobSha": "9b28580b6638049b3007fea208c8d489c769ed79",
+        "sourceRootSha256": "4e0a55312a755bc2654efdcb628c9f9d4ffdf94cffa1c7e82a9e8a0fa1d474f6",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Letter",
+        "onlineDateEvidence": "publisher_date_unresolved",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": "核对同DOI出版社准确最早上线时间，并证明所属Q3；科学判断暂保留"
+    },
+    {
+      "sequence": 19,
+      "doi": "10.1021/acs.joc.6c01242",
+      "journal": "JOC",
+      "title": "Photochemical Ni-Catalyzed Cross-Coupling of Aryl Bromides with Hydrazides",
+      "sourceDateCandidate": "2026-07-01",
+      "publisherFirstOnlineDate": null,
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_first_online_disputed_or_unverified",
+      "admissionEligible": false,
+      "decision": "evidence_pending",
+      "articleType": "Article",
+      "scopeAssessment": {
+        "primaryContribution": "Article研究：光激发镍催化芳基溴化物与酰肼发生C–N偶联，形成芳基酰肼。",
+        "preparativeTransformation": "光激发镍催化芳基溴化物与酰肼发生C–N偶联，形成芳基酰肼。",
+        "generalityEvidence": "实验原创偶联方法明确，已有多芳基底物应用，是可迁移合成转化。",
+        "sourceEvidence": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01242；冻结来源根2026-07-01_2026-07-07_joc；Git raw blob 158a2415687e4a0ecf0c588356f417cc1679d70a；根SHA256 00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 待独立消歧",
+        "boundaryChallenge": "ACS最早上线页面有6月30日与7月1日差异，NLM偏向6月30日，Q3归属不确定；严禁按created/issue日期收录。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "光激发镍催化芳基溴化物与酰肼发生C–N偶联，形成芳基酰肼。 实验原创偶联方法明确，已有多芳基底物应用，是可迁移合成转化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "ACS最早上线页面有6月30日与7月1日差异，NLM偏向6月30日，Q3归属不确定；严禁按created/issue日期收录。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01242",
+        "sourceRootId": "2026-07-01_2026-07-07_joc",
+        "sourceRawGitBlobSha": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+        "sourceRootSha256": "00ad1bd997c7e2b3d7d340caf44df2e3f661cdcda8c1978d5048de9bbacde8f7",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Article",
+        "onlineDateEvidence": "publisher_date_unresolved",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": "核对同DOI出版社准确最早上线时间，并证明所属Q3；科学判断暂保留"
+    },
+    {
+      "sequence": 20,
+      "doi": "10.1126/sciadv.aee4031",
+      "journal": "Science Advances",
+      "title": "Redirecting radical phosphonylation via energy-transfer–enabled diradical rearrangement",
+      "sourceDateCandidate": "2026-07-10",
+      "publisherFirstOnlineDate": null,
+      "academicScopeDecision": "include",
+      "releaseGate": "publisher_first_online_disputed_or_unverified",
+      "admissionEligible": false,
+      "decision": "evidence_pending",
+      "articleType": "Research Article",
+      "scopeAssessment": {
+        "primaryContribution": "Research Article研究：高烯丙醇与P(III)试剂在可见光能量转移下双自由基重排，制得膦氧基取代环丙烷。",
+        "preparativeTransformation": "高烯丙醇与P(III)试剂在可见光能量转移下双自由基重排，制得膦氧基取代环丙烷。",
+        "generalityEvidence": "AAAS论文在PMC公开HTML明确跨底物适用、分离制备和机理对照，科学上属原创有机膦合成。",
+        "sourceEvidence": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13344364/；冻结来源根2026-07-08_2026-07-14_science-advances；Git raw blob 5f161fa24df333602d16839d2c6336a912222540；根SHA256 6360d01cff618165548f8d4785dfbde30e7ab69863453e86a3fad6b104a9d99c；预审blob de10ded26df6c12080fef310eb06d3dc381827c1；出版社明确在线日期 待独立消歧",
+        "boundaryChallenge": "PMC文本标2026年7月8日文章日期，同时collection为7月10日，AAAS官方earliest online需直接核实，不能默认为7月10日。"
+      },
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "高烯丙醇与P(III)试剂在可见光能量转移下双自由基重排，制得膦氧基取代环丙烷。 AAAS论文在PMC公开HTML明确跨底物适用、分离制备和机理对照，科学上属原创有机膦合成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "PMC文本标2026年7月8日文章日期，同时collection为7月10日，AAAS官方earliest online需直接核实，不能默认为7月10日。"
+        }
+      ],
+      "reviewEvidence": {
+        "publisherPage": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13344364/",
+        "sourceRootId": "2026-07-08_2026-07-14_science-advances",
+        "sourceRawGitBlobSha": "5f161fa24df333602d16839d2c6336a912222540",
+        "sourceRootSha256": "6360d01cff618165548f8d4785dfbde30e7ab69863453e86a3fad6b104a9d99c",
+        "stageBranch": "staging/historical-archive-nightly",
+        "academicPreflightGitBlobSha": "de10ded26df6c12080fef310eb06d3dc381827c1",
+        "articleTypeEvidence": "Research Article",
+        "onlineDateEvidence": "publisher_date_unresolved",
+        "abstractCopied": false,
+        "pdfFetched": false,
+        "siFetched": false,
+        "figureFetched": false
+      },
+      "evidenceNeeded": "核对同DOI出版社准确最早上线时间，并证明所属Q3；科学判断暂保留"
+    }
+  ],
+  "notes": [
+    "本轮20篇为真正逐DOI正反学术判断，不包含预审160条未审任务。",
+    "没有读取受限正文/SI/PDF；无法证实的逐底物产率不填。",
+    "四篇学术符合范围但出版社最早上线日期不能可靠确定，暂不进入权威准入清单。",
+    "scope exclude不是用户永久排除，不阻止未来拿新证据复审。"
+  ]
+}
