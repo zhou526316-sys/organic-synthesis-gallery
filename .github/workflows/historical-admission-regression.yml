@@ -19,6 +19,7 @@ on:
       - 'scripts/test-historical-q3-five-acs-wiley-originals-20261016.mjs'
       - 'scripts/test-historical-q3-twelve-acs-restored-20261016.mjs'
       - 'scripts/test-historical-q3-ten-acs-originals-20261016.mjs'
+      - 'scripts/test-historical-q3-nine-originals-20261017.mjs'
       - 'scripts/test-pages-literature-authorization.mjs'
       - 'scripts/validate-pages-literature-authorization.mjs'
       - 'scripts/apply-fixed-slot-literature-release.mjs'
@@ -47,6 +48,7 @@ on:
       - 'scripts/test-historical-q3-five-acs-wiley-originals-20261016.mjs'
       - 'scripts/test-historical-q3-twelve-acs-restored-20261016.mjs'
       - 'scripts/test-historical-q3-ten-acs-originals-20261016.mjs'
+      - 'scripts/test-historical-q3-nine-originals-20261017.mjs'
       - 'scripts/validate-pages-literature-authorization.mjs'
       - 'scripts/apply-fixed-slot-literature-release.mjs'
       - 'scripts/fixed-slot-release-handoff.mjs'
@@ -91,6 +93,7 @@ jobs:
           node --test scripts/test-historical-q3-five-acs-wiley-originals-20261016.mjs
           node --test scripts/test-historical-q3-twelve-acs-restored-20261016.mjs
           node --test scripts/test-historical-q3-ten-acs-originals-20261016.mjs
+          node --test scripts/test-historical-q3-nine-originals-20261017.mjs
       - name: Verify old and new Pages marker partition, historical media policy
         run: |
           set -euo pipefail
