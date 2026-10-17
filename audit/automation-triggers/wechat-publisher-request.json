@@ -1,25 +1,41 @@
 {
-  "requestId": "wechat-oct16-r2-reviewed-fixed-ip-draft-v1",
-  "publicationDate": "2026-10-16",
+  "requestId": "wechat-oct17-r1-reviewed-fixed-ip-draft-20261017-v1",
+  "publicationDate": "2026-10-17",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-16-r2",
-  "approvedGate": "audit/wechat-working/2026-10-16-review-gate.json",
-  "approvedSourceCommit": "29b565c2e5e5ae23f32353dd604de36bed25779f",
-  "approval": "Owner explicitly ordered autonomous review until identified issues are corrected, then direct draft creation using the already configured API credentials.",
+  "editorialRevision": "2026-10-17-r1",
+  "approvedGate": "audit/wechat-working/2026-10-17-review-gate.json",
+  "approvedSourceCommit": "9a58287a7700457d5c720aa4fe8e1f7a56640cf5",
+  "approval": "Owner confirmed the October 17 WeChat drafts do not exist and explicitly requested the assistant to take over and create the reviewed drafts. Draft only; no publication or mass send.",
   "expectedArticleCount": 2,
-  "expectedDois": ["10.1021/jacs.6c17168", "10.1038/s41586-026-10933-6"],
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-16&doi=10.1021%2Fjacs.6c17168&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41586-026-10933-6&summary=0",
-  "expectedReviewedBodyImages": 38,
-  "expectedReviewedAssets": 41,
-  "journalTotalCount": 35,
-  "journalCounts": {"Science": 1, "Nature Communications": 3, "JACS": 6, "Angew": 6, "ACS Catalysis": 2, "JOC": 7, "Organic Letters": 10},
+  "expectedDois": [
+    "10.1021/jacs.6c17862",
+    "10.1038/s44160-026-01140-2"
+  ],
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-17&doi=10.1021%2Fjacs.6c17862&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01140-2&summary=0",
+  "expectedReviewedBodyImages": 41,
+  "expectedReviewedAssets": 42,
+  "expectedScienceFigures": [
+    20,
+    19
+  ],
+  "journalTotalCount": 20,
+  "journalCounts": {
+    "Nature Synthesis": 1,
+    "Nature Communications": 1,
+    "Science Advances": 1,
+    "JACS": 4,
+    "Angew": 1,
+    "ACS Catalysis": 3,
+    "JOC": 3,
+    "Organic Letters": 6
+  },
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "preserveOtherDates": true,
-  "existingOct15MediaToPreserve": "KhELYUzvwADwB_l1xH1SWNfsVU2N9GsF1VmAJUloHcUyByhQx-N7DQJh9YGsdr63",
-  "retryPolicy": "Create only if the existing publisher state has no October16 draft; otherwise reuse its same-day media. Do not blindly retry an ambiguous draft/add response. No public publication or mass-send.",
-  "integration": "PR715 merged only after all five final-head CI workflows succeeded. Exact source/renderer integration passed with24 sources and41 assets. Frozen website literature is unchanged; one verified missing author list is completed in draft memory only."
+  "existingOct16MediaToPreserve": "KhELYUzvwADwB_l1xH1SWMQTlBzSMg0yNfRx0Ny7AYKHseNj6TSsgQm5oL0eg218",
+  "retryPolicy": "Create only if there is no existing October17 draft; reuse same-day state if present. If draft/add response is ambiguous, stop and verify before any retry. Never touch October16 draft. Never public-send.",
+  "integration": "PR738 merged after eight successful final-head checks; all source hashes and renderer integration passed. Publish only to official WeChat draft box then draft/get and full cloud preview QA."
 }
