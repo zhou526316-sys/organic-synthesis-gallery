@@ -1657,7 +1657,7 @@ async function resolveTitles(): Promise<void> {
       }
       if (changed) {
         persistCaches();
-        mount();
+        refreshCorpusResultsInPlace();
       }
     } catch {
       // The next page load or second pass will retry.
@@ -1825,7 +1825,7 @@ function renderAfterScopeChange(): void {
   if (sort === 'readers' && [...query.trim()].length >= 3) {
     indexedSearchPending = false;
     indexedViewDegraded = false;
-    mount(); // Explain that most-read mode does not support abstract FTS.
+    refreshCorpusResultsInPlace(); // Explain most-read compatibility without replacing login DOM.
     return;
   }
   indexedSearchPending = Boolean(indexedViewRequest(''))
@@ -2174,7 +2174,7 @@ async function goToIndexedResultPage(requestedPage: number): Promise<void> {
     setArchitectureCorpus(indexedPapers);
     document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
     document.documentElement.dataset.catalogQueryRead = 'd1-index';
-    mount();
+    refreshCorpusResultsInPlace();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
   } catch (error) {
     if (token !== indexedViewSerial) return;
