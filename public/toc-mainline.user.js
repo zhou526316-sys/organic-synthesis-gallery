@@ -948,9 +948,13 @@ function embeddedJobDois(value) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
     if (publisher === 'elsevier') {
+      // Four previously verified DOI->PII routes are authoritative and need
+      // no 30-second DOI redirect round-trip before opening a publisher tab.
+      var known=oct09VerifiedPublisherArticleRoute(job);
+      if(known)return known;
       try {
         var response = await gmRequest({
-          method: 'GET', url: base, timeout: 30000,
+          method: 'GET', url: base, timeout: 12000,
           headers: { Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1' }
         });
         var resolved = elsevierResolvedPublisherUrl(response);
@@ -959,11 +963,12 @@ function embeddedJobDois(value) {
       // Opening doi.org in an unbound Tampermonkey tab guarantees a missing
       // publisher heartbeat. Try exact-DOI Crossref/OpenAlex article metadata;
       // if neither verifies an article URL, preserve the unresolved task.
-      return oct09VerifiedPublisherArticleRoute(job)
-        ||await verifiedElsevierMetadataRoute(job)
-        ||'';
+      return await verifiedElsevierMetadataRoute(job)||'';
     }
     if (publisher === 'rsc') {
+      // A DOI/ArticleId-verified publisher route wins before slow probing.
+      var verifiedKnown=oct09VerifiedPublisherArticleRoute(job);
+      if(verifiedKnown)return verifiedKnown;
       var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
         || job.opportunisticFigures===true||job.opportunisticEvidence===true))
         || String(job&&job.mediaNeed||'').indexOf('figures')>=0
@@ -971,7 +976,7 @@ function embeddedJobDois(value) {
       var htmlUrl=wantsFull?rscArticleHtmlUrl(job):'';
       if(htmlUrl){
         try{
-          var rscResponse=await gmRequest({method:'GET',url:htmlUrl,timeout:25000,
+          var rscResponse=await gmRequest({method:'GET',url:htmlUrl,timeout:9000,
             headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}});
           var rscFinal=String(rscResponse&&(rscResponse.finalUrl||rscResponse.responseURL)||htmlUrl);
           var rscText=String(rscResponse&&rscResponse.responseText||'').toLowerCase();
@@ -983,8 +988,6 @@ function embeddedJobDois(value) {
       }
       // Publisher-indexed Silverchair full-article route, used only when the
       // articleHTML page did not provide a DOI-bound usable canonical route.
-      var verifiedRsc = oct09VerifiedPublisherArticleRoute(job);
-      if (verifiedRsc) return verifiedRsc;
     }
     return base;
   }
