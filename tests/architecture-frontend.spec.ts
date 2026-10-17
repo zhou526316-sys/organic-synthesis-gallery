@@ -545,10 +545,7 @@ test('date range exposes complete cold Archive via bounded static pagination aft
   await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp('(?:第 |Page )'+totalPages+'/'));
   const coldExpected = dateExpected.filter(row => row.firstOnlineDate?.startsWith('2026-01'));
   expect(coldExpected.length).toBeGreaterThan(0);
-  await expect.poll(() => page.locator('#gallery > .card[data-doi]').all()
-    .then(async elements => elements.map(async element => element.getAttribute('data-doi'))
-      .reduce(async (arr, p) => [...await arr, await p],Promise.resolve([] as (string|null)[])))
-  ).toEqual(expect.arrayContaining([coldExpected[0].doi]));
+  await expect(page.locator(`#gallery > .card[data-doi="${coldExpected[0].doi}"]`)).toHaveCount(1);
 
   await page.locator('#dateTo').fill('2026-03-31');
   await page.locator('#dateTo').dispatchEvent('change');
