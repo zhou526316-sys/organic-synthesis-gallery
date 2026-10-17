@@ -248,6 +248,7 @@ export class PublishedCatalogClient {
     this.earliestDate = '';
     this.catalogId = '';
     this.hotRecords = null;
+    this.datePageCache = null;
   }
 
   async fetchBytes(url, { cache = 'no-store', maxBytes = 4 * 1024 * 1024, label = 'architecture' } = {}, signal) {
@@ -314,6 +315,7 @@ export class PublishedCatalogClient {
     this.memberDois = memberDois;
     this.catalogId = release.catalogId;
     this.hotRecords = null;
+    this.datePageCache = null;
 
     return this;
   }
@@ -383,6 +385,101 @@ export class PublishedCatalogClient {
     assert(Number(search.matched || 0) === search.results.length, 'global_search_result_window_required');
     if (!search.results.length) return [];
     return this.resolve(search.results.map(row => row.doi), signal);
+  }
+
+  /**
+   * Immutable, content-addressed date browse when D1 is unavailable.
+   * Search shards are only discovery metadata; cards are resolved from the
+   * exact revision-matched published article shards. Never resolve all 1,337
+   * members merely to display a 12/24-card page.
+   */
+  async rangePage(fromDate, toDate, {
+    page = 1, limit = 24, sort = 'newest',
+    selectedJournals = [], excludedJournals = [], signal,
+  } = {}) {
+    const reader = this.requireOpen();
+    const catalog = await reader.open(signal);
+    const validDate = value => typeof value === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(value);
+    const from = validDate(fromDate) ? fromDate : '';
+    const to = validDate(toDate) ? toDate : this.asOfDate;
+    assert(!from || from <= to, 'invalid_date_range');
+    assert(Number.isSafeInteger(page) && page >= 1
+      && Number.isSafeInteger(limit) && limit >= 1 && limit <= 100
+      && (sort === 'newest' || sort === 'oldest'), 'invalid_date_pagination');
+    assert(Array.isArray(selectedJournals) && Array.isArray(excludedJournals)
+      && selectedJournals.every(value => typeof value === 'string')
+      && excludedJournals.every(value => typeof value === 'string'), 'invalid_date_journal_scope');
+
+    const key = JSON.stringify({
+      catalogId: this.catalogId, from, to, sort,
+      selectedJournals: [...selectedJournals].sort(),
+      excludedJournals: [...excludedJournals].sort(),
+    });
+    let rows = this.datePageCache?.key === key ? this.datePageCache.rows : null;
+    if (!rows) {
+      const fromMonth = from ? from.slice(0, 7) : '';
+      const toMonth = to.slice(0, 7);
+      const refs = catalog.search.filter(ref => ref.month !== 'undated'
+        && (!fromMonth || ref.month >= fromMonth) && ref.month <= toMonth);
+      assert(refs.length <= STATIC_ARCHIVE_MAX_SEGMENTS, 'date_range_fanout_window_required');
+      const shards = new Set(catalog.shards.map(ref => ref.path));
+      const selected = new Set(selectedJournals), excluded = new Set(excludedJournals);
+      const seen = new Set();
+      rows = [];
+      // Bounded fanout avoids the old one-request-per-DOI bottleneck and keeps
+      // a broken publication object from silently producing a false zero.
+      for (let offset = 0; offset < refs.length; offset += 4) {
+        if (signal?.aborted) throw signal.reason || new DOMException('Aborted', 'AbortError');
+        const segments = await Promise.all(refs.slice(offset, offset + 4).map(ref => reader.read(ref, signal)));
+        for (const segment of segments) for (const raw of segment.entries || []) {
+          if (!validDate(raw?.date) || (from && raw.date < from) || raw.date > to) continue;
+          if (selected.size && !selected.has(raw.journal)) continue;
+          if (excluded.has(raw.journal)) continue;
+          const doi = normalizeDoi(raw?.doi);
+          const revision = String(raw?.revision || '').toLowerCase();
+          assert(doi && isHash(revision)
+            && shards.has(raw?.shard)
+            && this.membership?.members?.[doi] === revision
+            && !seen.has(doi), 'published_date_index_identity_mismatch');
+          seen.add(doi);
+          rows.push({ doi, revision, shard: raw.shard, date: raw.date });
+        }
+      }
+      const descending = sort === 'newest';
+      rows.sort((a,b) => (descending ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date))
+        || a.doi.localeCompare(b.doi));
+      if (signal?.aborted) throw signal.reason || new DOMException('Aborted', 'AbortError');
+      this.datePageCache = { key, rows };
+    }
+    const matched = rows.length;
+    const totalPages = Math.max(1, Math.ceil(matched / limit));
+    const boundedPage = Math.min(page, totalPages);
+    const windowRows = rows.slice((boundedPage - 1) * limit, boundedPage * limit);
+    const refs = new Map(catalog.shards.map(ref => [ref.path, ref]));
+    const shardRows = new Map();
+    const uniqueShards = [...new Set(windowRows.map(row => row.shard))];
+    const loaded = await Promise.all(uniqueShards.map(async path => {
+      const ref = refs.get(path);
+      assert(ref, 'published_date_shard_missing');
+      return [path, await reader.read(ref, signal)];
+    }));
+    for (const [path, shard] of loaded) {
+      shardRows.set(path, new Map((shard.records || []).map(record => [record.doi, record])));
+    }
+    const verified = windowRows.map(row => {
+      const record = shardRows.get(row.shard)?.get(row.doi);
+      assert(record && record.revision === row.revision
+        && record.firstOnlineDate === row.date
+        && this.membership?.members?.[row.doi] === row.revision,
+      'published_date_record_revision_mismatch');
+      return record;
+    });
+    if (signal?.aborted) throw signal.reason || new DOMException('Aborted', 'AbortError');
+    return {
+      matched, page: boundedPage, limit,
+      hasMore: boundedPage < totalPages,
+      papers: recordPapers(verified),
+    };
   }
 
   async range(fromDate, toDate, signal) {
