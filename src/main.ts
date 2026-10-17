@@ -15,7 +15,6 @@ import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
   fetchLiteratureCatalogView,
-  literatureCatalogIndexedReadActive,
   type LiteratureCatalogViewRequest,
 } from './literature-catalog-view';
 
@@ -2037,6 +2036,8 @@ async function loadIndexedViewPage(
   setArchitectureCorpus(indexedPapers);
   document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
+  document.documentElement.dataset.catalogIndexCapability = 'active';
+  indexedViewCapability = true;
   refreshCorpusResultsInPlace();
   // Read-only timing probes for browser perf regressions: do not include DOI,
   // title, query or user information in these document attributes.
@@ -2067,20 +2068,10 @@ function scheduleIndexedViewRecovery(serial: number, request: LiteratureCatalogV
 async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   const request = indexedViewRequest('');
   if (!request) return false;
-  if (indexedViewCapability !== true) {
-    // A failed health request and a genuinely disabled feature are both
-    // non-definitive for discovery; a later user query may check again.
-    const available = await literatureCatalogIndexedReadActive();
-    if (serial !== architectureRefreshSerial) return false;
-    indexedViewCapability = available ? true : null;
-    document.documentElement.dataset.catalogIndexCapability = available ? 'active' : 'degraded';
-    if (!available) {
-      indexedViewDegraded = true;
-      indexedSearchPending = false;
-      scheduleIndexedViewRecovery(serial, request);
-      return false;
-    }
-  }
+  // The catalog-view endpoint itself verifies the generation and read gate.
+  // Avoid a serial healthcheck before every first/failed full-library search.
+  if (indexedViewCapability !== true)
+    document.documentElement.dataset.catalogIndexCapability = 'probing';
   const pending = new AbortController();
   indexedSearchRequest = pending;
   try {
