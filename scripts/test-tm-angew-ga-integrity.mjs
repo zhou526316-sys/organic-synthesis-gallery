@@ -66,11 +66,11 @@ const env={
 const gif=Buffer.concat([Buffer.from('GIF89a'),Buffer.alloc(120)]);
 const old=await importLocalCapture({url:'https://api.gczhouwld.com/api/media/local-capture/import'},env,
   make({imageData:'data:image/gif;base64,'+gif.toString('base64')}));
-verify('different SHA-256 does not overwrite an existing official TOC',
+verify('different SHA-256 preserves existing official TOC and requires review',
   old.status===409&&old.body.code==='official_toc_conflict_review_required'&&
-  old.body.productionTocStored===false&&old.body.localStored===true);
-verify('conflict leaves forensic local image but never imports production TOC',
-  mediaWrites.some(key=>key.includes('/images/'))&&!mediaWrites.some(key=>key.startsWith('toc-cache/')));
+  old.body.productionTocStored===false&&old.body.localStored===false&&old.body.reviewRequired===true);
+verify('conflicting candidate is rejected before any R2 or production write',
+  mediaWrites.length===0);
 
 const writesBefore=mediaWrites.length;
 const knownWrongReceipt=await importLocalCapture({url:'https://api.gczhouwld.com/api/media/local-capture/import'},env,
