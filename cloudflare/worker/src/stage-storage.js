@@ -111,9 +111,13 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     });
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
       try {
-        // Re-read on every retry so another article's newly saved entry is not lost.
-        const current = await readIndex();
-        const prior = await retained(current.index.items[identity]);
+        // The first immutable snapshot already has a verified R2 ETag.
+        // Reuse it for the initial conditional CAS instead of downloading and
+        // parsing the same ~6.4MB index twice for every figure. If another
+        // writer advanced the index during image storage, CAS rejects us and
+        // the retry MUST fetch the latest index before merging that writer.
+        const current = attempt === 0 ? first : await readIndex();
+        const prior = attempt === 0 ? null : await retained(current.index.items[identity]);
         if (prior) return prior;
         const record = {...entry, sha256: fullHash, reviewMarker: await buildBodyReviewMarker(entry, fullHash), updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
         current.index.items[identity] = record;
