@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.72
+// @version      6.2.73
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.72';
+  var INSTALL_REVISION = '6.2.73';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -881,6 +881,69 @@ function embeddedJobDois(value) {
     return url;
   }
 
+
+  function exactElsevierDoiArticleUrl(job,source){
+    var doi=normalizeDoi(job&&job.doi),candidate=String(source||'').replace(/&amp;/gi,'&');
+    if(!doi||!candidate||candidate.length>1500)return '';
+    try{
+      var u=new URL(candidate),host=u.hostname.toLowerCase(),path=u.pathname,pii='';
+      if(u.protocol!=='https:')return '';
+      if(host==='linkinghub.elsevier.com'){
+        var match=path.match(/^\/(?:retrieve\/)?pii\/(S[0-9A-Z]{12,})\/?$/i);
+        if(match)pii=match[1].toUpperCase();
+      }else if(host==='www.sciencedirect.com'||host==='sciencedirect.com'){
+        var match=path.match(/^\/science\/article\/(?:abs\/)?pii\/(S[0-9A-Z]{12,})(?:\/|$)/i);
+        if(match)pii=match[1].toUpperCase();
+        if(!pii&&path.toLowerCase().includes('/doi/'+doi))return u.origin+path;
+      }else if(host==='www.cell.com'||host==='cell.com'){
+        var match=path.match(/^\/chem\/(?:fulltext|abstract)\/(S[0-9A-Z()\-]{12,})(?:\/|$)/i);
+        if(match&&doi.startsWith('10.1016/j.chempr.'))return u.origin+path;
+      }
+      // PII must originate in exact-DOI source metadata, never from a
+      // guessed suffix or arbitrary page link.
+      return pii?'https://www.sciencedirect.com/science/article/pii/'+pii:'';
+    }catch(_){return '';}
+  }
+  async function verifiedElsevierMetadataRoute(job){
+    var doi=normalizeDoi(job&&job.doi);
+    if(!doi||String(job&&job.publisher||publisherForDoi(doi))!=='elsevier')return '';
+    var sources=[
+      {origin:'https://api.crossref.org',url:'https://api.crossref.org/works/'+encodeURIComponent(doi),kind:'crossref'},
+      {origin:'https://api.openalex.org',url:'https://api.openalex.org/works/https://doi.org/'+doi,kind:'openalex'}
+    ];
+    for(var i=0;i<sources.length;i++){
+      var src=sources[i],response,body;
+      try{
+        response=await gmRequest({method:'GET',url:src.url,timeout:8500,
+          headers:{Accept:'application/json'}});
+        var status=Number(response&&response.status||0);
+        if(status===429)return ''; // Respect an explicit metadata rate limit.
+        if(status!==200)continue;
+        var target=new URL(String(response.finalUrl||response.responseURL||src.url));
+        if(target.origin!==src.origin)continue;
+        var raw=String(response.responseText||'');
+        if(!raw||raw.length>600000)continue;
+        body=JSON.parse(raw);
+      }catch(_){continue;}
+      var candidates=[],observed='';
+      if(src.kind==='crossref'){
+        var message=body&&body.message||{};
+        observed=normalizeDoi(message.DOI);
+        candidates.push(message.URL,message.resource&&message.resource.primary&&message.resource.primary.URL);
+        (Array.isArray(message.link)?message.link:[]).slice(0,12).forEach(function(r){candidates.push(r&&r.URL);});
+      }else{
+        observed=normalizeDoi(body&&body.doi||body&&body.ids&&body.ids.doi);
+        candidates.push(body&&body.primary_location&&body.primary_location.landing_page_url);
+        (Array.isArray(body&&body.locations)?body.locations:[]).slice(0,12).forEach(function(r){candidates.push(r&&r.landing_page_url);});
+      }
+      if(observed!==doi)continue;
+      for(var j=0;j<candidates.length;j++){
+        var exact=exactElsevierDoiArticleUrl(job,candidates[j]);
+        if(exact&&publisherArticleHostAllowed('elsevier',exact))return exact;
+      }
+    }
+    return '';
+  }
   async function resolvePublisherTaskUrl(job) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
@@ -893,7 +956,12 @@ function embeddedJobDois(value) {
         var resolved = elsevierResolvedPublisherUrl(response);
         if (resolved) return resolved;
       } catch (_) {}
-      return oct09VerifiedPublisherArticleRoute(job) || base;
+      // Opening doi.org in an unbound Tampermonkey tab guarantees a missing
+      // publisher heartbeat. Try exact-DOI Crossref/OpenAlex article metadata;
+      // if neither verifies an article URL, preserve the unresolved task.
+      return oct09VerifiedPublisherArticleRoute(job)
+        ||await verifiedElsevierMetadataRoute(job)
+        ||'';
     }
     if (publisher === 'rsc') {
       var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
@@ -5128,7 +5196,7 @@ function embeddedJobDois(value) {
   function controllerFailureDisposition(reason) {
     reason=String(reason||'');
     if(/^(?:controller_lease_lost|capture_server_upgrade_pending)$/.test(reason))return 'stop';
-    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout|publisher_task_tab_closed)$/.test(reason))return 'skip';
+    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout|publisher_task_tab_closed|publisher_article_route_unverified)$/.test(reason))return 'skip';
     return 'record';
   }
 
@@ -5377,8 +5445,21 @@ function embeddedJobDois(value) {
       job&&(job.captureEvidence||job.opportunisticEvidence)?'evidence':'',
       job&&job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
   }
+  function historicalTocAcquisitionTier(job) {
+    // Historical July-September papers remain official-TOC-only. Ordering
+    // publishers with reliable publisher-issued graphical TOC routes first
+    // prevents dozens of first-time Nature/Science 'no official TOC' checks
+    // from consuming the entire unattended pass before ACS/Wiley/CCS work.
+    // No paper is excluded, marked completed, or given an invented Figure 1.
+    if(!tocOnlyCaptureEligible(job))return 0;
+    var p=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi))||'');
+    if(p==='acs'||p==='wiley'||p==='ccs')return 1;
+    if(p==='rsc'||p==='elsevier')return 2;
+    return 3;
+  }
   function compareMissingCaptureJobs(a,b) {
-    return captureBatchDate(b).localeCompare(captureBatchDate(a))
+    return historicalTocAcquisitionTier(a)-historicalTocAcquisitionTier(b)
+      ||captureBatchDate(b).localeCompare(captureBatchDate(a))
       ||journalPriority(a)-journalPriority(b)
       ||String(b.date||'').localeCompare(String(a.date||''))
       ||String(a.doi).localeCompare(String(b.doi));
@@ -5935,7 +6016,11 @@ function embeddedJobDois(value) {
   }
   function coveragePending(run) {
     return Array.from(run.coverage.values()).filter(function(r){return r.state==='pending'&&coverageHasNeeds(r.job);})
-      .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
+      .sort(function(a,b){return historicalTocAcquisitionTier(a.job)-historicalTocAcquisitionTier(b.job)
+        ||captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))
+        ||journalPriority(a.job)-journalPriority(b.job)
+        ||Number(a.attempts>0)-Number(b.attempts>0)
+        ||compareMissingCaptureJobs(a.job,b.job);});
   }
   function coverageApplyFreshPlan(run,jobs,complete) {
     var fresh=new Set((jobs||[]).map(function(j){return normalizeDoi(j.doi);}));
@@ -6144,6 +6229,9 @@ function embeddedJobDois(value) {
           var baseTaskUrl=articleUrl(job);
           var manualTaskUrl=await resolvePublisherTaskUrl(job);
           if(!manualExecutionCurrent(run)||controllerPaused())return;
+          if(!manualTaskUrl||(job.publisher==='elsevier'
+            &&!publisherArticleHostAllowed('elsevier',manualTaskUrl)))
+            throw new Error('publisher_article_route_unverified');
           job.resolvedArticleUrl=manualTaskUrl;
           job.routePlan=captureRoutePlan(job,baseTaskUrl,manualTaskUrl);
           GM_setValue(ACTIVE_JOB_KEY,job);
@@ -6419,6 +6507,9 @@ function embeddedJobDois(value) {
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
           taskUrl=await resolvePublisherTaskUrl(job);
+          if(!taskUrl||(job.publisher==='elsevier'
+            &&!publisherArticleHostAllowed('elsevier',taskUrl)))
+            throw new Error('publisher_article_route_unverified');
           job.resolvedArticleUrl=taskUrl;
           GM_setValue(ACTIVE_JOB_KEY,job);
           tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(taskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
