@@ -22,8 +22,9 @@ const fnSource=source.slice(fnStart,fnEnd);
 
 function context({native,gm,hedge=8,timeout=45}={}) {
   const ctx=vm.createContext({
-    AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,
-    location:{hostname:'gallery.gczhouwld.com',pathname:'/'},
+    AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,URL,
+    location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/'},
+    WORKER:'https://api.gczhouwld.com',INVENTORY_SCOPED_BATCH_SIZE:80,INVENTORY_BULK_R2_TIMEOUT_MS:30000,
     GALLERY_HOST:'gallery.gczhouwld.com',PAGES_GALLERY_HOST:'organic-synthesis-gallery-public.pages.dev',
     LEGACY_GALLERY_HOST:'zhou526316-sys.github.io',LEGACY_GALLERY_PATH:'/organic-synthesis-gallery/',
     INVENTORY_REQUEST_TIMEOUT_MS:timeout,
@@ -119,3 +120,43 @@ test('fresh inventory is required before all-resolved path can finish',()=>{
 });
 
 console.log('TM_INVENTORY_STARTUP_TEST_SUMMARY '+JSON.stringify({passed:6,productionWrites:0,publisherRequests:0}));
+
+test('actual browser and hedge timeout is 30000 only for read-only 81+ DOI R2 snapshots',async()=>{
+  const observed=[],gmObserved=[];
+  const ctx=context({
+    timeout:16000,hedge:900,
+    native:async opts=>{observed.push(opts.timeout);return {status:200,responseText:'{"complete":true}'};},
+    gm:async opts=>{gmObserved.push(opts.timeout);return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({readOnly:true,dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(10000+i))});
+  for(const route of ['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory']){
+    const payload=await load({method:'POST',url:'https://api.gczhouwld.com'+route,timeout:30000,data:body},'queue');
+    assert.equal(payload.complete,true);
+    assert.equal(observed.at(-1),30000,'network timeout must not be clamped to 16s');
+  }
+  assert.equal(gmObserved.length,0);
+});
+
+test('owner PDF and any untrusted or sub-80 read keep the original 16000ms ceiling',async()=>{
+  const seen=[];
+  const ctx=context({timeout:16000,hedge:900,
+    native:async opts=>{seen.push(opts.timeout);return {status:200,responseText:'{"ok":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const list=Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(11000+i));
+  const cases=[
+    {method:'POST',url:'https://api.gczhouwld.com/api/private-pdf/capture-inventory',data:JSON.stringify({dois:list,readOnly:true}),timeout:30000},
+    {method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list,readOnly:false}),timeout:30000},
+    {method:'POST',url:'https://foreign.example/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list,readOnly:true}),timeout:30000},
+    {method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list.slice(0,80),readOnly:true}),timeout:30000},
+    {method:'GET',url:'https://api.gczhouwld.com/api/article-figures/staged?inventory=1',timeout:30000}
+  ];
+  for(const request of cases){
+    await load(request,'inventory');
+    assert.equal(seen.at(-1),16000,'non-bulk read must stay bounded at original timeout');
+  }
+  await load({method:'POST',url:'https://api.gczhouwld.com/api/article-figures/staged/inventory',
+    data:JSON.stringify({dois:list,readOnly:true}),timeout:5000},'inventory');
+  assert.equal(seen.at(-1),5000,'explicitly shorter budget must be honored');
+});
