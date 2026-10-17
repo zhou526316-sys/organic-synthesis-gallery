@@ -33,8 +33,8 @@ test('the security and historical cohort scopes remain untouched',()=>{
  assert.match(source,/if\(\!controllerPaused\(\)\)/);
  assert.ok(source.includes("var VERSION = '6.2.20';"));
  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41';"));
- assert.ok(source.includes("var INSTALL_REVISION = '6.2.72';"));
- assert.ok(loader.includes("const loaderVersion = '2.2.91';"));
+ assert.ok(source.includes("var INSTALL_REVISION = '6.2.73';"));
+ assert.ok(loader.includes("const loaderVersion = '2.2.92';"));
 });
 
 test('manual restart remains available without waiting for the periodic refresh slot',()=>{
