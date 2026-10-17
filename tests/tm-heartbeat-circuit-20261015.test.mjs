@@ -7,8 +7,9 @@ const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
 const first=source.indexOf('  function manualHeartbeatCircuitBreaker(');
 const last=source.indexOf('  async function runManualFromHead(',first);
 assert.ok(first>0&&last>first,'exact circuit-breaker helper must exist');
-const ctx=vm.createContext({normalizeDoi:x=>String(x||'').toLowerCase(),publisherForDoi:()=> 'unknown'});
-vm.runInContext(source.slice(first,last)+'\n globalThis.observe=manualHeartbeatCircuitBreaker;',ctx);
+let observedHeartbeat=null;
+const ctx=vm.createContext({normalizeDoi:x=>String(x||'').toLowerCase(),publisherForDoi:()=> 'unknown',currentPublisherHeartbeat:()=>observedHeartbeat,Date});
+vm.runInContext(source.slice(first,last)+'\n globalThis.observe=manualHeartbeatCircuitBreaker;globalThis.probePriority=recoveryProbePriority;',ctx);
 function state(rows=[]){
  return {publisherHeartbeatFailures:{},publisherHeartbeatQuarantine:{},
   coverage:new Map(rows.map(row=>[row.doi,{state:'pending',job:row,retryAt:0}]))};
@@ -29,20 +30,97 @@ test('repeat DOI attempts and independent publisher failures never globally term
  assert.match(source,/manualHeartbeatCircuitBreaker\(run,job,result\)/);
 });
 
-test('three different uninitialized DOIs quarantine only their publisher and preserve remaining work',()=>{
+test('three independent uninitialized DOIs isolate only one publisher and reserve exactly one recovery DOI',()=>{
  const rows=[
   {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
   {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
-  {doi:'10.1021/jacs.x',publisher:'acs'}
+  {doi:'10.1039/e',publisher:'rsc'},{doi:'10.1021/jacs.x',publisher:'acs'}
  ];
  const run=state(rows);
  for(let i=0;i<2;i++)assert.equal(ctx.observe(run,rows[i],missing),false);
  assert.equal(ctx.observe(run,rows[2],missing),true);
  assert.equal(run.publisherHeartbeatQuarantine.rsc.dois.length,3);
- assert.equal(run.coverage.get('10.1039/d').state,'blocked');
+ assert.equal(run.publisherHeartbeatQuarantine.rsc.probeDoi,'10.1039/d');
+ assert.equal(run.coverage.get('10.1039/d').state,'pending');
+ assert.equal(run.coverage.get('10.1039/e').state,'blocked');
  assert.equal(run.coverage.get('10.1021/jacs.x').state,'pending');
- assert.match(source,/publisher_script_quarantined_distinct_dois/);
+ assert.match(source,/quarantined&&quarantined.probeDoi!==normalizeDoi\(job.doi\)/);
  assert.match(source,/foregroundRetry=/);
+});
+
+test('serial dispatcher puts one bounded recovery probe behind ordinary publisher jobs',()=>{
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1021/jacs.x',publisher:'acs'},{doi:'10.1002/anie.x',publisher:'wiley'}
+ ];
+ const run=state(rows);
+ for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+ const original=[rows[3],rows[4],rows[5]].map(job=>({job}));
+ assert.equal(ctx.probePriority(run,original[0]),1);
+ assert.equal(ctx.probePriority(run,original[1]),0);
+ assert.equal(ctx.probePriority(run,original[2]),0);
+ original.sort((a,b)=>ctx.probePriority(run,a)-ctx.probePriority(run,b));
+ assert.deepEqual(original.map(r=>r.job.doi),['10.1021/jacs.x','10.1002/anie.x','10.1039/d']);
+ assert.match(source,/candidates\.sort\(function\(a,b\)\{return recoveryProbePriority\(run,a\)-recoveryProbePriority\(run,b\);\}\)/);
+});
+
+test('real DOI- and job-bound publisher startup recovers pending publisher coverage once',()=>{
+ observedHeartbeat=null;
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1039/e',publisher:'rsc'},{doi:'10.1021/jacs.x',publisher:'acs'}
+ ];
+ const run=state(rows);
+ for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+ assert.equal(run.coverage.get('10.1039/e').state,'blocked');
+ const job={...rows[3],jobId:'exact-bound-job'};
+ observedHeartbeat={jobId:'exact-bound-job',doi:rows[3].doi,state:'publisher_script_started'};
+ assert.equal(ctx.observe(run,job,{doi:job.doi,jobId:job.jobId,finishedAt:new Date().toISOString(),status:'failed',reason:'combined_capture;toc=not_found'}),true);
+ assert.equal(run.publisherHeartbeatQuarantine.rsc,undefined);
+ assert.equal(run.coverage.get('10.1039/e').state,'pending');
+ assert.equal(run.coverage.get('10.1021/jacs.x').state,'pending');
+ assert.equal(Object.hasOwn(run.publisherHeartbeatFailures,'rsc'),false);
+ observedHeartbeat=null;
+});
+
+test('startup heartbeat with timeout or absent terminal capture NEVER re-enables publisher queue',()=>{
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1039/e',publisher:'rsc'}
+ ];
+ observedHeartbeat=null;
+ const run=state(rows);
+ for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+ const probe={...rows[3],jobId:'exact-bound-job'};
+ observedHeartbeat={jobId:probe.jobId,doi:probe.doi,state:'publisher_script_started'};
+ assert.equal(ctx.observe(run,probe,{doi:probe.doi,jobId:probe.jobId,status:'failed',reason:'controller_timeout'}),true);
+ assert.ok(run.publisherHeartbeatQuarantine.rsc);
+ assert.equal(run.coverage.get('10.1039/e').state,'blocked');
+ observedHeartbeat=null;
+});
+
+test('wrong-job or mere binding-wait heartbeat cannot re-enable isolated DOI work',()=>{
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1039/e',publisher:'rsc'},{doi:'10.1021/jacs.x',publisher:'acs'}
+ ];
+ for (const hbState of ['publisher_binding_wait','publisher_script_started']){
+  observedHeartbeat=null;
+  const run=state(rows);
+  for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+  observedHeartbeat={jobId:hbState==='publisher_binding_wait'?'exact-bound-job':'wrong-job',
+    doi:rows[3].doi,state:hbState};
+  assert.equal(ctx.observe(run,{...rows[3],jobId:'exact-bound-job'},missing),true);
+  assert.equal(run.publisherHeartbeatQuarantine.rsc.probeDoi,'');
+  assert.equal(run.coverage.get('10.1039/e').state,'blocked');
+  assert.equal(run.coverage.get('10.1021/jacs.x').state,'pending');
+  assert.equal(ctx.observe(run,rows[4],missing),false,'a failed probe must not schedule an unbounded second probe');
+ }
+ observedHeartbeat=null;
 });
 
 test('successful publisher initialization clears only that publisher failure streak',()=>{
