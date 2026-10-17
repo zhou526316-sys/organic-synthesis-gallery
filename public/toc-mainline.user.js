@@ -1626,7 +1626,22 @@ function embeddedJobDois(value) {
     var inventoryControlPage=inventoryHost===GALLERY_HOST||inventoryHost===PAGES_GALLERY_HOST
       || inventoryHost===LEGACY_GALLERY_HOST&&inventoryPath.indexOf(LEGACY_GALLERY_PATH)===0;
     if(!inventoryControlPage)return metadataJson(options,prefix,true);
-    var timeoutMs=Math.max(3000,Math.min(INVENTORY_REQUEST_TIMEOUT_MS,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
+    // The cold, DOI-validated full R2 snapshots intentionally have one 30s
+    // budget. Do not clamp them back to the old 16s ceiling. Every other
+    // inventory request (including owner PDF, evidence and 80-DOI chunks)
+    // retains the existing shorter deadline.
+    var maxInventoryMs=INVENTORY_REQUEST_TIMEOUT_MS;
+    try{
+      var scopeTarget=new URL(String(options&&options.url||''),location.href);
+      var scopeBody=JSON.parse(String(options&&options.data||'{}'));
+      var isScopedBulk=String(options&&options.method||'GET').toUpperCase()==='POST'
+        &&scopeTarget.origin===WORKER
+        &&['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory'].indexOf(scopeTarget.pathname)>=0
+        &&scopeBody.readOnly===true&&Array.isArray(scopeBody.dois)
+        &&scopeBody.dois.length>INVENTORY_SCOPED_BATCH_SIZE&&scopeBody.dois.length<=2000;
+      if(isScopedBulk)maxInventoryMs=INVENTORY_BULK_R2_TIMEOUT_MS;
+    }catch(_){}
+    var timeoutMs=Math.max(3000,Math.min(maxInventoryMs,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
     var nativeAbort=new AbortController(),nativeOptions=Object.assign({},options,{timeout:timeoutMs,signal:nativeAbort.signal});
     var gmOptions=Object.assign({},options,{timeout:timeoutMs});delete gmOptions.signal;
     return new Promise(function(resolve,reject){
