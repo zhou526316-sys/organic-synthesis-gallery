@@ -368,6 +368,29 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 
 
 
+test('search suggestions: typing LMCT never rebuilds an open account password form', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  const shell = page.locator('gallery-user-shell');
+  await shell.locator('.trigger').click();
+  await shell.locator('[data-tab="login"]').click();
+  const password = shell.locator('[data-local-password]');
+  await expect(password).toBeVisible();
+  await page.evaluate(() => {
+    const account = document.querySelector('gallery-user-shell') as HTMLElement;
+    (window as any).__stablePasswordField = account.shadowRoot?.querySelector('[data-local-password]');
+  });
+  await page.locator('#search').fill('LMCT');
+  await expect(page.locator('#search')).toHaveValue('LMCT');
+  expect(await page.evaluate(() => {
+    const account = document.querySelector('gallery-user-shell') as HTMLElement;
+    return account.shadowRoot?.querySelector('[data-local-password]') === (window as any).__stablePasswordField;
+  })).toBe(true);
+});
+
 test('active D1 catalog view keeps all-time search server-paged and avoids static search shards', async ({ page }) => {
   const data = fixture();
   let staticSearchRequests = 0;
