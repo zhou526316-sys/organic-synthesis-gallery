@@ -8,6 +8,8 @@ on:
       - 'tests/tm-long-run-inventory-budget-20261017.test.mjs'
       - 'tests/tm-pdf-inventory-fast-20261017.test.mjs'
       - 'tests/tm-rsc-acs-inventory-20261008.test.mjs'
+      - 'cloudflare/worker/src/stage-storage.js'
+      - 'scripts/test-stage-storage.mjs'
       - '.github/workflows/tm-long-run-inventory-budget-20261017.yml'
   push:
     branches: [main]
@@ -28,6 +30,7 @@ jobs:
           set -euo pipefail
           node --check public/toc-mainline.user.js
           node --test tests/tm-pdf-inventory-fast-20261017.test.mjs tests/tm-rsc-acs-inventory-20261008.test.mjs tests/tm-long-run-inventory-budget-20261017.test.mjs tests/tm-cooldown-inventory-20261010.test.mjs tests/tm-inventory-startup.test.mjs
+          node scripts/test-stage-storage.mjs
           node scripts/validate-tm220-artifacts.mjs source
       - name: Build self-contained current installer
         env:
