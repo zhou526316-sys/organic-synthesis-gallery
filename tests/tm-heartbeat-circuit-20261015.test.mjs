@@ -60,11 +60,28 @@ test('real DOI- and job-bound publisher startup recovers pending publisher cover
  assert.equal(run.coverage.get('10.1039/e').state,'blocked');
  const job={...rows[3],jobId:'exact-bound-job'};
  observedHeartbeat={jobId:'exact-bound-job',doi:rows[3].doi,state:'publisher_script_started'};
- assert.equal(ctx.observe(run,job,{status:'failed',reason:'combined_capture;toc=not_found'}),true);
+ assert.equal(ctx.observe(run,job,{doi:job.doi,jobId:job.jobId,finishedAt:new Date().toISOString(),status:'failed',reason:'combined_capture;toc=not_found'}),true);
  assert.equal(run.publisherHeartbeatQuarantine.rsc,undefined);
  assert.equal(run.coverage.get('10.1039/e').state,'pending');
  assert.equal(run.coverage.get('10.1021/jacs.x').state,'pending');
  assert.equal(Object.hasOwn(run.publisherHeartbeatFailures,'rsc'),false);
+ observedHeartbeat=null;
+});
+
+test('startup heartbeat with timeout or absent terminal capture NEVER re-enables publisher queue',()=>{
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1039/e',publisher:'rsc'}
+ ];
+ observedHeartbeat=null;
+ const run=state(rows);
+ for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+ const probe={...rows[3],jobId:'exact-bound-job'};
+ observedHeartbeat={jobId:probe.jobId,doi:probe.doi,state:'publisher_script_started'};
+ assert.equal(ctx.observe(run,probe,{doi:probe.doi,jobId:probe.jobId,status:'failed',reason:'controller_timeout'}),true);
+ assert.ok(run.publisherHeartbeatQuarantine.rsc);
+ assert.equal(run.coverage.get('10.1039/e').state,'blocked');
  observedHeartbeat=null;
 });
 
