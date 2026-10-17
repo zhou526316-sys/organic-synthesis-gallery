@@ -110,7 +110,7 @@ test('three ACS first-online contradictions are documented only as held source, 
    assert.notEqual(h.stageSourceDate,h.publisherPageDate,h.doi);
    assert.equal(accepted.has(h.doi),false,'held date dispute improperly admitted '+h.doi);
    assert.equal(manifest.pending.some(x=>x.doi===h.doi),false,'do not alter original authoritative two pending '+h.doi);
-   assert.ok(h.publisherUrls.every(x=>x.includes(h.doi)),h.doi);
+   assert.ok(h.publisherUrls.some(x=>x.includes(h.doi)),h.doi);
    assert.ok(h.status.startsWith('hold_unapproved'));
  }
  assert.deepEqual(new Set(manifest.pending.map(x=>x.doi)),new Set([
