@@ -16,7 +16,7 @@ const payload={
   sourceUrl:'https://acs.silverchair-cdn.com/acs/content_public/journal/orlef7/pap/10.1021_acs.orglett.6c02752/1/m_ol6c02752_0007.svg',
   imageData:'data:image/png;base64,'+Buffer.from(data).toString('base64')
 };
-function envFor({hash=sha,stored=data,exists=true}={}){
+function envFor({hash=sha,stored=data,exists=true,primary=null}={}){
   const calls={r2Writes:0,r2Reads:0,selects:0,indexWrites:0};
   const r2Key='toc-cache/images/verified-existing.png';
   const env={
@@ -29,6 +29,8 @@ function envFor({hash=sha,stored=data,exists=true}={}){
     },
     DB:{
       prepare(sql){calls.selects++;
+        if(/FROM primary_visual_assets/.test(sql))
+          return {bind(x){assert.equal(x,doi);return {first:async()=>primary};}};
         assert.match(sql,/SELECT available,r2_key,content_hash FROM toc_assets WHERE doi = \? LIMIT 1/);
         return {bind(x){assert.equal(x,doi);return {first:async()=>exists
           ?{available:1,r2_key:r2Key,content_hash:hash}:null};}};
@@ -57,6 +59,28 @@ test('same production SHA and actual R2 bytes reuse existing official TOC',async
  assert.equal(r.body.contentHash,sha);
  assert.ok(r.body.imageUrl.includes('/media/toc-cache/images/verified-existing.png'));
  assert.equal(h.calls.r2Reads,1);assert.equal(h.calls.r2Writes,0);
+});
+
+test('a different reviewed official primary SHA cannot be silently replaced by a new TOC',async()=>{
+ const h=envFor({exists:false,primary:{
+   kind:'official_visual',r2_key:'primary/images/reviewed.png',content_hash:'d'.repeat(32)
+ }});
+ const r=await importLocalCapture(request,h.env,payload);
+ assert.equal(r.status,409);
+ assert.equal(r.body.code,'official_primary_visual_conflict_review_required');
+ assert.equal(r.body.reviewRequired,true);
+ assert.equal(r.body.productionTocStored,false);
+ assert.equal(h.calls.r2Writes,0);
+ assert.equal(h.calls.r2Reads,0);
+});
+
+test('matching reviewed primary and verified D1 TOC share the same idempotent SHA',async()=>{
+ const h=envFor({primary:{
+   kind:'official_visual',r2_key:'primary/images/reviewed.png',content_hash:sha
+ }});
+ const r=await importLocalCapture(request,h.env,payload);
+ assert.equal(r.status,200);assert.equal(r.body.productionTocStored,true);
+ assert.equal(h.calls.r2Writes,0);
 });
 
 test('missing or mismatched production bytes cannot close TOC gap',async()=>{
@@ -127,4 +151,4 @@ test('invalid or unversioned R2 index is fail-closed without replacement',async(
  }
 });
 
-console.log('TM_TOC_AUTHORITATIVE_PREFLIGHT '+JSON.stringify({tests:6,externalPublisherRequests:0,productionMediaWrites:0}));
+console.log('TM_TOC_AUTHORITATIVE_PREFLIGHT '+JSON.stringify({tests:8,externalPublisherRequests:0,productionMediaWrites:0}));
