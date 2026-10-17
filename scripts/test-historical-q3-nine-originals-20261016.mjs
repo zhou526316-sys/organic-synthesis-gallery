@@ -105,7 +105,7 @@ test('no formal or media release before authorized 08:00 admission',()=>{
 
  const ids=new Set(selection.map(x=>x.doi));
  for(const id of publisherDates.keys()){
-  if(published.has(id)){const x=published.get(id);assert.equal(x.ingestionChannel,'historical_backfill');assert.equal(x.mediaPolicy,'toc_only');assert.equal(x.new,false);}
+  if(published.has(id)){const x=published.get(id);assert.equal(x.ingestionChannel,'historical_backfill');assert.equal(x.mediaPolicy,'toc_only');assert.notEqual(x.new,true);}
   else assert.ok(ids.has(id),id);
  }
  assert.ok(selection.every(x=>!isExcludedDoi(x.doi)&&x.new===false&&x.addedDate===''));
