@@ -368,6 +368,67 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 
 
 
+test('search suggestions: browser-restored account email never hijacks the corpus on reload', async ({ page }) => {
+  await stubOptionalApi(page);
+  const target = `${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`;
+  await page.goto(target, { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  const search = page.locator('#search');
+  await expect(search).toHaveValue('');
+
+  await page.evaluate(() => {
+    (window as any).__autofillCorpusQueries = [];
+    document.querySelector('#app')?.addEventListener('gallery-corpus-query', event => {
+      (window as any).__autofillCorpusQueries.push((event as CustomEvent).detail.query);
+    });
+    const input = document.querySelector<HTMLInputElement>('#search')!;
+    // Simulate an unfocused Chromium password-manager replacement on reload.
+    input.value = 'login-account@example.test';
+    input.dispatchEvent(new InputEvent('input', {
+      bubbles: true, inputType: 'insertReplacementText',
+    }));
+  });
+  await expect(search).toHaveValue('');
+  expect(await page.evaluate(() => (window as any).__autofillCorpusQueries)).toEqual([]);
+
+  // Browsers can also restore a value silently, without an input event.
+  await page.evaluate(() => {
+    document.querySelector<HTMLInputElement>('#search')!.value = 'login-account@example.test';
+    window.dispatchEvent(new Event('pageshow'));
+  });
+  await expect(search).toHaveValue('');
+  expect(await page.evaluate(() => (window as any).__autofillCorpusQueries)).toEqual([]);
+
+  // Late Chromium autofill can happen after the search field was focused.
+  await search.focus();
+  await page.evaluate(() => {
+    const input = document.querySelector<HTMLInputElement>('#search')!;
+    input.value = 'login-account@example.test';
+    input.dispatchEvent(new AnimationEvent('animationstart', {
+      animationName: 'gallery-search-credential-autofill',
+    }));
+  });
+  await expect(search).toHaveValue('');
+
+  // Real user searches, including email-like strings, must still work.
+  await search.fill('LMCT');
+  await expect(search).toHaveValue('LMCT');
+  await search.fill('researcher@example.test');
+  await expect(search).toHaveValue('researcher@example.test');
+  await search.fill('10.1021/jacs.6c16103');
+  await expect(search).toHaveValue('10.1021/jacs.6c16103');
+  const accepted = await page.evaluate(() => (window as any).__autofillCorpusQueries as string[]);
+  expect(accepted).toContain('LMCT');
+  expect(accepted).toContain('researcher@example.test');
+  expect(accepted).toContain('10.1021/jacs.6c16103');
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  await expect(page.locator('#search')).toHaveValue('');
+});
+
 test('search suggestions: typing LMCT never rebuilds an open account password form', async ({ page }) => {
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
