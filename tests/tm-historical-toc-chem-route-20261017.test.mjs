@@ -111,7 +111,7 @@ test('mismatched DOI or foreign URL never becomes a publisher visit',async()=>{
  const foreign=routeFixture({crossrefUrl:'https://bad.example/science/article/pii/'+PII});
  assert.equal(await foreign.ctx.resolve({doi,publisher:'elsevier'}),'');
  assert.match(script,/throw new Error\('publisher_article_route_unverified'\)/);
- assert.match(script,/publisher_article_route_unverified\)\$\//);
+ assert.ok(script.includes("if(!manualTaskUrl||(job.publisher==='elsevier'"));
 });
 
 test('metadata 429 does not trigger an alternate metadata service request',async()=>{
