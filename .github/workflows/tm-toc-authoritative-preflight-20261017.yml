@@ -1,0 +1,32 @@
+name: Tampermonkey official TOC authoritative preflight and R2 CAS
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'tests/tm-toc-authoritative-preflight-20261017.test.mjs'
+      - '.github/workflows/tm-toc-authoritative-preflight-20261017.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/local-captures.js'
+      - '.github/workflows/tm-toc-authoritative-preflight-20261017.yml'
+permissions:
+  contents: read
+jobs:
+  authoritative:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify idempotent authoritative TOC, conflict preservation and index CAS
+        run: |
+          set -euo pipefail
+          node --check cloudflare/worker/src/local-captures.js
+          node --test tests/tm-toc-authoritative-preflight-20261017.test.mjs tests/tm-inventory-r2-cache-20261016.test.mjs
+          node scripts/test-stage-storage.mjs
+          node tests/tm-oct10-rsc-inventory-recovery.test.mjs
+          git diff --check
