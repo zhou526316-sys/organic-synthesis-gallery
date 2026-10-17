@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "gallery-historical-academic-date-variance-hold-20261017-v1",
+  "checkedAt": "2026-10-17T01:01:51.331Z",
+  "mode": "publisher_first_online_vs_frozen_CrossrefOpenAlex_discrepancy_do_not_infer",
+  "records": [
+    {
+      "doi": "10.1021/acs.orglett.6c02869",
+      "journal": "Organic Letters",
+      "title": "Electrochemical One- or Two-Electron Oxidation Enables Chemoselective α-Amino C(sp3)–H Arylation and Cyanation",
+      "stageRoot": "2026-07-22_2026-07-31_organic-letters",
+      "frozenSourceDate": "2026-07-29",
+      "publisherRoutes": [
+        {
+          "url": "https://pubs.acs.org/orlef7/article/28/31/10086/5236965/Electrochemical-One-or-Two-Electron-Oxidation",
+          "observedOnline": "2026-07-29"
+        },
+        {
+          "url": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02869/5236965/Electrochemical-One-or-Two-Electron-Oxidation",
+          "observedOnline": "2026-07-30"
+        }
+      ],
+      "status": "hold_online_date_route_conflict_not_approved",
+      "reason": "Two official ACS representations differ by one day for the same DOI; both cannot silently be treated as identical Published Online authority. Paper has authentic organic electrochemical preparative transformations but source-date correction must be explicitly documented before academic approval.",
+      "nextAction": "Compare ACS canonical Article History at stable date, Crossref published-online fields, initial online DOI indexing, and original archived receipts, then generate separate DOI-bound correction evidence; never mutate frozen source root."
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01686",
+      "journal": "JOC",
+      "title": "Enantioselective Synthesis of Spiropyrrolidines by Synergistic Catalysis",
+      "stageRoot": "2026-09-15_2026-09-21_joc",
+      "frozenSourceDate": "2026-09-17",
+      "publisherRoutes": [
+        {
+          "url": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01686/5432335/Enantioselective-Synthesis-of-Spiropyrrolidines-by",
+          "observedArticleIndexDay": "2026-09-18"
+        }
+      ],
+      "status": "hold_independent_official_history_read_needed_not_approved",
+      "reason": "ACS article-search entry presents September 18 while Crossref/OpenAlex frozen root has September 17; direct page rejected read access. Neither date is declared final, so do not assert a confirmed publisher mismatch without comparing full Article History.",
+      "nextAction": "Review direct ACS Published Online and early-version date evidence, with snapshot/URL receipts and source root pinning; retain pending academic decision without entering the existing two-item authoritative manifest pending list."
+    }
+  ],
+  "alreadyFormallyPublishedNotReapproved": [
+    "10.1021/acs.orglett.6c02945",
+    "10.1021/acs.orglett.6c02907",
+    "10.1021/acs.orglett.6c02902",
+    "10.1021/acs.orglett.6c02598"
+  ],
+  "historicalOwnerVetoStillEffective": [
+    "10.1038/s41467-026-77616-8"
+  ],
+  "auditGuards": {
+    "noAutoInclusion": true,
+    "noUserExclusionOverride": true,
+    "noSourceDateMutation": true,
+    "noD1Writes": true,
+    "noFormalSiteWrite": true,
+    "notPartOfExistingTwoAuthoritativePending": true
+  }
+}

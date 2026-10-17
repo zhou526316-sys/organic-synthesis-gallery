@@ -33,4 +33,18 @@ export class PublishedCatalogClient {
   resolveIndexed(items: Array<{ doi: string; revision: string }>, signal?: AbortSignal): Promise<unknown[]>;
   search(query: string, signal?: AbortSignal): Promise<unknown[]>;
   range(fromDate?: string, toDate?: string, signal?: AbortSignal): Promise<unknown[]>;
+  rangePage(fromDate?: string, toDate?: string, options?: {
+    page?: number;
+    limit?: number;
+    sort?: 'newest' | 'oldest';
+    selectedJournals?: string[];
+    excludedJournals?: string[];
+    signal?: AbortSignal;
+  }): Promise<{
+    matched: number;
+    page: number;
+    limit: number;
+    hasMore: boolean;
+    papers: unknown[];
+  }>;
 }

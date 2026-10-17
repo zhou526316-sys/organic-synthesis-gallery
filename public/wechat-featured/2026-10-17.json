@@ -1,0 +1,838 @@
+{
+  "date": "2026-10-17",
+  "editorialRevision": "2026-10-17-r1",
+  "paper": {
+    "doi": "10.1021/jacs.6c17862",
+    "journal": "JACS",
+    "title": "Enantioselective Coupling of Unactivated Alkenes with α-Imino Esters via Alkylzirconium Radical Intermediates",
+    "authors": "Jialin Huang, Liying Fu, Leheng Sun, Zequan Xiang, Xingda Zhao, Xiaoqiang Ma, Depeng Zhao"
+  },
+  "headline": "经烷基锆自由基实现非活化烯烃与α-亚胺酯的不对称偶联",
+  "kicker": "今日精选｜JACS",
+  "lead_figure_id": "today_toc",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "把简单烯烃接入难以构筑的手性中心",
+      "text": "这篇工作的价值，不只是给亚胺加上一条碳链。Depeng Zhao团队从普通烯烃出发，构筑α位没有氢、取代拥挤的手性氨基酸衍生物，并能区分两条差异很小的烷基链。它展示了一种值得学习的分工：先由氢锆化组织碳片段，再由手性金属环境控制加成；而镍、铜两套体系的差异，也提醒我们不能把相似产物等同于相同机制。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "从既有的取代反应，走向拥挤亚胺的加成",
+      "eyebrow": "研究问题",
+      "paragraphs": [
+        "α-四取代氨基酸的难点，是在同一碳上同时安排氨基、羧酸衍生基团和两条碳链，并控制它们的空间排列。两条碳链越相似，常见的位阻与电子差异越难用于手性识别。烯烃虽是方便的烷基来源，却不能直接替代一种已经受到控制的亲核试剂。",
+        "氢锆化和烷基锆的光诱导自由基反应都有先例，图1B中的不对称偶联主要利用σ-亲电试剂。本文把问题推进到α-亚胺酯的C=N加成：既要产生烷基自由基，又要让它在拥挤亚胺上选择性成键，避免其他金属反应路径。新意在这个连接与控制任务，而不是首次发现烷基锆。"
+      ],
+      "figures": [
+        "today_fig1ab",
+        "today_fig1c"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig1ab"
+        ],
+        "2": [
+          "today_fig1c"
+        ]
+      },
+      "source_evidence": [
+        "Main p1–2, Fig1A–C; references25–45"
+      ]
+    },
+    {
+      "heading": "先制备烷基锆，再建立有效的手性反应环境",
+      "eyebrow": "条件如何推进设计",
+      "paragraphs": [
+        "作者将烯烃先与Cp₂ZrHCl反应，再把所得溶液加入亚胺、镍盐和配体中光照。以3a为例，Ni(NTf₂)₂/L7在THF、20 °C、12 h下给出80%分离收率和97% ee；标准用量为2当量锆试剂、2.2当量烯烃、10 mol%镍及15 mol%配体。这里是分步操作，不是所有组分同时加入。",
+        "表1中，桥连位置无取代的L2仅给痕量产物；苄基取代L4达到53%、86% ee，进一步改变芳环取代后，L7同时改善效率和手性。这说明配体优化解决的不只是“哪一面进攻”，也影响能否形成有效反应体系。但表内数据本身还不足以指认某一条特定弱相互作用。"
+      ],
+      "figures": [
+        "today_table1"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_table1"
+        ]
+      },
+      "source_evidence": [
+        "Main Table1; SI GP-A S18"
+      ]
+    },
+    {
+      "heading": "底物范围暴露出第二个控制因素：亚胺的氮取代基",
+      "eyebrow": "从范围到边界",
+      "paragraphs": [
+        "图2先验证烯烃来源的多样性：末端、1,1-二取代及环内烯烃均有成功实例，卤素、吡啶和部分含活泼氢官能团能够保留。环戊烯、环己烯和环庚烯说明，碳片段不再局限于直链末端烯烃；但含游离羟基等实例需要提高锆试剂用量，不能将标准条件概括为全范围条件。",
+        "随后改变α-亚胺酯。脂肪族、带额外烯基和环状烷基的底物均能参与；芳基底物却出现明显转折：N-PMP保护时只有痕量产物，改为对三氟甲基苯基氮取代基，并重新匹配L18及温度，才得到3af–3ah。这不是简单增加三例范围，而是在指出亚胺电子性质与催化环境必须共同调整。",
+        "SI第S81页进一步显示：另一N-Boc亚胺有56%收率，却只有18% ee；磺酰亚胺在另一套Ni(acac)₂/L条件下给43%、15% ee，不加该镍/配体组合仍有32%产物。这些不是同条件横向排名，却提出一个重要的研究判断：提高亚胺反应性也可能放大背景反应，不能只用“能否转化”筛选保护基。"
+      ],
+      "figures": [
+        "today_fig2alkenes",
+        "today_fig2imines",
+        "today_si_other_imines"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig2alkenes"
+        ],
+        "2": [
+          "today_fig2imines"
+        ],
+        "3": [
+          "today_si_other_imines"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig2 and p3; SI S81 other-imine panel; source-specific different conditions preserved"
+      ]
+    },
+    {
+      "heading": "靛红亚胺需要新的铜催化组合，而不是照搬镍条件",
+      "eyebrow": "第二类亲电组分",
+      "paragraphs": [
+        "转向靛红亚胺后，作者重新筛选金属。SI表S4中，Cu(MeCN)₄PF₆的收率为80%、ee为75%；Cu(OTf)₂则为55%、85% ee。两者分别偏向效率和手性，后续仍要优化配体与温度，最终Cu(OTf)₂/L26给模型5a以62%收率、92% ee。产率最高的一行并不自动成为最合适的催化起点。",
+        "图3将这套条件用于不同靛红亚胺与烯烃，得到手性3-氨基吲哚啉-2-酮。其价值是把同一种烯烃衍生碳源用于另一类拥挤含氮骨架；并不能由此推定铜与镍具有完全相同的反应路径。操作上，相邻正文和SI GP-B采用DCE、9–10 °C；图3脚注却写THF，这一原文差异需保留，不能静默统一。"
+      ],
+      "figures": [
+        "today_si_cu_screen",
+        "today_fig3"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_si_cu_screen"
+        ],
+        "2": [
+          "today_fig3"
+        ]
+      },
+      "source_evidence": [
+        "SI TableS4,S6,GP-B S18–19; Main p4–5/Fig3; THF/DCE discrepancy explicitly retained"
+      ]
+    },
+    {
+      "heading": "内烯烃与复杂分子拓展，要连同操作条件一起看",
+      "eyebrow": "适用范围",
+      "paragraphs": [
+        "图4把研究推进到链内烯烃和复杂分子衍生的烯烃。前者能从另一位置的双键提供所需碳链，后者检验糖、药物片段等复杂环境下的兼容性。这些实验展示的是衍生底物的合成用途，并未测定新产物的药效；已有手性底物标出的de，也不能与对映体过量ee混用。",
+        "内烯烃的便利性有明确条件：镍体系先在50 °C氢锆化3 h，再进行光照偶联；铜体系还使用4当量锆试剂和4.4当量烯烃，并在THF预处理后换成DCE（SI GP-C、GP-D）。这些步骤解释了为何反应范围能拓展，也界定了“温和条件”的适用阶段。"
+      ],
+      "figures": [
+        "today_fig4"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig4"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig4; SI GP-C/D S19–20"
+      ]
+    },
+    {
+      "heading": "气体、相近烷基和混合烯烃，分别检验三种合成价值",
+      "eyebrow": "应用不只是复杂底物",
+      "paragraphs": [
+        "首先是原料可及性。乙烯和丙烯在1 bar下参与反应，6a、6b分别为72%/96% ee和61%/99% ee，不需要加压反应器。气体原料的使用并未取消空气敏感试剂的操作要求，但使最简单的烯烃也能进入这类氨基酸骨架。",
+        "其次是手性识别的难度。图5B有仅差一个碳的两条烷基链、碳数相同而不饱和程度不同的碳链，以及不同大小的环状片段。例如6d达到83%、93% ee。此处最有价值的不是再展示一个高ee数字，而是说明方法能处理常规结构差异很小的成键组合。",
+        "第三是操作整合：α-酮酸酯与对甲氧基苯胺先原位形成亚胺，再接入偶联，得到46%、90% ee的3y（图5C）。免除一次亚胺分离有实际意义，但仍需先完成缩合，并单独准备烷基锆，不能写成完全无预处理的直接三组分反应。",
+        "位置异构体混合物还能汇聚为同一连接方式的产物（图5D）：6o、6p分别为84%/96% ee、83%/97% ee。作者将其与自由基生成前的氢锆化/链行走联系起来。对合成设计的启发，是先在碳源准备阶段实现区域汇聚，再进行不对称成键；数据并未证明镍负责链行走，也不代表任意异构体混合物都适用。"
+      ],
+      "figures": [
+        "today_fig5a",
+        "today_fig5b",
+        "today_fig5c",
+        "today_fig5d"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig5a"
+        ],
+        "2": [
+          "today_fig5b"
+        ],
+        "3": [
+          "today_fig5c"
+        ],
+        "4": [
+          "today_fig5d"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig5A–D; SI Synthetic Applications S65–74; representative6d confirmed"
+      ]
+    },
+    {
+      "heading": "自由基从哪里来，哪些实验真正具有判别力",
+      "eyebrow": "机制证据",
+      "paragraphs": [
+        "TEMPO加入后目标产物消失，镍、铜体系分别分离出60%和32%的烷基捕获物。更有判别力的是，不加入亚胺和偶联金属，仅光照烷基锆与TEMPO，也得到45%的同类捕获物（图6A）。这把自由基来源指向烷基锆，而不只是笼统说明“体系中可能存在自由基”。",
+        "1,5-己二烯自由基钟补上另一条证据：镍体系出现15%直接偶联产物和53%环化产物；铜体系主要给41%的环化产物（图6B）。捕获与重排相互支持烷基自由基的参与，但尚不能单独判断它先与金属结合，还是直接加到金属活化的亚胺上。"
+      ],
+      "figures": [
+        "today_fig6a",
+        "today_fig6b"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig6a"
+        ],
+        "2": [
+          "today_fig6b"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig6A/B; SI S75–80"
+      ]
+    },
+    {
+      "heading": "光照依赖不同，铜与镍不能共用一个确定的机制",
+      "eyebrow": "机制的分岔与边界",
+      "paragraphs": [
+        "暗反应把两套体系分开了：镍体系不形成3a；铜体系在5 h已有20%转化率、87% ee，同时间光照则达到90%转化率、92% ee（图6D）。这组数字不是分离收率。铜的暗反应意味着，光促进的自由基路径并非唯一需要考虑的入口。",
+        "作者提出，光诱导C–Zr均裂生成烷基自由基和Zr(III)，后者参与金属还原，随后自由基在手性金属结合的亚胺上成键（图6E）。但Zr(III)、各金属价态及全部基元步骤没有被逐一直接观察；作者也明确保留“金属先捕获自由基，再向亚胺转移”的可能。",
+        "对于铜的暗反应，Cu(II)参与的单电子转移是一种解释；经转金属化后加成的离子路径也尚未排除。亚胺侧的3x、3ab未出现预期重排，则不支持长寿命亚胺自由基参与双自由基偶联作为优势路径。这里应呈现解释受到哪些实验约束，而不是把一张完整循环图写成唯一结论。"
+      ],
+      "figures": [
+        "today_fig6d",
+        "today_fig6e"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig6d"
+        ],
+        "2": [
+          "today_fig6e"
+        ]
+      },
+      "source_evidence": [
+        "Main p9/Fig6D/E author explicitly preserves alternatives; SI radical controls"
+      ]
+    },
+    {
+      "heading": "高ee已经实现，手性起源仍需分层判断",
+      "eyebrow": "手性证据",
+      "paragraphs": [
+        "图6C中配体ee与产物ee近似线性相关，与一个手性配体参与立体决定过程的模型相容，却不能唯一确定活性物种组成或过渡态构型。因此，配体筛选证明了L7有效，非线性效应实验则提供限制条件；二者都不能替代具体的分子级手性识别证据。",
+        "起始亚胺的E/Z混合也需要解释。SI以1h在DMSO-d₆中的变温核磁和线形拟合，估算其交换远快于数小时的反应时间，用以解释不同初始比例仍给近似ee。这个结果支持快速平衡的可能，却不是THF中、含催化剂时的直接动力学测量。后续应将底物交换、金属配位和真正成键放在同一条件下考察。"
+      ],
+      "figures": [
+        "today_fig6c",
+        "today_si_ez"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "today_fig6c"
+        ],
+        "2": [
+          "today_si_ez"
+        ]
+      },
+      "source_evidence": [
+        "Main Fig6C; SI S82–85; solvent limitation stated"
+      ]
+    },
+    {
+      "heading": "值得学习的是将碳源准备、背景反应与手性控制分开处理",
+      "eyebrow": "研究启示与下一步",
+      "paragraphs": [
+        "这篇论文提供的可迁移思路，是让不同环节承担不同控制任务：氢锆化负责把易得烯烃变成可用碳片段，手性金属环境负责拥挤亚胺的选择性加成，而氮取代基与金属/配体的匹配负责避免无选择性的背景反应。把这些变量分开检验，比只围绕最高ee筛条件更有信息量。",
+        "尚待解决的也很具体：降低化学计量锆试剂与催化剂用量，减少换溶剂及低温操作，并区分自由基直接加成与先被金属捕获的贡献。本文没有给出这些问题的答案；它的启发在于已用碳源、亚胺和暗反应对照标出了可继续追问的位置，而不是已经形成一套普适的烯烃不对称偶联机制。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {},
+      "source_evidence": [
+        "Editorial inference grounded in Fig2/5/6, SI GP A–D/S81; not authors-proven future results"
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "id": "today_toc",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_toc.png",
+      "filename": "today_toc.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 1,
+      "source_figure": "Graphical abstract",
+      "source_kind": "embedded_original_graphical_abstract",
+      "source_xref": 250,
+      "width": 992,
+      "height": 196,
+      "sha256": "503f2f15108141e9a23912b62dfb45c5751fc7b77a43b7bd9c6eb06c297d30aa",
+      "bytes": 92424,
+      "caption": "图形摘要（设计见Fig. 1）｜烯烃先转为烷基锆，再在手性金属环境中与亚胺组分不对称偶联。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig1ab",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig1ab.png",
+      "filename": "today_fig1ab.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1A–B",
+      "crop_pdf_points": [
+        [
+          50,
+          60,
+          556,
+          233
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 519,
+      "sha256": "cd16d24978c56f576cc7109ec2c879fbaa3ff853c9f7345f2d51db60b15957e9",
+      "bytes": 210715,
+      "caption": "Fig. 1A–B｜目标α-四取代氨基酸骨架，以及烷基锆参与既有不对称取代反应的背景。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig1c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig1c.png",
+      "filename": "today_fig1c.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1C",
+      "crop_pdf_points": [
+        [
+          50,
+          233,
+          556,
+          414
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 543,
+      "sha256": "1380cbcbc815d76147453e21a7a3a87a0f53f7f34e1a8b43cea072da64554362",
+      "bytes": 199169,
+      "caption": "Fig. 1C｜作者的路线设计：氢锆化、光诱导自由基生成与手性金属介导加成相衔接。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "today_table1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_table1.png",
+      "filename": "today_table1.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 3,
+      "source_figure": "Table 1",
+      "crop_pdf_points": [
+        [
+          49,
+          56,
+          558,
+          425
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1527,
+      "height": 1107,
+      "sha256": "d34b8b3e55ac22d46450db1c5199a51b4448d7c5fc465b56932506ae8df99675",
+      "bytes": 291051,
+      "caption": "Table 1｜模型反应的配体与溶剂筛选；收率为分离收率，ee由手性HPLC测定。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig2alkenes",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig2alkenes.png",
+      "filename": "today_fig2alkenes.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 2 upper + original full footnote",
+      "crop_pdf_points": [
+        [
+          50,
+          57,
+          556,
+          384
+        ],
+        [
+          50,
+          632,
+          558,
+          664
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 1524,
+      "height": 1095,
+      "sha256": "4036d62e7aecb8faea743b9ae2799a7f407162c77170d5dddd58d7404e8ac276",
+      "bytes": 367897,
+      "caption": "Fig. 2（上半部与原脚注）｜末端和环内烯烃范围。含游离羟基等实例需提高试剂用量，不能一概按标准2当量锆试剂理解。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig2imines",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig2imines.png",
+      "filename": "today_fig2imines.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 2 lower + original reaction header",
+      "crop_pdf_points": [
+        [
+          50,
+          57,
+          556,
+          108
+        ],
+        [
+          50,
+          386,
+          558,
+          664
+        ]
+      ],
+      "source_kind": "original_pdf_panels_and_footnotes_stacked",
+      "width": 1524,
+      "height": 1005,
+      "sha256": "8c56db09d7040f49fd6970c7a5a7502a5a854063a4e389fe94f145c7d8725fa0",
+      "bytes": 334805,
+      "caption": "Fig. 2（下半部）｜α-亚胺酯范围；芳基底物改用对三氟甲基苯基氮保护基及L18，按原脚注区分条件。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_si_other_imines",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_si_other_imines.png",
+      "filename": "today_si_other_imines.png",
+      "source_file": "ja6c17862_si_001.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "620d50725d53c3d8ee4a71160bd8a2ede24dff435cf90bd7f573987096cc604c",
+      "source_pdf_page": 82,
+      "source_figure": "SI p.S81, other imines",
+      "crop_pdf_points": [
+        [
+          87,
+          294,
+          520,
+          542
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1299,
+      "height": 744,
+      "sha256": "9b40b5b9f75301d1a00773bcf858990a0497173a03347dd7b8cb182e28dc8f32",
+      "bytes": 112793,
+      "caption": "SI Scheme（S81，未编号对照）｜氮保护基改变会影响反应与ee；磺酰亚胺对照另用Ni(acac)₂/L，不能与标准条件混为一组。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "today_si_cu_screen",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_si_cu_screen.png",
+      "filename": "today_si_cu_screen.png",
+      "source_file": "ja6c17862_si_001.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "620d50725d53c3d8ee4a71160bd8a2ede24dff435cf90bd7f573987096cc604c",
+      "source_pdf_page": 7,
+      "source_figure": "SI Table S4",
+      "crop_pdf_points": [
+        [
+          87,
+          68,
+          520,
+          482
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1299,
+      "height": 1242,
+      "sha256": "6867287a629e40e5bcf92c64d67040b1fa73748067c38b206cc9f2d4a48293f9",
+      "bytes": 166070,
+      "caption": "SI Table S4｜靛红亚胺的金属筛选：产率优势与对映选择性并不总是同步，后续仍需优化配体与温度。",
+      "display_width_pct": 96,
+      "body": true
+    },
+    {
+      "id": "today_fig3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig3.png",
+      "filename": "today_fig3.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 5,
+      "source_figure": "Fig. 3",
+      "crop_pdf_points": [
+        [
+          49,
+          56,
+          558,
+          666
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1527,
+      "height": 1830,
+      "sha256": "9fcf573c0705203288ec2f7a9b60d58fbdeda4b071020f834f23c0311e7a35de",
+      "bytes": 591332,
+      "caption": "Fig. 3｜靛红亚胺与烯烃的铜催化偶联。原脚注写THF，但相邻正文和SI GP-B写DCE；原图未改字，操作差异见正文说明。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig4",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig4.png",
+      "filename": "today_fig4.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 6,
+      "source_figure": "Fig. 4",
+      "crop_pdf_points": [
+        [
+          49,
+          54,
+          558,
+          701
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1527,
+      "height": 1941,
+      "sha256": "16256da00c29fed928643a7ecd62a61c35a6433c23a07eb75cbc6c7688160354",
+      "bytes": 658318,
+      "caption": "Fig. 4｜内烯烃与复杂分子衍生烯烃。a/b分别对应镍/铜体系；已有手性底物的de不可当作ee。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig5a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig5a.png",
+      "filename": "today_fig5a.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5A",
+      "crop_pdf_points": [
+        [
+          50,
+          58,
+          556,
+          188
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 390,
+      "sha256": "c1775d9204221dc9fff016b168b9041ab8e5ebd703ed7c2af9a4f5cb6a644f7d",
+      "bytes": 117369,
+      "caption": "Fig. 5A｜乙烯与丙烯在1 bar下作为原料。图中编号4a重复使用，按所示芳基α-亚胺酯结构识别。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "today_fig5b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig5b.png",
+      "filename": "today_fig5b.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5B",
+      "crop_pdf_points": [
+        [
+          50,
+          203,
+          556,
+          357
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 462,
+      "sha256": "a686fcfba6b7755980de9ff02a96a31ca505848ce38942a3e7d40aed0131899c",
+      "bytes": 172083,
+      "caption": "Fig. 5B｜含差异很小的两条烷基链的α-四取代氨基酸衍生物，检验更具挑战性的手性构筑。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig5c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig5c.png",
+      "filename": "today_fig5c.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5C",
+      "crop_pdf_points": [
+        [
+          50,
+          364,
+          556,
+          447
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 249,
+      "sha256": "5fbbdd8bfbab979a6d9335fc72c28e8f1c498b3c173b447d426a2acac613bf1b",
+      "bytes": 59086,
+      "caption": "Fig. 5C｜先原位制备α-亚胺酯，再偶联：46%收率、90% ee；免分离亚胺不等于无需分步制备试剂。",
+      "display_width_pct": 94,
+      "body": true
+    },
+    {
+      "id": "today_fig5d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig5d.png",
+      "filename": "today_fig5d.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 5D",
+      "crop_pdf_points": [
+        [
+          50,
+          451,
+          556,
+          608
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 471,
+      "sha256": "089c7d09e37fca48e08448b59081aa4ecb66e223ee94bd670a3fd16945e2afe8",
+      "bytes": 133278,
+      "caption": "Fig. 5D｜烯烃位置异构体混合物汇聚为单一连接方式的产物，与预先氢锆化/链行走解释相容。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig6a",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig6a.png",
+      "filename": "today_fig6a.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 6A",
+      "crop_pdf_points": [
+        [
+          50,
+          57,
+          556,
+          130
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 219,
+      "sha256": "49ab3161f86cb937f3a13386580b92ac81802215b2ce6a40b9ce1aba9f69e04e",
+      "bytes": 59067,
+      "caption": "Fig. 6A｜TEMPO抑制偶联并捕获烷基片段；单独光照烷基锆亦得到45%的捕获产物。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "today_fig6b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig6b.png",
+      "filename": "today_fig6b.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 6B",
+      "crop_pdf_points": [
+        [
+          50,
+          134,
+          556,
+          254
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 360,
+      "sha256": "632b3c39d35bca524c625f09b93a286273879b9a236e88cbffa7988de94f3e1a",
+      "bytes": 98642,
+      "caption": "Fig. 6B｜1,5-己二烯自由基钟；镍体系给15%直接偶联和53%环化产物，铜体系以环化产物为主。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig6d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig6d.png",
+      "filename": "today_fig6d.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 6D",
+      "crop_pdf_points": [
+        [
+          266,
+          258,
+          556,
+          425
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 870,
+      "height": 501,
+      "sha256": "881a278f1d7a770849167d3addc5b64a180c12b92f68c153ffc92a61a4a7101a",
+      "bytes": 103402,
+      "caption": "Fig. 6D｜镍和铜对光的依赖不同。铜的20%与90%是相同5 h时的转化率，不是分离收率。",
+      "display_width_pct": 90,
+      "body": true
+    },
+    {
+      "id": "today_fig6e",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig6e.png",
+      "filename": "today_fig6e.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 6E",
+      "crop_pdf_points": [
+        [
+          50,
+          428,
+          556,
+          608
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1518,
+      "height": 540,
+      "sha256": "ed5362313e78d1ebd39fb1157eddbc405965f28577ab64f916d3092cda44ee9b",
+      "bytes": 112757,
+      "caption": "Fig. 6E｜作者提出的可能机制；Zr(III)、金属低价态及先后成键顺序不因循环图完整而成为逐步实证。",
+      "display_width_pct": 100,
+      "body": true
+    },
+    {
+      "id": "today_fig6c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_fig6c.png",
+      "filename": "today_fig6c.png",
+      "source_file": "jacs.6c17862.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "0ba9d1c9288e95a8ed5a4c7c215174485d6fefadb1d4d59afaeb369ea8ef1c78",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 6C",
+      "crop_pdf_points": [
+        [
+          52,
+          258,
+          263,
+          425
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 633,
+      "height": 501,
+      "sha256": "9399590a3165fc0a553d7ad5dda7a179c8e0db76543693d703ab4fa4fee21b21",
+      "bytes": 37219,
+      "caption": "Fig. 6C｜配体ee与产物ee近似线性相关；该关系不唯一决定催化活性物种的组成。",
+      "display_width_pct": 78,
+      "body": true
+    },
+    {
+      "id": "today_si_ez",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/today_si_ez.png",
+      "filename": "today_si_ez.png",
+      "source_file": "ja6c17862_si_001.pdf",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_file_sha256": "620d50725d53c3d8ee4a71160bd8a2ede24dff435cf90bd7f573987096cc604c",
+      "source_pdf_page": 83,
+      "source_figure": "SI pp.S82–S84, variable-temperature NMR",
+      "crop_pdf_points": [
+        [
+          87,
+          74,
+          507,
+          737
+        ]
+      ],
+      "source_kind": "original_pdf_crop",
+      "width": 1260,
+      "height": 1989,
+      "sha256": "64b3a51292943f3d5988e06c5004cb7cde62be4dec2becb637bab4209ecc5156",
+      "bytes": 297547,
+      "caption": "SI Fig.（S82，变温核磁）｜底物1h在DMSO-d₆中的E/Z交换及线形拟合；S83–S84给出动力学讨论，不等同于THF中真实催化速率。",
+      "display_width_pct": 98,
+      "body": true
+    },
+    {
+      "id": "cover_featured",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/cover_featured.png",
+      "filename": "cover_featured.png",
+      "source_doi": "10.1021/jacs.6c17862",
+      "source_figure": "today_toc",
+      "source_kind": "original_TOC_proportional_resize_white_padding_only",
+      "source_asset_sha256": "503f2f15108141e9a23912b62dfb45c5751fc7b77a43b7bd9c6eb06c297d30aa",
+      "width": 940,
+      "height": 940,
+      "sha256": "c554c86524c7427624b30d9e3a552a751e9026963ef6e82e3272253a20eab10c",
+      "bytes": 90690,
+      "caption": "原始TOC等比例缩放和补白；无新增文字、无蓝条、无结构重绘。",
+      "display_width_pct": 100,
+      "body": false,
+      "placement_xy": [
+        12,
+        12
+      ],
+      "resized_size": [
+        916,
+        181
+      ]
+    },
+    {
+      "id": "gallery_qr",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-17-r1/gallery_qr.png",
+      "filename": "gallery_qr.png",
+      "source_kind": "date_scoped_QR",
+      "target_url": "https://gallery.gczhouwld.com/?edition=2026-10-17",
+      "width": 410,
+      "height": 410,
+      "sha256": "7afe201718951a1b82457c67b80901b23f4f46247bb8e5bf7bd7743147e4ed59",
+      "bytes": 2213,
+      "caption": "10月17日全部新增文献目录",
+      "body": false
+    }
+  ],
+  "cover": {
+    "source_figure_id": "cover_featured",
+    "production_cover_image": "user_selected",
+    "pixel_equivalence": "exact_source_bytes",
+    "delivery_image_sha256": "c554c86524c7427624b30d9e3a552a751e9026963ef6e82e3272253a20eab10c",
+    "canvas": {
+      "width": 940,
+      "height": 940,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0_1_0.4255319149",
+    "crop_1_1": "0_0_1_1",
+    "description": "仅对本篇真实TOC等比例缩放和补白。今日原图靠上、补白在底部；往期上下左右居中。无新增文字、蓝条或化学重绘。"
+  },
+  "source_url": "https://gallery.gczhouwld.com/?edition=2026-10-17&doi=10.1021%2Fjacs.6c17862&summary=0",
+  "ai_notice": "资料与审稿范围：依据本篇正文及322页SI中的方法、表征与机制资料。未取得对应审稿报告或作者答复，不将任何补充实验擅自归因于审稿要求。研究启示为编辑分析；原文内部的条件或编号差异按出处提示，没有改动原始化学图。",
+  "reviewed_gallery_entry": {
+    "date": "2026-10-17",
+    "figure_id": "today_toc",
+    "qr_figure_id": "gallery_qr",
+    "count": 20,
+    "doi": "10.1021/jacs.6c17862"
+  },
+  "title": "有机合成文献日报｜10.17｜今日精选｜JACS：经烷基锆自由基实现非活化烯烃与α-亚胺酯的不对称偶联"
+}

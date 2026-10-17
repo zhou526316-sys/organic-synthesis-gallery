@@ -1,0 +1,25 @@
+name: WeChat Oct17 original graphical abstract
+on:
+  push:
+    branches: [wechat-oct17-zirconium-phosphine-r1]
+    paths: ['.github/workflows/wechat-oct17-toc-source.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Retrieve only the publisher-linked abstract image
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/oct17-original-toc
+          curl -L --fail --connect-timeout 15 --max-time 60 --retry 1 'https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs44160-026-01140-2/MediaObjects/44160_2026_1140_Figa_HTML.png' -o /tmp/oct17-original-toc/retro_official_toc.png
+          sha256sum /tmp/oct17-original-toc/retro_official_toc.png > /tmp/oct17-original-toc/SHA256.txt
+          printf '%s\n' 'https://www.nature.com/articles/s44160-026-01140-2 abstract Image hyperlink, not Figure1. Original image; no image-generation or redraw.' > /tmp/oct17-original-toc/SOURCE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oct17-original-retro-toc
+          path: /tmp/oct17-original-toc
+          retention-days: 7

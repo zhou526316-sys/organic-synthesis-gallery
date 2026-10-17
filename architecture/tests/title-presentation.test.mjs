@@ -11,6 +11,19 @@ test('legacy first-title precedence is explicit and does not mutate canonical so
  assert.equal(record.paper.title,'Full current title');
  assert.equal(overlay.policy,'display-compatibility-not-fact-correction');
 });
+test('titleless legacy source retains independently DOI-verified superscripts before a newer plain-text title',()=>{
+ const doi='10.1021/acs.orglett.6c02012';
+ const canonicalTitle='Regioselective Amidine-Directed Iridium-Catalyzed C(sp 3 )–H Borylation by Attuning Boronic Esters';
+ const verified='Regioselective Amidine-Directed Iridium-Catalyzed C(sp³)–H Borylation by Attuning Boronic Esters';
+ const original={doi,revision,paper:{...record.paper,doi,title:canonicalTitle}};
+ const overlay=buildLegacyTitlePresentation([original],[
+  [{doi,title:null}],
+  [{doi,title:canonicalTitle}],
+ ],options);
+ assert.equal(applyTitlePresentation(original,overlay,id).title,verified);
+ assert.equal(original.paper.title,canonicalTitle);
+ assert.equal(overlay.overrides[doi].revision,revision);
+});
 test('unchanged titles do not create duplicate presentation rows',()=>assert.equal(Object.keys(build([[record.paper]]).overrides).length,0));
 test('placeholder titles do not suppress a later real title',()=>{
  const overlay=build([[{doi,title:'待核验'}],[record.paper]]);assert.deepEqual(overlay.overrides,{});

@@ -28,7 +28,18 @@ test('five exact Q3 Nature Communications Original Articles retain original DOI,
     assert.equal(x.citation.doi,x.doi);
     assert.equal(String(x.citation.articleNumber),x.publisherArticleNumber);
     assert.ok(x.authors.length>=3);
-    assert.ok(!published.has(x.doi));
+    // After the sole 08:00 writer has lawfully admitted a previously
+    // scope-reviewed original, verify the historical card instead of
+    // pretending the DOI is permanently unpublished.
+    if(published.has(x.doi)){
+      assert.equal(science.get(x.doi)?.decision,'include',x.doi);
+      const card=formal.articles.find(v=>v.doi===x.doi);
+      assert.equal(card?.ingestionChannel,'historical_backfill',x.doi);
+      assert.equal(card?.mediaPolicy,'toc_only',x.doi);
+      assert.equal(card?.addedDate,'',x.doi);
+      assert.notEqual(card?.new,true,x.doi);
+      assert.equal(card?.date,x.firstOnline,x.doi);
+    }
     assert.ok(!owner.has(x.doi));
   }
 });

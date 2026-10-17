@@ -45,10 +45,12 @@ for(const doi of ['10.1016/j.chempr.2026.103220','10.1039/d6sc03717h',
 stubResponse={sourceRoute:'https://www.sciencedirect.com/science/article/pii/S2451929426000744'};
 ok('existing legitimate ScienceDirect DOI resolution is retained',
   (await resolve({doi:'10.1016/j.chempr.2026.103008',publisher:'elsevier'}))===stubResponse.sourceRoute);
-stubResponse={status:200,finalUrl:'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06407h',
-  responseText:'Exact 10.1039/d6sc06407h publisher article content'};
-ok('existing legitimate RSC articleHTML DOI resolution is retained',
-  (await resolve({doi:'10.1039/d6sc06407h',publisher:'rsc',opportunisticEvidence:true}))===stubResponse.finalUrl);
+stubResponse={status:200,finalUrl:'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc03717h',
+  responseText:'Exact 10.1039/d6sc03717h publisher article content'};
+ok('previously verified RSC DOI/ArticleId route is reused before slow GM probe',
+  (await resolve({doi:'10.1039/d6sc06407h',publisher:'rsc',opportunisticEvidence:true}))===known['10.1039/d6sc06407h']);
+ok('unknown RSC still accepts a verified live articleHTML DOI result',
+  (await resolve({doi:'10.1039/d6sc03717h',publisher:'rsc',opportunisticEvidence:true}))===stubResponse.finalUrl);
 ok('read-only routes never upload, alter original queue or unlock PDF',calls>0
   && !source.slice(from,to).includes('/api/media/local-capture/import')
   && !source.slice(from,to).includes('privatePdfUploadRequest'));

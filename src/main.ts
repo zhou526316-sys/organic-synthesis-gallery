@@ -15,7 +15,6 @@ import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
   fetchLiteratureCatalogView,
-  literatureCatalogIndexedReadActive,
   type LiteratureCatalogViewRequest,
 } from './literature-catalog-view';
 
@@ -298,9 +297,14 @@ function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): v
 let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
+let indexedGenerationUnavailableUntil = 0;
+let indexedGenerationCooldownCatalogId = '';
 let indexedSearchPending = false;
+let indexedPendingMatched: number | null = null;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
+let searchPreviewTimer: number | null = null;
+let searchPreviewActive = false;
 let readersSortAdjustedForSearch = false;
 let indexedViewDegraded = false;
 let indexedViewRetryKey = '';
@@ -314,6 +318,15 @@ let indexedViewState: {
   cursors: string[];
   hasMore: boolean;
   nextCursor: string | null;
+  papers: Paper[];
+  loading: boolean;
+} | null = null;
+let staticDateViewState: {
+  requestKey: string;
+  matched: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
   papers: Paper[];
   loading: boolean;
 } | null = null;
@@ -340,6 +353,7 @@ function processCorpusSearchInput(nextQuery: string): void {
     && (Boolean(indexedViewRequest('')) || architectureBootstrapPending);
   renderCards();
   scheduleArchitectureCorpusRefresh();
+  armSearchPreviewFallback();
 }
 
 app.addEventListener('gallery-corpus-query', event => {
@@ -794,9 +808,15 @@ function resetResultWindow(): void {
   // The old request and its fallback transport cannot hold up a newer term.
   indexedSearchRequest?.abort();
   indexedSearchRequest = null;
-  if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
+  if ((indexedViewState || staticDateViewState) && architectureLandingPapers.length)
+    setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
+  staticDateViewState = null;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
+  searchPreviewActive = false;
+  for (const key of ['catalogSearchNetworkMs', 'catalogSearchResolveMs', 'catalogSearchRenderMs', 'catalogSearchTotalMs'])
+    delete document.documentElement.dataset[key];
   document.documentElement.dataset.catalogQueryRead = 'local';
   delete document.documentElement.dataset.catalogIndexedQuery;
 }
@@ -824,6 +844,22 @@ function paginationButtonsMarkup(currentPage: number, totalPages: number, loadin
   }).join('');
 }
 
+function armSearchPreviewFallback(): void {
+  if (searchPreviewTimer !== null) window.clearTimeout(searchPreviewTimer);
+  searchPreviewTimer = null;
+  if (!indexedSearchPending) return;
+  const expectedQuery = query;
+  // A delayed index/architecture bootstrap must not leave the page blank.
+  // Local results shown by this watchdog are expressly not an all-time answer.
+  searchPreviewTimer = window.setTimeout(() => {
+    searchPreviewTimer = null;
+    if (!indexedSearchPending || query !== expectedQuery || indexedPendingMatched !== null) return;
+    searchPreviewActive = true;
+    indexedSearchPending = false;
+    refreshCorpusResultsInPlace();
+  }, 1400);
+}
+
 function renderCards(): void {
   const gallery = document.querySelector<HTMLElement>('#gallery');
   const count = document.querySelector<HTMLElement>('#resultCount');
@@ -834,21 +870,43 @@ function renderCards(): void {
   // each keystroke while a real all-time index query is pending.
   if (indexedSearchPending && !indexedViewState
       && (Boolean(indexedViewRequest('')) || architectureBootstrapPending)) {
-    count.textContent = '…';
+    count.textContent = indexedPendingMatched === null ? '…' : String(indexedPendingMatched);
     if (scope) scope.textContent = t('searchingAllTime');
     const controls = document.querySelector<HTMLElement>('#resultWindowControls');
     if (controls) controls.hidden = true;
-    if (gallery.dataset.searchPending !== 'true') {
-      gallery.dataset.searchPending = 'true';
-      gallery.innerHTML = `<div class='empty' role='status'>${escapeHtml(t('searchingAllTime'))}</div>`;
+    gallery.dataset.searchPending = 'true';
+    const previousCards = gallery.querySelector('.card');
+    if (previousCards) {
+      gallery.classList.add('search-stale');
+      let pendingNote = gallery.querySelector<HTMLElement>('[data-search-progress]');
+      if (!pendingNote) {
+        pendingNote = document.createElement('div');
+        pendingNote.className = 'gallery-search-pending-note';
+        pendingNote.dataset.searchProgress = 'true';
+        pendingNote.setAttribute('role', 'status');
+        gallery.prepend(pendingNote);
+      }
+      pendingNote.textContent = indexedPendingMatched === null
+        ? (language === 'zh' ? '正在检索全库；下方仍是上一次结果，并非当前关键词的匹配。'
+          : 'Searching all papers; the cards below are previous results, not matches for this query.')
+        : (language === 'zh' ? `已找到 ${indexedPendingMatched} 篇，正在校验并载入当前页；下方仍是上一次结果。`
+          : `${indexedPendingMatched} papers matched; verifying this page. Cards below are previous results.`);
+    } else {
+      const note = gallery.querySelector<HTMLElement>('[data-search-progress]');
+      const progress = indexedPendingMatched === null ? t('searchingAllTime')
+        : language === 'zh' ? `已找到 ${indexedPendingMatched} 篇，正在校验并载入当前页…`
+          : `${indexedPendingMatched} papers matched; verifying this page…`;
+      if (note) note.textContent = progress;
+      else gallery.innerHTML = `<div class='empty' data-search-progress='true' role='status'>${escapeHtml(progress)}</div>`;
     }
     gallery.setAttribute('aria-busy', 'true');
     return;
   }
   gallery.dataset.searchPending = 'false';
+  gallery.classList.remove('search-stale');
   gallery.removeAttribute('aria-busy');
   syncLiteratureDoiRegistry();
-  const indexed = indexedViewState;
+  const indexed = indexedViewState || staticDateViewState;
   const list = indexed ? indexed.papers : filteredPapers();
   const windowSize = indexed?.limit || resultWindowSize();
   const localTotal = !indexed && resultScopeIsDefaultRecent() && hotBootstrapTotal > list.length
@@ -965,6 +1023,78 @@ function filterSummary(): string {
   return t('allJournals');
 }
 
+function currentSearchNotice(): string {
+  if (staticDateViewState && !staticDateViewState.loading) return language === 'zh'
+    ? '日期范围采用正式文献档案的完整分页检索；已核验冷区与热区，搜索结果按发表日期排序。'
+    : 'Full date-filtered archive pagination is active, including verified Hot and Archive records.';
+  if (searchPreviewActive) return language === 'zh'
+    ? '全库检索仍在后台进行；当前仅展示已加载文献的临时匹配，不能视为完整检索结果。'
+    : 'Full-library search is still running; these provisional local matches are not a complete answer.';
+  return architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent())
+    ? t('limitedRead')
+    : indexedViewDegraded && Boolean(query.trim() || dateFrom || dateTo)
+      ? t('indexedDegraded')
+      : sort === 'readers' && query.trim().length >= 3
+        ? t('readerSortLimited')
+        : readersSortAdjustedForSearch && Boolean(query.trim())
+          ? t('readersSortReset') : '';
+}
+
+function clearSearchScope(): void {
+  selectedJournals.clear();
+  excludedJournals.clear();
+  dateFrom = '';
+  dateTo = '';
+  onlyNew = false;
+  sort = 'newest';
+  readersSortAdjustedForSearch = false;
+  indexedViewDegraded = false;
+  resetResultWindow();
+  indexedSearchPending = Boolean(indexedViewRequest(''));
+  persistFilterPreferences();
+  mount();
+  scheduleArchitectureCorpusRefresh(0);
+}
+
+function syncClearSearchScopeButton(): void {
+  const shouldShow = Boolean(query.trim())
+    && (onlyNew || selectedJournals.size > 0 || excludedJournals.size > 0 || Boolean(dateFrom || dateTo));
+  const existing = document.querySelector<HTMLButtonElement>('#clearSearchScope');
+  if (!shouldShow) { existing?.remove(); return; }
+  if (existing) return;
+  const resultLine = document.querySelector('.resultline');
+  if (!resultLine) return;
+  const button = document.createElement('button');
+  button.id = 'clearSearchScope';
+  button.className = 'clear-custom-filters';
+  button.type = 'button';
+  button.textContent = t('clearSearchScope');
+  button.addEventListener('click', clearSearchScope);
+  resultLine.append(button);
+}
+
+function refreshCorpusResultsInPlace(): void {
+  // Search responses update only the result window. Recreating the toolbar and
+  // user center on each keystroke can trigger Chrome's password-save heuristic.
+  if (!document.querySelector('#gallery')) { mount(); return; }
+  const noticeText = currentSearchNotice();
+  const existing = document.querySelector<HTMLElement>('.architecture-read-limited');
+  if (noticeText) {
+    if (existing) existing.textContent = noticeText;
+    else {
+      const notice = document.createElement('div');
+      notice.className = 'architecture-read-limited';
+      notice.setAttribute('role', 'status');
+      notice.textContent = noticeText;
+      document.querySelector('.resultline')?.after(notice);
+    }
+  } else existing?.remove();
+  syncClearSearchScopeButton();
+  renderCards();
+  // Keep the delayed TOC/inventory bridge update from the old full mount.
+  scheduleInventory();
+}
+
 function mount(): void {
   const targetJournals = TARGET_JOURNALS.map(journal => journal.name);
   const targetSet = new Set(targetJournals);
@@ -977,18 +1107,11 @@ function mount(): void {
     .map(value => value.date).sort();
   const latest = latestCollectionDate && latestCollectionDate <= asOfBeijingDay
     ? latestCollectionDate : (dates[dates.length - 1] || '');
-  const scopeNotice = architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent())
-    ? t('limitedRead')
-    : indexedViewDegraded && Boolean(query.trim() || dateFrom || dateTo)
-      ? t('indexedDegraded')
-      : sort === 'readers' && query.trim().length >= 3
-        ? t('readerSortLimited')
-        : readersSortAdjustedForSearch && Boolean(query.trim())
-          ? t('readersSortReset') : '';
+  const scopeNotice = currentSearchNotice();
   const hasActiveSearchFilters = Boolean(query.trim())
     && (onlyNew || selectedJournals.size > 0 || excludedJournals.size > 0 || Boolean(dateFrom || dateTo));
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div>${hasActiveSearchFilters ? `<button id='clearSearchScope' class='clear-custom-filters' type='button'>${escapeHtml(t('clearSearchScope'))}</button>` : ''}</div>${scopeNotice ? `<div class='architecture-read-limited' role='status'>${escapeHtml(scopeNotice)}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' name='gallery-literature-search' autocomplete='off' autocapitalize='off' spellcheck='false' aria-label='${escapeHtml(t('search'))}' data-lpignore='true' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div>${hasActiveSearchFilters ? `<button id='clearSearchScope' class='clear-custom-filters' type='button'>${escapeHtml(t('clearSearchScope'))}</button>` : ''}</div>${scopeNotice ? `<div class='architecture-read-limited' role='status'>${escapeHtml(scopeNotice)}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -1081,21 +1204,39 @@ function mount(): void {
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderLocalHotView();
   }));
-  document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
-    dateFrom = (event.target as HTMLInputElement).value;
-    if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+  // Calendar changes keep the account/password DOM intact; combine two dates
+  // selected within 180ms into one cancellable catalog request.
+  const changeDateFilter = (field: 'from' | 'to', value: string): void => {
+    if (field === 'from') {
+      if (dateFrom === value) return;
+      dateFrom = value;
+      if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+    } else {
+      if (dateTo === value) return;
+      dateTo = value;
+      if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
+    }
+    const from = document.querySelector<HTMLInputElement>('#dateFrom');
+    const to = document.querySelector<HTMLInputElement>('#dateTo');
+    if (from && from.value !== dateFrom) from.value = dateFrom;
+    if (to && to.value !== dateTo) to.value = dateTo;
+    const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
+    if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
+    searchInputStartedAt = performance.now();
     resetResultWindow();
     persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
+    syncClearSearchScopeButton();
+    renderAfterScopeChange(180);
+    // Short keywords and reader-count sort cannot use D1; preserve the older
+    // complete static date/query path rather than silently returning Hot only.
+    if (!indexedSearchPending && (dateFrom || dateTo) && architectureClient)
+      scheduleArchitectureCorpusRefresh(180);
+  };
+  document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
+    changeDateFilter('from', (event.target as HTMLInputElement).value);
   });
   document.querySelector<HTMLInputElement>('#dateTo')?.addEventListener('change', event => {
-    dateTo = (event.target as HTMLInputElement).value;
-    if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
-    resetResultWindow();
-    persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
+    changeDateFilter('to', (event.target as HTMLInputElement).value);
   });
   document.querySelector<HTMLButtonElement>('#clearCustomFilters')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -1108,26 +1249,16 @@ function mount(): void {
     scheduleArchitectureCorpusRefresh(0);
   });
 
-  document.querySelector<HTMLButtonElement>('#clearSearchScope')?.addEventListener('click', () => {
-    selectedJournals.clear();
-    excludedJournals.clear();
-    dateFrom = '';
-    dateTo = '';
-    onlyNew = false;
-    sort = 'newest';
-    readersSortAdjustedForSearch = false;
-    indexedViewDegraded = false;
-    resetResultWindow();
-    indexedSearchPending = Boolean(indexedViewRequest(''));
-    persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
-  });
+  document.querySelector<HTMLButtonElement>('#clearSearchScope')?.addEventListener('click', clearSearchScope);
 
   const goToResultPage = async (targetPage: number): Promise<void> => {
     if (!Number.isSafeInteger(targetPage) || targetPage < 1) return;
     if (indexedViewState) {
       await goToIndexedResultPage(targetPage);
+      return;
+    }
+    if (staticDateViewState) {
+      await goToStaticDateResultPage(targetPage);
       return;
     }
     if (targetPage > 1 && hotBootstrapTotal > papers.length && resultScopeIsDefaultRecent()) {
@@ -1576,7 +1707,7 @@ async function resolveTitles(): Promise<void> {
       }
       if (changed) {
         persistCaches();
-        mount();
+        refreshCorpusResultsInPlace();
       }
     } catch {
       // The next page load or second pass will retry.
@@ -1740,18 +1871,19 @@ async function ensureFullHotCorpus(): Promise<void> {
   return hotFullLoadPromise;
 }
 
-function renderAfterScopeChange(): void {
+function renderAfterScopeChange(delay = 0): void {
   if (sort === 'readers' && [...query.trim()].length >= 3) {
     indexedSearchPending = false;
     indexedViewDegraded = false;
-    mount(); // Explain that most-read mode does not support abstract FTS.
+    refreshCorpusResultsInPlace(); // Explain most-read compatibility without replacing login DOM.
     return;
   }
   indexedSearchPending = Boolean(indexedViewRequest(''))
-    || (architectureBootstrapPending && [...query.trim()].length >= 3);
+    || (architectureBootstrapPending && Boolean(query.trim() || dateFrom || dateTo));
   if (indexedSearchPending) {
     renderCards();
-    scheduleArchitectureCorpusRefresh(0);
+    scheduleArchitectureCorpusRefresh(delay);
+    armSearchPreviewFallback();
   } else {
     renderLocalHotView();
   }
@@ -1786,9 +1918,10 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
     architectureBootstrapPending = false;
     architectureReadLimited = true;
     indexedSearchPending = false;
+    searchPreviewActive = false;
     document.documentElement.dataset.catalogRead = 'architecture-hot-fallback';
     console.warn('architecture-v1 background initialization unavailable; retaining verified Hot landing', error);
-    mount();
+    refreshCorpusResultsInPlace();
   }
 }
 
@@ -1938,6 +2071,105 @@ function indexedViewRequestKey(request: LiteratureCatalogViewRequest): string {
   });
 }
 
+type StaticDateViewRequest = {
+  catalogId: string;
+  from: string;
+  to: string;
+  sort: 'newest' | 'oldest';
+  selectedJournals: string[];
+  excludedJournals: string[];
+  limit: number;
+};
+
+function staticDateViewRequest(): StaticDateViewRequest | null {
+  const client = architectureClient;
+  if (!client || (!dateFrom && !dateTo) || query.trim() || onlyNew || sort === 'readers') return null;
+  return {
+    catalogId: client.catalogId,
+    from: dateFrom,
+    to: dateTo || client.asOfDate,
+    sort: sort === 'oldest' ? 'oldest' : 'newest',
+    selectedJournals: [...selectedJournals].sort(),
+    excludedJournals: [...excludedJournals].sort(),
+    limit: resultWindowSize(),
+  };
+}
+
+async function loadStaticDateViewPage(
+  serial: number,
+  request: StaticDateViewRequest,
+  page: number,
+  signal?: AbortSignal,
+  pageSerial?: number,
+): Promise<boolean> {
+  const client = architectureClient;
+  if (!client || client.catalogId !== request.catalogId) return false;
+  const key = JSON.stringify(request);
+  const reply = await client.rangePage(request.from, request.to, {
+    page, limit: request.limit, sort: request.sort,
+    selectedJournals: request.selectedJournals,
+    excludedJournals: request.excludedJournals,
+    signal,
+  });
+  if (signal?.aborted || serial !== architectureRefreshSerial || architectureClient !== client
+    || (pageSerial !== undefined && pageSerial !== indexedViewSerial)
+    || JSON.stringify(staticDateViewRequest()) !== key) return false;
+
+  const pagedPapers = normalizeArchitectureRows(reply.papers);
+  if (pagedPapers.length > request.limit || (reply.matched > 0 && !pagedPapers.length)) {
+    throw new Error('published_date_page_invalid');
+  }
+  indexedViewState = null;
+  staticDateViewState = {
+    requestKey: key,
+    matched: reply.matched,
+    page: reply.page,
+    limit: reply.limit,
+    hasMore: reply.hasMore,
+    papers: pagedPapers,
+    loading: false,
+  };
+  architectureReadLimited = false;
+  indexedSearchPending = false;
+  searchPreviewActive = false;
+  setArchitectureCorpus(pagedPapers);
+  document.documentElement.dataset.catalogQueryRead = 'static-date-page';
+  document.documentElement.dataset.catalogDateMatched = String(reply.matched);
+  refreshCorpusResultsInPlace();
+  return true;
+}
+
+async function goToStaticDateResultPage(requestedPage: number): Promise<void> {
+  const client = architectureClient;
+  const state = staticDateViewState;
+  const request = staticDateViewRequest();
+  if (!client || !state || state.loading || !request
+    || state.requestKey !== JSON.stringify(request)) return;
+  const totalPages = Math.max(1, Math.ceil(state.matched / state.limit));
+  const target = Math.max(1, Math.min(requestedPage, totalPages));
+  if (target === state.page) return;
+  const serial = ++indexedViewSerial;
+  indexedSearchRequest?.abort();
+  const controller = new AbortController();
+  indexedSearchRequest = controller;
+  staticDateViewState = { ...state, loading: true };
+  renderCards();
+  try {
+    await loadStaticDateViewPage(architectureRefreshSerial, request, target, controller.signal, serial);
+    if (serial === indexedViewSerial) {
+      document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+    }
+  } catch (error) {
+    if (serial !== indexedViewSerial || controller.signal.aborted) return;
+    // Keep the last verified page; a transport error is not an empty archive.
+    staticDateViewState = { ...state, loading: false };
+    console.warn('Verified archive date page unavailable; retaining last complete page', error);
+    refreshCorpusResultsInPlace();
+  } finally {
+    if (indexedSearchRequest === controller) indexedSearchRequest = null;
+  }
+}
+
 async function loadIndexedViewPage(
   serial: number,
   request: LiteratureCatalogViewRequest,
@@ -1953,8 +2185,17 @@ async function loadIndexedViewPage(
   const requestElapsed = Math.round(performance.now() - requestAt);
   if (serial !== architectureRefreshSerial && page === 1) return false;
   if (page > 1 && serial !== indexedViewSerial) return false;
-  if (architectureClient !== client) return false;
+  if (architectureClient !== client || signal?.aborted) return false;
+  if (page === 1) {
+    indexedPendingMatched = response.matched;
+    document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+    // A validated matched count is safe to show before DOI/revision records
+    // resolve; previous cards remain explicitly marked as stale.
+    renderCards();
+  }
+  const resolveAt = performance.now();
   const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+  const resolveElapsed = Math.round(performance.now() - resolveAt);
   // Static content-addressed shard resolution can still be pending after the
   // API returned. Guard this await too, not just the network response.
   if (signal?.aborted || (page === 1 && serial !== architectureRefreshSerial)
@@ -1976,15 +2217,23 @@ async function loadIndexedViewPage(
   architectureReadLimited = false;
   indexedViewDegraded = false;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
+  searchPreviewActive = false;
+  staticDateViewState = null;
+  indexedGenerationUnavailableUntil = 0;
   indexedViewRetryKey = '';
   indexedViewRetryCount = 0;
   setArchitectureCorpus(indexedPapers);
   document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
-  mount();
-  // Read-only timing probes for browser perf regressions: do not include DOI,
-  // title, query or user information in these document attributes.
+  document.documentElement.dataset.catalogIndexCapability = 'active';
+  indexedViewCapability = true;
+  const renderAt = performance.now();
+  refreshCorpusResultsInPlace();
+  // Read-only phase timings contain no DOI, search term or account information.
   document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+  document.documentElement.dataset.catalogSearchResolveMs = String(resolveElapsed);
+  document.documentElement.dataset.catalogSearchRenderMs = String(Math.round(performance.now() - renderAt));
   if (searchInputStartedAt > 0)
     document.documentElement.dataset.catalogSearchTotalMs = String(Math.round(performance.now() - searchInputStartedAt));
   return true;
@@ -2011,20 +2260,14 @@ function scheduleIndexedViewRecovery(serial: number, request: LiteratureCatalogV
 async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   const request = indexedViewRequest('');
   if (!request) return false;
-  if (indexedViewCapability !== true) {
-    // A failed health request and a genuinely disabled feature are both
-    // non-definitive for discovery; a later user query may check again.
-    const available = await literatureCatalogIndexedReadActive();
-    if (serial !== architectureRefreshSerial) return false;
-    indexedViewCapability = available ? true : null;
-    document.documentElement.dataset.catalogIndexCapability = available ? 'active' : 'degraded';
-    if (!available) {
-      indexedViewDegraded = true;
-      indexedSearchPending = false;
-      scheduleIndexedViewRecovery(serial, request);
-      return false;
-    }
-  }
+  // A known 409 is generation-scoped, not a transient network outage.
+  // Do not repeat the same doomed request while verified static browse works.
+  if (request.catalogId === indexedGenerationCooldownCatalogId
+    && Date.now() < indexedGenerationUnavailableUntil) return false;
+  // The catalog-view endpoint itself verifies the generation and read gate.
+  // Avoid a serial healthcheck before every first/failed full-library search.
+  if (indexedViewCapability !== true)
+    document.documentElement.dataset.catalogIndexCapability = 'probing';
   const pending = new AbortController();
   indexedSearchRequest = pending;
   try {
@@ -2035,10 +2278,20 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
     indexedViewState = null;
     indexedViewDegraded = true;
     indexedSearchPending = false;
+    indexedPendingMatched = null;
+    const status = error && typeof error === 'object' && 'status' in error
+      ? Number((error as { status?: unknown }).status) : 0;
+    if (status === 409) {
+      indexedGenerationCooldownCatalogId = request.catalogId;
+      indexedGenerationUnavailableUntil = Date.now() + 45_000;
+      indexedViewRetryKey = '';
+      indexedViewRetryCount = 0;
+    } else {
+      scheduleIndexedViewRecovery(serial, request);
+    }
     document.documentElement.dataset.catalogIndexCapability = 'degraded';
     document.documentElement.dataset.catalogQueryRead = 'static-segments';
-    scheduleIndexedViewRecovery(serial, request);
-    console.warn('D1 literature view temporarily unavailable; static metadata results are incomplete', error);
+    console.warn('D1 literature view temporarily unavailable; using verified static browse', error);
     return false;
   } finally {
     if (indexedSearchRequest === pending) indexedSearchRequest = null;
@@ -2098,7 +2351,7 @@ async function goToIndexedResultPage(requestedPage: number): Promise<void> {
     setArchitectureCorpus(indexedPapers);
     document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
     document.documentElement.dataset.catalogQueryRead = 'd1-index';
-    mount();
+    refreshCorpusResultsInPlace();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
   } catch (error) {
     if (token !== indexedViewSerial) return;
@@ -2121,7 +2374,39 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
   if (serial !== architectureRefreshSerial || architectureClient !== client) return;
   indexedViewState = null;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
+  const dateRequest = staticDateViewRequest();
+  if (dateRequest) {
+    // Date-only browse has a fully verified, 12/24-record static paging path.
+    // Never call the legacy range() method that fails above 1,000 members.
+    searchPreviewActive = true;
+    refreshCorpusResultsInPlace();
+    const pending = new AbortController();
+    indexedSearchRequest = pending;
+    try {
+      await loadStaticDateViewPage(serial, dateRequest, 1, pending.signal);
+    } catch (error) {
+      if (!pending.signal.aborted && serial === architectureRefreshSerial && architectureClient === client) {
+        staticDateViewState = null;
+        searchPreviewActive = false;
+        architectureReadLimited = true;
+        setArchitectureCorpus(architectureLandingPapers);
+        document.documentElement.dataset.catalogQueryRead = 'static-date-unavailable';
+        console.warn('Verified archive date browse unavailable; no false complete result', error);
+        refreshCorpusResultsInPlace();
+      }
+    } finally {
+      if (indexedSearchRequest === pending) indexedSearchRequest = null;
+    }
+    return;
+  }
+  staticDateViewState = null;
   document.documentElement.dataset.catalogQueryRead = 'static-segments';
+  // Show truthful bounded metadata while slower static shard search runs.
+  if (query.trim() || dateFrom || dateTo) {
+    searchPreviewActive = true;
+    refreshCorpusResultsInPlace();
+  }
   try {
     let additions: Paper[] = [];
     const needle = query.trim();
@@ -2131,14 +2416,16 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
     }
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     architectureReadLimited = false;
+    searchPreviewActive = false;
     setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
-    mount();
+    refreshCorpusResultsInPlace();
   } catch (error) {
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     console.warn('architecture-v1 on-demand read unavailable; retaining bounded Hot landing set', error);
     architectureReadLimited = true;
+    searchPreviewActive = false;
     setArchitectureCorpus(architectureLandingPapers);
-    mount();
+    refreshCorpusResultsInPlace();
   }
 }
 

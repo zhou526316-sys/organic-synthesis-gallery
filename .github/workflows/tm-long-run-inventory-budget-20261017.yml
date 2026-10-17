@@ -1,0 +1,42 @@
+name: Tampermonkey long-run inventory budget regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'tests/tm-long-run-inventory-budget-20261017.test.mjs'
+      - '.github/workflows/tm-long-run-inventory-budget-20261017.yml'
+  push:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/scripts/build-bridge-loader.mjs']
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify inventory cadence, refusal semantics and existing owner guards
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test tests/tm-long-run-inventory-budget-20261017.test.mjs tests/tm-cooldown-inventory-20261010.test.mjs tests/tm-inventory-startup.test.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+      - name: Build self-contained current installer
+        env:
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.93' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.74';" public/gallery-vpn-bridge.user.js

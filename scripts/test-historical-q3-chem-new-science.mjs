@@ -75,7 +75,17 @@ test('two genuinely original methods admitted for existing sole 08 historical wr
     const a=manifest.accepted.find(x=>x.doi===id);
     const x=science.assessments.find(x=>x.doi===id);
     assert.ok(a,'expected reviewed method '+id);
-    assert.ok(selected.some(x=>x.doi===id));
+    // The 08:00 writer removes already-published DOI from the *remaining*
+    // admission queue; publication itself does not retract academic approval.
+    if(published.has(id)){
+      assert.ok(!selected.some(x=>x.doi===id),'published DOI must not queue twice: '+id);
+      const publishedCard=formal.articles.find(x=>x.doi===id);
+      assert.equal(publishedCard?.ingestionChannel,'historical_backfill',id);
+      assert.equal(publishedCard?.mediaPolicy,'toc_only',id);
+      assert.equal(publishedCard?.addedDate,'',id);
+      assert.notEqual(publishedCard?.new,true,id);
+      assert.equal(publishedCard?.date,a.date,id);
+    }else assert.ok(selected.some(x=>x.doi===id),'unpublished eligible DOI must queue: '+id);
     assert.equal(a.reviewEvidence.publisherOnlineDate,x.date);
     assert.equal(a.scopeAssessment.primaryContribution,x.scopeAssessment.primaryContribution);
     assert.equal(a.scopeAssessment.generalityEvidence,x.scopeAssessment.generalityEvidence);
@@ -91,8 +101,7 @@ test('two genuinely original methods admitted for existing sole 08 historical wr
     assert.equal(card.mediaPolicy,'toc_only');
     assert.equal(card.ingestionChannel,'historical_backfill');
     assert.equal(card.date,a.date);
-    assert.ok(!published.has(id));
-    assert.ok(!excluded.has(id));
+    assert.ok(!excluded.has(id),'owner correction must still veto excluded DOI: '+id);
   }
   assert.equal(manifest.accepted.some(x=>x.doi===hold),false);
   assert.equal(manifest.pending.some(x=>x.doi===hold),false,

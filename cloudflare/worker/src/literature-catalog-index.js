@@ -250,13 +250,21 @@ export async function finalizeLiteratureCatalogGeneration(env,catalogIdValue){
       (SELECT COUNT(*) FROM literature_catalog_index WHERE catalog_id=?) AS indexed_rows,
       (SELECT COUNT(*) FROM literature_catalog_fts WHERE catalog_id=?) AS fts_rows,
       (SELECT COUNT(DISTINCT doi) FROM literature_catalog_fts WHERE catalog_id=?) AS fts_distinct_dois,
-      (SELECT COUNT(*) FROM literature_catalog_index i
-        LEFT JOIN literature_catalog_fts f ON f.catalog_id=i.catalog_id AND f.doi=i.doi
-        WHERE i.catalog_id=? AND f.doi IS NULL) AS missing_fts_rows,
-      (SELECT COUNT(*) FROM literature_catalog_fts f
-        LEFT JOIN literature_catalog_index i ON i.catalog_id=f.catalog_id AND i.doi=f.doi
-        WHERE f.catalog_id=? AND i.doi IS NULL) AS orphan_fts_rows
-    `).bind(catalogId,catalogId,catalogId,catalogId,catalogId).first();
+      -- FTS5 UNINDEXED doi/catalog_id cannot efficiently satisfy a LEFT JOIN:
+      -- at 1,337 rows this became a quadratic virtual-table rescan and caused
+      -- the live Cloudflare Worker finalize request to throw HTTP 500.
+      -- EXCEPT materializes DOI sets and preserves exact two-way parity.
+      (SELECT COUNT(*) FROM (
+        SELECT doi FROM literature_catalog_index WHERE catalog_id=?
+        EXCEPT
+        SELECT doi FROM literature_catalog_fts WHERE catalog_id=?
+      )) AS missing_fts_rows,
+      (SELECT COUNT(*) FROM (
+        SELECT doi FROM literature_catalog_fts WHERE catalog_id=?
+        EXCEPT
+        SELECT doi FROM literature_catalog_index WHERE catalog_id=?
+      )) AS orphan_fts_rows
+    `).bind(catalogId,catalogId,catalogId,catalogId,catalogId,catalogId,catalogId).first();
   const indexedRows=Number(parity?.indexed_rows||0);
   const ftsRows=Number(parity?.fts_rows||0);
   const ftsDistinctDois=Number(parity?.fts_distinct_dois||0);
