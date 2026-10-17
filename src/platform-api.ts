@@ -351,6 +351,10 @@ async function literatureReadWithFailover<T>(
     return await timedLiteratureRead<T>(method, `${MEDIA_API_ORIGIN}${path}`, body, signal);
   } catch (primaryError) {
     if (signal?.aborted || (primaryError instanceof Error && primaryError.name === 'AbortError')) throw primaryError;
+    // A 409 means the requested immutable catalog generation is not ready.
+    // Repeating the same date/query on another transport only adds latency.
+    if (primaryError && typeof primaryError === 'object' && 'status' in primaryError
+      && Number((primaryError as { status?: unknown }).status) === 409) throw primaryError;
     // If canonical GET explicitly rejects the route, use compatible POST
     // immediately instead of waiting for the same GET at workers.dev.
     const primaryStatus = primaryError && typeof primaryError === 'object' && 'status' in primaryError
