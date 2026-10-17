@@ -9,7 +9,7 @@ const last=source.indexOf('  async function runManualFromHead(',first);
 assert.ok(first>0&&last>first,'exact circuit-breaker helper must exist');
 let observedHeartbeat=null;
 const ctx=vm.createContext({normalizeDoi:x=>String(x||'').toLowerCase(),publisherForDoi:()=> 'unknown',currentPublisherHeartbeat:()=>observedHeartbeat,Date});
-vm.runInContext(source.slice(first,last)+'\n globalThis.observe=manualHeartbeatCircuitBreaker;',ctx);
+vm.runInContext(source.slice(first,last)+'\n globalThis.observe=manualHeartbeatCircuitBreaker;globalThis.probePriority=recoveryProbePriority;',ctx);
 function state(rows=[]){
  return {publisherHeartbeatFailures:{},publisherHeartbeatQuarantine:{},
   coverage:new Map(rows.map(row=>[row.doi,{state:'pending',job:row,retryAt:0}]))};
@@ -46,6 +46,23 @@ test('three independent uninitialized DOIs isolate only one publisher and reserv
  assert.equal(run.coverage.get('10.1021/jacs.x').state,'pending');
  assert.match(source,/quarantined&&quarantined.probeDoi!==normalizeDoi\(job.doi\)/);
  assert.match(source,/foregroundRetry=/);
+});
+
+test('serial dispatcher puts one bounded recovery probe behind ordinary publisher jobs',()=>{
+ const rows=[
+  {doi:'10.1039/a',publisher:'rsc'},{doi:'10.1039/b',publisher:'rsc'},
+  {doi:'10.1039/c',publisher:'rsc'},{doi:'10.1039/d',publisher:'rsc'},
+  {doi:'10.1021/jacs.x',publisher:'acs'},{doi:'10.1002/anie.x',publisher:'wiley'}
+ ];
+ const run=state(rows);
+ for(let i=0;i<3;i++)ctx.observe(run,rows[i],missing);
+ const original=[rows[3],rows[4],rows[5]].map(job=>({job}));
+ assert.equal(ctx.probePriority(run,original[0]),1);
+ assert.equal(ctx.probePriority(run,original[1]),0);
+ assert.equal(ctx.probePriority(run,original[2]),0);
+ original.sort((a,b)=>ctx.probePriority(run,a)-ctx.probePriority(run,b));
+ assert.deepEqual(original.map(r=>r.job.doi),['10.1021/jacs.x','10.1002/anie.x','10.1039/d']);
+ assert.match(source,/candidates\.sort\(function\(a,b\)\{return recoveryProbePriority\(run,a\)-recoveryProbePriority\(run,b\);\}\)/);
 });
 
 test('real DOI- and job-bound publisher startup recovers pending publisher coverage once',()=>{
