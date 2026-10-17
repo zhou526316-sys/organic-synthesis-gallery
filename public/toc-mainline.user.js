@@ -1630,11 +1630,11 @@ function embeddedJobDois(value) {
     // budget. Do not clamp them back to the old 16s ceiling. Every other
     // inventory request (including owner PDF, evidence and 80-DOI chunks)
     // retains the existing shorter deadline.
-    var maxInventoryMs=INVENTORY_REQUEST_TIMEOUT_MS;
+    var maxInventoryMs=INVENTORY_REQUEST_TIMEOUT_MS,isScopedBulk=false;
     try{
       var scopeTarget=new URL(String(options&&options.url||''),location.href);
       var scopeBody=JSON.parse(String(options&&options.data||'{}'));
-      var isScopedBulk=String(options&&options.method||'GET').toUpperCase()==='POST'
+      isScopedBulk=String(options&&options.method||'GET').toUpperCase()==='POST'
         &&scopeTarget.origin===WORKER
         &&['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory'].indexOf(scopeTarget.pathname)>=0
         &&scopeBody.readOnly===true&&Array.isArray(scopeBody.dois)
@@ -1679,7 +1679,10 @@ function embeddedJobDois(value) {
       }
       function startGm(){if(gmStarted||settled)return;gmStarted=true;consume(gmRequest(gmOptions,true),'gm');}
       consume(nativeControllerRequest(nativeOptions),'browser');
-      hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
+      // A cold R2 index already exceeds 6MB. Speculatively hedging it after
+      // 900ms doubles R2/Worker reads; use one native request, with a GM
+      // alternative only if the native request actually fails.
+      if(!isScopedBulk)hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
       deadlineTimer=setTimeout(function(){
         if(settled)return;settled=true;clean();try{nativeAbort.abort(new Error('inventory_deadline'));}catch(_){}
         reject(combinedFailure('inventory_deadline'));
