@@ -1,0 +1,425 @@
+{
+  "schemaVersion": "gallery-historical-20261017-nine-originals-two-pass-v1",
+  "reviewedAt": "2026-10-17T01:00:19.235Z",
+  "baselineApproved": 254,
+  "sourceBranch": "staging/historical-archive-nightly",
+  "mode": "DOI_official_first_online_original_preparative_scope_two_pass",
+  "reviewMethod": "one_assistant_two_separate_scientific_passes_not_two_human_reviewers",
+  "part": 1,
+  "partsTotal": 2,
+  "additions": 5,
+  "approved": [
+    {
+      "doi": "10.1002/anie.7517064",
+      "journal": "Angew",
+      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
+      "titleZh": "手性磷酸催化杯[4]芳烃上沿双胺去对称还原胺化构筑固有手性大环",
+      "date": "2026-09-01",
+      "authors": [
+        "Mengyao Yuan",
+        "Xi Xiang",
+        "Wansen Xie",
+        "Yuheng Ma",
+        "Huanchao Gu",
+        "Houchao Tao",
+        "Xiaoyu Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "e7517064",
+        "doi": "10.1002/anie.7517064"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以不同上沿双胺取代的前手性杯[4]芳烃为底物，通过手性磷酸催化醛参与的还原胺化和去对称化，制备ABCD型及ABCC型两类固有手性杯芳烃，实际构建的是非中心立体起源的大环手性。",
+      "evidenceBasis": "出版社Article History核对：Wiley Research Article First published 2026-09-01=2026-09-01，https://onlinelibrary.wiley.com/doi/10.1002/anie.7517064；冻结Crossref来源根 2026-09-01_2026-09-07_angew，原始raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，reviewer queue Git blob fa101cb6b54753b82c0a739e114d1b67079e489e，source root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+      "challengeReason": "二次挑战：手性选择性并非因为CPA催化普通单一中心手性还原胺化而直接等同大环固有手性。文章的控制实验支持顺序去对称化及后续动力学拆分，确定对映体的环节是亚胺还原；这仍是证据支持的选择性模型，不能称逐个立体中间体都被原位分离。六种立体异构体通过策略组合获得，非同一次反应同时产出六种。",
+      "scopeAssessment": {
+        "primaryContribution": "以不同上沿双胺取代的前手性杯[4]芳烃为底物，通过手性磷酸催化醛参与的还原胺化和去对称化，制备ABCD型及ABCC型两类固有手性杯芳烃，实际构建的是非中心立体起源的大环手性。",
+        "preparativeTransformation": "使用两类前手性二氨基杯[4]芳烃和不同芳香或脂肪醛，在CPA催化下经历亚胺形成和对映选择性还原，将上沿多个不同取代基按方向区分并锁定为具有固有手性的杯[4]芳烃。",
+        "generalityEvidence": "Wiley Research Article全文摘要明确覆盖两类宏环、多样醛和上沿取代基；产物经衍生化与杯芳烃二聚，并通过合成策略组合取得ABCD型的六种可能立体异构体。荧光与手性光学性质是下游应用，并非该论文唯一主要贡献。",
+        "sourceEvidence": "出版社Article History核对：Wiley Research Article First published 2026-09-01=2026-09-01，https://onlinelibrary.wiley.com/doi/10.1002/anie.7517064；冻结Crossref来源根 2026-09-01_2026-09-07_angew，原始raw Git blob 20a0ec09ce98e9c81acab658e9fe44086e5b0508，reviewer queue Git blob fa101cb6b54753b82c0a739e114d1b67079e489e，source root SHA256 32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+        "boundaryChallenge": "二次挑战：手性选择性并非因为CPA催化普通单一中心手性还原胺化而直接等同大环固有手性。文章的控制实验支持顺序去对称化及后续动力学拆分，确定对映体的环节是亚胺还原；这仍是证据支持的选择性模型，不能称逐个立体中间体都被原位分离。六种立体异构体通过策略组合获得，非同一次反应同时产出六种。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.7517064",
+        "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.7517064",
+        "publisherOnlineDate": "2026-09-01",
+        "publisherOriginalResearchType": "Wiley_Angew_Research_Article_First_Published_2026-09-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_angew",
+        "stageBatchSha": "20a0ec09ce98e9c81acab658e9fe44086e5b0508",
+        "sourceReviewQueueGitBlobSha": "fa101cb6b54753b82c0a739e114d1b67079e489e",
+        "stageSourceSha256": "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-01",
+          "officialPublisherFirstOnline": "2026-09-01",
+          "publisherArticlePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.7517064",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "Wiley_Angew_Research_Article_First_Published_2026-09-01"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以不同上沿双胺取代的前手性杯[4]芳烃为底物，通过手性磷酸催化醛参与的还原胺化和去对称化，制备ABCD型及ABCC型两类固有手性杯芳烃，实际构建的是非中心立体起源的大环手性。 使用两类前手性二氨基杯[4]芳烃和不同芳香或脂肪醛，在CPA催化下经历亚胺形成和对映选择性还原，将上沿多个不同取代基按方向区分并锁定为具有固有手性的杯[4]芳烃。 Wiley Research Article全文摘要明确覆盖两类宏环、多样醛和上沿取代基；产物经衍生化与杯芳烃二聚，并通过合成策略组合取得ABCD型的六种可能立体异构体。荧光与手性光学性质是下游应用，并非该论文唯一主要贡献。",
+          "assessment": "以不同上沿双胺取代的前手性杯[4]芳烃为底物，通过手性磷酸催化醛参与的还原胺化和去对称化，制备ABCD型及ABCC型两类固有手性杯芳烃，实际构建的是非中心立体起源的大环手性。 使用两类前手性二氨基杯[4]芳烃和不同芳香或脂肪醛，在CPA催化下经历亚胺形成和对映选择性还原，将上沿多个不同取代基按方向区分并锁定为具有固有手性的杯[4]芳烃。 Wiley Research Article全文摘要明确覆盖两类宏环、多样醛和上沿取代基；产物经衍生化与杯芳烃二聚，并通过合成策略组合取得ABCD型的六种可能立体异构体。荧光与手性光学性质是下游应用，并非该论文唯一主要贡献。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二次挑战：手性选择性并非因为CPA催化普通单一中心手性还原胺化而直接等同大环固有手性。文章的控制实验支持顺序去对称化及后续动力学拆分，确定对映体的环节是亚胺还原；这仍是证据支持的选择性模型，不能称逐个立体中间体都被原位分离。六种立体异构体通过策略组合获得，非同一次反应同时产出六种。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02867",
+      "journal": "Organic Letters",
+      "title": "Synthesis of Axially Chiral α-Aminophosphine Oxides via Dynamic Kinetic Three-Component Kabachnik–Fields Reactions",
+      "titleZh": "阴离子手性钴配合物催化联芳基半缩醛与胺和膦氧三组分动态动力学反应合成轴手性氨基膦氧",
+      "date": "2026-07-28",
+      "authors": [
+        "Zhi-Yuan Pan",
+        "Chao Chen",
+        "Yong-Kang Chen",
+        "Yong-Hui Cui",
+        "Qiongqiong Zhu",
+        "Chuan-Zhi Yao",
+        "Hua-Jie Jiang",
+        "Jie Yu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10093-10098",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02867"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用具有金属中心手性的阴离子Co(III)络合催化剂，促进联芳基半缩醛、胺及H-膦氧三组分动态动力学Kabachnik–Fields反应，构筑可分离的轴手性α-氨基膦氧。",
+      "evidenceBasis": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-28，https://pubs.acs.org/orlef7/article/28/31/10093/5235516/Synthesis-of-Axially-Chiral-Aminophosphine-Oxides；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+      "challengeReason": "二次反证：名称中的dynamic kinetic不允许将反应理解为先制备并光学拆分稳定的联芳基轴手性原料；核心在催化条件下构型快速互变并通过C–P键形成被选择性固定。金属中心手性钴络合物不是CPA催化剂；96:4是er而非96% ee，不能与大于20:1 dr互换或推断所有底物具最高选择性。",
+      "scopeAssessment": {
+        "primaryContribution": "利用具有金属中心手性的阴离子Co(III)络合催化剂，促进联芳基半缩醛、胺及H-膦氧三组分动态动力学Kabachnik–Fields反应，构筑可分离的轴手性α-氨基膦氧。",
+        "preparativeTransformation": "联芳基半缩醛与胺缩合生成亚胺或亚胺相关物种，随后H-膦氧加成构建C–P键并固定联芳基轴手性；催化来源是Co(III)手性阴离子，而非普通手性磷酸或零价钴加成。",
+        "generalityEvidence": "ACS Original Letter公布26个底物实例，最高88%收率、96:4 er、超过20:1 dr；三组分组装实际形成有机膦氧产物。两项选择性指标分别为轴手性对映比与可能的非对映比，不应把单个最高结果套用全部底物。",
+        "sourceEvidence": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-28，https://pubs.acs.org/orlef7/article/28/31/10093/5235516/Synthesis-of-Axially-Chiral-Aminophosphine-Oxides；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+        "boundaryChallenge": "二次反证：名称中的dynamic kinetic不允许将反应理解为先制备并光学拆分稳定的联芳基轴手性原料；核心在催化条件下构型快速互变并通过C–P键形成被选择性固定。金属中心手性钴络合物不是CPA催化剂；96:4是er而非96% ee，不能与大于20:1 dr互换或推断所有底物具最高选择性。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02867",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/31/10093/5235516/Synthesis-of-Axially-Chiral-Aminophosphine-Oxides",
+        "publisherOnlineDate": "2026-07-28",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-28",
+          "officialPublisherFirstOnline": "2026-07-28",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/28/31/10093/5235516/Synthesis-of-Axially-Chiral-Aminophosphine-Oxides",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用具有金属中心手性的阴离子Co(III)络合催化剂，促进联芳基半缩醛、胺及H-膦氧三组分动态动力学Kabachnik–Fields反应，构筑可分离的轴手性α-氨基膦氧。 联芳基半缩醛与胺缩合生成亚胺或亚胺相关物种，随后H-膦氧加成构建C–P键并固定联芳基轴手性；催化来源是Co(III)手性阴离子，而非普通手性磷酸或零价钴加成。 ACS Original Letter公布26个底物实例，最高88%收率、96:4 er、超过20:1 dr；三组分组装实际形成有机膦氧产物。两项选择性指标分别为轴手性对映比与可能的非对映比，不应把单个最高结果套用全部底物。",
+          "assessment": "利用具有金属中心手性的阴离子Co(III)络合催化剂，促进联芳基半缩醛、胺及H-膦氧三组分动态动力学Kabachnik–Fields反应，构筑可分离的轴手性α-氨基膦氧。 联芳基半缩醛与胺缩合生成亚胺或亚胺相关物种，随后H-膦氧加成构建C–P键并固定联芳基轴手性；催化来源是Co(III)手性阴离子，而非普通手性磷酸或零价钴加成。 ACS Original Letter公布26个底物实例，最高88%收率、96:4 er、超过20:1 dr；三组分组装实际形成有机膦氧产物。两项选择性指标分别为轴手性对映比与可能的非对映比，不应把单个最高结果套用全部底物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二次反证：名称中的dynamic kinetic不允许将反应理解为先制备并光学拆分稳定的联芳基轴手性原料；核心在催化条件下构型快速互变并通过C–P键形成被选择性固定。金属中心手性钴络合物不是CPA催化剂；96:4是er而非96% ee，不能与大于20:1 dr互换或推断所有底物具最高选择性。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02736",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic Decyanative Borylation of Dicyanoarenes Enabled by Radical–Radical Coupling",
+      "titleZh": "氧化淬灭光催化胺配位硼自由基与二氰基芳烃自由基负离子偶联实现脱氰硼化",
+      "date": "2026-07-27",
+      "authors": [
+        "Naoki Yasukawa",
+        "Ryota Nomura",
+        "Waka Okada",
+        "Kazutake Takada",
+        "Tsunayoshi Takehara",
+        "Takeyuki Suzuki",
+        "Daniele Leonori",
+        "Shuichi Nakamura"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10022-10027",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02736"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以带羧酸位点的胺-硼烷为硼自由基前体，利用光氧化还原的氧化淬灭循环与二氰芳烃单电子还原，发生脱氰芳基硼化并获得稳定的胺硼烷芳基加合物。",
+      "evidenceBasis": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-27，https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02736/5234302/Photocatalytic-Decyanative-Borylation-of；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+      "challengeReason": "二次反证：原文不仅是把氰基替成裸B(OH)2的普通硼酸，不经后续处理得到的是稳定的胺配位硼烷。41%是报告的代表例，不可称全范围最高。DFT支持自由基偶联与脱氰消除强放能，但没有找到自由基—自由基偶联过渡态；氧化淬灭SET路径及永久自由基效应属于机理证据模型而非所有中间体直接证实。",
+      "scopeAssessment": {
+        "primaryContribution": "以带羧酸位点的胺-硼烷为硼自由基前体，利用光氧化还原的氧化淬灭循环与二氰芳烃单电子还原，发生脱氰芳基硼化并获得稳定的胺硼烷芳基加合物。",
+        "preparativeTransformation": "Ir(ppy)3光照促进二氰芳烃还原为自由基负离子，氧化态光催化剂使去质子化的羧基功能化胺硼烷经氧化脱羧形成亲核胺配位硼自由基，两种自由基偶联并消除氰基，产物可继续作Suzuki–Miyaura偶联。",
+        "generalityEvidence": "ACS原创开放论文给出真实分离的胺配位芳基硼烷（代表底物41%分离收率及X射线结构），并展示不同二氰芳烃和后续Suzuki偶联、非诺贝特片段后期官能化。机理依赖自由基负离子与硼自由基匹配，不能把反应等同传统芳基卤化物硼化。",
+        "sourceEvidence": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-27，https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02736/5234302/Photocatalytic-Decyanative-Borylation-of；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+        "boundaryChallenge": "二次反证：原文不仅是把氰基替成裸B(OH)2的普通硼酸，不经后续处理得到的是稳定的胺配位硼烷。41%是报告的代表例，不可称全范围最高。DFT支持自由基偶联与脱氰消除强放能，但没有找到自由基—自由基偶联过渡态；氧化淬灭SET路径及永久自由基效应属于机理证据模型而非所有中间体直接证实。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02736",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02736/5234302/Photocatalytic-Decyanative-Borylation-of",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02736/5234302/Photocatalytic-Decyanative-Borylation-of",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以带羧酸位点的胺-硼烷为硼自由基前体，利用光氧化还原的氧化淬灭循环与二氰芳烃单电子还原，发生脱氰芳基硼化并获得稳定的胺硼烷芳基加合物。 Ir(ppy)3光照促进二氰芳烃还原为自由基负离子，氧化态光催化剂使去质子化的羧基功能化胺硼烷经氧化脱羧形成亲核胺配位硼自由基，两种自由基偶联并消除氰基，产物可继续作Suzuki–Miyaura偶联。 ACS原创开放论文给出真实分离的胺配位芳基硼烷（代表底物41%分离收率及X射线结构），并展示不同二氰芳烃和后续Suzuki偶联、非诺贝特片段后期官能化。机理依赖自由基负离子与硼自由基匹配，不能把反应等同传统芳基卤化物硼化。",
+          "assessment": "以带羧酸位点的胺-硼烷为硼自由基前体，利用光氧化还原的氧化淬灭循环与二氰芳烃单电子还原，发生脱氰芳基硼化并获得稳定的胺硼烷芳基加合物。 Ir(ppy)3光照促进二氰芳烃还原为自由基负离子，氧化态光催化剂使去质子化的羧基功能化胺硼烷经氧化脱羧形成亲核胺配位硼自由基，两种自由基偶联并消除氰基，产物可继续作Suzuki–Miyaura偶联。 ACS原创开放论文给出真实分离的胺配位芳基硼烷（代表底物41%分离收率及X射线结构），并展示不同二氰芳烃和后续Suzuki偶联、非诺贝特片段后期官能化。机理依赖自由基负离子与硼自由基匹配，不能把反应等同传统芳基卤化物硼化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二次反证：原文不仅是把氰基替成裸B(OH)2的普通硼酸，不经后续处理得到的是稳定的胺配位硼烷。41%是报告的代表例，不可称全范围最高。DFT支持自由基偶联与脱氰消除强放能，但没有找到自由基—自由基偶联过渡态；氧化淬灭SET路径及永久自由基效应属于机理证据模型而非所有中间体直接证实。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02895",
+      "journal": "Organic Letters",
+      "title": "A Building Block Strategy for Construction of C(sp3)–SCF3 Bonds via Nickel-Catalyzed 1,2-Difunctionalization of Trifluoromethylthiolated Alkenes",
+      "titleZh": "镍催化预装三氟甲硫基烯烃一二双官能团化构建脂肪碳硫三氟甲基键",
+      "date": "2026-07-22",
+      "authors": [
+        "Xavier Vanderbiest",
+        "Olivier Riant"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "9840-9845",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02895"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过一步制备可操作的SCF3取代烯烃砌块，再利用镍催化1,2-双官能团化扩展具有C(sp3)–SCF3键的有机骨架，核心是构筑脂肪碳–三氟甲硫基连接的新砌块策略。",
+      "evidenceBasis": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-22，https://pubs.acs.org/doi/10.1021/acs.orglett.6c02895；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+      "challengeReason": "二次挑战：该反应的SCF3基团在底物中预先存在，不是将外加SCF3阴离子或硫自由基任意转移到未官能化烯烃；因此不能写成普适直接三氟甲硫化。1,2-双官能团化确实建立其他新键，但Ni循环价态、适用烯烃局限必须以论文实验为准，不能将药物相关性解释成实际药效验证。",
+      "scopeAssessment": {
+        "primaryContribution": "通过一步制备可操作的SCF3取代烯烃砌块，再利用镍催化1,2-双官能团化扩展具有C(sp3)–SCF3键的有机骨架，核心是构筑脂肪碳–三氟甲硫基连接的新砌块策略。",
+        "preparativeTransformation": "采用预先含有SCF3的烯烃合成子作配对底物，以Ni催化控制烯烃两端官能团引入，获得新的脂肪C(sp3)–SCF3键与另一碳基团的1,2-双官能团化产物。",
+        "generalityEvidence": "ACS Letter报告新设计的SCF3烯烃试剂可一步合成，并给出多种取代底物的官能团化产品，随文SI列出实验筛选、反应范围限制及毫摩尔规模实验。真实合成创新不是一个仅供药物理化性质测量的SCF3材料。",
+        "sourceEvidence": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-22，https://pubs.acs.org/doi/10.1021/acs.orglett.6c02895；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+        "boundaryChallenge": "二次挑战：该反应的SCF3基团在底物中预先存在，不是将外加SCF3阴离子或硫自由基任意转移到未官能化烯烃；因此不能写成普适直接三氟甲硫化。1,2-双官能团化确实建立其他新键，但Ni循环价态、适用烯烃局限必须以论文实验为准，不能将药物相关性解释成实际药效验证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02895",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02895",
+        "publisherOnlineDate": "2026-07-22",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-22",
+          "officialPublisherFirstOnline": "2026-07-22",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02895",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过一步制备可操作的SCF3取代烯烃砌块，再利用镍催化1,2-双官能团化扩展具有C(sp3)–SCF3键的有机骨架，核心是构筑脂肪碳–三氟甲硫基连接的新砌块策略。 采用预先含有SCF3的烯烃合成子作配对底物，以Ni催化控制烯烃两端官能团引入，获得新的脂肪C(sp3)–SCF3键与另一碳基团的1,2-双官能团化产物。 ACS Letter报告新设计的SCF3烯烃试剂可一步合成，并给出多种取代底物的官能团化产品，随文SI列出实验筛选、反应范围限制及毫摩尔规模实验。真实合成创新不是一个仅供药物理化性质测量的SCF3材料。",
+          "assessment": "通过一步制备可操作的SCF3取代烯烃砌块，再利用镍催化1,2-双官能团化扩展具有C(sp3)–SCF3键的有机骨架，核心是构筑脂肪碳–三氟甲硫基连接的新砌块策略。 采用预先含有SCF3的烯烃合成子作配对底物，以Ni催化控制烯烃两端官能团引入，获得新的脂肪C(sp3)–SCF3键与另一碳基团的1,2-双官能团化产物。 ACS Letter报告新设计的SCF3烯烃试剂可一步合成，并给出多种取代底物的官能团化产品，随文SI列出实验筛选、反应范围限制及毫摩尔规模实验。真实合成创新不是一个仅供药物理化性质测量的SCF3材料。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二次挑战：该反应的SCF3基团在底物中预先存在，不是将外加SCF3阴离子或硫自由基任意转移到未官能化烯烃；因此不能写成普适直接三氟甲硫化。1,2-双官能团化确实建立其他新键，但Ni循环价态、适用烯烃局限必须以论文实验为准，不能将药物相关性解释成实际药效验证。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02953",
+      "journal": "Organic Letters",
+      "title": "Synthesis and Reactions of Hydrazine Trifluoroborate Salts",
+      "titleZh": "肼三氟硼酸盐砌块合成与羰基及炔酮缩合构筑N-硼甲基吡唑",
+      "date": "2026-07-27",
+      "authors": [
+        "Lorenzo Ballerini",
+        "Wenhao Zhao",
+        "Anika Tarasewicz",
+        "María Méndez",
+        "Joseph P. A. Harrity"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "10134-10138",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02953"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "报道可分离的肼三氟硼酸盐新型有机合成砌块，并通过与1,3-二羰基底物或共轭炔酮反应，实现较高区域控制的N-硼甲基吡唑系列制备。",
+      "evidenceBasis": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-27，https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02953/5233818/Synthesis-and-Reactions-of-Hydrazine；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+      "challengeReason": "二次反证：文中强调的新盐是具有后续反应能力的有机硼砌块，不应把全部N-硼甲基吡唑称作最后可直接偶联的游离硼酸。作者并非声称所有肼衍生物与全部羰基伙伴都定量成环，区域控制针对已测试的1,3-二羰基和共轭炔酮。药物类似物属于合成示范而非证明原药疗效。",
+      "scopeAssessment": {
+        "primaryContribution": "报道可分离的肼三氟硼酸盐新型有机合成砌块，并通过与1,3-二羰基底物或共轭炔酮反应，实现较高区域控制的N-硼甲基吡唑系列制备。",
+        "preparativeTransformation": "使用新型肼三氟硼酸盐与二羰基试剂或共轭炔酮发生缩合、杂环化，得到N-甲基硼酸酯或三氟硼酸盐取代的吡唑产物；所保留的有机硼官能团可进入芳香亲电取代及三组分Petasis硼曼尼希反应。",
+        "generalityEvidence": "ACS开放Letter摘要和后续正文显示可制备多种N-硼甲基吡唑，使用区域可控缩合，并通过SEAr、Petasis三组分反应与palovarotene类似物合成展示砌块可迁移性。其价值不是单一盐的晶体结构或材料性质。",
+        "sourceEvidence": "出版社Article History核对：ACS Original Letter official Published Online=2026-07-27，https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02953/5233818/Synthesis-and-Reactions-of-Hydrazine；冻结Crossref+OpenAlex来源根 2026-07-22_2026-07-31_organic-letters，原始raw Git blob 67f6960bccfa31a1d2477390309426061dc65563，reviewer queue Git blob aaa0d589644e29ebad050a5d8f6b088d61d24a68，source root SHA256 0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61；作者及卷期页/论文编号来自相同DOI的冻结来源。研究范围依据出版社公开摘要或开放正文核查；未抓取或复制受限全文、SI、PDF、主图。",
+        "boundaryChallenge": "二次反证：文中强调的新盐是具有后续反应能力的有机硼砌块，不应把全部N-硼甲基吡唑称作最后可直接偶联的游离硼酸。作者并非声称所有肼衍生物与全部羰基伙伴都定量成环，区域控制针对已测试的1,3-二羰基和共轭炔酮。药物类似物属于合成示范而非证明原药疗效。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02953",
+        "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02953/5233818/Synthesis-and-Reactions-of-Hydrazine",
+        "publisherOnlineDate": "2026-07-27",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "sourceReviewQueueGitBlobSha": "aaa0d589644e29ebad050a5d8f6b088d61d24a68",
+        "stageSourceSha256": "0a6b01c9f69433c2bd3e8e0c008e3e872e2e5c2e70b65b3d341e55f9868a5e61",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-07-27",
+          "officialPublisherFirstOnline": "2026-07-27",
+          "publisherArticlePage": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02953/5233818/Synthesis-and-Reactions-of-Hydrazine",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_OrgLett_Original_Letter_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "报道可分离的肼三氟硼酸盐新型有机合成砌块，并通过与1,3-二羰基底物或共轭炔酮反应，实现较高区域控制的N-硼甲基吡唑系列制备。 使用新型肼三氟硼酸盐与二羰基试剂或共轭炔酮发生缩合、杂环化，得到N-甲基硼酸酯或三氟硼酸盐取代的吡唑产物；所保留的有机硼官能团可进入芳香亲电取代及三组分Petasis硼曼尼希反应。 ACS开放Letter摘要和后续正文显示可制备多种N-硼甲基吡唑，使用区域可控缩合，并通过SEAr、Petasis三组分反应与palovarotene类似物合成展示砌块可迁移性。其价值不是单一盐的晶体结构或材料性质。",
+          "assessment": "报道可分离的肼三氟硼酸盐新型有机合成砌块，并通过与1,3-二羰基底物或共轭炔酮反应，实现较高区域控制的N-硼甲基吡唑系列制备。 使用新型肼三氟硼酸盐与二羰基试剂或共轭炔酮发生缩合、杂环化，得到N-甲基硼酸酯或三氟硼酸盐取代的吡唑产物；所保留的有机硼官能团可进入芳香亲电取代及三组分Petasis硼曼尼希反应。 ACS开放Letter摘要和后续正文显示可制备多种N-硼甲基吡唑，使用区域可控缩合，并通过SEAr、Petasis三组分反应与palovarotene类似物合成展示砌块可迁移性。其价值不是单一盐的晶体结构或材料性质。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二次反证：文中强调的新盐是具有后续反应能力的有机硼砌块，不应把全部N-硼甲基吡唑称作最后可直接偶联的游离硼酸。作者并非声称所有肼衍生物与全部羰基伙伴都定量成环，区域控制针对已测试的1,3-二羰基和共轭炔酮。药物类似物属于合成示范而非证明原药疗效。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "onlyAcademicApproval": true,
+    "noPublication": true,
+    "noD1": true,
+    "noTOCorFigureOrPdf": true,
+    "noTodayOrHotOrWechat": true,
+    "requiresSoleBeijing08": true
+  }
+}
