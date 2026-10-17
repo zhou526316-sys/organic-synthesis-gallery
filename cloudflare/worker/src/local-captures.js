@@ -955,6 +955,29 @@ export async function importLocalCapture(request, env, payload) {
   if(kind==='official'){
     if(!env?.DB)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
       code:'official_toc_db_unavailable'}};
+    // The public /api/toc response gives an existing reviewed
+    // primary_visual_assets 'official_visual' precedence over toc_assets.
+    // Without this preflight importToc may save the new D1 TOC and yet
+    // return the prior primary's different SHA: an apparent opaque 503.
+    // Treat the discrepancy as a review conflict *before* any R2 writes.
+    let primaryOfficial=null;
+    try{
+      primaryOfficial=await env.DB.prepare(
+        'SELECT kind,r2_key,content_hash FROM primary_visual_assets WHERE doi = ? LIMIT 1'
+      ).bind(doi).first();
+    }catch(error){
+      if(!/no such table|no such column|SQLITE_ERROR/i.test(String(error?.message||error)))
+        throw error;
+    }
+    if(primaryOfficial?.kind==='official_visual'&&primaryOfficial.r2_key
+      &&String(primaryOfficial.content_hash||'').toLowerCase()!==hash.slice(0,32)){
+      return {status:409,body:{doi,kind,stored:false,localStored:false,
+        productionTocStored:false,reviewRequired:true,
+        code:'official_primary_visual_conflict_review_required',
+        contentHash:hash.slice(0,32),
+        existingHash:String(primaryOfficial.content_hash||'').toLowerCase(),
+        existingProduction:true}};
+    }
     const existing=await env.DB.prepare(
       'SELECT available,r2_key,content_hash FROM toc_assets WHERE doi = ? LIMIT 1'
     ).bind(doi).first();
@@ -1057,6 +1080,7 @@ export async function importLocalCapture(request, env, payload) {
           stored:true,localStored:true,productionTocStored:false,
           doi,kind,contentHash:hash.slice(0,32),code:reason,error:reason,
           promotionStatus:promoStatus,promotionCode:nestedCode||'none',
+          productionReadSource:String(promoted?.body?.reason||'').replace(/[^a-z0-9_]/gi,'_').slice(0,60),
           ...hashConflict?{existingHash:currentHash,reviewRequired:true}:{},
           updatedAt:now
         }
