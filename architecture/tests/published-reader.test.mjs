@@ -110,6 +110,28 @@ test('indexed discovery resolves only revision-bound content records', async () 
   );
 });
 
+test('concurrent DOI reads share one immutable shard download and retain hash validation', async () => {
+  const second = { ...papers[0], doi: '10.1234/archive-second',
+    url: 'https://doi.org/10.1234/archive-second', title: 'Second archive record' };
+  const source = fixture({ sourcePapers: [...papers, second] });
+  const fetched = [];
+  const fetcher = async (url, init) => {
+    const path = new URL(url).pathname;
+    fetched.push(path);
+    if (path.includes('/shards/')) await new Promise(resolve => setTimeout(resolve, 40));
+    return source.fetcher(url, init);
+  };
+  const client = await new PublishedCatalogClient('https://example.invalid/', { fetcher }).open();
+  const expected = ['10.1234/archive', '10.1234/archive-second'].map(doi =>
+    ({ doi, revision: client.membership.members[doi] }));
+  const rows = await client.resolveIndexed(expected, new AbortController().signal);
+  assert.deepEqual(rows.map(row => row.doi), expected.map(row => row.doi));
+  const shardReads = fetched.filter(path => path.includes('/shards/'));
+  assert.equal(shardReads.length, 1, 'same immutable shard must be downloaded exactly once');
+  await assert.rejects(client.resolveIndexed([{doi:expected[0].doi, revision:'f'.repeat(64)}]),
+    /indexed_membership_revision_mismatch/);
+});
+
 test('global search resolves Archive records on demand', async () => {
   const client = await new PublishedCatalogClient('https://example.invalid/', fixture()).open();
   const rows = await client.search('Archive nickel');

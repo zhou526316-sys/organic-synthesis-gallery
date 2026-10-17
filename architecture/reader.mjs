@@ -14,7 +14,7 @@ export class CatalogReader {
     assert(this.base.pathname.endsWith('/'), 'catalog_base_requires_trailing_slash');
     assert(Number.isSafeInteger(cacheEntries) && cacheEntries > 0, 'invalid_cache_limit');
     this.fetcher = fetcher; this.cacheEntries = cacheEntries; this.maxObjectBytes = maxObjectBytes; this.currentRef = currentRef;
-    this.cache = new Map(); this.catalog = null;
+    this.cache = new Map(); this.inFlight = new Map(); this.catalog = null;
   }
   async read(ref, signal) {
     const pathname = typeof ref === 'string' ? ref : ref.path;
@@ -23,6 +23,17 @@ export class CatalogReader {
     if (this.cache.has(pathname)) {
       const cached = this.cache.get(pathname); this.cache.delete(pathname); this.cache.set(pathname, cached); return cached;
     }
+    // Share only an identical immutable reference under the same AbortSignal.
+    // A newly cancelled search may not inherit an earlier request's abort.
+    const key = typeof ref === 'string' ? pathname : `${pathname}:${ref.sha256}:${ref.bytes}`;
+    const previous = this.inFlight.get(key);
+    if (previous && previous.signal === signal) return previous.promise;
+    const promise = this.readVerifiedObject(ref, pathname, signal);
+    this.inFlight.set(key, { signal, promise });
+    try { return await promise; }
+    finally { if (this.inFlight.get(key)?.promise === promise) this.inFlight.delete(key); }
+  }
+  async readVerifiedObject(ref, pathname, signal) {
     const url = new URL(pathname, this.base);
     const response = await this.fetcher(url, { cache: pathname === 'current.json' ? 'no-cache' : 'default', signal, credentials: 'omit' });
     assert(response.ok, `catalog_http_${response.status}:${pathname}`);
