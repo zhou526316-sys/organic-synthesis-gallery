@@ -425,9 +425,31 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
 
+  // Mark the real nodes: a complete remount after search is the trigger for
+  // Chromium password-manager associating the search keyword with login.
+  await page.evaluate(() => {
+    (window as any).__stableSearchNodes = {
+      search: document.querySelector('#search'),
+      account: document.querySelector('gallery-user-shell'),
+    };
+  });
   await page.locator('#search').fill('10.');
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
     .toBe('d1-index');
+  const searchShell = await page.evaluate(() => {
+    const search = document.querySelector<HTMLInputElement>('#search');
+    return {
+      searchPreserved: search === (window as any).__stableSearchNodes.search,
+      accountPreserved: document.querySelector('gallery-user-shell') === (window as any).__stableSearchNodes.account,
+      searchAutocomplete: search?.autocomplete,
+      searchType: search?.type,
+      searchName: search?.name,
+    };
+  });
+  expect(searchShell).toEqual({
+    searchPreserved: true, accountPreserved: true,
+    searchAutocomplete: 'off', searchType: 'search', searchName: 'gallery-literature-search',
+  });
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
   await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(RESULT_WINDOW_SIZE, data.memberCount));
   await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
@@ -963,11 +985,17 @@ test('a burst of search keystrokes does not rebuild gallery cards or schedule st
       loading: gallery.dataset.searchPending === 'true',
       count: document.querySelector('#resultCount')?.textContent,
       cards: gallery.querySelectorAll('.card').length,
+      stale: gallery.classList.contains('search-stale'),
+      notice: gallery.querySelector('[data-search-progress]')?.textContent || '',
     };
   });
   expect(result.loading).toBe(true);
   expect(result.count).toBe('…');
-  expect(result.cards).toBe(0);
+  // Previously loaded cards remain visible but explicitly marked as previous
+  // results until a verified global response is ready.
+  expect(result.cards).toBeGreaterThan(0);
+  expect(result.stale).toBe(true);
+  expect(result.notice).toMatch(/上一次结果|previous results/);
   expect(result.childRebuilds).toBeLessThanOrEqual(2);
 });
 
