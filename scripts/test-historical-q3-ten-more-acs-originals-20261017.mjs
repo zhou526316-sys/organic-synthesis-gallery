@@ -49,7 +49,14 @@ test('ten independent original syntheses are 268-to-278 scholarly approvals, not
    const x=approved.get(row.doi);
    assert.ok(x,'missing accepted DOI '+row.doi);
    assert.deepEqual(x,row);
-   assert.equal(published.has(x.doi),false,'DOI already formally admitted '+x.doi);
+   if(published.has(x.doi)){
+     const formalRow=formal.articles.find(y=>y.doi===x.doi);
+     assert.equal(formalRow.ingestionChannel,'historical_backfill');
+     assert.equal(formalRow.mediaPolicy,'toc_only');
+     assert.equal(formalRow.addedDate,'');
+     assert.notEqual(formalRow.new,true);
+     assert.equal(formalRow.date,x.date);
+   }
    assert.equal(x.date,dates.get(x.doi));
    assert.equal(x.reviewEvidence.publisherOnlineDate,x.date);
    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.sourceFrozenDate,x.date);
@@ -120,7 +127,10 @@ test('publisher route date dispute, original two pendings, and owner policy veto
    onPolicyVeto:x=>vetoes.push(x)
  });
  const allow=new Set(available.map(x=>x.doi));
- for(const x of extra)assert.ok(allow.has(x.doi),'unpublished original should await fixed slot '+x.doi);
+ for(const x of extra){
+   if(published.has(x.doi))assert.equal(allow.has(x.doi),false,'formal archive DOI cannot release twice '+x.doi);
+   else assert.ok(allow.has(x.doi),'not-yet-published original should await fixed slot '+x.doi);
+ }
  assert.ok(vetoes.some(x=>x.doi==='10.1038/s41467-026-77616-8'));
  assert.ok(available.every(x=>x.new===false&&x.addedDate===''));
  for(const g of [joc.guards,ol.guards])for(const value of Object.values(g))assert.equal(value,true);
