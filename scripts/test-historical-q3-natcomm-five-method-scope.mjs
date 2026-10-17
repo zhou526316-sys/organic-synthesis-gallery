@@ -28,7 +28,17 @@ test('five exact Q3 Nature Communications Original Articles retain original DOI,
     assert.equal(x.citation.doi,x.doi);
     assert.equal(String(x.citation.articleNumber),x.publisherArticleNumber);
     assert.ok(x.authors.length>=3);
-    assert.ok(!published.has(x.doi));
+    // Original source proof has no publication authority. A later legitimate
+    // 08:00 archive writer may admit only science-approved, non-vetoed DOI.
+    if(published.has(x.doi)){
+      assert.ok(approved.includes(x.doi),'publisher date alone cannot admit '+x.doi);
+      const card=formal.articles.find(r=>r.doi===x.doi);
+      assert.equal(card.date,x.firstOnline);
+      assert.equal(card.ingestionChannel,'historical_backfill');
+      assert.equal(card.mediaPolicy,'toc_only');
+      assert.equal(card.addedDate,'');
+      assert.notEqual(card.new,true);
+    }
     assert.ok(!owner.has(x.doi));
   }
 });
