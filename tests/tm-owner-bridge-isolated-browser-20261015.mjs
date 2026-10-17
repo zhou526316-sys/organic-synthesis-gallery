@@ -7,7 +7,7 @@ const api='https://api.gczhouwld.com';
 const owner=site+'/private-pdf-owner-setup.html';
 const html=await readFile('public/private-pdf-owner-setup.html','utf8');
 const bundle=await readFile('public/gallery-vpn-bridge.user.js','utf8');
-assert.match(bundle,/\/\/ @version\s+2\.2\.92/);
+assert.match(bundle,/\/\/ @version\s+2\.2\.93/);
 assert.ok(bundle.indexOf('owner_isolated_bridge_v2')<bundle.indexOf("const DIAGNOSTIC_ID = 'vpn-lit-bridge-loader-status'"));
 assert.ok(bundle.includes("if (!((location.pathname === '/private-pdf-owner-setup.html'"),'Owner page must skip legacy collector');
 const browser=await chromium.launch({headless:true});
