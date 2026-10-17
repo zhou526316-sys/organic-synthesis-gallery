@@ -47,7 +47,15 @@ test('nine DOI-distinct publisher-dated original preparative articles have indep
    const x=accepted.get(proof.doi),[date,journal]=expected.get(proof.doi);
    assert.ok(x,proof.doi);
    assert.deepEqual(x,proof);
-   assert.equal(published.has(x.doi),false,'already formal: '+x.doi);
+   // A later sole 08:00 publication may move this reviewed DOI into Archive.
+   if(published.has(x.doi)){
+     const live=published.get(x.doi);
+     assert.equal(live.date,x.date);
+     assert.equal(live.ingestionChannel,'historical_backfill');
+     assert.equal(live.mediaPolicy,'toc_only');
+     assert.equal(live.addedDate,'');
+     assert.notEqual(live.new,true);
+   }
    assert.equal(x.date,date);
    assert.equal(x.journal,journal);
    assert.equal(x.reviewEvidence.publisherOnlineDate,date);
@@ -122,7 +130,7 @@ test('existing fixed Beijing 08:00 writer and owner policy veto are not bypassed
    onPolicyVeto:x=>veto.push(x)
  });
  const selectedDois=new Set(selected.map(x=>x.doi));
- for(const x of batch)assert.ok(selectedDois.has(x.doi));
+ for(const x of batch)if(!published.has(x.doi))assert.ok(selectedDois.has(x.doi));
  assert.ok(veto.some(x=>x.doi==='10.1038/s41467-026-77616-8'));
  for(const v of Object.values(part1.guards))assert.equal(v,true);
  for(const v of Object.values(part2.guards))assert.equal(v,true);
