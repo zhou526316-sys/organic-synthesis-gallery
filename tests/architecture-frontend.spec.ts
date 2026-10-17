@@ -509,6 +509,56 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   }
 });
 
+test('date range exposes complete cold Archive via bounded static pagination after D1 409', async ({ page }) => {
+  const data = fixture();
+  let indexRequests = 0;
+  await page.route('**/api/literature/catalog-view', route => {
+    indexRequests += 1;
+    return route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({
+      error:'literature_catalog_generation_not_ready',
+    })});
+  });
+  await stubOptionalApi(page);
+  const base = process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174';
+  await page.goto(base + '/', {waitUntil:'domcontentloaded'});
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    {timeout:30000}).toBe('architecture-v1');
+
+  await page.locator('#dateFrom').fill('2026-01-01');
+  await page.locator('#dateFrom').dispatchEvent('change');
+  await page.locator('#dateTo').fill('2026-10-31');
+  await page.locator('#dateTo').dispatchEvent('change');
+
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    {timeout:30000}).toBe('static-date-page');
+  const dateExpected = data.indexedItems.filter(row => row.firstOnlineDate
+    && row.firstOnlineDate >= '2026-01-01' && row.firstOnlineDate <= '2026-10-31');
+  await expect(page.locator('#resultCount')).toHaveText(String(dateExpected.length));
+  await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(RESULT_WINDOW_SIZE,dateExpected.length));
+  await expect(page.locator('.architecture-read-limited')).toContainText(/日期范围|date-filtered/);
+  expect(indexRequests).toBeGreaterThan(0);
+
+  const totalPages = Math.ceil(dateExpected.length / RESULT_WINDOW_SIZE);
+  expect(totalPages).toBeGreaterThan(1);
+  await page.locator('#resultPageJumpInput').fill(String(totalPages));
+  await page.locator('#resultPageJumpButton').click();
+  await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp('(?:第 |Page )'+totalPages+'/'));
+  const coldExpected = dateExpected.filter(row => row.firstOnlineDate?.startsWith('2026-01'));
+  expect(coldExpected.length).toBeGreaterThan(0);
+  await expect.poll(() => page.locator('#gallery > .card[data-doi]').all()
+    .then(async elements => elements.map(async element => element.getAttribute('data-doi'))
+      .reduce(async (arr, p) => [...await arr, await p],Promise.resolve([] as (string|null)[])))
+  ).toEqual(expect.arrayContaining([coldExpected[0].doi]));
+
+  await page.locator('#dateTo').fill('2026-03-31');
+  await page.locator('#dateTo').dispatchEvent('change');
+  const narrow = dateExpected.filter(row => row.firstOnlineDate && row.firstOnlineDate <= '2026-03-31');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    {timeout:30000}).toBe('static-date-page');
+  await expect(page.locator('#resultCount')).toHaveText(String(narrow.length));
+  await expect(page.locator('#gallery > .card')).toHaveCount(narrow.length);
+});
+
 test('D1 metadata is discovery-only and card content comes from the verified static revision', async ({ page }) => {
   const data = fixture();
   const canonical = data.indexedItems.find(item => item.doi === data.archiveDoi);
