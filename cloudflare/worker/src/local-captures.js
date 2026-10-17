@@ -893,6 +893,42 @@ export async function promoteStagedArticleFigures(request, env, payload = {}) {
   };
 }
 
+// The local TOC index is shared by the publisher controller, its independent
+// Gallery image outbox and the deployment reconciler. A plain R2 GET+PUT
+// overwrites another DOI's concurrent change. Commit by R2 ETag CAS and
+// preserve all existing records; corrupted indexes are never replaced by {}.
+export async function commitVerifiedLocalTocIndex(env,identity,record){
+  const limit=32*1024*1024;
+  for(let attempt=0;attempt<4;attempt++){
+    const object=await env.MEDIA.get(INDEX_KEY);
+    if(object&&(!object.etag||Number(object.size||0)>limit))
+      throw new Error('local_toc_index_etag_or_size_invalid');
+    let index;
+    if(object){
+      const raw=await object.text();
+      if(raw.length>limit)throw new Error('local_toc_index_size_limit');
+      try{index=JSON.parse(raw);}
+      catch{throw new Error('local_toc_index_invalid_json');}
+      if(!index||!index.items||typeof index.items!=='object'||Array.isArray(index.items))
+        throw new Error('local_toc_index_invalid_schema');
+    }else index={version:1,updatedAt:0,items:{}};
+    const prior=index.items[identity];
+    if(prior&&prior.r2Key===record.r2Key&&prior.contentHash===record.contentHash
+      &&Number(prior.mediaGeneration)===MEDIA_REBUILD_EPOCH)
+      return {committed:true,reused:true,attempts:attempt+1};
+    index.items[identity]=record;
+    index.version=1;index.updatedAt=record.updatedAt;
+    const saved=await env.MEDIA.put(INDEX_KEY,JSON.stringify(index),{
+      onlyIf:object?{etagMatches:object.etag}:{etagDoesNotMatch:'*'},
+      httpMetadata:{contentType:'application/json; charset=utf-8',cacheControl:'no-store'}
+    });
+    if(saved)return {committed:true,reused:false,attempts:attempt+1};
+    // A mismatch is a retriable concurrent index writer, never permission to
+    // discard the newer index or claim a stored receipt.
+  }
+  throw new Error('local_toc_index_cas_conflict');
+}
+
 export async function importLocalCapture(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
@@ -913,6 +949,61 @@ export async function importLocalCapture(request, env, payload) {
     return {status:409,body:{doi,kind,stored:false,productionTocStored:false,
       code:'angew_verified_substrate_scope_bytes_not_toc'}};
   }
+  // Validate the existing authoritative TOC before creating an R2 capture
+  // object or mutating the local capture index. Previously an HTTP 409
+  // conflict still overwrote the local-index row, leading to repeated uploads.
+  if(kind==='official'){
+    if(!env?.DB)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+      code:'official_toc_db_unavailable'}};
+    // The public /api/toc response gives an existing reviewed
+    // primary_visual_assets 'official_visual' precedence over toc_assets.
+    // Without this preflight importToc may save the new D1 TOC and yet
+    // return the prior primary's different SHA: an apparent opaque 503.
+    // Treat the discrepancy as a review conflict *before* any R2 writes.
+    let primaryOfficial=null;
+    try{
+      primaryOfficial=await env.DB.prepare(
+        'SELECT kind,r2_key,content_hash FROM primary_visual_assets WHERE doi = ? LIMIT 1'
+      ).bind(doi).first();
+    }catch(error){
+      if(!/no such table|no such column|SQLITE_ERROR/i.test(String(error?.message||error)))
+        throw error;
+    }
+    if(primaryOfficial?.kind==='official_visual'&&primaryOfficial.r2_key
+      &&String(primaryOfficial.content_hash||'').toLowerCase()!==hash.slice(0,32)){
+      return {status:409,body:{doi,kind,stored:false,localStored:false,
+        productionTocStored:false,reviewRequired:true,
+        code:'official_primary_visual_conflict_review_required',
+        contentHash:hash.slice(0,32),
+        existingHash:String(primaryOfficial.content_hash||'').toLowerCase(),
+        existingProduction:true}};
+    }
+    const existing=await env.DB.prepare(
+      'SELECT available,r2_key,content_hash FROM toc_assets WHERE doi = ? LIMIT 1'
+    ).bind(doi).first();
+    if(existing&&Number(existing.available)===1&&existing.r2_key){
+      const previousHash=String(existing.content_hash||'').toLowerCase();
+      if(previousHash!==hash.slice(0,32)){
+        return {status:409,body:{doi,kind,stored:false,localStored:false,
+          productionTocStored:false,code:'official_toc_conflict_review_required',
+          contentHash:hash.slice(0,32),existingHash:previousHash,
+          existingProduction:true,reviewRequired:true}};
+      }
+      // D1 'available' alone is not proof that the R2 object is readable
+      // with the claimed SHA. Never close a gap from metadata alone.
+      const prior=await env.MEDIA.get(existing.r2_key);
+      if(!prior)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+        code:'official_toc_production_object_unavailable'}};
+      const priorHash=(await sha256Hex(new Uint8Array(await prior.arrayBuffer()))).slice(0,32);
+      if(priorHash!==previousHash)return {status:503,body:{doi,kind,stored:false,productionTocStored:false,
+        code:'official_toc_production_hash_mismatch'}};
+      const url=publicMediaUrl(request,existing.r2_key);
+      return {status:200,body:{doi,kind,stored:true,localStored:false,
+        productionTocStored:true,productionFallbackStored:false,
+        importState:'already_verified_production_bytes',contentHash:previousHash,
+        imageUrl:url,productionToc:{available:true,imageUrl:url,reason:'already_cached'}}};
+    }
+  }
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const key = `${IMAGE_PREFIX}${doiHash.slice(0, 24)}-${kind}-${hash.slice(0, 16)}.${extensionFor(image.contentType)}`;
   await env.MEDIA.put(key, image.bytes, {
@@ -920,10 +1011,9 @@ export async function importLocalCapture(request, env, payload) {
     customMetadata: { doi, kind, contentHash: hash.slice(0, 32), source: safeText(payload?.source || 'windows-toc-collector', 80) },
   });
 
-  const index = await readIndex(env);
   const now = Date.now();
   const identity = `${doi}|${kind}`;
-  index.items[identity] = {
+  const row = {
     doi,
     jobId: payload.jobId,
     captureVersion: payload.captureVersion,
@@ -943,11 +1033,16 @@ export async function importLocalCapture(request, env, payload) {
     capturedAt: typeof payload?.capturedAt === 'string' ? payload.capturedAt.slice(0, 80) : '',
     updatedAt: now,
   };
-  index.version = 1;
-  index.updatedAt = now;
-  await env.MEDIA.put(INDEX_KEY, JSON.stringify(index), {
-    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
-  });
+  try{
+    await commitVerifiedLocalTocIndex(env,identity,row);
+  }catch(error){
+    const detail=String(error?.message||'local_toc_index_commit_failed');
+    const code=/^local_toc_index_[a-z_]+$/.test(detail)?detail:'local_toc_index_commit_failed';
+    return {status:503,body:{doi,kind,stored:false,localStored:false,
+      productionTocStored:false,productionFallbackStored:false,
+      objectStored:true,contentHash:hash.slice(0,32),code,
+      error:'local_toc_index_commit_failed',retryAfterMs:5000}};
+  }
 
   let productionToc = null;
   let productionFallback = null;
@@ -969,19 +1064,26 @@ export async function importLocalCapture(request, env, payload) {
     });
     if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true
       || String(promoted?.body?.contentHash || '').toLowerCase() !== hash.slice(0, 32)) {
+      const promoStatus=Number(promoted?.status||0);
+      const currentHash=String(promoted?.body?.contentHash||'').toLowerCase();
+      // A concurrent writer may have populated production after preflight.
+      // This is a review conflict, not a transient 503 or a successful save.
+      const hashConflict=promoStatus===200&&promoted?.body?.available===true
+        &&currentHash&&currentHash!==hash.slice(0,32);
+      const reason=hashConflict?'official_toc_conflict_review_required'
+        :'official_toc_production_promotion_failed';
+      const nestedCode=String(promoted?.body?.code||promoted?.body?.error||'')
+        .replace(/[^a-z0-9_]/gi,'_').slice(0,80);
       return {
-        status: 503,
-        body: {
-          stored: true,
-          localStored: true,
-          productionTocStored: false,
-          doi,
-          kind,
-          contentHash: hash.slice(0, 32),
-          error: 'official_toc_production_promotion_failed',
-          promotionStatus: Number(promoted?.status || 0),
-          updatedAt: now,
-        },
+        status:hashConflict?409:503,
+        body:{
+          stored:true,localStored:true,productionTocStored:false,
+          doi,kind,contentHash:hash.slice(0,32),code:reason,error:reason,
+          promotionStatus:promoStatus,promotionCode:nestedCode||'none',
+          productionReadSource:String(promoted?.body?.reason||'').replace(/[^a-z0-9_]/gi,'_').slice(0,60),
+          ...hashConflict?{existingHash:currentHash,reviewRequired:true}:{},
+          updatedAt:now
+        }
       };
     }
     productionToc = promoted.body;
