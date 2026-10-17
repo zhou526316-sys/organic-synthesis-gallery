@@ -65,7 +65,10 @@ test('eleven ACS original methods are scientifically audited separately from 08:
      const formalRow=live.articles.find(x=>x.doi===doi);
      assert.equal(formalRow.ingestionChannel,'historical_backfill');
      assert.equal(formalRow.mediaPolicy,'toc_only');
-     assert.equal(formalRow.new,false);
+     // A serialized historical card may omit a default false flag.
+     // Preserve the actual policy: it must never be marked daily-new.
+     assert.notEqual(formalRow.new,true);
+     assert.equal(formalRow.date,row.date);
      assert.equal(formalRow.addedDate,'');
    }
    assert.equal(['JOC','Organic Letters'].includes(row.journal),true);
