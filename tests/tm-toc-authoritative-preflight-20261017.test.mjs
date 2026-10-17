@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {webcrypto} from 'node:crypto';
-import {importLocalCapture} from '../cloudflare/worker/src/local-captures.js';
+import {importLocalCapture,commitVerifiedLocalTocIndex} from '../cloudflare/worker/src/local-captures.js';
 
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const doi='10.1021/acs.orglett.6c02752';
@@ -78,4 +78,53 @@ test('cross-DOI and capture nonce safeguards execute before cache preflight',asy
  assert.equal(h.calls.selects,0);assert.equal(h.calls.r2Reads,0);
 });
 
-console.log('TM_TOC_AUTHORITATIVE_PREFLIGHT '+JSON.stringify({tests:4,externalPublisherRequests:0,productionMediaWrites:0}));
+test('two concurrent captured DOIs preserve each other through R2 CAS retries',async()=>{
+ let raw=null,etag=null,revision=0,conflicts=0;
+ const bucket={
+   async get(key){
+     assert.equal(key,'local-captures/index.json');
+     if(raw===null)return null;
+     const snapshot=raw,tag=etag;
+     return {etag:tag,size:snapshot.length,text:async()=>snapshot};
+   },
+   async put(key,value,options){
+     assert.equal(key,'local-captures/index.json');
+     const ok=etag===null?options.onlyIf.etagDoesNotMatch==='*'
+       :options.onlyIf.etagMatches===etag;
+     if(!ok){conflicts++;return null;}
+     raw=value;etag='verified-r2-'+(++revision);return {etag};
+   }
+ };
+ const record=doi=>({doi,r2Key:'local-captures/images/'+doi+'.png',contentHash:'f'.repeat(32),
+    mediaGeneration:1790082000000,updatedAt:Date.now()});
+ const a=record('10.1021/jacs.6c00001'),b=record('10.1021/jacs.6c00002');
+ const [ra,rb]=await Promise.all([
+   commitVerifiedLocalTocIndex({MEDIA:bucket},a.doi+'|official',a),
+   commitVerifiedLocalTocIndex({MEDIA:bucket},b.doi+'|official',b)
+ ]);
+ assert.equal(ra.committed,true);assert.equal(rb.committed,true);
+ assert.equal(Object.keys(JSON.parse(raw).items).length,2);
+ assert.ok(conflicts>=1,'fixture forces a concurrent CAS conflict, not a last-writer-wins overwrite');
+});
+
+test('invalid or unversioned R2 index is fail-closed without replacement',async()=>{
+ for(const index of [
+   {raw:'{invalid',etag:'original'},
+   {raw:JSON.stringify({items:[]}),etag:'original'},
+   {raw:JSON.stringify({items:{}}),etag:null}
+ ]){
+   let writes=0;
+   const env={MEDIA:{
+     get:async()=>({etag:index.etag,size:index.raw.length,text:async()=>index.raw}),
+     put:async()=>{writes++;return {etag:'bad-write'}}
+   }};
+   await assert.rejects(
+     ()=>commitVerifiedLocalTocIndex(env,'10.1021/jacs.6c00001|official',{
+       doi:'10.1021/jacs.6c00001',r2Key:'local-captures/images/test.png',contentHash:'a'.repeat(32),
+       mediaGeneration:1790082000000,updatedAt:Date.now()
+     }),/local_toc_index_(?:invalid_json|invalid_schema|etag_or_size_invalid)/);
+   assert.equal(writes,0);
+ }
+});
+
+console.log('TM_TOC_AUTHORITATIVE_PREFLIGHT '+JSON.stringify({tests:6,externalPublisherRequests:0,productionMediaWrites:0}));
