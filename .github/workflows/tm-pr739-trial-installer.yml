@@ -1,0 +1,57 @@
+name: PR739 Tampermonkey trial installer package
+on:
+  push:
+    branches:
+      - fix/tm-heartbeat-recovery-20261017
+    paths:
+      - scripts/build-pr739-canary.mjs
+      - .github/workflows/tm-pr739-trial-installer.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package-pr739-trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify exact approved candidate and circuit breaker
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test tests/tm-heartbeat-circuit-20261015.test.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+          grep -F 'function recoveryProbePriority(run,row)' public/toc-mainline.user.js
+          grep -F 'candidates.sort(function(a,b){return recoveryProbePriority(run,a)-recoveryProbePriority(run,b);});' public/toc-mainline.user.js
+      - name: Build current verified Bridge and isolated trial artifact
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          node scripts/build-pr739-canary.mjs
+          node --check public/gallery-vpn-bridge-pr739-canary.user.js
+          grep -F '// @version      2.2.93' public/gallery-vpn-bridge-pr739-canary.user.js
+          grep -F "var INSTALL_REVISION = '6.2.74';" public/gallery-vpn-bridge-pr739-canary.user.js
+          grep -F "const ENGINE_REVISION = '6.2.74';" public/gallery-vpn-bridge-pr739-canary.user.js
+          if grep -Eq '^// @(updateURL|downloadURL)' public/gallery-vpn-bridge-pr739-canary.user.js; then
+            echo 'Canary must not point at production updater'; exit 1
+          fi
+          sha256sum public/gallery-vpn-bridge-pr739-canary.user.js | tee pr739-canary.sha256
+          git diff --check
+      - name: Preserve owner-test installer for seven days
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr739-vpn-bridge-trial-2.2.93-6.2.74
+          path: |
+            public/gallery-vpn-bridge-pr739-canary.user.js
+            pr739-canary.sha256
+          retention-days: 7
