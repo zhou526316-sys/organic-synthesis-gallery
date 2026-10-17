@@ -1,20 +1,20 @@
 {
   "schemaVersion": "gallery-history-review-worklist-v1",
   "mode": "scientific_review_worklist_only_not_scope_decision",
-  "producedAt": "2026-10-16T18:46:08.393Z",
-  "sourceCompletedRoots": 407,
-  "uniqueCandidateDois": 58088,
+  "producedAt": "2026-10-17T17:43:36.403Z",
+  "sourceCompletedRoots": 417,
+  "uniqueCandidateDois": 58548,
   "statusCounts": {
-    "alreadyPublished": 898,
-    "approvedAwaiting08": 132,
+    "alreadyPublished": 1029,
+    "approvedAwaiting08": 25,
     "sourcePending": 2,
     "explicitlyExcluded": 6,
-    "needsReview": 57050
+    "needsReview": 57486
   },
   "maximumRows": 320,
   "selected": 320,
   "distinctReviewDois": 320,
-  "remainingUnselectedRequiresReview": 56730,
+  "remainingUnselectedRequiresReview": 57166,
   "byJournal": {
     "JACS": 20,
     "Angew": 20,
@@ -2050,18 +2050,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4gc06067a",
+      "doi": "10.1039/d4gc05807k",
       "journal": "Green Chemistry",
-      "title": "Electrochemical oxidation–cyclocondensation of chitin-derived 3-acetamido-5-acetylfuran (3A5AF) for the synthesis of 3-acetyl-4-acetamidopyrrolin-2-ones",
+      "title": "A novel electrochemical Hofmann-type rearrangement enables facile access to α-oxoisocyanates for the synthesis of N -carbamoylacetamides",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Juan J. Arteaga Giraldo",
+      "firstAuthor": "Xinxin Zhao",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-03-01_2025-03-31_green-chemistry"
+        "2025-02-01_2025-02-28_green-chemistry"
       ],
       "sourceFingerprints": [
-        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
+        "6defa374cacf78bdc51a697b9bf53f0acc3cd8f6efd7c8f505cc4c5df80616df"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -2399,12 +2399,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4gc06252c",
+      "doi": "10.1039/d4gc06067a",
       "journal": "Green Chemistry",
-      "title": "Photoredox-catalyzed chemo- and regioselective synthesis of homopropargyl amines via radical–radical cross-coupling",
+      "title": "Electrochemical oxidation–cyclocondensation of chitin-derived 3-acetamido-5-acetylfuran (3A5AF) for the synthesis of 3-acetyl-4-acetamidopyrrolin-2-ones",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Zulin Xiao",
+      "firstAuthor": "Juan J. Arteaga Giraldo",
       "priority": "P0",
       "sourceBatchIds": [
         "2025-03-01_2025-03-31_green-chemistry"
@@ -2465,18 +2465,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7517064",
+      "doi": "10.1002/anie.7149031",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
-      "date": "2026-09-01",
+      "title": "Photo‐Driven Asymmetric Nanopore Electrode Enables Endogenous ROS Monitoring in Single Neuroimmune Cells",
+      "date": "2026-08-31",
       "year": "2026",
-      "firstAuthor": "Mengyao Yuan",
+      "firstAuthor": "Hui‐Jun Wei",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-09-01_2026-09-07_angew"
+        "2026-08-22_2026-08-31_angew"
       ],
       "sourceFingerprints": [
-        "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
+        "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -2748,18 +2748,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4gc06307d",
+      "doi": "10.1039/d4gc06252c",
       "journal": "Green Chemistry",
-      "title": "Electrochemically enabled nickel-catalyzed controllable synthesis of monoaryl or diaryl amines from aryl halides and trimethylsilyl azides",
+      "title": "Photoredox-catalyzed chemo- and regioselective synthesis of homopropargyl amines via radical–radical cross-coupling",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Jiawei Huang",
+      "firstAuthor": "Zulin Xiao",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-04-01_2025-04-30_green-chemistry"
+        "2025-03-01_2025-03-31_green-chemistry"
       ],
       "sourceFingerprints": [
-        "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
+        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -3152,12 +3152,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7149031",
+      "doi": "10.1002/anie.5047569",
       "journal": "Angew",
-      "title": "Photo‐Driven Asymmetric Nanopore Electrode Enables Endogenous ROS Monitoring in Single Neuroimmune Cells",
-      "date": "2026-08-31",
+      "title": "Ligand Steric Hindrance‐Engineered Spatially Asymmetric Single‐Atom Catalysts: A New Platform for Electrochemical Oxygen Reduction",
+      "date": "2026-08-30",
       "year": "2026",
-      "firstAuthor": "Hui‐Jun Wei",
+      "firstAuthor": "Kai Cui",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -3433,18 +3433,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4gc06596d",
+      "doi": "10.1039/d4gc06307d",
       "journal": "Green Chemistry",
-      "title": "Design of a polymer supported chiral cobalt catalyst for heterogeneous enantioselective C–H activations",
+      "title": "Electrochemically enabled nickel-catalyzed controllable synthesis of monoaryl or diaryl amines from aryl halides and trimethylsilyl azides",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Jie Lin",
+      "firstAuthor": "Jiawei Huang",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-06-01_2025-06-30_green-chemistry"
+        "2025-04-01_2025-04-30_green-chemistry"
       ],
       "sourceFingerprints": [
-        "34626eae085dc8293a54ea82551cb8313ca2cb9bc49a45c97e06118e485661c4"
+        "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -3499,12 +3499,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.5047569",
+      "doi": "10.1002/anie.9685756",
       "journal": "Angew",
-      "title": "Ligand Steric Hindrance‐Engineered Spatially Asymmetric Single‐Atom Catalysts: A New Platform for Electrochemical Oxygen Reduction",
-      "date": "2026-08-30",
+      "title": "Asymmetric Dipole‐Field Engineering in Chiral Mesostructures for Efficient Photocatalytic N 2 Reduction",
+      "date": "2026-08-26",
       "year": "2026",
-      "firstAuthor": "Kai Cui",
+      "firstAuthor": "Xin Huang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -3780,18 +3780,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4gc06597b",
+      "doi": "10.1039/d4gc06596d",
       "journal": "Green Chemistry",
-      "title": "Site-selective electrochemical synthesis of nitrogen-enriched bis-pyrazole derivatives: a sustainable approach for N–N versus NN bond formation",
+      "title": "Design of a polymer supported chiral cobalt catalyst for heterogeneous enantioselective C–H activations",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Lei Liu",
+      "firstAuthor": "Jie Lin",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-03-01_2025-03-31_green-chemistry"
+        "2025-06-01_2025-06-30_green-chemistry"
       ],
       "sourceFingerprints": [
-        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
+        "34626eae085dc8293a54ea82551cb8313ca2cb9bc49a45c97e06118e485661c4"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -3846,12 +3846,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.9685756",
+      "doi": "10.1002/anie.7034615",
       "journal": "Angew",
-      "title": "Asymmetric Dipole‐Field Engineering in Chiral Mesostructures for Efficient Photocatalytic N 2 Reduction",
-      "date": "2026-08-26",
+      "title": "Hierarchical Flux Competition Governs Electrochemical‐Chemical Coupling in Redox‐Mediated Batteries",
+      "date": "2026-08-23",
       "year": "2026",
-      "firstAuthor": "Xin Huang",
+      "firstAuthor": "Shiqiang Huang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -4123,12 +4123,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00516g",
+      "doi": "10.1039/d4gc06597b",
       "journal": "Green Chemistry",
-      "title": "Asymmetric TiS 1 O 1 N 2 site for interfacial polarization with improved NO 3 − -to-NH 3 photoreduction",
+      "title": "Site-selective electrochemical synthesis of nitrogen-enriched bis-pyrazole derivatives: a sustainable approach for N–N versus NN bond formation",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Chunlei Xuan",
+      "firstAuthor": "Lei Liu",
       "priority": "P0",
       "sourceBatchIds": [
         "2025-03-01_2025-03-31_green-chemistry"
@@ -4189,12 +4189,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.7034615",
+      "doi": "10.1002/anie.9125401",
       "journal": "Angew",
-      "title": "Hierarchical Flux Competition Governs Electrochemical‐Chemical Coupling in Redox‐Mediated Batteries",
-      "date": "2026-08-23",
+      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
+      "date": "2026-08-22",
       "year": "2026",
-      "firstAuthor": "Shiqiang Huang",
+      "firstAuthor": "Yuye Jiao",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-22_2026-08-31_angew"
@@ -4464,18 +4464,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00523j",
+      "doi": "10.1039/d5gc00330j",
       "journal": "Green Chemistry",
-      "title": "Disclosing multiple factors influencing enantioselective copolymerization of CO 2 with meso -epoxides using β-diiminate Zn catalysts",
+      "title": "Electrochemically assisted Friedlander reaction: a highly efficient and sustainable method for quinoline synthesis",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Yolanda Rusconi",
+      "firstAuthor": "Hamid Salehzadeh",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-03-01_2025-03-31_green-chemistry"
+        "2025-02-01_2025-02-28_green-chemistry"
       ],
       "sourceFingerprints": [
-        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
+        "6defa374cacf78bdc51a697b9bf53f0acc3cd8f6efd7c8f505cc4c5df80616df"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -4530,18 +4530,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.9125401",
+      "doi": "10.1002/anie.2026-m1308073600",
       "journal": "Angew",
-      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
-      "date": "2026-08-22",
+      "title": "Inside Front Cover: Multi‐Level Asymmetric Mesoporous Nanochannels for Photothermal‐Regulated Dopamine Sensing (Angew. Chem. Int. Ed. 41/2026)",
+      "date": "2026-08-20",
       "year": "2026",
-      "firstAuthor": "Yuye Jiao",
+      "firstAuthor": "Abuduheiremu Awati",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-22_2026-08-31_angew"
+        "2026-08-15_2026-08-21_angew"
       ],
       "sourceFingerprints": [
-        "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+        "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -4809,18 +4809,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00566c",
+      "doi": "10.1039/d5gc00487j",
       "journal": "Green Chemistry",
-      "title": "Red-light-driven enantioselective Minisci-type addition to heteroarenes via recyclable semi-heterogeneous catalysis",
+      "title": "Development of a heterogeneous P–N–N tridentate ligand for iridium-catalyzed asymmetric hydrogenation of ketones in batch and flow",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Yajun Sun",
+      "firstAuthor": "Lizhou Zheng",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-04-01_2025-04-30_green-chemistry"
+        "2025-02-01_2025-02-28_green-chemistry"
       ],
       "sourceFingerprints": [
-        "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
+        "6defa374cacf78bdc51a697b9bf53f0acc3cd8f6efd7c8f505cc4c5df80616df"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -4875,12 +4875,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.2026-m1308073600",
+      "doi": "10.1002/anie.1293701",
       "journal": "Angew",
-      "title": "Inside Front Cover: Multi‐Level Asymmetric Mesoporous Nanochannels for Photothermal‐Regulated Dopamine Sensing (Angew. Chem. Int. Ed. 41/2026)",
-      "date": "2026-08-20",
+      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "date": "2026-08-19",
       "year": "2026",
-      "firstAuthor": "Abuduheiremu Awati",
+      "firstAuthor": "Jidong Yu",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -5158,18 +5158,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00732a",
+      "doi": "10.1039/d5gc00516g",
       "journal": "Green Chemistry",
-      "title": "Zwitterionic polymer-assisted asymmetrically coordinated Cu atoms on aligned carbonous microchannels for efficient electroreduction of CO 2 to CO",
+      "title": "Asymmetric TiS 1 O 1 N 2 site for interfacial polarization with improved NO 3 − -to-NH 3 photoreduction",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Congwei Wang",
+      "firstAuthor": "Chunlei Xuan",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-04-01_2025-04-30_green-chemistry"
+        "2025-03-01_2025-03-31_green-chemistry"
       ],
       "sourceFingerprints": [
-        "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
+        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -5224,12 +5224,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.1293701",
+      "doi": "10.1002/anie.8680687",
       "journal": "Angew",
-      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
       "date": "2026-08-19",
       "year": "2026",
-      "firstAuthor": "Jidong Yu",
+      "firstAuthor": "Mingyang Liu",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -5507,18 +5507,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00830a",
+      "doi": "10.1039/d5gc00523j",
       "journal": "Green Chemistry",
-      "title": "Asymmetric defective site-triggered triple synergistic modulation in nanoconfined aerogel for superior electrochemical conversion of low-concentration nitrate into ammonia",
+      "title": "Disclosing multiple factors influencing enantioselective copolymerization of CO 2 with meso -epoxides using β-diiminate Zn catalysts",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Ke Wang",
+      "firstAuthor": "Yolanda Rusconi",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-05-01_2025-05-31_green-chemistry"
+        "2025-03-01_2025-03-31_green-chemistry"
       ],
       "sourceFingerprints": [
-        "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
+        "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -5573,12 +5573,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.8680687",
+      "doi": "10.1002/anie.2026-m2607093700",
       "journal": "Angew",
-      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
-      "date": "2026-08-19",
+      "title": "Frontispiece: Probing Into Asymmetric Dearomatizing Photocycloadditions of 2‐Naphthalene Derivatives With Alkenes: [2 + 2] and [4 + 2] Pathways",
+      "date": "2026-08-17",
       "year": "2026",
-      "firstAuthor": "Mingyang Liu",
+      "firstAuthor": "Shi Tang",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -5856,12 +5856,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc00990a",
+      "doi": "10.1039/d5gc00566c",
       "journal": "Green Chemistry",
-      "title": "Photoelectrochemical-induced heterogeneous catalytic selective dehalogenation coupling of alkyl halides with thiophenols via interfacial charge transfer",
+      "title": "Red-light-driven enantioselective Minisci-type addition to heteroarenes via recyclable semi-heterogeneous catalysis",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Lulu Zhao",
+      "firstAuthor": "Yajun Sun",
       "priority": "P0",
       "sourceBatchIds": [
         "2025-04-01_2025-04-30_green-chemistry"
@@ -6258,12 +6258,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.2026-m2607093700",
+      "doi": "10.1002/anie.9795533",
       "journal": "Angew",
-      "title": "Frontispiece: Probing Into Asymmetric Dearomatizing Photocycloadditions of 2‐Naphthalene Derivatives With Alkenes: [2 + 2] and [4 + 2] Pathways",
+      "title": "Asymmetric Kinetic Resolution of 2‐Aryl Oxetanes by Dinuclear Titanium Radical Catalysis",
       "date": "2026-08-17",
       "year": "2026",
-      "firstAuthor": "Shi Tang",
+      "firstAuthor": "Huaxi Sun",
       "priority": "P0",
       "sourceBatchIds": [
         "2026-08-15_2026-08-21_angew"
@@ -6536,18 +6536,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc01259g",
+      "doi": "10.1039/d5gc00732a",
       "journal": "Green Chemistry",
-      "title": "Electrochemical vicinal amidoselenation of unactivated olefins via a tandem Ritter reaction",
+      "title": "Zwitterionic polymer-assisted asymmetrically coordinated Cu atoms on aligned carbonous microchannels for efficient electroreduction of CO 2 to CO",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Wei Xu",
+      "firstAuthor": "Congwei Wang",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-05-01_2025-05-31_green-chemistry"
+        "2025-04-01_2025-04-30_green-chemistry"
       ],
       "sourceFingerprints": [
-        "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
+        "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -6602,18 +6602,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1002/anie.9795533",
+      "doi": "10.1002/anie.1174032",
       "journal": "Angew",
-      "title": "Asymmetric Kinetic Resolution of 2‐Aryl Oxetanes by Dinuclear Titanium Radical Catalysis",
-      "date": "2026-08-17",
+      "title": "Atomically Asymmetric Pd 1 ─O─Cu Interfaces Break the Activity–Selectivity Limit in CO‐to‐Acetate Conversion",
+      "date": "2026-08-13",
       "year": "2026",
-      "firstAuthor": "Huaxi Sun",
+      "firstAuthor": "Zhi‐Xin Li",
       "priority": "P0",
       "sourceBatchIds": [
-        "2026-08-15_2026-08-21_angew"
+        "2026-08-08_2026-08-14_angew"
       ],
       "sourceFingerprints": [
-        "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
+        "86dc7767d6f83ae48be4593ddd987611e84168905eb0bb3f090120f30e4818d1"
       ],
       "flags": [],
       "reviewTask": "independent_first_and_adversarial_second_scope_review_required",
@@ -6814,18 +6814,18 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d4sc08608b",
+      "doi": "10.1039/d4sc08332f",
       "journal": "Chemical Science",
-      "title": "Electrochemical hydrogenative coupling of nitrobenzene into azobenzene over a mesoporous palladium–sulfur cathode",
+      "title": "Asymmetric total synthesis of glauconic and glaucanic acid",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Jie Xiao",
+      "firstAuthor": "Jan Paciorek",
       "priority": "P0",
       "sourceBatchIds": [
-        "2025-04-01_2025-04-30_chemical-science"
+        "2025-02-01_2025-02-28_chemical-science"
       ],
       "sourceFingerprints": [
-        "af9f857fa8c20855ac1a4c4d3bfb77ee0bd784b23a68a1e3bef90fd8c574d213"
+        "27f2229bb1ee47816a02019d540b5e2db1f67c7cd9763a8b779bbfb3f295baac"
       ],
       "flags": [
         "publisher_first_online_date_unverified",
@@ -6880,12 +6880,12 @@
       "publisherFirstOnlineVerification": "required"
     },
     {
-      "doi": "10.1039/d5gc01320h",
+      "doi": "10.1039/d5gc00830a",
       "journal": "Green Chemistry",
-      "title": "Green electrochemical synthesis of CeO 2 nanopowders via an electrolysis–calcination process",
+      "title": "Asymmetric defective site-triggered triple synergistic modulation in nanoconfined aerogel for superior electrochemical conversion of low-concentration nitrate into ammonia",
       "date": "",
       "year": "2025",
-      "firstAuthor": "Xiaohui Zhang",
+      "firstAuthor": "Ke Wang",
       "priority": "P0",
       "sourceBatchIds": [
         "2025-05-01_2025-05-31_green-chemistry"

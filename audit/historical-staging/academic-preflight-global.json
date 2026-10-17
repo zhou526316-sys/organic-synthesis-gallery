@@ -2,10 +2,10 @@
   "schemaVersion": "gallery-historical-academic-preflight-v1",
   "mode": "evidence_collection_and_two_pass_human_or_model_review_pending",
   "selectionMode": "global",
-  "sourceWorklistProducedAt": "2026-10-16T18:46:08.393Z",
-  "sourceWorklistSha256": "70892d313ac50135c7a179b4a35d931fe81377f362bc5bfed2ce3b0c01db84dc",
+  "sourceWorklistProducedAt": "2026-10-17T17:43:36.403Z",
+  "sourceWorklistSha256": "3d307283ca59033eeb32eb484655d80dc94b0c49fc972286424daf8ba954183e",
   "sourceRowsInProvidedPage": 320,
-  "sourceTotalUnreviewed": 57050,
+  "sourceTotalUnreviewed": 57486,
   "selected": 160,
   "maxBatchSize": 160,
   "journalCoverage": [
@@ -26,7 +26,7 @@
     "Nature",
     "Science"
   ],
-  "highChemistrySignalCount": 118,
+  "highChemistrySignalCount": 117,
   "interdisciplinaryTitleRiskCount": 3,
   "candidates": [
     {
@@ -757,19 +757,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.7517064",
+      "doi": "10.1002/anie.9125401",
       "journal": "Angew",
-      "title": "Catalytic Enantioselective Synthesis of Upper‐rim‐Functionalized Inherently Chiral Calix[4]arenes Through Desymmetrizing Reductive Amination",
-      "firstAuthor": "Mengyao Yuan",
+      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
+      "firstAuthor": "Yuye Jiao",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-01",
+      "originDateCandidate": "2026-08-22",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 9,
+        "score": 7,
         "signals": [
-          "stereoselective_synthetic_method",
-          "broad_chemistry_context"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -779,13 +778,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-01_2026-09-07_angew"
+          "2026-08-22_2026-08-31_angew"
         ],
         "sourceSha256Hashes": [
-          "32fca3cd65b48e42c434f3ba5278fc4dab1e436f74251c53098de4d79ff89744"
+          "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.7517064",
+      "doiResolver": "https://doi.org/10.1002/anie.9125401",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -1433,18 +1432,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.9125401",
+      "doi": "10.1002/anie.1293701",
       "journal": "Angew",
-      "title": "Asymmetric Dual Sites Enable Spatially Resolved Biradical‐Mediated C–N Coupling for N,N‐Dimethylformamide Photoelectrosynthesis",
-      "firstAuthor": "Yuye Jiao",
+      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
+      "firstAuthor": "Jidong Yu",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-22",
+      "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 1,
         "signals": [
-          "bond_construction"
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -1454,13 +1453,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-22_2026-08-31_angew"
+          "2026-08-15_2026-08-21_angew"
         ],
         "sourceSha256Hashes": [
-          "e9ca77578b68a0d1da0fcb0800cd0d6c59061e5002e25b1c9716a4bc37cf6044"
+          "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.9125401",
+      "doiResolver": "https://doi.org/10.1002/anie.1293701",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2105,10 +2104,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.1293701",
+      "doi": "10.1002/anie.8680687",
       "journal": "Angew",
-      "title": "Zn─F Diatomic Sites Promote Electrochemical C─N Coupling for the Synthesis of Amino Acids",
-      "firstAuthor": "Jidong Yu",
+      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
+      "firstAuthor": "Mingyang Liu",
       "originalQueuePriority": "P0",
       "originDateCandidate": "2026-08-19",
       "truePublisherOnlineDate": null,
@@ -2132,7 +2131,7 @@
           "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.1293701",
+      "doiResolver": "https://doi.org/10.1002/anie.8680687",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2482,10 +2481,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc00523j",
+      "doi": "10.1039/d5gc00487j",
       "journal": "Green Chemistry",
-      "title": "Disclosing multiple factors influencing enantioselective copolymerization of CO 2 with meso -epoxides using β-diiminate Zn catalysts",
-      "firstAuthor": "Yolanda Rusconi",
+      "title": "Development of a heterogeneous P–N–N tridentate ligand for iridium-catalyzed asymmetric hydrogenation of ketones in batch and flow",
+      "firstAuthor": "Lizhou Zheng",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -2503,13 +2502,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-03-01_2025-03-31_green-chemistry"
+          "2025-02-01_2025-02-28_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
+          "6defa374cacf78bdc51a697b9bf53f0acc3cd8f6efd7c8f505cc4c5df80616df"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc00523j",
+      "doiResolver": "https://doi.org/10.1039/d5gc00487j",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -2774,12 +2773,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.8680687",
+      "doi": "10.1002/anie.8769472",
       "journal": "Angew",
-      "title": "Visualizing Labor Division in Oxygen Electrocatalysis: Fully Exposed Ni Clusters Enabling Dual‐Site Catalysis via Asymmetric Atomic Bridging",
-      "firstAuthor": "Mingyang Liu",
+      "title": "Regulating Surface Electron Dynamics Enables Selective C─N Coupling in Photoelectrochemical Oxime Synthesis",
+      "firstAuthor": "Zilong Li",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-19",
+      "originDateCandidate": "2026-09-24",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -2795,13 +2794,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-15_2026-08-21_angew"
+          "2026-09-22_2026-09-30_angew"
         ],
         "sourceSha256Hashes": [
-          "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
+          "f9732fca63059d620a5b76c17b2d9c09293d3e6b586359016b174ac0e229faa5"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.8680687",
+      "doiResolver": "https://doi.org/10.1002/anie.8769472",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3151,19 +3150,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d4gc06597b",
+      "doi": "10.1039/d5gc00523j",
       "journal": "Green Chemistry",
-      "title": "Site-selective electrochemical synthesis of nitrogen-enriched bis-pyrazole derivatives: a sustainable approach for N–N versus NN bond formation",
-      "firstAuthor": "Lei Liu",
+      "title": "Disclosing multiple factors influencing enantioselective copolymerization of CO 2 with meso -epoxides using β-diiminate Zn catalysts",
+      "firstAuthor": "Yolanda Rusconi",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 6,
+        "score": 8,
         "signals": [
-          "synthetic_method_context",
-          "broad_chemistry_context"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -3179,7 +3177,7 @@
           "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d4gc06597b",
+      "doiResolver": "https://doi.org/10.1039/d5gc00523j",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3440,12 +3438,12 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.8769472",
+      "doi": "10.1002/anie.9795533",
       "journal": "Angew",
-      "title": "Regulating Surface Electron Dynamics Enables Selective C─N Coupling in Photoelectrochemical Oxime Synthesis",
-      "firstAuthor": "Zilong Li",
+      "title": "Asymmetric Kinetic Resolution of 2‐Aryl Oxetanes by Dinuclear Titanium Radical Catalysis",
+      "firstAuthor": "Huaxi Sun",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-09-24",
+      "originDateCandidate": "2026-08-17",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
@@ -3461,13 +3459,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-09-22_2026-09-30_angew"
+          "2026-08-15_2026-08-21_angew"
         ],
         "sourceSha256Hashes": [
-          "f9732fca63059d620a5b76c17b2d9c09293d3e6b586359016b174ac0e229faa5"
+          "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.8769472",
+      "doiResolver": "https://doi.org/10.1002/anie.9795533",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -3814,10 +3812,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5gc01320h",
+      "doi": "10.1039/d4gc06597b",
       "journal": "Green Chemistry",
-      "title": "Green electrochemical synthesis of CeO 2 nanopowders via an electrolysis–calcination process",
-      "firstAuthor": "Xiaohui Zhang",
+      "title": "Site-selective electrochemical synthesis of nitrogen-enriched bis-pyrazole derivatives: a sustainable approach for N–N versus NN bond formation",
+      "firstAuthor": "Lei Liu",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -3836,13 +3834,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-05-01_2025-05-31_green-chemistry"
+          "2025-03-01_2025-03-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "9be112ba3a807ade58af3a1626d5317db4c8d020895c2c7855872a337f2b924e"
+          "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5gc01320h",
+      "doiResolver": "https://doi.org/10.1039/d4gc06597b",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -4729,19 +4727,17 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1002/anie.9795533",
+      "doi": "10.1002/anie.1174032",
       "journal": "Angew",
-      "title": "Asymmetric Kinetic Resolution of 2‐Aryl Oxetanes by Dinuclear Titanium Radical Catalysis",
-      "firstAuthor": "Huaxi Sun",
+      "title": "Atomically Asymmetric Pd 1 ─O─Cu Interfaces Break the Activity–Selectivity Limit in CO‐to‐Acetate Conversion",
+      "firstAuthor": "Zhi‐Xin Li",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2026-08-17",
+      "originDateCandidate": "2026-08-13",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 1,
-        "signals": [
-          "broad_chemistry_context"
-        ],
+        "score": 0,
+        "signals": [],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
         "nonOriginalPublisherTypeVerified": false,
@@ -4750,13 +4746,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2026-08-15_2026-08-21_angew"
+          "2026-08-08_2026-08-14_angew"
         ],
         "sourceSha256Hashes": [
-          "7b5b0cd3814173a2a5c5b34a5c2cd06f960a20b11d6c18339c9c284f3a0233bf"
+          "86dc7767d6f83ae48be4593ddd987611e84168905eb0bb3f090120f30e4818d1"
         ]
       },
-      "doiResolver": "https://doi.org/10.1002/anie.9795533",
+      "doiResolver": "https://doi.org/10.1002/anie.1174032",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5060,18 +5056,19 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc08090h",
+      "doi": "10.1039/d4sc08332f",
       "journal": "Chemical Science",
-      "title": "Enantioselective copper-catalysed defluorinative alkylation of polyfluoroarenes with alkenes and 1,3-dienes",
-      "firstAuthor": "Dazhen Shi",
+      "title": "Asymmetric total synthesis of glauconic and glaucanic acid",
+      "firstAuthor": "Jan Paciorek",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-11-25",
+      "originDateCandidate": "",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
         "score": 8,
         "signals": [
-          "stereoselective_synthetic_method"
+          "target_or_late_stage_synthesis",
+          "broad_chemistry_context"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5081,13 +5078,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-11-01_2025-11-30_chemical-science"
+          "2025-02-01_2025-02-28_chemical-science"
         ],
         "sourceSha256Hashes": [
-          "7e698372f7a60dc0f561df9e44b5584f50815ea3c7ee3abef909ed0891a2eeb9"
+          "27f2229bb1ee47816a02019d540b5e2db1f67c7cd9763a8b779bbfb3f295baac"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc08090h",
+      "doiResolver": "https://doi.org/10.1039/d4sc08332f",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5720,18 +5717,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc05919d",
+      "doi": "10.1039/d5sc08090h",
       "journal": "Chemical Science",
-      "title": "Low-valent cobalt catalyzed direct dehydroxylative cross-coupling of benzyl alcohols with aryl-chlorides",
-      "firstAuthor": "Prashant S. Shinde",
+      "title": "Enantioselective copper-catalysed defluorinative alkylation of polyfluoroarenes with alkenes and 1,3-dienes",
+      "firstAuthor": "Dazhen Shi",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-11-12",
+      "originDateCandidate": "2025-11-25",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 7,
+        "score": 8,
         "signals": [
-          "bond_construction"
+          "stereoselective_synthetic_method"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -5747,7 +5744,7 @@
           "7e698372f7a60dc0f561df9e44b5584f50815ea3c7ee3abef909ed0891a2eeb9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc05919d",
+      "doiResolver": "https://doi.org/10.1039/d5sc08090h",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -5761,10 +5758,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d4gc06067a",
+      "doi": "10.1039/d4gc05807k",
       "journal": "Green Chemistry",
-      "title": "Electrochemical oxidation–cyclocondensation of chitin-derived 3-acetamido-5-acetylfuran (3A5AF) for the synthesis of 3-acetyl-4-acetamidopyrrolin-2-ones",
-      "firstAuthor": "Juan J. Arteaga Giraldo",
+      "title": "A novel electrochemical Hofmann-type rearrangement enables facile access to α-oxoisocyanates for the synthesis of N -carbamoylacetamides",
+      "firstAuthor": "Xinxin Zhao",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -5782,13 +5779,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-03-01_2025-03-31_green-chemistry"
+          "2025-02-01_2025-02-28_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
+          "6defa374cacf78bdc51a697b9bf53f0acc3cd8f6efd7c8f505cc4c5df80616df"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d4gc06067a",
+      "doiResolver": "https://doi.org/10.1039/d4gc05807k",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6375,19 +6372,18 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d5sc00268k",
+      "doi": "10.1039/d5sc05919d",
       "journal": "Chemical Science",
-      "title": "1,2-Hydrogen atom transfer of aminyl radicals under photoredox catalysis for the synthesis of α-amino phosphine oxides",
-      "firstAuthor": "Ailin Pan",
+      "title": "Low-valent cobalt catalyzed direct dehydroxylative cross-coupling of benzyl alcohols with aryl-chlorides",
+      "firstAuthor": "Prashant S. Shinde",
       "originalQueuePriority": "P0",
-      "originDateCandidate": "2025-11-05",
+      "originDateCandidate": "2025-11-12",
       "truePublisherOnlineDate": null,
       "publisherCategory": null,
       "evidenceRank": {
-        "score": 6,
+        "score": 7,
         "signals": [
-          "synthetic_method_context",
-          "broad_chemistry_context"
+          "bond_construction"
         ],
         "offTopicTitleRisk": false,
         "chemistryTitleSignalsOnly": true,
@@ -6403,7 +6399,7 @@
           "7e698372f7a60dc0f561df9e44b5584f50815ea3c7ee3abef909ed0891a2eeb9"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d5sc00268k",
+      "doiResolver": "https://doi.org/10.1039/d5sc05919d",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
@@ -6417,10 +6413,10 @@
       "publicationAuthority": false
     },
     {
-      "doi": "10.1039/d4gc06307d",
+      "doi": "10.1039/d4gc06067a",
       "journal": "Green Chemistry",
-      "title": "Electrochemically enabled nickel-catalyzed controllable synthesis of monoaryl or diaryl amines from aryl halides and trimethylsilyl azides",
-      "firstAuthor": "Jiawei Huang",
+      "title": "Electrochemical oxidation–cyclocondensation of chitin-derived 3-acetamido-5-acetylfuran (3A5AF) for the synthesis of 3-acetyl-4-acetamidopyrrolin-2-ones",
+      "firstAuthor": "Juan J. Arteaga Giraldo",
       "originalQueuePriority": "P0",
       "originDateCandidate": "",
       "truePublisherOnlineDate": null,
@@ -6438,13 +6434,13 @@
       },
       "sourceProof": {
         "sourceRootIds": [
-          "2025-04-01_2025-04-30_green-chemistry"
+          "2025-03-01_2025-03-31_green-chemistry"
         ],
         "sourceSha256Hashes": [
-          "7304ddcb0e956e0244ab68a27e102ee0b2002620c6adc707f0a3256da029a384"
+          "fd3ef9bf914cfef907755ea7e697df7562d99b92029cab14c2b646764aa5f558"
         ]
       },
-      "doiResolver": "https://doi.org/10.1039/d4gc06307d",
+      "doiResolver": "https://doi.org/10.1039/d4gc06067a",
       "publisherEvidenceRequired": [
         "DOI-exact official Article versus Review/Comment/Preview classification",
         "Publisher first available online date versus issue/index-created date",
