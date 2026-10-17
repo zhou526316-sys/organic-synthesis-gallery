@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "gallery-20261017-three-publisher-online-conflict-holds-v1",
+  "verifiedAt": "2026-10-17T01:46:34.900Z",
+  "mode": "read_only_evidence_hold_no_admission",
+  "items": [
+    {
+      "doi": "10.1021/acs.joc.6c01612",
+      "stageSourceDate": "2026-08-26",
+      "publisherPageDate": "2026-08-27",
+      "publisherUrls": [
+        "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c01612/5332216/Radical-Mediated-Functional-Group-Migration-and",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01612"
+      ],
+      "reason": "Publisher Article History is one day later than frozen Crossref/OpenAlex. Preserve original source and require independent date-override evidence before any scope approval.",
+      "status": "hold_unapproved_source_date_discrepancy"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02869",
+      "stageSourceDate": "2026-07-29",
+      "publisherPageDate": "2026-07-30",
+      "publisherUrls": [
+        "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02869/5236965/Electrochemical-One-or-Two-Electron-Oxidation",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02869"
+      ],
+      "reason": "ACS DOI article lists July 30 Published Online, frozen source lists July 29. Important one/two electron electrochemical synthesis must not be admitted with uncorrected source day.",
+      "status": "hold_unapproved_source_date_discrepancy"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03004",
+      "stageSourceDate": "2026-08-24",
+      "publisherPageDate": "2026-08-25",
+      "alternatePublisherPageDate": "2026-08-24",
+      "publisherUrls": [
+        "https://pubs.acs.org/orlef7/article/28/35/10995/5328212",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03004?goto=supporting-info"
+      ],
+      "reason": "Issue article display states August 24 Published Online while canonical DOI article route states August 25; two ACS publisher routes conflict. Do not choose arbitrarily.",
+      "status": "hold_unapproved_dual_official_publisher_dates"
+    }
+  ],
+  "guards": {
+    "noManifestAdmission": true,
+    "noNewExclusion": true,
+    "noD1": true,
+    "noPublisherMediaOrPdf": true,
+    "noDailyOrOffslotPublication": true
+  }
+}
