@@ -14,8 +14,19 @@
     // Site addition date first; original publication date is only the legacy fallback.
     return String(job.addedDate||job.date||'');
   }
+  function historicalTocAcquisitionTier(job) {
+    // The official historical TOC-only policy never permits Figure 1
+    // substitution. Prioritize trusted ACS/Wiley/CCS TOC discovery before
+    // low-yield Nature/Science first visits; no DOI is excluded or completed.
+    if(!tocOnlyCaptureEligible(job))return 0;
+    var p=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi))||'');
+    if(p==='acs'||p==='wiley'||p==='ccs')return 1;
+    if(p==='rsc'||p==='elsevier')return 2;
+    return 3;
+  }
   function compareMissingCaptureJobs(a,b) {
-    return captureBatchDate(b).localeCompare(captureBatchDate(a))
+    return historicalTocAcquisitionTier(a)-historicalTocAcquisitionTier(b)
+      ||captureBatchDate(b).localeCompare(captureBatchDate(a))
       ||journalPriority(a)-journalPriority(b)
       ||String(b.date||'').localeCompare(String(a.date||''))
       ||String(a.doi).localeCompare(String(b.doi));

@@ -65,8 +65,11 @@ test('eleven ACS original methods are scientifically audited separately from 08:
      const formalRow=live.articles.find(x=>x.doi===doi);
      assert.equal(formalRow.ingestionChannel,'historical_backfill');
      assert.equal(formalRow.mediaPolicy,'toc_only');
-     assert.equal(formalRow.new,false);
+     // The formal serialized index omits 'new' when false. The hard
+     // invariant is that it must never be true or gain a daily addedDate.
+     assert.notEqual(formalRow.new,true);
      assert.equal(formalRow.addedDate,'');
+     assert.equal(formalRow.date,row.date);
    }
    assert.equal(['JOC','Organic Letters'].includes(row.journal),true);
    for(const k of ['primaryContribution','preparativeTransformation',

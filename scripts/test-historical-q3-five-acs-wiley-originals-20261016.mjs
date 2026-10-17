@@ -89,7 +89,7 @@ test('existing site and owner exclusion remain controlling; archival entries nev
      const row=formal.get(doi);
      assert.equal(row.ingestionChannel,'historical_backfill');
      assert.equal(row.mediaPolicy,'toc_only');
-     assert.equal(row.new,false);
+     assert.notEqual(row.new,true);
      assert.equal(row.addedDate,'');
    }else assert.ok(selectedDois.has(doi),doi);
  }

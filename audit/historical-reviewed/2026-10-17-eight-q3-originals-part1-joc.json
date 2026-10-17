@@ -1,0 +1,341 @@
+{
+  "schemaVersion": "gallery-historical-20261017-eight-publisher-online-two-pass-v1",
+  "reviewedAt": "2026-10-17T01:45:13.867Z",
+  "reviewMethod": "single_assistant_two_individually_written_scientific_and_adversarial_passes_not_two_human_reviewers",
+  "baselineApproved": 254,
+  "part": 1,
+  "partCount": 2,
+  "newApprovals": 4,
+  "sourceBranch": "staging/historical-archive-nightly",
+  "approved": [
+    {
+      "doi": "10.1021/acs.joc.6c00646",
+      "journal": "JOC",
+      "title": "Construction of Azetidinols via t BuOK-Mediated Formal [3 + 1] Annulation of N -Formylimides and Seyferth–Gilbert Reagent",
+      "titleZh": "叔丁醇钾促进甲酰亚胺与Seyferth–Gilbert试剂三加一串联环化合成氮杂环丁醇",
+      "date": "2026-08-26",
+      "authors": [
+        "Dong-Fang Jiang",
+        "Jia Zhou",
+        "Yutong Tang",
+        "Xin Xiong",
+        "Hao Dong",
+        "Haifei Wang",
+        "Zhenjie Qi",
+        "Wei-Min He"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12148-12158",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00646"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发以N-甲酰亚胺和Seyferth–Gilbert试剂为原料的叔丁醇钾促进反应，构筑含羟基的四元氮杂环丁烷，是实际分离制备氮杂环丁醇而非仅理论环化研究。",
+      "evidenceBasis": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-26 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c00646); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+      "challengeReason": "第二遍反证：反应由强碱tBuOK促进，不是金属手性催化，也没有以ee为主要评价的普适不对称制备。形式[3+1]包括亲核加成、阴离子迁移、环化及还原多个步骤，不能误写为协同周环反应；底物限定N-甲酰亚胺及指定重氮膦酸酯试剂，并非任意醛胺可直接生成氮杂四环。",
+      "scopeAssessment": {
+        "primaryContribution": "开发以N-甲酰亚胺和Seyferth–Gilbert试剂为原料的叔丁醇钾促进反应，构筑含羟基的四元氮杂环丁烷，是实际分离制备氮杂环丁醇而非仅理论环化研究。",
+        "preparativeTransformation": "在tBuOK作用下由Seyferth–Gilbert试剂参与亲核加成、阴离子迁移、环化和还原串联过程，以形式[3+1]环化形成多取代azetidinol骨架。",
+        "generalityEvidence": "JOC原始Article报告杂芳环、烯烃、炔烃、醚和酯兼容的多类底物，包含复杂药物分子修饰及可放大实验。作者将其称作前所未有的[3+1]亲核加成迁移环化还原过程，具有明确可分离产物。",
+        "sourceEvidence": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-26 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c00646); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+        "boundaryChallenge": "第二遍反证：反应由强碱tBuOK促进，不是金属手性催化，也没有以ee为主要评价的普适不对称制备。形式[3+1]包括亲核加成、阴离子迁移、环化及还原多个步骤，不能误写为协同周环反应；底物限定N-甲酰亚胺及指定重氮膦酸酯试剂，并非任意醛胺可直接生成氮杂四环。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00646",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00646",
+        "publisherOnlineDate": "2026-08-26",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "10dd25170b7ef7db0361cce8bdf500302259b654",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-26",
+          "officialPublisherFirstOnline": "2026-08-26",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00646",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发以N-甲酰亚胺和Seyferth–Gilbert试剂为原料的叔丁醇钾促进反应，构筑含羟基的四元氮杂环丁烷，是实际分离制备氮杂环丁醇而非仅理论环化研究。 在tBuOK作用下由Seyferth–Gilbert试剂参与亲核加成、阴离子迁移、环化和还原串联过程，以形式[3+1]环化形成多取代azetidinol骨架。 JOC原始Article报告杂芳环、烯烃、炔烃、醚和酯兼容的多类底物，包含复杂药物分子修饰及可放大实验。作者将其称作前所未有的[3+1]亲核加成迁移环化还原过程，具有明确可分离产物。",
+          "reason": "开发以N-甲酰亚胺和Seyferth–Gilbert试剂为原料的叔丁醇钾促进反应，构筑含羟基的四元氮杂环丁烷，是实际分离制备氮杂环丁醇而非仅理论环化研究。 在tBuOK作用下由Seyferth–Gilbert试剂参与亲核加成、阴离子迁移、环化和还原串联过程，以形式[3+1]环化形成多取代azetidinol骨架。 JOC原始Article报告杂芳环、烯烃、炔烃、醚和酯兼容的多类底物，包含复杂药物分子修饰及可放大实验。作者将其称作前所未有的[3+1]亲核加成迁移环化还原过程，具有明确可分离产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：反应由强碱tBuOK促进，不是金属手性催化，也没有以ee为主要评价的普适不对称制备。形式[3+1]包括亲核加成、阴离子迁移、环化及还原多个步骤，不能误写为协同周环反应；底物限定N-甲酰亚胺及指定重氮膦酸酯试剂，并非任意醛胺可直接生成氮杂四环。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01208",
+      "journal": "JOC",
+      "title": "Synthesis of Cyclopropyl Carbocyclic Purine Nucleosides via Base-Promoted [2 + 1] Annulation of Alkenyl Sulfonium Salts",
+      "titleZh": "碱促进烯基硫鎓盐与嘌呤取代羰基化合物二加一环化合成环丙基碳环核苷",
+      "date": "2026-08-26",
+      "authors": [
+        "Ke-Xin Huang",
+        "Ke-Xin Zhang",
+        "Chang-Yin Li",
+        "Long-Hui Ma",
+        "Zhao-Yang Chen",
+        "Bing-Ke Li",
+        "Xin-He Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "35",
+        "pages": "12010-12015",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01208"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立嘌呤取代丙酮或苯乙酮与烯基硫鎓盐的碱促进形式[2+1]环化，制备环丙基碳环嘌呤核苷类似物。",
+      "evidenceBasis": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-26 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01208); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+      "challengeReason": "第二遍核查：所谓[2+1]并非已有环丙基核苷的单步取代，而是α-嘌呤取代羰基化合物双碳亲核进攻烯基硫鎓盐。92%为论文报告的最高收率，不能对所有24种底物通称为92%；该工作不涉及生物活性已证实或任意核苷的普适药效。",
+      "scopeAssessment": {
+        "primaryContribution": "建立嘌呤取代丙酮或苯乙酮与烯基硫鎓盐的碱促进形式[2+1]环化，制备环丙基碳环嘌呤核苷类似物。",
+        "preparativeTransformation": "以α-嘌呤取代酮作为具有两个碳亲核位点的起始物，与烯基硫鎓盐发生选择性连续C–C成键，构筑环丙基碳环核苷骨架。",
+        "generalityEvidence": "ACS JOC报道24个实例，最高92%分离收率，反应无需过渡金属、原料相对易得，对多种官能团具有兼容性；产物是碳环嘌呤核苷类似物，并非经典核糖O-糖苷。",
+        "sourceEvidence": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-26 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01208); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+        "boundaryChallenge": "第二遍核查：所谓[2+1]并非已有环丙基核苷的单步取代，而是α-嘌呤取代羰基化合物双碳亲核进攻烯基硫鎓盐。92%为论文报告的最高收率，不能对所有24种底物通称为92%；该工作不涉及生物活性已证实或任意核苷的普适药效。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01208",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01208",
+        "publisherOnlineDate": "2026-08-26",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "10dd25170b7ef7db0361cce8bdf500302259b654",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-26",
+          "officialPublisherFirstOnline": "2026-08-26",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01208",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "建立嘌呤取代丙酮或苯乙酮与烯基硫鎓盐的碱促进形式[2+1]环化，制备环丙基碳环嘌呤核苷类似物。 以α-嘌呤取代酮作为具有两个碳亲核位点的起始物，与烯基硫鎓盐发生选择性连续C–C成键，构筑环丙基碳环核苷骨架。 ACS JOC报道24个实例，最高92%分离收率，反应无需过渡金属、原料相对易得，对多种官能团具有兼容性；产物是碳环嘌呤核苷类似物，并非经典核糖O-糖苷。",
+          "reason": "建立嘌呤取代丙酮或苯乙酮与烯基硫鎓盐的碱促进形式[2+1]环化，制备环丙基碳环嘌呤核苷类似物。 以α-嘌呤取代酮作为具有两个碳亲核位点的起始物，与烯基硫鎓盐发生选择性连续C–C成键，构筑环丙基碳环核苷骨架。 ACS JOC报道24个实例，最高92%分离收率，反应无需过渡金属、原料相对易得，对多种官能团具有兼容性；产物是碳环嘌呤核苷类似物，并非经典核糖O-糖苷。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍核查：所谓[2+1]并非已有环丙基核苷的单步取代，而是α-嘌呤取代羰基化合物双碳亲核进攻烯基硫鎓盐。92%为论文报告的最高收率，不能对所有24种底物通称为92%；该工作不涉及生物活性已证实或任意核苷的普适药效。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01404",
+      "journal": "JOC",
+      "title": "Highly Stereoselective Synthesis of trans -5-Phosphorylthiazoline-4-amines via [1 + 4] Annulation of α-Phosphoryl Diazoalkanes and Thioacylamidines",
+      "titleZh": "膦酰基重氮烷与硫代酰脒经卡宾生成和一加四环化立体选择性合成反式膦酰基噻唑啉胺",
+      "date": "2026-08-27",
+      "authors": [
+        "Fuchen Li",
+        "Yuhua Chen",
+        "Jiaxi Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12275-12281",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01404"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发α-膦酰基重氮烷与强亲核性硫代酰脒的环化合成，构筑反式5-膦酰基噻唑啉-4-胺五元非磷杂环。",
+      "evidenceBasis": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-27 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01404); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+      "challengeReason": "第二遍反证：题名中的highly stereoselective特指trans相对构型和非对映控制，不能无数据升级为不对称催化高ee；含膦酰基侧链的噻唑啉不是磷原子直接进入五元杂环的磷杂环。机理为卡宾生成再[1+4]成环，不能说两个亲核原料直接形成稳定自由基偶联。",
+      "scopeAssessment": {
+        "primaryContribution": "开发α-膦酰基重氮烷与强亲核性硫代酰脒的环化合成，构筑反式5-膦酰基噻唑啉-4-胺五元非磷杂环。",
+        "preparativeTransformation": "α-膦酰基重氮烷先生成卡宾相关活性物种，再与硫代酰脒发生形式[1+4]串联环化，产生带膦酰基和氨基的trans-噻唑啉。",
+        "generalityEvidence": "ACS JOC报道不同硫代酰脒和膦酰基重氮伙伴的良好底物适应性、令人满意至优异的分离收率，并给出产物X射线及核磁表征，重点体现高非对映立体选择性。",
+        "sourceEvidence": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-08-27 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01404); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-08-22_2026-08-31_joc, raw Git blob 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a, reviewer queue Git blob 10dd25170b7ef7db0361cce8bdf500302259b654, source root SHA256 713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+        "boundaryChallenge": "第二遍反证：题名中的highly stereoselective特指trans相对构型和非对映控制，不能无数据升级为不对称催化高ee；含膦酰基侧链的噻唑啉不是磷原子直接进入五元杂环的磷杂环。机理为卡宾生成再[1+4]成环，不能说两个亲核原料直接形成稳定自由基偶联。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01404",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01404",
+        "publisherOnlineDate": "2026-08-27",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "sourceReviewQueueGitBlobSha": "10dd25170b7ef7db0361cce8bdf500302259b654",
+        "stageSourceSha256": "713253fb6cb7d97c32fcb4cbc8e03e50b2910024b6ad4119d6af99faf5d40eb2",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-27",
+          "officialPublisherFirstOnline": "2026-08-27",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01404",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "开发α-膦酰基重氮烷与强亲核性硫代酰脒的环化合成，构筑反式5-膦酰基噻唑啉-4-胺五元非磷杂环。 α-膦酰基重氮烷先生成卡宾相关活性物种，再与硫代酰脒发生形式[1+4]串联环化，产生带膦酰基和氨基的trans-噻唑啉。 ACS JOC报道不同硫代酰脒和膦酰基重氮伙伴的良好底物适应性、令人满意至优异的分离收率，并给出产物X射线及核磁表征，重点体现高非对映立体选择性。",
+          "reason": "开发α-膦酰基重氮烷与强亲核性硫代酰脒的环化合成，构筑反式5-膦酰基噻唑啉-4-胺五元非磷杂环。 α-膦酰基重氮烷先生成卡宾相关活性物种，再与硫代酰脒发生形式[1+4]串联环化，产生带膦酰基和氨基的trans-噻唑啉。 ACS JOC报道不同硫代酰脒和膦酰基重氮伙伴的良好底物适应性、令人满意至优异的分离收率，并给出产物X射线及核磁表征，重点体现高非对映立体选择性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：题名中的highly stereoselective特指trans相对构型和非对映控制，不能无数据升级为不对称催化高ee；含膦酰基侧链的噻唑啉不是磷原子直接进入五元杂环的磷杂环。机理为卡宾生成再[1+4]成环，不能说两个亲核原料直接形成稳定自由基偶联。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01587",
+      "journal": "JOC",
+      "title": "Visible-Light-Promoted Bromocyclization of N -Methacryloyl Hydrazones for the Synthesis of Brominated Pyrazolones",
+      "titleZh": "可见光促进N-甲基丙烯酰基腙溴环化合成溴代吡唑啉酮",
+      "date": "2026-09-16",
+      "authors": [
+        "Gang Yang",
+        "Hong Zhang",
+        "Xiuling Cui"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13008-13012",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01587"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "报道N-甲基丙烯酰基腙的可见光促进分子内溴环化，构筑结构明确的溴代吡唑啉酮，是新的有机制备方法而非卤素检测。",
+      "evidenceBasis": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-09-16 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01587); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-09-15_2026-09-21_joc, raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541, reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3, source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+      "challengeReason": "第二遍反证：这不是普通甲基丙烯酰基肼酮的无光直接取代，题目和原始制备路径强调可见光促进溴环化；对自由基或离子中间体的具体反应顺序没有充分独立观测证据时只能称机理假说。论文没有报告催化不对称控制，不能把溴代杂环存在立体中心等同有高ee。",
+      "scopeAssessment": {
+        "primaryContribution": "报道N-甲基丙烯酰基腙的可见光促进分子内溴环化，构筑结构明确的溴代吡唑啉酮，是新的有机制备方法而非卤素检测。",
+        "preparativeTransformation": "从N-甲基丙烯酰基腙前体出发，在可见光与溴化条件下通过环化同时建立含氮五元吡唑啉酮骨架和可进一步转化的C–Br键。",
+        "generalityEvidence": "JOC原创Article给出多个溴代吡唑啉酮的可分离产物和光照促进的环化证据，文章书目为91卷38期13008–13012页；不把没有逐项核实的底物收率、溴源或催化剂种类写成确定事实。",
+        "sourceEvidence": "ACS original Journal of Organic Chemistry research Article History Published Online 2026-09-16 (publisher DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01587); published-issue day distinct from first-online. Frozen Crossref+OpenAlex review root 2026-09-15_2026-09-21_joc, raw Git blob 0a6b4fb5580453d2b101f2f94030ee7f9c473541, reviewer queue Git blob d88e4ec51eac980d6f2b59618a6409fc44a87fa3, source root SHA256 4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648. DOI title, authors, 2026 citation volume/issue/pages checked; no copyrighted full abstract, publisher PDF, figures or SI mirrored.",
+        "boundaryChallenge": "第二遍反证：这不是普通甲基丙烯酰基肼酮的无光直接取代，题目和原始制备路径强调可见光促进溴环化；对自由基或离子中间体的具体反应顺序没有充分独立观测证据时只能称机理假说。论文没有报告催化不对称控制，不能把溴代杂环存在立体中心等同有高ee。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01587",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01587",
+        "publisherOnlineDate": "2026-09-16",
+        "publisherOriginalResearchType": "ACS_JOC_Original_Article_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_joc",
+        "stageBatchSha": "0a6b4fb5580453d2b101f2f94030ee7f9c473541",
+        "sourceReviewQueueGitBlobSha": "d88e4ec51eac980d6f2b59618a6409fc44a87fa3",
+        "stageSourceSha256": "4c6b34d680f068371c0bd724575ee7605dcd29867888f991e18dfed715f52648",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-09-16",
+          "officialPublisherFirstOnline": "2026-09-16",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01587",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_official_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "报道N-甲基丙烯酰基腙的可见光促进分子内溴环化，构筑结构明确的溴代吡唑啉酮，是新的有机制备方法而非卤素检测。 从N-甲基丙烯酰基腙前体出发，在可见光与溴化条件下通过环化同时建立含氮五元吡唑啉酮骨架和可进一步转化的C–Br键。 JOC原创Article给出多个溴代吡唑啉酮的可分离产物和光照促进的环化证据，文章书目为91卷38期13008–13012页；不把没有逐项核实的底物收率、溴源或催化剂种类写成确定事实。",
+          "reason": "报道N-甲基丙烯酰基腙的可见光促进分子内溴环化，构筑结构明确的溴代吡唑啉酮，是新的有机制备方法而非卤素检测。 从N-甲基丙烯酰基腙前体出发，在可见光与溴化条件下通过环化同时建立含氮五元吡唑啉酮骨架和可进一步转化的C–Br键。 JOC原创Article给出多个溴代吡唑啉酮的可分离产物和光照促进的环化证据，文章书目为91卷38期13008–13012页；不把没有逐项核实的底物收率、溴源或催化剂种类写成确定事实。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：这不是普通甲基丙烯酰基肼酮的无光直接取代，题目和原始制备路径强调可见光促进溴环化；对自由基或离子中间体的具体反应顺序没有充分独立观测证据时只能称机理假说。论文没有报告催化不对称控制，不能把溴代杂环存在立体中心等同有高ee。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "noD1": true,
+    "noPublisherMediaOrPdf": true,
+    "noDailyNew": true,
+    "no08ScheduleChange": true,
+    "noOwnerExclusionOverride": true
+  }
+}

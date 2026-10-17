@@ -64,8 +64,10 @@ test('frozen Crossref/OpenAlex Q3 JOC batch has four article-specific two-pass m
    // Valid only if it entered through the SAME sole fixed 08:00 historic gate.
    assert.equal(alreadyPublished.ingestionChannel,'historical_backfill');
    assert.equal(alreadyPublished.mediaPolicy,'toc_only');
-   assert.equal(alreadyPublished.new,false);
+   // Fixed-slot serialization omits false `new`; it must never become true.
+   assert.notEqual(alreadyPublished.new,true);
    assert.equal(alreadyPublished.addedDate,'');
+   assert.equal(alreadyPublished.date,x.date);
   }
  }
  assert.deepEqual(selected,

@@ -3,11 +3,12 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const oldSort=".sort(function(a,b){return Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
 const newSort=".sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});";
+const historicalYieldSort="historicalTocAcquisitionTier(a.job)-historicalTocAcquisitionTier(b.job)";
 const sourcePath='public/toc-mainline.user.js';
 if(process.argv.includes('--apply')){
   for(const file of [sourcePath,'scripts/tm-queue-coverage.inc.js']){
     let text=fs.readFileSync(file,'utf8');
-    if(!text.includes(newSort)){
+    if(!text.includes(newSort)&&!text.includes(historicalYieldSort)){
       assert.equal(text.split(oldSort).length-1,1,file+' exact priority anchor');
       text=text.replace(oldSort,newSort);fs.writeFileSync(file,text);
     }
@@ -17,9 +18,13 @@ if(process.argv.includes('--apply')){
   assert.ok(a>=0&&b>a);fs.writeFileSync('scripts/tm-immediate-restart-runtime.inc.js',text.slice(a,b).trimEnd()+'\n');
 }
 const source=fs.readFileSync(sourcePath,'utf8');
-assert.ok(source.includes(newSort));
+assert.ok(source.includes(newSort)||source.includes(historicalYieldSort));
 function between(a,b){const start=source.indexOf(a),end=source.indexOf(b,start);assert.ok(start>=0&&end>start);return source.slice(start,end);}
-const ctx=vm.createContext({console,Map,String,Number,Boolean});
+const ctx=vm.createContext({console,Map,String,Number,Boolean,
+  tocOnlyCaptureEligible:j=>j&&j.mediaPolicy==='toc_only'&&j.date>='2026-07-01'&&j.date<='2026-09-30',
+  normalizeDoi:d=>String(d||'').toLowerCase(),
+  publisherForDoi:d=>d.startsWith('10.1021/')?'acs':d.startsWith('10.1038/')?'nature':'other'
+});
 vm.runInContext(between('  function journalPriority(','  function isNatureScienceFamilyJob(')+between('  function captureBatchDate(','  function validCapturedFigure(')+between('  function coverageHasNeeds(','  function coverageNeedKey(')+between('  function coveragePending(','  function coverageStats(')+';globalThis.select=coveragePending;',ctx);
 const row=(doi,addedDate,journal,attempts=0)=>({job:{doi,addedDate,journal,captureFigures:true},state:'pending',attempts});
 const newestRetry=row('newest','2026-10-03','Chem',1),oldNew=row('older','2026-10-02','Nature');
@@ -28,4 +33,11 @@ const natureRetry=row('nature','2026-10-03','Nature',1),chemNew=row('chem','2026
 assert.equal(ctx.select({coverage:new Map([['chem',chemNew],['nature',natureRetry]])})[0].job.doi,'nature');
 const sameGroupNew=row('fresh','2026-10-03','Nature');
 assert.equal(ctx.select({coverage:new Map([['retry',natureRetry],['fresh',sameGroupNew]])})[0].job.doi,'fresh');
-console.log(JSON.stringify({queuePriorityCases:3,passed:true,order:'site-addedDate then journal then same-priority first visits',productionWrites:0}));
+const historicAcs=row('10.1021/acs.orglett.6c00001','2026-09-15','JACS'),
+      historicNature=row('10.1038/s41467-026-70001-1','2026-09-30','Nature');
+historicAcs.job.mediaPolicy='toc_only';historicAcs.job.date='2026-09-15';
+historicNature.job.mediaPolicy='toc_only';historicNature.job.date='2026-09-30';
+assert.equal(ctx.select({coverage:new Map([['nat',historicNature],['acs',historicAcs]])})[0].job.doi,
+  historicAcs.job.doi);
+console.log(JSON.stringify({queuePriorityCases:4,passed:true,
+  order:'October addedDate; historical official publisher tier then date/journal',productionWrites:0}));

@@ -66,7 +66,7 @@ test('thirteen distinct article-evidenced 2026 Q3 studies have frozen first-onli
     const previous=prod.get(row.doi);
     assert.equal(previous.ingestionChannel,'historical_backfill');
     assert.equal(previous.mediaPolicy,'toc_only');
-    assert.equal(previous.new,false);
+    assert.notEqual(previous.new,true);
     assert.equal(previous.addedDate,'');
   }
  }
