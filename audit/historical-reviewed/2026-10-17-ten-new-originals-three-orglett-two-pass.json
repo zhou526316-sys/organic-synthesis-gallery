@@ -1,0 +1,266 @@
+{
+  "schemaVersion": "gallery-historical-20261017-ten-source-verified-academic-originals-v1",
+  "reviewedAt": "2026-10-17T02:52:50.518Z",
+  "mode": "DOI_exact_ACS_publisher_first_online_and_independent_science_challenge",
+  "reviewMethod": "one_assistant_two_separate_scientific_passes_not_two_human_referees",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "baselineApproved": 268,
+  "part": 2,
+  "partCount": 2,
+  "newApprovals": 3,
+  "approved": [
+    {
+      "doi": "10.1021/acs.orglett.6c03393",
+      "journal": "Organic Letters",
+      "title": "1,2-Sulfonylalkynylation of Alkynes to Access Sulfonyl-Substituted 1,3-Enyne Compounds via Nickel/Photoredox Dual Catalysis",
+      "titleZh": "镍与光氧化还原协同催化炔烃三组分一二磺酰炔基化构筑E式烯炔",
+      "date": "2026-08-31",
+      "authors": [
+        "Ren-Jie Tong",
+        "Fei Tang",
+        "Zhuang Ge",
+        "Jie Zhou",
+        "Rui-Jie Wang",
+        "Ming-Chao Li",
+        "Jun Xu",
+        "Ning Deng",
+        "Hua-Jian Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11344-11349",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03393"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用镍与光氧化还原双催化，将炔烃、磺酸钠和溴代炔汇聚转化为带砜基的1,3-烯炔，形成可分离的新C–S与C–C键，并具有高E式立体选择性。",
+      "evidenceBasis": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03393 Article History Published Online 2026-08-31；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+      "challengeReason": "第二遍反证：反应起始是炔烃加成后产生烯炔，不是已存在的烯烃直接双官能团化；三个实际底物包含可得的钠盐磺酸盐与溴代炔，不应虚构外加卤代磺酰氯。高E/Z指的是烯烃几何选择性，并不等于对映选择性ee；该红氧中性反应仍需要光催化与镍双循环。",
+      "scopeAssessment": {
+        "primaryContribution": "利用镍与光氧化还原双催化，将炔烃、磺酸钠和溴代炔汇聚转化为带砜基的1,3-烯炔，形成可分离的新C–S与C–C键，并具有高E式立体选择性。",
+        "preparativeTransformation": "以炔烃、磺酸钠和溴代炔为三个实际伙伴，在氧化还原中性光/镍体系中进行1,2-磺酰炔基化；对内炔亦可形成四取代烯炔，产物砜基还可进一步转化。",
+        "generalityEvidence": "ACS Organic Letters官方Letter报告对多种炔烃和磺酸盐的兼容性，包括内炔，得到E-选择性高于20:1的烯炔产物；下游含砜官能团可作为进一步衍生手柄，但不等于同一步获得全部药物结构。",
+        "sourceEvidence": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03393 Article History Published Online 2026-08-31；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+        "boundaryChallenge": "第二遍反证：反应起始是炔烃加成后产生烯炔，不是已存在的烯烃直接双官能团化；三个实际底物包含可得的钠盐磺酸盐与溴代炔，不应虚构外加卤代磺酰氯。高E/Z指的是烯烃几何选择性，并不等于对映选择性ee；该红氧中性反应仍需要光催化与镍双循环。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03393",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03393",
+        "publisherOnlineDate": "2026-08-31",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "79281f36b0d48d23a638cf55f308ef7dc7f3090e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-31",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03393",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Official_Article_History_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用镍与光氧化还原双催化，将炔烃、磺酸钠和溴代炔汇聚转化为带砜基的1,3-烯炔，形成可分离的新C–S与C–C键，并具有高E式立体选择性。 以炔烃、磺酸钠和溴代炔为三个实际伙伴，在氧化还原中性光/镍体系中进行1,2-磺酰炔基化；对内炔亦可形成四取代烯炔，产物砜基还可进一步转化。 ACS Organic Letters官方Letter报告对多种炔烃和磺酸盐的兼容性，包括内炔，得到E-选择性高于20:1的烯炔产物；下游含砜官能团可作为进一步衍生手柄，但不等于同一步获得全部药物结构。",
+          "assessment": "利用镍与光氧化还原双催化，将炔烃、磺酸钠和溴代炔汇聚转化为带砜基的1,3-烯炔，形成可分离的新C–S与C–C键，并具有高E式立体选择性。 以炔烃、磺酸钠和溴代炔为三个实际伙伴，在氧化还原中性光/镍体系中进行1,2-磺酰炔基化；对内炔亦可形成四取代烯炔，产物砜基还可进一步转化。 ACS Organic Letters官方Letter报告对多种炔烃和磺酸盐的兼容性，包括内炔，得到E-选择性高于20:1的烯炔产物；下游含砜官能团可作为进一步衍生手柄，但不等于同一步获得全部药物结构。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：反应起始是炔烃加成后产生烯炔，不是已存在的烯烃直接双官能团化；三个实际底物包含可得的钠盐磺酸盐与溴代炔，不应虚构外加卤代磺酰氯。高E/Z指的是烯烃几何选择性，并不等于对映选择性ee；该红氧中性反应仍需要光催化与镍双循环。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02782",
+      "journal": "Organic Letters",
+      "title": "Photoredox-Enabled Chemo-Selective Construction of Indole-Fused Medium-Sized Difluoro-diazocines",
+      "titleZh": "光氧化还原促进化学选择性二氟甲基化环化构筑吲哚稠合中环二氮杂辛环",
+      "date": "2026-08-31",
+      "authors": [
+        "Dulin Kong",
+        "Tongtong Shi",
+        "Xin Wang",
+        "Xinyue Zhu",
+        "Yifei Huo",
+        "Wei Peng",
+        "Yukai Liu",
+        "Kai Sun"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11179-11184",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02782"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展光氧化还原驱动的化学选择性二氟甲基化/关环，克服中环成环的熵与焓阻力，制备吲哚稠合的含二氟基二氮杂辛环结构。",
+      "evidenceBasis": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02782 Article History Published Online 2026-08-31；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+      "challengeReason": "第二遍核查：文中C3硒化、氰化与交叉偶联等是产物后续转化，不能宣称光环化本身一次完成全部官能团化。题名所说medium-sized特指中等环尺寸的二氮杂辛环，不意味着各种八元或更大杂环在任意双自由基条件下都可构建；机理模型与已分离的主产物须分别标注。",
+      "scopeAssessment": {
+        "primaryContribution": "发展光氧化还原驱动的化学选择性二氟甲基化/关环，克服中环成环的熵与焓阻力，制备吲哚稠合的含二氟基二氮杂辛环结构。",
+        "preparativeTransformation": "在预设吲哚与含氮链间建立分子内成环关系，利用可见光氧化还原活化的二氟甲基相关中间体引导八元含氮杂环形成，得到可分离的稠合二氟二氮杂辛环。",
+        "generalityEvidence": "ACS Letter展示多种底物、放大反应及生物相关片段衍生化；后续可在吲哚C3进行硒化、氰化、卤化、硝化和交叉偶联，证明中环产物保留可编辑结构。",
+        "sourceEvidence": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02782 Article History Published Online 2026-08-31；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+        "boundaryChallenge": "第二遍核查：文中C3硒化、氰化与交叉偶联等是产物后续转化，不能宣称光环化本身一次完成全部官能团化。题名所说medium-sized特指中等环尺寸的二氮杂辛环，不意味着各种八元或更大杂环在任意双自由基条件下都可构建；机理模型与已分离的主产物须分别标注。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02782",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02782",
+        "publisherOnlineDate": "2026-08-31",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "79281f36b0d48d23a638cf55f308ef7dc7f3090e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-31",
+          "officialPublisherFirstOnline": "2026-08-31",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02782",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Official_Article_History_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展光氧化还原驱动的化学选择性二氟甲基化/关环，克服中环成环的熵与焓阻力，制备吲哚稠合的含二氟基二氮杂辛环结构。 在预设吲哚与含氮链间建立分子内成环关系，利用可见光氧化还原活化的二氟甲基相关中间体引导八元含氮杂环形成，得到可分离的稠合二氟二氮杂辛环。 ACS Letter展示多种底物、放大反应及生物相关片段衍生化；后续可在吲哚C3进行硒化、氰化、卤化、硝化和交叉偶联，证明中环产物保留可编辑结构。",
+          "assessment": "发展光氧化还原驱动的化学选择性二氟甲基化/关环，克服中环成环的熵与焓阻力，制备吲哚稠合的含二氟基二氮杂辛环结构。 在预设吲哚与含氮链间建立分子内成环关系，利用可见光氧化还原活化的二氟甲基相关中间体引导八元含氮杂环形成，得到可分离的稠合二氟二氮杂辛环。 ACS Letter展示多种底物、放大反应及生物相关片段衍生化；后续可在吲哚C3进行硒化、氰化、卤化、硝化和交叉偶联，证明中环产物保留可编辑结构。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍核查：文中C3硒化、氰化与交叉偶联等是产物后续转化，不能宣称光环化本身一次完成全部官能团化。题名所说medium-sized特指中等环尺寸的二氮杂辛环，不意味着各种八元或更大杂环在任意双自由基条件下都可构建；机理模型与已分离的主产物须分别标注。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03358",
+      "journal": "Organic Letters",
+      "title": "Nucleophilic Dialkylation/Diarylation of Cage B(3,6)–H in 1,2-Dialkenyl- o -carboranes",
+      "titleZh": "无过渡金属亲核取代实现一二二烯基邻碳硼烷笼体硼三六位双烷基化及双芳基化",
+      "date": "2026-08-26",
+      "authors": [
+        "Qihang Zhuo",
+        "Jie Zhang",
+        "Zuowei Xie"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "11117-11122",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03358"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出不用过渡金属催化的笼状B–H有机官能团化，将1,2-二烯基-o-碳硼烷的B(3,6)顶点区域选择性地转化为双烷基或双芳基产物。",
+      "evidenceBasis": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03358 Article History Published Online 2026-08-26；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+      "challengeReason": "第二遍反证：反应是o-碳硼烷笼B(3,6)的亲核双取代，不是任何普通芳香烃C–H都可无金属直接亲核取代；位点选择依赖笼碳上的烯基电子吸引效应和空间约束。NBO计算支持电子解释，但不能将其写成原位直接观测到的独立硼负离子中间体，或宣称整类碳硼烷笼通用。",
+      "scopeAssessment": {
+        "primaryContribution": "提出不用过渡金属催化的笼状B–H有机官能团化，将1,2-二烯基-o-碳硼烷的B(3,6)顶点区域选择性地转化为双烷基或双芳基产物。",
+        "preparativeTransformation": "带电子吸引烯基取代基的邻碳硼烷笼碳显著改变硼笼的电性及空间环境，使B(3,6)–H顶点成为选择性亲核取代位置，形成系列B–C双官能团化碳硼烷产物。",
+        "generalityEvidence": "ACS Original Letter展示多个烷基化和芳基化组合、结构可分离验证，并以自然键轨道NBO分析解释B(3,6)位电子缺陷和区域选择性；为不同于过渡金属Cage B–H活化的分子硼化学提供制备路线。",
+        "sourceEvidence": "ACS Organic Letters原始Letter DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03358 Article History Published Online 2026-08-26；冻结Crossref+OpenAlex来源根 2026-08-22_2026-08-31_organic-letters 与在线日期一致，raw Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827，review queue Git blob 79281f36b0d48d23a638cf55f308ef7dc7f3090e，根SHA256 66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98。作者、2026年刊卷期页和底物–产物制备信息已核对。仅在内部记录原创性，不复制受限完整摘要、主文、SI、图或PDF。",
+        "boundaryChallenge": "第二遍反证：反应是o-碳硼烷笼B(3,6)的亲核双取代，不是任何普通芳香烃C–H都可无金属直接亲核取代；位点选择依赖笼碳上的烯基电子吸引效应和空间约束。NBO计算支持电子解释，但不能将其写成原位直接观测到的独立硼负离子中间体，或宣称整类碳硼烷笼通用。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03358",
+        "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03358",
+        "publisherOnlineDate": "2026-08-26",
+        "publisherOriginalResearchType": "ACS_OrgLett_Original_Letter_Published_Online",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "sourceReviewQueueGitBlobSha": "79281f36b0d48d23a638cf55f308ef7dc7f3090e",
+        "stageSourceSha256": "66a573490c3735bd296c234d7409de0f94c356524fc4b6d259427b683164ea98",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "firstOnlineDateEvidence": {
+          "sourceFrozenDate": "2026-08-26",
+          "officialPublisherFirstOnline": "2026-08-26",
+          "publisherArticlePage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03358",
+          "sourceFrozenAndUnchanged": true,
+          "dateKind": "ACS_Official_Article_History_Published_Online"
+        },
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "提出不用过渡金属催化的笼状B–H有机官能团化，将1,2-二烯基-o-碳硼烷的B(3,6)顶点区域选择性地转化为双烷基或双芳基产物。 带电子吸引烯基取代基的邻碳硼烷笼碳显著改变硼笼的电性及空间环境，使B(3,6)–H顶点成为选择性亲核取代位置，形成系列B–C双官能团化碳硼烷产物。 ACS Original Letter展示多个烷基化和芳基化组合、结构可分离验证，并以自然键轨道NBO分析解释B(3,6)位电子缺陷和区域选择性；为不同于过渡金属Cage B–H活化的分子硼化学提供制备路线。",
+          "assessment": "提出不用过渡金属催化的笼状B–H有机官能团化，将1,2-二烯基-o-碳硼烷的B(3,6)顶点区域选择性地转化为双烷基或双芳基产物。 带电子吸引烯基取代基的邻碳硼烷笼碳显著改变硼笼的电性及空间环境，使B(3,6)–H顶点成为选择性亲核取代位置，形成系列B–C双官能团化碳硼烷产物。 ACS Original Letter展示多个烷基化和芳基化组合、结构可分离验证，并以自然键轨道NBO分析解释B(3,6)位电子缺陷和区域选择性；为不同于过渡金属Cage B–H活化的分子硼化学提供制备路线。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反证：反应是o-碳硼烷笼B(3,6)的亲核双取代，不是任何普通芳香烃C–H都可无金属直接亲核取代；位点选择依赖笼碳上的烯基电子吸引效应和空间约束。NBO计算支持电子解释，但不能将其写成原位直接观测到的独立硼负离子中间体，或宣称整类碳硼烷笼通用。"
+        }
+      ]
+    }
+  ],
+  "guards": {
+    "noFormalPublication": true,
+    "noCloudflareD1": true,
+    "noRightsUnverifiedMedia": true,
+    "noNewHotWeChat": true,
+    "no08ScheduleChanges": true,
+    "existingTwoDatePendingIntact": true
+  }
+}

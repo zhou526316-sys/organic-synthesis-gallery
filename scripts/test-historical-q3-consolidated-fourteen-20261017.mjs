@@ -22,7 +22,8 @@ const ids=new Set(root.accepted.map(x=>x.doi));
 const eightMap=new Map(eight.map(x=>[x.doi,x]));
 const nineMap=new Map(nine.map(x=>[x.doi,x]));
 const overlaps=[...eightMap.keys()].filter(id=>nineMap.has(id)).sort();
-const newRows=root.accepted.slice(254);
+// Freeze exactly the 14 DOI approved by the consolidation. Later approved batches extend the manifest without altering this cohort.
+const newRows=root.accepted.slice(254,268);
 const formalMap=new Map(formal.articles.map(x=>[x.doi.toLowerCase(),x]));
 const expectedOverlaps=[
  '10.1021/acs.joc.6c01733',
@@ -32,11 +33,11 @@ const expectedOverlaps=[
 
 test('two independent DOI-exact research passes reconcile seventeen reviews into fourteen unique academic approvals',()=>{
  assert.equal(validateHistoricalApproval(root).length,root.accepted.length);
- assert.equal(root.accepted.length,268);
+ assert.ok(root.accepted.length>=268,'future DOI-exact approvals may extend this manifest');
  assert.equal(root.pending.length,2);
- assert.equal(root.summary.include,268);
- assert.equal(root.summary.checked,270);
- assert.equal(new Set(root.accepted.map(x=>x.doi)).size,268);
+ assert.equal(root.summary.include,root.accepted.length);
+ assert.equal(root.summary.checked,root.accepted.length+root.pending.length);
+ assert.equal(new Set(root.accepted.map(x=>x.doi)).size,root.accepted.length);
  assert.deepEqual(overlaps,expectedOverlaps);
  assert.equal(eight.length,8);
  assert.equal(nine.length,9);
