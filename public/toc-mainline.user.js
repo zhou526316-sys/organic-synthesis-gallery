@@ -6152,6 +6152,15 @@ function embeddedJobDois(value) {
     return true;
   }
 
+  function recoveryProbePriority(run,row) {
+    // The queue is serial. Never let a quarantined publisher's optional
+    // recovery probe hold up a currently eligible ordinary publisher job.
+    // Preserve coveragePending's prior ordering within each priority group.
+    var job=row&&row.job||{},publisher=String(job.publisher||publisherForDoi(normalizeDoi(job.doi)));
+    var quarantine=(run&&run.publisherHeartbeatQuarantine||{})[publisher];
+    return quarantine&&quarantine.probeDoi===normalizeDoi(job.doi)?1:0;
+  }
+
   async function runManualFromHead(run) {
     var s=run.summary;run.coverage=new Map();run.publisherHeartbeatFailures={};run.publisherHeartbeatQuarantine={};s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
     run.renewTimer=setInterval(function(){renewManualLease(run);},15000);
@@ -6204,6 +6213,7 @@ function embeddedJobDois(value) {
         if(!renewManualLease(run))throw new Error('manual_run_superseded');
         if(!await applyFreshInventory(false))return;
         var candidates=coveragePending(run),row=null;
+        candidates.sort(function(a,b){return recoveryProbePriority(run,a)-recoveryProbePriority(run,b);});
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
           var quarantined=(run.publisherHeartbeatQuarantine||{})[String(job.publisher||publisherForDoi(job.doi))];
