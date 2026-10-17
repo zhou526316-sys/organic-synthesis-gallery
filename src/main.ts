@@ -2218,6 +2218,10 @@ function scheduleIndexedViewRecovery(serial: number, request: LiteratureCatalogV
 async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   const request = indexedViewRequest('');
   if (!request) return false;
+  // A known 409 is generation-scoped, not a transient network outage.
+  // Do not repeat the same doomed request while verified static browse works.
+  if (request.catalogId === indexedGenerationCooldownCatalogId
+    && Date.now() < indexedGenerationUnavailableUntil) return false;
   // The catalog-view endpoint itself verifies the generation and read gate.
   // Avoid a serial healthcheck before every first/failed full-library search.
   if (indexedViewCapability !== true)
@@ -2232,10 +2236,19 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
     indexedViewState = null;
     indexedViewDegraded = true;
     indexedSearchPending = false;
+    const status = error && typeof error === 'object' && 'status' in error
+      ? Number((error as { status?: unknown }).status) : 0;
+    if (status === 409) {
+      indexedGenerationCooldownCatalogId = request.catalogId;
+      indexedGenerationUnavailableUntil = Date.now() + 45_000;
+      indexedViewRetryKey = '';
+      indexedViewRetryCount = 0;
+    } else {
+      scheduleIndexedViewRecovery(serial, request);
+    }
     document.documentElement.dataset.catalogIndexCapability = 'degraded';
     document.documentElement.dataset.catalogQueryRead = 'static-segments';
-    scheduleIndexedViewRecovery(serial, request);
-    console.warn('D1 literature view temporarily unavailable; static metadata results are incomplete', error);
+    console.warn('D1 literature view temporarily unavailable; using verified static browse', error);
     return false;
   } finally {
     if (indexedSearchRequest === pending) indexedSearchRequest = null;
@@ -2318,6 +2331,32 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
   if (serial !== architectureRefreshSerial || architectureClient !== client) return;
   indexedViewState = null;
   indexedSearchPending = false;
+  const dateRequest = staticDateViewRequest();
+  if (dateRequest) {
+    // Date-only browse has a fully verified, 12/24-record static paging path.
+    // Never call the legacy range() method that fails above 1,000 members.
+    searchPreviewActive = true;
+    refreshCorpusResultsInPlace();
+    const pending = new AbortController();
+    indexedSearchRequest = pending;
+    try {
+      await loadStaticDateViewPage(serial, dateRequest, 1, pending.signal);
+    } catch (error) {
+      if (!pending.signal.aborted && serial === architectureRefreshSerial && architectureClient === client) {
+        staticDateViewState = null;
+        searchPreviewActive = false;
+        architectureReadLimited = true;
+        setArchitectureCorpus(architectureLandingPapers);
+        document.documentElement.dataset.catalogQueryRead = 'static-date-unavailable';
+        console.warn('Verified archive date browse unavailable; no false complete result', error);
+        refreshCorpusResultsInPlace();
+      }
+    } finally {
+      if (indexedSearchRequest === pending) indexedSearchRequest = null;
+    }
+    return;
+  }
+  staticDateViewState = null;
   document.documentElement.dataset.catalogQueryRead = 'static-segments';
   // Show truthful bounded metadata while slower static shard search runs.
   if (query.trim() || dateFrom || dateTo) {
