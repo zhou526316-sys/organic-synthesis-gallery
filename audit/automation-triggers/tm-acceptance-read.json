@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261017-new-owner-log-readonly-1912",
-  "requestedAt": "2026-10-17T11:14:00Z",
-  "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User confirms a new Tampermonkey browser log upload on 2026-10-17 evening Beijing. Read latest R2 diagnostic snapshot and existing media indexes read-only. Compare upload timestamp/version to previous 2026-10-16 22:38 Bridge 2.2.90 engine 6.2.71 running snapshot; assess visit coverage, stop reason, per-DOI output, official TOC and historical yield, inventory deadlines, publisher route/heartbeat, staged figures, evidence, private-PDF stored receipts vs deferred. Never start an owner capture or modify publisher/media/PDF/publication.",
+  "requestId": "tm-20261017-owner-acceptance-pr739-readonly-1792240576828",
+  "requestedAt": "2026-10-17T12:36:16.828Z",
+  "operation": "read-only-existing-owner-diagnostic-and-indexes",
+  "context": "User explicitly requests acceptance of PR #739. Check newest authenticated owner local diagnostic upload and read-only media indexes for a genuine post-PR script revision and comparable DOI-bound publisher capture improvement. Do not write to media, visit any publisher, download private PDF, promote or publish. If latest installed revision remains 6.2.73, expressly classify it as pre-PR baseline (PR still has @version 6.2.73) and not proof of improvement.",
   "expectedBridgeVersion": "2.2.92",
   "expectedInstallRevision": "6.2.73",
   "readOnly": true,
