@@ -13,6 +13,9 @@ function installGlobalStyles(): void {
   style.textContent = `
     .user-title-link,.user-doi-link{color:inherit;text-decoration:none}.user-title-link:hover,.user-doi-link:hover{color:#3159bd;text-decoration:underline}.card.user-status-card{border-color:transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(110deg,rgba(var(--user-status-rgb),.2) 0%,rgba(var(--user-status-rgb),.95) 18%,rgba(255,255,255,.96) 27%,rgba(var(--user-status-rgb),.92) 36%,rgba(var(--user-status-rgb),.18) 58%,rgba(var(--user-status-rgb),.68) 78%,rgba(var(--user-status-rgb),.2) 100%) border-box;background-size:100% 100%,240% 100%;animation:user-status-border-flow 4.2s linear infinite;box-shadow:0 0 0 1px rgba(var(--user-status-rgb),.06),0 0 18px rgba(var(--user-status-rgb),.1)}.card.user-status-card:hover{border-color:transparent;box-shadow:0 0 0 1px rgba(var(--user-status-rgb),.1),0 5px 22px rgba(var(--user-status-rgb),.16)}@keyframes user-status-border-flow{0%{background-position:0 0,0% 50%}100%{background-position:0 0,200% 50%}}@media(prefers-reduced-motion:reduce){.card.user-status-card{animation:none;background-position:0 0,50% 50%}}.user-search-match{outline:2px solid rgba(49,89,189,.22);outline-offset:2px}.user-search-highlight{border-radius:4px;background:#fff0a8;color:inherit;padding:0 .08em}.user-search-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 12px;padding:10px 12px;border:1px solid #cfd9f4;border-radius:12px;background:#f7f9ff;color:#344054;font-size:12px}.user-search-summary strong{color:#172033}.user-search-summary button{border:0;border-radius:8px;background:#e9efff;color:#3159bd;padding:6px 9px;cursor:pointer;font-weight:700}.user-hit-reason{margin:-2px 0 7px;color:#788497;font-size:10px;line-height:1.35}.user-search-empty{grid-column:1/-1;padding:42px 18px;border:1px dashed #d2d9e5;border-radius:16px;background:#fff;color:#667085;text-align:center}.user-search-popover{position:fixed;z-index:10050;max-height:300px;overflow:auto;padding:5px;border:1px solid #d7deea;border-radius:12px;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.18)}.user-search-popover button{width:100%;display:grid;grid-template-columns:65px minmax(0,1fr) auto;gap:7px;align-items:center;padding:8px;border:0;border-radius:8px;background:#fff;text-align:left;color:#344054;cursor:pointer}.user-search-popover button:hover{background:#f4f6fb}.user-search-popover .kind{color:#667085;font-size:9px}.user-search-popover strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.user-search-popover small{color:#98a2b3;font-size:9px}@media(max-width:680px){.user-search-summary{align-items:flex-start;font-size:10px}.user-search-summary button{flex:0 0 auto}.user-hit-reason{font-size:8px;margin-bottom:4px}.user-search-popover{max-height:240px}.user-search-popover button{grid-template-columns:48px minmax(0,1fr);font-size:10px}.user-search-popover small{display:none}}
   `;
+  // Chromium may ignore autocomplete=off when restoring a saved login.
+  // Detect browser autofill without changing the actual sign-in form.
+  style.textContent += '\n#search:-webkit-autofill{animation:gallery-search-credential-autofill 1ms linear}@keyframes gallery-search-credential-autofill{from{opacity:1}to{opacity:1}}';
   document.head.appendChild(style);
 }
 
@@ -25,6 +28,8 @@ export class UserSearchController {
   private candidates: Candidate[] = [];
   private refreshQueued = false;
   private composing = false;
+  private searchActivated = false;
+  private readonly autofillCheckTimers: number[] = [];
   private cards: HTMLElement[] = [];
   private metas: PaperMeta[] = [];
   private aliasKey = '';
@@ -42,7 +47,29 @@ export class UserSearchController {
     this.suggestionIntent = false;
     this.dismissSuggestions();
   };
+  // The corpus query is authoritative. An email inserted by a browser's
+  // password manager must not silently become a literature search. Do not
+  // suppress intentional email searches after the reader activates the box.
+  private readonly discardCredentialAutofill = (event?: Event): boolean => {
+    const input = this.searchInput;
+    if (!input || this.stopped || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) return false;
+    let browserAutofill = false;
+    try { browserAutofill = input.matches(':-webkit-autofill'); } catch { /* selector support varies */ }
+    const browserReplacement = event instanceof InputEvent && event.inputType === 'insertReplacementText';
+    const browserAnimation = event instanceof AnimationEvent
+      && event.animationName === 'gallery-search-credential-autofill';
+    if (this.searchActivated && !browserAutofill && !browserReplacement && !browserAnimation) return false;
+    input.value = this.fullQuery;
+    this.stopSuggestions();
+    return true;
+  };
+  private readonly onPageShow = (): void => { this.discardCredentialAutofill(); };
+  private readonly onAutofillAnimation = (event: AnimationEvent): void => {
+    if (event.animationName === 'gallery-search-credential-autofill') this.discardCredentialAutofill(event);
+  };
   private readonly onSearchFocus = (): void => {
+    this.discardCredentialAutofill();
+    this.searchActivated = true;
     // A pending blur-dismiss timer belongs to the previous focus cycle.
     // Cancel it before rendering suggestions for the newly focused input.
     // Otherwise a fast outside-click and re-focus can close a fresh popup.
@@ -53,8 +80,9 @@ export class UserSearchController {
     this.suggestionIntent = this.fullQuery.trim().length >= 2;
     this.renderSuggestions();
   };
-  private readonly onSearchChange = (): void => { store.addHistory(this.fullQuery); };
+  private readonly onSearchChange = (): void => { this.discardCredentialAutofill(); store.addHistory(this.fullQuery); };
   private readonly onSearchBlur = (): void => {
+    if (!this.fullQuery.trim()) this.searchActivated = false;
     if (this.blurDismissTimer !== null) window.clearTimeout(this.blurDismissTimer);
     this.blurDismissTimer = window.setTimeout(() => {
       this.blurDismissTimer = null;
@@ -104,7 +132,7 @@ export class UserSearchController {
     // This controller owns search now, so stop that older listener instead of
     // blanking/restoring the input value (which breaks IME and caret position).
     event.stopImmediatePropagation();
-    if (!this.searchInput) return;
+    if (!this.searchInput || this.discardCredentialAutofill(event)) return;
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
@@ -116,7 +144,7 @@ export class UserSearchController {
     this.queueRefresh();
     this.renderSuggestions();
   };
-  private readonly onCompositionStart = (): void => { this.composing = true; };
+  private readonly onCompositionStart = (): void => { this.searchActivated = true; this.composing = true; };
   private readonly onCompositionEnd = (): void => {
     this.composing = false;
     if (!this.searchInput) return;
@@ -138,7 +166,10 @@ export class UserSearchController {
     this.searchInput = this.root.querySelector<HTMLInputElement>('#search');
     this.gallery = this.root.querySelector<HTMLElement>('#gallery');
     if (!this.searchInput || !this.gallery) return;
-    this.fullQuery = preservedQuery || this.searchInput.value || '';
+    // Never adopt a DOM value filled before the controller was mounted: it
+    // may be a restored login username, not a user-initiated search.
+    this.fullQuery = preservedQuery;
+    this.searchActivated = false;
     this.searchInput.value = this.fullQuery;
     this.searchInput.placeholder = this.language === 'zh' ? '搜索标题、作者、DOI、关键词；多词条 AND，支持拼写纠正…' : 'Search title, author, DOI or keyword; multi-term AND + typo correction…';
     this.searchInput.addEventListener('input', this.onInput, { capture: true });
@@ -147,6 +178,14 @@ export class UserSearchController {
     this.searchInput.addEventListener('keydown', this.onSearchKeyDown);
     this.searchInput.addEventListener('change', this.onSearchChange);
     this.searchInput.addEventListener('focus', this.onSearchFocus);
+    this.searchInput.addEventListener('animationstart', this.onAutofillAnimation);
+    window.addEventListener('pageshow', this.onPageShow);
+    // Some browsers restore form values after DOMContentLoaded without an
+    // input event. Bound the guard to early page hydration; focus/pageshow and
+    // the autofill animation cover later changes without background polling.
+    for (const delay of [0, 250, 1200, 4000]) {
+      this.autofillCheckTimers.push(window.setTimeout(() => this.discardCredentialAutofill(), delay));
+    }
     this.searchInput.addEventListener('blur', this.onSearchBlur);
     document.addEventListener('pointerdown', this.onOuterPointerDown, true);
     this.root.addEventListener('gallery-search', this.handleSearch as EventListener);
@@ -175,6 +214,10 @@ export class UserSearchController {
     this.searchInput?.removeEventListener('keydown', this.onSearchKeyDown);
     this.searchInput?.removeEventListener('change', this.onSearchChange);
     this.searchInput?.removeEventListener('focus', this.onSearchFocus);
+    this.searchInput?.removeEventListener('animationstart', this.onAutofillAnimation);
+    window.removeEventListener('pageshow', this.onPageShow);
+    for (const timer of this.autofillCheckTimers) window.clearTimeout(timer);
+    this.autofillCheckTimers.length = 0;
     this.searchInput?.removeEventListener('blur', this.onSearchBlur);
     document.removeEventListener('pointerdown', this.onOuterPointerDown, true);
     if (this.blurDismissTimer !== null) {
@@ -205,6 +248,7 @@ export class UserSearchController {
 
   private setSearch(value: string): void {
     if (!this.searchInput) return;
+    this.searchActivated = true;
     this.fullQuery = value.trim(); store.addHistory(this.fullQuery); this.searchInput.value = this.fullQuery;
     this.searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     this.searchInput.focus();
