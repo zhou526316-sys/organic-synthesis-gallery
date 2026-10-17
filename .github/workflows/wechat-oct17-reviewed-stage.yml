@@ -1,0 +1,96 @@
+name: WeChat Oct17 reviewed source staging
+on:
+  push:
+    branches: [wechat-oct17-zirconium-phosphine-r1]
+    paths: ['audit/automation-triggers/wechat-oct17-reviewed-stage.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct17-reviewed-stage
+  cancel-in-progress: false
+defaults:
+  run:
+    shell: bash
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconcile latest main without changing published literature
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git merge --no-edit origin/main
+      - name: Verify exact reviewed transfer and retain existing publisher code
+        env:
+          REVIEWED_ARCHIVE_URL: https://at.adobe.com/FcFApZO2eqWMaC0M
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,io,json,pathlib,hashlib,urllib.request,zipfile
+          root=pathlib.Path.cwd()
+          req=urllib.request.Request(os.environ['REVIEWED_ARCHIVE_URL'],headers={'User-Agent':'Mozilla/5.0','Accept':'application/zip'})
+          with urllib.request.urlopen(req,timeout=60) as r:data=r.read(12000000)
+          sha='aaaf164aef3d29c6d8ea1a46ac8b1bee710b20b970de4bc76ab8e3f9f6c72ffa'
+          assert hashlib.sha256(data).hexdigest()==sha,'Exact archive hash mismatch'
+          z=zipfile.ZipFile(io.BytesIO(data));m=json.loads(z.read('TRANSFER_MANIFEST.json'))
+          assert m['date']=='2026-10-17' and m['revision']=='2026-10-17-r1'
+          assert m['draftOnly'] is True and m['publicSendAuthorized'] is False
+          assert len(m['files'])==85
+          assert set(z.namelist())=={'TRANSFER_MANIFEST.json'}|{'production/'+x['path'] for x in m['files']}
+          def blob(p):
+            b=p.read_bytes();return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          assert len(m['runtimeFingerprints'])==2
+          for row in m['runtimeFingerprints']:
+            assert blob(root/row['path'])==row['blobSha'],'Publisher runtime changed; re-review, do not overwrite'
+          prefixes=['public/wechat-assets/reviewed/2026-10-17-r1/','audit/wechat-working/2026-10-17-r1-review/']
+          singles={'public/wechat-editions/2026-10-17.json','public/wechat-featured/2026-10-17.json','public/wechat-retrospective/xu-phosphine-orthogonal-hydrogenation-20261017.json','audit/wechat-working/2026-10-17-review-gate.json','scripts/verify-wechat-oct17-review.py'}
+          for row in m['files']:
+            rel=row['path'];p=(root/rel).resolve();p.relative_to(root)
+            assert rel in singles or any(rel.startswith(a) for a in prefixes),rel
+            payload=z.read('production/'+rel)
+            assert len(payload)==row['bytes'] and hashlib.sha256(payload).hexdigest()==row['sha256'],rel
+            if p.exists():assert p.read_bytes()==payload,'Concurrent Oct17 source exists; refuse overwrite: '+rel
+            else:p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(payload)
+          pathlib.Path('/tmp/oct17-staged-files.json').write_text(json.dumps(m['files']))
+          print(json.dumps({'files':len(m['files']),'archiveSha256':sha,'publisherCodeChanged':False,'wechatWrite':False}))
+          PY
+      - name: Install original image decoder
+        run: python3 -m pip install --quiet Pillow
+      - name: Require strict source, raster, native renderer and actual formal-release checks
+        run: |
+          set -euo pipefail
+          python3 scripts/verify-wechat-oct17-review.py | tee /tmp/oct17-source-check.json
+          python3 - <<'PY'
+          import json,pathlib,subprocess
+          r=json.loads(pathlib.Path('/tmp/oct17-source-check.json').read_text())
+          assert r['status']=='actual_catalogue_and_reviewed_renderer_pass'
+          assert r['papers']==20 and r['assets']==42 and r['scienceFigures']==[20,19] and r['bodyImageTags']==[22,19]
+          subprocess.run(['git','diff','--exit-code','origin/main','--','public/rolling-supplement.json','public/papers.gz.b64','ops/wechat-publisher/create-draft.py','ops/wechat-publisher/reviewed_gallery_entry.py','audit/automation-triggers/wechat-publisher-request.json'],check=True)
+          r.update({'frozenPublicationChanged':False,'publisherCodeChanged':False,'existingOct16DraftUnchanged':True,'officialDraftWritePending':True})
+          pathlib.Path('audit/wechat-working/2026-10-17-r1-integration-check.json').write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Commit validated Oct17 sources only
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,subprocess
+          rows=json.load(open('/tmp/oct17-staged-files.json'))
+          names=[x['path'] for x in rows]+['audit/wechat-working/2026-10-17-r1-integration-check.json']
+          subprocess.run(['git','add','--']+names,check=True)
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          if subprocess.run(['git','diff','--cached','--quiet']).returncode:
+            subprocess.run(['git','commit','-m','editorial: Oct17 three-pass reviewed JACS and Nature Synthesis pair with 39 original science figures'],check=True)
+          subprocess.run(['git','push','origin','HEAD:wechat-oct17-zirconium-phosphine-r1'],check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oct17-reviewed-source-check
+          path: /tmp/oct17-source-check.json
+          retention-days: 7
