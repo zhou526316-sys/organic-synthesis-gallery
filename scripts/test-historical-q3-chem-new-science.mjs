@@ -75,7 +75,18 @@ test('two genuinely original methods admitted for existing sole 08 historical wr
     const a=manifest.accepted.find(x=>x.doi===id);
     const x=science.assessments.find(x=>x.doi===id);
     assert.ok(a,'expected reviewed method '+id);
-    assert.ok(selected.some(x=>x.doi===id));
+    if(published.has(id)){
+      // 08:00 fixed-slot writer has legitimately admitted this historically
+      // science-approved DOI. Verify the authoritative archive card rather
+      // than demanding an already-published DOI remain in a future queue.
+      const formalRow=formal.articles.find(row=>row.doi===id);
+      assert.equal(formalRow.date,a.date);
+      assert.equal(formalRow.ingestionChannel,'historical_backfill');
+      assert.equal(formalRow.mediaPolicy,'toc_only');
+      assert.equal(formalRow.addedDate,'');
+      assert.notEqual(formalRow.new,true);
+      assert.equal(selected.some(row=>row.doi===id),false);
+    }else assert.ok(selected.some(row=>row.doi===id));
     assert.equal(a.reviewEvidence.publisherOnlineDate,x.date);
     assert.equal(a.scopeAssessment.primaryContribution,x.scopeAssessment.primaryContribution);
     assert.equal(a.scopeAssessment.generalityEvidence,x.scopeAssessment.generalityEvidence);
@@ -91,7 +102,7 @@ test('two genuinely original methods admitted for existing sole 08 historical wr
     assert.equal(card.mediaPolicy,'toc_only');
     assert.equal(card.ingestionChannel,'historical_backfill');
     assert.equal(card.date,a.date);
-    assert.ok(!published.has(id));
+    // Published DOI may legitimately be archived at the sole fixed 08:00 slot.
     assert.ok(!excluded.has(id));
   }
   assert.equal(manifest.accepted.some(x=>x.doi===hold),false);
