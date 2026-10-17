@@ -653,6 +653,18 @@ select {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
+.gallery-search-pending-note {
+  grid-column: 1 / -1;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #d7deea;
+  background: #f5f7fb;
+  color: #475467;
+  font-size: 13px;
+}
+.gallery.search-stale > .card {
+  opacity: .58;
+}
 .card[hidden] {
   display: none !important;
 }

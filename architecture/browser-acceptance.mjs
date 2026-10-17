@@ -45,8 +45,10 @@ await symlink(path.join(root,'node_modules'),path.join(work,'node_modules'),'dir
 // Only a temporary preview copy is instrumented; no repository source file is changed.
 let main=await readFile(path.join(work,'src/main.ts'),'utf8');
 for(const anchor of ['void load();','void resolveTitles().then(() => resolveTitles());','void loadTranslations();']) assert.ok(main.includes(anchor),`legacy_hook_anchor_missing:${anchor}`);
-main=main.replace('void resolveTitles().then(() => resolveTitles());','await resolveTitles(); await resolveTitles();')
-  .replace('void loadTranslations();','await loadTranslations();');
+const startup = 'void resolveTitles().then(() => resolveTitles());\n    void loadTranslations();';
+assert.ok(main.includes(startup),'legacy_startup_hooks_missing');
+main=main.replace(startup,
+  'await resolveTitles(); await resolveTitles();\n    await loadTranslations();');
 const hooks=`
 (globalThis as any).__archBridge = {
   async replace(rows: Paper[]) {

@@ -368,6 +368,29 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 
 
 
+test('search suggestions: typing LMCT never rebuilds an open account password form', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  const shell = page.locator('gallery-user-shell');
+  await shell.locator('.trigger').click();
+  await shell.locator('[data-tab="login"]').click();
+  const password = shell.locator('[data-local-password]');
+  await expect(password).toBeVisible();
+  await page.evaluate(() => {
+    const account = document.querySelector('gallery-user-shell') as HTMLElement;
+    (window as any).__stablePasswordField = account.shadowRoot?.querySelector('[data-local-password]');
+  });
+  await page.locator('#search').fill('LMCT');
+  await expect(page.locator('#search')).toHaveValue('LMCT');
+  expect(await page.evaluate(() => {
+    const account = document.querySelector('gallery-user-shell') as HTMLElement;
+    return account.shadowRoot?.querySelector('[data-local-password]') === (window as any).__stablePasswordField;
+  })).toBe(true);
+});
+
 test('active D1 catalog view keeps all-time search server-paged and avoids static search shards', async ({ page }) => {
   const data = fixture();
   let staticSearchRequests = 0;
@@ -425,9 +448,31 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
 
+  // Mark the real nodes: a complete remount after search is the trigger for
+  // Chromium password-manager associating the search keyword with login.
+  await page.evaluate(() => {
+    (window as any).__stableSearchNodes = {
+      search: document.querySelector('#search'),
+      account: document.querySelector('gallery-user-shell'),
+    };
+  });
   await page.locator('#search').fill('10.');
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
     .toBe('d1-index');
+  const searchShell = await page.evaluate(() => {
+    const search = document.querySelector<HTMLInputElement>('#search');
+    return {
+      searchPreserved: search === (window as any).__stableSearchNodes.search,
+      accountPreserved: document.querySelector('gallery-user-shell') === (window as any).__stableSearchNodes.account,
+      searchAutocomplete: search?.autocomplete,
+      searchType: search?.type,
+      searchName: search?.name,
+    };
+  });
+  expect(searchShell).toEqual({
+    searchPreserved: true, accountPreserved: true,
+    searchAutocomplete: 'off', searchType: 'search', searchName: 'gallery-literature-search',
+  });
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
   await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(RESULT_WINDOW_SIZE, data.memberCount));
   await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
@@ -462,6 +507,53 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
     // should not need another API request or manufacture a stale page-three cursor.
     expect(viewRequests.length).toBe(readsBeforeReturn);
   }
+});
+
+test('date range exposes complete cold Archive via bounded static pagination after D1 409', async ({ page }) => {
+  const data = fixture();
+  let indexRequests = 0;
+  await page.route('**/api/literature/catalog-view', route => {
+    indexRequests += 1;
+    return route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({
+      error:'literature_catalog_generation_not_ready',
+    })});
+  });
+  await stubOptionalApi(page);
+  const base = process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174';
+  await page.goto(base + '/', {waitUntil:'domcontentloaded'});
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    {timeout:30000}).toBe('architecture-v1');
+
+  await page.locator('#dateFrom').fill('2026-01-01');
+  await page.locator('#dateFrom').dispatchEvent('change');
+  await page.locator('#dateTo').fill('2026-10-31');
+  await page.locator('#dateTo').dispatchEvent('change');
+
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    {timeout:30000}).toBe('static-date-page');
+  const dateExpected = data.indexedItems.filter(row => row.firstOnlineDate
+    && row.firstOnlineDate >= '2026-01-01' && row.firstOnlineDate <= '2026-10-31');
+  await expect(page.locator('#resultCount')).toHaveText(String(dateExpected.length));
+  await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(RESULT_WINDOW_SIZE,dateExpected.length));
+  await expect(page.locator('.architecture-read-limited')).toContainText(/日期范围|date-filtered/);
+  expect(indexRequests).toBeGreaterThan(0);
+
+  const totalPages = Math.ceil(dateExpected.length / RESULT_WINDOW_SIZE);
+  expect(totalPages).toBeGreaterThan(1);
+  await page.locator('#resultPageJumpInput').fill(String(totalPages));
+  await page.locator('#resultPageJumpButton').click();
+  await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp('(?:第 |Page )'+totalPages+'/'));
+  const coldExpected = dateExpected.filter(row => row.firstOnlineDate?.startsWith('2026-01'));
+  expect(coldExpected.length).toBeGreaterThan(0);
+  await expect(page.locator(`#gallery > .card[data-doi="${coldExpected[0].doi}"]`)).toHaveCount(1);
+
+  await page.locator('#dateTo').fill('2026-03-31');
+  await page.locator('#dateTo').dispatchEvent('change');
+  const narrow = dateExpected.filter(row => row.firstOnlineDate && row.firstOnlineDate <= '2026-03-31');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    {timeout:30000}).toBe('static-date-page');
+  await expect(page.locator('#resultCount')).toHaveText(String(narrow.length));
+  await expect(page.locator('#gallery > .card')).toHaveCount(narrow.length);
 });
 
 test('D1 metadata is discovery-only and card content comes from the verified static revision', async ({ page }) => {
@@ -963,11 +1055,17 @@ test('a burst of search keystrokes does not rebuild gallery cards or schedule st
       loading: gallery.dataset.searchPending === 'true',
       count: document.querySelector('#resultCount')?.textContent,
       cards: gallery.querySelectorAll('.card').length,
+      stale: gallery.classList.contains('search-stale'),
+      notice: gallery.querySelector('[data-search-progress]')?.textContent || '',
     };
   });
   expect(result.loading).toBe(true);
   expect(result.count).toBe('…');
-  expect(result.cards).toBe(0);
+  // Previously loaded cards remain visible but explicitly marked as previous
+  // results until a verified global response is ready.
+  expect(result.cards).toBeGreaterThan(0);
+  expect(result.stale).toBe(true);
+  expect(result.notice).toMatch(/上一次结果|previous results/);
   expect(result.childRebuilds).toBeLessThanOrEqual(2);
 });
 

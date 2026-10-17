@@ -1,4 +1,5 @@
 import { normalizeDoi } from '../shared/literature-identity.mjs';
+import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
 
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 const hash = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
@@ -24,7 +25,14 @@ export function buildLegacyTitlePresentation(records, groups, { catalogId, sourc
     assert(Array.isArray(rows), 'presentation_source_not_array');
     for (const row of rows) {
       const doi = normalizeDoi(row?.doi || row?.url);
-      if (doi && !titles.has(doi) && validTitle(row.title)) titles.set(doi, row.title.trim());
+      if (!doi || titles.has(doi)) continue;
+      // The current Gallery's normalizePaper() restores DOI-reviewed titles
+      // before merging titleless legacy records. This first-title precedence
+      // also applies when those early records have null/placeholder titles.
+      // Do not downgrade sub/superscript chemistry to later plain-text titles.
+      const candidate = validTitle(row.title)
+        ? row.title.trim() : verifiedHistoricalTitle(doi);
+      if (validTitle(candidate)) titles.set(doi, candidate);
     }
   }
   const overrides = {}, seen = new Set();

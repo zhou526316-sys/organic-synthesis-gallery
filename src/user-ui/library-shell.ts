@@ -147,7 +147,14 @@ export class GalleryUserShell extends HTMLElement {
     if (this.sessionPoll !== null) window.clearInterval(this.sessionPoll);
     this.sessionPoll = null;
   }
-  attributeChangedCallback(): void { if (this.isConnected) this.render(); }
+  attributeChangedCallback(name: string): void {
+    if (!this.isConnected) return;
+    // Search keystrokes update this attribute solely for the Followed tab.
+    // Rebuilding an unrelated login/password form can prompt Chromium to
+    // misclassify the literature keyword as a username and offer to save it.
+    if (name === 'data-current-query' && (!this.open || this.tab !== 'followed')) return;
+    this.render();
+  }
   private get language(): Language { return this.dataset.language === 'en' ? 'en' : 'zh'; }
   private tr(zh: string, en: string): string { return this.language === 'zh' ? zh : en; }
 
