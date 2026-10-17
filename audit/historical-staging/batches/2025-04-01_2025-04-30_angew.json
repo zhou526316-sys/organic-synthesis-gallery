@@ -10,7 +10,7 @@
     "from": "2025-04-01",
     "to": "2025-04-30"
   },
-  "checkedAt": "2026-10-15T15:46:34.794Z",
+  "checkedAt": "2026-10-17T17:41:42.820Z",
   "status": "incomplete_sources",
   "sourceStatus": {
     "crossref": [
@@ -50,9 +50,9 @@
       "openalex": 100
     }
   },
-  "candidateCount": 528,
+  "candidateCount": 529,
   "alreadyPublished": 0,
-  "unreviewed": 528,
+  "unreviewed": 529,
   "records": [
     {
       "doi": "10.1002/anie.202415161",
@@ -14871,16 +14871,14 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref+openalex",
+        "source": "crossref",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1002/anie.202504320",
       "sources": [
-        "crossref",
-        "openalex"
+        "crossref"
       ],
-      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -22288,6 +22286,57 @@
       "url": "https://doi.org/10.1002/anie.202506248",
       "sources": [
         "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-04-01",
+        "to": "2025-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1002/anie.202506252",
+      "title": "Enhancing the Built‐In Electric Field of Thickness‐Insensitive Small Molecule Cathode Interlayers for High‐Efficiency and Stable Organic Solar Cells",
+      "authors": [
+        "Yuxing Wang",
+        "Junjie Wen",
+        "Zhe Shang",
+        "Yanyi Zhong",
+        "Huixiang Zhang",
+        "Wenxu Liu",
+        "Wentian Han",
+        "Huanhuan Yang",
+        "Jiming Liu",
+        "Jiangbin Zhang",
+        "Hui Li",
+        "Yao Liu"
+      ],
+      "date": "2025-04-28",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Angewandte Chemie International Edition",
+      "citation": {
+        "year": 2025,
+        "volume": "64",
+        "issue": "31",
+        "pages": "e202506252-e202506252",
+        "articleNumber": "",
+        "doi": "10.1002/anie.202506252"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1002/anie.202506252",
+      "sources": [
+        "openalex"
       ],
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",

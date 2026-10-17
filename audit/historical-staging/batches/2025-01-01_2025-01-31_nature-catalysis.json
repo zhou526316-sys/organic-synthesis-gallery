@@ -1,0 +1,652 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-01-01",
+    "to": "2025-01-31"
+  },
+  "checkedAt": "2026-10-17T17:43:01.908Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 13,
+        "count": 13,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 13,
+      "count": 13,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 13,
+      "openalex": 13
+    }
+  },
+  "candidateCount": 13,
+  "alreadyPublished": 0,
+  "unreviewed": 13,
+  "records": [
+    {
+      "doi": "10.1038/s41929-024-01275-5",
+      "title": "Role of the human-in-the-loop in emerging self-driving laboratories for heterogeneous catalysis",
+      "authors": [
+        "Christoph Scheurer",
+        "Karsten Reuter"
+      ],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "13-19",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01275-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01275-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01276-4",
+      "title": "Site- and enantioselective allylic and propargylic C–H oxidation enabled by copper-based biomimetic catalysis",
+      "authors": [
+        "Honggang Zhang",
+        "Yibo Zhou",
+        "Tilong Yang",
+        "Jingui Wu",
+        "Pinhong Chen",
+        "Zhenyang Lin",
+        "Guosheng Liu"
+      ],
+      "date": "2025-01-08",
+      "datePrecision": "day",
+      "createdDate": "2025-01-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "58-66",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01276-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01276-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01277-3",
+      "title": "In situ electrochemical production of solid peroxide from urine",
+      "authors": [
+        "Xinjian Shi",
+        "Yue Jiang",
+        "Bailin Zeng",
+        "Zhuoyue Sun",
+        "Maojin Yun",
+        "Peng Lv",
+        "Yu Jia",
+        "Xiaolin Zheng"
+      ],
+      "date": "2025-01-20",
+      "datePrecision": "day",
+      "createdDate": "2025-01-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "67-78",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01277-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01277-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01278-2",
+      "title": "Organic electrolyte cations promote non-aqueous CO2 reduction by mediating interfacial electric fields",
+      "authors": [
+        "Jon-Marc McGregor",
+        "Jay T. Bender",
+        "Amanda S. Petersen",
+        "Louise Cañada",
+        "Jan Rossmeisl",
+        "Joan F. Brennecke",
+        "Joaquin Resasco"
+      ],
+      "date": "2025-01-10",
+      "datePrecision": "day",
+      "createdDate": "2025-01-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "79-91",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01278-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01278-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01279-1",
+      "title": "Coupled cation–electron transfer at the Pt(111)/perfluoro-sulfonic acid ionomer interface and its impact on the oxygen reduction reaction kinetics",
+      "authors": [
+        "Kaiyue Zhao",
+        "Mingchuan Luo",
+        "Yongfan Zhang",
+        "Xiaoxia Chang",
+        "Bingjun Xu"
+      ],
+      "date": "2025-01-13",
+      "datePrecision": "day",
+      "createdDate": "2025-01-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "46-57",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01279-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01279-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01281-7",
+      "title": "An efficient catalytic route in haem peroxygenases mediated by O2/small-molecule reductant pairs for sustainable applications",
+      "authors": [
+        "Di Deng",
+        "Zhihui Jiang",
+        "Lixin Kang",
+        "Langxing Liao",
+        "Xiaodong Zhang",
+        "Yuben Qiao",
+        "Yang Zhou",
+        "Liulin Yang",
+        "Binju Wang",
+        "Aitao Li"
+      ],
+      "date": "2025-01-28",
+      "datePrecision": "day",
+      "createdDate": "2025-01-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "20-32",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01281-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01281-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01282-6",
+      "title": "Confined hot-pressurized water in Brønsted-acidic beta zeolite speeds up the O-demethylation of guaiacol",
+      "authors": [
+        "Massimo Bocus",
+        "Elias Van Den Broeck",
+        "Xian Wu",
+        "Mathias Bal",
+        "Jeroen Bomon",
+        "Louis Vanduyfhuys",
+        "Bert F. Sels",
+        "Bert U. W. Maes",
+        "Veronique Van Speybroeck"
+      ],
+      "date": "2025-01-09",
+      "datePrecision": "day",
+      "createdDate": "2025-01-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "33-45",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01282-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01282-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01283-5",
+      "title": "Plasma-driven decentralized production of essential chemicals",
+      "authors": [
+        "Maria L. Carreon"
+      ],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "2-7",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01283-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01283-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01284-4",
+      "title": "Clarifying cation control",
+      "authors": [
+        "Michael J. Janik"
+      ],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "9-10",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01284-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01284-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-024-01286-2",
+      "title": "A hydrogenative oxidation strategy for the single-step synthesis of lactams from N-heteroarenes using water",
+      "authors": [
+        "Yaoyu Liang",
+        "Jie Luo",
+        "Cai You",
+        "Yael Diskin-Posner",
+        "David Milstein"
+      ],
+      "date": "2025-01-20",
+      "datePrecision": "day",
+      "createdDate": "2025-01-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "2",
+        "pages": "98-106",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-024-01286-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-024-01286-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01290-0",
+      "title": "Enzymatic catalysis meets radical coupling",
+      "authors": [
+        "Chenyu Wang"
+      ],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "8-8",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01290-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01290-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01296-8",
+      "title": "Molecular basis of activity changes in acid catalysis within nanoconfined water",
+      "authors": [
+        "Bocus, Massimo",
+        "Véronique Van Speybroeck"
+      ],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "11-12",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01296-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01296-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01297-7",
+      "title": "Reaching out",
+      "authors": [],
+      "date": "2025-01-29",
+      "datePrecision": "day",
+      "createdDate": "2025-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "1-1",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01297-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01297-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

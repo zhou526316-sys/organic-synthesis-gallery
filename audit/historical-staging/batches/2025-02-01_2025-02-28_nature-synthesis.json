@@ -1,0 +1,1107 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-02-01",
+    "to": "2025-02-28"
+  },
+  "checkedAt": "2026-10-17T17:42:40.003Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 22,
+        "count": 22,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 22,
+      "count": 22,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 22,
+      "openalex": 22
+    }
+  },
+  "candidateCount": 22,
+  "alreadyPublished": 0,
+  "unreviewed": 22,
+  "records": [
+    {
+      "doi": "10.1038/s44160-024-00724-0",
+      "title": "Synthesis and reactivity of an antimony(III) dication",
+      "authors": [
+        "Deepti Sharma",
+        "Annabel Benny",
+        "Alex P. Andrews",
+        "Thayalan Rajeshkumar",
+        "Laurent Maron",
+        "Ajay Venugopal"
+      ],
+      "date": "2025-02-10",
+      "datePrecision": "day",
+      "createdDate": "2025-02-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "462-470",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00724-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00724-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00731-1",
+      "title": "Cyclopalladation of a covalent organic framework for near-infrared-light-driven photocatalytic hydrogen peroxide production",
+      "authors": [
+        "Andrés Rodríguez-Camargo",
+        "Maxwell W. Terban",
+        "Martina Paetsch",
+        "Elio A. Rico",
+        "Daniel Graf",
+        "Radhika Hirpara",
+        "Viola Duppel",
+        "Igor Moudrakovski",
+        "Martin Etter",
+        "Néstor Guijarro",
+        "Christian Ochsenfeld",
+        "Robert E. Dinnebier",
+        "Liang Yao",
+        "Bettina V. Lotsch"
+      ],
+      "date": "2025-02-10",
+      "datePrecision": "day",
+      "createdDate": "2025-02-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "710-719",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00731-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00731-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00733-z",
+      "title": "Selective hydrogenolysis of organohalides",
+      "authors": [
+        "Haifeng Yang",
+        "Dan Lehnherr"
+      ],
+      "date": "2025-02-06",
+      "datePrecision": "day",
+      "createdDate": "2025-02-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "414-416",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00733-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00733-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00735-x",
+      "title": "An antimony(III) dication for styrene hydroamination",
+      "authors": [],
+      "date": "2025-02-13",
+      "datePrecision": "day",
+      "createdDate": "2025-02-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "419-420",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00735-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00735-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00737-3",
+      "title": "Synthesis of two-dimensional transition metal phosphorous chalcogenides and their high-entropy alloys",
+      "authors": [
+        "Haifeng Que",
+        "Bixuan Li",
+        "Luhao Sun",
+        "Peng Zhang",
+        "Huaning Jiang",
+        "Xingguo Wang",
+        "Kunpeng Si",
+        "Binyin Gao",
+        "Qianqian He",
+        "Yangyu Jia",
+        "Yahan Yang",
+        "Juntian Wei",
+        "Yongji Gong"
+      ],
+      "date": "2025-02-10",
+      "datePrecision": "day",
+      "createdDate": "2025-02-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "582-591",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00737-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00737-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00738-2",
+      "title": "Isotopological entanglement of a metal–organic framework and a hydrogen-bonded organic framework for proton conduction",
+      "authors": [
+        "Zhongwen Jiang",
+        "Yuqian Sun",
+        "Yin Rao",
+        "Lingyi Yang",
+        "Haozhi Xi",
+        "Qiaowei Li"
+      ],
+      "date": "2025-02-04",
+      "datePrecision": "day",
+      "createdDate": "2025-02-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "622-631",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00738-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00738-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00740-8",
+      "title": "Producing protein nanotubes by sacrificing nanofibres",
+      "authors": [
+        "Shiki Yagai"
+      ],
+      "date": "2025-02-05",
+      "datePrecision": "day",
+      "createdDate": "2025-02-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "531-532",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00740-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00740-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00741-7",
+      "title": "Synthesis of micrometre-thick oriented 2D covalent organic framework films by a kinetic polymerization pathway",
+      "authors": [
+        "Luca Cusin",
+        "Piotr Cieciórski",
+        "Samuel Van Gele",
+        "Fabian Heck",
+        "Simon Krause",
+        "Pawel W. Majewski",
+        "Bettina V. Lotsch",
+        "Wojciech Danowski",
+        "Paolo Samorì"
+      ],
+      "date": "2025-02-20",
+      "datePrecision": "day",
+      "createdDate": "2025-02-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "632-641",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00741-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00741-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00742-6",
+      "title": "Selective electrocatalytic synthesis of urea using entangled iron porphyrins in covalent organic frameworks",
+      "authors": [
+        "Chengtao Gong",
+        "Yongwu Peng",
+        "Mengqiu Xu",
+        "Xiaofei Wei",
+        "Guan Sheng",
+        "Jialiang Liu",
+        "Xiaowei Wu",
+        "Xing Han",
+        "Fangna Dai",
+        "Jinqiao Dong",
+        "Zhijie Chen",
+        "Yihan Zhu",
+        "Wei Ye",
+        "Yong Cui"
+      ],
+      "date": "2025-02-21",
+      "datePrecision": "day",
+      "createdDate": "2025-02-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "720-729",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00742-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00742-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00743-5",
+      "title": "Building spin-1/2 antiferromagnetic Heisenberg chains with diaza-nanographenes",
+      "authors": [
+        "Xiaoshuai Fu",
+        "Li Huang",
+        "Kun Liu",
+        "João C. G. Henriques",
+        "Yixuan Gao",
+        "Xianghe Han",
+        "Hui Chen",
+        "Yan Wang",
+        "Carlos-Andres Palma",
+        "Zhihai Cheng",
+        "Xiao Lin",
+        "Shixuan Du",
+        "Ji Ma",
+        "Joaquín Fernández-Rossier",
+        "Xinliang Feng",
+        "Hong-Jun Gao"
+      ],
+      "date": "2025-02-21",
+      "datePrecision": "day",
+      "createdDate": "2025-02-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "684-693",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00743-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00743-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00744-4",
+      "title": "Fabrication of spin-1/2 Heisenberg antiferromagnetic chains via combined on-surface synthesis and reduction for spinon detection",
+      "authors": [
+        "Xuelei Su",
+        "Zhihao Ding",
+        "Ye Hong",
+        "Nan Ke",
+        "KaKing Yan",
+        "Can Li",
+        "Yi-Fan Jiang",
+        "Ping Yu"
+      ],
+      "date": "2025-02-21",
+      "datePrecision": "day",
+      "createdDate": "2025-02-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "694-701",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00744-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00744-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00745-3",
+      "title": "Difunctionalization of bicyclo[1.1.0]butanes enabled by merging C−C cleavage and ruthenium-catalysed remote C−H activation",
+      "authors": [
+        "Shan Chen",
+        "Zhimin Xu",
+        "Binbin Yuan",
+        "Xue-Ya Gou",
+        "Lutz Ackermann"
+      ],
+      "date": "2025-02-17",
+      "datePrecision": "day",
+      "createdDate": "2025-02-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "655-663",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00745-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00745-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00746-2",
+      "title": "Inverse programming of ferromagnetic domains for 3D curved surfaces of soft materials",
+      "authors": [
+        "Neng Xia",
+        "Dongdong Jin",
+        "Zhengxin Yang",
+        "Chengfeng Pan",
+        "Lin Su",
+        "Moqiu Zhang",
+        "Xin Wang",
+        "Zirong Xu",
+        "Zichang Guo",
+        "Longyu Pan",
+        "Xiaohao Sun",
+        "Xing Ma",
+        "Liu Wang",
+        "Li Zhang"
+      ],
+      "date": "2025-02-20",
+      "datePrecision": "day",
+      "createdDate": "2025-02-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "642-654",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00746-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00746-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00747-1",
+      "title": "Design of catalysts for selective CO2 hydrogenation",
+      "authors": [
+        "Runping Ye",
+        "Jie Ding",
+        "Tomas Ramirez Reina",
+        "Melis Seher Duyar",
+        "Haitao Li",
+        "Wenhao Luo",
+        "Rongbin Zhang",
+        "Maohong Fan",
+        "Gang Feng",
+        "Jian Sun",
+        "Jian Liu"
+      ],
+      "date": "2025-02-27",
+      "datePrecision": "day",
+      "createdDate": "2025-02-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "288-302",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00747-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00747-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00749-z",
+      "title": "Photogeneration of an open-shell iron nitrido",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2025-02-03",
+      "datePrecision": "day",
+      "createdDate": "2025-02-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "2",
+        "pages": "144-144",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00749-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00749-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00750-6",
+      "title": "Semimetallic Weyl ferromagnets",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-02-03",
+      "datePrecision": "day",
+      "createdDate": "2025-02-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "2",
+        "pages": "145-145",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00750-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00750-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00753-3",
+      "title": "Mechanochemical activation of metallic lithium for the generation and application of organolithium compounds in air",
+      "authors": [
+        "Keisuke Kondo",
+        "Koji Kubota",
+        "Hajime Ito"
+      ],
+      "date": "2025-02-21",
+      "datePrecision": "day",
+      "createdDate": "2025-02-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "744-753",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00753-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00753-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00754-2",
+      "title": "Approach to homogeneous two-dimensional multicomponent materials and their high-entropy alloys",
+      "authors": [],
+      "date": "2025-02-12",
+      "datePrecision": "day",
+      "createdDate": "2025-02-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "535-536",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00754-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00754-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00755-1",
+      "title": "Efficient synthesis of organosulfur compounds via electrochemical biomass conversion",
+      "authors": [
+        "Qing Xia",
+        "Xin Gao",
+        "Jie Wu",
+        "Xinzhong Wang",
+        "Yanjie Zhai",
+        "Shanhe Gong",
+        "Weisong Li",
+        "Xiao Zhang"
+      ],
+      "date": "2025-02-27",
+      "datePrecision": "day",
+      "createdDate": "2025-02-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "765-775",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00755-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00755-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00757-z",
+      "title": "Spin-1/2 Heisenberg chains realized in π-electron systems",
+      "authors": [
+        "Xinnan Peng",
+        "Jiong Lu"
+      ],
+      "date": "2025-02-21",
+      "datePrecision": "day",
+      "createdDate": "2025-02-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "6",
+        "pages": "668-670",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00757-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00757-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00766-y",
+      "title": "Segmented platelets",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-02-17",
+      "datePrecision": "day",
+      "createdDate": "2025-02-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "276-276",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00766-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00766-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00772-0",
+      "title": "Ring-opening of azetidines",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-02-27",
+      "datePrecision": "day",
+      "createdDate": "2025-02-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "274-274",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00772-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00772-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-02-01",
+        "to": "2025-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

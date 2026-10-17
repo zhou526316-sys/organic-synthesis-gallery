@@ -1,0 +1,1781 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-01-01",
+    "to": "2025-01-31"
+  },
+  "checkedAt": "2026-10-17T17:43:02.769Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 35,
+        "count": 35,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 35,
+      "count": 35,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 35,
+      "openalex": 35
+    }
+  },
+  "candidateCount": 35,
+  "alreadyPublished": 0,
+  "unreviewed": 35,
+  "records": [
+    {
+      "doi": "10.1038/s44160-024-00692-5",
+      "title": "Kinetic Wulff-shaped heteroepitaxy of phase-pure 2D perovskite heterostructures with deterministic slab thickness",
+      "authors": [
+        "Ming Xia",
+        "Tianyu Wang",
+        "Yuan Lu",
+        "Yahui Li",
+        "Baini Li",
+        "Hongzhi Shen",
+        "Yunfan Guo",
+        "Yi Yu",
+        "Jichen Dong",
+        "Letian Dou",
+        "Yunqi Liu",
+        "Enzheng Shi"
+      ],
+      "date": "2025-01-03",
+      "datePrecision": "day",
+      "createdDate": "2025-01-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "380-390",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00692-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00692-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00694-3",
+      "title": "Ultrathin transition metal oxychalcogenide catalysts for oxygen evolution in acidic media",
+      "authors": [
+        "Wenshuo Xu",
+        "Yao Wu",
+        "Shibo Xi",
+        "Yan Wang",
+        "Ye Wang",
+        "Yuxuan Ke",
+        "Lingtong Ding",
+        "Xiao Wang",
+        "Jieun Yang",
+        "Wenjing Zhang",
+        "Kian Ping Loh",
+        "Feng Ding",
+        "Zheng Liu",
+        "Manish Chhowalla"
+      ],
+      "date": "2025-01-02",
+      "datePrecision": "day",
+      "createdDate": "2025-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "327-335",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00694-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00694-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00696-1",
+      "title": "Molecular sublimation enables 2D–3D transformation of orientational FAPbI3 perovskites",
+      "authors": [
+        "Zihui Liang",
+        "Jinguo Cao",
+        "Zezhu Zhou",
+        "Lizhi Ren",
+        "Haodong Wu",
+        "Zhen Wang",
+        "Changhai Yi",
+        "Dong Yang",
+        "Kai Wang",
+        "Congcong Wu"
+      ],
+      "date": "2025-01-02",
+      "datePrecision": "day",
+      "createdDate": "2025-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "347-358",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00696-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00696-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00697-0",
+      "title": "Low-symmetry coordination cages enable recognition specificity and selective enrichment of higher fullerene isomers",
+      "authors": [
+        "Xiao-Qing Guo",
+        "Pengwei Yu",
+        "Li-Peng Zhou",
+        "Shao-Jun Hu",
+        "Xiao-Fang Duan",
+        "Li-Xuan Cai",
+        "Lipiao Bao",
+        "Xing Lu",
+        "Qing-Fu Sun"
+      ],
+      "date": "2025-01-02",
+      "datePrecision": "day",
+      "createdDate": "2025-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "359-369",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00697-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00697-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00698-z",
+      "title": "Anti-Markovnikov hydro- and deuterochlorination of unsaturated hydrocarbons using iron photocatalysis",
+      "authors": [
+        "Kang-Jie Bian",
+        "David Nemoto",
+        "Ying Chen",
+        "Yen-Chu Lu",
+        "Shih-Chieh Kao",
+        "Xiao-Wei Chen",
+        "Angel A. Martí",
+        "Julian G. West"
+      ],
+      "date": "2025-01-02",
+      "datePrecision": "day",
+      "createdDate": "2025-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "314-326",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00698-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00698-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00699-y",
+      "title": "Dimensional phase transition for the controlled growth of α-FAPbI3 perovskite films",
+      "authors": [],
+      "date": "2025-01-06",
+      "datePrecision": "day",
+      "createdDate": "2025-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "286-287",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00699-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00699-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00703-5",
+      "title": "Photocatalytic pathways for hydrochlorination",
+      "authors": [
+        "Francisco Juliá-Hernández"
+      ],
+      "date": "2025-01-02",
+      "datePrecision": "day",
+      "createdDate": "2025-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "279-281",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00703-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00703-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00704-4",
+      "title": "Synthesis of amorphous metal oxides via a crystalline to amorphous phase transition strategy",
+      "authors": [
+        "Bei Wu",
+        "Xiaocheng Liu",
+        "Peigen Liu",
+        "Geng Wu",
+        "Lin Tian",
+        "Xiao Han",
+        "Junmin Li",
+        "Xun Hong"
+      ],
+      "date": "2025-01-03",
+      "datePrecision": "day",
+      "createdDate": "2025-01-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "370-379",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00704-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00704-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00705-3",
+      "title": "Scalable synthesis of Cu-cluster catalysts via spark ablation for the electrochemical conversion of CO2 to acetaldehyde",
+      "authors": [
+        "Cedric David Koolen",
+        "Jack Kirk Pedersen",
+        "Bernardus Zijlstra",
+        "Maximilian Winzely",
+        "Jie Zhang",
+        "Tobias V. Pfeiffer",
+        "Wilbert Vrijburg",
+        "Mo Li",
+        "Ayush Agarwal",
+        "Zohreh Akbari",
+        "Yasemen Kuddusi",
+        "Juan Herranz",
+        "Olga V. Safonova",
+        "Andreas Schmidt-Ott",
+        "Wen Luo",
+        "Andreas Zuettel"
+      ],
+      "date": "2025-01-03",
+      "datePrecision": "day",
+      "createdDate": "2025-01-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "336-346",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00705-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00705-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00706-2",
+      "title": "High-throughput method to identify and produce atomic cluster catalysts",
+      "authors": [],
+      "date": "2025-01-03",
+      "datePrecision": "day",
+      "createdDate": "2025-01-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "284-285",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00706-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00706-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00707-1",
+      "title": "Enhancing the hardness of diamond through twin refinement and interlocked twins",
+      "authors": [
+        "Pan Ying",
+        "Baozhong Li",
+        "Mengdong Ma",
+        "Yufei Gao",
+        "Rongxin Sun",
+        "Zihe Li",
+        "Shuai Chen",
+        "Bin Zhang",
+        "Hefei Li",
+        "Bing Liu",
+        "Lei Sun",
+        "Song Zhao",
+        "Ke Tong",
+        "Wentao Hu",
+        "Yilong Pan",
+        "Guodong Tang",
+        "Dongli Yu",
+        "Zhisheng Zhao",
+        "Bo Xu",
+        "Yongjun Tian"
+      ],
+      "date": "2025-01-03",
+      "datePrecision": "day",
+      "createdDate": "2025-01-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "391-398",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00707-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00707-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00710-6",
+      "title": "Photocontrolled radical polymerization for the synthesis of ultrahigh-molecular-weight polymers",
+      "authors": [
+        "Shilong Zhu",
+        "Weina Kong",
+        "Shuangqi Lian",
+        "Ao Shen",
+        "Steven P. Armes",
+        "Zesheng An"
+      ],
+      "date": "2025-01-10",
+      "datePrecision": "day",
+      "createdDate": "2025-01-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "1",
+        "pages": "15-30",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00710-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00710-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00711-5",
+      "title": "Capturing aromatic Cr5 pentagons in large main-group molecular cages",
+      "authors": [
+        "Wei-Xing Chen",
+        "Wen-Juan Tian",
+        "Zi-Sheng Li",
+        "Jing-Jing Wang",
+        "Alvaro Muñoz-Castro",
+        "Gernot Frenking",
+        "Zhong-Ming Sun"
+      ],
+      "date": "2025-01-06",
+      "datePrecision": "day",
+      "createdDate": "2025-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "471-478",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00711-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00711-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00712-4",
+      "title": "Synthesis of monocrystalline lithium for high-critical-current-density solid-state batteries",
+      "authors": [
+        "Hao Chen",
+        "Yumeng Zhao",
+        "Xinyue Zhang",
+        "Rui Li",
+        "Aoxuan Wang",
+        "Haiming Zhang",
+        "Junxiang Liu",
+        "Bohua Wen",
+        "Lan Zhang",
+        "Qingsong Hua",
+        "Tongchao Liu",
+        "Kai Wu",
+        "Khalil Amine",
+        "Jiayan Luo"
+      ],
+      "date": "2025-01-06",
+      "datePrecision": "day",
+      "createdDate": "2025-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "552-561",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00712-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00712-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00713-3",
+      "title": "A Pickering-emulsion-droplet-integrated electrode for the continuous-flow electrosynthesis of oximes",
+      "authors": [
+        "Feifan Zhang",
+        "Qi-Yuan Fan",
+        "Yu-Cheng Huang",
+        "Haitao Li",
+        "Houbing Zou",
+        "Yawei Li",
+        "Yuqin Zou",
+        "Shuangyin Wang",
+        "Chunming Yang",
+        "Yuxuan Lu",
+        "Hengquan Yang"
+      ],
+      "date": "2025-01-06",
+      "datePrecision": "day",
+      "createdDate": "2025-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "479-487",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00713-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00713-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00714-2",
+      "title": "Synthesis of superconducting freestanding infinite-layer nickelate heterostructures on the millimetre scale",
+      "authors": [
+        "Yonghun Lee",
+        "Xin Wei",
+        "Yijun Yu",
+        "Lopa Bhatt",
+        "Kyuho Lee",
+        "Berit H. Goodge",
+        "Shannon P. Harvey",
+        "Bai Yang Wang",
+        "David A. Muller",
+        "Lena F. Kourkoutis",
+        "Wei-Sheng Lee",
+        "Srinivas Raghu",
+        "Harold Y. Hwang"
+      ],
+      "date": "2025-01-10",
+      "datePrecision": "day",
+      "createdDate": "2025-01-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "573-581",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00714-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00714-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00715-1",
+      "title": "Atomic-scale insights into topotactic transformations in an extra-large-pore zeolite using time-resolved 3D electron diffraction",
+      "authors": [
+        "Yi Luo",
+        "Hao Xu",
+        "Yue Han",
+        "Wen Tong",
+        "Meichen Jiao",
+        "Naihong Wang",
+        "Jingang Jiang",
+        "Wende Hu",
+        "Chuanming Wang",
+        "Xiaodong Zou",
+        "Peng Wu"
+      ],
+      "date": "2025-01-10",
+      "datePrecision": "day",
+      "createdDate": "2025-01-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "453-461",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00715-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00715-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00716-0",
+      "title": "Late-stage deuteration and tritiation through bioinspired cooperative hydrogenolysis",
+      "authors": [
+        "Beibei Zhang",
+        "Zhenyang Zhang",
+        "Yang Wang",
+        "Da Zhao"
+      ],
+      "date": "2025-01-22",
+      "datePrecision": "day",
+      "createdDate": "2025-01-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "444-452",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00716-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00716-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00717-z",
+      "title": "Room-temperature epitaxy of α-CH3NH3PbI3 halide perovskite by pulsed laser deposition",
+      "authors": [
+        "Junia S. Solomon",
+        "Tatiana Soto-Montero",
+        "Yorick A. Birkhölzer",
+        "Daniel M. Cunha",
+        "Wiria Soltanpoor",
+        "Martin Ledinský",
+        "Nikolai Orlov",
+        "Erik C. Garnett",
+        "Nicolás Forero-Correa",
+        "Sebastian E. Reyes-Lillo",
+        "Thomas B. Haward",
+        "Joshua R. S. Lilly",
+        "Laura M. Herz",
+        "Gertjan Koster",
+        "Guus Rijnders",
+        "Linn Leppert",
+        "Monica Morales-Masis"
+      ],
+      "date": "2025-01-16",
+      "datePrecision": "day",
+      "createdDate": "2025-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "432-443",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00717-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00717-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00718-y",
+      "title": "Deciphering the dynamics of topotactic transformation",
+      "authors": [
+        "Jeffrey D. Rimer"
+      ],
+      "date": "2025-01-10",
+      "datePrecision": "day",
+      "createdDate": "2025-01-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "417-418",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00718-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00718-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00719-x",
+      "title": "Crystalline porous frameworks based on double extension of metal–organic and covalent organic linkages",
+      "authors": [
+        "Kenichi Endo",
+        "Stefano Canossa",
+        "Fabian Heck",
+        "Davide M. Proserpio",
+        "M. Satukbugra Istek",
+        "Friedrich Stemmler",
+        "Joris van Slageren",
+        "Sean Hartmann",
+        "Achim Hartschuh",
+        "Bettina V. Lotsch"
+      ],
+      "date": "2025-01-14",
+      "datePrecision": "day",
+      "createdDate": "2025-01-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "603-613",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00719-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00719-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00720-4",
+      "title": "Synthesis of molecular Borromean links featuring trimeric metallocages",
+      "authors": [
+        "Hai-Ning Zhang",
+        "Guo-Xin Jin"
+      ],
+      "date": "2025-01-14",
+      "datePrecision": "day",
+      "createdDate": "2025-01-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "488-496",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00720-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00720-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00721-3",
+      "title": "Nickel-mediated aerobic C(sp2)–nucleophile coupling reactions for late-stage diversification of aryl electrophiles",
+      "authors": [
+        "Dipankar Das",
+        "Long P. Dinh",
+        "Ryan E. Smith",
+        "Dipannita Kalyani",
+        "Christo S. Sevov"
+      ],
+      "date": "2025-01-16",
+      "datePrecision": "day",
+      "createdDate": "2025-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "497-505",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00721-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00721-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00722-2",
+      "title": "Industrial electrosynthesis of hydrogen peroxide over p-block metal single sites",
+      "authors": [
+        "Yu Gu",
+        "Yingjun Tan",
+        "Hao Tan",
+        "Ying Han",
+        "Dongfang Cheng",
+        "Fangxu Lin",
+        "Zhengyi Qian",
+        "Lingyou Zeng",
+        "Shipeng Zhang",
+        "Ruijin Zeng",
+        "Youxing Liu",
+        "Hongyu Guo",
+        "Mingchuan Luo",
+        "Shaojun Guo"
+      ],
+      "date": "2025-01-16",
+      "datePrecision": "day",
+      "createdDate": "2025-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "614-621",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00722-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00722-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00723-1",
+      "title": "Structure and optical properties of an Ag135Cu60 nanocluster incorporating an Ag135 buckminsterfullerene-like topology",
+      "authors": [
+        "Li Tang",
+        "Weinan Dong",
+        "Qikai Han",
+        "Bin Wang",
+        "Zhennan Wu",
+        "Shuxin Wang"
+      ],
+      "date": "2025-01-14",
+      "datePrecision": "day",
+      "createdDate": "2025-01-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "506-513",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00723-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00723-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00726-y",
+      "title": "Helical protein nanotubules assembled from sacrificial supramolecular polymers",
+      "authors": [
+        "Linfei Ye",
+        "Xiaoduo Dong",
+        "Chong Wang",
+        "Yao Lin",
+        "Myongsoo Lee",
+        "Long Li",
+        "Guosong Chen"
+      ],
+      "date": "2025-01-16",
+      "datePrecision": "day",
+      "createdDate": "2025-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "562-572",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00726-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00726-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00727-x",
+      "title": "Recrystallization prohibiting lithium dendrites",
+      "authors": [
+        "Baolin Liu",
+        "Ning Qin",
+        "Zhouguang Lu"
+      ],
+      "date": "2025-01-21",
+      "datePrecision": "day",
+      "createdDate": "2025-01-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "529-530",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00727-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00727-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00728-w",
+      "title": "Synthesis covered in 2024",
+      "authors": [],
+      "date": "2025-01-15",
+      "datePrecision": "day",
+      "createdDate": "2025-01-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "1",
+        "pages": "1-1",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00728-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00728-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00729-9",
+      "title": "Meso-microporous zeolites",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-01-07",
+      "datePrecision": "day",
+      "createdDate": "2025-01-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "1",
+        "pages": "4-4",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00729-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00729-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00730-2",
+      "title": "Covalent heterostructures of ultrathin amorphous carbon nitride and Si for high-performance vertical photodiodes",
+      "authors": [
+        "Hyojin Seung",
+        "Jinsol Bok",
+        "Ji Su Kim",
+        "Jihoon Kim",
+        "Hyeonseung Choi",
+        "Jongtae Ahn",
+        "Jung Pyo Hong",
+        "Eunki Yoon",
+        "Sylke Blumstengel",
+        "Young Yong Kim",
+        "Luciano Colazzo",
+        "Soohyung Park",
+        "Do Kyung Hwang",
+        "Jungwon Park",
+        "Changsoon Choi",
+        "Taeghwan Hyeon",
+        "Dae-Hyeong Kim"
+      ],
+      "date": "2025-01-22",
+      "datePrecision": "day",
+      "createdDate": "2025-01-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "4",
+        "pages": "514-522",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00730-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00730-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00732-0",
+      "title": "Protecting cells for catalysis",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2025-01-07",
+      "datePrecision": "day",
+      "createdDate": "2025-01-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "1",
+        "pages": "3-3",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00732-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00732-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-024-00734-y",
+      "title": "Transition metal oxychalcogenides as highly active oxygen electrocatalysts",
+      "authors": [
+        "Ruben Canton-Vitoria",
+        "Nikos Tagmatarchis"
+      ],
+      "date": "2025-01-23",
+      "datePrecision": "day",
+      "createdDate": "2025-01-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "3",
+        "pages": "282-283",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-024-00734-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-024-00734-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00736-4",
+      "title": "Freestanding infinite-layer nickelate super-conductors",
+      "authors": [],
+      "date": "2025-01-17",
+      "datePrecision": "day",
+      "createdDate": "2025-01-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "5",
+        "pages": "533-534",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00736-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00736-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00739-1",
+      "title": "Author Correction: Diffusion-mediated synthesis of high-quality organic–inorganic hybrid perovskite nanocrystals",
+      "authors": [
+        "Xiang Sun",
+        "Lin Yuan",
+        "Yang Liu",
+        "Guozheng Shi",
+        "Yumin Wang",
+        "Chunmeng Liu",
+        "Xuliang Zhang",
+        "Yaxin Zhao",
+        "Chenyu Zhao",
+        "Mengmeng Ma",
+        "Boyuan Shen",
+        "Yaxing Wang",
+        "Qing Shen",
+        "Zeke Liu",
+        "Wanli Ma"
+      ],
+      "date": "2025-01-13",
+      "datePrecision": "day",
+      "createdDate": "2025-01-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "2",
+        "pages": "271-271",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00739-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00739-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00748-0",
+      "title": "Ring-in-ring [3]catenane synthesis",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-01-31",
+      "datePrecision": "day",
+      "createdDate": "2025-01-31",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "2",
+        "pages": "143-143",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00748-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00748-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-01-01",
+        "to": "2025-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
