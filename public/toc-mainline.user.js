@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.73
+// @version      6.2.74
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.73';
+  var INSTALL_REVISION = '6.2.74';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -105,6 +105,9 @@
   var INVENTORY_HEDGE_DELAY_MS = 900;
   var INVENTORY_TRANSPORT_REPAIR_REVISION = '20261012-doi-scoped-bounded-layers-v2';
   var INVENTORY_REQUEST_TIMEOUT_MS = 16000; // Independent bounded small reads, not a longer global wait.
+  var INVENTORY_BULK_R2_TIMEOUT_MS = 30000; // One authoritative cold R2 snapshot, no retry on timeout.
+  var OWNER_PDF_INVENTORY_BATCH_SIZE = 64; // Existing server accepts <=80 DOI per authorized query.
+  var OWNER_PDF_INVENTORY_REVISION = '20261017-bounded-64-doi-no-timeout-split-v1';
   var INVENTORY_FULL_REFRESH_MIN_MS = 10 * 60 * 1000; // A long 200-DOI pass must not scan the entire registry each minute.
   var INVENTORY_FULL_REFRESH_REVISION = '20261017-bounded-refresh-v1';
   var INVENTORY_SCOPED_BATCH_SIZE = 80;
@@ -1623,7 +1626,22 @@ function embeddedJobDois(value) {
     var inventoryControlPage=inventoryHost===GALLERY_HOST||inventoryHost===PAGES_GALLERY_HOST
       || inventoryHost===LEGACY_GALLERY_HOST&&inventoryPath.indexOf(LEGACY_GALLERY_PATH)===0;
     if(!inventoryControlPage)return metadataJson(options,prefix,true);
-    var timeoutMs=Math.max(3000,Math.min(INVENTORY_REQUEST_TIMEOUT_MS,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
+    // The cold, DOI-validated full R2 snapshots intentionally have one 30s
+    // budget. Do not clamp them back to the old 16s ceiling. Every other
+    // inventory request (including owner PDF, evidence and 80-DOI chunks)
+    // retains the existing shorter deadline.
+    var maxInventoryMs=INVENTORY_REQUEST_TIMEOUT_MS,isScopedBulk=false;
+    try{
+      var scopeTarget=new URL(String(options&&options.url||''),location.href);
+      var scopeBody=JSON.parse(String(options&&options.data||'{}'));
+      isScopedBulk=String(options&&options.method||'GET').toUpperCase()==='POST'
+        &&scopeTarget.origin===WORKER
+        &&['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory'].indexOf(scopeTarget.pathname)>=0
+        &&scopeBody.readOnly===true&&Array.isArray(scopeBody.dois)
+        &&scopeBody.dois.length>INVENTORY_SCOPED_BATCH_SIZE&&scopeBody.dois.length<=2000;
+      if(isScopedBulk)maxInventoryMs=INVENTORY_BULK_R2_TIMEOUT_MS;
+    }catch(_){}
+    var timeoutMs=Math.max(3000,Math.min(maxInventoryMs,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
     var nativeAbort=new AbortController(),nativeOptions=Object.assign({},options,{timeout:timeoutMs,signal:nativeAbort.signal});
     var gmOptions=Object.assign({},options,{timeout:timeoutMs});delete gmOptions.signal;
     return new Promise(function(resolve,reject){
@@ -1661,7 +1679,10 @@ function embeddedJobDois(value) {
       }
       function startGm(){if(gmStarted||settled)return;gmStarted=true;consume(gmRequest(gmOptions,true),'gm');}
       consume(nativeControllerRequest(nativeOptions),'browser');
-      hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
+      // A cold R2 index already exceeds 6MB. Speculatively hedging it after
+      // 900ms doubles R2/Worker reads; use one native request, with a GM
+      // alternative only if the native request actually fails.
+      if(!isScopedBulk)hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
       deadlineTimer=setTimeout(function(){
         if(settled)return;settled=true;clean();try{nativeAbort.abort(new Error('inventory_deadline'));}catch(_){}
         reject(combinedFailure('inventory_deadline'));
@@ -5532,7 +5553,8 @@ function embeddedJobDois(value) {
       return {complete:false,items:[],unknown:dois.length,reason:reason};
     }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
-    var batches=[];for(var i=0;i<dois.length;i+=12)batches.push(dois.slice(i,i+12));
+    var batches=[];for(var i=0;i<dois.length;i+=OWNER_PDF_INVENTORY_BATCH_SIZE)
+      batches.push(dois.slice(i,i+OWNER_PDF_INVENTORY_BATCH_SIZE));
     var all=[];
     for(var offset=0;offset<batches.length;offset+=2){
       var pair=await Promise.all(batches.slice(offset,offset+2).map(async function(batch){
@@ -5553,15 +5575,16 @@ function embeddedJobDois(value) {
           } catch(error) {
             var msg=captureLiveError(error&&error.message||error);
             var status=Number(error&&error.httpStatus||0);
-            // One bounded subdivision for transient failures only. An
-            // owner-auth/rate-limit denial never triggers additional requests.
+            // A transport has already consumed the 16-20s budget; retrying
+            // it as two smaller calls multiplied owner inventory startup time.
+            // Only a responsive but incomplete *shape* may be divided once.
+            // Real 401/403/429 and transport failures are never retried.
             if(depth===0&&part.length>6&&![401,403,429].includes(status)
-                && /timeout|deadline|aborted|network|failed to fetch|transport|incomplete/i.test(msg)){
+                && /^(?:owner_pdf_inventory_incomplete|owner_pdf_inventory_invalid_rows)$/.test(msg)){
               var mid=Math.ceil(part.length/2);
-              await sleep(300);
-              var left=await verify(part.slice(0,mid),1);
-              var right=await verify(part.slice(mid),1);
-              return {items:left.items.concat(right.items),errors:left.errors.concat(right.errors)};
+              var pieces=await Promise.all([verify(part.slice(0,mid),1),verify(part.slice(mid),1)]);
+              return {items:pieces[0].items.concat(pieces[1].items),
+                errors:pieces[0].errors.concat(pieces[1].errors)};
             }
             return {items:[],errors:['PDF库存小批 '+part.length+' 篇:'+msg]};
           }
@@ -5686,7 +5709,7 @@ function embeddedJobDois(value) {
       if(bulkEndpoint&&dois.length>INVENTORY_SCOPED_BATCH_SIZE&&dois.length<=2000){
         try{
           var bulk=await inventoryReadMetadataJson({method:'POST',url:bulkEndpoint,
-            timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},
+            timeout:INVENTORY_BULK_R2_TIMEOUT_MS,headers:{'content-type':'application/json'},
             data:JSON.stringify({dois:dois,readOnly:true})},'queue');
           if(!bulk||bulk.scopeRevision!=='doi-scoped-inventory-v1'||bulk.complete!==true
             ||Number(bulk.scopeRequestedCount)!==dois.length

@@ -68,7 +68,8 @@ test('client requires validated scoped metadata and does not convert failures in
  assert.match(src,/scopeRequestedCount!==part.length/);
  assert.match(src,/requestedDois\[i\]/);
  assert.match(src,/complete:complete,count:all.length,items:all/);
- assert.match(src,/var batches=\[\];for\(var i=0;i<dois.length;i\+=12\)/);
+ assert.match(src,/OWNER_PDF_INVENTORY_BATCH_SIZE = 64/);
+ assert.match(src,/i\+=OWNER_PDF_INVENTORY_BATCH_SIZE/);
  assert.match(src,/tocsKnown:Boolean\(inv.tocs&&inv.tocs.complete!==false\)/);
  assert.ok(src.includes("INVENTORY_SCOPED_BATCH_SIZE = 80"));
  assert.ok(src.includes("pageLimit=120"));

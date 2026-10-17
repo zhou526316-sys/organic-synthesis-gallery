@@ -46,8 +46,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.92' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.73';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.93' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.74';" public/gallery-vpn-bridge.user.js
           grep -F 'publisher_article_route_unverified' public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()

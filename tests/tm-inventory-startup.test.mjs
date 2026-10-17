@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import { test } from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.73"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.73';"));
+assert.ok(source.includes("// @version      6.2.74"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.74';"));
 assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261012-scoped-registry-plan-v3'"));
 assert.ok(source.includes("INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000"));
 assert.ok(source.includes("INVENTORY_SCOPED_BATCH_SIZE = 80"));
@@ -22,8 +22,9 @@ const fnSource=source.slice(fnStart,fnEnd);
 
 function context({native,gm,hedge=8,timeout=45}={}) {
   const ctx=vm.createContext({
-    AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,
-    location:{hostname:'gallery.gczhouwld.com',pathname:'/'},
+    AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,URL,
+    location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/'},
+    WORKER:'https://api.gczhouwld.com',INVENTORY_SCOPED_BATCH_SIZE:80,INVENTORY_BULK_R2_TIMEOUT_MS:30000,
     GALLERY_HOST:'gallery.gczhouwld.com',PAGES_GALLERY_HOST:'organic-synthesis-gallery-public.pages.dev',
     LEGACY_GALLERY_HOST:'zhou526316-sys.github.io',LEGACY_GALLERY_PATH:'/organic-synthesis-gallery/',
     INVENTORY_REQUEST_TIMEOUT_MS:timeout,
@@ -119,3 +120,79 @@ test('fresh inventory is required before all-resolved path can finish',()=>{
 });
 
 console.log('TM_INVENTORY_STARTUP_TEST_SUMMARY '+JSON.stringify({passed:6,productionWrites:0,publisherRequests:0}));
+
+test('actual browser and hedge timeout is 30000 only for read-only 81+ DOI R2 snapshots',async()=>{
+  const observed=[],gmObserved=[];
+  const ctx=context({
+    timeout:16000,hedge:900,
+    native:async opts=>{observed.push(opts.timeout);return {status:200,responseText:'{"complete":true}'};},
+    gm:async opts=>{gmObserved.push(opts.timeout);return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({readOnly:true,dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(10000+i))});
+  for(const route of ['/api/article-figures/staged/inventory','/api/media/local-capture-index/inventory']){
+    const payload=await load({method:'POST',url:'https://api.gczhouwld.com'+route,timeout:30000,data:body},'queue');
+    assert.equal(payload.complete,true);
+    assert.equal(observed.at(-1),30000,'network timeout must not be clamped to 16s');
+  }
+  assert.equal(gmObserved.length,0);
+});
+
+test('owner PDF and any untrusted or sub-80 read keep the original 16000ms ceiling',async()=>{
+  const seen=[];
+  const ctx=context({timeout:16000,hedge:900,
+    native:async opts=>{seen.push(opts.timeout);return {status:200,responseText:'{"ok":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const list=Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(11000+i));
+  const cases=[
+    {method:'POST',url:'https://api.gczhouwld.com/api/private-pdf/capture-inventory',data:JSON.stringify({dois:list,readOnly:true}),timeout:30000},
+    {method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list,readOnly:false}),timeout:30000},
+    {method:'POST',url:'https://foreign.example/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list,readOnly:true}),timeout:30000},
+    {method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',data:JSON.stringify({dois:list.slice(0,80),readOnly:true}),timeout:30000},
+    {method:'GET',url:'https://api.gczhouwld.com/api/article-figures/staged?inventory=1',timeout:30000}
+  ];
+  for(const request of cases){
+    await load(request,'inventory');
+    assert.equal(seen.at(-1),16000,'non-bulk read must stay bounded at original timeout');
+  }
+  await load({method:'POST',url:'https://api.gczhouwld.com/api/article-figures/staged/inventory',
+    data:JSON.stringify({dois:list,readOnly:true}),timeout:5000},'inventory');
+  assert.equal(seen.at(-1),5000,'explicitly shorter budget must be honored');
+});
+
+test('large cold DOI snapshot avoids speculative duplicate R2 requests while retaining failure fallback',async()=>{
+  let nativeCalls=0,gmCalls=0;
+  const ctx=context({timeout:16000,hedge:2,
+    native:async opts=>{
+      nativeCalls++;
+      await new Promise(resolve=>setTimeout(resolve,15));
+      return {status:200,responseText:'{"complete":true}'};
+    },
+    gm:async()=>{gmCalls++;return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(12000+i)),readOnly:true});
+  const value=await load({method:'POST',url:'https://api.gczhouwld.com/api/article-figures/staged/inventory',
+    timeout:30000,data:body},'stage');
+  assert.equal(value.complete,true);
+  await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(nativeCalls,1);
+  assert.equal(gmCalls,0,'cold R2 snapshot must not launch a second full index read after 2ms');
+  assert.match(source,/if\(!isScopedBulk\)hedgeTimer=setTimeout\(startGm,INVENTORY_HEDGE_DELAY_MS\)/);
+});
+
+test('large cold DOI snapshot still permits exactly one GM fallback on immediate native network error',async()=>{
+  let nativeCalls=0,gmCalls=0;
+  const ctx=context({timeout:16000,hedge:2,
+    native:async()=>{nativeCalls++;throw new TypeError('Failed to fetch');},
+    gm:async()=>{gmCalls++;return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(13000+i)),readOnly:true});
+  const value=await load({method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',
+    timeout:30000,data:body},'toc');
+  assert.equal(value.complete,true);
+  assert.equal(nativeCalls,1);
+  assert.equal(gmCalls,1,'real network error may safely use alternate read-only transport once');
+});
