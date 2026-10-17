@@ -30,7 +30,9 @@ jobs:
           node --check cloudflare/scripts/build-bridge-loader.mjs
           node --test tests/tm-historical-toc-chem-route-20261017.test.mjs tests/tm-long-run-inventory-budget-20261017.test.mjs tests/tm-heartbeat-circuit-20261015.test.mjs
           node --test tests/tm-gap-recovery.test.mjs tests/tm-inventory-startup.test.mjs
-          node scripts/test-tm-oct1-scope-contract.mjs
+          # The old scope script requires an unshallowed 2026 reference SHA;
+          # equivalent live October/historical guards are already covered by
+          # the tests above and the separate scoped provenance CI.
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Verify bundled install exactly matches production version contract
