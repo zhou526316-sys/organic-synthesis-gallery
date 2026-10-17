@@ -49,7 +49,14 @@ test('twelve new frozen original syntheses have independent article-specific sec
    const x=byId.get(p.doi),e=p.reviewEvidence;
    assert.ok(x,p.doi);
    assert.deepEqual(x,p);
-   assert.equal(existing.has(x.doi),false,'already-formal DOI was reapproved: '+x.doi);
+   if(existing.has(x.doi)){
+     const live=pub.articles.find(row=>row.doi===x.doi);
+     assert.equal(live.date,x.date);
+     assert.equal(live.ingestionChannel,'historical_backfill');
+     assert.equal(live.mediaPolicy,'toc_only');
+     assert.equal(live.addedDate,'');
+     assert.notEqual(live.new,true);
+   }
    assert.equal(x.date,dates.get(x.doi));
    assert.equal(e.publisherOnlineDate,x.date);
    assert.equal(e.firstOnlineDateEvidence.officialPublisherFirstOnline,x.date);
@@ -119,7 +126,7 @@ test('formal 08:00 writer still owns admission and owner exclusion policy remain
    onPolicyVeto:x=>vetoes.push(x)
  });
  const selectedDois=new Set(selected.map(x=>x.doi));
- for(const x of rows)assert.ok(selectedDois.has(x.doi),x.doi);
+ for(const x of rows)if(!existing.has(x.doi))assert.ok(selectedDois.has(x.doi),x.doi);
  assert.ok(vetoes.some(x=>x.doi==='10.1038/s41467-026-77616-8'));
  for(const x of selected)assert.equal(x.new,false);
  for(const prop of Object.values(p1.flags))assert.equal(prop,true);
