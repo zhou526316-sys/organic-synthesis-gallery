@@ -351,6 +351,12 @@ async function literatureReadWithFailover<T>(
     return await timedLiteratureRead<T>(method, `${MEDIA_API_ORIGIN}${path}`, body, signal);
   } catch (primaryError) {
     if (signal?.aborted || (primaryError instanceof Error && primaryError.name === 'AbortError')) throw primaryError;
+    // If canonical GET explicitly rejects the route, use compatible POST
+    // immediately instead of waiting for the same GET at workers.dev.
+    const primaryStatus = primaryError && typeof primaryError === 'object' && 'status' in primaryError
+      ? Number((primaryError as { status?: unknown }).status) : 0;
+    if (method === 'GET' && path.startsWith('/api/literature/catalog-view')
+      && [400, 404, 405, 415, 501].includes(primaryStatus)) throw primaryError;
     try {
       return await timedLiteratureRead<T>(method, `${WORKER_ORIGIN}${path}`, body, signal);
     } catch (backupError) {
