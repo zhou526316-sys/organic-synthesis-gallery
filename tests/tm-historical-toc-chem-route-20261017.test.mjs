@@ -138,4 +138,13 @@ test('no guessed PII, unverified URL or redirect host is accepted',()=>{
   'https://www.sciencedirect.com/science/article/pii/'+PII);
 });
 
-console.log('TM_HISTORICAL_YIELD_CHEM_ROUTE',{tests:10,livePublisherRequests:0,productionMediaWrites:0});
+test('generator fragments cannot silently restore old historical-TOC ordering',()=>{
+ const fragmentMissing=fs.readFileSync('scripts/tm-missing-only-runtime.inc.js','utf8');
+ const fragmentQueue=fs.readFileSync('scripts/tm-queue-coverage.inc.js','utf8');
+ assert.ok(fragmentMissing.includes('function historicalTocAcquisitionTier('));
+ assert.ok(fragmentMissing.includes('historicalTocAcquisitionTier(a)-historicalTocAcquisitionTier(b)'));
+ assert.ok(fragmentQueue.includes('historicalTocAcquisitionTier(a.job)-historicalTocAcquisitionTier(b.job)'));
+ assert.ok(script.includes('historicalTocAcquisitionTier(a.job)-historicalTocAcquisitionTier(b.job)'));
+});
+
+console.log('TM_HISTORICAL_YIELD_CHEM_ROUTE',{tests:11,livePublisherRequests:0,productionMediaWrites:0});
