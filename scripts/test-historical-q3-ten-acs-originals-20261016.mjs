@@ -48,7 +48,14 @@ test('ten DOI-distinct original syntheses pass full immutable, bibliography and 
    const x=accepted.get(proof.doi);
    assert.ok(x,proof.doi);
    assert.deepEqual(x,proof);
-   assert.equal(published.has(x.doi),false,'already formal '+x.doi);
+   if(published.has(x.doi)){
+     const live=formal.articles.find(row=>row.doi===x.doi);
+     assert.equal(live.date,x.date);
+     assert.equal(live.ingestionChannel,'historical_backfill');
+     assert.equal(live.mediaPolicy,'toc_only');
+     assert.equal(live.addedDate,'');
+     assert.notEqual(live.new,true);
+   }
    assert.equal(x.date,expected.get(x.doi));
    const evidence=x.reviewEvidence;
    assert.equal(evidence.publisherOnlineDate,x.date);
@@ -127,7 +134,8 @@ test('already formally catalogued ACS DOI, date holds, policy exclusions and 08:
  const vetoes=[];
  const admissions=selectHistoricalAdmissions(manifest,{published,policyExcluded,onPolicyVeto:x=>vetoes.push(x)});
  const selected=new Set(admissions.map(x=>x.doi));
- for(const x of entries)assert.ok(selected.has(x.doi),'unpublished approved DOI held by release selector '+x.doi);
+ for(const x of entries)
+   if(!published.has(x.doi))assert.ok(selected.has(x.doi),'unpublished approved DOI held by release selector '+x.doi);
  assert.ok(vetoes.some(x=>x.doi==='10.1038/s41467-026-77616-8'));
  assert.ok(admissions.every(x=>x.new===false&&x.addedDate===''));
  for(const field of Object.values(ol.guards))assert.equal(field,true);
