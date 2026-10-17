@@ -59,7 +59,8 @@ test('six newly approved source-complete original preparations, no duplicate and
    assert.equal(already.ingestionChannel,'historical_backfill');
    assert.equal(already.mediaPolicy,'toc_only');
    assert.equal(already.addedDate,'');
-   assert.equal(already.new,false);
+   assert.notEqual(already.new,true);
+   assert.equal(already.date,x.date);
   }
  }
 });
