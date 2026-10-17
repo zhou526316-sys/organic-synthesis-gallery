@@ -191,6 +191,53 @@ test('generation import is resumable, finalize is fenced, and FTS trigram matche
   assert.equal(invalidCursor.body.error,'literature_catalog_cursor_invalid');
 });
 
+test('full-size 1337-paper finalize verifies exact FTS DOI sets without quadratic joins',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:1337});
+  assert.equal((await beginLiteratureCatalogGeneration(env,g)).status,200);
+
+  const putIndex=db.sqlite.prepare(`INSERT INTO literature_catalog_index(
+    catalog_id,doi,revision,title,title_zh,authors_text,authors_json,journal,
+    first_online_date,date_precision,added_date,synthesis_type,searchable_text,updated_at
+  ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+  const putFts=db.sqlite.prepare(
+    'INSERT INTO literature_catalog_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)');
+  const content='lmct nickel synthesis '.repeat(45);
+  for(let i=0;i<g.recordCount;i++){
+    const doi='10.1234/large-'+i;
+    putIndex.run(g.catalogId,doi,'e'.repeat(64),'Chemistry '+i,'','Alice Example',
+      '["Alice Example"]','JACS','2026-10-01','day','2026-10-05','methodology',
+      content+i,Date.now());
+    putFts.run(g.catalogId,doi,content+i);
+  }
+  // A same-count, same-distinctness corruption still must not pass.
+  db.sqlite.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .run(g.catalogId,'10.1234/large-1336');
+  putFts.run(g.catalogId,'10.1234/not-in-index',content);
+  const corrupt=await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+  assert.equal(corrupt.status,409);
+  assert.equal(corrupt.body.ftsRows,g.recordCount);
+  assert.equal(corrupt.body.ftsDistinctDois,g.recordCount);
+  assert.equal(corrupt.body.missingFtsRows,1);
+  assert.equal(corrupt.body.orphanFtsRows,1);
+
+  db.sqlite.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .run(g.catalogId,'10.1234/not-in-index');
+  putFts.run(g.catalogId,'10.1234/large-1336',content);
+  const started=performance.now();
+  const finalized=await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+  const elapsed=performance.now()-started;
+  assert.equal(finalized.status,200);
+  assert.equal(finalized.body.ready,true);
+  assert.equal(finalized.body.indexedRows,g.recordCount);
+  assert.equal(finalized.body.ftsRows,g.recordCount);
+  const paritySql=db.reads.find(entry=>entry.sql.includes('missing_fts_rows'))?.sql || '';
+  assert.match(paritySql,/EXCEPT/i);
+  assert.doesNotMatch(paritySql,/LEFT JOIN\\s+literature_catalog_fts/i);
+  assert.ok(elapsed<1500,'large DOI-set parity took '+Math.round(elapsed)+'ms');
+});
+
 test('finalize rejects equal-count FTS corruption when DOI sets differ',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
