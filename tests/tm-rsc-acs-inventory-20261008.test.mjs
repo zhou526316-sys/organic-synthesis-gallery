@@ -228,7 +228,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
    recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
    privatePdfLease:()=>({token:'测试授权占位符'}),
    GM_getValue:()=>null,PRIVATE_PDF_LEASE_KEY:'test',
-   PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
+   PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',OWNER_PDF_INVENTORY_BATCH_SIZE:64,
    updateInventoryProgress:()=>{},captureLiveError:e=>String(e),
    inventoryReadMetadataJson:async options=>{
      active++;calls++;peak=Math.max(peak,active);
@@ -240,7 +240,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(peak,2);assert.equal(calls,Math.ceil(177/12));
+ assert.equal(peak,2);assert.equal(calls,Math.ceil(177/64));
  assert.equal(result.complete,true);assert.equal(result.items.length,177);
  assert.equal(result.unknown,0);
 });
@@ -274,30 +274,53 @@ test('RSC Silverchair CSS background is accepted only from a DOI-bound isolated 
  x.image.getAttribute=(key)=>key==='style'?'background-image: url("https://rscj.silverchair-cdn.com/site/logo.png")':old(key);
  assert.equal(c.testFns.rscSilverchairVisualCandidates(job,x.scope,c.location.href).length,0);
 });
-test('owner PDF transient timeout splits only the failed small batch and preserves all DOI statuses',async()=>{
+test('owner PDF exhausted timeout does not multiply API requests or invent missing records',async()=>{
  const papers=Array.from({length:53},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
  let calls=0;
  const ctx={Map,Set,Date,Promise,console,Number,
-   normalizeDoi:d=>String(d||'').toLowerCase(),
-   recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
+   normalizeDoi:d=>String(d||'').toLowerCase(),recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
    privatePdfLease:()=>({token:'测试授权占位符'}),GM_getValue:()=>null,
-   PRIVATE_PDF_LEASE_KEY:'owner-test',
+   OWNER_PDF_INVENTORY_BATCH_SIZE:64,PRIVATE_PDF_LEASE_KEY:'owner-test',
    PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
-   updateInventoryProgress:()=>{},captureLiveError:e=>String(e),
-   sleep:async()=>{},
+   updateInventoryProgress:()=>{},captureLiveError:e=>String(e),sleep:async()=>{},
    inventoryReadMetadataJson:async options=>{
-     const items=JSON.parse(options.data).dois;calls++;
-     if(items.length===12&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
+     calls++;
+     throw Error('owner_pdf_inventory_deadline;browser:controller_native_timeout_16000ms');
+   }
+ };
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\\n globalThis.load=readOwnerPdfInventory;',ctx);
+ const result=await ctx.load(papers,null);
+ assert.equal(result.complete,false);
+ assert.equal(result.unknown,53);
+ assert.equal(result.items.length,0);
+ assert.equal(calls,1,'do not retry full timeout as 2 smaller calls');
+ assert.equal(result.errors.length,1);
+});
+
+test('owner PDF responsive incomplete batches may split once without losing DOI coverage',async()=>{
+ const papers=Array.from({length:53},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
+ let calls=0,parallel=0,peak=0;
+ const ctx={Map,Set,Date,Promise,console,Number,
+   normalizeDoi:d=>String(d||'').toLowerCase(),recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
+   privatePdfLease:()=>({token:'测试授权占位符'}),GM_getValue:()=>null,
+   OWNER_PDF_INVENTORY_BATCH_SIZE:64,PRIVATE_PDF_LEASE_KEY:'owner-test',
+   PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
+   updateInventoryProgress:()=>{},captureLiveError:e=>String(e),sleep:async()=>{},
+   inventoryReadMetadataJson:async options=>{
+     const items=JSON.parse(options.data).dois;calls++;parallel++;peak=Math.max(peak,parallel);
+     await new Promise(resolve=>setImmediate(resolve));parallel--;
+     if(items.length===53)return {schemaVersion:'private-pdf-capture-inventory-v1',
+       complete:true,count:items.length,items:items.slice(0,3).map(doi=>({doi,status:'ready'}))};
      return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:items.length,
        items:items.map(doi=>({doi,status:'ready'}))};
    }
  };
- vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(result.complete,true);
- assert.equal(result.unknown,0);
+ assert.equal(result.complete,true);assert.equal(result.unknown,0);
  assert.equal(result.items.length,53);
- assert.equal(calls,7,'first 12 split 6+6; other four bounded DOI batches remain');
+ assert.equal(calls,3,'one incomplete first response and two small verified continuations');
+ assert.equal(peak,2,'the two halves remain bounded and concurrent');
 });
 test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',async()=>{
  const papers=Array.from({length:25},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
@@ -305,15 +328,15 @@ test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',as
  const ctx={Map,Set,Date,Promise,console,Number,
    normalizeDoi:d=>String(d||'').toLowerCase(),recentFullCaptureEligible:x=>true,
    privatePdfLease:()=>({token:'测试授权占位符'}),GM_getValue:()=>null,
-   PRIVATE_PDF_LEASE_KEY:'owner-test',PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
+   PRIVATE_PDF_LEASE_KEY:'owner-test',PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',OWNER_PDF_INVENTORY_BATCH_SIZE:64,
    updateInventoryProgress:()=>{},captureLiveError:e=>String(e),sleep:async()=>{},
    inventoryReadMetadataJson:async()=>{calls++;const e=Error('owner_pdf_inventory_http_403');e.httpStatus=403;throw e;}
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(calls,Math.ceil(papers.length/12),'no per-DOI auth-denial retry');
+ assert.equal(calls,Math.ceil(papers.length/64),'no per-DOI auth-denial retry');
  assert.equal(result.complete,false);
  assert.equal(result.items.length,0);
  assert.equal(result.unknown,25);
- assert.equal(result.errors.length,Math.ceil(papers.length/12));
+ assert.equal(result.errors.length,Math.ceil(papers.length/64));
 });
