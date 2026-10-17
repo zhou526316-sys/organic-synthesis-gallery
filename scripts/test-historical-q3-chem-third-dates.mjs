@@ -61,7 +61,18 @@ test('publisher first-online evidence alone admits nothing; two later science-re
     '10.1016/j.chempr.2026.103241'
   ]));
   for(const x of proof.rows){
-    assert.equal(cat.has(x.doi),false);
+    // The original evidence authorizes dates, not publication. The later
+    // authorized 08:00 release may now have admitted a DOI, but only one that
+    // separately passed science review and still has historical-card metadata.
+    if(cat.has(x.doi)){
+      assert.ok(independentlyReviewed.has(x.doi),'published without independent science approval '+x.doi);
+      const historicalCard=catalog.articles.find(row=>row.doi===x.doi);
+      assert.equal(historicalCard.date,x.publisherFirstOnlineDate);
+      assert.equal(historicalCard.ingestionChannel,'historical_backfill');
+      assert.equal(historicalCard.mediaPolicy,'toc_only');
+      assert.equal(historicalCard.addedDate,'');
+      assert.notEqual(historicalCard.new,true);
+    }
     assert.equal(acc.has(x.doi),independentlyReviewed.has(x.doi));
     assert.equal(x.academicScopeDecision,'not_made_by_publication_date_evidence');
   }
