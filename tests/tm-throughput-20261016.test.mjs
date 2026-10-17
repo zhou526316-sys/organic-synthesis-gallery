@@ -69,8 +69,8 @@ test('early userscript injection does not weaken job, page or owner authorizatio
   assert.ok(source.includes('// @run-at       document-end'));
   assert.ok(loader.includes('// @run-at       document-end'));
   assert.ok(!source.includes('// @run-at       document-start'));
-  assert.ok(source.includes("var INSTALL_REVISION = '6.2.71';"));
-  assert.ok(loader.includes("const loaderVersion = '2.2.90';"));
+  assert.ok(source.includes("var INSTALL_REVISION = '6.2.72';"));
+  assert.ok(loader.includes("const loaderVersion = '2.2.91';"));
   for(const marker of ['assertBoundCaptureJob(job, candidate.url)',
     'page_doi_unverified','capture_job_stale_or_unbound',
     'privatePdfLease()','ownerPdfReplayBackpressure()'])assert.ok(source.includes(marker),marker);
