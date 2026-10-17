@@ -160,3 +160,39 @@ test('owner PDF and any untrusted or sub-80 read keep the original 16000ms ceili
     data:JSON.stringify({dois:list,readOnly:true}),timeout:5000},'inventory');
   assert.equal(seen.at(-1),5000,'explicitly shorter budget must be honored');
 });
+
+test('large cold DOI snapshot avoids speculative duplicate R2 requests while retaining failure fallback',async()=>{
+  let nativeCalls=0,gmCalls=0;
+  const ctx=context({timeout:16000,hedge:2,
+    native:async opts=>{
+      nativeCalls++;
+      await new Promise(resolve=>setTimeout(resolve,15));
+      return {status:200,responseText:'{"complete":true}'};
+    },
+    gm:async()=>{gmCalls++;return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(12000+i)),readOnly:true});
+  const value=await load({method:'POST',url:'https://api.gczhouwld.com/api/article-figures/staged/inventory',
+    timeout:30000,data:body},'stage');
+  assert.equal(value.complete,true);
+  await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(nativeCalls,1);
+  assert.equal(gmCalls,0,'cold R2 snapshot must not launch a second full index read after 2ms');
+  assert.match(source,/if\(!isScopedBulk\)hedgeTimer=setTimeout\(startGm,INVENTORY_HEDGE_DELAY_MS\)/);
+});
+
+test('large cold DOI snapshot still permits exactly one GM fallback on immediate native network error',async()=>{
+  let nativeCalls=0,gmCalls=0;
+  const ctx=context({timeout:16000,hedge:2,
+    native:async()=>{nativeCalls++;throw new TypeError('Failed to fetch');},
+    gm:async()=>{gmCalls++;return {status:200,responseText:'{"complete":true}'};}
+  });
+  const load=vm.runInContext('inventoryReadMetadataJson',ctx);
+  const body=JSON.stringify({dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(13000+i)),readOnly:true});
+  const value=await load({method:'POST',url:'https://api.gczhouwld.com/api/media/local-capture-index/inventory',
+    timeout:30000,data:body},'toc');
+  assert.equal(value.complete,true);
+  assert.equal(nativeCalls,1);
+  assert.equal(gmCalls,1,'real network error may safely use alternate read-only transport once');
+});
