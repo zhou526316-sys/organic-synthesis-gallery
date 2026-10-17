@@ -6105,7 +6105,12 @@ function embeddedJobDois(value) {
     var isolated=run.publisherHeartbeatQuarantine||(run.publisherHeartbeatQuarantine={});
     var quarantine=isolated[publisher];
     if(quarantine&&quarantine.probeDoi===doi){
-      var hb=currentPublisherHeartbeat(),bound=Boolean(hb&&hb.jobId===job.jobId
+      // A startup ping without a DOI-bound terminal capture result (e.g. an
+      // eight-minute controller timeout) is not evidence of recovery.
+      var terminal=Boolean(result&&result.jobId===job.jobId
+        &&normalizeDoi(result.doi)===doi&&result.finishedAt
+        &&/^(?:combined_capture;|evidence_capture;|private_pdf_side_channel;)/.test(String(result.reason||'')));
+      var hb=currentPublisherHeartbeat(),bound=Boolean(terminal&&hb&&hb.jobId===job.jobId
         &&normalizeDoi(hb.doi)===doi
         &&/^(?:active_job_seen|publisher_script_started)$/.test(String(hb.state||'')));
       quarantine.probeDoi='';
