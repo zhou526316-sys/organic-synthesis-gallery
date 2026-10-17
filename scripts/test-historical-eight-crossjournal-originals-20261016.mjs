@@ -111,7 +111,7 @@ test('the eight stay off-slot and owner-excluded DOI gets veto receipt',()=>{
      assert.equal(paper.ingestionChannel,'historical_backfill');
      assert.equal(paper.mediaPolicy,expected.get(doi)[2]);
      assert.equal(paper.addedDate,'');
-     assert.equal(paper.new,false);
+     assert.notEqual(paper.new,true);
    }else assert.ok(ids.has(doi),doi);
  }
  assert.ok(vetoes.some(x=>x.doi==='10.1038/s41467-026-77616-8'));

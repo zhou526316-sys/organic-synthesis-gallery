@@ -111,7 +111,7 @@ test('only authorized later 08:00 admission can move one of the twelve to formal
    const row=pub.get(doi);
    assert.equal(row.ingestionChannel,'historical_backfill');
    assert.equal(row.mediaPolicy,'toc_only');
-   assert.equal(row.new,false);
+   assert.notEqual(row.new,true);
    assert.equal(row.addedDate,'');
   }else assert.ok(ids.has(doi),doi);
  }

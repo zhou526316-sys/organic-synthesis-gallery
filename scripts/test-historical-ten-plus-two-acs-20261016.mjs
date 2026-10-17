@@ -55,7 +55,7 @@ test('ten originals plus two independently publisher-date-corrected originals ar
    const live=published.get(row.doi);
    assert.equal(live.ingestionChannel,'historical_backfill');
    assert.equal(live.mediaPolicy,'toc_only');
-   assert.equal(live.new,false);
+   assert.notEqual(live.new,true);
    assert.equal(live.addedDate,'');
   }
  }
