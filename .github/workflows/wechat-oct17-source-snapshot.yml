@@ -1,0 +1,35 @@
+name: WeChat Oct17 source snapshot
+on:
+  push:
+    branches: [wechat-oct17-zirconium-phosphine-r1]
+    paths: ['.github/workflows/wechat-oct17-source-snapshot.yml']
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export only repository source and published editorial context
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,zipfile,subprocess,json
+          root=pathlib.Path('.')
+          paths={'PROJECT_RULES.md','package.json','package-lock.json','audit/literature-update-state.json','audit/wechat-publisher/latest.json','audit/automation-triggers/wechat-publisher-request.json'}
+          for pat in ['ops/wechat-publisher/*.py','docs/wechat*.md','.github/workflows/wechat*.yml','public/*.json','public/*.b64','public/wechat-editions/2026-10-1[567].json','public/wechat-featured/2026-10-1[567].json','public/wechat-retrospective/*20261016.json','audit/wechat-working/2026-10-16-review-gate.json','audit/wechat-working/2026-10-16-integration-author-evidence.json','shared/literature-journals.js']:
+            paths.update(str(p) for p in root.glob(pat) if p.is_file())
+          with zipfile.ZipFile('/tmp/oct17-current-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for s in sorted(paths):
+              p=root/s
+              if p.is_file() and p.stat().st_size<20000000 and not any(x in s.lower() for x in ['credential','.env','secret','token']):z.write(p,s)
+            z.writestr('SOURCE_SHA.txt',subprocess.check_output(['git','rev-parse','HEAD']).decode())
+          print(json.dumps({'sourceFiles':len(paths),'bytes':pathlib.Path('/tmp/oct17-current-source.zip').stat().st_size,'wechatWrite':False}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oct17-current-source
+          path: /tmp/oct17-current-source.zip
+          retention-days: 7
