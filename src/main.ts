@@ -298,6 +298,7 @@ let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
 let indexedGenerationUnavailableUntil = 0;
+let indexedGenerationCooldownCatalogId = '';
 let indexedSearchPending = false;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
@@ -2038,6 +2039,105 @@ function indexedViewRequestKey(request: LiteratureCatalogViewRequest): string {
     sort: request.sort || 'newest',
     limit: request.limit || resultWindowSize(),
   });
+}
+
+type StaticDateViewRequest = {
+  catalogId: string;
+  from: string;
+  to: string;
+  sort: 'newest' | 'oldest';
+  selectedJournals: string[];
+  excludedJournals: string[];
+  limit: number;
+};
+
+function staticDateViewRequest(): StaticDateViewRequest | null {
+  const client = architectureClient;
+  if (!client || (!dateFrom && !dateTo) || query.trim() || onlyNew || sort === 'readers') return null;
+  return {
+    catalogId: client.catalogId,
+    from: dateFrom,
+    to: dateTo || client.asOfDate,
+    sort: sort === 'oldest' ? 'oldest' : 'newest',
+    selectedJournals: [...selectedJournals].sort(),
+    excludedJournals: [...excludedJournals].sort(),
+    limit: resultWindowSize(),
+  };
+}
+
+async function loadStaticDateViewPage(
+  serial: number,
+  request: StaticDateViewRequest,
+  page: number,
+  signal?: AbortSignal,
+  pageSerial?: number,
+): Promise<boolean> {
+  const client = architectureClient;
+  if (!client || client.catalogId !== request.catalogId) return false;
+  const key = JSON.stringify(request);
+  const reply = await client.rangePage(request.from, request.to, {
+    page, limit: request.limit, sort: request.sort,
+    selectedJournals: request.selectedJournals,
+    excludedJournals: request.excludedJournals,
+    signal,
+  });
+  if (signal?.aborted || serial !== architectureRefreshSerial || architectureClient !== client
+    || (pageSerial !== undefined && pageSerial !== indexedViewSerial)
+    || JSON.stringify(staticDateViewRequest()) !== key) return false;
+
+  const pagedPapers = normalizeArchitectureRows(reply.papers);
+  if (pagedPapers.length > request.limit || (reply.matched > 0 && !pagedPapers.length)) {
+    throw new Error('published_date_page_invalid');
+  }
+  indexedViewState = null;
+  staticDateViewState = {
+    requestKey: key,
+    matched: reply.matched,
+    page: reply.page,
+    limit: reply.limit,
+    hasMore: reply.hasMore,
+    papers: pagedPapers,
+    loading: false,
+  };
+  architectureReadLimited = false;
+  indexedSearchPending = false;
+  searchPreviewActive = false;
+  setArchitectureCorpus(pagedPapers);
+  document.documentElement.dataset.catalogQueryRead = 'static-date-page';
+  document.documentElement.dataset.catalogDateMatched = String(reply.matched);
+  refreshCorpusResultsInPlace();
+  return true;
+}
+
+async function goToStaticDateResultPage(requestedPage: number): Promise<void> {
+  const client = architectureClient;
+  const state = staticDateViewState;
+  const request = staticDateViewRequest();
+  if (!client || !state || state.loading || !request
+    || state.requestKey !== JSON.stringify(request)) return;
+  const totalPages = Math.max(1, Math.ceil(state.matched / state.limit));
+  const target = Math.max(1, Math.min(requestedPage, totalPages));
+  if (target === state.page) return;
+  const serial = ++indexedViewSerial;
+  indexedSearchRequest?.abort();
+  const controller = new AbortController();
+  indexedSearchRequest = controller;
+  staticDateViewState = { ...state, loading: true };
+  renderCards();
+  try {
+    await loadStaticDateViewPage(architectureRefreshSerial, request, target, controller.signal, serial);
+    if (serial === indexedViewSerial) {
+      document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+    }
+  } catch (error) {
+    if (serial !== indexedViewSerial || controller.signal.aborted) return;
+    // Keep the last verified page; a transport error is not an empty archive.
+    staticDateViewState = { ...state, loading: false };
+    console.warn('Verified archive date page unavailable; retaining last complete page', error);
+    refreshCorpusResultsInPlace();
+  } finally {
+    if (indexedSearchRequest === controller) indexedSearchRequest = null;
+  }
 }
 
 async function loadIndexedViewPage(
