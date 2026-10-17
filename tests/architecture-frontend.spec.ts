@@ -622,6 +622,29 @@ test('rapid calendar edits retain the account form and search one complete range
   await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp(`(?:共 ${matched} 篇|of ${matched}$)`));
 });
 
+test('clearing a date after static pagination restores the Hot landing window', async ({ page }) => {
+  await page.route('**/api/literature/catalog-view**', route => route.fulfill({
+    status: 409, contentType: 'application/json',
+    body: JSON.stringify({ error: 'literature_catalog_generation_not_ready' }),
+  }));
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  const first = await page.locator('#gallery > .card').first().getAttribute('data-doi');
+  await page.locator('#dateTo').fill('2026-03-31');
+  await page.locator('#dateTo').dispatchEvent('change');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    { timeout: 30000 }).toBe('static-date-page');
+  await page.locator('#dateTo').fill('');
+  await page.locator('#dateTo').dispatchEvent('change');
+  await expect(page.locator('#dateTo')).toHaveValue('');
+  await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', first || '');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+    { timeout: 30000 }).toBe('local');
+});
+
 test('date range exposes complete cold Archive via bounded static pagination after D1 409', async ({ page }) => {
   const data = fixture();
   let indexRequests = 0;

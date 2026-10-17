@@ -808,7 +808,8 @@ function resetResultWindow(): void {
   // The old request and its fallback transport cannot hold up a newer term.
   indexedSearchRequest?.abort();
   indexedSearchRequest = null;
-  if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
+  if ((indexedViewState || staticDateViewState) && architectureLandingPapers.length)
+    setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
   staticDateViewState = null;
   indexedSearchPending = false;
@@ -852,7 +853,7 @@ function armSearchPreviewFallback(): void {
   // Local results shown by this watchdog are expressly not an all-time answer.
   searchPreviewTimer = window.setTimeout(() => {
     searchPreviewTimer = null;
-    if (!indexedSearchPending || query !== expectedQuery) return;
+    if (!indexedSearchPending || query !== expectedQuery || indexedPendingMatched !== null) return;
     searchPreviewActive = true;
     indexedSearchPending = false;
     refreshCorpusResultsInPlace();
@@ -1226,6 +1227,10 @@ function mount(): void {
     persistFilterPreferences();
     syncClearSearchScopeButton();
     renderAfterScopeChange(180);
+    // Short keywords and reader-count sort cannot use D1; preserve the older
+    // complete static date/query path rather than silently returning Hot only.
+    if (!indexedSearchPending && (dateFrom || dateTo) && architectureClient)
+      scheduleArchitectureCorpusRefresh(180);
   };
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
     changeDateFilter('from', (event.target as HTMLInputElement).value);
