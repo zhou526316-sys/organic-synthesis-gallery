@@ -300,6 +300,7 @@ let indexedViewCapability: boolean | null = null;
 let indexedGenerationUnavailableUntil = 0;
 let indexedGenerationCooldownCatalogId = '';
 let indexedSearchPending = false;
+let indexedPendingMatched: number | null = null;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
 let searchPreviewTimer: number | null = null;
@@ -807,11 +808,15 @@ function resetResultWindow(): void {
   // The old request and its fallback transport cannot hold up a newer term.
   indexedSearchRequest?.abort();
   indexedSearchRequest = null;
-  if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
+  if ((indexedViewState || staticDateViewState) && architectureLandingPapers.length)
+    setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
   staticDateViewState = null;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
   searchPreviewActive = false;
+  for (const key of ['catalogSearchNetworkMs', 'catalogSearchResolveMs', 'catalogSearchRenderMs', 'catalogSearchTotalMs'])
+    delete document.documentElement.dataset[key];
   document.documentElement.dataset.catalogQueryRead = 'local';
   delete document.documentElement.dataset.catalogIndexedQuery;
 }
@@ -848,7 +853,7 @@ function armSearchPreviewFallback(): void {
   // Local results shown by this watchdog are expressly not an all-time answer.
   searchPreviewTimer = window.setTimeout(() => {
     searchPreviewTimer = null;
-    if (!indexedSearchPending || query !== expectedQuery) return;
+    if (!indexedSearchPending || query !== expectedQuery || indexedPendingMatched !== null) return;
     searchPreviewActive = true;
     indexedSearchPending = false;
     refreshCorpusResultsInPlace();
@@ -865,7 +870,7 @@ function renderCards(): void {
   // each keystroke while a real all-time index query is pending.
   if (indexedSearchPending && !indexedViewState
       && (Boolean(indexedViewRequest('')) || architectureBootstrapPending)) {
-    count.textContent = '…';
+    count.textContent = indexedPendingMatched === null ? '…' : String(indexedPendingMatched);
     if (scope) scope.textContent = t('searchingAllTime');
     const controls = document.querySelector<HTMLElement>('#resultWindowControls');
     if (controls) controls.hidden = true;
@@ -881,11 +886,18 @@ function renderCards(): void {
         pendingNote.setAttribute('role', 'status');
         gallery.prepend(pendingNote);
       }
-      pendingNote.textContent = language === 'zh'
-        ? '正在检索全库；下方仍是上一次结果，并非当前关键词的匹配。'
-        : 'Searching all papers; the cards below are previous results, not matches for this query.';
-    } else if (!gallery.querySelector('[data-search-progress]')) {
-      gallery.innerHTML = `<div class='empty' data-search-progress='true' role='status'>${escapeHtml(t('searchingAllTime'))}</div>`;
+      pendingNote.textContent = indexedPendingMatched === null
+        ? (language === 'zh' ? '正在检索全库；下方仍是上一次结果，并非当前关键词的匹配。'
+          : 'Searching all papers; the cards below are previous results, not matches for this query.')
+        : (language === 'zh' ? `已找到 ${indexedPendingMatched} 篇，正在校验并载入当前页；下方仍是上一次结果。`
+          : `${indexedPendingMatched} papers matched; verifying this page. Cards below are previous results.`);
+    } else {
+      const note = gallery.querySelector<HTMLElement>('[data-search-progress]');
+      const progress = indexedPendingMatched === null ? t('searchingAllTime')
+        : language === 'zh' ? `已找到 ${indexedPendingMatched} 篇，正在校验并载入当前页…`
+          : `${indexedPendingMatched} papers matched; verifying this page…`;
+      if (note) note.textContent = progress;
+      else gallery.innerHTML = `<div class='empty' data-search-progress='true' role='status'>${escapeHtml(progress)}</div>`;
     }
     gallery.setAttribute('aria-busy', 'true');
     return;
@@ -1192,21 +1204,39 @@ function mount(): void {
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderLocalHotView();
   }));
-  document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
-    dateFrom = (event.target as HTMLInputElement).value;
-    if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+  // Calendar changes keep the account/password DOM intact; combine two dates
+  // selected within 180ms into one cancellable catalog request.
+  const changeDateFilter = (field: 'from' | 'to', value: string): void => {
+    if (field === 'from') {
+      if (dateFrom === value) return;
+      dateFrom = value;
+      if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+    } else {
+      if (dateTo === value) return;
+      dateTo = value;
+      if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
+    }
+    const from = document.querySelector<HTMLInputElement>('#dateFrom');
+    const to = document.querySelector<HTMLInputElement>('#dateTo');
+    if (from && from.value !== dateFrom) from.value = dateFrom;
+    if (to && to.value !== dateTo) to.value = dateTo;
+    const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
+    if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
+    searchInputStartedAt = performance.now();
     resetResultWindow();
     persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
+    syncClearSearchScopeButton();
+    renderAfterScopeChange(180);
+    // Short keywords and reader-count sort cannot use D1; preserve the older
+    // complete static date/query path rather than silently returning Hot only.
+    if (!indexedSearchPending && (dateFrom || dateTo) && architectureClient)
+      scheduleArchitectureCorpusRefresh(180);
+  };
+  document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
+    changeDateFilter('from', (event.target as HTMLInputElement).value);
   });
   document.querySelector<HTMLInputElement>('#dateTo')?.addEventListener('change', event => {
-    dateTo = (event.target as HTMLInputElement).value;
-    if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
-    resetResultWindow();
-    persistFilterPreferences();
-    mount();
-    scheduleArchitectureCorpusRefresh(0);
+    changeDateFilter('to', (event.target as HTMLInputElement).value);
   });
   document.querySelector<HTMLButtonElement>('#clearCustomFilters')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -1841,7 +1871,7 @@ async function ensureFullHotCorpus(): Promise<void> {
   return hotFullLoadPromise;
 }
 
-function renderAfterScopeChange(): void {
+function renderAfterScopeChange(delay = 0): void {
   if (sort === 'readers' && [...query.trim()].length >= 3) {
     indexedSearchPending = false;
     indexedViewDegraded = false;
@@ -1849,10 +1879,10 @@ function renderAfterScopeChange(): void {
     return;
   }
   indexedSearchPending = Boolean(indexedViewRequest(''))
-    || (architectureBootstrapPending && [...query.trim()].length >= 3);
+    || (architectureBootstrapPending && Boolean(query.trim() || dateFrom || dateTo));
   if (indexedSearchPending) {
     renderCards();
-    scheduleArchitectureCorpusRefresh(0);
+    scheduleArchitectureCorpusRefresh(delay);
     armSearchPreviewFallback();
   } else {
     renderLocalHotView();
@@ -2155,8 +2185,17 @@ async function loadIndexedViewPage(
   const requestElapsed = Math.round(performance.now() - requestAt);
   if (serial !== architectureRefreshSerial && page === 1) return false;
   if (page > 1 && serial !== indexedViewSerial) return false;
-  if (architectureClient !== client) return false;
+  if (architectureClient !== client || signal?.aborted) return false;
+  if (page === 1) {
+    indexedPendingMatched = response.matched;
+    document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+    // A validated matched count is safe to show before DOI/revision records
+    // resolve; previous cards remain explicitly marked as stale.
+    renderCards();
+  }
+  const resolveAt = performance.now();
   const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+  const resolveElapsed = Math.round(performance.now() - resolveAt);
   // Static content-addressed shard resolution can still be pending after the
   // API returned. Guard this await too, not just the network response.
   if (signal?.aborted || (page === 1 && serial !== architectureRefreshSerial)
@@ -2178,6 +2217,7 @@ async function loadIndexedViewPage(
   architectureReadLimited = false;
   indexedViewDegraded = false;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
   searchPreviewActive = false;
   staticDateViewState = null;
   indexedGenerationUnavailableUntil = 0;
@@ -2188,10 +2228,12 @@ async function loadIndexedViewPage(
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
   document.documentElement.dataset.catalogIndexCapability = 'active';
   indexedViewCapability = true;
+  const renderAt = performance.now();
   refreshCorpusResultsInPlace();
-  // Read-only timing probes for browser perf regressions: do not include DOI,
-  // title, query or user information in these document attributes.
+  // Read-only phase timings contain no DOI, search term or account information.
   document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+  document.documentElement.dataset.catalogSearchResolveMs = String(resolveElapsed);
+  document.documentElement.dataset.catalogSearchRenderMs = String(Math.round(performance.now() - renderAt));
   if (searchInputStartedAt > 0)
     document.documentElement.dataset.catalogSearchTotalMs = String(Math.round(performance.now() - searchInputStartedAt));
   return true;
@@ -2236,6 +2278,7 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
     indexedViewState = null;
     indexedViewDegraded = true;
     indexedSearchPending = false;
+    indexedPendingMatched = null;
     const status = error && typeof error === 'object' && 'status' in error
       ? Number((error as { status?: unknown }).status) : 0;
     if (status === 409) {
@@ -2331,6 +2374,7 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
   if (serial !== architectureRefreshSerial || architectureClient !== client) return;
   indexedViewState = null;
   indexedSearchPending = false;
+  indexedPendingMatched = null;
   const dateRequest = staticDateViewRequest();
   if (dateRequest) {
     // Date-only browse has a fully verified, 12/24-record static paging path.
